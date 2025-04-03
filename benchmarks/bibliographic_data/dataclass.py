@@ -24,7 +24,7 @@ class Entry:
     publisher: Optional[str] = None
     editor: Optional[List[str]] = field(default_factory=list)
     publisher_place: Optional[str] = None
-    issued: Optional[int] = None
+    issued: Optional[str] = None
     event_date: Optional[str] = None
     related: Optional[List[str]] = field(default_factory=list)
     relation: Optional[Dict] = field(default_factory=dict)
