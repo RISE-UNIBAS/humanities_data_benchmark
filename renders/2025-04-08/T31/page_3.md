@@ -4,9 +4,6 @@ Average Fuzzy Score: **0.0**
 
 | Key | Value | Ground Truth | Score |
 | --- | --- | --- | --- |
-| metadata.title | None | History and Theory | 0.0 |
-| metadata.year | None | 1945 | 0.0 |
-| metadata.page_number | None | 2 | 0.0 |
 | entries[0].type | None | journal-article | 0.0 |
 | entries[0].container_title | None | American Journal of Economics and Sociology | 0.0 |
 | entries[0].issued | None | 1951 | 0.0 |

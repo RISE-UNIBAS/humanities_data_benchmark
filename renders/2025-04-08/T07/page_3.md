@@ -1,12 +1,9 @@
 ### Result for image: page_3
-Average Fuzzy Score: **0.37569744820281653**
+Average Fuzzy Score: **0.3644148719655181**
 <small>
 
 | Key | Value | Ground Truth | Score |
 | --- | --- | --- | --- |
-| metadata.title | History and Theory | History and Theory | 1.0 |
-| metadata.year | 1945 | 1945 | 1.0 |
-| metadata.page_number | 2 | 2 | 1.0 |
 | entries[0].type | journal-article | journal-article | 1.0 |
 | entries[0].container_title | British Journal of Sociology | American Journal of Economics and Sociology | 0.6478873239436621 |
 | entries[0].issued | 1952 | 1951 | 0.0 |

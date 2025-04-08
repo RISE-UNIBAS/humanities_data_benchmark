@@ -1,12 +1,9 @@
 ### Result for image: page_2
-Average Fuzzy Score: **0.15293704098664168**
+Average Fuzzy Score: **0.1566371306879314**
 <small>
 
 | Key | Value | Ground Truth | Score |
 | --- | --- | --- | --- |
-| metadata.title | None | Books | 0.0 |
-| metadata.year | None | 1945 | 0.0 |
-| metadata.page_number | None | 1 | 0.0 |
 | entries[0].id | 1 | 1 | 0.0 |
 | entries[0].type | None | book | 0.0 |
 | entries[0].title | Time as Dimension and History | Time as Dimension and History | 1.0 |

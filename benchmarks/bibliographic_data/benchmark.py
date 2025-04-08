@@ -15,30 +15,64 @@ class BibliographicData(Benchmark):
 
     def score_request_answer(self, image_name, response, ground_truth):
         data = self.prepare_scoring_data(response)
-
+        
+        # Check if data is a list (array) but ground_truth has entries
+        if isinstance(data, list) and "entries" in ground_truth:
+            # Create entries wrapper to match ground truth structure
+            data = {"entries": data}
+        
         my_keys = get_all_keys(ground_truth)
-
+        
         avg_score = 0
+        total_keys = 0
         for k in my_keys:
             test_value = get_nested_value(data, k)
             gold_value = get_nested_value(ground_truth, k)
+            
+            # Skip metadata fields to focus on bibliographic entries
+            if k.startswith("metadata"):
+                continue
+                
             score = calculate_fuzzy_score(test_value, gold_value)
             avg_score += score
-        avg_score /= len(my_keys)
+            total_keys += 1
+            
+        if total_keys > 0:
+            avg_score /= total_keys
+        else:
+            avg_score = 0
+            
         return {"fuzzy": avg_score}
 
     def create_request_render(self, image_name, result, score, truth):
         data = self.prepare_scoring_data(result)
+        
+        # Check if data is a list (array) but truth has entries
+        if isinstance(data, list) and "entries" in truth:
+            # Create entries wrapper to match ground truth structure
+            data = {"entries": data}
+            
         my_keys = get_all_keys(truth)
         avg_score = 0
         md_table_body = ""
+        total_keys = 0
+        
         for k in my_keys:
+            # Skip metadata fields to focus on bibliographic entries
+            if k.startswith("metadata"):
+                continue
+                
             test_value = get_nested_value(data, k)
             gold_value = get_nested_value(truth, k)
-            score = calculate_fuzzy_score(test_value, gold_value)
-            avg_score += score
-            md_table_body += f"\n| {k} | {test_value} | {gold_value} | {score} |"
-        avg_score /= len(my_keys)
+            item_score = calculate_fuzzy_score(test_value, gold_value)
+            avg_score += item_score
+            total_keys += 1
+            md_table_body += f"\n| {k} | {test_value} | {gold_value} | {item_score} |"
+            
+        if total_keys > 0:
+            avg_score /= total_keys
+        else:
+            avg_score = 0
 
         render = (
             f"### Result for image: {image_name}\n"

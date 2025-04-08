@@ -1,12 +1,9 @@
 ### Result for image: page_4
-Average Fuzzy Score: **0.8120766486353069**
+Average Fuzzy Score: **0.8227153889753508**
 <small>
 
 | Key | Value | Ground Truth | Score |
 | --- | --- | --- | --- |
-| metadata.title | 1946 | Books | 0.0 |
-| metadata.year | 1946 | 1946 | 1.0 |
-| metadata.page_number | 34 | 4 | 0.0 |
 | entries[0].id | 34 | 34 | 1.0 |
 | entries[0].type | book | book | 1.0 |
 | entries[0].title | Der Sinn der Geschichte | Der Sinn der Geschichte | 1.0 |

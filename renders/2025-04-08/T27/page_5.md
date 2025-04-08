@@ -1,12 +1,9 @@
 ### Result for image: page_5
-Average Fuzzy Score: **0.588598639856207**
+Average Fuzzy Score: **0.5851104593099706**
 <small>
 
 | Key | Value | Ground Truth | Score |
 | --- | --- | --- | --- |
-| metadata.title | History and Theory | Books | 0.17391304347826086 |
-| metadata.year | 1946 | 1946 | 1.0 |
-| metadata.page_number | 4 | 4 | 1.0 |
 | entries[0].id | 49 | 49 | 1.0 |
 | entries[0].type | journal-article | journal-article | 1.0 |
 | entries[0].author[0].family | Schlenke | Schlenke | 1.0 |

@@ -1,12 +1,9 @@
 ### Result for image: page_10
-Average Fuzzy Score: **0.341081784677941**
+Average Fuzzy Score: **0.3354128650025425**
 <small>
 
 | Key | Value | Ground Truth | Score |
 | --- | --- | --- | --- |
-| metadata.title | Bibliography | BIBLIOGRAPHY | 0.08333333333333337 |
-| metadata.year | 1947 | 1947 | 1.0 |
-| metadata.page_number | 9 | 9 | 1.0 |
 | entries[0].id | 140 | 140 | 1.0 |
 | entries[0].type | book | book | 1.0 |
 | entries[0].title | Why We Read History | Why We Read History | 1.0 |

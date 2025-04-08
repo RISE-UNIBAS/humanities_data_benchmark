@@ -1,12 +1,9 @@
 ### Result for image: page_3
-Average Fuzzy Score: **0.05478367441852021**
+Average Fuzzy Score: **0.05577374082367419**
 <small>
 
 | Key | Value | Ground Truth | Score |
 | --- | --- | --- | --- |
-| metadata.title | None | History and Theory | 0.0 |
-| metadata.year | None | 1945 | 0.0 |
-| metadata.page_number | None | 2 | 0.0 |
 | entries[0].type | None | journal-article | 0.0 |
 | entries[0].container_title | None | American Journal of Economics and Sociology | 0.0 |
 | entries[0].issued | None | 1951 | 0.0 |

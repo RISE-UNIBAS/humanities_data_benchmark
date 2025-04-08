@@ -1,12 +1,9 @@
 ### Result for image: page_2
-Average Fuzzy Score: **0.4270857749030401**
+Average Fuzzy Score: **0.426473794802768**
 <small>
 
 | Key | Value | Ground Truth | Score |
 | --- | --- | --- | --- |
-| metadata.title | Books Published in 1945 | Books | 0.3571428571428571 |
-| metadata.year | 1945 | 1945 | 1.0 |
-| metadata.page_number | 1945 | 1 | 0.0 |
 | entries[0].id | 1 | 1 | 1.0 |
 | entries[0].type | book | book | 1.0 |
 | entries[0].title | Time as Dimension and History | Time as Dimension and History | 1.0 |

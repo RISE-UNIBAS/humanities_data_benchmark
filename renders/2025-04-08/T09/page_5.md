@@ -4,9 +4,6 @@ Average Fuzzy Score: **0.0**
 
 | Key | Value | Ground Truth | Score |
 | --- | --- | --- | --- |
-| metadata.title | None | Books | 0.0 |
-| metadata.year | None | 1946 | 0.0 |
-| metadata.page_number | None | 4 | 0.0 |
 | entries[0].id | None | 49 | 0.0 |
 | entries[0].type | None | journal-article | 0.0 |
 | entries[0].author[0].family | None | Schlenke | 0.0 |

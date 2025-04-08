@@ -4,9 +4,6 @@ Average Fuzzy Score: **0.0**
 
 | Key | Value | Ground Truth | Score |
 | --- | --- | --- | --- |
-| metadata.title | None | Books | 0.0 |
-| metadata.year | None | 1946 | 0.0 |
-| metadata.page_number | None | 4 | 0.0 |
 | entries[0].id | None | 34 | 0.0 |
 | entries[0].type | None | book | 0.0 |
 | entries[0].title | None | Der Sinn der Geschichte | 0.0 |

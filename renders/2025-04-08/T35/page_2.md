@@ -1,47 +1,44 @@
 ### Result for image: page_2
-Average Fuzzy Score: **0.0**
+Average Fuzzy Score: **0.05150950819153584**
 <small>
 
 | Key | Value | Ground Truth | Score |
 | --- | --- | --- | --- |
-| metadata.title | None | Books | 0.0 |
-| metadata.year | None | 1945 | 0.0 |
-| metadata.page_number | None | 1 | 0.0 |
-| entries[0].id | None | 1 | 0.0 |
+| entries[0].id | 1 | 1 | 0.0 |
 | entries[0].type | None | book | 0.0 |
-| entries[0].title | None | Time as Dimension and History | 0.0 |
+| entries[0].title | Time as Dimension and History | Time as Dimension and History | 1.0 |
 | entries[0].author[0].family | None | Alexander | 0.0 |
 | entries[0].author[0].given | None | Hubert G. | 0.0 |
 | entries[0].publisher | None | University of New Mexico Press | 0.0 |
 | entries[0].publisher_place | None | Albuquerque | 0.0 |
 | entries[0].issued | None | 1945 | 0.0 |
-| entries[1].id | None | 2 | 0.0 |
+| entries[1].id | 2 | 2 | 0.0 |
 | entries[1].type | None | book | 0.0 |
-| entries[1].title | None | Wahrheit und Ideologie | 0.0 |
+| entries[1].title | Wahrheit und Ideologie | Wahrheit und Ideologie | 1.0 |
 | entries[1].author[0].family | None | Barth | 0.0 |
 | entries[1].author[0].given | None | Hans | 0.0 |
 | entries[1].publisher | None | Manesse | 0.0 |
 | entries[1].publisher_place | None | Zürich | 0.0 |
 | entries[1].issued | None | 1945 | 0.0 |
-| entries[2].id | None | 3 | 0.0 |
+| entries[2].id | 3 | 3 | 0.0 |
 | entries[2].type | None | book | 0.0 |
-| entries[2].title | None | Las generaciones en la historia | 0.0 |
+| entries[2].title | Las generaciones en la historia | Las generaciones en la historia | 1.0 |
 | entries[2].author[0].family | None | Entralyo Laín | 0.0 |
 | entries[2].author[0].given | None | Pedro | 0.0 |
 | entries[2].publisher | None | Instituto de estudios políticos | 0.0 |
 | entries[2].publisher_place | None | Madrid | 0.0 |
 | entries[2].issued | None | 1945 | 0.0 |
-| entries[3].id | None | 4 | 0.0 |
+| entries[3].id | 4 | 4 | 0.0 |
 | entries[3].type | None | book | 0.0 |
-| entries[3].title | None | Cuatro visiones de la historia universal | 0.0 |
+| entries[3].title | Cuatro visiones de la historia universal | Cuatro visiones de la historia universal | 1.0 |
 | entries[3].author[0].family | None | Ferrater Mora | 0.0 |
 | entries[3].author[0].given | None | José | 0.0 |
 | entries[3].publisher | None | Editorial Losada | 0.0 |
 | entries[3].publisher_place | None | Buenos Aires | 0.0 |
 | entries[3].issued | None | 1945 | 0.0 |
-| entries[4].id | None | 5 | 0.0 |
+| entries[4].id | 5 | 5 | 0.0 |
 | entries[4].type | None | book | 0.0 |
-| entries[4].title | None | The Use of Personal Documents in History, Anthropology, and Sociology | 0.0 |
+| entries[4].title | The Use of Personal Documents in History, Anthropology, and Sociology | The Use of Personal Documents in History, Anthropology, and Sociology | 1.0 |
 | entries[4].author[0].family | None | Gottschalk | 0.0 |
 | entries[4].author[0].given | None | L. | 0.0 |
 | entries[4].author[1].family | None | Kluckhohn | 0.0 |
@@ -52,34 +49,34 @@ Average Fuzzy Score: **0.0**
 | entries[4].publisher_place | None | New York | 0.0 |
 | entries[4].note | None | Published as Bulletin 53 by the SSRC | 0.0 |
 | entries[4].issued | None | 1945 | 0.0 |
-| entries[5].id | None | 6 | 0.0 |
+| entries[5].id | 7 | 6 | 0.0 |
 | entries[5].type | None | journal-article | 0.0 |
-| entries[5].title | None | Review of The Use of Personal Documents in History, Anthropology, and Sociology | 0.0 |
+| entries[5].title | El problema de la historia y su lugar en el conocimiento | Review of The Use of Personal Documents in History, Anthropology, and Sociology | 0.3555555555555555 |
 | entries[5].author[0].family | None | Lapiere | 0.0 |
 | entries[5].author[0].given | None | R. T. | 0.0 |
 | entries[5].container_title | None | The American Journal of Sociology | 0.0 |
 | entries[5].volume | None | LII | 0.0 |
 | entries[5].issued | None | 1946 | 0.0 |
 | entries[5].relation.reviewed | None | 5 | 0.0 |
-| entries[6].id | None | 7 | 0.0 |
+| entries[6].id | 9 | 7 | 0.0 |
 | entries[6].type | None | book | 0.0 |
-| entries[6].title | None | El problema de la historia y su lugar en el conocimiento | 0.0 |
+| entries[6].title | Man the Measure: a New Approach to History | El problema de la historia y su lugar en el conocimiento | 0.34693877551020413 |
 | entries[6].author[0].family | None | Jasinowski | 0.0 |
 | entries[6].author[0].given | None | Bogumil | 0.0 |
 | entries[6].publisher | None | Universidad de Chile | 0.0 |
 | entries[6].publisher_place | None | Santiago, Chile | 0.0 |
 | entries[6].issued | None | 1945 | 0.0 |
-| entries[7].id | None | 8 | 0.0 |
+| entries[7].id | 11 | 8 | 0.0 |
 | entries[7].type | None | review | 0.0 |
-| entries[7].title | None | Review of El problema de la historia y su lugar en el conocimiento | 0.0 |
+| entries[7].title | The Social Interpretation of History | Review of El problema de la historia y su lugar en el conocimiento | 0.33333333333333337 |
 | entries[7].container_title | None | Revue philosophique | 0.0 |
 | entries[7].volume | None | CXL | 0.0 |
 | entries[7].page | None | 528 | 0.0 |
 | entries[7].issued | None | 1950 | 0.0 |
 | entries[7].relation.reviewed | None | 7 | 0.0 |
-| entries[8].id | None | 9 | 0.0 |
+| entries[8].id | 12 | 9 | 0.0 |
 | entries[8].type | None | book | 0.0 |
-| entries[8].title | None | Man the Measure: a New Approach to History | 0.0 |
+| entries[8].title | The Open Society and Its Enemies | Man the Measure: a New Approach to History | 0.3513513513513513 |
 | entries[8].author[0].family | None | Kahler | 0.0 |
 | entries[8].author[0].given | None | Erich | 0.0 |
 | entries[8].edition | None | 2 | 0.0 |

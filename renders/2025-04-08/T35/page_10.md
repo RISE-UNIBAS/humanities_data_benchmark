@@ -1,61 +1,58 @@
 ### Result for image: page_10
-Average Fuzzy Score: **0.0**
+Average Fuzzy Score: **0.05258140554451774**
 <small>
 
 | Key | Value | Ground Truth | Score |
 | --- | --- | --- | --- |
-| metadata.title | None | BIBLIOGRAPHY | 0.0 |
-| metadata.year | None | 1947 | 0.0 |
-| metadata.page_number | None | 9 | 0.0 |
-| entries[0].id | None | 140 | 0.0 |
+| entries[0].id | 140 | 140 | 0.0 |
 | entries[0].type | None | book | 0.0 |
-| entries[0].title | None | Why We Read History | 0.0 |
+| entries[0].title | Why We Read History | Why We Read History | 1.0 |
 | entries[0].author[0].family | None | Smellie | 0.0 |
 | entries[0].author[0].given | None | K. B. | 0.0 |
-| entries[0].publisher | None | P. Elek | 0.0 |
+| entries[0].publisher | London: P. Elek | P. Elek | 0.6363636363636364 |
 | entries[0].publisher-place | None | London | 0.0 |
 | entries[0].issued | None | 1947 | 0.0 |
-| entries[1].id | None | 141 | 0.0 |
+| entries[1].id | 141 | 141 | 0.0 |
 | entries[1].type | None | book | 0.0 |
-| entries[1].title | None | A Study of History | 0.0 |
+| entries[1].title | A Study of History | A Study of History | 1.0 |
 | entries[1].author[0].family | None | Toynbee | 0.0 |
 | entries[1].author[0].given | None | Arnold J. | 0.0 |
-| entries[1].publisher | None | Oxford | 0.0 |
+| entries[1].publisher | New York: Oxford (Abridgement of vols. I-VI of A Study of History) | Oxford | 0.16666666666666663 |
 | entries[1].publisher-place | None | New York | 0.0 |
 | entries[1].note | None | Abridged by D. C. Somervell. Abridgement of vols. I-VI of A Study of History. | 0.0 |
 | entries[1].issued | None | 1947 | 0.0 |
-| entries[2].id | None | 142 | 0.0 |
+| entries[2].id | 142 | 142 | 0.0 |
 | entries[2].type | None | book | 0.0 |
-| entries[2].title | None | In den spiegel van het verleden: historische opstellen | 0.0 |
+| entries[2].title | In den spiegel van het verleden: historische opstellers | In den spiegel van het verleden: historische opstellen | 0.9724770642201834 |
 | entries[2].author[0].family | None | Verberne | 0.0 |
 | entries[2].author[0].given | None | L. G. J. | 0.0 |
-| entries[2].publisher | None | Bruna | 0.0 |
+| entries[2].publisher | Utrecht: Antwerpen: Bruna | Bruna | 0.33333333333333337 |
 | entries[2].publisher-place | None | Utrecht, Antwerpen | 0.0 |
 | entries[2].issued | None | 1947 | 0.0 |
-| entries[3].id | None | 143 | 0.0 |
+| entries[3].id | 143 | 143 | 0.0 |
 | entries[3].type | None | book | 0.0 |
-| entries[3].title | None | Esquemas de metodología eclesiástica | 0.0 |
+| entries[3].title | Esquemas de metodología eclesiástica | Esquemas de metodología eclesiástica | 1.0 |
 | entries[3].author[0].family | None | Vevir | 0.0 |
 | entries[3].author[0].given | None | José | 0.0 |
-| entries[3].publisher | None | Instituto | 0.0 |
+| entries[3].publisher | Barcelona: Instituto | Instituto | 0.6206896551724138 |
 | entries[3].publisher-place | None | Barcelona | 0.0 |
 | entries[3].issued | None | 1947 | 0.0 |
-| entries[4].id | None | 144 | 0.0 |
+| entries[4].id | 144 | 144 | 0.0 |
 | entries[4].type | None | book | 0.0 |
-| entries[4].title | None | Sinn und Ziel der Geschichte | 0.0 |
+| entries[4].title | Sinn und Ziel der Geschichte | Sinn und Ziel der Geschichte | 1.0 |
 | entries[4].author[0].family | None | Walz | 0.0 |
 | entries[4].author[0].given | None | Hans H. | 0.0 |
-| entries[4].publisher | None | Universitäts-Verlag | 0.0 |
+| entries[4].publisher | Bonn: Universitäts-Verlag | Universitäts-Verlag | 0.8636363636363636 |
 | entries[4].publisher-place | None | Bonn | 0.0 |
 | entries[4].issued | None | 1947 | 0.0 |
-| entries[5].id | None | 145 | 0.0 |
+| entries[5].id | 145 | 145 | 0.0 |
 | entries[5].type | None | book | 0.0 |
-| entries[5].title | None | Atti del congresso internazionale di filosofia | 0.0 |
+| entries[5].title | Atti del congresso internazionale di filosofia 15-20 November, 1946 | Atti del congresso internazionale di filosofia | 0.8141592920353982 |
 | entries[5].event-date | None | 1946-11-15/1946-11-20 | 0.0 |
-| entries[5].publisher | None | Castellani | 0.0 |
+| entries[5].publisher | Milano: Castellani | Castellani | 0.7142857142857143 |
 | entries[5].publisher-place | None | Milano | 0.0 |
 | entries[5].issued | None | 1947 | 0.0 |
-| entries[5].note | None | Mentions relevant articles. | 0.0 |
+| entries[5].note | Relevant articles: | Mentions relevant articles. | 0.7111111111111111 |
 | entries[5].related[0].id | None | 146 | 0.0 |
 | entries[5].related[0].type | None | article-journal | 0.0 |
 | entries[5].related[0].title | None | Storia e materialismo storico | 0.0 |
