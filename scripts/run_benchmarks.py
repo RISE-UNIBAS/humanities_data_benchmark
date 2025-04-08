@@ -22,7 +22,7 @@ logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s %(levelname)s:%(name)s:%(message)s",
     handlers=[
-        logging.FileHandler(f"logs/{time.strftime('%Y%m%d-%H%M%S')}.log"),
+        #logging.FileHandler(f"logs/{time.strftime('%Y%m%d-%H%M%S')}.log"),
         logging.StreamHandler(),
     ]
 )
