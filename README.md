@@ -1,14 +1,27 @@
-# LLM Benchmark Suite for Humanities Image Data
-This repository contains a number of benchmark datasets (images), prompts, ground truths and evaluation scripts for
-evaluating the performance of large language models (LLMs) on tasks in the humanities. The repository is
-intended to be a resource for researchers and practitioners who are interested in evaluating the performance
-of LLMs on DH-related tasks.
 
-> **ℹ Are you looking for test results?**
-  This README provides an overview of the benchmark suite and how to use it. 
-  For detailed test results, please visit the [test results page](https://rise-unibas.github.io/humanities_data_benchmark/)
+# LLM Benchmark Suite for Humanities Image Data
+
+This repository contains benchmark datasets (images), prompts, ground truths, and evaluation scripts for
+assessing the performance of large language models (LLMs) on humanities-related tasks. The suite is
+designed as a resource for researchers and practitioners interested in systematically evaluating
+how well various LLMs perform on digital humanities (DH) tasks involving visual materials.
+
+## What is Benchmarking and Why Should You Care?
+
+Benchmarking is the process of systematically evaluating and ranking various models for specific tasks using well-defined ground truths and metrics. For humanities research, benchmarking provides:
+
+- **Evidence-based decision making** about which model(s) to use for which humanities-specific task(s)
+- **Quantifiable comparisons** between different AI models on humanities data
+- **Standardized evaluation** of model performance on tasks like historical document analysis, transcription, and metadata extraction
+
+This benchmark suite focuses on tasks essential to digital humanities work with visual materials, helping researchers make informed choices about which AI systems best suit their specific research needs.
+
+> **ℹ Looking for benchmark results?**  
+> This README provides an overview of the benchmark suite and explains how to use it.  
+> For detailed test results and model comparisons, visit our [results dashboard](https://rise-unibas.github.io/humanities_data_benchmark/).
 
 ## Table of Contents
+- [What is Benchmarking and Why Should You Care?](#what-is-benchmarking-and-why-should-you-care)
 - [Terminology](#terminology)
 - [How it Works](#how-it-works)
 - [Expand on this Benchmark Suite](#expand-on-this-benchmark-suite)
@@ -17,6 +30,21 @@ of LLMs on DH-related tasks.
   - [Run a Benchmark](#run-a-benchmark)
   - [Add Configuration to the Suite](#add-configuration-to-the-suite)
   - [Implement a Benchmark Class](#implement-a-benchmark-class)
+- [Providers and Models](#providers-and-models)
+- [Benchmarking Methodology](#benchmarking-methodology)
+  - [Ground Truth](#ground-truth)
+  - [Metrics](#metrics)
+    - [Internal Metrics](#internal-metrics-task-performance)
+    - [External Metrics](#external-metrics-practical-considerations)
+- [Current Limitations](#current-limitations)
+  - [Additional Models](#additional-models)
+  - [Specialized Capabilities](#specialized-capabilities)
+  - [Benchmark Dimensions](#benchmark-dimensions)
+  - [Other Areas for Improvement](#other-areas-for-improvement)
+- [Practical Considerations](#practical-considerations)
+  - [Resource Requirements](#resource-requirements)
+  - [Technical Considerations](#technical-considerations)
+  - [Compliance Considerations](#compliance-considerations)
 
 ## Terminology
 - **Benchmark**: A benchmark is a task that the model should perform. Its resources consist of images and their ground truths, prompts, 
@@ -210,3 +238,110 @@ The `resize_images` property indicates whether the images should be resized befo
 The `get_page_part_regex` property is a regular expression that is used to extract the page part from the image name.
 The `get_output_format` property indicates the output format of the model response.
 The `title` property is used to generate the title of the benchmark.
+
+## Providers and Models
+
+This benchmark suite currently tests models from the following providers:
+
+### OpenAI
+- **gpt-4o**: OpenAI's multimodal model capable of processing both text and images
+- **gpt-4.5-preview**: An updated version of GPT-4 with improved capabilities
+- **gpt-4o-mini**: A smaller, faster version of GPT-4o with reduced capabilities
+
+### Google/Gemini
+- **gemini-2.0-flash**: Fast response multimodal model from Google's Gemini line
+- **gemini-2.0-flash-lite**: A lighter version of gemini-2.0-flash
+- **gemini-exp-1206**: An experimental Gemini model
+- **gemini-1.5-flash**: Earlier generation of the Gemini flash model
+- **gemini-1.5-pro**: Higher capability model from the Gemini 1.5 series
+- **gemini-2.0-pro-exp-02-05**: Experimental model from the Gemini 2.0 pro line
+- **gemini-2.5-pro-exp-03-25**: Latest experimental Gemini model in the benchmark suite
+
+### Anthropic
+- **claude-3-5-sonnet-20241022**: Mid-tier Claude model with strong reasoning capabilities
+- **claude-3-7-sonnet-20250219**: More advanced Claude model with improved capabilities
+
+### Mistral AI
+- **pixtral-large-latest**: Mistral's multimodal model for vision tasks
+
+## Benchmarking Methodology
+
+### Ground Truth
+In this benchmark suite, a model's output for a task is compared to the ground truth (gold standard) for that task given the same input. Ground truth is the correct or verified output created by domain experts.
+
+When selecting ground truth samples, we ensure:
+- They are representative of the overall dataset
+- They cover various edge cases and scenarios relevant to humanities tasks
+- The sample size is large enough to achieve statistical significance
+
+### Metrics
+We use two categories of metrics to evaluate model performance:
+
+#### Internal Metrics (Task Performance)
+These metrics evaluate how well the model performs the specific task. Examples include:
+
+- **F1 Score**: The harmonic mean of precision and recall, balancing both metrics
+- **Precision**: The ratio of correctly predicted positive observations to all predicted positives
+- **Recall**: The ratio of correctly predicted positive observations to all actual positives
+- **Character/Word Error Rate**: Used for evaluating text generation and transcription accuracy
+
+#### External Metrics (Practical Considerations)
+These metrics evaluate factors beyond task performance that impact usability:
+
+- **Compute Cost**: The financial cost of running the model on humanities-scale datasets
+- **Speed**: Response time and throughput for processing humanities materials
+- **Deployment Options**: Whether the model can be run locally or requires API calls
+- **Legal and Ethical Considerations**: Including data privacy, IP compliance, and model bias
+
+## Current Limitations
+
+The benchmark suite currently has several limitations that could be addressed in future iterations:
+
+### Additional Models
+Several important models are not yet included:
+- **Anthropic Claude 3 Opus**: Anthropic's highest capability model
+- **Anthropic Claude 3 Haiku**: Anthropic's fastest/smallest model
+- **Meta/Llama models**: The entire Llama model family is absent (Llama 3/4 series)
+- **Additional Mistral models**: Only Pixtral is represented, missing other Mistral models
+- **Cohere Command models**: Entirely absent from the benchmark
+- **Various open-source models**: Falcon, Mixtral, and other open-source alternatives
+
+### Specialized Capabilities
+- **Domain-specific fine-tuned models**: Models specifically optimized for historical research
+- **OCR-specialized models**: Models with particular strength in document processing/OCR
+- **Multilingual capabilities**: Systematic testing across different languages
+
+### Benchmark Dimensions
+- **Cost efficiency**: Evaluating performance relative to token cost
+- **Speed metrics**: Response time measurements
+- **Context window testing**: Evaluation across different context window sizes
+- **Advanced prompt engineering**: Testing with different prompting strategies
+
+### Other Areas for Improvement
+- **Standardized error analysis**: More granular error categorization
+- **Interdisciplinary evaluation**: Additional humanities domains beyond current benchmarks
+- **Time-series analysis**: Tracking model improvements over successive versions
+- **Human baseline comparison**: Comparing model performance to human expert performance
+
+## Practical Considerations
+
+When using this benchmark suite for your own research, consider the following:
+
+> **Note**: For a more detailed introduction to AI benchmarking in humanities contexts, see:  
+> Hindermann, M., & Marti, S. (2025, March 19). RISE Crash Course: "AI Benchmarking". Zenodo. https://doi.org/10.5281/zenodo.15062831
+
+### Resource Requirements
+- **Skills**: Operationalizing tasks requires both domain knowledge and technical expertise
+- **Ground Truth Creation**: Requires domain expertise and careful curation
+- **Metric Selection**: Requires understanding of both the humanities domain and evaluation methods
+
+### Technical Considerations
+- **Local vs. API Models**: Determine if you need to run models locally or can use API services
+- **Data Privacy**: Ensure you're allowed to share your data via APIs if needed
+- **Infrastructure**: Consider if you have access to appropriate computing resources
+
+### Compliance Considerations
+- **Legal Requirements**: Check for any legal restrictions on data sharing or model usage
+- **Ethical Guidelines**: Consider any ethical implications of your benchmarking approach
+- **Funder Requirements**: Verify if there are any funding agency requirements
+- **FAIR Data Principles**: Consider how to make your benchmark data Findable, Accessible, Interoperable, and Reusable
