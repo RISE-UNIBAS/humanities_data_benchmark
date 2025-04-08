@@ -158,11 +158,12 @@ def create_index():
 
     # Sort benchmarks alphabetically
     for benchmark in sorted(latest_results.keys()):
-        row_data = [benchmark]
+        # Add link to the benchmark name with the correct URL path
+        benchmark_link = f'<a href="benchmarks/{benchmark}/">{benchmark}</a>'
+        row_data = [benchmark_link]
 
         if len(latest_results[benchmark]) == 0:
-            row_data.append("No results available")
-            table_data.append(row_data)
+            # Skip benchmarks with no results
             continue
 
         # Store test results to sort them later
@@ -204,16 +205,23 @@ def create_index():
         # Sort test results by score value (highest to lowest)
         test_results.sort(key=lambda x: x[4], reverse=True)
         
+        # Skip benchmarks where all tests have no results (date is None for all)
+        if all(date is None for _, date, _, _, _ in test_results):
+            continue
+            
         # Create inner table for this benchmark's tests
         inner_table = '<table class="inner-table" style="width:100%; border-collapse: collapse;">'
         inner_table += '<tr><th>ID</th><th>Model</th><th>Date</th><th>Results</th></tr>'
         
         for test_id, date, model_info, badge_html, _ in test_results:
-            test_id_html = get_square(test_id, href=f"archive/{date}/{test_id}") if date else get_square(test_id)
+            # Skip entries with no date (no results)
+            if date is None:
+                continue
+                
+            test_id_html = get_square(test_id, href=f"archive/{date}/{test_id}")
             model_html = get_rectangle(model_info) if model_info else "N/A"
-            date_html = date if date else "N/A"
             
-            inner_table += f'<tr><td>{test_id_html}</td><td>{model_html}</td><td>{date_html}</td><td>{badge_html}</td></tr>'
+            inner_table += f'<tr><td>{test_id_html}</td><td>{model_html}</td><td>{date}</td><td>{badge_html}</td></tr>'
         
         inner_table += '</table>'
         row_data.append(inner_table)
