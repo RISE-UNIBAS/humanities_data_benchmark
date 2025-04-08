@@ -171,8 +171,12 @@ def create_index():
             date = latest_results[benchmark][test_id]
             if date is None:
                 # Add entries with no results available with score of -1 (to ensure they appear below entries with score 0)
-                test_results.append((test_id, None, get_square(test_id) + ": No results available<br>", -1))
+                test_results.append((test_id, None, None, "No results available", -1))
                 continue
+            
+            # Get test configuration to access model information
+            test_config = load_test_configuration(test_id)
+            model_info = test_config['model'] if test_config and 'model' in test_config else "unknown"
 
             scoring_file = os.path.join('..', 'results', date, test_id, 'scoring.json')
             scoring_data = read_file(scoring_file)
@@ -194,18 +198,25 @@ def create_index():
                 except (ValueError, AttributeError):
                     score_value = 0
 
-            result_html = get_square(test_id, href=f"archive/{date}/{test_id}") + f": {date} {" ".join(badges)}<br>"
-            test_results.append((test_id, date, result_html, score_value))
+            badge_html = " ".join(badges)
+            test_results.append((test_id, date, model_info, badge_html, score_value))
 
         # Sort test results by score value (highest to lowest)
-        test_results.sort(key=lambda x: x[3], reverse=True)
+        test_results.sort(key=lambda x: x[4], reverse=True)
         
-        # Combine sorted results
-        result_col = ""
-        for _, _, result_html, _ in test_results:
-            result_col += result_html
+        # Create inner table for this benchmark's tests
+        inner_table = '<table class="inner-table" style="width:100%; border-collapse: collapse;">'
+        inner_table += '<tr><th>ID</th><th>Model</th><th>Date</th><th>Results</th></tr>'
+        
+        for test_id, date, model_info, badge_html, _ in test_results:
+            test_id_html = get_square(test_id, href=f"archive/{date}/{test_id}") if date else get_square(test_id)
+            model_html = get_rectangle(model_info) if model_info else "N/A"
+            date_html = date if date else "N/A"
             
-        row_data.append(result_col)
+            inner_table += f'<tr><td>{test_id_html}</td><td>{model_html}</td><td>{date_html}</td><td>{badge_html}</td></tr>'
+        
+        inner_table += '</table>'
+        row_data.append(inner_table)
         table_data.append(row_data)
 
 

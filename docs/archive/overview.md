@@ -7,12 +7,13 @@ This page provides an overview of all benchmark tests.Click on the test name to 
 <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script><style>
     /* Square styles */
     .test-rectangle {
-        display: inline-block;
+        display: inline-flex;
         height: 20px;
         border-radius: 3px;
         text-align: center;
-        line-height: 20px;
-        font-size: 10px;
+        align-items: center;
+        justify-content: center;
+        font-size: 12px;
         font-weight: regular;
         color: white;
         padding: 0 5px;
@@ -21,15 +22,32 @@ This page provides an overview of all benchmark tests.Click on the test name to 
         text-overflow: ellipsis;
     }
     .test-square {
-        display: inline-block;
+        display: inline-flex;
         width: 30px;
         height: 20px;
         border-radius: 3px;
         text-align: center;
-        line-height: 20px;
+        align-items: center;
+        justify-content: center;
         font-size: 12px;
         font-weight: bold;
         color: white;
+    }
+    /* Inner table styles */
+    .inner-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 0;
+        padding: 0;
+    }
+    .inner-table th, .inner-table td {
+        padding: 4px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+    }
+    .inner-table th {
+        background-color: #f2f2f2;
+        font-weight: bold;
     }
 </style>
 <table id="data-table" class="display">
