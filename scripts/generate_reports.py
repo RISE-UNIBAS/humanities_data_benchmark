@@ -156,7 +156,8 @@ def create_index():
     table_headers = ["Benchmark", "Latest Results"]
     table_data = []
 
-    for benchmark in latest_results:
+    # Sort benchmarks alphabetically
+    for benchmark in sorted(latest_results.keys()):
         row_data = [benchmark]
 
         if len(latest_results[benchmark]) == 0:
@@ -164,11 +165,13 @@ def create_index():
             table_data.append(row_data)
             continue
 
-        result_col = ""
+        # Store test results to sort them later
+        test_results = []
         for test_id in latest_results[benchmark]:
             date = latest_results[benchmark][test_id]
             if date is None:
-                result_col += get_square(test_id) + ": No results available<br>"
+                # Add entries with no results available with score of -1 (to ensure they appear below entries with score 0)
+                test_results.append((test_id, None, get_square(test_id) + ": No results available<br>", -1))
                 continue
 
             scoring_file = os.path.join('..', 'results', date, test_id, 'scoring.json')
@@ -179,12 +182,30 @@ def create_index():
                 scoring_data = {'Total': 0}
 
             badges = []
+            score_value = 0
             for key, value in scoring_data.items():
                 badges.append(get_badge(key, value))
+                # Extract numeric value for sorting
+                try:
+                    if isinstance(value, (int, float)):
+                        score_value = float(value)
+                    else:
+                        score_value = float(value) if value.replace('.', '', 1).isdigit() else 0
+                except (ValueError, AttributeError):
+                    score_value = 0
 
-            result_col += get_square(test_id, href=f"archive/{date}/{test_id}") + f": {date} {" ".join(badges)}<br>"
+            result_html = get_square(test_id, href=f"archive/{date}/{test_id}") + f": {date} {" ".join(badges)}<br>"
+            test_results.append((test_id, date, result_html, score_value))
+
+        # Sort test results by score value (highest to lowest)
+        test_results.sort(key=lambda x: x[3], reverse=True)
+        
+        # Combine sorted results
+        result_col = ""
+        for _, _, result_html, _ in test_results:
+            result_col += result_html
+            
         row_data.append(result_col)
-
         table_data.append(row_data)
 
 
