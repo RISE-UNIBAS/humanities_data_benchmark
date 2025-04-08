@@ -321,6 +321,116 @@ This page provides an overview of all tests. Click on the test name to see the d
     <td>prompt.txt</td>
     <td>false</td>
 </tr>
+<tr>
+    <td><a href='tests/T26'><span class='test-square' style='background-color: #2ecc71;'>T26</span></a></td>
+    <td><a href="/benchmarks/bibliographic_data/">bibliographic_data</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff0066;'>openai</span></td>
+    <td><span class='test-rectangle' style='background-color: #9b59b6;'>gpt-4.5-preview</span></td>
+    <td>Document</td>
+    <td>0.0</td>
+    <td>You are a Historian</td>
+    <td></td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='tests/T27'><span class='test-square' style='background-color: #ff33cc;'>T27</span></a></td>
+    <td><a href="/benchmarks/bibliographic_data/">bibliographic_data</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff0066;'>openai</span></td>
+    <td><span class='test-rectangle' style='background-color: #34495e;'>gpt-4o-mini</span></td>
+    <td>Document</td>
+    <td>0.0</td>
+    <td>You are a Historian</td>
+    <td></td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='tests/T28'><span class='test-square' style='background-color: #cc33ff;'>T28</span></a></td>
+    <td><a href="/benchmarks/bibliographic_data/">bibliographic_data</a></td>
+    <td><span class='test-rectangle' style='background-color: #ffcc33;'>genai</span></td>
+    <td><span class='test-rectangle' style='background-color: #9b59b6;'>gemini-exp-1206</span></td>
+    <td>Document</td>
+    <td>0.0</td>
+    <td>You are a Historian</td>
+    <td></td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='tests/T29'><span class='test-square' style='background-color: #f39c12;'>T29</span></a></td>
+    <td><a href="/benchmarks/bibliographic_data/">bibliographic_data</a></td>
+    <td><span class='test-rectangle' style='background-color: #ffcc33;'>genai</span></td>
+    <td><span class='test-rectangle' style='background-color: #2ecc71;'>gemini-1.5-flash</span></td>
+    <td>Document</td>
+    <td>0.0</td>
+    <td>You are a Historian</td>
+    <td></td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='tests/T30'><span class='test-square' style='background-color: #1abc9c;'>T30</span></a></td>
+    <td><a href="/benchmarks/bibliographic_data/">bibliographic_data</a></td>
+    <td><span class='test-rectangle' style='background-color: #ffcc33;'>genai</span></td>
+    <td><span class='test-rectangle' style='background-color: #3399ff;'>gemini-1.5-pro</span></td>
+    <td>Document</td>
+    <td>0.0</td>
+    <td>You are a Historian</td>
+    <td></td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='tests/T31'><span class='test-square' style='background-color: #9966ff;'>T31</span></a></td>
+    <td><a href="/benchmarks/bibliographic_data/">bibliographic_data</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff5050;'>anthropic</span></td>
+    <td><span class='test-rectangle' style='background-color: #f1c40f;'>claude-3-7-sonnet-20250219</span></td>
+    <td>Document</td>
+    <td>0.0</td>
+    <td>You are a Historian</td>
+    <td></td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='tests/T32'><span class='test-square' style='background-color: #1abc9c;'>T32</span></a></td>
+    <td><a href="/benchmarks/bibliographic_data/">bibliographic_data</a></td>
+    <td><span class='test-rectangle' style='background-color: #ffcc33;'>genai</span></td>
+    <td><span class='test-rectangle' style='background-color: #e74c3c;'>gemini-2.5-pro-exp-03-25</span></td>
+    <td>Document</td>
+    <td>0.0</td>
+    <td>You are a Historian</td>
+    <td></td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='tests/T33'><span class='test-square' style='background-color: #9b59b6;'>T33</span></a></td>
+    <td><a href="/benchmarks/bibliographic_data/">bibliographic_data</a></td>
+    <td><span class='test-rectangle' style='background-color: #ffcc33;'>genai</span></td>
+    <td><span class='test-rectangle' style='background-color: #ff0033;'>gemini-2.0-flash-lite</span></td>
+    <td>Document</td>
+    <td>0.0</td>
+    <td>You are a Historian</td>
+    <td></td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='tests/T34'><span class='test-square' style='background-color: #33ffcc;'>T34</span></a></td>
+    <td><a href="/benchmarks/bibliographic_data/">bibliographic_data</a></td>
+    <td><span class='test-rectangle' style='background-color: #ffcc33;'>genai</span></td>
+    <td><span class='test-rectangle' style='background-color: #7f8c8d;'>gemini-2.0-pro-exp-02-05</span></td>
+    <td>Document</td>
+    <td>0.0</td>
+    <td>You are a Historian</td>
+    <td></td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='tests/T35'><span class='test-square' style='background-color: #2c3e50;'>T35</span></a></td>
+    <td><a href="/benchmarks/bibliographic_data/">bibliographic_data</a></td>
+    <td><span class='test-rectangle' style='background-color: #f1c40f;'>mistral</span></td>
+    <td><span class='test-rectangle' style='background-color: #34495e;'>pixtral-large-latest</span></td>
+    <td>Document</td>
+    <td>0.0</td>
+    <td>You are a Historian</td>
+    <td></td>
+    <td>false</td>
+</tr>
 
   </tbody>
 </table>
