@@ -6,7 +6,7 @@ assessing the performance of large language models (LLMs) on humanities-related 
 designed as a resource for researchers and practitioners interested in systematically evaluating
 how well various LLMs perform on digital humanities (DH) tasks involving visual materials.
 
-> **ℹ Looking for benchmark results?**
+> **ℹ Looking for benchmark results?**     
 > This README provides an overview of the benchmark suite and explains how to use it.  
 > For detailed test results and model comparisons, visit our [results dashboard](https://rise-unibas.github.io/humanities_data_benchmark/).
 
