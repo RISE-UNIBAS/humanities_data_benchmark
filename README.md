@@ -6,6 +6,10 @@ assessing the performance of large language models (LLMs) on humanities-related 
 designed as a resource for researchers and practitioners interested in systematically evaluating
 how well various LLMs perform on digital humanities (DH) tasks involving visual materials.
 
+> **ℹ Looking for benchmark results?**
+> This README provides an overview of the benchmark suite and explains how to use it.  
+> For detailed test results and model comparisons, visit our [results dashboard](https://rise-unibas.github.io/humanities_data_benchmark/).
+
 ## What is Benchmarking and Why Should You Care?
 
 Benchmarking is the process of systematically evaluating and ranking various models for specific tasks using well-defined ground truths and metrics. For humanities research, benchmarking provides:
@@ -16,9 +20,9 @@ Benchmarking is the process of systematically evaluating and ranking various mod
 
 This benchmark suite focuses on tasks essential to digital humanities work with visual materials, helping researchers make informed choices about which AI systems best suit their specific research needs.
 
-> **ℹ Looking for benchmark results?**  
-> This README provides an overview of the benchmark suite and explains how to use it.  
-> For detailed test results and model comparisons, visit our [results dashboard](https://rise-unibas.github.io/humanities_data_benchmark/).
+> **ℹ Looking for more background?**  
+> For a deeper introduction to AI benchmarking in humanities contexts, see:  
+> Hindermann, M., & Marti, S. (2025, March 19). *RISE Crash Course: "AI Benchmarking"*. Zenodo. https://doi.org/10.5281/zenodo.15062831
 
 ## Table of Contents
 - [What is Benchmarking and Why Should You Care?](#what-is-benchmarking-and-why-should-you-care)
@@ -326,9 +330,6 @@ Several important models are not yet included:
 ## Practical Considerations
 
 When using this benchmark suite for your own research, consider the following:
-
-> **Note**: For a more detailed introduction to AI benchmarking in humanities contexts, see:  
-> Hindermann, M., & Marti, S. (2025, March 19). RISE Crash Course: "AI Benchmarking". Zenodo. https://doi.org/10.5281/zenodo.15062831
 
 ### Resource Requirements
 - **Skills**: Operationalizing tasks requires both domain knowledge and technical expertise
