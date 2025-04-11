@@ -176,7 +176,7 @@ class Benchmark(ABC):
             response_text = answer["response_text"]
             json_text = None
             if self.convert_result_to_json and "```json" in response_text:
-                json_match = re.search(r'```json\s*([\[{].*?[\]}])\s*```', response_text, re.DOTALL)
+                json_match = re.search(r'```json\s*([\[{].*?[]}])\s*```', response_text, re.DOTALL)
                 if json_match:
                     json_text = json_match.group(1)
 

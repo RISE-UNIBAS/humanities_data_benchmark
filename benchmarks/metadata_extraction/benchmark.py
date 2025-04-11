@@ -38,7 +38,7 @@ class MetadataExtraction(Benchmark):
                 receiver_persons.tp += score["receiver_persons_tp"]
                 receiver_persons.fp += score["receiver_persons_fp"]
                 receiver_persons.fn += score["receiver_persons_fn"]
-            except KeyError:
+            except (KeyError, TypeError):
                 continue
 
         categories = [send_date, sender_persons, receiver_persons]
@@ -69,6 +69,8 @@ class MetadataExtraction(Benchmark):
             response_letter = self._initialize_letter(raw_letter=data["metadata"],
                                                       image_name=image_name)
         except KeyError:
+            if "error" in data:
+                return None
             response_letter = self._initialize_letter(raw_letter=data,
                                                       image_name=image_name)
         ground_truth_letter = self._initialize_letter(raw_letter=ground_truth,
@@ -147,6 +149,13 @@ class MetadataExtraction(Benchmark):
         except FileNotFoundError:
             logging.error("Persons ground truth not found.")
 
+        if "error" in data:
+            render = (
+                f"### Result for {ground_truth_letter.document_number}\n"
+                f"Model did not produce a valid response!\n"
+            )
+            return render
+
         scoring_table = "| Category          | Ground Truth | Prediction | TP | FP | FN |\n"
         scoring_table += "|------------------|--------------|------------|----|----|----|\n"
         scoring_table += f"| `send_date`        | {ground_truth_letter.send_date} | {response_letter.send_date} | {score['send_date_tp']} | {score['send_date_fp']} | {score['send_date_fn']} |\n"
@@ -163,7 +172,6 @@ class MetadataExtraction(Benchmark):
             except (TypeError, AttributeError):
                 alt_names = "None"
             persons_table += f"| {person.name} | {alt_names} |\n"
-
 
         render = (
             f"### Result for {response_letter.document_number}\n"
