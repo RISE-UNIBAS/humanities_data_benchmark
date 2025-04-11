@@ -469,7 +469,7 @@ This page provides an overview of all tests. Click on the test name to see the d
     <td>0.0</td>
     <td>You are a historian with keyword knowledge and an expert in the field of 20th century Swiss history</td>
     <td>prompt.txt</td>
-    <td>false</td>
+    <td>true</td>
 </tr>
 <tr>
     <td><a href='tests/T38'><span class='test-square' style='background-color: #8e44ad;'>T38</span></a></td>
@@ -766,7 +766,7 @@ This page provides an overview of all tests. Click on the test name to see the d
     <td>0.0</td>
     <td>You are a historian with keyword knowledge and an expert in the field of 20th century Swiss history</td>
     <td>prompt.txt</td>
-    <td>false</td>
+    <td>true</td>
 </tr>
 <tr>
     <td><a href='tests/T65'><span class='test-square' style='background-color: #9b59b6;'>T65</span></a></td>
@@ -777,7 +777,7 @@ This page provides an overview of all tests. Click on the test name to see the d
     <td>0.0</td>
     <td>You are a historian with keyword knowledge and an expert in the field of 20th century Swiss history</td>
     <td>prompt.txt</td>
-    <td>false</td>
+    <td>true</td>
 </tr>
 
   </tbody>
