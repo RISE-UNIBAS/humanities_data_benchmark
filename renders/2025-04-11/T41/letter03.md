@@ -2,7 +2,7 @@
 | Category          | Ground Truth | Prediction | TP | FP | FN |
 |------------------|--------------|------------|----|----|----|
 | `send_date`        | 1926-03-24 | 1926-03-24 | 1 | 0 | 0 |
-| `sender_persons`  | Ritter-Dreier, Fritz<br>Kachelhofer-Gerber, Frederick Charles |  | 0 | 1 | 2 |
+| `sender_persons`  | Ritter-Dreier, Fritz<br>Kachelhofer-Gerber, Frederick Charles |  | 0 | 0 | 2 |
 | `receiver_persons` | Christ-Wackernagel, Paul | Herrn P. Christ-Wackernagel | 1 | 0 | 0 |
 
 | Name | Alternate Names |

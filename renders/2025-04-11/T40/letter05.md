@@ -2,7 +2,7 @@
 | Category          | Ground Truth | Prediction | TP | FP | FN |
 |------------------|--------------|------------|----|----|----|
 | `send_date`        | 1926-03-29 | 1926-03-29 | 1 | 0 | 0 |
-| `sender_persons`  | None |  | 0 | 1 | 0 |
+| `sender_persons`  | None |  | 0 | 0 | 0 |
 | `receiver_persons` | Krasting, Wilhelm | Dr. W. Krasting | 1 | 0 | 0 |
 
 | Name | Alternate Names |

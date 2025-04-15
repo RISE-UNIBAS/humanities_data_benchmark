@@ -191,7 +191,7 @@ class MetadataExtraction(Benchmark):
         return render
 
     def skip_image(self,
-                   image_name: str) -> bool:
+                   image_name: str) -> bool | None:
         """ Skip the image if the rules say so."""
 
         try:
@@ -240,7 +240,7 @@ class MetadataExtraction(Benchmark):
         :param categories: a list of categories
         """
 
-        return sum([category.get_f1() for category in categories]) / len(categories)
+        return round(sum([category.get_f1() for category in categories]) / len(categories), 2)
 
     @staticmethod
     def _get_f1_micro(categories: list[Category]) -> float:
@@ -256,13 +256,13 @@ class MetadataExtraction(Benchmark):
         try:
             micro_precision = sum_tp / (sum_tp + sum_fp)
             micro_recall = sum_tp / (sum_tp + sum_fn)
-            return 2 * (micro_precision * micro_recall) / (micro_precision + micro_recall)
+            return round(2 * (micro_precision * micro_recall) / (micro_precision + micro_recall), 2)
         except ZeroDivisionError:
             return float(0)
 
     @staticmethod
     def _initialize_letter(raw_letter: dict,
-                           image_name: str) -> Letter:
+                           image_name: str) -> Letter | None:
         """ Initialize a Letter object from a dictionary.
 
         :param raw_letter: the raw letter data
@@ -391,14 +391,16 @@ class MetadataExtraction(Benchmark):
         ground_truth_persons = set([person.name for person in ground_truth_persons if person.name != "None"])
         predicted_persons = set()
         for predicted_person in matched_predicted_persons:
-            if predicted_person == "null":
+            if predicted_person == "null" or predicted_person == "None":
                 continue
             elif predicted_person is None:
+                continue
+            elif predicted_person == "":
                 continue
             else:
                 predicted_persons.add(predicted_person)
 
-        return {f"{sender_or_receiver}_persons_tp": len(ground_truth_persons & predicted_persons),
+        return {f"{sender_or_receiver}_persons_tp": len(ground_truth_persons & predicted_persons),  # intersection
                 f"{sender_or_receiver}_persons_fp": len(predicted_persons - ground_truth_persons),
                 f"{sender_or_receiver}_persons_fn": len(ground_truth_persons - predicted_persons)}
 
