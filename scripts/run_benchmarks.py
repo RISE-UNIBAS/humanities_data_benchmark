@@ -36,7 +36,7 @@ def get_api_key(provider):
     return api_key
 
 
-def load_benchmark(test_config):
+def load_benchmark(test_config, date=None):
     """Load the benchmark class from the benchmark folder."""
     benchmark_name = test_config['name']
     api_key = get_api_key(test_config['provider'])
@@ -51,10 +51,10 @@ def load_benchmark(test_config):
         class_name = ''.join(part.capitalize() for part in benchmark_name.split('_'))
         benchmark_class = getattr(benchmark_module, class_name)
         logging.info(f"Loaded {benchmark_name} from {benchmark_file}")
-        return benchmark_class(test_config, api_key, benchmark_path)
+        return benchmark_class(test_config, api_key, benchmark_path, date)
     else:
         logging.info(f"Loaded {benchmark_name} from Benchmark class")
-        return DefaultBenchmark(test_config, api_key, benchmark_path)
+        return DefaultBenchmark(test_config, api_key, benchmark_path, date)
 
 
 def create_result_table(results):
@@ -85,13 +85,14 @@ def create_result_table(results):
         f.write(md_table)
 
 
-def main(limit_to: list[str] = None):
+def main(limit_to: list[str] = None, dates: list[str] = None):
     """ Main function to run benchmarks.
 
     This function reads the configuration file, loads the benchmarks,
     and runs each benchmark based on the configuration.
 
     :param limit_to: Optional list of benchmark ids (such as T01, T99) to limit the execution to, defaults to None
+    :param dates: Optional list of dates (YYYY-MM-DD format) to limit the execution to, defaults to None
     """
 
     with open(CONFIG_FILE, newline='', encoding='utf-8') as csvfile:
@@ -100,14 +101,22 @@ def main(limit_to: list[str] = None):
             if limit_to and test_config['id'] not in limit_to:
                 continue
             if test_config.get('legacy_test', 'false').lower() == 'false':
-                benchmark = load_benchmark(test_config)
-                if benchmark.is_runnable():
-                    logging.info(f"Running {benchmark.get_title()}...")
-                    benchmark.run(regenerate_existing_results=REGENERATE_RESULTS)
+                if dates:
+                    for date in dates:
+                        benchmark = load_benchmark(test_config, date)
+                        if benchmark.is_runnable():
+                            logging.info(f"Running {benchmark.get_title()} for date {date}...")
+                            benchmark.run(regenerate_existing_results=REGENERATE_RESULTS)
+                        else:
+                            logging.error(f"Skipping {benchmark.get_title()} for date {date} (not runnable).")
                 else:
-                    logging.error(f"Skipping {benchmark.get_title()} (not runnable).")
+                    benchmark = load_benchmark(test_config)
+                    if benchmark.is_runnable():
+                        logging.info(f"Running {benchmark.get_title()}...")
+                        benchmark.run(regenerate_existing_results=REGENERATE_RESULTS)
+                    else:
+                        logging.error(f"Skipping {benchmark.get_title()} (not runnable).")
 
 
 if __name__ == "__main__":
-    main(limit_to=["T10", "T11", "T12", "T13", "T14", "T15", "T17", "T18", "T20", "T23", "T24", "T25", "T36", "T37", "T38", "T39", "T40", "T41", "T42", "T43", "T44", "T45",
-  "T48", "T49", "T52", "T53", "T56", "T57", "T60", "T61", "T62", "T63", "T64", "T65"]) #"T46", "T47"
+    main()

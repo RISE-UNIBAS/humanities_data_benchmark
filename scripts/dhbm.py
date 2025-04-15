@@ -27,11 +27,11 @@ def get_api_key(provider, cli_api_key=None):
     return api_key
 
 
-def run_test(test_config, api_key):
+def run_test(test_config, api_key, date=None):
     """Execute a single test and return the response JSON."""
     benchmark_directory = os.path.join(os.getcwd(), "benchmarks", test_config["name"])
 
-    benchmark = Benchmark(test_config, api_key, benchmark_directory)
+    benchmark = Benchmark(test_config, api_key, benchmark_directory, date)
     response = benchmark.ask_llm([])  # No images assumed for simplicity
 
     print(json.dumps(response, indent=4))
@@ -48,6 +48,7 @@ def main():
     parser.add_argument("--role_description", type=str, help="Description of AI role.")
     parser.add_argument("--prompt_file", type=str, help="File name of the prompt.")
     parser.add_argument("--api_key", type=str, required=False, help="API key for the provider.")
+    parser.add_argument("--date", type=str, required=False, help="Date to use for results (YYYY-MM-DD format)")
 
     args = parser.parse_args()
 
@@ -67,7 +68,7 @@ def main():
 
     try:
         api_key = get_api_key(test_config["provider"], args.api_key)
-        response = run_test(test_config, api_key)
+        response = run_test(test_config, api_key, args.date)
     except Exception as e:
         logger.error(f"Error running test: {e}")
 

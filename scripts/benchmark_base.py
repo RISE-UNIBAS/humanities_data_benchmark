@@ -16,7 +16,7 @@ from simple_ai_clients import AiApiClient
 class Benchmark(ABC):
     """ Base class for all benchmark workflows. """
 
-    def __init__(self, config, api_key, benchmark_directory):
+    def __init__(self, config, api_key, benchmark_directory, date=None):
         """ Initialize the benchmark. """
 
         self.id = config.get('id')
@@ -27,6 +27,7 @@ class Benchmark(ABC):
         self.api_key = api_key
         self.role_description = config['role_description']
         self.prompt_file = config['prompt_file']
+        self.date = date or datetime.now().strftime('%Y-%m-%d')
         if self.prompt_file is None or self.prompt_file == "":
             self.prompt_file = "prompt.txt"
         self.prompt = self.load_prompt()
@@ -133,16 +134,14 @@ class Benchmark(ABC):
             return self.client.prompt(model=self.model, prompt=self.prompt)
 
     def get_request_answer_path(self):
-        date_str = datetime.now().strftime('%Y-%m-%d')
-        return str(os.path.join('..', 'results', date_str, self.id))
+        return str(os.path.join('..', 'results', self.date, self.id))
 
     def get_request_answer_file_name(self, image_name):
         """ Get the path to the answer file. """
         return os.path.join(self.get_request_answer_path(), self.get_request_name(image_name) + ".json")
 
     def get_request_render_path(self):
-        date_str = datetime.now().strftime('%Y-%m-%d')
-        return str(os.path.join('..', 'renders', date_str, self.id))
+        return str(os.path.join('..', 'renders', self.date, self.id))
 
     def get_request_render_file_name(self, image_name):
         """ Get the path to the render file. """
@@ -164,8 +163,7 @@ class Benchmark(ABC):
     def save_benchmark_score(self,
                              score: dict) -> None:
         """ Save the benchmark score to a file. """
-        date_str = datetime.now().strftime('%Y-%m-%d')
-        save_path = os.path.join('..', "results", date_str, self.id, "scoring.json")
+        save_path = os.path.join('..', "results", self.date, self.id, "scoring.json")
         os.makedirs(os.path.dirname(save_path), exist_ok=True)
         write_file(save_path, score)
 

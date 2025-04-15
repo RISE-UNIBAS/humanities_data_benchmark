@@ -159,6 +159,13 @@ python scripts/dhbm.py --name "folder_name" --provider "anthropic" --model "clau
 --role_description "A useful assistant." --prompt_file "prompt.txt" --api_key "your-api-key"
 ```
 
+To run a test with a specific date (for re-generating renders for that date):
+
+```bash
+python scripts/dhbm.py --name "folder_name" --provider "anthropic" --model "claude-3-7-sonnet-20250219" \
+--role_description "A useful assistant." --prompt_file "prompt.txt" --date "2025-03-01"
+```
+
 Alternatively, you can provide the configuration as a json file:
 
 ```bash
@@ -172,6 +179,7 @@ To run a specific test ID from the benchmarks_tests.csv file:
 # In scripts/run_benchmarks.py
 from scripts.run_benchmarks import main
 main(limit_to=["T17"])  # Run only the T17 test
+main(limit_to=["T10", "T11"], dates=["2025-03-01", "2025-04-01"])  # Run T10 and T11 for specific dates
 ```
 
 ### Add Configuration to the Suite
