@@ -8,6 +8,8 @@
 | Name | Alternate Names |
 | --- | --- |
 
+#### Rules
 `inferred_from_function`: False
 
 `inferred_from_correspondence`: False
+

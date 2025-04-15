@@ -7,8 +7,10 @@
 
 | Name | Alternate Names |
 | --- | --- |
-| Leupold, Rudolf | Dr. RUDOLF LEUPOLD<br>Dr. Rudolf Leupold |
+| Leupold, Rudolf | Dr. RUDOLF LEUPOLD<br>Dr. Rudolf Leupold<br>Rudolf Leupold |
 
+#### Rules
 `inferred_from_function`: False
 
 `inferred_from_correspondence`: False
+

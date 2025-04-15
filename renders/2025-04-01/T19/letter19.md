@@ -10,6 +10,8 @@
 | Speich, Rudolf | Dr. R. Speich<br>Dr. RUD. SPEICH<br>Herr Dr. Speich<br>Herrn Dr. Speich<br>Herrn Dr.R. Speich<br>Herrn Dr.Speich<br>Rud. Speich<br>Rudolf Thomas Speich-Jenny |
 | Groschupf-Jaeger, Louis | Groschopf<br>Groschupf<br>Herr Groschupf<br>Herrn Groschupf |
 
+#### Rules
 `inferred_from_function`: False
 
 `inferred_from_correspondence`: False
+

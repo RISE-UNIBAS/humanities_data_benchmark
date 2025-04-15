@@ -9,6 +9,8 @@
 | --- | --- |
 | Oettinger-Meili, Artur | A. Oettinger<br>A.Oettinger<br>Arthur Oettinger-Meili<br>Herr Oettinger<br>Herrn A. Oettinger<br>Herrn Max Oettinger<br>Herrn Oettinger<br>Max Oettinger<br>Oettinger |
 
+#### Rules
 `inferred_from_function`: False
 
 `inferred_from_correspondence`: False
+

@@ -10,6 +10,8 @@
 | Ritter-Dreier, Fritz | Fritz Ritter<br>Herr Fritz Ritter<br>Herr Ritter<br>Herrn Fritz Ritter<br>J.A. Ritter<br>J.A.Ritter<br>Ritter |
 | Groschupf-Jaeger, Louis | Groschopf<br>Groschupf<br>Herr Groschupf<br>Herrn Groschupf |
 
+#### Rules
 `inferred_from_function`: False
 
 `inferred_from_correspondence`: False
+

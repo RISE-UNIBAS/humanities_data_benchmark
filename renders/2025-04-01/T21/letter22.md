@@ -10,6 +10,8 @@
 | Groschupf-Jaeger, Louis | Groschopf<br>Groschupf<br>Herr Groschupf<br>Herrn Groschupf |
 | Kachelhofer-Gerber, Frederick Charles | None |
 
+#### Rules
 `inferred_from_function`: False
 
 `inferred_from_correspondence`: False
+

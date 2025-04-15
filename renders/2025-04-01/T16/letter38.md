@@ -9,6 +9,8 @@
 | --- | --- |
 | Stauffacher, Werner | Direktor Werner Stauffacher<br>Herr Stauffacher<br>Herr Werner Stauffacher<br>Herren Stauffacher<br>Herrn Direktor Werner Stauffacher<br>Herrn W. Stauffacher<br>Stauffacher<br>W. Stauffacher<br>Werner Stauffacher |
 
+#### Rules
 `inferred_from_function`: False
 
 `inferred_from_correspondence`: False
+

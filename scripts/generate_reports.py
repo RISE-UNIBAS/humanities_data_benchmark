@@ -6,6 +6,7 @@ from data_loader import write_file, read_file
 from report_helper import get_square, create_html_table, get_rectangle, get_badge
 from run_benchmarks import BENCHMARKS_DIR, CONFIG_FILE, REPORTS_DIR
 
+
 def load_test_configuration(test_id):
     """Load the test configuration from the configuration file."""
     with open(CONFIG_FILE, newline='', encoding='utf-8') as csvfile:
@@ -400,7 +401,6 @@ markdown_extensions:
 
 if __name__ == "__main__":
     os.makedirs(REPORTS_DIR, exist_ok=True)
-
     test_dates = load_test_dates()
     benchmarks = load_all_benchmarks()
 
@@ -416,9 +416,7 @@ if __name__ == "__main__":
     create_tests_overview()
     create_test_runs_pages()
 
-
     generate_site_navigation()  # Generate mkdocs.yml
     create_index()
-
 
     print("Reports generated successfully!")

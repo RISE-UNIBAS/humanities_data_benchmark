@@ -9,6 +9,8 @@
 | --- | --- |
 | Krasting, Wilhelm | Dr. Krasting<br>Dr. W. Krasting<br>Herr Dr. Krasting<br>Herrn Dr. Krasting<br>Herrn Dr. W.Krasting |
 
+#### Rules
 `inferred_from_function`: False
 
 `inferred_from_correspondence`: False
+

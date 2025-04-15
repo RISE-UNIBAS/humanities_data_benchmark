@@ -11,6 +11,8 @@
 | Kachelhofer-Gerber, Frederick Charles | None |
 | Rupprecht, Karl | Herr Rupprecht<br>Herrn Rupprecht |
 
+#### Rules
 `inferred_from_function`: False
 
 `inferred_from_correspondence`: False
+
