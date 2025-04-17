@@ -779,6 +779,149 @@ This page provides an overview of all tests. Click on the test name to see the d
     <td>prompt.txt</td>
     <td>true</td>
 </tr>
+<tr>
+    <td><a href='tests/T66'><span class='test-square' style='background-color: #7f8c8d;'>T66</span></a></td>
+    <td><a href="/benchmarks/zettelkatalog/">zettelkatalog</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff0066;'>openai</span></td>
+    <td><span class='test-rectangle' style='background-color: #33ccff;'>gpt-4o</span></td>
+    <td>Document</td>
+    <td>0.0</td>
+    <td>You are a historian with keyword knowledge and an expert in the field of 20th century Swiss history</td>
+    <td>prompt.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='tests/T67'><span class='test-square' style='background-color: #c0392b;'>T67</span></a></td>
+    <td><a href="/benchmarks/metadata_extraction/">metadata_extraction</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff0066;'>openai</span></td>
+    <td><span class='test-rectangle' style='background-color: #2980b9;'>gpt-4.1</span></td>
+    <td>Document</td>
+    <td>0.0</td>
+    <td>You are a historian with keyword knowledge and an expert in the field of 20th century Swiss history</td>
+    <td>prompt.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='tests/T68'><span class='test-square' style='background-color: #f39c12;'>T68</span></a></td>
+    <td><a href="/benchmarks/metadata_extraction/">metadata_extraction</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff0066;'>openai</span></td>
+    <td><span class='test-rectangle' style='background-color: #2980b9;'>gpt-4.1</span></td>
+    <td>Document</td>
+    <td>0.0</td>
+    <td>You are a historian with keyword knowledge and an expert in the field of 20th century Swiss history</td>
+    <td>prompt.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='tests/T69'><span class='test-square' style='background-color: #00ccff;'>T69</span></a></td>
+    <td><a href="/benchmarks/metadata_extraction/">metadata_extraction</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff0066;'>openai</span></td>
+    <td><span class='test-rectangle' style='background-color: #2980b9;'>gpt-4.1</span></td>
+    <td>Document</td>
+    <td>0.0</td>
+    <td>You are a historian with keyword knowledge and an expert in the field of 20th century Swiss history</td>
+    <td>prompt.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='tests/T70'><span class='test-square' style='background-color: #27ae60;'>T70</span></a></td>
+    <td><a href="/benchmarks/metadata_extraction/">metadata_extraction</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff0066;'>openai</span></td>
+    <td><span class='test-rectangle' style='background-color: #9b59b6;'>gpt-4.1-mini</span></td>
+    <td>Document</td>
+    <td>0.0</td>
+    <td>You are a historian with keyword knowledge and an expert in the field of 20th century Swiss history</td>
+    <td>prompt.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='tests/T71'><span class='test-square' style='background-color: #ff6600;'>T71</span></a></td>
+    <td><a href="/benchmarks/metadata_extraction/">metadata_extraction</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff0066;'>openai</span></td>
+    <td><span class='test-rectangle' style='background-color: #9b59b6;'>gpt-4.1-mini</span></td>
+    <td>Document</td>
+    <td>0.0</td>
+    <td>You are a historian with keyword knowledge and an expert in the field of 20th century Swiss history</td>
+    <td>prompt.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='tests/T72'><span class='test-square' style='background-color: #3498db;'>T72</span></a></td>
+    <td><a href="/benchmarks/metadata_extraction/">metadata_extraction</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff0066;'>openai</span></td>
+    <td><span class='test-rectangle' style='background-color: #9b59b6;'>gpt-4.1-mini</span></td>
+    <td>Document</td>
+    <td>0.0</td>
+    <td>You are a historian with keyword knowledge and an expert in the field of 20th century Swiss history</td>
+    <td>prompt.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='tests/T73'><span class='test-square' style='background-color: #8e44ad;'>T73</span></a></td>
+    <td><a href="/benchmarks/metadata_extraction/">metadata_extraction</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff0066;'>openai</span></td>
+    <td><span class='test-rectangle' style='background-color: #ffcc33;'>gpt-4.1-nano</span></td>
+    <td>Document</td>
+    <td>0.0</td>
+    <td>You are a historian with keyword knowledge and an expert in the field of 20th century Swiss history</td>
+    <td>prompt.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='tests/T74'><span class='test-square' style='background-color: #00ff99;'>T74</span></a></td>
+    <td><a href="/benchmarks/metadata_extraction/">metadata_extraction</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff0066;'>openai</span></td>
+    <td><span class='test-rectangle' style='background-color: #ffcc33;'>gpt-4.1-nano</span></td>
+    <td>Document</td>
+    <td>0.0</td>
+    <td>You are a historian with keyword knowledge and an expert in the field of 20th century Swiss history</td>
+    <td>prompt.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='tests/T75'><span class='test-square' style='background-color: #34495e;'>T75</span></a></td>
+    <td><a href="/benchmarks/metadata_extraction/">metadata_extraction</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff0066;'>openai</span></td>
+    <td><span class='test-rectangle' style='background-color: #ffcc33;'>gpt-4.1-nano</span></td>
+    <td>Document</td>
+    <td>0.0</td>
+    <td>You are a historian with keyword knowledge and an expert in the field of 20th century Swiss history</td>
+    <td>prompt.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='tests/T76'><span class='test-square' style='background-color: #2ecc71;'>T76</span></a></td>
+    <td><a href="/benchmarks/metadata_extraction/">metadata_extraction</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff0066;'>openai</span></td>
+    <td><span class='test-rectangle' style='background-color: #34495e;'>gpt-4o-mini</span></td>
+    <td>Document</td>
+    <td>0.0</td>
+    <td>You are a historian with keyword knowledge and an expert in the field of 20th century Swiss history</td>
+    <td>prompt.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='tests/T77'><span class='test-square' style='background-color: #0099ff;'>T77</span></a></td>
+    <td><a href="/benchmarks/metadata_extraction/">metadata_extraction</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff0066;'>openai</span></td>
+    <td><span class='test-rectangle' style='background-color: #34495e;'>gpt-4o-mini</span></td>
+    <td>Document</td>
+    <td>0.0</td>
+    <td>You are a historian with keyword knowledge and an expert in the field of 20th century Swiss history</td>
+    <td>prompt.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='tests/T78'><span class='test-square' style='background-color: #0099ff;'>T78</span></a></td>
+    <td><a href="/benchmarks/metadata_extraction/">metadata_extraction</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff0066;'>openai</span></td>
+    <td><span class='test-rectangle' style='background-color: #34495e;'>gpt-4o-mini</span></td>
+    <td>Document</td>
+    <td>0.0</td>
+    <td>You are a historian with keyword knowledge and an expert in the field of 20th century Swiss history</td>
+    <td>prompt.txt</td>
+    <td>false</td>
+</tr>
 
   </tbody>
 </table>
