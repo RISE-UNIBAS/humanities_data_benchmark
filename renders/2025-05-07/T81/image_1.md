@@ -2,9 +2,13 @@
 
 **Average fuzzy score:** 0.020
 
+<style>
+.diff { text-decoration: underline; text-decoration-color: #ffcccc; text-decoration-style: wavy; }
+</style>
+
 | Section | Prediction | Ground Truth | Score |
 |---------|------------|--------------|-------|
-| Es werden zum Verkauff offerirt | 1. Ein Stücklein von circa 20. Saum extra schönen und guter Pragorser-Tüchern von Haaren. | 1. Ein Stücklein von in circa 20. Saum extra schön und guter rother Marggräffer-Wein von Anno 1728. in raisonnablem Preiß. | 0.730 |
+| Es werden zum Verkauff offerirt | 1. Ein Stücklein von circa 20. Saum extra schön<span class="diff">en</span> und guter <span class="diff">P</span>rag<span class="diff">o</span>r<span class="diff">s</span>er-<span class="diff">Tüch</span>e<span class="diff">r</span>n von <span class="diff">H</span>aare<span class="diff">n</span>. | 1. Ein Stücklein vo<span class="diff">n i</span>n circa 20. Saum extra schön und guter r<span class="diff">other M</span>a<span class="diff">r</span>g<span class="diff">g</span>r<span class="diff">äff</span>er-<span class="diff">W</span>e<span class="diff">i</span>n von <span class="diff">Anno 1728. in r</span>a<span class="diff">isonn</span>a<span class="diff">blem P</span>re<span class="diff">iß</span>. | 0.730 |
 | Es werden zum Verkauff offerirt | N/A | 2. Das Würthshauß zur Tannen allhier, sambt Bethwerck, allerhand Geschir: und Haußrath, auch all übriger Gerechtigkeit, in billichem Preiß, und finden die Herren Liebhabere in dem Adresse- Contor Bescheyd. | 0.000 |
 | Es werden zum Verkauff offerirt | N/A | 3. Ein Stock Heu von ohngefehr 2. Wägen, von letster Recolte, sehr gut und ohnberegnet, in raisonnablem Preiß. Ligt aber nicht hier. | 0.000 |
 | Es werden zum Verkauff offerirt | N/A | 4. Zwey Stücklein vom besten weissen Marggräffer-Wein de Anno 1718. und ein dito von gemeldtem Jahrgang, weisser Elsasser, sehr schön und vom besten Orth, in moderatem Preiß. | 0.000 |

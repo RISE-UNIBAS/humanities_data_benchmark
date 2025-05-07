@@ -2,6 +2,10 @@
 
 **Average fuzzy score:** 0.000
 
+<style>
+.diff { text-decoration: underline; text-decoration-color: #ffcccc; text-decoration-style: wavy; }
+</style>
+
 | Section | Prediction | Ground Truth | Score |
 |---------|------------|--------------|-------|
 | Personen so ihre Dienste offerieren | N/A | 1. Ein junger Mensch 20. Jahr alt von sehr honneten Elteren , wegen dessen Conduitte sich in Augspurg nach Belieben kan erkundiget werden, suchet Condition als Handels-Bedienter in einem guten Hauß (allwo in Scripturen recht viel zu thun ist) verspricht dem Heren Patronen in Teutsch und Italjänisch- auch wo es erfordert wird in Frantzösischer Correspondentz und andern Handels- Verrichtungen gute Dienste zu leisten, und alles Vergnügen zu geben, sintemalen er ehender keinen Heller Salarium begehret, biß er bey dem Hrn. Patronen, seiner Capacität halben, genugsame Proben abgelegt und gezeigt haben wird, offerirt auch auff die Prob zu kommen und die Reiß-Spesen zu bestreiten, auch, wo er nicht beliebt werden solte, einen Ruckweg auff namliche Condition zu nemen. | 0.000 |
