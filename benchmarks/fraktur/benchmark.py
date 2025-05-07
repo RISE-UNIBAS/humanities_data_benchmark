@@ -72,7 +72,10 @@ class Fraktur(Benchmark):
         ground_truth_flat = [entry for ads in ground_truth.values() for entry in ads]
 
         # Group response and ground_truth data
-        response_grouped = self.group_by_section_and_number(response["advertisements"])
+        try:
+            response_grouped = self.group_by_section_and_number(response["advertisements"])
+        except KeyError:
+            response_grouped = {}
         ground_truth_grouped = self.group_by_section_and_number(ground_truth_flat)
 
         # Compare ads per section
@@ -125,6 +128,6 @@ class Fraktur(Benchmark):
             prediction = prediction.replace("\n", "<br>")
             ground_truth = ground_truth.replace("\n", "<br>")
             
-            render += f"| {section} {item['number']} | {prediction} | {ground_truth} | {similarity} |\n"
+            render += f"| {section} | {prediction} | {ground_truth} | {similarity} |\n"
         
         return render

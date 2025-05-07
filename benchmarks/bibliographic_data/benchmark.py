@@ -10,7 +10,6 @@ class BibliographicData(Benchmark):
             print(">>>>", score['fuzzy'])
             total_score += score['fuzzy']
 
-        #return {"fuzzy": total_score / len(all_scores)}
         return {"fuzzy": total_score / len(all_scores)}
 
     def score_request_answer(self, image_name, response, ground_truth):
