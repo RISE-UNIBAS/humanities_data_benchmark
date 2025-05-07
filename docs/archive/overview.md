@@ -63,6 +63,15 @@ This page provides an overview of all benchmark tests.Click on the test name to 
   </tr></thead>
   <tbody>
 <tr>
+    <td>2025-05-07</td>
+    <td></td>
+    <td><a href='/archive/2025-05-07/T80'><span class='test-square' style='background-color: #ff0066;'>T80</span></a>&nbsp;</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+</tr>
+<tr>
     <td>2025-04-17</td>
     <td></td>
     <td></td>
@@ -70,15 +79,6 @@ This page provides an overview of all benchmark tests.Click on the test name to 
     <td></td>
     <td></td>
     <td></td>
-</tr>
-<tr>
-    <td>2025-04-15</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td><a href='/archive/2025-04-15/T66'><span class='test-square' style='background-color: #7f8c8d;'>T66</span></a>&nbsp;</td>
 </tr>
 <tr>
     <td>2025-04-11</td>

@@ -419,4 +419,4 @@ if __name__ == "__main__":
     generate_site_navigation()  # Generate mkdocs.yml
     create_index()
 
-    print("Reports generated successfully!")
+    print("Reports response successfully!")

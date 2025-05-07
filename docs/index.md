@@ -66,7 +66,7 @@ results, and comparisons.
 </tr>
 <tr>
     <td><a href="benchmarks/fraktur/">fraktur</a></td>
-    <td><table class="inner-table" style="width:100%; border-collapse: collapse;"><tr><th>ID</th><th>Model</th><th>Date</th><th>Results</th></tr><tr><td><a href='archive/2025-04-02/T22'><span class='test-square' style='background-color: #2980b9;'>T22</span></a></td><td><span class='test-rectangle' style='background-color: #e74c3c;'>gemini-2.5-pro-exp-03-25</span></td><td>2025-04-02</td><td><img src="https://img.shields.io/badge/score-niy-brightgreen" alt="score"></td></tr></table></td>
+    <td><table class="inner-table" style="width:100%; border-collapse: collapse;"><tr><th>ID</th><th>Model</th><th>Date</th><th>Results</th></tr><tr><td><a href='archive/2025-05-07/T80'><span class='test-square' style='background-color: #ff0066;'>T80</span></a></td><td><span class='test-rectangle' style='background-color: #e74c3c;'>gemini-2.5-pro-exp-03-25</span></td><td>2025-05-07</td><td><img src="https://img.shields.io/badge/fuzzy-0.3585806451612903-brightgreen" alt="fuzzy"></td></tr><tr><td><a href='archive/2025-04-02/T22'><span class='test-square' style='background-color: #2980b9;'>T22</span></a></td><td><span class='test-rectangle' style='background-color: #e74c3c;'>gemini-2.5-pro-exp-03-25</span></td><td>2025-04-02</td><td><img src="https://img.shields.io/badge/score-niy-brightgreen" alt="score"></td></tr></table></td>
 </tr>
 <tr>
     <td><a href="benchmarks/metadata_extraction/">metadata_extraction</a></td>
@@ -79,10 +79,6 @@ results, and comparisons.
 <tr>
     <td><a href="benchmarks/test_benchmark2/">test_benchmark2</a></td>
     <td><table class="inner-table" style="width:100%; border-collapse: collapse;"><tr><th>ID</th><th>Model</th><th>Date</th><th>Results</th></tr><tr><td><a href='archive/2025-04-01/T04'><span class='test-square' style='background-color: #ff3300;'>T04</span></a></td><td><span class='test-rectangle' style='background-color: #33ccff;'>gpt-4o</span></td><td>2025-04-01</td><td><img src="https://img.shields.io/badge/score-niy-brightgreen" alt="score"></td></tr><tr><td><a href='archive/2025-04-01/T05'><span class='test-square' style='background-color: #2c3e50;'>T05</span></a></td><td><span class='test-rectangle' style='background-color: #f39c12;'>gemini-2.0-flash</span></td><td>2025-04-01</td><td><img src="https://img.shields.io/badge/score-niy-brightgreen" alt="score"></td></tr><tr><td><a href='archive/2025-04-01/T06'><span class='test-square' style='background-color: #33ccff;'>T06</span></a></td><td><span class='test-rectangle' style='background-color: #cc6699;'>claude-3-5-sonnet-20241022</span></td><td>2025-04-01</td><td><img src="https://img.shields.io/badge/score-niy-brightgreen" alt="score"></td></tr></table></td>
-</tr>
-<tr>
-    <td><a href="benchmarks/zettelkatalog/">zettelkatalog</a></td>
-    <td><table class="inner-table" style="width:100%; border-collapse: collapse;"><tr><th>ID</th><th>Model</th><th>Date</th><th>Results</th></tr><tr><td><a href='archive/2025-04-15/T66'><span class='test-square' style='background-color: #7f8c8d;'>T66</span></a></td><td><span class='test-rectangle' style='background-color: #33ccff;'>gpt-4o</span></td><td>2025-04-15</td><td><img src="https://img.shields.io/badge/keine-antwort-brightgreen" alt="keine"></td></tr></table></td>
 </tr>
 
   </tbody>
