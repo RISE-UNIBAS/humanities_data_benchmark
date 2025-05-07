@@ -204,6 +204,31 @@ def create_index():
             test_results.append((test_id, date, model_info, badge_html, score_value))
 
         # Sort test results by score value (highest to lowest)
+        # For Fraktur benchmark, sort specifically by fuzzy score
+        if benchmark == "fraktur":
+            # Extract fuzzy score from scoring data for sorting
+            fraktur_test_results = []
+            for test_id, date, model_info, badge_html, _ in test_results:
+                if date is None:
+                    fraktur_test_results.append((test_id, date, model_info, badge_html, -1))
+                    continue
+                
+                scoring_file = os.path.join('..', 'results', date, test_id, 'scoring.json')
+                scoring_data = read_file(scoring_file)
+                try:
+                    scoring_data = json.loads(scoring_data)
+                    # Use fuzzy score for sorting if available
+                    fuzzy_score = scoring_data.get('fuzzy', 0)
+                    if isinstance(fuzzy_score, str):
+                        fuzzy_score = float(fuzzy_score) if fuzzy_score.replace('.', '', 1).isdigit() else 0
+                    fraktur_test_results.append((test_id, date, model_info, badge_html, fuzzy_score))
+                except (json.decoder.JSONDecodeError, ValueError):
+                    fraktur_test_results.append((test_id, date, model_info, badge_html, 0))
+            
+            # Replace the original test_results with the fuzzy score sorted version
+            test_results = fraktur_test_results
+            
+        # Sort by the score value (highest to lowest)
         test_results.sort(key=lambda x: x[4], reverse=True)
         
         # Skip benchmarks where all tests have no results (date is None for all)

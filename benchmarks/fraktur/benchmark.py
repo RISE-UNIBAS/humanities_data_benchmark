@@ -2,29 +2,79 @@ from scripts.benchmark_base import Benchmark
 from scripts.scoring_helper import calculate_fuzzy_score
 import re
 from collections import defaultdict
+import Levenshtein
 
 
 class Fraktur(Benchmark):
 
-    def score_benchmark(self, all_scores: list) -> dict:
+    def calculate_cer(self, reference_text: str, hypothesis_text: str) -> float:
         """
-        Calculate the overall benchmark score by averaging the fuzzy scores of all evaluated documents.
+        Calculate Character Error Rate (CER) between a reference text and a hypothesis text.
         
-        This method computes an average fuzzy matching score across all processed images,
-        providing a single metric that represents the benchmark's overall performance.
+        CER is calculated as the Levenshtein distance (edit distance) divided by the number
+        of characters in the reference text. Lower scores indicate better performance.
         
         Args:
-            all_scores (list): List of dictionaries containing individual fuzzy scores for each document.
+            reference_text (str): The ground truth text
+            hypothesis_text (str): The predicted text
             
         Returns:
-            dict: Dictionary with a single key 'fuzzy' containing the averaged fuzzy score.
+            float: Character Error Rate, a value between 0.0 (perfect match) and potentially >1.0
+                  (when hypothesis has more errors than reference characters)
+        """
+        if not reference_text:
+            return 1.0  # Maximum error if reference is empty
+            
+        if not hypothesis_text:
+            return 1.0  # Maximum error if hypothesis is empty
+        
+        # Normalize strings - lowercase and remove extra whitespace
+        ref_normalized = ' '.join(reference_text.lower().split())
+        hyp_normalized = ' '.join(hypothesis_text.lower().split())
+        
+        # If strings are identical after normalization
+        if ref_normalized == hyp_normalized:
+            return 0.0
+            
+        # Calculate Levenshtein distance (minimum number of single-character edits)
+        edit_distance = Levenshtein.distance(ref_normalized, hyp_normalized)
+        
+        # Divide by the length of the reference text
+        return min(1.0, edit_distance / max(1, len(ref_normalized)))
+
+    def score_benchmark(self, all_scores: list) -> dict:
+        """
+        Calculate the overall benchmark score by averaging the fuzzy scores and CER of all evaluated documents.
+        
+        This method computes average scores across all processed images,
+        providing metrics that represent the benchmark's overall performance.
+        
+        Args:
+            all_scores (list): List of dictionaries containing individual scores for each document.
+            
+        Returns:
+            dict: Dictionary with keys 'fuzzy' and 'cer' containing the averaged scores.
         """
 
-        total_score = 0
+        total_fuzzy = 0
+        total_cer = 0
+        
         for score in all_scores:
-            total_score += score['fuzzy']
+            total_fuzzy += score['fuzzy']
+            total_cer += score['cer']
 
-        return {"fuzzy": total_score / len(all_scores)}
+        # Ensure we don't divide by zero
+        if len(all_scores) > 0:
+            avg_fuzzy = total_fuzzy / len(all_scores)
+            avg_cer = total_cer / len(all_scores)
+        else:
+            avg_fuzzy = 0.0
+            avg_cer = 1.0
+
+        return {
+            "fuzzy": round(avg_fuzzy, 3),
+            "cer": round(avg_cer, 3)
+        }
 
     def score_request_answer(self,
                              image_name: str,
@@ -34,8 +84,9 @@ class Fraktur(Benchmark):
         Score an individual response by comparing extracted advertisements to ground truth.
         
         This method processes the model's response, compares the extracted advertisements 
-        with the ground truth data, and calculates a fuzzy similarity score for each advertisement.
-        The final score is an average of all individual advertisement similarity scores.
+        with the ground truth data, and calculates both fuzzy similarity scores and 
+        character error rates (CER) for each advertisement.
+        The final scores are averages of all individual scores.
         
         Args:
             image_name (str): Name of the image being processed.
@@ -43,17 +94,48 @@ class Fraktur(Benchmark):
             ground_truth (dict): The ground truth data for comparison, containing expected advertisements.
             
         Returns:
-            dict: Dictionary with a 'fuzzy' key containing the rounded average similarity score.
+            dict: Dictionary with 'fuzzy' and 'cer' keys containing the rounded average scores.
+                 Note that for CER, lower scores are better (0.0 is perfect).
         """
 
         data = self.prepare_scoring_data(response)
         results = self.compare_ads(response=data,
                                    ground_truth=ground_truth)
 
-        # avg fuzzy score over all ads on a page
-        avg_score = sum([result["similarity"] for result in results]) / len(results)
+        # Calculate scores
+        total_fuzzy = 0
+        total_cer = 0
+        
+        for result in results:
+            total_fuzzy += result["similarity"]
+            
+            # Calculate CER if we have both texts
+            if result["match_found"]:
+                # Use the text from the ground truth and the response for CER calculation
+                gt_text = result["ground_truth_text"]
+                resp_text = result["response_text"]
+                
+                # Calculate and store the CER
+                cer = self.calculate_cer(gt_text, resp_text)
+                result["cer"] = round(cer, 3)
+                total_cer += cer
+            else:
+                # Missing advertisement is maximum error
+                result["cer"] = 1.0
+                total_cer += 1.0
+        
+        # Ensure we don't divide by zero
+        if len(results) > 0:
+            avg_fuzzy = total_fuzzy / len(results)
+            avg_cer = total_cer / len(results)
+        else:
+            avg_fuzzy = 0.0
+            avg_cer = 1.0
 
-        return {"fuzzy": round(avg_score, 2)}
+        return {
+            "fuzzy": round(avg_fuzzy, 2),
+            "cer": round(avg_cer, 3)  # Use 3 decimal places for CER for more precision
+        }
 
     def extract_number_prefix(self,
                               text: str) -> int | None:
@@ -188,8 +270,9 @@ class Fraktur(Benchmark):
         Create a markdown render of the request results for visualization.
         
         This method generates a detailed markdown report comparing the model's extracted
-        advertisements with the ground truth, including similarity scores for each item.
-        The differences between prediction and ground truth are highlighted with light red underlines.
+        advertisements with the ground truth, including similarity scores and character
+        error rates (CER) for each item. The differences between prediction and ground truth
+        are highlighted with light red underlines.
         
         Args:
             image_name (str): Name of the image being processed.
@@ -203,24 +286,36 @@ class Fraktur(Benchmark):
         data = self.prepare_scoring_data(result)
         results = self.compare_ads(response=data, ground_truth=truth)
         
-        # Add result header and overall score at the top
+        # Ensure CER scores are calculated for all results
+        for item in results:
+            if "cer" not in item and item["match_found"]:
+                # Use normalized text for consistency with score_request_answer
+                gt_text = item["ground_truth_text"]
+                resp_text = item["response_text"]
+                item["cer"] = round(self.calculate_cer(gt_text, resp_text), 3)
+            elif "cer" not in item:
+                item["cer"] = 1.0
+        
+        # Add result header and overall scores at the top
         render = f"**Result for image: {image_name}**\n\n"
-        render += f"**Average fuzzy score:** {score['fuzzy']:.3f}\n\n"
+        render += f"**Average fuzzy score:** {score['fuzzy']:.3f} (higher is better)\n"
+        render += f"**Average character error rate (CER):** {score['cer']:.3f} (lower is better)\n\n"
         
         # Add CSS style for highlighting differences
         render += "<style>\n"
         render += ".diff { text-decoration: underline; text-decoration-color: #ffcccc; text-decoration-style: wavy; }\n"
         render += "</style>\n\n"
         
-        # Create markdown table with 4 columns
-        render += "| Section | Prediction | Ground Truth | Score |\n"
-        render += "|---------|------------|--------------|-------|\n"
+        # Create markdown table with 5 columns
+        render += "| Section | Prediction | Ground Truth | Fuzzy Score | CER |\n"
+        render += "|---------|------------|--------------|-------------|-----|\n"
         
         for item in results:
             section = item["section"]
             prediction_text = item["response_text"]
             ground_truth_text = item["ground_truth_text"]
             similarity = f"{item['similarity']:.3f}"
+            cer = f"{item['cer']:.3f}"
             
             # Handle case where prediction is missing
             if prediction_text is None:
@@ -230,7 +325,7 @@ class Fraktur(Benchmark):
                 # Highlight differences between prediction and ground truth
                 prediction, ground_truth = self._highlight_differences(prediction_text, ground_truth_text)
             
-            render += f"| {section} | {prediction} | {ground_truth} | {similarity} |\n"
+            render += f"| {section} | {prediction} | {ground_truth} | {similarity} | {cer} |\n"
         
         return render
         
