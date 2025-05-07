@@ -189,6 +189,7 @@ class Fraktur(Benchmark):
         
         This method generates a detailed markdown report comparing the model's extracted
         advertisements with the ground truth, including similarity scores for each item.
+        The differences between prediction and ground truth are highlighted with light red underlines.
         
         Args:
             image_name (str): Name of the image being processed.
@@ -197,7 +198,7 @@ class Fraktur(Benchmark):
             truth (dict): The ground truth data for comparison.
             
         Returns:
-            str: Markdown-formatted string containing the comparison report.
+            str: Markdown-formatted string containing the comparison report with highlighted differences.
         """
         data = self.prepare_scoring_data(result)
         results = self.compare_ads(response=data, ground_truth=truth)
@@ -206,20 +207,80 @@ class Fraktur(Benchmark):
         render = f"**Result for image: {image_name}**\n\n"
         render += f"**Average fuzzy score:** {score['fuzzy']:.3f}\n\n"
         
+        # Add CSS style for highlighting differences
+        render += "<style>\n"
+        render += ".diff { text-decoration: underline; text-decoration-color: #ffcccc; text-decoration-style: wavy; }\n"
+        render += "</style>\n\n"
+        
         # Create markdown table with 4 columns
         render += "| Section | Prediction | Ground Truth | Score |\n"
         render += "|---------|------------|--------------|-------|\n"
         
         for item in results:
             section = item["section"]
-            prediction = item["response_text"] or "N/A"
-            ground_truth = item["ground_truth_text"]
+            prediction_text = item["response_text"]
+            ground_truth_text = item["ground_truth_text"]
             similarity = f"{item['similarity']:.3f}"
             
-            # Format multi-line text for markdown table
-            prediction = prediction.replace("\n", "<br>")
-            ground_truth = ground_truth.replace("\n", "<br>")
+            # Handle case where prediction is missing
+            if prediction_text is None:
+                prediction = "N/A"
+                ground_truth = ground_truth_text.replace("\n", "<br>")
+            else:
+                # Highlight differences between prediction and ground truth
+                prediction, ground_truth = self._highlight_differences(prediction_text, ground_truth_text)
             
             render += f"| {section} | {prediction} | {ground_truth} | {similarity} |\n"
         
         return render
+        
+    def _highlight_differences(self, prediction_text: str, ground_truth_text: str) -> tuple:
+        """
+        Highlight differences between prediction and ground truth texts.
+        
+        This method compares the two texts character by character and wraps
+        differing segments in HTML spans with a light red underline style.
+        
+        Args:
+            prediction_text (str): The text predicted by the model
+            ground_truth_text (str): The ground truth text
+            
+        Returns:
+            tuple: (formatted_prediction, formatted_ground_truth) with differences highlighted
+        """
+        from difflib import SequenceMatcher
+        
+        # Compare sequences
+        matcher = SequenceMatcher(None, prediction_text, ground_truth_text)
+        
+        # Build formatted strings with highlighted differences
+        pred_formatted = ""
+        truth_formatted = ""
+        
+        for op, i1, i2, j1, j2 in matcher.get_opcodes():
+            if op == 'equal':
+                # Identical text
+                pred_part = prediction_text[i1:i2]
+                truth_part = ground_truth_text[j1:j2]
+                pred_formatted += pred_part
+                truth_formatted += truth_part
+            elif op == 'replace':
+                # Different text
+                pred_part = prediction_text[i1:i2]
+                truth_part = ground_truth_text[j1:j2]
+                pred_formatted += f'<span class="diff">{pred_part}</span>'
+                truth_formatted += f'<span class="diff">{truth_part}</span>'
+            elif op == 'delete':
+                # Text in prediction but not in ground truth
+                pred_part = prediction_text[i1:i2]
+                pred_formatted += f'<span class="diff">{pred_part}</span>'
+            elif op == 'insert':
+                # Text in ground truth but not in prediction
+                truth_part = ground_truth_text[j1:j2]
+                truth_formatted += f'<span class="diff">{truth_part}</span>'
+        
+        # Replace newlines for markdown table compatibility
+        pred_formatted = pred_formatted.replace("\n", "<br>")
+        truth_formatted = truth_formatted.replace("\n", "<br>")
+        
+        return pred_formatted, truth_formatted
