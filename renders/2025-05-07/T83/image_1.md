@@ -1,6 +1,6 @@
 **Result for image: image_1**
 
-**Average fuzzy score:** 0.325
+**Average fuzzy score:** 0.320
 
 | Section | Prediction | Ground Truth | Score |
 |---------|------------|--------------|-------|

@@ -35,7 +35,7 @@ class Fraktur(Benchmark):
         # avg fuzzy score over all ads on a page
         avg_score = sum([result["similarity"] for result in results]) / len(results)
 
-        return {"fuzzy": avg_score}
+        return {"fuzzy": round(avg_score, 2)}
 
     def extract_number_prefix(self,
                               text):
