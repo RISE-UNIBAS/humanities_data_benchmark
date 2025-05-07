@@ -48,7 +48,7 @@ class Fraktur(Benchmark):
     def group_by_section_and_number(self,
                                     ad_list: list) -> dict:
         """Group ads by tags_section and leading number in text.
-
+        Uses fuzzy matching for section names with a 98% threshold.
         """
 
         grouped = defaultdict(dict)
@@ -65,8 +65,12 @@ class Fraktur(Benchmark):
                     response: dict,
                     ground_truth: dict):
         """
-
+        Compare advertisements between response and ground truth,
+        using fuzzy matching with a 95% threshold for section names.
         """
+
+        # Fuzzy matching threshold (95%)
+        SECTION_MATCH_THRESHOLD = 0.95
 
         # Flatten ground_truth values (list of list of dicts) into single list
         ground_truth_flat = [entry for ads in ground_truth.values() for entry in ads]
@@ -76,17 +80,27 @@ class Fraktur(Benchmark):
             response_grouped = self.group_by_section_and_number(response["advertisements"])
         except KeyError:
             response_grouped = {}
+
         ground_truth_grouped = self.group_by_section_and_number(ground_truth_flat)
 
         # Compare ads per section
         results = []
         for section, gt_ads in ground_truth_grouped.items():
+            # First try exact match
             response_ads = response_grouped.get(section, {})
+            
+            # If no exact match, try fuzzy matching
+            if not response_ads:
+                for resp_section, resp_ads in response_grouped.items():
+                    similarity = calculate_fuzzy_score(test_value=resp_section, gold_value=section)
+                    if similarity >= SECTION_MATCH_THRESHOLD:
+                        response_ads = resp_ads
+                        break
 
             for number, gt_ad in gt_ads.items():
                 response_ad = response_ads.get(number)
                 if response_ad:
-                    similarity = calculate_fuzzy_score(test_value=response_ad["text"], gold_value=gt_ad["text"])#SequenceMatcher(None, gt_ad["text"], response_ad["text"]).ratio()
+                    similarity = calculate_fuzzy_score(test_value=response_ad["text"], gold_value=gt_ad["text"])
                     results.append({
                         "section": section,
                         "number": number,
