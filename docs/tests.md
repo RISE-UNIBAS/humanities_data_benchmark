@@ -1109,6 +1109,28 @@ This page provides an overview of all tests. Click on the test name to see the d
     <td>prompt_optimized.txt</td>
     <td>false</td>
 </tr>
+<tr>
+    <td><a href='tests/T96'><span class='test-square' style='background-color: #9b59b6;'>T96</span></a></td>
+    <td><a href="/benchmarks/fraktur/">fraktur</a></td>
+    <td><span class='test-rectangle' style='background-color: #ffcc33;'>genai</span></td>
+    <td><span class='test-rectangle' style='background-color: #ff0099;'>gemini-2.5-flash-preview-04-17</span></td>
+    <td>Document</td>
+    <td>0.0</td>
+    <td>You are a historian with keyword knowledge</td>
+    <td>prompt_optimized.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='tests/T97'><span class='test-square' style='background-color: #ff6699;'>T97</span></a></td>
+    <td><a href="/benchmarks/fraktur/">fraktur</a></td>
+    <td><span class='test-rectangle' style='background-color: #ffcc33;'>genai</span></td>
+    <td><span class='test-rectangle' style='background-color: #00ff99;'>gemini-2.5-pro-preview-05-06</span></td>
+    <td>Document</td>
+    <td>0.0</td>
+    <td>You are a historian with keyword knowledge</td>
+    <td>prompt_optimized.txt</td>
+    <td>false</td>
+</tr>
 
   </tbody>
 </table>
