@@ -13,4 +13,4 @@ class Advertisement:
 
 @dataclass
 class Document(BaseModel):
-    advertisements: Dict[str, List[Advertisement]] = field(default_factory=dict)
+    advertisements: List[Advertisement] = field(default_factory=dict)
