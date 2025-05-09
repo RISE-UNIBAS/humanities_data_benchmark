@@ -118,8 +118,6 @@ def main(limit_to: list[str] = None, dates: list[str] = None):
                         logging.error(f"Skipping {benchmark.get_title()} (not runnable).")
 
 if __name__ == "__main__":
-    main(limit_to=["T16"],
-         dates=["2025-04-11"])
-    # main(]) #"T46", "T47"""
-
-
+    main(limit_to=["T22", "T79", "T80", "T81", "T82", "T83", "T84", "T85", "T86", "T87", "T88", "T89", "T90", "T91", "T92", "T93", "T94", "T95", "T96", "T97"])
+    # ,
+    #          )
