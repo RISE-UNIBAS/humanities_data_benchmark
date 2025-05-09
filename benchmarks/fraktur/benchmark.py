@@ -1,3 +1,5 @@
+import logging
+
 from scripts.benchmark_base import Benchmark
 from scripts.scoring_helper import calculate_fuzzy_score
 import re
@@ -181,15 +183,18 @@ class Fraktur(Benchmark):
         for ad in ad_list:
             if not isinstance(ad, dict):
                 continue  # skip malformed entries
-            section = ad.get("tags_section", "").strip()
-            number = self.extract_number_prefix(ad.get("text", ""))
-            if section and number:
-                grouped[section][number] = ad
+            try:
+                section = ad.get("tags_section", "").strip()
+                number = self.extract_number_prefix(ad.get("text", ""))
+                if section and number:
+                    grouped[section][number] = ad
+            except AttributeError:
+                return {}
         return grouped
 
     def compare_ads(self,
                     response: dict,
-                    ground_truth: dict):
+                    ground_truth: dict | list):
         """
         Compare advertisements between response and ground truth.
         
@@ -215,7 +220,10 @@ class Fraktur(Benchmark):
         SECTION_MATCH_THRESHOLD = 0.95
 
         # Flatten ground_truth values (list of list of dicts) into single list
-        ground_truth_flat = [entry for ads in ground_truth.values() for entry in ads]
+        if type(ground_truth) is dict:
+            ground_truth_flat = [entry for ads in ground_truth.values() for entry in ads]
+        else:
+            ground_truth_flat = ground_truth
 
         # Group response and ground_truth data
         try:
