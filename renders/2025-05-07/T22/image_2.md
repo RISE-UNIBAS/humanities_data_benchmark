@@ -3,6 +3,8 @@
 **Average fuzzy score:** 0.950 (higher is better)
 **Average character error rate (CER):** 0.058 (lower is better)
 
+<img src="../../../benchmarks/fraktur/images/image_2.jpg" alt="image_2" width="800px">
+
 <style>
 .diff { text-decoration: underline; text-decoration-color: #ffcccc; text-decoration-style: wavy; }
 </style>

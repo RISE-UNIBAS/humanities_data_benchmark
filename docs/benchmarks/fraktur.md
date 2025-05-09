@@ -75,7 +75,7 @@ The entire ground truth file follows this structure:
 
 ## Scoring
 
-The benchmark uses fuzzy string matching to evaluate the accuracy of extracted advertisements. This approach accommodates minor variations in OCR while still requiring high fidelity to the original text.
+The benchmark uses two complementary metrics to evaluate the accuracy of extracted advertisements: Fuzzy String Matching and Character Error Rate (CER).
 
 ### Scoring an ad
 
@@ -83,10 +83,12 @@ Each advertisement is scored by comparing it to the corresponding ground truth e
 
 1. **Section Matching**: Advertisements are matched across response and ground truth based on section names, using exact matching first and fuzzy matching with a 95% similarity threshold as a fallback
 2. **Number Matching**: Within each section, advertisements are matched by their numerical prefixes
-3. **Text Comparison**: The text content is compared using fuzzy string matching, resulting in a similarity score between 0.0 and 1.0
-4. **Missing Matches**: Advertisements in the ground truth that aren't found in the response receive a score of 0.0
+3. **Text Comparison**: Two metrics are calculated for each matched advertisement:
+   - **Fuzzy Score**: Text content is compared using fuzzy string matching, resulting in a similarity score between 0.0 and 1.0 (higher is better)
+   - **Character Error Rate (CER)**: Calculated using Levenshtein distance as a ratio of the reference text length, resulting in an error rate between 0.0 and 1.0 (lower is better)
+4. **Missing Matches**: Advertisements in the ground truth that aren't found in the response receive a fuzzy score of 0.0 and a CER of 1.0
 
-#### Example
+#### Fuzzy Matching Example
 
 For a ground truth advertisement:
 ```
@@ -100,16 +102,31 @@ And a model response:
 
 The fuzzy matching would yield a high similarity score (approximately 0.99) despite the minor spelling difference ("zimblich" vs. "zimlich").
 
+#### Character Error Rate (CER) Example
+
+For the same example, the CER would be calculated as follows:
+1. Calculate the Levenshtein distance (edit distance): 1 character substitution
+2. Calculate the CER: 1 / (length of reference text) ≈ 0.01
+
+This results in a very low CER score (approximately 0.01), indicating excellent performance.
+
 ### Scoring the collection
 
-The overall benchmark score is calculated as the average of the fuzzy matching scores across all advertisements. This produces a single value between 0.0 and 1.0, where higher scores indicate better performance.
+The overall benchmark scores are calculated as follows:
 
-The final score accounts for:
+1. **Fuzzy Score**: The average of the fuzzy matching scores across all advertisements, producing a value between 0.0 and 1.0, where higher scores indicate better performance.
+2. **CER Score**: The average of the character error rates across all advertisements, producing a value between 0.0 and 1.0, where lower scores indicate better performance.
+
+These metrics account for:
 - Correctly identified section headings
 - Correctly matched advertisement numbers
 - Textual similarity to the ground truth
 
-A perfect score of 1.0 would indicate that all advertisements were identified and transcribed with perfect fidelity to the original text.
+A perfect result would have a fuzzy score of 1.0 and a CER of 0.0, indicating that all advertisements were identified and transcribed with perfect fidelity to the original text.
+
+### Benchmark Sorting
+
+In the benchmark overview page, Fraktur results are sorted by fuzzy score in descending order (highest scores at the top), allowing for quick identification of the best-performing models.
 
 ## Future Enhancements
 
