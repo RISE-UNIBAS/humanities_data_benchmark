@@ -298,9 +298,13 @@ class Fraktur(Benchmark):
                 item["cer"] = 1.0
         
         # Add result header and overall scores at the top
-        render = f"**Result for image: {image_name}**\n\n"
-        render += f"**Average fuzzy score:** {score['fuzzy']:.3f} (higher is better)\n"
-        render += f"**Average character error rate (CER):** {score['cer']:.3f} (lower is better)\n\n"
+        render = f"### Result for {image_name}\n"
+        render += f"**Average fuzzy score:** {score['fuzzy']:.3f} (higher is better)<br>"
+        render += f"**Average character error rate (CER):** {score['cer']:.3f} (lower is better)<br>"
+        
+        # Add link to raw result JSON file with model name
+        request_name = f"request_{self.id}_{image_name}"
+        render += f"[View raw result from {self.model}](https://github.com/RISE-UNIBAS/humanities_data_benchmark/blob/main/results/{self.date}/{self.id}/{request_name}.json)\n\n"
 
         # Add the image before the table - using relative path from renders to images directory
         image_ext = None

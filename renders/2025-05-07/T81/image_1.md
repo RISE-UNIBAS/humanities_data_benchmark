@@ -1,7 +1,5 @@
-**Result for image: image_1**
-
-**Average fuzzy score:** 0.020 (higher is better)
-**Average character error rate (CER):** 0.981 (lower is better)
+### Result for image_1
+**Average fuzzy score:** 0.020 (higher is better)<br>**Average character error rate (CER):** 0.981 (lower is better)<br>[View raw result from gpt-4.5-preview](https://github.com/RISE-UNIBAS/humanities_data_benchmark/blob/main/results/2025-05-07/T81/request_T81_image_1.json)
 
 <img src="https://github.com/RISE-UNIBAS/humanities_data_benchmark/blob/main/benchmarks/fraktur/images/image_1.jpeg?raw=true" alt="image_1" width="800px">
 

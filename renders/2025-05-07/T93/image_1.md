@@ -1,7 +1,5 @@
-**Result for image: image_1**
-
-**Average fuzzy score:** 0.000 (higher is better)
-**Average character error rate (CER):** 1.000 (lower is better)
+### Result for image_1
+**Average fuzzy score:** 0.000 (higher is better)<br>**Average character error rate (CER):** 1.000 (lower is better)<br>[View raw result from claude-3-5-sonnet-20241022](https://github.com/RISE-UNIBAS/humanities_data_benchmark/blob/main/results/2025-05-07/T93/request_T93_image_1.json)
 
 <img src="https://github.com/RISE-UNIBAS/humanities_data_benchmark/blob/main/benchmarks/fraktur/images/image_1.jpeg?raw=true" alt="image_1" width="800px">
 

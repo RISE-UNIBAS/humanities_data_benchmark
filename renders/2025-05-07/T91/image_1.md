@@ -1,7 +1,5 @@
-**Result for image: image_1**
-
-**Average fuzzy score:** 0.970 (higher is better)
-**Average character error rate (CER):** 0.034 (lower is better)
+### Result for image_1
+**Average fuzzy score:** 0.970 (higher is better)<br>**Average character error rate (CER):** 0.034 (lower is better)<br>[View raw result from gemini-2.0-pro-exp-02-05](https://github.com/RISE-UNIBAS/humanities_data_benchmark/blob/main/results/2025-05-07/T91/request_T91_image_1.json)
 
 <img src="https://github.com/RISE-UNIBAS/humanities_data_benchmark/blob/main/benchmarks/fraktur/images/image_1.jpeg?raw=true" alt="image_1" width="800px">
 
