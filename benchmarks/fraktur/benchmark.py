@@ -1,14 +1,26 @@
 import logging
-
-from scripts.benchmark_base import Benchmark
-from scripts.scoring_helper import calculate_fuzzy_score
 import re
 import os
 from collections import defaultdict
+
 import Levenshtein
+from scripts.benchmark_base import Benchmark
+from scripts.scoring_helper import calculate_fuzzy_score
+
+# Constants
+DEFAULT_SECTION = "Es wird zum Verkauf angetragen"
+SECTION_MATCH_THRESHOLD = 0.95
 
 
 class Fraktur(Benchmark):
+    """
+    Benchmark for Fraktur text extraction from historical documents.
+    
+    This benchmark evaluates a model's ability to accurately extract and transcribe
+    structured advertisements from historical documents written in Fraktur script.
+    It measures both fuzzy matching scores and character error rates (CER) between
+    the model's predictions and ground truth data.
+    """
 
     def calculate_cer(self, reference_text: str, hypothesis_text: str) -> float:
         """
@@ -18,12 +30,12 @@ class Fraktur(Benchmark):
         of characters in the reference text. Lower scores indicate better performance.
         
         Args:
-            reference_text (str): The ground truth text
-            hypothesis_text (str): The predicted text
+            reference_text (str): The ground truth text.
+            hypothesis_text (str): The predicted text.
             
         Returns:
             float: Character Error Rate, a value between 0.0 (perfect match) and potentially >1.0
-                  (when hypothesis has more errors than reference characters)
+                  (when hypothesis has more errors than reference characters).
         """
         if not reference_text:
             return 1.0  # Maximum error if reference is empty
@@ -47,16 +59,19 @@ class Fraktur(Benchmark):
 
     def score_benchmark(self, all_scores: list) -> dict:
         """
-        Calculate the overall benchmark score by averaging the fuzzy scores and CER of all evaluated documents.
+        Calculate the overall benchmark score by averaging fuzzy scores and CER across documents.
         
         This method computes average scores across all processed images,
-        providing metrics that represent the benchmark's overall performance.
+        providing metrics that represent the benchmark's overall performance
+        on Fraktur text extraction.
         
         Args:
-            all_scores (list): List of dictionaries containing individual scores for each document.
+            all_scores (list): List of dictionaries containing individual scores for each document,
+                              where each dictionary has 'fuzzy' and 'cer' keys.
             
         Returns:
-            dict: Dictionary with keys 'fuzzy' and 'cer' containing the averaged scores.
+            dict: Dictionary with keys 'fuzzy' (higher is better) and 'cer' (lower is better)
+                 containing the averaged scores rounded to 3 decimal places.
         """
 
         total_fuzzy = 0
@@ -84,26 +99,28 @@ class Fraktur(Benchmark):
                              response: dict,
                              ground_truth: dict) -> dict:
         """
-        Score an individual response by comparing extracted advertisements to ground truth.
+        Score a model response by comparing extracted advertisements to ground truth.
         
         This method processes the model's response, compares the extracted advertisements 
         with the ground truth data, and calculates both fuzzy similarity scores and 
-        character error rates (CER) for each advertisement.
-        The final scores are averages of all individual scores.
+        character error rates (CER) for each advertisement. Special handling is applied
+        for image_4 which requires default section assignment.
         
         Args:
-            image_name (str): Name of the image being processed.
-            response (dict): The model's full response containing extracted advertisements.
+            image_name (str): Name of the image being processed (e.g., "image_1", "image_4").
+            response (dict): The model's full JSON response containing extracted advertisements.
             ground_truth (dict): The ground truth data for comparison, containing expected advertisements.
             
         Returns:
-            dict: Dictionary with 'fuzzy' and 'cer' keys containing the rounded average scores.
-                 Note that for CER, lower scores are better (0.0 is perfect).
+            dict: Dictionary with:
+                - 'fuzzy': Average fuzzy similarity score (higher is better, max 1.0)
+                - 'cer': Average character error rate (lower is better, min 0.0)
         """
 
         data = self.prepare_scoring_data(response)
         results = self.compare_ads(response=data,
-                                   ground_truth=ground_truth)
+                                  ground_truth=ground_truth,
+                                  image_name=image_name)
 
         # Calculate scores
         total_fuzzy = 0
@@ -143,16 +160,18 @@ class Fraktur(Benchmark):
     def extract_number_prefix(self,
                               text: str) -> int | None:
         """
-        Extract the leading number prefix (e.g., '1.') from advertisement text.
+        Extract the leading number prefix (e.g., '1.', '16.') from advertisement text.
         
         This method identifies the numbered list format commonly used in historical
-        classified advertisements by extracting the leading ordinal number.
+        classified advertisements by extracting the leading ordinal number. It matches
+        patterns like "16. Bey Hrn. Rudolf..." and extracts the number 16.
         
         Args:
             text (str): The advertisement text to analyze.
             
         Returns:
-            int or None: The extracted number as an integer if found, None otherwise.
+            int or None: The extracted number as an integer if found (e.g., 16), 
+                        None if no number prefix is found.
         """
 
         match = re.match(r"^\s*(\d+)\.", text)
@@ -160,7 +179,8 @@ class Fraktur(Benchmark):
         return int(match.group(1)) if match else None
 
     def group_by_section_and_number(self,
-                                    ad_list: list) -> dict:
+                                    ad_list: list,
+                                    image_name: str = None) -> dict:
         """
         Group advertisements by their section titles and leading number prefixes.
         
@@ -169,8 +189,11 @@ class Fraktur(Benchmark):
         by their numerical prefix (e.g., "1.", "2.", etc.). This organization
         facilitates matching between model responses and ground truth data.
         
+        For image_4, uses a default section title if tags_section is empty or None.
+        
         Args:
             ad_list (list): List of advertisement dictionaries to be grouped.
+            image_name (str, optional): Name of the current image being processed.
             
         Returns:
             dict: A nested dictionary with structure {section_title: {number: advertisement_dict}}
@@ -178,23 +201,39 @@ class Fraktur(Benchmark):
                  number is the integer prefix of the advertisement,
                  and advertisement_dict is the full advertisement object.
         """
-
         grouped = defaultdict(dict)
+        
+        # Handle empty or invalid ad_list
+        if not ad_list or not isinstance(ad_list, list):
+            return grouped
+            
         for ad in ad_list:
             if not isinstance(ad, dict):
                 continue  # skip malformed entries
+                
             try:
+                # Get section and strip whitespace
                 section = ad.get("tags_section", "").strip()
+                
+                # Special handling for image_4
+                if image_name == "image_4" and not section:
+                    section = DEFAULT_SECTION
+                    ad["tags_section"] = DEFAULT_SECTION
+                
+                # Extract number from text and add to grouped structure
                 number = self.extract_number_prefix(ad.get("text", ""))
                 if section and number:
                     grouped[section][number] = ad
-            except AttributeError:
-                return {}
+            except (AttributeError, TypeError) as e:
+                logging.warning(f"Error grouping advertisement: {e}")
+                continue
+                
         return grouped
 
     def compare_ads(self,
                     response: dict,
-                    ground_truth: dict | list):
+                    ground_truth: dict | list,
+                    image_name: str = None):
         """
         Compare advertisements between response and ground truth.
         
@@ -205,6 +244,7 @@ class Fraktur(Benchmark):
         Args:
             response (dict): The model's parsed response containing extracted advertisements.
             ground_truth (dict): The ground truth data containing expected advertisements.
+            image_name (str, optional): Name of the current image being processed.
             
         Returns:
             list: List of dictionaries containing comparison results for each advertisement, including:
@@ -215,44 +255,55 @@ class Fraktur(Benchmark):
                 - response_text: Text from model's response (or None if no match)
                 - ground_truth_text: Text from ground truth
         """
-
-        # Fuzzy matching threshold (95%)
-        SECTION_MATCH_THRESHOLD = 0.95
-
         # Flatten ground_truth values (list of list of dicts) into single list
-        if type(ground_truth) is dict:
+        if isinstance(ground_truth, dict):
             ground_truth_flat = [entry for ads in ground_truth.values() for entry in ads]
         else:
             ground_truth_flat = ground_truth
 
-        # Group response and ground_truth data
+        # Get model response advertisements
         try:
-            response_grouped = self.group_by_section_and_number(response["advertisements"])
-        except KeyError:
+            # For image_4, we need special handling
+            if image_name == "image_4":
+                logging.info(f"Using special handling for image_4")
+                
+                # Get advertisements from response
+                response_ads = response.get("advertisements", [])
+                
+                # Force the section name for ads without a section
+                for ad in response_ads:
+                    if isinstance(ad, dict) and ("tags_section" not in ad or not ad.get("tags_section")):
+                        ad["tags_section"] = DEFAULT_SECTION
+                
+                # Group the modified ads
+                response_grouped = self.group_by_section_and_number(response_ads, image_name)
+            else:
+                # Standard handling for other images
+                response_grouped = self.group_by_section_and_number(response.get("advertisements", []), image_name)
+        except (KeyError, AttributeError, TypeError) as e:
+            logging.warning(f"Error getting response advertisements: {e}")
             response_grouped = {}
 
-        ground_truth_grouped = self.group_by_section_and_number(ground_truth_flat)
-
-        # Compare ads per section
+        # Group ground truth data
+        ground_truth_grouped = self.group_by_section_and_number(ground_truth_flat, image_name)
         results = []
-        for section, gt_ads in ground_truth_grouped.items():
-            # First try exact match
-            response_ads = response_grouped.get(section, {})
+        
+        # Special handling for image_4 with default section
+        if image_name == "image_4" and DEFAULT_SECTION in ground_truth_grouped:
+            gt_ads = ground_truth_grouped[DEFAULT_SECTION]
+            response_ads = response_grouped.get(DEFAULT_SECTION, {})
             
-            # If no exact match, try fuzzy matching
-            if not response_ads:
-                for resp_section, resp_ads in response_grouped.items():
-                    similarity = calculate_fuzzy_score(test_value=resp_section, gold_value=section)
-                    if similarity >= SECTION_MATCH_THRESHOLD:
-                        response_ads = resp_ads
-                        break
-
+            # Process each advertisement in ground truth
             for number, gt_ad in gt_ads.items():
+                match_found = False
+                
+                # First try direct match by number in default section
                 response_ad = response_ads.get(number)
                 if response_ad:
+                    match_found = True
                     similarity = calculate_fuzzy_score(test_value=response_ad["text"], gold_value=gt_ad["text"])
                     results.append({
-                        "section": section,
+                        "section": DEFAULT_SECTION,
                         "number": number,
                         "match_found": True,
                         "similarity": round(similarity, 3),
@@ -260,14 +311,71 @@ class Fraktur(Benchmark):
                         "ground_truth_text": gt_ad["text"]
                     })
                 else:
-                    results.append({
-                        "section": section,
-                        "number": number,
-                        "match_found": False,
-                        "similarity": 0.0,
-                        "response_text": None,
-                        "ground_truth_text": gt_ad["text"]
-                    })
+                    # If no direct match, try to find by number across all sections
+                    for resp_section, resp_ads in response_grouped.items():
+                        if number in resp_ads:
+                            response_ad = resp_ads[number]
+                            match_found = True
+                            similarity = calculate_fuzzy_score(test_value=response_ad["text"], gold_value=gt_ad["text"])
+                            results.append({
+                                "section": DEFAULT_SECTION,
+                                "number": number,
+                                "match_found": True,
+                                "similarity": round(similarity, 3),
+                                "response_text": response_ad["text"],
+                                "ground_truth_text": gt_ad["text"]
+                            })
+                            break
+                    
+                    # If still no match found, mark as not found
+                    if not match_found:
+                        results.append({
+                            "section": DEFAULT_SECTION,
+                            "number": number,
+                            "match_found": False,
+                            "similarity": 0.0,
+                            "response_text": None,
+                            "ground_truth_text": gt_ad["text"]
+                        })
+        else:
+            # Standard matching algorithm for all other images
+            for section, gt_ads in ground_truth_grouped.items():
+                # First try exact match by section name
+                response_ads = response_grouped.get(section, {})
+                
+                # If no exact match, try fuzzy matching of section names
+                if not response_ads:
+                    for resp_section, resp_ads in response_grouped.items():
+                        similarity = calculate_fuzzy_score(test_value=resp_section, gold_value=section)
+                        if similarity >= SECTION_MATCH_THRESHOLD:
+                            response_ads = resp_ads
+                            break
+    
+                # Process each advertisement in this section
+                for number, gt_ad in gt_ads.items():
+                    response_ad = response_ads.get(number)
+                    if response_ad:
+                        # Match found - calculate similarity score
+                        similarity = calculate_fuzzy_score(test_value=response_ad["text"], gold_value=gt_ad["text"])
+                        results.append({
+                            "section": section,
+                            "number": number,
+                            "match_found": True,
+                            "similarity": round(similarity, 3),
+                            "response_text": response_ad["text"],
+                            "ground_truth_text": gt_ad["text"]
+                        })
+                    else:
+                        # No match found
+                        results.append({
+                            "section": section,
+                            "number": number,
+                            "match_found": False,
+                            "similarity": 0.0,
+                            "response_text": None,
+                            "ground_truth_text": gt_ad["text"]
+                        })
+                        
         return results
 
     def create_request_render(self,
@@ -276,24 +384,27 @@ class Fraktur(Benchmark):
                               score: dict,
                               truth: dict) -> str:
         """
-        Create a markdown render of the request results for visualization.
+        Create a markdown visualization of benchmark results for a specific image.
         
-        This method generates a detailed markdown report comparing the model's extracted
-        advertisements with the ground truth, including similarity scores and character
-        error rates (CER) for each item. The differences between prediction and ground truth
-        are highlighted with light red underlines.
+        This method generates a detailed markdown report that includes:
+        - The original image displayed at the top
+        - Overall fuzzy score and character error rate (CER) metrics
+        - A link to view the raw JSON result
+        - A table comparing model predictions with ground truth for each advertisement
+        - Visual highlighting of differences between prediction and ground truth
         
         Args:
-            image_name (str): Name of the image being processed.
-            result (dict): The model's full response.
-            score (dict): The calculated scores for this response.
+            image_name (str): Name of the image being processed (e.g., "image_1").
+            result (dict): The model's full JSON response.
+            score (dict): Dictionary with 'fuzzy' and 'cer' scores for this image.
             truth (dict): The ground truth data for comparison.
             
         Returns:
-            str: Markdown-formatted string containing the comparison report with highlighted differences.
+            str: Markdown-formatted string containing the complete benchmark report.
+                 This report includes the image, scores, and detailed comparison table.
         """
         data = self.prepare_scoring_data(result)
-        results = self.compare_ads(response=data, ground_truth=truth)
+        results = self.compare_ads(response=data, ground_truth=truth, image_name=image_name)
         
         # Ensure CER scores are calculated for all results
         for item in results:
@@ -355,17 +466,20 @@ class Fraktur(Benchmark):
         
     def _highlight_differences(self, prediction_text: str, ground_truth_text: str) -> tuple:
         """
-        Highlight differences between prediction and ground truth texts.
+        Highlight differences between prediction and ground truth texts with visual styling.
         
-        This method compares the two texts character by character and wraps
-        differing segments in HTML spans with a light red underline style.
+        This method performs a character-by-character comparison of the prediction and ground
+        truth texts, then wraps differing segments in HTML spans with a light red wavy underline
+        for clear visual identification of discrepancies in the generated report.
         
         Args:
-            prediction_text (str): The text predicted by the model
-            ground_truth_text (str): The ground truth text
+            prediction_text (str): The text predicted by the model.
+            ground_truth_text (str): The reference ground truth text.
             
         Returns:
-            tuple: (formatted_prediction, formatted_ground_truth) with differences highlighted
+            tuple: A tuple containing (formatted_prediction, formatted_ground_truth), where both
+                  strings have HTML formatting applied to highlight differences with the "diff" CSS class.
+                  Newlines are also replaced with <br> tags for proper rendering in markdown tables.
         """
         from difflib import SequenceMatcher
         
