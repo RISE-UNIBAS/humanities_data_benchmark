@@ -1,6 +1,7 @@
 from scripts.benchmark_base import Benchmark
 from scripts.scoring_helper import calculate_fuzzy_score
 import re
+import os
 from collections import defaultdict
 import Levenshtein
 
@@ -300,7 +301,18 @@ class Fraktur(Benchmark):
         render = f"**Result for image: {image_name}**\n\n"
         render += f"**Average fuzzy score:** {score['fuzzy']:.3f} (higher is better)\n"
         render += f"**Average character error rate (CER):** {score['cer']:.3f} (lower is better)\n\n"
-        
+
+        # Add the image before the table - using relative path from renders to images directory
+        image_ext = None
+        for ext in ['.jpg', '.jpeg', '.png']:
+            if os.path.exists(os.path.join(self.benchmark_dir, "images", f"{image_name}{ext}")):
+                image_ext = ext
+                break
+
+        if image_ext:
+            # Use GitHub raw URL format to ensure images display correctly on GitHub Pages
+            render += f"<img src=\"https://github.com/RISE-UNIBAS/humanities_data_benchmark/blob/main/benchmarks/{self.name}/images/{image_name}{image_ext}?raw=true\" alt=\"{image_name}\" width=\"800px\">\n\n"
+
         # Add CSS style for highlighting differences
         render += "<style>\n"
         render += ".diff { text-decoration: underline; text-decoration-color: #ffcccc; text-decoration-style: wavy; }\n"

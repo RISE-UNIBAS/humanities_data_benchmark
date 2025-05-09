@@ -1,7 +1,9 @@
-ee**Result for image: image_1**
+**Result for image: image_1**
 
 **Average fuzzy score:** 0.020 (higher is better)
 **Average character error rate (CER):** 0.986 (lower is better)
+
+<img src="https://github.com/RISE-UNIBAS/humanities_data_benchmark/blob/main/benchmarks/fraktur/images/image_1.jpeg?raw=true" alt="image_1" width="800px">
 
 <style>
 .diff { text-decoration: underline; text-decoration-color: #ffcccc; text-decoration-style: wavy; }
