@@ -28,6 +28,9 @@ def resize_image(image_path: str,
     img = Image.open(image_path)
     img.thumbnail(max_size)
 
+    if img.mode == 'RGBA':
+        img = img.convert('RGB')
+
     filename = os.path.basename(image_path)
     resized_path = os.path.join(temp_dir, filename)
 
