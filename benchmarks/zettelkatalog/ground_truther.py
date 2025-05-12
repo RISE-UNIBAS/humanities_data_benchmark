@@ -6,7 +6,7 @@ import os
 import argparse
 from typing import Dict, Any, List, Optional, Union
 import datetime
-from dataclass import Author, Publication, Education, Examination, PersonalData, Document
+from dataclass import Author, Publication, Examination, LibraryReference, Document, WorkType
 
 class Config:
     def __init__(self, image_dir=None, json_dir=None, output_dir=None, prefix="request_T66_"):
@@ -454,28 +454,31 @@ class MetadataEditor:
                 "test_time": 0,
                 "execution_time": datetime.datetime.now().isoformat(),
                 "response_text": {
+                    "type": {
+                        "type": ""  # Literal["Dissertation or thesis", "Other"]
+                    },
                     "author": {
                         "last_name": "",
                         "first_name": ""
                     },
-                    "title": "",
                     "publication": {
-                        "place": "",
+                        "title": "",
                         "year": 0,
+                        "place": "",
                         "pages": "",
                         "publisher": "",
-                        "format": ""
+                        "format": "",
+                        "reprint_note": ""
                     },
-                    "type": "",
-                    "institution": "",
-                    "language": "",
-                    "notes": "",
-                    "defense_date": "",
-                    "advisor": "",
-                    "department": "",
-                    "director": "",
-                    "personal_data": "",
-                    "library_reference": ""
+                    "examination": {
+                        "place": "",
+                        "year": 0
+                    },
+                    "library_reference": {
+                        "shelfmark": "",
+                        "publication_number": "",
+                        "subjects": ""
+                    }
                 },
                 "scores": {}
             }
@@ -714,6 +717,12 @@ class MetadataEditor:
             if "response_text" not in self.json_data:
                 self.json_data["response_text"] = {}
                 
+            # Initialize type structure if needed
+            if "type" not in self.json_data["response_text"]:
+                self.json_data["response_text"]["type"] = {
+                    "type": ""  # Literal["Dissertation or thesis", "Other"]
+                }
+                
             # Initialize author structure if needed
             if "author" not in self.json_data["response_text"]:
                 self.json_data["response_text"]["author"] = {
@@ -721,9 +730,25 @@ class MetadataEditor:
                     "last_name": ""
                 }
             
-            # Initialize personal_data structure if needed
-            if "personal_data" not in self.json_data["response_text"]:
-                self.json_data["response_text"]["personal_data"] = None
+            # Initialize publication structure if needed
+            if "publication" not in self.json_data["response_text"]:
+                self.json_data["response_text"]["publication"] = {
+                    "title": "",
+                    "year": 0,
+                    "place": None,
+                    "pages": None,
+                    "publisher": None,
+                    "format": None,
+                    "reprint_note": None
+                }
+                
+            # Initialize examination structure if needed
+            if "examination" not in self.json_data["response_text"]:
+                self.json_data["response_text"]["examination"] = None
+            
+            # Initialize library_reference structure if needed
+            if "library_reference" not in self.json_data["response_text"]:
+                self.json_data["response_text"]["library_reference"] = None
                 
             # Clear existing form elements
             for widget in self.scrollable_frame.winfo_children():
@@ -756,28 +781,31 @@ class MetadataEditor:
                     "test_time": 0,
                     "execution_time": datetime.datetime.now().isoformat(),
                     "response_text": {
+                        "type": {
+                            "type": ""  # Literal["Dissertation or thesis", "Other"]
+                        },
                         "author": {
                             "last_name": "",
                             "first_name": ""
                         },
-                        "title": "",
                         "publication": {
-                            "place": "",
+                            "title": "",
                             "year": 0,
+                            "place": "",
                             "pages": "",
                             "publisher": "",
-                            "format": ""
+                            "format": "",
+                            "reprint_note": ""
                         },
-                        "type": "",
-                        "institution": "",
-                        "language": "",
-                        "notes": "",
-                        "defense_date": "",
-                        "advisor": "",
-                        "department": "",
-                        "director": "",
-                        "personal_data": "",
-                        "library_reference": ""
+                        "examination": {
+                            "place": "",
+                            "year": 0
+                        },
+                        "library_reference": {
+                            "shelfmark": "",
+                            "publication_number": "",
+                            "subjects": ""
+                        }
                     },
                     "scores": {}
                 }
@@ -804,28 +832,31 @@ class MetadataEditor:
             "test_time": 0,
             "execution_time": datetime.datetime.now().isoformat(),
             "response_text": {
+                "type": {
+                    "type": ""  # Literal["Dissertation or thesis", "Other"]
+                },
                 "author": {
                     "last_name": "",
                     "first_name": ""
                 },
-                "title": "",
                 "publication": {
-                    "place": "",
+                    "title": "",
                     "year": 0,
+                    "place": "",
                     "pages": "",
                     "publisher": "",
-                    "format": ""
+                    "format": "",
+                    "reprint_note": ""
                 },
-                "type": "",
-                "institution": "",
-                "language": "",
-                "notes": "",
-                "defense_date": "",
-                "advisor": "",
-                "department": "",
-                "director": "",
-                "personal_data": "",
-                "library_reference": ""
+                "examination": {
+                    "place": "",
+                    "year": 0
+                },
+                "library_reference": {
+                    "shelfmark": "",
+                    "publication_number": "",
+                    "subjects": ""
+                }
             },
             "scores": {}
         }
@@ -839,10 +870,10 @@ class MetadataEditor:
             repaired_data["response_text"]["author"]["last_name"] = author_match.group(1).strip()
             repaired_data["response_text"]["author"]["first_name"] = author_match.group(2).strip()
             
-        # Look for title
+        # Look for publication title and year
         title_match = re.search(r'"title".*?:"(.*?)"', json_text, re.DOTALL)
         if title_match:
-            repaired_data["response_text"]["title"] = title_match.group(1).strip()
+            repaired_data["response_text"]["publication"]["title"] = title_match.group(1).strip()
             
         # Look for publication place and year
         place_match = re.search(r'"place".*?:"(.*?)"', json_text, re.DOTALL)
@@ -859,7 +890,32 @@ class MetadataEditor:
         # Look for document type
         type_match = re.search(r'"type".*?:"(.*?)"', json_text, re.DOTALL)
         if type_match:
-            repaired_data["response_text"]["type"] = type_match.group(1).strip()
+            repaired_data["response_text"]["type"]["type"] = type_match.group(1).strip()
+            
+        # Look for library reference
+        shelfmark_match = re.search(r'"shelfmark".*?:"(.*?)"', json_text, re.DOTALL)
+        if shelfmark_match:
+            repaired_data["response_text"]["library_reference"]["shelfmark"] = shelfmark_match.group(1).strip()
+        
+        publication_number_match = re.search(r'"publication_number".*?:"(.*?)"', json_text, re.DOTALL)
+        if publication_number_match:
+            repaired_data["response_text"]["library_reference"]["publication_number"] = publication_number_match.group(1).strip()
+            
+        subjects_match = re.search(r'"subjects".*?:"(.*?)"', json_text, re.DOTALL)
+        if subjects_match:
+            repaired_data["response_text"]["library_reference"]["subjects"] = subjects_match.group(1).strip()
+            
+        # Look for examination details
+        examination_place_match = re.search(r'"examination".*?"place".*?:"(.*?)"', json_text, re.DOTALL)
+        if examination_place_match:
+            repaired_data["response_text"]["examination"]["place"] = examination_place_match.group(1).strip()
+            
+        examination_year_match = re.search(r'"examination".*?"year".*?:(\d+)', json_text, re.DOTALL)
+        if examination_year_match:
+            try:
+                repaired_data["response_text"]["examination"]["year"] = int(examination_year_match.group(1))
+            except:
+                pass
             
         # Log what we managed to extract
         self.logger.info(f"Extracted data from corrupted JSON: {repaired_data}")
@@ -936,8 +992,33 @@ class MetadataEditor:
             frame = ttk.LabelFrame(parent_frame, text=display_key)
             frame.pack(fill=tk.X, padx=5, pady=5, anchor=tk.W)
             
+            # Special handling for type (WorkType)
+            if path.endswith("type") and not any(s in path for s in ["[", "]"]) and isinstance(data, dict) and "type" in data:
+                # This is the WorkType object in response_text.type
+                # Create a frame for the type field
+                type_frame = ttk.Frame(frame)
+                type_frame.pack(fill=tk.X, padx=5, pady=5)
+                
+                # Create field for type
+                type_field_frame = ttk.Frame(type_frame)
+                type_field_frame.pack(fill=tk.X, pady=2)
+                
+                ttk.Label(type_field_frame, text="Type:").pack(side=tk.LEFT, padx=5)
+                type_var = tk.StringVar(value=data.get("type", "") if isinstance(data, dict) else "")
+                
+                # Create a dropdown for type with allowed values
+                type_combo = ttk.Combobox(type_field_frame, textvariable=type_var, width=40)
+                type_combo['values'] = ("Dissertation or thesis", "Other")
+                type_combo.pack(side=tk.LEFT, fill=tk.X, expand=True, padx=5)
+                
+                # Save the variable
+                self.form_elements[f"{path}.type"] = {"type": "string", "var": type_var, "path": f"{path}.type"}
+                
+                # Special handling for WorkType object
+                self.form_elements[path] = {"type": "work_type_object", "path": path, "type": type_var}
+            
             # Special handling for author
-            if path.endswith("author") and not any(s in path for s in ["[", "]"]):
+            elif path.endswith("author") and not any(s in path for s in ["[", "]"]):
                 # This is the author object in response_text.author
                 # Create a frame for the author fields
                 author_frame = ttk.Frame(frame)
@@ -1015,74 +1096,97 @@ class MetadataEditor:
                 
                 # Mark this path as the university list
                 self.form_elements[path] = {"type": "university_list", "path": path}
-            # Special handling for examinations list
-            elif path.endswith("examinations") and isinstance(data, list):
-                # We'll handle this as a complex list of examination objects
-                examinations = data if data and data is not None else []
-                
-                # Container for examination entries
+            # Special handling for examination (singular, not a list in the new structure)
+            elif path.endswith("examination") and isinstance(data, dict):
+                # We'll handle this as a single examination object
+                # Container for examination entry
                 exam_container = ttk.Frame(frame)
                 exam_container.pack(fill=tk.X, padx=5, pady=5)
                 
                 # Keep track of examination entries
                 self.examination_entries = []
                 
-                # Function to add examination entry
-                def add_examination_entry(location="", count=0):
+                # Function to create examination entry
+                def create_examination_entry(place="", year=0):
                     entry_frame = ttk.LabelFrame(exam_container, text="Examination")
                     entry_frame.pack(fill=tk.X, pady=2)
                     
-                    # Location field
-                    loc_frame = ttk.Frame(entry_frame)
-                    loc_frame.pack(fill=tk.X, pady=2)
-                    ttk.Label(loc_frame, text="Location:").pack(side=tk.LEFT, padx=5)
-                    location_var = tk.StringVar(value=location)
-                    location_entry = ttk.Entry(loc_frame, textvariable=location_var, width=30)
-                    location_entry.pack(side=tk.LEFT, fill=tk.X, expand=True, padx=5)
+                    # Place field
+                    place_frame = ttk.Frame(entry_frame)
+                    place_frame.pack(fill=tk.X, pady=2)
+                    ttk.Label(place_frame, text="Place:").pack(side=tk.LEFT, padx=5)
+                    place_var = tk.StringVar(value=place)
+                    place_entry = ttk.Entry(place_frame, textvariable=place_var, width=30)
+                    place_entry.pack(side=tk.LEFT, fill=tk.X, expand=True, padx=5)
                     
-                    # Count field
-                    count_frame = ttk.Frame(entry_frame)
-                    count_frame.pack(fill=tk.X, pady=2)
-                    ttk.Label(count_frame, text="Count:").pack(side=tk.LEFT, padx=5)
-                    count_var = tk.StringVar(value=str(count))
-                    count_entry = ttk.Entry(count_frame, textvariable=count_var, width=10)
-                    count_entry.pack(side=tk.LEFT, padx=5)
+                    # Year field
+                    year_frame = ttk.Frame(entry_frame)
+                    year_frame.pack(fill=tk.X, pady=2)
+                    ttk.Label(year_frame, text="Year:").pack(side=tk.LEFT, padx=5)
+                    year_var = tk.StringVar(value=str(year))
+                    year_entry = ttk.Entry(year_frame, textvariable=year_var, width=10)
+                    year_entry.pack(side=tk.LEFT, padx=5)
                     
-                    # Remove button
-                    remove_btn = ttk.Button(entry_frame, text="Remove Examination", 
-                                          command=lambda: remove_examination(entry_frame, location_var, count_var))
-                    remove_btn.pack(anchor=tk.W, padx=5, pady=5)
-                    
-                    exam_entry = {"frame": entry_frame, "location": location_var, "count": count_var}
+                    exam_entry = {"frame": entry_frame, "location": place_var, "count": year_var}
                     self.examination_entries.append(exam_entry)
                     return exam_entry
                 
-                def remove_examination(frame, location_var, count_var):
-                    # Find the examination entry to remove
-                    for i, entry in enumerate(self.examination_entries):
-                        if entry["location"] == location_var and entry["count"] == count_var:
-                            self.examination_entries.pop(i)
-                            break
-                    frame.destroy()
+                # Create the examination entry with existing data
+                place = data.get("place", "")
+                year = data.get("year", 0)
+                create_examination_entry(place=place, year=year)
                 
-                # Add existing examinations
-                for exam in examinations:
-                    if isinstance(exam, dict):
-                        add_examination_entry(
-                            location=exam.get("location", ""),
-                            count=exam.get("count", 0)
-                        )
+                # Mark this path as the examination object
+                self.form_elements[path] = {"type": "examination_object", "path": path}
                 
-                # If no examinations exist yet, add an empty one
-                if not examinations:
-                    add_examination_entry()
-                    
-                # Add button to add new examination
-                add_btn = ttk.Button(frame, text="Add Examination", command=lambda: add_examination_entry())
-                add_btn.pack(anchor=tk.W, padx=5, pady=5)
+            # Special handling for library_reference
+            elif path.endswith("library_reference") and isinstance(data, dict):
+                # We'll handle this as a single library_reference object
+                # Container for library_reference entry
+                ref_container = ttk.Frame(frame)
+                ref_container.pack(fill=tk.X, padx=5, pady=5)
                 
-                # Mark this path as the examinations list
-                self.form_elements[path] = {"type": "examinations_list", "path": path}
+                # Keep track of library_reference entries
+                self.library_reference_entry = {}
+                
+                # Create the form elements
+                entry_frame = ttk.LabelFrame(ref_container, text="Library Reference")
+                entry_frame.pack(fill=tk.X, pady=2)
+                
+                # Shelfmark field
+                shelfmark_frame = ttk.Frame(entry_frame)
+                shelfmark_frame.pack(fill=tk.X, pady=2)
+                ttk.Label(shelfmark_frame, text="Shelfmark:").pack(side=tk.LEFT, padx=5)
+                shelfmark_var = tk.StringVar(value=data.get("shelfmark", ""))
+                shelfmark_entry = ttk.Entry(shelfmark_frame, textvariable=shelfmark_var, width=30)
+                shelfmark_entry.pack(side=tk.LEFT, fill=tk.X, expand=True, padx=5)
+                
+                # publication_number field
+                publication_number_frame = ttk.Frame(entry_frame)
+                publication_number_frame.pack(fill=tk.X, pady=2)
+                ttk.Label(publication_number_frame, text="publication_number:").pack(side=tk.LEFT, padx=5)
+                publication_number_var = tk.StringVar(value=data.get("publication_number", ""))
+                publication_number_entry = ttk.Entry(publication_number_frame, textvariable=publication_number_var, width=30)
+                publication_number_entry.pack(side=tk.LEFT, fill=tk.X, expand=True, padx=5)
+                
+                # subjects field
+                subjects_frame = ttk.Frame(entry_frame)
+                subjects_frame.pack(fill=tk.X, pady=2)
+                ttk.Label(subjects_frame, text="Subjects:").pack(side=tk.LEFT, padx=5)
+                subjects_var = tk.StringVar(value=data.get("subjects", ""))
+                subjects_entry = ttk.Entry(subjects_frame, textvariable=subjects_var, width=30)
+                subjects_entry.pack(side=tk.LEFT, fill=tk.X, expand=True, padx=5)
+                
+                # Save the references
+                self.library_reference_entry = {
+                    "frame": entry_frame,
+                    "shelfmark": shelfmark_var,
+                    "publication_number": publication_number_var,
+                    "subjects": subjects_var
+                }
+                
+                # Mark this path as the library_reference object
+                self.form_elements[path] = {"type": "library_reference_object", "path": path}
             else:
                 # Generic list handling
                 for i, item in enumerate(data):
@@ -1159,9 +1263,22 @@ class MetadataEditor:
         if "response_text" not in self.json_data:
             self.json_data["response_text"] = {}
             
-        # Special handling for author object
+        # Special handling for work type object
         for path, element_info in self.form_elements.items():
-            if element_info.get("type") == "author_object":
+            if element_info.get("type") == "work_type_object":
+                # Get type data from the form
+                type_value = element_info["type"].get()
+                
+                # Create work type object
+                type_data = {
+                    "type": type_value
+                }
+                
+                # Update type in the response_text
+                self.json_data["response_text"]["type"] = type_data
+                
+            # Special handling for author object
+            elif element_info.get("type") == "author_object":
                 # Get author data from the form
                 first_name = element_info["first_name"].get()
                 last_name = element_info["last_name"].get()
@@ -1175,50 +1292,53 @@ class MetadataEditor:
                 # Update author in the response_text
                 self.json_data["response_text"]["author"] = author_data
                 
-        # Special handling for university list
-        if hasattr(self, 'university_entries'):
-            universities = [entry.get() for entry in self.university_entries if entry.get().strip()]
-            
-            # Ensure the path exists - but we'll need to do this differently based on the parent path
-            # For now, we'll handle it for "personal_data.education.university"
-            if "personal_data" not in self.json_data["response_text"]:
-                self.json_data["response_text"]["personal_data"] = {}
-            if "education" not in self.json_data["response_text"]["personal_data"]:
-                self.json_data["response_text"]["personal_data"]["education"] = {}
-                
-            # Update universities
-            self.json_data["response_text"]["personal_data"]["education"]["university"] = universities
+        # We no longer have university_entries in the new data structure
+        # so that part has been removed
         
-        # Special handling for examinations list
-        if hasattr(self, 'examination_entries'):
-            examinations = []
-            for exam_entry in self.examination_entries:
-                location = exam_entry["location"].get()
-                count_str = exam_entry["count"].get()
-                
-                try:
-                    count = int(count_str)
-                except ValueError:
-                    count = 0
-                    
-                # Only add if we have a location (required field)
-                if location.strip():
-                    examinations.append({
-                        "location": location,
-                        "count": count
-                    })
+        # Special handling for examination - the new structure has a single examination
+        # rather than a list of examinations
+        if hasattr(self, 'examination_entries') and self.examination_entries:
+            # Get the first examination entry (since we now only have one examination)
+            exam_entry = self.examination_entries[0]
+            place = exam_entry["location"].get() if "location" in exam_entry else ""
+            year_str = exam_entry["count"].get() if "count" in exam_entry else "0"
             
-            # Ensure the path exists
-            if "personal_data" not in self.json_data["response_text"]:
-                self.json_data["response_text"]["personal_data"] = {}
+            try:
+                year = int(year_str)
+            except ValueError:
+                year = 0
                 
-            # Update examinations
-            self.json_data["response_text"]["personal_data"]["examinations"] = examinations
+            # Only add if we have a place (required field)
+            if place.strip():
+                # Ensure the examination object exists
+                if "examination" not in self.json_data["response_text"]:
+                    self.json_data["response_text"]["examination"] = {}
+                
+                # Update examination
+                self.json_data["response_text"]["examination"]["place"] = place
+                self.json_data["response_text"]["examination"]["year"] = year
+        
+        # Special handling for library_reference
+        if hasattr(self, 'library_reference_entry') and self.library_reference_entry:
+            # Get the library reference entry
+            shelfmark = self.library_reference_entry["shelfmark"].get() if "shelfmark" in self.library_reference_entry else ""
+            publication_number = self.library_reference_entry["publication_number"].get() if "publication_number" in self.library_reference_entry else ""
+            subjects = self.library_reference_entry["subjects"].get() if "subjects" in self.library_reference_entry else ""
+            
+
+            # Ensure the library_reference object exists
+            if "library_reference" not in self.json_data["response_text"]:
+                self.json_data["response_text"]["library_reference"] = {}
+            
+            # Update library_reference
+            self.json_data["response_text"]["library_reference"]["shelfmark"] = shelfmark
+            self.json_data["response_text"]["library_reference"]["publication_number"] = publication_number
+            self.json_data["response_text"]["library_reference"]["subjects"] = subjects
         
         # Handle all other form elements based on their paths
         for path, element_info in self.form_elements.items():
             # Skip specially handled types
-            if element_info.get("type") in ["author_object", "university_list", "examinations_list"]:
+            if element_info.get("type") in ["work_type_object", "author_object", "university_list", "examinations_list", "examination_object", "library_reference_object"]:
                 continue
                 
             # Get the variable and its value
@@ -1449,7 +1569,7 @@ class MetadataEditor:
                         # Modify the filename in this directory to avoid conflict
                         dir_path = os.path.dirname(output_path)
                         base_name = os.path.basename(output_path)
-                        output_path = os.path.join(dir_path, f"EDITED_{base_name}")
+                        output_path = os.path.join(dir_path, base_name)
             
             # Create parent directory if it doesn't exist
             os.makedirs(os.path.dirname(output_path), exist_ok=True)
@@ -1554,8 +1674,8 @@ def main():
     app = MetadataEditor(root, config)
     
     # Add keyboard shortcuts
-    root.bind('<Right>', lambda event: app.next_image())
-    root.bind('<Left>', lambda event: app.previous_image())
+    # root.bind('<Right>', lambda event: app.next_image())
+    # root.bind('<Left>', lambda event: app.previous_image())
     root.bind('<Control-s>', lambda event: app.save_json())
     
     # Try to load initial data
