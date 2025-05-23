@@ -143,7 +143,7 @@ class AiApiClient:
                     })
 
             message = self.api_client.messages.create(
-                max_tokens=1024,
+                max_tokens=10000,
                 messages=[{
                     "role": "user",
                     "content": content,
