@@ -119,4 +119,5 @@ def main(limit_to: list[str] = None, dates: list[str] = None):
 
 
 if __name__ == "__main__":
-    main()
+    main(limit_to=["T108", "T109", "T110", "T111", "T112", "T113", "T114", "T115", "T116", "T117", "T118", "T119",
+                   "T120", "T121", "T122", "T123"])
