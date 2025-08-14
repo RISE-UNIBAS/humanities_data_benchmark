@@ -216,7 +216,7 @@ This page provides an overview of all tests. Click on the test name to see the d
     <td>0.0</td>
     <td>You are a historian with keyword knowledge and an expert in the field of 20th century Swiss history</td>
     <td>prompt.txt</td>
-    <td>false</td>
+    <td>true</td>
 </tr>
 <tr>
     <td><a href='tests/T15'><span class='test-square' style='background-color: #ff0099;'>T15</span></a></td>
@@ -227,7 +227,7 @@ This page provides an overview of all tests. Click on the test name to see the d
     <td>0.0</td>
     <td>You are a historian with keyword knowledge and an expert in the field of 20th century Swiss history</td>
     <td>prompt.txt</td>
-    <td>false</td>
+    <td>true</td>
 </tr>
 <tr>
     <td><a href='tests/T16'><span class='test-square' style='background-color: #33ffcc;'>T16</span></a></td>
@@ -238,7 +238,7 @@ This page provides an overview of all tests. Click on the test name to see the d
     <td>0.0</td>
     <td>You are a historian with keyword knowledge and an expert in the field of 20th century Swiss history</td>
     <td>prompt.txt</td>
-    <td>false</td>
+    <td>true</td>
 </tr>
 <tr>
     <td><a href='tests/T17'><span class='test-square' style='background-color: #9b59b6;'>T17</span></a></td>
@@ -271,7 +271,7 @@ This page provides an overview of all tests. Click on the test name to see the d
     <td>0.0</td>
     <td>You are a historian with keyword knowledge and an expert in the field of 20th century Swiss history</td>
     <td>prompt.txt</td>
-    <td>false</td>
+    <td>true</td>
 </tr>
 <tr>
     <td><a href='tests/T20'><span class='test-square' style='background-color: #ff5050;'>T20</span></a></td>
@@ -293,7 +293,7 @@ This page provides an overview of all tests. Click on the test name to see the d
     <td>0.0</td>
     <td>You are a historian with keyword knowledge and an expert in the field of 20th century Swiss history</td>
     <td>prompt.txt</td>
-    <td>false</td>
+    <td>true</td>
 </tr>
 <tr>
     <td><a href='tests/T22'><span class='test-square' style='background-color: #2980b9;'>T22</span></a></td>
@@ -304,7 +304,7 @@ This page provides an overview of all tests. Click on the test name to see the d
     <td>0.0</td>
     <td>You are a historian with keyword knowledge and an expert in the field of 20th century Swiss history</td>
     <td>prompt.txt</td>
-    <td>false</td>
+    <td>true</td>
 </tr>
 <tr>
     <td><a href='tests/T23'><span class='test-square' style='background-color: #ff0066;'>T23</span></a></td>
@@ -370,7 +370,7 @@ This page provides an overview of all tests. Click on the test name to see the d
     <td>0.0</td>
     <td>You are a Historian</td>
     <td></td>
-    <td>false</td>
+    <td>true</td>
 </tr>
 <tr>
     <td><a href='tests/T29'><span class='test-square' style='background-color: #f39c12;'>T29</span></a></td>
@@ -381,7 +381,7 @@ This page provides an overview of all tests. Click on the test name to see the d
     <td>0.0</td>
     <td>You are a Historian</td>
     <td></td>
-    <td>false</td>
+    <td>true</td>
 </tr>
 <tr>
     <td><a href='tests/T30'><span class='test-square' style='background-color: #1abc9c;'>T30</span></a></td>
@@ -392,7 +392,7 @@ This page provides an overview of all tests. Click on the test name to see the d
     <td>0.0</td>
     <td>You are a Historian</td>
     <td></td>
-    <td>false</td>
+    <td>true</td>
 </tr>
 <tr>
     <td><a href='tests/T31'><span class='test-square' style='background-color: #9966ff;'>T31</span></a></td>
@@ -414,7 +414,7 @@ This page provides an overview of all tests. Click on the test name to see the d
     <td>0.0</td>
     <td>You are a Historian</td>
     <td></td>
-    <td>false</td>
+    <td>true</td>
 </tr>
 <tr>
     <td><a href='tests/T33'><span class='test-square' style='background-color: #9b59b6;'>T33</span></a></td>
@@ -436,7 +436,7 @@ This page provides an overview of all tests. Click on the test name to see the d
     <td>0.0</td>
     <td>You are a Historian</td>
     <td></td>
-    <td>false</td>
+    <td>true</td>
 </tr>
 <tr>
     <td><a href='tests/T35'><span class='test-square' style='background-color: #2c3e50;'>T35</span></a></td>
@@ -568,7 +568,7 @@ This page provides an overview of all tests. Click on the test name to see the d
     <td>0.0</td>
     <td>You are a historian with keyword knowledge and an expert in the field of 20th century Swiss history</td>
     <td>prompt.txt</td>
-    <td>false</td>
+    <td>true</td>
 </tr>
 <tr>
     <td><a href='tests/T47'><span class='test-square' style='background-color: #e67e22;'>T47</span></a></td>
@@ -579,7 +579,7 @@ This page provides an overview of all tests. Click on the test name to see the d
     <td>0.0</td>
     <td>You are a historian with keyword knowledge and an expert in the field of 20th century Swiss history</td>
     <td>prompt.txt</td>
-    <td>false</td>
+    <td>true</td>
 </tr>
 <tr>
     <td><a href='tests/T48'><span class='test-square' style='background-color: #99ccff;'>T48</span></a></td>
@@ -590,7 +590,7 @@ This page provides an overview of all tests. Click on the test name to see the d
     <td>0.0</td>
     <td>You are a historian with keyword knowledge and an expert in the field of 20th century Swiss history</td>
     <td>prompt.txt</td>
-    <td>false</td>
+    <td>true</td>
 </tr>
 <tr>
     <td><a href='tests/T49'><span class='test-square' style='background-color: #ff6699;'>T49</span></a></td>
@@ -601,7 +601,7 @@ This page provides an overview of all tests. Click on the test name to see the d
     <td>0.0</td>
     <td>You are a historian with keyword knowledge and an expert in the field of 20th century Swiss history</td>
     <td>prompt.txt</td>
-    <td>false</td>
+    <td>true</td>
 </tr>
 <tr>
     <td><a href='tests/T50'><span class='test-square' style='background-color: #ff3399;'>T50</span></a></td>
@@ -612,7 +612,7 @@ This page provides an overview of all tests. Click on the test name to see the d
     <td>0.0</td>
     <td>You are a historian with keyword knowledge and an expert in the field of 20th century Swiss history</td>
     <td>prompt.txt</td>
-    <td>false</td>
+    <td>true</td>
 </tr>
 <tr>
     <td><a href='tests/T51'><span class='test-square' style='background-color: #ccff00;'>T51</span></a></td>
@@ -623,7 +623,7 @@ This page provides an overview of all tests. Click on the test name to see the d
     <td>0.0</td>
     <td>You are a historian with keyword knowledge and an expert in the field of 20th century Swiss history</td>
     <td>prompt.txt</td>
-    <td>false</td>
+    <td>true</td>
 </tr>
 <tr>
     <td><a href='tests/T52'><span class='test-square' style='background-color: #ff6600;'>T52</span></a></td>
@@ -656,7 +656,7 @@ This page provides an overview of all tests. Click on the test name to see the d
     <td>0.0</td>
     <td>You are a historian with keyword knowledge and an expert in the field of 20th century Swiss history</td>
     <td>prompt.txt</td>
-    <td>false</td>
+    <td>true</td>
 </tr>
 <tr>
     <td><a href='tests/T55'><span class='test-square' style='background-color: #99ccff;'>T55</span></a></td>
@@ -667,7 +667,7 @@ This page provides an overview of all tests. Click on the test name to see the d
     <td>0.0</td>
     <td>You are a historian with keyword knowledge and an expert in the field of 20th century Swiss history</td>
     <td>prompt.txt</td>
-    <td>false</td>
+    <td>true</td>
 </tr>
 <tr>
     <td><a href='tests/T56'><span class='test-square' style='background-color: #f39c12;'>T56</span></a></td>
@@ -700,7 +700,7 @@ This page provides an overview of all tests. Click on the test name to see the d
     <td>0.0</td>
     <td>You are a historian with keyword knowledge and an expert in the field of 20th century Swiss history</td>
     <td>prompt.txt</td>
-    <td>false</td>
+    <td>true</td>
 </tr>
 <tr>
     <td><a href='tests/T59'><span class='test-square' style='background-color: #33ccff;'>T59</span></a></td>
@@ -711,7 +711,7 @@ This page provides an overview of all tests. Click on the test name to see the d
     <td>0.0</td>
     <td>You are a historian with keyword knowledge and an expert in the field of 20th century Swiss history</td>
     <td>prompt.txt</td>
-    <td>false</td>
+    <td>true</td>
 </tr>
 <tr>
     <td><a href='tests/T60'><span class='test-square' style='background-color: #bdc3c7;'>T60</span></a></td>
@@ -942,7 +942,7 @@ This page provides an overview of all tests. Click on the test name to see the d
     <td>0.0</td>
     <td>You are a historian with keyword knowledge</td>
     <td>prompt_optimized.txt</td>
-    <td>false</td>
+    <td>true</td>
 </tr>
 <tr>
     <td><a href='tests/T81'><span class='test-square' style='background-color: #ffcc33;'>T81</span></a></td>
@@ -1019,7 +1019,7 @@ This page provides an overview of all tests. Click on the test name to see the d
     <td>0.0</td>
     <td>You are a historian with keyword knowledge</td>
     <td>prompt_optimized.txt</td>
-    <td>false</td>
+    <td>true</td>
 </tr>
 <tr>
     <td><a href='tests/T88'><span class='test-square' style='background-color: #f39c12;'>T88</span></a></td>
@@ -1030,7 +1030,7 @@ This page provides an overview of all tests. Click on the test name to see the d
     <td>0.0</td>
     <td>You are a historian with keyword knowledge</td>
     <td>prompt_optimized.txt</td>
-    <td>false</td>
+    <td>true</td>
 </tr>
 <tr>
     <td><a href='tests/T89'><span class='test-square' style='background-color: #33ffcc;'>T89</span></a></td>
@@ -1041,7 +1041,7 @@ This page provides an overview of all tests. Click on the test name to see the d
     <td>0.0</td>
     <td>You are a historian with keyword knowledge</td>
     <td>prompt_optimized.txt</td>
-    <td>false</td>
+    <td>true</td>
 </tr>
 <tr>
     <td><a href='tests/T90'><span class='test-square' style='background-color: #6699ff;'>T90</span></a></td>
@@ -1063,7 +1063,7 @@ This page provides an overview of all tests. Click on the test name to see the d
     <td>0.0</td>
     <td>You are a historian with keyword knowledge</td>
     <td>prompt_optimized.txt</td>
-    <td>false</td>
+    <td>true</td>
 </tr>
 <tr>
     <td><a href='tests/T92'><span class='test-square' style='background-color: #9b59b6;'>T92</span></a></td>
@@ -1118,7 +1118,7 @@ This page provides an overview of all tests. Click on the test name to see the d
     <td>0.0</td>
     <td>You are a historian with keyword knowledge</td>
     <td>prompt_optimized.txt</td>
-    <td>false</td>
+    <td>true</td>
 </tr>
 <tr>
     <td><a href='tests/T97'><span class='test-square' style='background-color: #ff6699;'>T97</span></a></td>
@@ -1129,7 +1129,7 @@ This page provides an overview of all tests. Click on the test name to see the d
     <td>0.0</td>
     <td>You are a historian with keyword knowledge</td>
     <td>prompt_optimized.txt</td>
-    <td>false</td>
+    <td>true</td>
 </tr>
 <tr>
     <td><a href='tests/T98'><span class='test-square' style='background-color: #66ff33;'>T98</span></a></td>
@@ -1411,6 +1411,105 @@ This page provides an overview of all tests. Click on the test name to see the d
     <td><a href="/benchmarks/fraktur/">fraktur</a></td>
     <td><span class='test-rectangle' style='background-color: #ff5050;'>anthropic</span></td>
     <td><span class='test-rectangle' style='background-color: #0099ff;'>claude-opus-4-1-20250805</span></td>
+    <td>Document</td>
+    <td>0.0</td>
+    <td>You are a historian with keyword knowledge</td>
+    <td>prompt_optimized.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='tests/T124'><span class='test-square' style='background-color: #ff3366;'>T124</span></a></td>
+    <td><a href="/benchmarks/metadata_extraction/">metadata_extraction</a></td>
+    <td><span class='test-rectangle' style='background-color: #ffcc33;'>genai</span></td>
+    <td><span class='test-rectangle' style='background-color: #e67e22;'>gemini-2.5-pro</span></td>
+    <td>Document</td>
+    <td>0.0</td>
+    <td>You are a historian with keyword knowledge and an expert in the field of 20th century Swiss history</td>
+    <td>prompt.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='tests/T125'><span class='test-square' style='background-color: #3498db;'>T125</span></a></td>
+    <td><a href="/benchmarks/metadata_extraction/">metadata_extraction</a></td>
+    <td><span class='test-rectangle' style='background-color: #ffcc33;'>genai</span></td>
+    <td><span class='test-rectangle' style='background-color: #e67e22;'>gemini-2.5-pro</span></td>
+    <td>Document</td>
+    <td>0.0</td>
+    <td>You are a historian with keyword knowledge and an expert in the field of 20th century Swiss history</td>
+    <td>prompt.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='tests/T126'><span class='test-square' style='background-color: #66ff33;'>T126</span></a></td>
+    <td><a href="/benchmarks/metadata_extraction/">metadata_extraction</a></td>
+    <td><span class='test-rectangle' style='background-color: #ffcc33;'>genai</span></td>
+    <td><span class='test-rectangle' style='background-color: #e67e22;'>gemini-2.5-pro</span></td>
+    <td>Document</td>
+    <td>0.0</td>
+    <td>You are a historian with keyword knowledge and an expert in the field of 20th century Swiss history</td>
+    <td>prompt.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='tests/T127'><span class='test-square' style='background-color: #0099ff;'>T127</span></a></td>
+    <td><a href="/benchmarks/bibliographic_data/">bibliographic_data</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff5050;'>anthropic</span></td>
+    <td><span class='test-rectangle' style='background-color: #0099ff;'>claude-opus-4-1-20250805</span></td>
+    <td>Document</td>
+    <td>0.0</td>
+    <td>You are a Historian</td>
+    <td></td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='tests/T128'><span class='test-square' style='background-color: #8e44ad;'>T128</span></a></td>
+    <td><a href="/benchmarks/bibliographic_data/">bibliographic_data</a></td>
+    <td><span class='test-rectangle' style='background-color: #ffcc33;'>genai</span></td>
+    <td><span class='test-rectangle' style='background-color: #e67e22;'>gemini-2.5-pro</span></td>
+    <td>Document</td>
+    <td>0.0</td>
+    <td>You are a Historian</td>
+    <td></td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='tests/T129'><span class='test-square' style='background-color: #bdc3c7;'>T129</span></a></td>
+    <td><a href="/benchmarks/bibliographic_data/">bibliographic_data</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff0066;'>openai</span></td>
+    <td><span class='test-rectangle' style='background-color: #ff9933;'>gpt-5</span></td>
+    <td>Document</td>
+    <td>0.0</td>
+    <td>You are a Historian</td>
+    <td></td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='tests/T130'><span class='test-square' style='background-color: #ff0099;'>T130</span></a></td>
+    <td><a href="/benchmarks/bibliographic_data/">bibliographic_data</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff0066;'>openai</span></td>
+    <td><span class='test-rectangle' style='background-color: #8e44ad;'>gpt-5-mini</span></td>
+    <td>Document</td>
+    <td>0.0</td>
+    <td>You are a Historian</td>
+    <td></td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='tests/T131'><span class='test-square' style='background-color: #c0392b;'>T131</span></a></td>
+    <td><a href="/benchmarks/bibliographic_data/">bibliographic_data</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff0066;'>openai</span></td>
+    <td><span class='test-rectangle' style='background-color: #ff33cc;'>gpt-5-nano</span></td>
+    <td>Document</td>
+    <td>0.0</td>
+    <td>You are a Historian</td>
+    <td></td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='tests/T132'><span class='test-square' style='background-color: #00ff66;'>T132</span></a></td>
+    <td><a href="/benchmarks/fraktur/">fraktur</a></td>
+    <td><span class='test-rectangle' style='background-color: #ffcc33;'>genai</span></td>
+    <td><span class='test-rectangle' style='background-color: #e67e22;'>gemini-2.5-pro</span></td>
     <td>Document</td>
     <td>0.0</td>
     <td>You are a historian with keyword knowledge</td>
