@@ -86,7 +86,7 @@ class AiApiClient:
         answer = None
 
         if self.api == 'openai':
-            if model in ["gpt-5", "gpt-5-mini", "gpt-5-nano"]:
+            if model in ["gpt-5", "gpt-5-mini", "gpt-5-nano", "o3"]:
                 self.temperature = 1
             workload_json = [{
                 "role": "user",
