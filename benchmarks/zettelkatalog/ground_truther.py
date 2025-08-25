@@ -4,6 +4,7 @@ from PIL import Image, ImageTk
 import json
 import os
 import argparse
+import logging
 from typing import Dict, Any, List, Optional, Union
 import datetime
 from dataclass import Author, Publication, Education, Examination, PersonalData, Document
@@ -30,7 +31,7 @@ class Config:
                 json.dump(config_data, f, indent=4)
             return True
         except Exception as e:
-            print(f"Error saving config: {str(e)}")
+            logging.error(f"Error saving config: {str(e)}")
             return False
     
     def load_config(self):
@@ -57,7 +58,7 @@ class Config:
                 
             return True
         except Exception as e:
-            print(f"Error loading config: {str(e)}")
+            logging.error(f"Error loading config: {str(e)}")
             return False
 
 class MetadataEditor:
@@ -1529,17 +1530,14 @@ def main():
     # Validate directories
     if config.image_dir and not os.path.isdir(config.image_dir):
         logger.warning(f"Image directory does not exist: {config.image_dir}")
-        print(f"Warning: Image directory does not exist: {config.image_dir}")
         config.image_dir = None
         
     if config.json_dir and not os.path.isdir(config.json_dir):
         logger.warning(f"JSON directory does not exist: {config.json_dir}")
-        print(f"Warning: JSON directory does not exist: {config.json_dir}")
         config.json_dir = None
         
     if config.output_dir and not os.path.isdir(config.output_dir):
-        logger.warning(f"Output directory does not exist: {config.output_dir}")
-        print(f"Warning: Output directory does not exist: {config.output_dir}, will create it when saving.")
+        logger.warning(f"Output directory does not exist: {config.output_dir}, will create it when saving.")
     
     # Log configuration
     logger.info(f"Starting with configuration:")
