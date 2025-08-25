@@ -126,15 +126,6 @@ This page provides an overview of all benchmark tests.Click on the test name to 
     <td></td>
 </tr>
 <tr>
-    <td>2025-04-15</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td><a href='/archive/2025-04-15/T66'><span class='test-square' style='background-color: #7f8c8d;'>T66</span></a>&nbsp;</td>
-</tr>
-<tr>
     <td>2025-04-11</td>
     <td></td>
     <td></td>

@@ -80,10 +80,6 @@ results, and comparisons.
     <td><a href="benchmarks/test_benchmark2/">test_benchmark2</a></td>
     <td><table class="inner-table" style="width:100%; border-collapse: collapse;"><tr><th>ID</th><th>Model</th><th>Date</th><th>Results</th></tr><tr><td><a href='archive/2025-04-01/T04'><span class='test-square' style='background-color: #ff3300;'>T04</span></a></td><td><span class='test-rectangle' style='background-color: #33ccff;'>gpt-4o</span></td><td>2025-04-01</td><td><img src="https://img.shields.io/badge/score-niy-brightgreen" alt="score"></td></tr><tr><td><a href='archive/2025-04-01/T05'><span class='test-square' style='background-color: #2c3e50;'>T05</span></a></td><td><span class='test-rectangle' style='background-color: #f39c12;'>gemini-2.0-flash</span></td><td>2025-04-01</td><td><img src="https://img.shields.io/badge/score-niy-brightgreen" alt="score"></td></tr><tr><td><a href='archive/2025-04-01/T06'><span class='test-square' style='background-color: #33ccff;'>T06</span></a></td><td><span class='test-rectangle' style='background-color: #cc6699;'>claude-3-5-sonnet-20241022</span></td><td>2025-04-01</td><td><img src="https://img.shields.io/badge/score-niy-brightgreen" alt="score"></td></tr></table></td>
 </tr>
-<tr>
-    <td><a href="benchmarks/zettelkatalog/">zettelkatalog</a></td>
-    <td><table class="inner-table" style="width:100%; border-collapse: collapse;"><tr><th>ID</th><th>Model</th><th>Date</th><th>Results</th></tr><tr><td><a href='archive/2025-04-15/T66'><span class='test-square' style='background-color: #7f8c8d;'>T66</span></a></td><td><span class='test-rectangle' style='background-color: #33ccff;'>gpt-4o</span></td><td>2025-04-15</td><td><img src="https://img.shields.io/badge/keine-antwort-brightgreen" alt="keine"></td></tr></table></td>
-</tr>
 
   </tbody>
 </table>
