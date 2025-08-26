@@ -153,7 +153,19 @@ def create_index():
             if test['name'] not in latest_results:
                 latest_results[test['name']] = {}
 
-            latest_results[test['name']][test['id']] = find_latest_date(test['id'])
+            # Create grouping key based on prompt_file and rules
+            prompt_file = test.get('prompt_file', '') or 'prompt.txt'
+            rules = test.get('rules', '') or ''
+            group_key = f"{prompt_file}|{rules}"
+            
+            if group_key not in latest_results[test['name']]:
+                latest_results[test['name']][group_key] = []
+            
+            latest_results[test['name']][group_key].append({
+                'id': test['id'],
+                'date': find_latest_date(test['id']),
+                'config': test
+            })
 
     # Get all available date folders (sorted by date descending)
     table_headers = ["Benchmark", "Latest Results"]
@@ -169,89 +181,106 @@ def create_index():
             # Skip benchmarks with no results
             continue
 
-        # Store test results to sort them later
-        test_results = []
-        for test_id in latest_results[benchmark]:
-            date = latest_results[benchmark][test_id]
-            if date is None:
-                # Add entries with no results available with score of -1 (to ensure they appear below entries with score 0)
-                test_results.append((test_id, None, None, "No results available", -1))
-                continue
+        # Create inner table for this benchmark's tests grouped by prompt and rules
+        inner_table = '<table class="inner-table" style="width:100%; border-collapse: collapse;">'
+        inner_table += '<tr><th>Prompt</th><th>Rules</th><th>ID</th><th>Model</th><th>Date</th><th>Results</th></tr>'
+        
+        # Process each prompt/rules group
+        for group_key in sorted(latest_results[benchmark].keys()):
+            prompt_file, rules = group_key.split('|', 1)
+            group_tests = latest_results[benchmark][group_key]
             
-            # Get test configuration to access model information
-            test_config = load_test_configuration(test_id)
-            model_info = test_config['model'] if test_config and 'model' in test_config else "unknown"
-
-            scoring_file = os.path.join('..', 'results', date, test_id, 'scoring.json')
-            scoring_data = read_file(scoring_file)
-            try:
-                scoring_data = json.loads(scoring_data)
-            except json.decoder.JSONDecodeError:
-                scoring_data = {'Total': 0}
-
-            badges = []
-            score_value = 0
-            for key, value in scoring_data.items():
-                badges.append(get_badge(key, value))
-                # Extract numeric value for sorting
-                try:
-                    if isinstance(value, (int, float)):
-                        score_value = float(value)
-                    else:
-                        score_value = float(value) if value.replace('.', '', 1).isdigit() else 0
-                except (ValueError, AttributeError):
-                    score_value = 0
-
-            badge_html = " ".join(badges)
-            test_results.append((test_id, date, model_info, badge_html, score_value))
-
-        # Sort test results by score value (highest to lowest)
-        # For Fraktur benchmark, sort specifically by fuzzy score
-        if benchmark == "fraktur":
-            # Extract fuzzy score from scoring data for sorting
-            fraktur_test_results = []
-            for test_id, date, model_info, badge_html, _ in test_results:
+            # Store test results to sort them later
+            test_results = []
+            for test_info in group_tests:
+                test_id = test_info['id']
+                date = test_info['date']
+                test_config = test_info['config']
+                
                 if date is None:
-                    fraktur_test_results.append((test_id, date, model_info, badge_html, -1))
+                    # Add entries with no results available with score of -1 (to ensure they appear below entries with score 0)
+                    test_results.append((test_id, None, None, "No results available", -1, test_config))
                     continue
                 
+                # Get test configuration to access model information
+                model_info = test_config['model'] if test_config and 'model' in test_config else "unknown"
+
                 scoring_file = os.path.join('..', 'results', date, test_id, 'scoring.json')
                 scoring_data = read_file(scoring_file)
                 try:
                     scoring_data = json.loads(scoring_data)
-                    # Use fuzzy score for sorting if available
-                    fuzzy_score = scoring_data.get('fuzzy', 0)
-                    if isinstance(fuzzy_score, str):
-                        fuzzy_score = float(fuzzy_score) if fuzzy_score.replace('.', '', 1).isdigit() else 0
-                    fraktur_test_results.append((test_id, date, model_info, badge_html, fuzzy_score))
-                except (json.decoder.JSONDecodeError, ValueError):
-                    fraktur_test_results.append((test_id, date, model_info, badge_html, 0))
-            
-            # Replace the original test_results with the fuzzy score sorted version
-            test_results = fraktur_test_results
-            
-        # Sort by the score value (highest to lowest)
-        test_results.sort(key=lambda x: x[4], reverse=True)
-        
-        # Skip benchmarks where all tests have no results (date is None for all)
-        if all(date is None for _, date, _, _, _ in test_results):
-            continue
-            
-        # Create inner table for this benchmark's tests
-        inner_table = '<table class="inner-table" style="width:100%; border-collapse: collapse;">'
-        inner_table += '<tr><th>ID</th><th>Model</th><th>Date</th><th>Results</th></tr>'
-        
-        for test_id, date, model_info, badge_html, _ in test_results:
-            # Skip entries with no date (no results)
-            if date is None:
-                continue
+                except json.decoder.JSONDecodeError:
+                    scoring_data = {'Total': 0}
+
+                badges = []
+                score_value = 0
+                for key, value in scoring_data.items():
+                    badges.append(get_badge(key, value))
+                    # Extract numeric value for sorting
+                    try:
+                        if isinstance(value, (int, float)):
+                            score_value = float(value)
+                        else:
+                            score_value = float(value) if value.replace('.', '', 1).isdigit() else 0
+                    except (ValueError, AttributeError):
+                        score_value = 0
+
+                badge_html = " ".join(badges)
+                test_results.append((test_id, date, model_info, badge_html, score_value, test_config))
+
+            # Sort test results by score value (highest to lowest)
+            # For Fraktur benchmark, sort specifically by fuzzy score
+            if benchmark == "fraktur":
+                # Extract fuzzy score from scoring data for sorting
+                fraktur_test_results = []
+                for test_id, date, model_info, badge_html, _, test_config in test_results:
+                    if date is None:
+                        fraktur_test_results.append((test_id, date, model_info, badge_html, -1, test_config))
+                        continue
+                    
+                    scoring_file = os.path.join('..', 'results', date, test_id, 'scoring.json')
+                    scoring_data = read_file(scoring_file)
+                    try:
+                        scoring_data = json.loads(scoring_data)
+                        # Use fuzzy score for sorting if available
+                        fuzzy_score = scoring_data.get('fuzzy', 0)
+                        if isinstance(fuzzy_score, str):
+                            fuzzy_score = float(fuzzy_score) if fuzzy_score.replace('.', '', 1).isdigit() else 0
+                        fraktur_test_results.append((test_id, date, model_info, badge_html, fuzzy_score, test_config))
+                    except (json.decoder.JSONDecodeError, ValueError):
+                        fraktur_test_results.append((test_id, date, model_info, badge_html, 0, test_config))
                 
-            test_id_html = get_square(test_id, href=f"archive/{date}/{test_id}")
-            model_html = get_rectangle(model_info) if model_info else "N/A"
+                # Replace the original test_results with the fuzzy score sorted version
+                test_results = fraktur_test_results
+                
+            # Sort by the score value (highest to lowest)
+            test_results.sort(key=lambda x: x[4], reverse=True)
             
-            inner_table += f'<tr><td>{test_id_html}</td><td>{model_html}</td><td>{date}</td><td>{badge_html}</td></tr>'
+            # Add rows for this group
+            first_row = True
+            for test_id, date, model_info, badge_html, _, test_config in test_results:
+                # Skip entries with no date (no results)
+                if date is None:
+                    continue
+                    
+                test_id_html = get_square(test_id, href=f"archive/{date}/{test_id}")
+                model_html = get_rectangle(model_info) if model_info else "N/A"
+                
+                # Display prompt and rules only in the first row of each group
+                if first_row:
+                    prompt_display = prompt_file if prompt_file else "prompt.txt"
+                    rules_display = rules if rules else "None"
+                    inner_table += f'<tr><td>{prompt_display}</td><td>{rules_display}</td><td>{test_id_html}</td><td>{model_html}</td><td>{date}</td><td>{badge_html}</td></tr>'
+                    first_row = False
+                else:
+                    inner_table += f'<tr><td></td><td></td><td>{test_id_html}</td><td>{model_html}</td><td>{date}</td><td>{badge_html}</td></tr>'
         
         inner_table += '</table>'
+        
+        # Skip benchmarks where all tests have no results
+        if '<tr><td>' not in inner_table:
+            continue
+            
         row_data.append(inner_table)
         table_data.append(row_data)
 
