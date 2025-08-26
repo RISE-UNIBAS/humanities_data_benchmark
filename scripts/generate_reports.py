@@ -494,12 +494,9 @@ def create_index():
             provider_display = provider_mappings.get(test['provider'].lower(), test['provider'])
             provider_html = get_rectangle(provider_display)
             
-            # Create expandable rules cell
+            # Create rules cell (always expanded)
             if test['rules'] and test['rules'].strip() and test['rules'] != "None":
-                rules_display = f'''<details>
-                    <summary>Show Rules</summary>
-                    <div style="margin-top: 5px; padding: 5px; background-color: #f5f5f5; border-radius: 3px; font-size: 0.9em; white-space: pre-wrap;">{test['rules']}</div>
-                </details>'''
+                rules_display = f'''<div style="padding: 5px; background-color: #f5f5f5; border-radius: 3px; font-size: 0.9em; white-space: pre-wrap; max-width: 200px; overflow-wrap: break-word;">{test['rules']}</div>'''
             else:
                 rules_display = "None"
             

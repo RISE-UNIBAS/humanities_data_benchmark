@@ -59,6 +59,13 @@ TEST_STYLE = """<style>
     .sortable-table th[onclick]:hover {
         background-color: #e8e8e8;
     }
+    
+    /* Rules column styles */
+    .inner-table td:nth-child(5) {
+        max-width: 200px;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+    }
 </style>"""
 
 COLOR_PALETTE = [

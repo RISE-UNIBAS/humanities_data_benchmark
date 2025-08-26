@@ -59,6 +59,13 @@ This page provides an overview of all benchmark tests.Click on the test name to 
     .sortable-table th[onclick]:hover {
         background-color: #e8e8e8;
     }
+    
+    /* Rules column styles */
+    .inner-table td:nth-child(5) {
+        max-width: 200px;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+    }
 </style>
 <table id="data-table" class="display">
   <thead><tr>
