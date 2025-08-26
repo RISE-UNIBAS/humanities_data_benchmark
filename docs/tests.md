@@ -66,6 +66,13 @@ This page provides an overview of all tests. Click on the test name to see the d
         word-wrap: break-word;
         overflow-wrap: break-word;
     }
+    
+    /* Radar chart container styles */
+    #performanceRadar {
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        background-color: #fafafa;
+    }
 </style>
 <table id="data-table" class="display">
   <thead><tr>

@@ -245,7 +245,99 @@ def create_leaderboard():
     if not leaderboard_data:
         return "<p>No leaderboard data available.</p>"
     
-    leaderboard_html = '''<div>
+    # Generate data for radar chart
+    radar_data = []
+    for data in leaderboard_data[:10]:  # Top 10 models
+        radar_data.append({
+            'model': data['model'],
+            'provider': data['provider'],
+            'bibliographic_data': data['bibliographic_data'] if data['bibliographic_data'] is not None else 0,
+            'fraktur': data['fraktur'] if data['fraktur'] is not None else 0,
+            'metadata_extraction': data['metadata_extraction'] if data['metadata_extraction'] is not None else 0
+        })
+    
+    leaderboard_html = f'''<div>
+<!-- Radar Chart Section -->
+<div style="margin-bottom: 30px;">
+    <h3>Global Performance (Top 10 Models)</h3>
+    <div style="width: 100%; max-width: 800px; margin: 0 auto;">
+        <canvas id="performanceRadar" width="800" height="600"></canvas>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+const radarData = {json.dumps(radar_data)};
+const ctx = document.getElementById('performanceRadar').getContext('2d');
+const colors = [
+    'rgba(255, 99, 132, 0.6)', 'rgba(54, 162, 235, 0.6)', 'rgba(255, 205, 86, 0.6)',
+    'rgba(75, 192, 192, 0.6)', 'rgba(153, 102, 255, 0.6)', 'rgba(255, 159, 64, 0.6)',
+    'rgba(199, 199, 199, 0.6)', 'rgba(83, 102, 147, 0.6)', 'rgba(255, 99, 255, 0.6)',
+    'rgba(99, 255, 132, 0.6)'
+];
+
+const datasets = radarData.map((item, index) => ({{
+    label: `${{item.model}} (${{item.provider}})`,
+    data: [item.bibliographic_data, item.fraktur, item.metadata_extraction],
+    backgroundColor: colors[index % colors.length],
+    borderColor: colors[index % colors.length].replace('0.6', '1'),
+    borderWidth: 2,
+    pointBackgroundColor: colors[index % colors.length].replace('0.6', '1'),
+    pointBorderColor: '#fff',
+    pointHoverBackgroundColor: '#fff',
+    pointHoverBorderColor: colors[index % colors.length].replace('0.6', '1')
+}}));
+
+const radarChart = new Chart(ctx, {{
+    type: 'radar',
+    data: {{
+        labels: ['Bibliographic Data', 'Fraktur', 'Metadata Extraction'],
+        datasets: datasets
+    }},
+    options: {{
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {{
+            title: {{
+                display: true,
+                text: 'Model Performance Across Benchmarks',
+                font: {{
+                    size: 16
+                }}
+            }},
+            legend: {{
+                position: 'bottom',
+                labels: {{
+                    usePointStyle: true,
+                    padding: 20
+                }}
+            }}
+        }},
+        scales: {{
+            r: {{
+                beginAtZero: true,
+                max: 1.0,
+                ticks: {{
+                    stepSize: 0.2,
+                    font: {{
+                        size: 12
+                    }}
+                }},
+                pointLabels: {{
+                    font: {{
+                        size: 14
+                    }}
+                }}
+            }}
+        }},
+        interaction: {{
+            intersect: false
+        }}
+    }}
+}});
+</script>
+
+<div>
 <table id="leaderboard-table" style="width:100%; border-collapse: collapse; margin-bottom: 20px;">
 <thead>
 <tr>
@@ -520,9 +612,10 @@ results, and comparisons.
 
 ## Leaderboard
 
-The following table shows the **global average performance** of each model across the three core benchmarks: 
+The following visualization and table show the **global average performance** of each model across the three core benchmarks: 
 [bibliographic_data](benchmarks/bibliographic_data/), [fraktur](benchmarks/fraktur/), and [metadata_extraction](benchmarks/metadata_extraction/). Only models with results in all three benchmarks are included.
-Click on any column header to sort the table.
+
+The **radar chart** provides a visual comparison of the top 10 models across all three benchmarks, making it easy to see each model's strengths and weaknesses at a glance. The **sortable table** below contains detailed scores for all models. Click on any column header to sort the table.
 
 {leaderboard_html}
 

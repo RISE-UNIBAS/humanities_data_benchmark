@@ -66,6 +66,13 @@ TEST_STYLE = """<style>
         word-wrap: break-word;
         overflow-wrap: break-word;
     }
+    
+    /* Radar chart container styles */
+    #performanceRadar {
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        background-color: #fafafa;
+    }
 </style>"""
 
 COLOR_PALETTE = [
