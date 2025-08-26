@@ -183,7 +183,7 @@ def create_index():
 
         # Create inner table for this benchmark's tests grouped by prompt and rules
         inner_table = '<table class="inner-table" style="width:100%; border-collapse: collapse;">'
-        inner_table += '<tr><th>Prompt</th><th>Rules</th><th>ID</th><th>Model</th><th>Date</th><th>Results</th></tr>'
+        inner_table += '<tr><th style="width:15%;">Prompt</th><th style="width:10%;">Rules</th><th style="width:8%;">ID</th><th style="width:15%;">Model</th><th style="width:12%;">Date</th><th style="width:40%;">Results</th></tr>'
         
         # Process each prompt/rules group
         for group_key in sorted(latest_results[benchmark].keys()):
