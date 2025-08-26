@@ -49,6 +49,23 @@ This page provides an overview of all tests. Click on the test name to see the d
         background-color: #f2f2f2;
         font-weight: bold;
     }
+    
+    /* Sortable table styles */
+    .sortable-table th[onclick] {
+        cursor: pointer;
+        user-select: none;
+        transition: background-color 0.2s;
+    }
+    .sortable-table th[onclick]:hover {
+        background-color: #e8e8e8;
+    }
+    
+    /* Rules column styles */
+    .inner-table td:nth-child(5) {
+        max-width: 200px;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+    }
 </style>
 <table id="data-table" class="display">
   <thead><tr>
