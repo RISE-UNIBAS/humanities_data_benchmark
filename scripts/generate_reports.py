@@ -249,13 +249,12 @@ def create_leaderboard():
 <table id="leaderboard-table" style="width:100%; border-collapse: collapse; margin-bottom: 20px;">
 <thead>
 <tr>
-<th onclick="sortTable(0)" style="cursor: pointer;">Rank ↕</th>
-<th onclick="sortTable(1)" style="cursor: pointer;">Model ↕</th>
-<th onclick="sortTable(2)" style="cursor: pointer;">Provider ↕</th>
-<th onclick="sortTable(3)" style="cursor: pointer;">Global Average ↕</th>
-<th onclick="sortTable(4)" style="cursor: pointer;"><a href="benchmarks/bibliographic_data/" style="color: inherit; text-decoration: none;">bibliographic_data</a> ↕</th>
-<th onclick="sortTable(5)" style="cursor: pointer;"><a href="benchmarks/fraktur/" style="color: inherit; text-decoration: none;">fraktur</a> ↕</th>
-<th onclick="sortTable(6)" style="cursor: pointer;"><a href="benchmarks/metadata_extraction/" style="color: inherit; text-decoration: none;">metadata_extraction</a> ↕</th>
+<th onclick="sortTable(0)" style="cursor: pointer;">Model ↕</th>
+<th onclick="sortTable(1)" style="cursor: pointer;">Provider ↕</th>
+<th onclick="sortTable(2)" style="cursor: pointer;">Global Average ↕</th>
+<th onclick="sortTable(3)" style="cursor: pointer;"><a href="benchmarks/bibliographic_data/" style="color: inherit; text-decoration: none;">bibliographic_data</a> ↕</th>
+<th onclick="sortTable(4)" style="cursor: pointer;"><a href="benchmarks/fraktur/" style="color: inherit; text-decoration: none;">fraktur</a> ↕</th>
+<th onclick="sortTable(5)" style="cursor: pointer;"><a href="benchmarks/metadata_extraction/" style="color: inherit; text-decoration: none;">metadata_extraction</a> ↕</th>
 </tr>
 </thead>
 <tbody>'''
@@ -272,7 +271,7 @@ def create_leaderboard():
         fraktur_sort = f'{data["fraktur"]:.3f}' if data["fraktur"] is not None else "0"  
         metadata_sort = f'{data["metadata_extraction"]:.3f}' if data["metadata_extraction"] is not None else "0"
         
-        leaderboard_html += f'<tr><td data-sort="{rank}"><strong>#{rank}</strong></td><td data-sort="{data["model"]}">{model_html}</td><td data-sort="{data["provider"]}">{provider_html}</td><td data-sort="{data["global_avg"]:.3f}">{global_avg_badge}</td><td data-sort="{biblio_sort}">{biblio_badge}</td><td data-sort="{fraktur_sort}">{fraktur_badge}</td><td data-sort="{metadata_sort}">{metadata_badge}</td></tr>'
+        leaderboard_html += f'<tr><td data-sort="{data["model"]}">{model_html}</td><td data-sort="{data["provider"]}">{provider_html}</td><td data-sort="{data["global_avg"]:.3f}">{global_avg_badge}</td><td data-sort="{biblio_sort}">{biblio_badge}</td><td data-sort="{fraktur_sort}">{fraktur_badge}</td><td data-sort="{metadata_sort}">{metadata_badge}</td></tr>'
     
     leaderboard_html += '''</tbody>
 </table>
@@ -303,13 +302,6 @@ if (valueA > valueB) return isAscending ? 1 : -1;
 return 0;
 });
 
-if (columnIndex !== 0) {
-rows.forEach((row, index) => {
-const rankCell = row.getElementsByTagName("td")[0];
-rankCell.innerHTML = "<strong>#" + (index + 1) + "</strong>";
-rankCell.setAttribute("data-sort", index + 1);
-});
-}
 
 rows.forEach(row => tbody.appendChild(row));
 
@@ -493,7 +485,8 @@ results, and comparisons.
 ## Leaderboard
 
 The following table shows the **global average performance** of each model across the three core benchmarks: 
-Bibliographic Data, Fraktur, and Metadata Extraction. Only models with results in all three benchmarks are included.
+[bibliographic_data](benchmarks/bibliographic_data/), [fraktur](benchmarks/fraktur/), and [metadata_extraction](benchmarks/metadata_extraction/). Only models with results in all three benchmarks are included.
+Click on any column header to sort the table.
 
 {leaderboard_html}
 
