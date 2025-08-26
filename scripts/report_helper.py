@@ -49,6 +49,16 @@ TEST_STYLE = """<style>
         background-color: #f2f2f2;
         font-weight: bold;
     }
+    
+    /* Sortable table styles */
+    .sortable-table th[onclick] {
+        cursor: pointer;
+        user-select: none;
+        transition: background-color 0.2s;
+    }
+    .sortable-table th[onclick]:hover {
+        background-color: #e8e8e8;
+    }
 </style>"""
 
 COLOR_PALETTE = [

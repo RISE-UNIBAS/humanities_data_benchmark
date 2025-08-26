@@ -49,6 +49,16 @@ This page provides an overview of all benchmark tests.Click on the test name to 
         background-color: #f2f2f2;
         font-weight: bold;
     }
+    
+    /* Sortable table styles */
+    .sortable-table th[onclick] {
+        cursor: pointer;
+        user-select: none;
+        transition: background-color 0.2s;
+    }
+    .sortable-table th[onclick]:hover {
+        background-color: #e8e8e8;
+    }
 </style>
 <table id="data-table" class="display">
   <thead><tr>

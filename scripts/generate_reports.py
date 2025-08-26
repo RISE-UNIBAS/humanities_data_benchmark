@@ -316,6 +316,46 @@ header.innerHTML = text + ' ↕';
 }
 }
 }
+
+// Function to sort benchmark tables
+function sortBenchmarkTable(benchmarkName, columnIndex) {
+const table = document.getElementById(benchmarkName + "-table");
+const tbody = table.getElementsByTagName("tbody")[0];
+const rows = Array.from(tbody.getElementsByTagName("tr"));
+
+const isAscending = table.getAttribute("data-sort-dir") !== "asc";
+table.setAttribute("data-sort-dir", isAscending ? "asc" : "desc");
+
+rows.sort((a, b) => {
+const cellA = a.getElementsByTagName("td")[columnIndex];
+const cellB = b.getElementsByTagName("td")[columnIndex];
+
+let valueA = cellA.getAttribute("data-sort") || cellA.textContent.trim();
+let valueB = cellB.getAttribute("data-sort") || cellB.textContent.trim();
+
+if (!isNaN(valueA) && !isNaN(valueB)) {
+valueA = parseFloat(valueA);
+valueB = parseFloat(valueB);
+}
+
+if (valueA < valueB) return isAscending ? -1 : 1;
+if (valueA > valueB) return isAscending ? 1 : -1;
+return 0;
+});
+
+rows.forEach(row => tbody.appendChild(row));
+
+const headers = table.getElementsByTagName("th");
+for (let i = 0; i < headers.length; i++) {
+const header = headers[i];
+const text = header.innerHTML.replace(/ [↕↑↓]/g, '');
+if (i === columnIndex) {
+header.innerHTML = text + (isAscending ? ' ↑' : ' ↓');
+} else {
+header.innerHTML = text + ' ↕';
+}
+}
+}
 </script>
 </div>'''
     
@@ -359,15 +399,15 @@ def create_index():
         benchmark_sections += f'### <a href="benchmarks/{benchmark}/">{benchmark}</a>\n\n'
         
         # Create table for this benchmark
-        benchmark_table = '''<table class="inner-table">
+        benchmark_table = f'''<table class="inner-table sortable-table" id="{benchmark}-table">
 <thead>
 <tr>
-<th>Model</th>
-<th>Provider</th>
-<th>Date</th>
-<th>Prompt</th>
-<th>Rules</th>
-<th>Results</th>
+<th onclick="sortBenchmarkTable('{benchmark}', 0)" style="cursor: pointer;">Model ↕</th>
+<th onclick="sortBenchmarkTable('{benchmark}', 1)" style="cursor: pointer;">Provider ↕</th>
+<th onclick="sortBenchmarkTable('{benchmark}', 2)" style="cursor: pointer;">Date ↕</th>
+<th onclick="sortBenchmarkTable('{benchmark}', 3)" style="cursor: pointer;">Prompt ↕</th>
+<th onclick="sortBenchmarkTable('{benchmark}', 4)" style="cursor: pointer;">Rules ↕</th>
+<th onclick="sortBenchmarkTable('{benchmark}', 5)" style="cursor: pointer;">Results ↕</th>
 </tr>
 </thead>
 <tbody>'''
@@ -406,9 +446,25 @@ def create_index():
                 except (ValueError, TypeError):
                     score_value = 0
 
+                # Create badges based on benchmark type
                 badges = []
-                for key, value in scoring_data.items():
-                    badges.append(get_badge(key.lower(), value))
+                if benchmark == 'bibliographic_data':
+                    # Show all metrics for bibliographic_data
+                    for key, value in scoring_data.items():
+                        badges.append(get_badge(key.lower(), value))
+                elif benchmark == 'fraktur':
+                    # Only show fuzzy for fraktur
+                    if 'fuzzy' in scoring_data:
+                        badges.append(get_badge('fuzzy', scoring_data['fuzzy']))
+                elif benchmark == 'metadata_extraction':
+                    # Only show f1_micro for metadata_extraction
+                    if 'f1_micro' in scoring_data:
+                        badges.append(get_badge('f1_micro', scoring_data['f1_micro']))
+                else:
+                    # For other benchmarks, show all metrics
+                    for key, value in scoring_data.items():
+                        badges.append(get_badge(key.lower(), value))
+                
                 badge_html = " ".join(badges)
                 
                 all_tests.append({
@@ -447,7 +503,7 @@ def create_index():
             else:
                 rules_display = "None"
             
-            benchmark_table += f'<tr><td>{model_html}</td><td>{provider_html}</td><td>{test["date"]}</td><td>{test["prompt"]}</td><td>{rules_display}</td><td>{test["badges"]}</td></tr>'
+            benchmark_table += f'<tr><td data-sort="{test["model"]}">{model_html}</td><td data-sort="{provider_display}">{provider_html}</td><td data-sort="{test["date"]}">{test["date"]}</td><td data-sort="{test["prompt"]}">{test["prompt"]}</td><td data-sort="{test["rules"] if test["rules"] != "None" else ""}">{rules_display}</td><td data-sort="{test["score"]:.3f}">{test["badges"]}</td></tr>'
         
         benchmark_table += '</tbody></table>\n\n'
         benchmark_sections += benchmark_table
