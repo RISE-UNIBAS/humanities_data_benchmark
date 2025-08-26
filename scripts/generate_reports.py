@@ -373,109 +373,154 @@ header.innerHTML = text + ' ↕';
 <div style="margin-top: 30px; margin-bottom: 30px;">
     <p>The radar chart provides a visual comparison of the top 10 models across all three benchmarks.</p>
     <h3>Global Performance (Top 10 Models)</h3>
-    <div style="width: 100%; max-width: 800px; margin: 0 auto; height: 600px;">
-        <canvas id="performanceRadar" style="max-width: 100%; max-height: 100%;"></canvas>
+    <div style="width: 100%; max-width: 800px; margin: 0 auto;">
+        <svg id="performanceRadar" width="800" height="600" viewBox="0 0 800 600" style="max-width: 100%; border: 1px solid #ddd; border-radius: 8px; background-color: #fafafa;">
+            <!-- Radar chart will be generated here -->
+        </svg>
+        <div id="radarLegend" style="margin-top: 20px; text-align: center; font-size: 12px;"></div>
     </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-function initRadarChart() {{
-    // Check if Chart.js is loaded
-    if (typeof Chart === 'undefined') {{
-        console.error('Chart.js library not loaded');
-        document.getElementById('performanceRadar').parentElement.innerHTML = '<p style="text-align: center; color: #666;">Chart library failed to load. Please refresh the page.</p>';
-        return;
-    }}
-    
+document.addEventListener('DOMContentLoaded', function() {{
     const radarData = {json.dumps(radar_data)};
-    const ctx = document.getElementById('performanceRadar');
+    const svg = document.getElementById('performanceRadar');
+    const legend = document.getElementById('radarLegend');
     
-    if (!ctx) {{
-        console.error('Canvas element not found');
+    if (!svg || !radarData || radarData.length === 0) {{
+        svg.innerHTML = '<text x="400" y="300" text-anchor="middle" fill="#666">No data available for radar chart</text>';
         return;
     }}
+    
+    const centerX = 400;
+    const centerY = 300;
+    const radius = 200;
+    const labels = ['Bibliographic Data', 'Fraktur', 'Metadata Extraction'];
+    const angleStep = (2 * Math.PI) / labels.length;
     
     const colors = [
-        'rgba(255, 99, 132, 0.6)', 'rgba(54, 162, 235, 0.6)', 'rgba(255, 205, 86, 0.6)',
-        'rgba(75, 192, 192, 0.6)', 'rgba(153, 102, 255, 0.6)', 'rgba(255, 159, 64, 0.6)',
-        'rgba(199, 199, 199, 0.6)', 'rgba(83, 102, 147, 0.6)', 'rgba(255, 99, 255, 0.6)',
-        'rgba(99, 255, 132, 0.6)'
+        '#ff6384', '#36a2eb', '#ffcd56', '#4bc0c0', '#9966ff', 
+        '#ff9f40', '#c7c7c7', '#53669f', '#ff63ff', '#63ff84'
     ];
-
-    const datasets = radarData.map((item, index) => ({{
-        label: item.model + ' (' + item.provider + ')',
-        data: [item.bibliographic_data, item.fraktur, item.metadata_extraction],
-        backgroundColor: colors[index % colors.length],
-        borderColor: colors[index % colors.length].replace('0.6', '1'),
-        borderWidth: 2,
-        pointBackgroundColor: colors[index % colors.length].replace('0.6', '1'),
-        pointBorderColor: '#fff',
-        pointHoverBackgroundColor: '#fff',
-        pointHoverBorderColor: colors[index % colors.length].replace('0.6', '1')
-    }}));
-
-    try {{
-        const radarChart = new Chart(ctx, {{
-            type: 'radar',
-            data: {{
-                labels: ['Bibliographic Data', 'Fraktur', 'Metadata Extraction'],
-                datasets: datasets
-            }},
-            options: {{
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {{
-                    title: {{
-                        display: true,
-                        text: 'Model Performance Across Benchmarks',
-                        font: {{
-                            size: 16
-                        }}
-                    }},
-                    legend: {{
-                        position: 'bottom',
-                        labels: {{
-                            usePointStyle: true,
-                            padding: 20
-                        }}
-                    }}
-                }},
-                scales: {{
-                    r: {{
-                        beginAtZero: true,
-                        max: 1.0,
-                        ticks: {{
-                            stepSize: 0.2,
-                            font: {{
-                                size: 12
-                            }}
-                        }},
-                        pointLabels: {{
-                            font: {{
-                                size: 14
-                            }}
-                        }}
-                    }}
-                }},
-                interaction: {{
-                    intersect: false
-                }}
-            }}
-        }});
-    }} catch (error) {{
-        console.error('Error creating radar chart:', error);
-        document.getElementById('performanceRadar').parentElement.innerHTML = '<p style="text-align: center; color: #666;">Radar chart could not be loaded. Please check browser console for details.</p>';
+    
+    // Clear SVG
+    svg.innerHTML = '';
+    
+    // Draw background circles and grid
+    for (let i = 1; i <= 5; i++) {{
+        const r = (radius * i) / 5;
+        const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        circle.setAttribute('cx', centerX);
+        circle.setAttribute('cy', centerY);
+        circle.setAttribute('r', r);
+        circle.setAttribute('fill', 'none');
+        circle.setAttribute('stroke', '#ddd');
+        circle.setAttribute('stroke-width', '1');
+        svg.appendChild(circle);
+        
+        // Add scale labels
+        if (i % 2 === 0) {{
+            const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+            text.setAttribute('x', centerX + r + 5);
+            text.setAttribute('y', centerY);
+            text.setAttribute('font-size', '12');
+            text.setAttribute('fill', '#666');
+            text.textContent = (i / 5).toFixed(1);
+            svg.appendChild(text);
+        }}
     }}
-}}
-
-// Try to initialize when DOM is ready
-if (document.readyState === 'loading') {{
-    document.addEventListener('DOMContentLoaded', initRadarChart);
-}} else {{
-    // DOM is already loaded
-    setTimeout(initRadarChart, 100);
-}}
+    
+    // Draw axes and labels
+    labels.forEach((label, i) => {{
+        const angle = i * angleStep - Math.PI / 2;
+        const x1 = centerX;
+        const y1 = centerY;
+        const x2 = centerX + Math.cos(angle) * radius;
+        const y2 = centerY + Math.sin(angle) * radius;
+        
+        // Axis line
+        const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+        line.setAttribute('x1', x1);
+        line.setAttribute('y1', y1);
+        line.setAttribute('x2', x2);
+        line.setAttribute('y2', y2);
+        line.setAttribute('stroke', '#ddd');
+        line.setAttribute('stroke-width', '1');
+        svg.appendChild(line);
+        
+        // Label
+        const labelX = centerX + Math.cos(angle) * (radius + 30);
+        const labelY = centerY + Math.sin(angle) * (radius + 30);
+        const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        text.setAttribute('x', labelX);
+        text.setAttribute('y', labelY);
+        text.setAttribute('text-anchor', 'middle');
+        text.setAttribute('dominant-baseline', 'middle');
+        text.setAttribute('font-size', '14');
+        text.setAttribute('font-weight', 'bold');
+        text.setAttribute('fill', '#333');
+        text.textContent = label;
+        svg.appendChild(text);
+    }});
+    
+    // Draw data polygons
+    let legendHTML = '';
+    radarData.forEach((item, index) => {{
+        const color = colors[index % colors.length];
+        const points = [];
+        
+        labels.forEach((label, i) => {{
+            const angle = i * angleStep - Math.PI / 2;
+            let value;
+            if (i === 0) value = item.bibliographic_data;
+            else if (i === 1) value = item.fraktur;
+            else value = item.metadata_extraction;
+            
+            const distance = (value || 0) * radius;
+            const x = centerX + Math.cos(angle) * distance;
+            const y = centerY + Math.sin(angle) * distance;
+            points.push(`${{x}},${{y}}`);
+        }});
+        
+        // Draw filled polygon
+        const polygon = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
+        polygon.setAttribute('points', points.join(' '));
+        polygon.setAttribute('fill', color);
+        polygon.setAttribute('fill-opacity', '0.3');
+        polygon.setAttribute('stroke', color);
+        polygon.setAttribute('stroke-width', '2');
+        svg.appendChild(polygon);
+        
+        // Draw data points
+        points.forEach(point => {{
+            const [x, y] = point.split(',').map(Number);
+            const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+            circle.setAttribute('cx', x);
+            circle.setAttribute('cy', y);
+            circle.setAttribute('r', '4');
+            circle.setAttribute('fill', color);
+            circle.setAttribute('stroke', 'white');
+            circle.setAttribute('stroke-width', '2');
+            svg.appendChild(circle);
+        }});
+        
+        // Add to legend
+        legendHTML += `<span style="color: ${{color}}; margin-right: 20px;">● ${{item.model}} (${{item.provider}})</span>`;
+    }});
+    
+    legend.innerHTML = legendHTML;
+    
+    // Add title
+    const title = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+    title.setAttribute('x', centerX);
+    title.setAttribute('y', 30);
+    title.setAttribute('text-anchor', 'middle');
+    title.setAttribute('font-size', '16');
+    title.setAttribute('font-weight', 'bold');
+    title.setAttribute('fill', '#333');
+    title.textContent = 'Model Performance Across Benchmarks';
+    svg.appendChild(title);
+}});
 </script>
 </div>'''
     
