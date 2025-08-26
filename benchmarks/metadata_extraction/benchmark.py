@@ -173,8 +173,26 @@ class MetadataExtraction(Benchmark):
                 alt_names = "None"
             persons_table += f"| {person.name} | {alt_names} |\n"
 
+        # Add link to raw result JSON file with model name
+        request_name = f"request_{self.id}_{image_name}"
+        raw_link = f"[View raw result from {self.model}](https://github.com/RISE-UNIBAS/humanities_data_benchmark/blob/main/results/{self.date}/{self.id}/{request_name}.json)\n\n"
+        
+        # Add the image before the table - using relative path from renders to images directory
+        image_html = ""
+        image_ext = None
+        for ext in ['.jpg', '.jpeg', '.png']:
+            if os.path.exists(os.path.join(self.benchmark_dir, "images", f"{image_name}{ext}")):
+                image_ext = ext
+                break
+
+        if image_ext:
+            # Use GitHub raw URL format to ensure images display correctly on GitHub Pages
+            image_html = f"<img src=\"https://github.com/RISE-UNIBAS/humanities_data_benchmark/blob/main/benchmarks/{self.name}/images/{image_name}{image_ext}?raw=true\" alt=\"{image_name}\" width=\"800px\">\n\n"
+
         render = (
             f"### Result for {response_letter.document_number}\n"
+            f"{raw_link}"
+            f"{image_html}"
             f"{scoring_table}\n"
             f"{persons_table}\n"
             f"#### Rules\n"
@@ -185,8 +203,6 @@ class MetadataExtraction(Benchmark):
         if self.rules is not None:
             for key, value in self.rules.items():
                 render += f"`{key}`: {value}\n\n"
-
-        # todo: display all images in the render
 
         return render
 
