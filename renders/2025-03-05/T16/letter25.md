@@ -1,4 +1,6 @@
 ### Result for letter25
+[View raw result from gemini-1.5-pro](https://github.com/RISE-UNIBAS/humanities_data_benchmark/blob/main/results/2025-03-05/T16/request_T16_letter25.json)
+
 | Category          | Ground Truth | Prediction | TP | FP | FN |
 |------------------|--------------|------------|----|----|----|
 | `send_date`        | 1928-04-04 | 1938-04-04 | 0 | 1 | 1 |
@@ -10,6 +12,12 @@
 | Ritter-Dreier, Fritz | Fritz Ritter<br>Herr Fritz Ritter<br>Herr Ritter<br>Herrn Fritz Ritter<br>J.A. Ritter<br>J.A.Ritter<br>Ritter |
 | Groschupf-Jaeger, Louis | Groschopf<br>Groschupf<br>Herr Groschupf<br>Herrn Groschupf |
 
+#### Rules
 `inferred_from_function`: False
 
 `inferred_from_correspondence`: False
+
+#### Letter images
+
+<img src="https://github.com/RISE-UNIBAS/humanities_data_benchmark/blob/main/benchmarks/metadata_extraction/images/letter25_p1.jpg?raw=true" alt="letter25_p1.jpg" width="800px">
+<img src="https://github.com/RISE-UNIBAS/humanities_data_benchmark/blob/main/benchmarks/metadata_extraction/images/letter25_p2.jpg?raw=true" alt="letter25_p2.jpg" width="800px">

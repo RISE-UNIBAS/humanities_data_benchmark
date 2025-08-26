@@ -1,4 +1,6 @@
 ### Result for letter01
+[View raw result from gemini-2.0-flash-lite](https://github.com/RISE-UNIBAS/humanities_data_benchmark/blob/main/results/2025-04-11/T20/request_T20_letter01.json)
+
 | Category          | Ground Truth | Prediction | TP | FP | FN |
 |------------------|--------------|------------|----|----|----|
 | `send_date`        | 1926-02-16 | 1926-02-16 | 1 | 0 | 0 |
@@ -16,3 +18,8 @@
 
 `inferred_from_correspondence`: False
 
+#### Letter images
+
+<img src="https://github.com/RISE-UNIBAS/humanities_data_benchmark/blob/main/benchmarks/metadata_extraction/images/letter01_p1.jpg?raw=true" alt="letter01_p1.jpg" width="800px">
+<img src="https://github.com/RISE-UNIBAS/humanities_data_benchmark/blob/main/benchmarks/metadata_extraction/images/letter01_p2.jpg?raw=true" alt="letter01_p2.jpg" width="800px">
+<img src="https://github.com/RISE-UNIBAS/humanities_data_benchmark/blob/main/benchmarks/metadata_extraction/images/letter01_p3.jpg?raw=true" alt="letter01_p3.jpg" width="800px">

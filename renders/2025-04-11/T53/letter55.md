@@ -1,4 +1,6 @@
 ### Result for letter55
+[View raw result from claude-3-5-sonnet-20241022](https://github.com/RISE-UNIBAS/humanities_data_benchmark/blob/main/results/2025-04-11/T53/request_T53_letter55.json)
+
 | Category          | Ground Truth | Prediction | TP | FP | FN |
 |------------------|--------------|------------|----|----|----|
 | `send_date`        | 1932-10-10 | 1928-10-10 | 0 | 1 | 1 |
@@ -15,7 +17,6 @@
 
 `inferred_from_correspondence`: False
 
-`skip_signatures`: False
+#### Letter images
 
-`skip_non_signatures`: True
-
+<img src="https://github.com/RISE-UNIBAS/humanities_data_benchmark/blob/main/benchmarks/metadata_extraction/images/letter55_p1.jpg?raw=true" alt="letter55_p1.jpg" width="800px">

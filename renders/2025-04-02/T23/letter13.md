@@ -1,4 +1,6 @@
 ### Result for letter13
+[View raw result from pixtral-large-latest](https://github.com/RISE-UNIBAS/humanities_data_benchmark/blob/main/results/2025-04-02/T23/request_T23_letter13.json)
+
 | Category          | Ground Truth | Prediction | TP | FP | FN |
 |------------------|--------------|------------|----|----|----|
 | `send_date`        | 1927-09-15 | 1927-09-15 | 1 | 0 | 0 |
@@ -11,6 +13,12 @@
 | Kachelhofer-Gerber, Frederick Charles | None |
 | Rupprecht, Karl | Herr Rupprecht<br>Herrn Rupprecht |
 
+#### Rules
 `inferred_from_function`: False
 
 `inferred_from_correspondence`: False
+
+#### Letter images
+
+<img src="https://github.com/RISE-UNIBAS/humanities_data_benchmark/blob/main/benchmarks/metadata_extraction/images/letter13_p1.jpg?raw=true" alt="letter13_p1.jpg" width="800px">
+<img src="https://github.com/RISE-UNIBAS/humanities_data_benchmark/blob/main/benchmarks/metadata_extraction/images/letter13_p2.jpg?raw=true" alt="letter13_p2.jpg" width="800px">

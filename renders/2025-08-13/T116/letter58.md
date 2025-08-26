@@ -1,4 +1,6 @@
 ### Result for letter58
+[View raw result from gpt-5-nano](https://github.com/RISE-UNIBAS/humanities_data_benchmark/blob/main/results/2025-08-13/T116/request_T116_letter58.json)
+
 | Category          | Ground Truth | Prediction | TP | FP | FN |
 |------------------|--------------|------------|----|----|----|
 | `send_date`        | 1932-11-24 | 1932-11-24 | 1 | 0 | 0 |
@@ -15,7 +17,6 @@
 
 `inferred_from_correspondence`: False
 
-`skip_signatures`: False
+#### Letter images
 
-`skip_non_signatures`: True
-
+<img src="https://github.com/RISE-UNIBAS/humanities_data_benchmark/blob/main/benchmarks/metadata_extraction/images/letter58_p1.jpg?raw=true" alt="letter58_p1.jpg" width="800px">

@@ -1,4 +1,6 @@
 ### Result for letter60
+[View raw result from gpt-4.1](https://github.com/RISE-UNIBAS/humanities_data_benchmark/blob/main/results/2025-04-17/T69/request_T69_letter60.json)
+
 | Category          | Ground Truth | Prediction | TP | FP | FN |
 |------------------|--------------|------------|----|----|----|
 | `send_date`        | 1932-12-19 | 1932-12-19 | 1 | 0 | 0 |
@@ -16,7 +18,6 @@
 
 `inferred_from_correspondence`: False
 
-`skip_signatures`: False
+#### Letter images
 
-`skip_non_signatures`: True
-
+<img src="https://github.com/RISE-UNIBAS/humanities_data_benchmark/blob/main/benchmarks/metadata_extraction/images/letter60_p1.jpg?raw=true" alt="letter60_p1.jpg" width="800px">

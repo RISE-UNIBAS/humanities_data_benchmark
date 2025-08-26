@@ -1,4 +1,6 @@
 ### Result for letter45
+[View raw result from claude-3-7-sonnet-20250219](https://github.com/RISE-UNIBAS/humanities_data_benchmark/blob/main/results/2025-04-11/T25/request_T25_letter45.json)
+
 | Category          | Ground Truth | Prediction | TP | FP | FN |
 |------------------|--------------|------------|----|----|----|
 | `send_date`        | 1928-09-28 | 1928-09-28 | 1 | 0 | 0 |
@@ -15,7 +17,6 @@
 
 `inferred_from_correspondence`: False
 
-`skip_signatures`: False
+#### Letter images
 
-`skip_non_signatures`: True
-
+<img src="https://github.com/RISE-UNIBAS/humanities_data_benchmark/blob/main/benchmarks/metadata_extraction/images/letter45_p1.jpg?raw=true" alt="letter45_p1.jpg" width="800px">

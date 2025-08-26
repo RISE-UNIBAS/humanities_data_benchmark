@@ -1,4 +1,6 @@
 ### Result for letter02
+[View raw result from gemini-1.5-pro](https://github.com/RISE-UNIBAS/humanities_data_benchmark/blob/main/results/2025-04-01/T16/request_T16_letter02.json)
+
 | Category          | Ground Truth | Prediction | TP | FP | FN |
 |------------------|--------------|------------|----|----|----|
 | `send_date`        | 1926-03-04 | 1926-04-04 | 0 | 1 | 1 |
@@ -15,3 +17,10 @@
 
 `inferred_from_correspondence`: False
 
+#### Letter images
+
+<img src="https://github.com/RISE-UNIBAS/humanities_data_benchmark/blob/main/benchmarks/metadata_extraction/images/letter02_p1.jpg?raw=true" alt="letter02_p1.jpg" width="800px">
+<img src="https://github.com/RISE-UNIBAS/humanities_data_benchmark/blob/main/benchmarks/metadata_extraction/images/letter02_p2.jpg?raw=true" alt="letter02_p2.jpg" width="800px">
+<img src="https://github.com/RISE-UNIBAS/humanities_data_benchmark/blob/main/benchmarks/metadata_extraction/images/letter02_p3.jpg?raw=true" alt="letter02_p3.jpg" width="800px">
+<img src="https://github.com/RISE-UNIBAS/humanities_data_benchmark/blob/main/benchmarks/metadata_extraction/images/letter02_p4.jpg?raw=true" alt="letter02_p4.jpg" width="800px">
+<img src="https://github.com/RISE-UNIBAS/humanities_data_benchmark/blob/main/benchmarks/metadata_extraction/images/letter02_p5.jpg?raw=true" alt="letter02_p5.jpg" width="800px">

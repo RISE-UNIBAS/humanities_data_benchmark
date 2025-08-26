@@ -1,4 +1,6 @@
 ### Result for letter48
+[View raw result from gpt-4o-mini](https://github.com/RISE-UNIBAS/humanities_data_benchmark/blob/main/results/2025-04-17/T78/request_T78_letter48.json)
+
 | Category          | Ground Truth | Prediction | TP | FP | FN |
 |------------------|--------------|------------|----|----|----|
 | `send_date`        | 1932-09-07 | 1932-09-07 | 1 | 0 | 0 |
@@ -16,7 +18,8 @@
 
 `inferred_from_correspondence`: False
 
-`skip_signatures`: False
+#### Letter images
 
-`skip_non_signatures`: True
-
+<img src="https://github.com/RISE-UNIBAS/humanities_data_benchmark/blob/main/benchmarks/metadata_extraction/images/letter48_p1.jpg?raw=true" alt="letter48_p1.jpg" width="800px">
+<img src="https://github.com/RISE-UNIBAS/humanities_data_benchmark/blob/main/benchmarks/metadata_extraction/images/letter48_p2.jpg?raw=true" alt="letter48_p2.jpg" width="800px">
+<img src="https://github.com/RISE-UNIBAS/humanities_data_benchmark/blob/main/benchmarks/metadata_extraction/images/letter48_p3.jpg?raw=true" alt="letter48_p3.jpg" width="800px">

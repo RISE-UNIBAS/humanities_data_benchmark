@@ -1,4 +1,6 @@
 ### Result for letter39
+[View raw result from gpt-4o-mini](https://github.com/RISE-UNIBAS/humanities_data_benchmark/blob/main/results/2025-04-17/T78/request_T78_letter39.json)
+
 | Category          | Ground Truth | Prediction | TP | FP | FN |
 |------------------|--------------|------------|----|----|----|
 | `send_date`        | 1928-05-26 | 1928-05-26 | 1 | 0 | 0 |
@@ -15,7 +17,7 @@
 
 `inferred_from_correspondence`: False
 
-`skip_signatures`: False
+#### Letter images
 
-`skip_non_signatures`: True
-
+<img src="https://github.com/RISE-UNIBAS/humanities_data_benchmark/blob/main/benchmarks/metadata_extraction/images/letter39_p1.jpg?raw=true" alt="letter39_p1.jpg" width="800px">
+<img src="https://github.com/RISE-UNIBAS/humanities_data_benchmark/blob/main/benchmarks/metadata_extraction/images/letter39_p2.jpg?raw=true" alt="letter39_p2.jpg" width="800px">

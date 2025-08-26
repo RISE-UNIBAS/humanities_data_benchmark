@@ -1,4 +1,6 @@
 ### Result for letter42
+[View raw result from gpt-4o-mini](https://github.com/RISE-UNIBAS/humanities_data_benchmark/blob/main/results/2025-04-17/T76/request_T76_letter42.json)
+
 | Category          | Ground Truth | Prediction | TP | FP | FN |
 |------------------|--------------|------------|----|----|----|
 | `send_date`        | 1928-05-31 | 1928-05-31 | 1 | 0 | 0 |
@@ -15,3 +17,6 @@
 
 `inferred_from_correspondence`: False
 
+#### Letter images
+
+<img src="https://github.com/RISE-UNIBAS/humanities_data_benchmark/blob/main/benchmarks/metadata_extraction/images/letter42_p1.jpg?raw=true" alt="letter42_p1.jpg" width="800px">

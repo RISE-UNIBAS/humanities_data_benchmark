@@ -1,4 +1,6 @@
 ### Result for letter25
+[View raw result from gpt-4.5-preview](https://github.com/RISE-UNIBAS/humanities_data_benchmark/blob/main/results/2025-04-11/T41/request_T41_letter25.json)
+
 | Category          | Ground Truth | Prediction | TP | FP | FN |
 |------------------|--------------|------------|----|----|----|
 | `send_date`        | 1928-04-04 | 1928-04-04 | 1 | 0 | 0 |
@@ -15,7 +17,7 @@
 
 `inferred_from_correspondence`: False
 
-`skip_signatures`: False
+#### Letter images
 
-`skip_non_signatures`: True
-
+<img src="https://github.com/RISE-UNIBAS/humanities_data_benchmark/blob/main/benchmarks/metadata_extraction/images/letter25_p1.jpg?raw=true" alt="letter25_p1.jpg" width="800px">
+<img src="https://github.com/RISE-UNIBAS/humanities_data_benchmark/blob/main/benchmarks/metadata_extraction/images/letter25_p2.jpg?raw=true" alt="letter25_p2.jpg" width="800px">

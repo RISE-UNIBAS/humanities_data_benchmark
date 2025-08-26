@@ -1,4 +1,6 @@
 ### Result for letter22
+[View raw result from claude-3-opus-20240229](https://github.com/RISE-UNIBAS/humanities_data_benchmark/blob/main/results/2025-04-11/T36/request_T36_letter22.json)
+
 | Category          | Ground Truth | Prediction | TP | FP | FN |
 |------------------|--------------|------------|----|----|----|
 | `send_date`        | 1928-04-02 | 1928-04-02 | 1 | 0 | 0 |
@@ -15,3 +17,6 @@
 
 `inferred_from_correspondence`: False
 
+#### Letter images
+
+<img src="https://github.com/RISE-UNIBAS/humanities_data_benchmark/blob/main/benchmarks/metadata_extraction/images/letter22_p1.jpg?raw=true" alt="letter22_p1.jpg" width="800px">

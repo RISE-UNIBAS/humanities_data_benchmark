@@ -1,4 +1,6 @@
 ### Result for letter34
+[View raw result from claude-sonnet-4-20250514](https://github.com/RISE-UNIBAS/humanities_data_benchmark/blob/main/results/2025-05-23/T105/request_T105_letter34.json)
+
 | Category          | Ground Truth | Prediction | TP | FP | FN |
 |------------------|--------------|------------|----|----|----|
 | `send_date`        | 1928-05-10 | 1928-05-10 | 1 | 0 | 0 |
@@ -15,7 +17,6 @@
 
 `inferred_from_correspondence`: False
 
-`skip_signatures`: False
+#### Letter images
 
-`skip_non_signatures`: True
-
+<img src="https://github.com/RISE-UNIBAS/humanities_data_benchmark/blob/main/benchmarks/metadata_extraction/images/letter34_p1.jpg?raw=true" alt="letter34_p1.jpg" width="800px">

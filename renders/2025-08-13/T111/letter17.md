@@ -1,4 +1,6 @@
 ### Result for letter17
+[View raw result from gpt-5-mini](https://github.com/RISE-UNIBAS/humanities_data_benchmark/blob/main/results/2025-08-13/T111/request_T111_letter17.json)
+
 | Category          | Ground Truth | Prediction | TP | FP | FN |
 |------------------|--------------|------------|----|----|----|
 | `send_date`        | 1928-03-01 | 1928-03-01 | 1 | 0 | 0 |
@@ -15,3 +17,7 @@
 
 `inferred_from_correspondence`: False
 
+#### Letter images
+
+<img src="https://github.com/RISE-UNIBAS/humanities_data_benchmark/blob/main/benchmarks/metadata_extraction/images/letter17_p1.jpg?raw=true" alt="letter17_p1.jpg" width="800px">
+<img src="https://github.com/RISE-UNIBAS/humanities_data_benchmark/blob/main/benchmarks/metadata_extraction/images/letter17_p2.jpg?raw=true" alt="letter17_p2.jpg" width="800px">

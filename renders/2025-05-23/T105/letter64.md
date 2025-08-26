@@ -1,4 +1,6 @@
 ### Result for letter64
+[View raw result from claude-sonnet-4-20250514](https://github.com/RISE-UNIBAS/humanities_data_benchmark/blob/main/results/2025-05-23/T105/request_T105_letter64.json)
+
 | Category          | Ground Truth | Prediction | TP | FP | FN |
 |------------------|--------------|------------|----|----|----|
 | `send_date`        | 1935-08-16 | 1955-08-16 | 0 | 1 | 1 |
@@ -14,7 +16,6 @@
 
 `inferred_from_correspondence`: False
 
-`skip_signatures`: False
+#### Letter images
 
-`skip_non_signatures`: True
-
+<img src="https://github.com/RISE-UNIBAS/humanities_data_benchmark/blob/main/benchmarks/metadata_extraction/images/letter64_p1.jpg?raw=true" alt="letter64_p1.jpg" width="800px">

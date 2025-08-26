@@ -1,4 +1,6 @@
 ### Result for letter32
+[View raw result from claude-3-5-sonnet-20241022](https://github.com/RISE-UNIBAS/humanities_data_benchmark/blob/main/results/2025-04-11/T52/request_T52_letter32.json)
+
 | Category          | Ground Truth | Prediction | TP | FP | FN |
 |------------------|--------------|------------|----|----|----|
 | `send_date`        | 1928-05-03 | 1928-05-03 | 1 | 0 | 0 |
@@ -16,7 +18,6 @@
 
 `inferred_from_correspondence`: False
 
-`skip_signatures`: True
+#### Letter images
 
-`skip_non_signatures`: False
-
+<img src="https://github.com/RISE-UNIBAS/humanities_data_benchmark/blob/main/benchmarks/metadata_extraction/images/letter32_p1.jpg?raw=true" alt="letter32_p1.jpg" width="800px">
