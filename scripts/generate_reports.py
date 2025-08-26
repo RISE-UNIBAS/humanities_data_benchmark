@@ -347,44 +347,46 @@ def create_index():
                 'config': test
             })
 
-    # Get all available date folders (sorted by date descending)
-    table_headers = ["Benchmark", "Latest Results"]
-    table_data = []
-
+    # Create individual benchmark sections
+    benchmark_sections = ""
+    
     # Sort benchmarks alphabetically
     for benchmark in sorted(latest_results.keys()):
-        # Add link to the benchmark name with the correct URL path
-        benchmark_link = f'<a href="benchmarks/{benchmark}/">{benchmark}</a>'
-        row_data = [benchmark_link]
-
         if len(latest_results[benchmark]) == 0:
             # Skip benchmarks with no results
             continue
 
-        # Create inner table for this benchmark's tests grouped by prompt and rules
-        inner_table = '<table class="inner-table" style="width:100%; border-collapse: collapse;">'
-        inner_table += '<tr><th>Prompt</th><th>Rules</th><th>ID</th><th>Model</th><th>Date</th><th>Results</th></tr>'
+        benchmark_sections += f'### <a href="benchmarks/{benchmark}/">{benchmark}</a>\n\n'
         
-        # Process each prompt/rules group
-        for group_key in sorted(latest_results[benchmark].keys()):
+        # Create table for this benchmark
+        benchmark_table = '''<table class="inner-table">
+<thead>
+<tr>
+<th>Model</th>
+<th>Provider</th>
+<th>Date</th>
+<th>Prompt</th>
+<th>Rules</th>
+<th>Results</th>
+</tr>
+</thead>
+<tbody>'''
+        
+        # Collect all tests for this benchmark (no grouping)
+        all_tests = []
+        for group_key in latest_results[benchmark].keys():
             prompt_file, rules = group_key.split('|', 1)
             group_tests = latest_results[benchmark][group_key]
             
-            # Store test results to sort them later
-            test_results = []
             for test_info in group_tests:
                 test_id = test_info['id']
                 date = test_info['date']
                 test_config = test_info['config']
                 
                 if date is None:
-                    # Add entries with no results available with score of -1 (to ensure they appear below entries with score 0)
-                    test_results.append((test_id, None, None, "No results available", -1, test_config))
                     continue
                 
-                # Get test configuration to access model information
-                model_info = test_config['model'] if test_config and 'model' in test_config else "unknown"
-
+                # Get scoring data
                 scoring_file = os.path.join('..', 'results', date, test_id, 'scoring.json')
                 scoring_data = read_file(scoring_file)
                 try:
@@ -392,88 +394,67 @@ def create_index():
                 except json.decoder.JSONDecodeError:
                     scoring_data = {'Total': 0}
 
-                badges = []
+                # Extract the main score for sorting
                 score_value = 0
+                if benchmark == 'bibliographic_data' or benchmark == 'fraktur':
+                    score_value = scoring_data.get('fuzzy', 0)
+                elif benchmark == 'metadata_extraction':
+                    score_value = scoring_data.get('f1_micro', 0)
+                
+                try:
+                    score_value = float(score_value) if score_value else 0
+                except (ValueError, TypeError):
+                    score_value = 0
+
+                badges = []
                 for key, value in scoring_data.items():
-                    badges.append(get_badge(key, value))
-                    # Extract numeric value for sorting
-                    try:
-                        if isinstance(value, (int, float)):
-                            score_value = float(value)
-                        else:
-                            score_value = float(value) if value.replace('.', '', 1).isdigit() else 0
-                    except (ValueError, AttributeError):
-                        score_value = 0
-
+                    badges.append(get_badge(key.lower(), value))
                 badge_html = " ".join(badges)
-                test_results.append((test_id, date, model_info, badge_html, score_value, test_config))
-
-            # Sort test results by score value (highest to lowest)
-            # For Fraktur benchmark, sort specifically by fuzzy score
-            if benchmark == "fraktur":
-                # Extract fuzzy score from scoring data for sorting
-                fraktur_test_results = []
-                for test_id, date, model_info, badge_html, _, test_config in test_results:
-                    if date is None:
-                        fraktur_test_results.append((test_id, date, model_info, badge_html, -1, test_config))
-                        continue
-                    
-                    scoring_file = os.path.join('..', 'results', date, test_id, 'scoring.json')
-                    scoring_data = read_file(scoring_file)
-                    try:
-                        scoring_data = json.loads(scoring_data)
-                        # Use fuzzy score for sorting if available
-                        fuzzy_score = scoring_data.get('fuzzy', 0)
-                        if isinstance(fuzzy_score, str):
-                            fuzzy_score = float(fuzzy_score) if fuzzy_score.replace('.', '', 1).isdigit() else 0
-                        fraktur_test_results.append((test_id, date, model_info, badge_html, fuzzy_score, test_config))
-                    except (json.decoder.JSONDecodeError, ValueError):
-                        fraktur_test_results.append((test_id, date, model_info, badge_html, 0, test_config))
                 
-                # Replace the original test_results with the fuzzy score sorted version
-                test_results = fraktur_test_results
-                
-            # Sort by the score value (highest to lowest)
-            test_results.sort(key=lambda x: x[4], reverse=True)
-            
-            # Add rows for this group
-            first_row = True
-            for test_id, date, model_info, badge_html, _, test_config in test_results:
-                # Skip entries with no date (no results)
-                if date is None:
-                    continue
-                    
-                test_id_html = get_square(test_id, href=f"archive/{date}/{test_id}")
-                model_html = get_rectangle(model_info) if model_info else "N/A"
-                
-                # Display prompt and rules only in the first row of each group
-                if first_row:
-                    prompt_display = prompt_file if prompt_file else "prompt.txt"
-                    
-                    # Create expandable rules cell
-                    if rules and rules.strip():
-                        rules_display = f'''<details>
-                            <summary>Show Rules</summary>
-                            <div style="margin-top: 5px; padding: 5px; background-color: #f5f5f5; border-radius: 3px; font-size: 0.9em; white-space: pre-wrap;">{rules}</div>
-                        </details>'''
-                    else:
-                        rules_display = "None"
-                    
-                    inner_table += f'<tr><td>{prompt_display}</td><td>{rules_display}</td><td>{test_id_html}</td><td>{model_html}</td><td>{date}</td><td>{badge_html}</td></tr>'
-                    first_row = False
-                else:
-                    inner_table += f'<tr><td></td><td></td><td>{test_id_html}</td><td>{model_html}</td><td>{date}</td><td>{badge_html}</td></tr>'
+                all_tests.append({
+                    'model': test_config['model'],
+                    'provider': test_config['provider'],
+                    'date': date,
+                    'prompt': prompt_file if prompt_file else "prompt.txt",
+                    'rules': rules if rules else "None",
+                    'badges': badge_html,
+                    'score': score_value
+                })
         
-        inner_table += '</table>'
+        # Sort by score (highest first)
+        all_tests.sort(key=lambda x: x['score'], reverse=True)
         
-        # Skip benchmarks where all tests have no results
-        if '<tr><td>' not in inner_table:
-            continue
+        # Add rows to table
+        for test in all_tests:
+            model_html = get_rectangle(test['model'])
             
-        row_data.append(inner_table)
-        table_data.append(row_data)
+            # Use provider mappings from leaderboard
+            provider_mappings = {
+                'anthropic': 'Anthropic',
+                'openai': 'OpenAI',
+                'genai': 'Google',
+                'mistral': 'Mistral AI'
+            }
+            provider_display = provider_mappings.get(test['provider'].lower(), test['provider'])
+            provider_html = get_rectangle(provider_display)
+            
+            # Create expandable rules cell
+            if test['rules'] and test['rules'].strip() and test['rules'] != "None":
+                rules_display = f'''<details>
+                    <summary>Show Rules</summary>
+                    <div style="margin-top: 5px; padding: 5px; background-color: #f5f5f5; border-radius: 3px; font-size: 0.9em; white-space: pre-wrap;">{test['rules']}</div>
+                </details>'''
+            else:
+                rules_display = "None"
+            
+            benchmark_table += f'<tr><td>{model_html}</td><td>{provider_html}</td><td>{test["date"]}</td><td>{test["prompt"]}</td><td>{rules_display}</td><td>{test["badges"]}</td></tr>'
+        
+        benchmark_table += '</tbody></table>\n\n'
+        benchmark_sections += benchmark_table
 
-
+    # Import TEST_STYLE from report_helper for styling
+    from report_helper import TEST_STYLE
+    
     # Generate leaderboard
     leaderboard_html = create_leaderboard()
     
@@ -481,6 +462,8 @@ def create_index():
 # Humanities Data Benchmark
 Welcome to the **Humanities Data Benchmark** report page. This page provides an overview of all benchmark tests, 
 results, and comparisons.
+
+{TEST_STYLE}
 
 ## Leaderboard
 
@@ -492,7 +475,7 @@ Click on any column header to sort the table.
 
 ## Latest Benchmark Results
 
-{create_html_table(table_headers, table_data)}
+{benchmark_sections}
 
 
 ## About This Page
