@@ -371,83 +371,111 @@ header.innerHTML = text + ' ↕';
 
 <!-- Radar Chart Section -->
 <div style="margin-top: 30px; margin-bottom: 30px;">
-    <p><strong>The radar chart provides a visual comparison of the top 10 models across all three benchmarks.</strong></p>
+    <p>The radar chart provides a visual comparison of the top 10 models across all three benchmarks.</p>
     <h3>Global Performance (Top 10 Models)</h3>
-    <div style="width: 100%; max-width: 800px; margin: 0 auto;">
-        <canvas id="performanceRadar" width="800" height="600"></canvas>
+    <div style="width: 100%; max-width: 800px; margin: 0 auto; height: 600px;">
+        <canvas id="performanceRadar" style="max-width: 100%; max-height: 100%;"></canvas>
     </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-const radarData = {json.dumps(radar_data)};
-const ctx = document.getElementById('performanceRadar').getContext('2d');
-const colors = [
-    'rgba(255, 99, 132, 0.6)', 'rgba(54, 162, 235, 0.6)', 'rgba(255, 205, 86, 0.6)',
-    'rgba(75, 192, 192, 0.6)', 'rgba(153, 102, 255, 0.6)', 'rgba(255, 159, 64, 0.6)',
-    'rgba(199, 199, 199, 0.6)', 'rgba(83, 102, 147, 0.6)', 'rgba(255, 99, 255, 0.6)',
-    'rgba(99, 255, 132, 0.6)'
-];
+function initRadarChart() {{
+    // Check if Chart.js is loaded
+    if (typeof Chart === 'undefined') {{
+        console.error('Chart.js library not loaded');
+        document.getElementById('performanceRadar').parentElement.innerHTML = '<p style="text-align: center; color: #666;">Chart library failed to load. Please refresh the page.</p>';
+        return;
+    }}
+    
+    const radarData = {json.dumps(radar_data)};
+    const ctx = document.getElementById('performanceRadar');
+    
+    if (!ctx) {{
+        console.error('Canvas element not found');
+        return;
+    }}
+    
+    const colors = [
+        'rgba(255, 99, 132, 0.6)', 'rgba(54, 162, 235, 0.6)', 'rgba(255, 205, 86, 0.6)',
+        'rgba(75, 192, 192, 0.6)', 'rgba(153, 102, 255, 0.6)', 'rgba(255, 159, 64, 0.6)',
+        'rgba(199, 199, 199, 0.6)', 'rgba(83, 102, 147, 0.6)', 'rgba(255, 99, 255, 0.6)',
+        'rgba(99, 255, 132, 0.6)'
+    ];
 
-const datasets = radarData.map((item, index) => ({{
-    label: `${{item.model}} (${{item.provider}})`,
-    data: [item.bibliographic_data, item.fraktur, item.metadata_extraction],
-    backgroundColor: colors[index % colors.length],
-    borderColor: colors[index % colors.length].replace('0.6', '1'),
-    borderWidth: 2,
-    pointBackgroundColor: colors[index % colors.length].replace('0.6', '1'),
-    pointBorderColor: '#fff',
-    pointHoverBackgroundColor: '#fff',
-    pointHoverBorderColor: colors[index % colors.length].replace('0.6', '1')
-}}));
+    const datasets = radarData.map((item, index) => ({{
+        label: item.model + ' (' + item.provider + ')',
+        data: [item.bibliographic_data, item.fraktur, item.metadata_extraction],
+        backgroundColor: colors[index % colors.length],
+        borderColor: colors[index % colors.length].replace('0.6', '1'),
+        borderWidth: 2,
+        pointBackgroundColor: colors[index % colors.length].replace('0.6', '1'),
+        pointBorderColor: '#fff',
+        pointHoverBackgroundColor: '#fff',
+        pointHoverBorderColor: colors[index % colors.length].replace('0.6', '1')
+    }}));
 
-const radarChart = new Chart(ctx, {{
-    type: 'radar',
-    data: {{
-        labels: ['Bibliographic Data', 'Fraktur', 'Metadata Extraction'],
-        datasets: datasets
-    }},
-    options: {{
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {{
-            title: {{
-                display: true,
-                text: 'Model Performance Across Benchmarks',
-                font: {{
-                    size: 16
-                }}
+    try {{
+        const radarChart = new Chart(ctx, {{
+            type: 'radar',
+            data: {{
+                labels: ['Bibliographic Data', 'Fraktur', 'Metadata Extraction'],
+                datasets: datasets
             }},
-            legend: {{
-                position: 'bottom',
-                labels: {{
-                    usePointStyle: true,
-                    padding: 20
-                }}
-            }}
-        }},
-        scales: {{
-            r: {{
-                beginAtZero: true,
-                max: 1.0,
-                ticks: {{
-                    stepSize: 0.2,
-                    font: {{
-                        size: 12
+            options: {{
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {{
+                    title: {{
+                        display: true,
+                        text: 'Model Performance Across Benchmarks',
+                        font: {{
+                            size: 16
+                        }}
+                    }},
+                    legend: {{
+                        position: 'bottom',
+                        labels: {{
+                            usePointStyle: true,
+                            padding: 20
+                        }}
                     }}
                 }},
-                pointLabels: {{
-                    font: {{
-                        size: 14
+                scales: {{
+                    r: {{
+                        beginAtZero: true,
+                        max: 1.0,
+                        ticks: {{
+                            stepSize: 0.2,
+                            font: {{
+                                size: 12
+                            }}
+                        }},
+                        pointLabels: {{
+                            font: {{
+                                size: 14
+                            }}
+                        }}
                     }}
+                }},
+                interaction: {{
+                    intersect: false
                 }}
             }}
-        }},
-        interaction: {{
-            intersect: false
-        }}
+        }});
+    }} catch (error) {{
+        console.error('Error creating radar chart:', error);
+        document.getElementById('performanceRadar').parentElement.innerHTML = '<p style="text-align: center; color: #666;">Radar chart could not be loaded. Please check browser console for details.</p>';
     }}
-}});
+}}
+
+// Try to initialize when DOM is ready
+if (document.readyState === 'loading') {{
+    document.addEventListener('DOMContentLoaded', initRadarChart);
+}} else {{
+    // DOM is already loaded
+    setTimeout(initRadarChart, 100);
+}}
 </script>
 </div>'''
     
