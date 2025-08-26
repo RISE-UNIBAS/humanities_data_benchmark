@@ -142,6 +142,194 @@ def create_individual_reports():
             write_file(test_report_path, md_string)
 
 
+def create_leaderboard():
+    """Create a leaderboard section showing global averages for each model across key benchmarks."""
+    
+    # Target benchmarks for global average calculation
+    target_benchmarks = ['bibliographic_data', 'fraktur', 'metadata_extraction']
+    
+    # Dictionary to store model scores: {model_name: {benchmark: [scores], provider: provider_name}}
+    model_scores = {}
+    
+    # Common company name mappings for providers already used
+    provider_mappings = {
+        'anthropic': 'Anthropic',
+        'openai': 'OpenAI',
+        'genai': 'Google',
+        'mistral': 'Mistral AI'
+    }
+    
+    with open(CONFIG_FILE, newline='', encoding='utf-8') as csvfile:
+        tests = csv.DictReader(csvfile)
+        for test in tests:
+            # Only process target benchmarks
+            if test['name'] not in target_benchmarks:
+                continue
+                
+            test_id = test['id']
+            model = test['model']
+            provider = test['provider']
+            benchmark = test['name']
+            
+            # Find latest date for this test
+            date = find_latest_date(test_id)
+            if date is None:
+                continue
+                
+            # Load scoring data
+            scoring_file = os.path.join('..', 'results', date, test_id, 'scoring.json')
+            scoring_data = read_file(scoring_file)
+            try:
+                scoring_data = json.loads(scoring_data)
+            except json.decoder.JSONDecodeError:
+                continue
+            
+            # Initialize model entry if not exists
+            if model not in model_scores:
+                model_scores[model] = {'provider': provider}
+            if benchmark not in model_scores[model]:
+                model_scores[model][benchmark] = []
+            
+            # Extract the main score based on benchmark type
+            score = None
+            if benchmark == 'bibliographic_data':
+                # Use fuzzy score for bibliographic_data
+                score = scoring_data.get('fuzzy')
+            elif benchmark == 'fraktur':
+                # Use fuzzy score for fraktur
+                score = scoring_data.get('fuzzy')
+            elif benchmark == 'metadata_extraction':
+                # Use f1_micro for metadata_extraction
+                score = scoring_data.get('f1_micro')
+            
+            if score is not None:
+                try:
+                    score_value = float(score) if isinstance(score, (str, int, float)) else 0
+                    model_scores[model][benchmark].append(score_value)
+                except (ValueError, TypeError):
+                    continue
+    
+    # Calculate global averages for each model
+    leaderboard_data = []
+    for model, benchmarks in model_scores.items():
+        benchmark_averages = {}
+        total_score = 0
+        benchmark_count = 0
+        
+        for benchmark_name in target_benchmarks:
+            if benchmark_name in benchmarks and benchmarks[benchmark_name]:
+                avg_score = sum(benchmarks[benchmark_name]) / len(benchmarks[benchmark_name])
+                benchmark_averages[benchmark_name] = avg_score
+                total_score += avg_score
+                benchmark_count += 1
+            else:
+                benchmark_averages[benchmark_name] = None
+        
+        # Only include models that have results for all three benchmarks
+        if benchmark_count == len(target_benchmarks):
+            global_average = total_score / benchmark_count
+            provider_name = provider_mappings.get(benchmarks.get('provider', '').lower(), benchmarks.get('provider', 'Unknown'))
+            leaderboard_data.append({
+                'model': model,
+                'provider': provider_name,
+                'global_avg': global_average,
+                'bibliographic_data': benchmark_averages['bibliographic_data'],
+                'fraktur': benchmark_averages['fraktur'],
+                'metadata_extraction': benchmark_averages['metadata_extraction']
+            })
+    
+    # Sort by global average (highest first)
+    leaderboard_data.sort(key=lambda x: x['global_avg'], reverse=True)
+    
+    # Create leaderboard HTML table
+    if not leaderboard_data:
+        return "<p>No leaderboard data available.</p>"
+    
+    leaderboard_html = '''<div>
+<table id="leaderboard-table" style="width:100%; border-collapse: collapse; margin-bottom: 20px;">
+<thead>
+<tr>
+<th onclick="sortTable(0)" style="cursor: pointer;">Rank ↕</th>
+<th onclick="sortTable(1)" style="cursor: pointer;">Model ↕</th>
+<th onclick="sortTable(2)" style="cursor: pointer;">Provider ↕</th>
+<th onclick="sortTable(3)" style="cursor: pointer;">Global Average ↕</th>
+<th onclick="sortTable(4)" style="cursor: pointer;"><a href="benchmarks/bibliographic_data/" style="color: inherit; text-decoration: none;">bibliographic_data</a> ↕</th>
+<th onclick="sortTable(5)" style="cursor: pointer;"><a href="benchmarks/fraktur/" style="color: inherit; text-decoration: none;">fraktur</a> ↕</th>
+<th onclick="sortTable(6)" style="cursor: pointer;"><a href="benchmarks/metadata_extraction/" style="color: inherit; text-decoration: none;">metadata_extraction</a> ↕</th>
+</tr>
+</thead>
+<tbody>'''
+    
+    for rank, data in enumerate(leaderboard_data, 1):
+        model_html = get_rectangle(data['model'])
+        provider_html = get_rectangle(data['provider'])
+        global_avg_badge = get_badge("global", f"{data['global_avg']:.3f}")
+        biblio_badge = get_badge("fuzzy", f"{data['bibliographic_data']:.3f}") if data['bibliographic_data'] is not None else "N/A"
+        fraktur_badge = get_badge("fuzzy", f"{data['fraktur']:.3f}") if data['fraktur'] is not None else "N/A"
+        metadata_badge = get_badge("f1_micro", f"{data['metadata_extraction']:.3f}") if data['metadata_extraction'] is not None else "N/A"
+        
+        biblio_sort = f'{data["bibliographic_data"]:.3f}' if data["bibliographic_data"] is not None else "0"
+        fraktur_sort = f'{data["fraktur"]:.3f}' if data["fraktur"] is not None else "0"  
+        metadata_sort = f'{data["metadata_extraction"]:.3f}' if data["metadata_extraction"] is not None else "0"
+        
+        leaderboard_html += f'<tr><td data-sort="{rank}"><strong>#{rank}</strong></td><td data-sort="{data["model"]}">{model_html}</td><td data-sort="{data["provider"]}">{provider_html}</td><td data-sort="{data["global_avg"]:.3f}">{global_avg_badge}</td><td data-sort="{biblio_sort}">{biblio_badge}</td><td data-sort="{fraktur_sort}">{fraktur_badge}</td><td data-sort="{metadata_sort}">{metadata_badge}</td></tr>'
+    
+    leaderboard_html += '''</tbody>
+</table>
+
+<script>
+function sortTable(columnIndex) {
+const table = document.getElementById("leaderboard-table");
+const tbody = table.getElementsByTagName("tbody")[0];
+const rows = Array.from(tbody.getElementsByTagName("tr"));
+
+const isAscending = table.getAttribute("data-sort-dir") !== "asc";
+table.setAttribute("data-sort-dir", isAscending ? "asc" : "desc");
+
+rows.sort((a, b) => {
+const cellA = a.getElementsByTagName("td")[columnIndex];
+const cellB = b.getElementsByTagName("td")[columnIndex];
+
+let valueA = cellA.getAttribute("data-sort") || cellA.textContent.trim();
+let valueB = cellB.getAttribute("data-sort") || cellB.textContent.trim();
+
+if (!isNaN(valueA) && !isNaN(valueB)) {
+valueA = parseFloat(valueA);
+valueB = parseFloat(valueB);
+}
+
+if (valueA < valueB) return isAscending ? -1 : 1;
+if (valueA > valueB) return isAscending ? 1 : -1;
+return 0;
+});
+
+if (columnIndex !== 0) {
+rows.forEach((row, index) => {
+const rankCell = row.getElementsByTagName("td")[0];
+rankCell.innerHTML = "<strong>#" + (index + 1) + "</strong>";
+rankCell.setAttribute("data-sort", index + 1);
+});
+}
+
+rows.forEach(row => tbody.appendChild(row));
+
+const headers = table.getElementsByTagName("th");
+for (let i = 0; i < headers.length; i++) {
+const header = headers[i];
+const text = header.innerHTML.replace(/ [↕↑↓]/g, '');
+if (i === columnIndex) {
+header.innerHTML = text + (isAscending ? ' ↑' : ' ↓');
+} else {
+header.innerHTML = text + ' ↕';
+}
+}
+}
+</script>
+</div>'''
+    
+    return leaderboard_html
+
+
 def create_index():
     """Generate the index page."""
 
@@ -294,10 +482,20 @@ def create_index():
         table_data.append(row_data)
 
 
+    # Generate leaderboard
+    leaderboard_html = create_leaderboard()
+    
     index_md = f"""
 # Humanities Data Benchmark
 Welcome to the **Humanities Data Benchmark** report page. This page provides an overview of all benchmark tests, 
 results, and comparisons.
+
+## Leaderboard
+
+The following table shows the **global average performance** of each model across the three core benchmarks: 
+Bibliographic Data, Fraktur, and Metadata Extraction. Only models with results in all three benchmarks are included.
+
+{leaderboard_html}
 
 ## Latest Benchmark Results
 

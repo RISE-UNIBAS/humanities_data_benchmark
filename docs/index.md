@@ -3,6 +3,77 @@
 Welcome to the **Humanities Data Benchmark** report page. This page provides an overview of all benchmark tests, 
 results, and comparisons.
 
+## Leaderboard
+
+The following table shows the **global average performance** of each model across the three core benchmarks: 
+Bibliographic Data, Fraktur, and Metadata Extraction. Only models with results in all three benchmarks are included.
+
+<div>
+<table id="leaderboard-table" style="width:100%; border-collapse: collapse; margin-bottom: 20px;">
+<thead>
+<tr>
+<th onclick="sortTable(0)" style="cursor: pointer;">Rank ↕</th>
+<th onclick="sortTable(1)" style="cursor: pointer;">Model ↕</th>
+<th onclick="sortTable(2)" style="cursor: pointer;">Provider ↕</th>
+<th onclick="sortTable(3)" style="cursor: pointer;">Global Average ↕</th>
+<th onclick="sortTable(4)" style="cursor: pointer;"><a href="benchmarks/bibliographic_data/" style="color: inherit; text-decoration: none;">bibliographic_data</a> ↕</th>
+<th onclick="sortTable(5)" style="cursor: pointer;"><a href="benchmarks/fraktur/" style="color: inherit; text-decoration: none;">fraktur</a> ↕</th>
+<th onclick="sortTable(6)" style="cursor: pointer;"><a href="benchmarks/metadata_extraction/" style="color: inherit; text-decoration: none;">metadata_extraction</a> ↕</th>
+</tr>
+</thead>
+<tbody><tr><td data-sort="1"><strong>#1</strong></td><td data-sort="gpt-5-mini"><span class='test-rectangle' style='background-color: #8e44ad;'>gpt-5-mini</span></td><td data-sort="OpenAI"><span class='test-rectangle' style='background-color: #cc33ff;'>OpenAI</span></td><td data-sort="0.605"><img src="https://img.shields.io/badge/global-0.605-brightgreen" alt="global"></td><td data-sort="0.638"><img src="https://img.shields.io/badge/fuzzy-0.638-brightgreen" alt="fuzzy"></td><td data-sort="0.650"><img src="https://img.shields.io/badge/fuzzy-0.650-brightgreen" alt="fuzzy"></td><td data-sort="0.527"><img src="https://img.shields.io/badge/f1_micro-0.527-brightgreen" alt="f1_micro"></td></tr><tr><td data-sort="2"><strong>#2</strong></td><td data-sort="gemini-2.5-pro"><span class='test-rectangle' style='background-color: #e67e22;'>gemini-2.5-pro</span></td><td data-sort="Google"><span class='test-rectangle' style='background-color: #ff6699;'>Google</span></td><td data-sort="0.582"><img src="https://img.shields.io/badge/global-0.582-brightgreen" alt="global"></td><td data-sort="0.258"><img src="https://img.shields.io/badge/fuzzy-0.258-brightgreen" alt="fuzzy"></td><td data-sort="0.954"><img src="https://img.shields.io/badge/fuzzy-0.954-brightgreen" alt="fuzzy"></td><td data-sort="0.533"><img src="https://img.shields.io/badge/f1_micro-0.533-brightgreen" alt="f1_micro"></td></tr><tr><td data-sort="3"><strong>#3</strong></td><td data-sort="gpt-4o"><span class='test-rectangle' style='background-color: #33ccff;'>gpt-4o</span></td><td data-sort="OpenAI"><span class='test-rectangle' style='background-color: #cc33ff;'>OpenAI</span></td><td data-sort="0.503"><img src="https://img.shields.io/badge/global-0.503-brightgreen" alt="global"></td><td data-sort="0.520"><img src="https://img.shields.io/badge/fuzzy-0.520-brightgreen" alt="fuzzy"></td><td data-sort="0.464"><img src="https://img.shields.io/badge/fuzzy-0.464-brightgreen" alt="fuzzy"></td><td data-sort="0.523"><img src="https://img.shields.io/badge/f1_micro-0.523-brightgreen" alt="f1_micro"></td></tr><tr><td data-sort="4"><strong>#4</strong></td><td data-sort="gemini-2.0-flash-lite"><span class='test-rectangle' style='background-color: #ff0033;'>gemini-2.0-flash-lite</span></td><td data-sort="Google"><span class='test-rectangle' style='background-color: #ff6699;'>Google</span></td><td data-sort="0.482"><img src="https://img.shields.io/badge/global-0.482-brightgreen" alt="global"></td><td data-sort="0.129"><img src="https://img.shields.io/badge/fuzzy-0.129-brightgreen" alt="fuzzy"></td><td data-sort="0.812"><img src="https://img.shields.io/badge/fuzzy-0.812-brightgreen" alt="fuzzy"></td><td data-sort="0.503"><img src="https://img.shields.io/badge/f1_micro-0.503-brightgreen" alt="f1_micro"></td></tr><tr><td data-sort="5"><strong>#5</strong></td><td data-sort="gpt-5"><span class='test-rectangle' style='background-color: #ff9933;'>gpt-5</span></td><td data-sort="OpenAI"><span class='test-rectangle' style='background-color: #cc33ff;'>OpenAI</span></td><td data-sort="0.470"><img src="https://img.shields.io/badge/global-0.470-brightgreen" alt="global"></td><td data-sort="0.627"><img src="https://img.shields.io/badge/fuzzy-0.627-brightgreen" alt="fuzzy"></td><td data-sort="0.050"><img src="https://img.shields.io/badge/fuzzy-0.050-brightgreen" alt="fuzzy"></td><td data-sort="0.733"><img src="https://img.shields.io/badge/f1_micro-0.733-brightgreen" alt="f1_micro"></td></tr><tr><td data-sort="6"><strong>#6</strong></td><td data-sort="claude-opus-4-1-20250805"><span class='test-rectangle' style='background-color: #0099ff;'>claude-opus-4-1-20250805</span></td><td data-sort="Anthropic"><span class='test-rectangle' style='background-color: #66ff33;'>Anthropic</span></td><td data-sort="0.468"><img src="https://img.shields.io/badge/global-0.468-brightgreen" alt="global"></td><td data-sort="0.296"><img src="https://img.shields.io/badge/fuzzy-0.296-brightgreen" alt="fuzzy"></td><td data-sort="0.644"><img src="https://img.shields.io/badge/fuzzy-0.644-brightgreen" alt="fuzzy"></td><td data-sort="0.463"><img src="https://img.shields.io/badge/f1_micro-0.463-brightgreen" alt="f1_micro"></td></tr><tr><td data-sort="7"><strong>#7</strong></td><td data-sort="gpt-4o-mini"><span class='test-rectangle' style='background-color: #34495e;'>gpt-4o-mini</span></td><td data-sort="OpenAI"><span class='test-rectangle' style='background-color: #cc33ff;'>OpenAI</span></td><td data-sort="0.437"><img src="https://img.shields.io/badge/global-0.437-brightgreen" alt="global"></td><td data-sort="0.539"><img src="https://img.shields.io/badge/fuzzy-0.539-brightgreen" alt="fuzzy"></td><td data-sort="0.242"><img src="https://img.shields.io/badge/fuzzy-0.242-brightgreen" alt="fuzzy"></td><td data-sort="0.528"><img src="https://img.shields.io/badge/f1_micro-0.528-brightgreen" alt="f1_micro"></td></tr><tr><td data-sort="8"><strong>#8</strong></td><td data-sort="claude-opus-4-20250514"><span class='test-rectangle' style='background-color: #ff6600;'>claude-opus-4-20250514</span></td><td data-sort="Anthropic"><span class='test-rectangle' style='background-color: #66ff33;'>Anthropic</span></td><td data-sort="0.435"><img src="https://img.shields.io/badge/global-0.435-brightgreen" alt="global"></td><td data-sort="0.274"><img src="https://img.shields.io/badge/fuzzy-0.274-brightgreen" alt="fuzzy"></td><td data-sort="0.594"><img src="https://img.shields.io/badge/fuzzy-0.594-brightgreen" alt="fuzzy"></td><td data-sort="0.437"><img src="https://img.shields.io/badge/f1_micro-0.437-brightgreen" alt="f1_micro"></td></tr><tr><td data-sort="9"><strong>#9</strong></td><td data-sort="gemini-1.5-pro"><span class='test-rectangle' style='background-color: #3399ff;'>gemini-1.5-pro</span></td><td data-sort="Google"><span class='test-rectangle' style='background-color: #ff6699;'>Google</span></td><td data-sort="0.402"><img src="https://img.shields.io/badge/global-0.402-brightgreen" alt="global"></td><td data-sort="0.116"><img src="https://img.shields.io/badge/fuzzy-0.116-brightgreen" alt="fuzzy"></td><td data-sort="0.640"><img src="https://img.shields.io/badge/fuzzy-0.640-brightgreen" alt="fuzzy"></td><td data-sort="0.450"><img src="https://img.shields.io/badge/f1_micro-0.450-brightgreen" alt="f1_micro"></td></tr><tr><td data-sort="10"><strong>#10</strong></td><td data-sort="gemini-2.0-flash"><span class='test-rectangle' style='background-color: #f39c12;'>gemini-2.0-flash</span></td><td data-sort="Google"><span class='test-rectangle' style='background-color: #ff6699;'>Google</span></td><td data-sort="0.393"><img src="https://img.shields.io/badge/global-0.393-brightgreen" alt="global"></td><td data-sort="0.084"><img src="https://img.shields.io/badge/fuzzy-0.084-brightgreen" alt="fuzzy"></td><td data-sort="0.600"><img src="https://img.shields.io/badge/fuzzy-0.600-brightgreen" alt="fuzzy"></td><td data-sort="0.493"><img src="https://img.shields.io/badge/f1_micro-0.493-brightgreen" alt="f1_micro"></td></tr><tr><td data-sort="11"><strong>#11</strong></td><td data-sort="claude-sonnet-4-20250514"><span class='test-rectangle' style='background-color: #f1c40f;'>claude-sonnet-4-20250514</span></td><td data-sort="Anthropic"><span class='test-rectangle' style='background-color: #66ff33;'>Anthropic</span></td><td data-sort="0.352"><img src="https://img.shields.io/badge/global-0.352-brightgreen" alt="global"></td><td data-sort="0.156"><img src="https://img.shields.io/badge/fuzzy-0.156-brightgreen" alt="fuzzy"></td><td data-sort="0.560"><img src="https://img.shields.io/badge/fuzzy-0.560-brightgreen" alt="fuzzy"></td><td data-sort="0.340"><img src="https://img.shields.io/badge/f1_micro-0.340-brightgreen" alt="f1_micro"></td></tr><tr><td data-sort="12"><strong>#12</strong></td><td data-sort="gemini-1.5-flash"><span class='test-rectangle' style='background-color: #2ecc71;'>gemini-1.5-flash</span></td><td data-sort="Google"><span class='test-rectangle' style='background-color: #ff6699;'>Google</span></td><td data-sort="0.346"><img src="https://img.shields.io/badge/global-0.346-brightgreen" alt="global"></td><td data-sort="0.106"><img src="https://img.shields.io/badge/fuzzy-0.106-brightgreen" alt="fuzzy"></td><td data-sort="0.552"><img src="https://img.shields.io/badge/fuzzy-0.552-brightgreen" alt="fuzzy"></td><td data-sort="0.380"><img src="https://img.shields.io/badge/f1_micro-0.380-brightgreen" alt="f1_micro"></td></tr><tr><td data-sort="13"><strong>#13</strong></td><td data-sort="gpt-4.5-preview"><span class='test-rectangle' style='background-color: #9b59b6;'>gpt-4.5-preview</span></td><td data-sort="OpenAI"><span class='test-rectangle' style='background-color: #cc33ff;'>OpenAI</span></td><td data-sort="0.324"><img src="https://img.shields.io/badge/global-0.324-brightgreen" alt="global"></td><td data-sort="0.203"><img src="https://img.shields.io/badge/fuzzy-0.203-brightgreen" alt="fuzzy"></td><td data-sort="0.166"><img src="https://img.shields.io/badge/fuzzy-0.166-brightgreen" alt="fuzzy"></td><td data-sort="0.603"><img src="https://img.shields.io/badge/f1_micro-0.603-brightgreen" alt="f1_micro"></td></tr><tr><td data-sort="14"><strong>#14</strong></td><td data-sort="pixtral-large-latest"><span class='test-rectangle' style='background-color: #34495e;'>pixtral-large-latest</span></td><td data-sort="Mistral AI"><span class='test-rectangle' style='background-color: #ff6600;'>Mistral AI</span></td><td data-sort="0.279"><img src="https://img.shields.io/badge/global-0.279-brightgreen" alt="global"></td><td data-sort="0.044"><img src="https://img.shields.io/badge/fuzzy-0.044-brightgreen" alt="fuzzy"></td><td data-sort="0.464"><img src="https://img.shields.io/badge/fuzzy-0.464-brightgreen" alt="fuzzy"></td><td data-sort="0.330"><img src="https://img.shields.io/badge/f1_micro-0.330-brightgreen" alt="f1_micro"></td></tr><tr><td data-sort="15"><strong>#15</strong></td><td data-sort="gpt-5-nano"><span class='test-rectangle' style='background-color: #ff33cc;'>gpt-5-nano</span></td><td data-sort="OpenAI"><span class='test-rectangle' style='background-color: #cc33ff;'>OpenAI</span></td><td data-sort="0.276"><img src="https://img.shields.io/badge/global-0.276-brightgreen" alt="global"></td><td data-sort="0.330"><img src="https://img.shields.io/badge/fuzzy-0.330-brightgreen" alt="fuzzy"></td><td data-sort="0.000"><img src="https://img.shields.io/badge/fuzzy-0.000-brightgreen" alt="fuzzy"></td><td data-sort="0.497"><img src="https://img.shields.io/badge/f1_micro-0.497-brightgreen" alt="f1_micro"></td></tr><tr><td data-sort="16"><strong>#16</strong></td><td data-sort="claude-3-5-sonnet-20241022"><span class='test-rectangle' style='background-color: #cc6699;'>claude-3-5-sonnet-20241022</span></td><td data-sort="Anthropic"><span class='test-rectangle' style='background-color: #66ff33;'>Anthropic</span></td><td data-sort="0.156"><img src="https://img.shields.io/badge/global-0.156-brightgreen" alt="global"></td><td data-sort="0.000"><img src="https://img.shields.io/badge/fuzzy-0.000-brightgreen" alt="fuzzy"></td><td data-sort="0.042"><img src="https://img.shields.io/badge/fuzzy-0.042-brightgreen" alt="fuzzy"></td><td data-sort="0.427"><img src="https://img.shields.io/badge/f1_micro-0.427-brightgreen" alt="f1_micro"></td></tr><tr><td data-sort="17"><strong>#17</strong></td><td data-sort="claude-3-7-sonnet-20250219"><span class='test-rectangle' style='background-color: #f1c40f;'>claude-3-7-sonnet-20250219</span></td><td data-sort="Anthropic"><span class='test-rectangle' style='background-color: #66ff33;'>Anthropic</span></td><td data-sort="0.146"><img src="https://img.shields.io/badge/global-0.146-brightgreen" alt="global"></td><td data-sort="0.000"><img src="https://img.shields.io/badge/fuzzy-0.000-brightgreen" alt="fuzzy"></td><td data-sort="0.000"><img src="https://img.shields.io/badge/fuzzy-0.000-brightgreen" alt="fuzzy"></td><td data-sort="0.437"><img src="https://img.shields.io/badge/f1_micro-0.437-brightgreen" alt="f1_micro"></td></tr></tbody>
+</table>
+
+<script>
+function sortTable(columnIndex) {
+const table = document.getElementById("leaderboard-table");
+const tbody = table.getElementsByTagName("tbody")[0];
+const rows = Array.from(tbody.getElementsByTagName("tr"));
+
+const isAscending = table.getAttribute("data-sort-dir") !== "asc";
+table.setAttribute("data-sort-dir", isAscending ? "asc" : "desc");
+
+rows.sort((a, b) => {
+const cellA = a.getElementsByTagName("td")[columnIndex];
+const cellB = b.getElementsByTagName("td")[columnIndex];
+
+let valueA = cellA.getAttribute("data-sort") || cellA.textContent.trim();
+let valueB = cellB.getAttribute("data-sort") || cellB.textContent.trim();
+
+if (!isNaN(valueA) && !isNaN(valueB)) {
+valueA = parseFloat(valueA);
+valueB = parseFloat(valueB);
+}
+
+if (valueA < valueB) return isAscending ? -1 : 1;
+if (valueA > valueB) return isAscending ? 1 : -1;
+return 0;
+});
+
+if (columnIndex !== 0) {
+rows.forEach((row, index) => {
+const rankCell = row.getElementsByTagName("td")[0];
+rankCell.innerHTML = "<strong>#" + (index + 1) + "</strong>";
+rankCell.setAttribute("data-sort", index + 1);
+});
+}
+
+rows.forEach(row => tbody.appendChild(row));
+
+const headers = table.getElementsByTagName("th");
+for (let i = 0; i < headers.length; i++) {
+const header = headers[i];
+const text = header.innerHTML.replace(/ [↕↑↓]/g, '');
+if (i === columnIndex) {
+header.innerHTML = text + (isAscending ? ' ↑' : ' ↓');
+} else {
+header.innerHTML = text + ' ↕';
+}
+}
+}
+</script>
+</div>
+
 ## Latest Benchmark Results
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
