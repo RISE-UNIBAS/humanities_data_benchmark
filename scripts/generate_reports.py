@@ -183,7 +183,7 @@ def create_index():
 
         # Create inner table for this benchmark's tests grouped by prompt and rules
         inner_table = '<table class="inner-table" style="width:100%; border-collapse: collapse;">'
-        inner_table += '<tr><th style="width:15%;">Prompt</th><th style="width:10%;">Rules</th><th style="width:8%;">ID</th><th style="width:15%;">Model</th><th style="width:12%;">Date</th><th style="width:40%;">Results</th></tr>'
+        inner_table += '<tr><th>Prompt</th><th>Rules</th><th>ID</th><th>Model</th><th>Date</th><th>Results</th></tr>'
         
         # Process each prompt/rules group
         for group_key in sorted(latest_results[benchmark].keys()):
@@ -269,7 +269,16 @@ def create_index():
                 # Display prompt and rules only in the first row of each group
                 if first_row:
                     prompt_display = prompt_file if prompt_file else "prompt.txt"
-                    rules_display = rules if rules else "None"
+                    
+                    # Create expandable rules cell
+                    if rules and rules.strip():
+                        rules_display = f'''<details>
+                            <summary>Show Rules</summary>
+                            <div style="margin-top: 5px; padding: 5px; background-color: #f5f5f5; border-radius: 3px; font-size: 0.9em; white-space: pre-wrap;">{rules}</div>
+                        </details>'''
+                    else:
+                        rules_display = "None"
+                    
                     inner_table += f'<tr><td>{prompt_display}</td><td>{rules_display}</td><td>{test_id_html}</td><td>{model_html}</td><td>{date}</td><td>{badge_html}</td></tr>'
                     first_row = False
                 else:
