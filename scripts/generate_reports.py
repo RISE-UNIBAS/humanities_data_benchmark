@@ -270,6 +270,7 @@ def create_leaderboard_radar_chart(leaderboard_data):
     
     return svg_content
 
+
 def create_leaderboard():
     """Create a leaderboard section showing global averages for each model across key benchmarks."""
     
@@ -656,14 +657,14 @@ results, and comparisons.
 
 ## Leaderboard
 
-The following radar chart shows the performance distribution of top models across the three core benchmarks:
-
-{radar_chart_html}
-
 The table below shows the **global average performance** of each model across the three core benchmarks: 
 [bibliographic_data](benchmarks/bibliographic_data/), [fraktur](benchmarks/fraktur/), and [metadata_extraction](benchmarks/metadata_extraction/). Only models with results in all three benchmarks are included. Click on any column header to sort the table.
 
 {leaderboard_html}
+
+The following radar chart shows the performance distribution of top models across the three core benchmarks:
+
+{radar_chart_html}
 
 ## Latest Benchmark Results
 

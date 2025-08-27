@@ -76,105 +76,6 @@ results, and comparisons.
 
 ## Leaderboard
 
-The following radar chart shows the performance distribution of top models across the three core benchmarks:
-
-<div style="text-align: center; margin: 20px 0;">
-<svg width="600" height="500" xmlns="http://www.w3.org/2000/svg">
-    <!-- Background -->
-    <rect width="100%" height="100%" fill="white"/>
-    
-    <!-- Grid circles -->
-    <circle cx="200" cy="200" r="30.0" 
-            fill="none" stroke="#e0e0e0" stroke-width="1"/>
-    <text x="235.0" y="200" 
-          fill="#666" font-size="10" alignment-baseline="middle">0.2</text>
-    <circle cx="200" cy="200" r="60.0" 
-            fill="none" stroke="#e0e0e0" stroke-width="1"/>
-    <text x="265.0" y="200" 
-          fill="#666" font-size="10" alignment-baseline="middle">0.4</text>
-    <circle cx="200" cy="200" r="90.0" 
-            fill="none" stroke="#e0e0e0" stroke-width="1"/>
-    <text x="295.0" y="200" 
-          fill="#666" font-size="10" alignment-baseline="middle">0.6</text>
-    <circle cx="200" cy="200" r="120.0" 
-            fill="none" stroke="#e0e0e0" stroke-width="1"/>
-    <text x="325.0" y="200" 
-          fill="#666" font-size="10" alignment-baseline="middle">0.8</text>
-    <circle cx="200" cy="200" r="150.0" 
-            fill="none" stroke="#e0e0e0" stroke-width="1"/>
-    <text x="355.0" y="200" 
-          fill="#666" font-size="10" alignment-baseline="middle">1.0</text>
-    <line x1="200" y1="200" x2="200.0" y2="50.0" 
-          stroke="#ccc" stroke-width="1"/>
-    <text x="200.0" y="25.0" fill="#333" font-size="11" font-weight="bold"
-          text-anchor="middle" alignment-baseline="middle">Bibliographic Data</text>
-    <line x1="200" y1="200" x2="329.9038105676658" y2="275.0" 
-          stroke="#ccc" stroke-width="1"/>
-    <text x="351.55444566227675" y="287.5" fill="#333" font-size="11" font-weight="bold"
-          text-anchor="start" alignment-baseline="middle">Fraktur</text>
-    <line x1="200" y1="200" x2="70.09618943233423" y2="275.00000000000006" 
-          stroke="#ccc" stroke-width="1"/>
-    <text x="48.44555433772325" y="287.50000000000006" fill="#333" font-size="11" font-weight="bold"
-          text-anchor="end" alignment-baseline="middle">Metadata Extraction</text>
-    <polygon points="200.0,104.35567176718438 284.4374768689828,248.75 131.58399310102936,239.50000000000003" fill="#1f77b4" fill-opacity="0.1" 
-             stroke="#1f77b4" stroke-width="2"/>
-    <circle cx="200.0" cy="104.35567176718438" r="3" fill="#1f77b4"/>
-    <circle cx="284.4374768689828" cy="248.75" r="3" fill="#1f77b4"/>
-    <circle cx="131.58399310102936" cy="239.50000000000003" r="3" fill="#1f77b4"/>
-    <polygon points="200.0,103.08172219700359 264.9519052838329,237.5 115.56252313101724,248.75000000000003" fill="#ff7f0e" fill-opacity="0.1" 
-             stroke="#ff7f0e" stroke-width="2"/>
-    <circle cx="200.0" cy="103.08172219700359" r="3" fill="#ff7f0e"/>
-    <circle cx="264.9519052838329" cy="237.5" r="3" fill="#ff7f0e"/>
-    <circle cx="115.56252313101724" cy="248.75000000000003" r="3" fill="#ff7f0e"/>
-    <polygon points="200.0,161.32067807311404 323.92823528155316,271.54999999999995 130.71796769724492,240.00000000000003" fill="#2ca02c" fill-opacity="0.1" 
-             stroke="#2ca02c" stroke-width="2"/>
-    <circle cx="200.0" cy="161.32067807311404" r="3" fill="#2ca02c"/>
-    <circle cx="323.92823528155316" cy="271.54999999999995" r="3" fill="#2ca02c"/>
-    <circle cx="130.71796769724492" cy="240.00000000000003" r="3" fill="#2ca02c"/>
-    <polygon points="200.0,107.81121952342559 264.9519052838329,237.5 128.98591688967605,241.00000000000003" fill="#d62728" fill-opacity="0.1" 
-             stroke="#d62728" stroke-width="2"/>
-    <circle cx="200.0" cy="107.81121952342559" r="3" fill="#d62728"/>
-    <circle cx="264.9519052838329" cy="237.5" r="3" fill="#d62728"/>
-    <circle cx="128.98591688967605" cy="241.00000000000003" r="3" fill="#d62728"/>
-    <polygon points="200.0,118.34376836352179 265.99113576837425,238.1 133.31604390859823,238.50000000000003" fill="#9467bd" fill-opacity="0.1" 
-             stroke="#9467bd" stroke-width="2"/>
-    <circle cx="200.0" cy="118.34376836352179" r="3" fill="#9467bd"/>
-    <circle cx="265.99113576837425" cy="238.1" r="3" fill="#9467bd"/>
-    <circle cx="133.31604390859823" cy="238.50000000000003" r="3" fill="#9467bd"/>
-    <polygon points="200.0,121.94076462388165 260.27536810339694,234.79999999999998 132.01700580292157,239.25000000000003" fill="#8c564b" fill-opacity="0.1" 
-             stroke="#8c564b" stroke-width="2"/>
-    <circle cx="200.0" cy="121.94076462388165" r="3" fill="#8c564b"/>
-    <circle cx="260.27536810339694" cy="234.79999999999998" r="3" fill="#8c564b"/>
-    <circle cx="132.01700580292157" cy="239.25000000000003" r="3" fill="#8c564b"/>
-    <text x="420" y="40" fill="#333" 
-          font-size="12" font-weight="bold">Models:</text>
-    <rect x="420" y="42" width="15" height="15" 
-          fill="#1f77b4" fill-opacity="0.3" stroke="#1f77b4" stroke-width="2"/>
-    <text x="440" y="50" fill="#333" font-size="11" 
-          alignment-baseline="middle">gpt-5-mini</text>
-    <rect x="420" y="67" width="15" height="15" 
-          fill="#ff7f0e" fill-opacity="0.3" stroke="#ff7f0e" stroke-width="2"/>
-    <text x="440" y="75" fill="#333" font-size="11" 
-          alignment-baseline="middle">o3</text>
-    <rect x="420" y="92" width="15" height="15" 
-          fill="#2ca02c" fill-opacity="0.3" stroke="#2ca02c" stroke-width="2"/>
-    <text x="440" y="100" fill="#333" font-size="11" 
-          alignment-baseline="middle">gemini-2.5-pro</text>
-    <rect x="420" y="117" width="15" height="15" 
-          fill="#d62728" fill-opacity="0.3" stroke="#d62728" stroke-width="2"/>
-    <text x="440" y="125" fill="#333" font-size="11" 
-          alignment-baseline="middle">gpt-4.1-mini</text>
-    <rect x="420" y="142" width="15" height="15" 
-          fill="#9467bd" fill-opacity="0.3" stroke="#9467bd" stroke-width="2"/>
-    <text x="440" y="150" fill="#333" font-size="11" 
-          alignment-baseline="middle">gpt-4.1</text>
-    <rect x="420" y="167" width="15" height="15" 
-          fill="#8c564b" fill-opacity="0.3" stroke="#8c564b" stroke-width="2"/>
-    <text x="440" y="175" fill="#333" font-size="11" 
-          alignment-baseline="middle">gpt-4o</text>
-</svg>
-</div>
-
 The table below shows the **global average performance** of each model across the three core benchmarks: 
 [bibliographic_data](benchmarks/bibliographic_data/), [fraktur](benchmarks/fraktur/), and [metadata_extraction](benchmarks/metadata_extraction/). Only models with results in all three benchmarks are included. Click on any column header to sort the table.
 
@@ -274,6 +175,105 @@ header.innerHTML = text + ' ↕';
 }
 }
 </script>
+</div>
+
+The following radar chart shows the performance distribution of top models across the three core benchmarks:
+
+<div style="text-align: center; margin: 20px 0;">
+<svg width="600" height="500" xmlns="http://www.w3.org/2000/svg">
+    <!-- Background -->
+    <rect width="100%" height="100%" fill="white"/>
+    
+    <!-- Grid circles -->
+    <circle cx="200" cy="200" r="30.0" 
+            fill="none" stroke="#e0e0e0" stroke-width="1"/>
+    <text x="235.0" y="200" 
+          fill="#666" font-size="10" alignment-baseline="middle">0.2</text>
+    <circle cx="200" cy="200" r="60.0" 
+            fill="none" stroke="#e0e0e0" stroke-width="1"/>
+    <text x="265.0" y="200" 
+          fill="#666" font-size="10" alignment-baseline="middle">0.4</text>
+    <circle cx="200" cy="200" r="90.0" 
+            fill="none" stroke="#e0e0e0" stroke-width="1"/>
+    <text x="295.0" y="200" 
+          fill="#666" font-size="10" alignment-baseline="middle">0.6</text>
+    <circle cx="200" cy="200" r="120.0" 
+            fill="none" stroke="#e0e0e0" stroke-width="1"/>
+    <text x="325.0" y="200" 
+          fill="#666" font-size="10" alignment-baseline="middle">0.8</text>
+    <circle cx="200" cy="200" r="150.0" 
+            fill="none" stroke="#e0e0e0" stroke-width="1"/>
+    <text x="355.0" y="200" 
+          fill="#666" font-size="10" alignment-baseline="middle">1.0</text>
+    <line x1="200" y1="200" x2="200.0" y2="50.0" 
+          stroke="#ccc" stroke-width="1"/>
+    <text x="200.0" y="25.0" fill="#333" font-size="11" font-weight="bold"
+          text-anchor="middle" alignment-baseline="middle">Bibliographic Data</text>
+    <line x1="200" y1="200" x2="329.9038105676658" y2="275.0" 
+          stroke="#ccc" stroke-width="1"/>
+    <text x="351.55444566227675" y="287.5" fill="#333" font-size="11" font-weight="bold"
+          text-anchor="start" alignment-baseline="middle">Fraktur</text>
+    <line x1="200" y1="200" x2="70.09618943233423" y2="275.00000000000006" 
+          stroke="#ccc" stroke-width="1"/>
+    <text x="48.44555433772325" y="287.50000000000006" fill="#333" font-size="11" font-weight="bold"
+          text-anchor="end" alignment-baseline="middle">Metadata Extraction</text>
+    <polygon points="200.0,104.35567176718438 284.4374768689828,248.75 131.58399310102936,239.50000000000003" fill="#1f77b4" fill-opacity="0.1" 
+             stroke="#1f77b4" stroke-width="2"/>
+    <circle cx="200.0" cy="104.35567176718438" r="3" fill="#1f77b4"/>
+    <circle cx="284.4374768689828" cy="248.75" r="3" fill="#1f77b4"/>
+    <circle cx="131.58399310102936" cy="239.50000000000003" r="3" fill="#1f77b4"/>
+    <polygon points="200.0,103.08172219700359 264.9519052838329,237.5 115.56252313101724,248.75000000000003" fill="#ff7f0e" fill-opacity="0.1" 
+             stroke="#ff7f0e" stroke-width="2"/>
+    <circle cx="200.0" cy="103.08172219700359" r="3" fill="#ff7f0e"/>
+    <circle cx="264.9519052838329" cy="237.5" r="3" fill="#ff7f0e"/>
+    <circle cx="115.56252313101724" cy="248.75000000000003" r="3" fill="#ff7f0e"/>
+    <polygon points="200.0,161.32067807311404 323.92823528155316,271.54999999999995 130.71796769724492,240.00000000000003" fill="#2ca02c" fill-opacity="0.1" 
+             stroke="#2ca02c" stroke-width="2"/>
+    <circle cx="200.0" cy="161.32067807311404" r="3" fill="#2ca02c"/>
+    <circle cx="323.92823528155316" cy="271.54999999999995" r="3" fill="#2ca02c"/>
+    <circle cx="130.71796769724492" cy="240.00000000000003" r="3" fill="#2ca02c"/>
+    <polygon points="200.0,107.81121952342559 264.9519052838329,237.5 128.98591688967605,241.00000000000003" fill="#d62728" fill-opacity="0.1" 
+             stroke="#d62728" stroke-width="2"/>
+    <circle cx="200.0" cy="107.81121952342559" r="3" fill="#d62728"/>
+    <circle cx="264.9519052838329" cy="237.5" r="3" fill="#d62728"/>
+    <circle cx="128.98591688967605" cy="241.00000000000003" r="3" fill="#d62728"/>
+    <polygon points="200.0,118.34376836352179 265.99113576837425,238.1 133.31604390859823,238.50000000000003" fill="#9467bd" fill-opacity="0.1" 
+             stroke="#9467bd" stroke-width="2"/>
+    <circle cx="200.0" cy="118.34376836352179" r="3" fill="#9467bd"/>
+    <circle cx="265.99113576837425" cy="238.1" r="3" fill="#9467bd"/>
+    <circle cx="133.31604390859823" cy="238.50000000000003" r="3" fill="#9467bd"/>
+    <polygon points="200.0,121.94076462388165 260.27536810339694,234.79999999999998 132.01700580292157,239.25000000000003" fill="#8c564b" fill-opacity="0.1" 
+             stroke="#8c564b" stroke-width="2"/>
+    <circle cx="200.0" cy="121.94076462388165" r="3" fill="#8c564b"/>
+    <circle cx="260.27536810339694" cy="234.79999999999998" r="3" fill="#8c564b"/>
+    <circle cx="132.01700580292157" cy="239.25000000000003" r="3" fill="#8c564b"/>
+    <text x="420" y="40" fill="#333" 
+          font-size="12" font-weight="bold">Models:</text>
+    <rect x="420" y="42" width="15" height="15" 
+          fill="#1f77b4" fill-opacity="0.3" stroke="#1f77b4" stroke-width="2"/>
+    <text x="440" y="50" fill="#333" font-size="11" 
+          alignment-baseline="middle">gpt-5-mini</text>
+    <rect x="420" y="67" width="15" height="15" 
+          fill="#ff7f0e" fill-opacity="0.3" stroke="#ff7f0e" stroke-width="2"/>
+    <text x="440" y="75" fill="#333" font-size="11" 
+          alignment-baseline="middle">o3</text>
+    <rect x="420" y="92" width="15" height="15" 
+          fill="#2ca02c" fill-opacity="0.3" stroke="#2ca02c" stroke-width="2"/>
+    <text x="440" y="100" fill="#333" font-size="11" 
+          alignment-baseline="middle">gemini-2.5-pro</text>
+    <rect x="420" y="117" width="15" height="15" 
+          fill="#d62728" fill-opacity="0.3" stroke="#d62728" stroke-width="2"/>
+    <text x="440" y="125" fill="#333" font-size="11" 
+          alignment-baseline="middle">gpt-4.1-mini</text>
+    <rect x="420" y="142" width="15" height="15" 
+          fill="#9467bd" fill-opacity="0.3" stroke="#9467bd" stroke-width="2"/>
+    <text x="440" y="150" fill="#333" font-size="11" 
+          alignment-baseline="middle">gpt-4.1</text>
+    <rect x="420" y="167" width="15" height="15" 
+          fill="#8c564b" fill-opacity="0.3" stroke="#8c564b" stroke-width="2"/>
+    <text x="440" y="175" fill="#333" font-size="11" 
+          alignment-baseline="middle">gpt-4o</text>
+</svg>
 </div>
 
 ## Latest Benchmark Results
