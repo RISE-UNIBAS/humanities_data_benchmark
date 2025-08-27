@@ -23,13 +23,13 @@ TEST_STYLE = """<style>
     }
     .test-square {
         display: inline-flex;
-        width: 30px;
+        width: 45px;
         height: 20px;
         border-radius: 3px;
         text-align: center;
         align-items: center;
         justify-content: center;
-        font-size: 12px;
+        font-size: 11px;
         font-weight: bold;
         color: white;
     }
