@@ -61,7 +61,7 @@ This page provides an overview of all tests. Click on the test name to see the d
     }
     
     /* Rules column styles */
-    .inner-table td:nth-child(5) {
+    .inner-table td:nth-child(6) {
         max-width: 200px;
         word-wrap: break-word;
         overflow-wrap: break-word;

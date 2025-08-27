@@ -404,10 +404,11 @@ def create_index():
 <tr>
 <th onclick="sortBenchmarkTable('{benchmark}', 0)" style="cursor: pointer;">Model ↕</th>
 <th onclick="sortBenchmarkTable('{benchmark}', 1)" style="cursor: pointer;">Provider ↕</th>
-<th onclick="sortBenchmarkTable('{benchmark}', 2)" style="cursor: pointer;">Date ↕</th>
-<th onclick="sortBenchmarkTable('{benchmark}', 3)" style="cursor: pointer;">Prompt ↕</th>
-<th onclick="sortBenchmarkTable('{benchmark}', 4)" style="cursor: pointer;">Rules ↕</th>
-<th onclick="sortBenchmarkTable('{benchmark}', 5)" style="cursor: pointer;">Results ↕</th>
+<th onclick="sortBenchmarkTable('{benchmark}', 2)" style="cursor: pointer;">Test ID ↕</th>
+<th onclick="sortBenchmarkTable('{benchmark}', 3)" style="cursor: pointer;">Date ↕</th>
+<th onclick="sortBenchmarkTable('{benchmark}', 4)" style="cursor: pointer;">Prompt ↕</th>
+<th onclick="sortBenchmarkTable('{benchmark}', 5)" style="cursor: pointer;">Rules ↕</th>
+<th onclick="sortBenchmarkTable('{benchmark}', 6)" style="cursor: pointer;">Results ↕</th>
 </tr>
 </thead>
 <tbody>'''
@@ -468,6 +469,7 @@ def create_index():
                 badge_html = " ".join(badges)
                 
                 all_tests.append({
+                    'test_id': test_id,
                     'model': test_config['model'],
                     'provider': test_config['provider'],
                     'date': date,
@@ -500,7 +502,10 @@ def create_index():
             else:
                 rules_display = "None"
             
-            benchmark_table += f'<tr><td data-sort="{test["model"]}">{model_html}</td><td data-sort="{provider_display}">{provider_html}</td><td data-sort="{test["date"]}">{test["date"]}</td><td data-sort="{test["prompt"]}">{test["prompt"]}</td><td data-sort="{test["rules"] if test["rules"] != "None" else ""}">{rules_display}</td><td data-sort="{test["score"]:.3f}">{test["badges"]}</td></tr>'
+            # Create clickable test ID using get_square for consistent styling
+            test_id_square = get_square(test["test_id"], href="tests/" + test["test_id"])
+            
+            benchmark_table += f'<tr><td data-sort="{test["model"]}">{model_html}</td><td data-sort="{provider_display}">{provider_html}</td><td data-sort="{test["test_id"]}">{test_id_square}</td><td data-sort="{test["date"]}">{test["date"]}</td><td data-sort="{test["prompt"]}">{test["prompt"]}</td><td data-sort="{test["rules"] if test["rules"] != "None" else ""}">{rules_display}</td><td data-sort="{test["score"]:.3f}">{test["badges"]}</td></tr>'
         
         benchmark_table += '</tbody></table>\n\n'
         benchmark_sections += benchmark_table

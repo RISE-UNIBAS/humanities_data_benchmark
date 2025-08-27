@@ -61,7 +61,7 @@ TEST_STYLE = """<style>
     }
     
     /* Rules column styles */
-    .inner-table td:nth-child(5) {
+    .inner-table td:nth-child(6) {
         max-width: 200px;
         word-wrap: break-word;
         overflow-wrap: break-word;
