@@ -80,7 +80,7 @@ def create_archive_overview(dates, benchmark_names):
                 for test in os.listdir(result_path):
                     conf = load_test_configuration(test)
                     if conf['name'] == benchmark:
-                        cell += get_square(test, href=f"/archive/{date}/{test}") + "&nbsp;"
+                        cell += get_square(test, href=f"/humanities_data_benchmark/archive/{date}/{test}") + "&nbsp;"
             else:
                 cell = ""
             row_data.append(cell)

@@ -273,7 +273,7 @@ header.innerHTML = text + ' ↕';
 <th onclick="sortBenchmarkTable('zettelkatalog', 6)" style="cursor: pointer;">Results ↕</th>
 </tr>
 </thead>
-<tbody><tr><td data-sort="gpt-4o"><span class='test-rectangle' style='background-color: #33ccff;'>gpt-4o</span></td><td data-sort="OpenAI"><span class='test-rectangle' style='background-color: #cc33ff;'>OpenAI</span></td><td data-sort="T66"><a href='tests/T66'><span class='test-square' style='background-color: #7f8c8d;'>T66</span></a></td><td data-sort="2025-04-15">2025-04-15</td><td data-sort="prompt.txt">prompt.txt</td><td data-sort="">None</td><td data-sort="0.000"><img src="https://img.shields.io/badge/keine-antwort-brightgreen" alt="keine"></td></tr></tbody></table>
+<tbody></tbody></table>
 
 
 
