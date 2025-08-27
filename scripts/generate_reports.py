@@ -79,6 +79,9 @@ def create_archive_overview(dates, benchmark_names):
                 cell = ""
                 for test in os.listdir(result_path):
                     conf = load_test_configuration(test)
+                    if conf is None:
+                        print(f"Warning: Could not find configuration for test ID '{test}' in {date}")
+                        continue
                     if conf['name'] == benchmark:
                         cell += get_square(test, href=f"/humanities_data_benchmark/archive/{date}/{test}") + "&nbsp;"
             else:
@@ -96,6 +99,10 @@ def create_individual_reports():
     for date in os.listdir("../results"):
         for test in os.listdir("../results/" + date):
             test_config = load_test_configuration(test)
+            if test_config is None:
+                print(f"Warning: Could not find configuration for test ID '{test}' in {date}, skipping...")
+                continue
+                
             renders_directory = os.path.join("..", "renders", date, test)
 
             test_report_path = os.path.join(REPORTS_DIR, "archive", date, f"{test}.md")
@@ -111,7 +118,7 @@ def create_individual_reports():
             md_string = "# Test Report\n\n"
             md_string += f"This test has the following configuration:\n\n"
             md_string += get_badge("data", test_config['name'], "lightgrey",
-                                     href=f"/benchmarks/{test_config['name']}") + "&nbsp;"
+                                     href=f"/humanities_data_benchmark/benchmarks/{test_config['name']}") + "&nbsp;"
             md_string += get_badge("provider", test_config['provider'], "green") + "&nbsp;"
             md_string += get_badge("model", test_config['model'], "blue") + "&nbsp;"
             if test_config['dataclass'] != "":
