@@ -503,7 +503,7 @@ def create_index():
                 rules_display = "None"
             
             # Create clickable test ID using get_square for consistent styling
-            test_id_square = get_square(test["test_id"], href="tests/" + test["test_id"])
+            test_id_square = get_square(test["test_id"], href="/humanities_data_benchmark/tests/" + test["test_id"])
             
             benchmark_table += f'<tr><td data-sort="{test["model"]}">{model_html}</td><td data-sort="{provider_display}">{provider_html}</td><td data-sort="{test["test_id"]}">{test_id_square}</td><td data-sort="{test["date"]}">{test["date"]}</td><td data-sort="{test["prompt"]}">{test["prompt"]}</td><td data-sort="{test["rules"] if test["rules"] != "None" else ""}">{rules_display}</td><td data-sort="{test["score"]:.3f}">{test["badges"]}</td></tr>'
         
@@ -611,7 +611,7 @@ def create_tests_overview():
 
             test_id = test_config['id']
             row_data = [
-                get_square(test_id, href="tests/" + test_id),
+                get_square(test_id, href="/humanities_data_benchmark/tests/" + test_id),
                 f'<a href="/humanities_data_benchmark/benchmarks/{test_config["name"]}/">{test_config["name"]}</a>',
                 get_rectangle(test_config['provider']),
                 get_rectangle(test_config['model']),
