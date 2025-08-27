@@ -553,7 +553,7 @@ def create_test_runs_pages():
 
             test_run_md = f"# Test {test_config['id']}\n\n"
             test_run_md += f"This test has the following configuration:\n\n"
-            test_run_md += get_badge("data", test_config['name'], "lightgrey", href=f"/benchmarks/{test_config['name']}") + "&nbsp;"
+            test_run_md += get_badge("data", test_config['name'], "lightgrey", href=f"/humanities_data_benchmark/benchmarks/{test_config['name']}") + "&nbsp;"
             test_run_md += get_badge("provider", test_config['provider'], "green") + "&nbsp;"
             test_run_md += get_badge("model", test_config['model'], "blue") + "&nbsp;"
             if test_config['dataclass'] != "":
@@ -585,7 +585,7 @@ def create_test_runs_pages():
                         for key, value in score_data.items():
                             score_html += get_badge(key, value) + "&nbsp;"
 
-                        table_data.append([date, score_html, "<a href='/archive/" + date + "/" + test + "'>Details</a>"])
+                        table_data.append([date, score_html, "<a href='/humanities_data_benchmark/archive/" + date + "/" + test + "'>Details</a>"])
 
             test_run_md += create_html_table(["Date", "Results", "Details"], table_data)
             write_file(test_run_file, test_run_md)
@@ -612,7 +612,7 @@ def create_tests_overview():
             test_id = test_config['id']
             row_data = [
                 get_square(test_id, href="tests/" + test_id),
-                f'<a href="/benchmarks/{test_config["name"]}/">{test_config["name"]}</a>',
+                f'<a href="/humanities_data_benchmark/benchmarks/{test_config["name"]}/">{test_config["name"]}</a>',
                 get_rectangle(test_config['provider']),
                 get_rectangle(test_config['model']),
                 test_config['dataclass'],
