@@ -3,6 +3,7 @@ import os
 import csv
 import re
 import logging
+import math
 
 from data_loader import write_file, read_file
 from report_helper import get_square, create_html_table, get_rectangle, get_badge
@@ -148,6 +149,126 @@ def create_individual_reports():
 
             write_file(test_report_path, md_string)
 
+
+def create_leaderboard_radar_chart(leaderboard_data):
+    """Create an HTML/SVG radar chart for the top performing models in the leaderboard."""
+    if not leaderboard_data:
+        return "<p>No leaderboard data available for radar chart.</p>"
+    
+    # Take top 6 models for better readability
+    top_models = leaderboard_data[:6]
+    
+    # Categories for the radar chart
+    categories = ['bibliographic_data', 'fraktur', 'metadata_extraction']
+    category_labels = ['Bibliographic Data', 'Fraktur', 'Metadata Extraction']
+    
+    # Chart dimensions
+    size = 400
+    center_x, center_y = size // 2, size // 2
+    radius = 150
+    
+    # Color palette for models
+    colors = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd', '#8c564b']
+    
+    # Calculate angles for each category (starting from top)
+    angles = []
+    for i in range(len(categories)):
+        angle = (i * 2 * math.pi / len(categories)) - (math.pi / 2)  # Start from top
+        angles.append(angle)
+    
+    # Start building SVG
+    svg_content = f'''<div style="text-align: center; margin: 20px 0;">
+<svg width="{size + 200}" height="{size + 100}" xmlns="http://www.w3.org/2000/svg">
+    <!-- Background -->
+    <rect width="100%" height="100%" fill="white"/>
+    
+    <!-- Grid circles -->'''
+    
+    # Add concentric circles for scale
+    for scale in [0.2, 0.4, 0.6, 0.8, 1.0]:
+        circle_radius = radius * scale
+        svg_content += f'''
+    <circle cx="{center_x}" cy="{center_y}" r="{circle_radius}" 
+            fill="none" stroke="#e0e0e0" stroke-width="1"/>
+    <text x="{center_x + circle_radius + 5}" y="{center_y}" 
+          fill="#666" font-size="10" alignment-baseline="middle">{scale}</text>'''
+    
+    # Add axis lines and labels
+    for i, (angle, label) in enumerate(zip(angles, category_labels)):
+        end_x = center_x + radius * math.cos(angle)
+        end_y = center_y + radius * math.sin(angle)
+        
+        # Axis line
+        svg_content += f'''
+    <line x1="{center_x}" y1="{center_y}" x2="{end_x}" y2="{end_y}" 
+          stroke="#ccc" stroke-width="1"/>'''
+        
+        # Label positioning
+        label_offset = 25
+        label_x = center_x + (radius + label_offset) * math.cos(angle)
+        label_y = center_y + (radius + label_offset) * math.sin(angle)
+        
+        # Adjust text anchor based on position
+        anchor = "middle"
+        if label_x < center_x - 10:
+            anchor = "end"
+        elif label_x > center_x + 10:
+            anchor = "start"
+            
+        svg_content += f'''
+    <text x="{label_x}" y="{label_y}" fill="#333" font-size="11" font-weight="bold"
+          text-anchor="{anchor}" alignment-baseline="middle">{label}</text>'''
+    
+    # Plot each model
+    for i, model_data in enumerate(top_models):
+        color = colors[i % len(colors)]
+        
+        # Calculate points for this model
+        points = []
+        for j, category in enumerate(categories):
+            value = model_data[category]
+            if value is not None:
+                point_radius = radius * value
+                point_x = center_x + point_radius * math.cos(angles[j])
+                point_y = center_y + point_radius * math.sin(angles[j])
+                points.append(f"{point_x},{point_y}")
+        
+        if len(points) == len(categories):
+            # Create polygon for the model
+            points_str = " ".join(points)
+            svg_content += f'''
+    <polygon points="{points_str}" fill="{color}" fill-opacity="0.1" 
+             stroke="{color}" stroke-width="2"/>'''
+            
+            # Add dots at each point
+            for point in points:
+                x, y = point.split(',')
+                svg_content += f'''
+    <circle cx="{x}" cy="{y}" r="3" fill="{color}"/>'''
+    
+    # Add legend
+    legend_start_x = size + 20
+    legend_start_y = 50
+    
+    svg_content += f'''
+    <text x="{legend_start_x}" y="{legend_start_y - 10}" fill="#333" 
+          font-size="12" font-weight="bold">Models:</text>'''
+    
+    for i, model_data in enumerate(top_models):
+        color = colors[i % len(colors)]
+        legend_y = legend_start_y + i * 25
+        
+        svg_content += f'''
+    <rect x="{legend_start_x}" y="{legend_y - 8}" width="15" height="15" 
+          fill="{color}" fill-opacity="0.3" stroke="{color}" stroke-width="2"/>
+    <text x="{legend_start_x + 20}" y="{legend_y}" fill="#333" font-size="11" 
+          alignment-baseline="middle">{model_data['model']}</text>'''
+    
+    svg_content += '''
+</svg>
+</div>'''
+    
+    return svg_content
 
 def create_leaderboard():
     """Create a leaderboard section showing global averages for each model across key benchmarks."""
@@ -366,7 +487,7 @@ header.innerHTML = text + ' ↕';
 </script>
 </div>'''
     
-    return leaderboard_html
+    return leaderboard_html, leaderboard_data
 
 
 def create_index():
@@ -520,8 +641,11 @@ def create_index():
     # Import TEST_STYLE from report_helper for styling
     from report_helper import TEST_STYLE
     
-    # Generate leaderboard
-    leaderboard_html = create_leaderboard()
+    # Generate leaderboard and radar chart
+    leaderboard_html, leaderboard_data = create_leaderboard()
+    
+    # Generate radar chart HTML
+    radar_chart_html = create_leaderboard_radar_chart(leaderboard_data)
     
     index_md = f"""
 # Humanities Data Benchmark
@@ -532,7 +656,11 @@ results, and comparisons.
 
 ## Leaderboard
 
-The following table shows the **global average performance** of each model across the three core benchmarks: 
+The following radar chart shows the performance distribution of top models across the three core benchmarks:
+
+{radar_chart_html}
+
+The table below shows the **global average performance** of each model across the three core benchmarks: 
 [bibliographic_data](benchmarks/bibliographic_data/), [fraktur](benchmarks/fraktur/), and [metadata_extraction](benchmarks/metadata_extraction/). Only models with results in all three benchmarks are included. Click on any column header to sort the table.
 
 {leaderboard_html}
