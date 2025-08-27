@@ -7,9 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-#### Added
-- Tests T136-T141.
+### Added
 - Global model performance leaderboard to docs.
+- T136 on 2025-08-27
+- T137 on 2025-08-27
+- T138 on 2025-08-27
+- T139 on 2025-08-27
+- T140 on 2025-08-27
+- T141 on 2025-08-27
+
+### Fixed
+- Broken link patterns in docs.
 
 ## [v0.1.0] - 2025-08-25
 
