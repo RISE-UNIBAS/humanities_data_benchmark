@@ -38,5 +38,5 @@ class Document(BaseModel):
     type: WorkType
     author: Author
     publication: Publication
-    examination: Optional[Examination] = None
-    library_reference: Optional[LibraryReference] = None
+    examination: Examination
+    library_reference: LibraryReference
