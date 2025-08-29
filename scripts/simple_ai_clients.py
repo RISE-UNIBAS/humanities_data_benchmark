@@ -86,6 +86,8 @@ class AiApiClient:
         answer = None
 
         if self.api == 'openai':
+            if model in ["gpt-5", "gpt-5-mini", "gpt-5-nano", "o3"]:
+                self.temperature = 1
             workload_json = [{
                 "role": "user",
                 "content": [
@@ -141,15 +143,24 @@ class AiApiClient:
                             "data": base64_image
                         }
                     })
-
-            message = self.api_client.messages.create(
-                max_tokens=1024,
-                messages=[{
-                    "role": "user",
-                    "content": content,
-                }],
-                model=model,
-            )
+            if model in ["claude-3-opus-20240229"]:
+                message = self.api_client.messages.create(
+                    max_tokens=4096,
+                    messages=[{
+                        "role": "user",
+                        "content": content,
+                    }],
+                    model=model,
+                )
+            else:
+                message = self.api_client.messages.create(
+                    max_tokens=10000,
+                    messages=[{
+                        "role": "user",
+                        "content": content,
+                    }],
+                    model=model,
+                )
             answer = message
 
         if self.api == 'mistral':

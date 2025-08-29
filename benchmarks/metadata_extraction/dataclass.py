@@ -10,6 +10,7 @@ class Metadata:
     sender_persons: Optional[List[str]]
     receiver_persons: Optional[List[str]]
 
+
 @dataclass
 class Document(BaseModel):
     metadata: Metadata

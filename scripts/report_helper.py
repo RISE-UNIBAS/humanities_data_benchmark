@@ -23,13 +23,13 @@ TEST_STYLE = """<style>
     }
     .test-square {
         display: inline-flex;
-        width: 30px;
+        width: 45px;
         height: 20px;
         border-radius: 3px;
         text-align: center;
         align-items: center;
         justify-content: center;
-        font-size: 12px;
+        font-size: 11px;
         font-weight: bold;
         color: white;
     }
@@ -48,6 +48,30 @@ TEST_STYLE = """<style>
     .inner-table th {
         background-color: #f2f2f2;
         font-weight: bold;
+    }
+    
+    /* Sortable table styles */
+    .sortable-table th[onclick] {
+        cursor: pointer;
+        user-select: none;
+        transition: background-color 0.2s;
+    }
+    .sortable-table th[onclick]:hover {
+        background-color: #e8e8e8;
+    }
+    
+    /* Rules column styles */
+    .inner-table td:nth-child(6) {
+        max-width: 200px;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+    }
+    
+    /* Radar chart container styles */
+    #performanceRadar {
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        background-color: #fafafa;
     }
 </style>"""
 

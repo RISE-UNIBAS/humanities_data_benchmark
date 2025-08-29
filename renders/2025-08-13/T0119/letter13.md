@@ -1,0 +1,24 @@
+### Result for letter13
+[View raw result from claude-opus-4-1-20250805](https://github.com/RISE-UNIBAS/humanities_data_benchmark/blob/main/results/2025-08-13/T119/request_T119_letter13.json)
+
+| Category          | Ground Truth | Prediction | TP | FP | FN |
+|------------------|--------------|------------|----|----|----|
+| `send_date`        | 1927-09-15 | 1929-09-16 | 0 | 1 | 1 |
+| `sender_persons`  | Groschupf-Jaeger, Louis<br>Kachelhofer-Gerber, Frederick Charles | None | 0 | 0 | 2 |
+| `receiver_persons` | Rupprecht, Karl | Herrn Rupprecht, Hotelier | 0 | 1 | 1 |
+
+| Name | Alternate Names |
+| --- | --- |
+| Groschupf-Jaeger, Louis | Groschopf<br>Groschupf<br>Herr Groschupf<br>Herrn Groschupf |
+| Kachelhofer-Gerber, Frederick Charles | None |
+| Rupprecht, Karl | Herr Rupprecht<br>Herrn Rupprecht |
+
+#### Rules
+`inferred_from_function`: False
+
+`inferred_from_correspondence`: False
+
+#### Letter images
+
+<img src="https://github.com/RISE-UNIBAS/humanities_data_benchmark/blob/main/benchmarks/metadata_extraction/images/letter13_p1.jpg?raw=true" alt="letter13_p1.jpg" width="800px">
+<img src="https://github.com/RISE-UNIBAS/humanities_data_benchmark/blob/main/benchmarks/metadata_extraction/images/letter13_p2.jpg?raw=true" alt="letter13_p2.jpg" width="800px">

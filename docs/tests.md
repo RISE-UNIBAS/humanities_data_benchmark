@@ -23,13 +23,13 @@ This page provides an overview of all tests. Click on the test name to see the d
     }
     .test-square {
         display: inline-flex;
-        width: 30px;
+        width: 45px;
         height: 20px;
         border-radius: 3px;
         text-align: center;
         align-items: center;
         justify-content: center;
-        font-size: 12px;
+        font-size: 11px;
         font-weight: bold;
         color: white;
     }
@@ -49,6 +49,30 @@ This page provides an overview of all tests. Click on the test name to see the d
         background-color: #f2f2f2;
         font-weight: bold;
     }
+    
+    /* Sortable table styles */
+    .sortable-table th[onclick] {
+        cursor: pointer;
+        user-select: none;
+        transition: background-color 0.2s;
+    }
+    .sortable-table th[onclick]:hover {
+        background-color: #e8e8e8;
+    }
+    
+    /* Rules column styles */
+    .inner-table td:nth-child(6) {
+        max-width: 200px;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+    }
+    
+    /* Radar chart container styles */
+    #performanceRadar {
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        background-color: #fafafa;
+    }
 </style>
 <table id="data-table" class="display">
   <thead><tr>
@@ -65,8 +89,8 @@ This page provides an overview of all tests. Click on the test name to see the d
   </tr></thead>
   <tbody>
 <tr>
-    <td><a href='tests/T01'><span class='test-square' style='background-color: #99ccff;'>T01</span></a></td>
-    <td><a href="/benchmarks/test_benchmark/">test_benchmark</a></td>
+    <td><a href='/humanities_data_benchmark/tests/T0001'><span class='test-square' style='background-color: #ff0066;'>T0001</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/test_benchmark/">test_benchmark</a></td>
     <td><span class='test-rectangle' style='background-color: #ff0066;'>openai</span></td>
     <td><span class='test-rectangle' style='background-color: #33ccff;'>gpt-4o</span></td>
     <td></td>
@@ -76,8 +100,8 @@ This page provides an overview of all tests. Click on the test name to see the d
     <td>false</td>
 </tr>
 <tr>
-    <td><a href='tests/T02'><span class='test-square' style='background-color: #0099ff;'>T02</span></a></td>
-    <td><a href="/benchmarks/test_benchmark/">test_benchmark</a></td>
+    <td><a href='/humanities_data_benchmark/tests/T0002'><span class='test-square' style='background-color: #ff3300;'>T0002</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/test_benchmark/">test_benchmark</a></td>
     <td><span class='test-rectangle' style='background-color: #ffcc33;'>genai</span></td>
     <td><span class='test-rectangle' style='background-color: #f39c12;'>gemini-2.0-flash</span></td>
     <td></td>
@@ -87,8 +111,8 @@ This page provides an overview of all tests. Click on the test name to see the d
     <td>false</td>
 </tr>
 <tr>
-    <td><a href='tests/T03'><span class='test-square' style='background-color: #33ccff;'>T03</span></a></td>
-    <td><a href="/benchmarks/test_benchmark/">test_benchmark</a></td>
+    <td><a href='/humanities_data_benchmark/tests/T0003'><span class='test-square' style='background-color: #ff33cc;'>T0003</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/test_benchmark/">test_benchmark</a></td>
     <td><span class='test-rectangle' style='background-color: #ff5050;'>anthropic</span></td>
     <td><span class='test-rectangle' style='background-color: #cc6699;'>claude-3-5-sonnet-20241022</span></td>
     <td></td>
@@ -98,8 +122,8 @@ This page provides an overview of all tests. Click on the test name to see the d
     <td>false</td>
 </tr>
 <tr>
-    <td><a href='tests/T04'><span class='test-square' style='background-color: #ff3300;'>T04</span></a></td>
-    <td><a href="/benchmarks/test_benchmark2/">test_benchmark2</a></td>
+    <td><a href='/humanities_data_benchmark/tests/T0004'><span class='test-square' style='background-color: #c0392b;'>T0004</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/test_benchmark2/">test_benchmark2</a></td>
     <td><span class='test-rectangle' style='background-color: #ff0066;'>openai</span></td>
     <td><span class='test-rectangle' style='background-color: #33ccff;'>gpt-4o</span></td>
     <td></td>
@@ -109,8 +133,8 @@ This page provides an overview of all tests. Click on the test name to see the d
     <td>false</td>
 </tr>
 <tr>
-    <td><a href='tests/T05'><span class='test-square' style='background-color: #2c3e50;'>T05</span></a></td>
-    <td><a href="/benchmarks/test_benchmark2/">test_benchmark2</a></td>
+    <td><a href='/humanities_data_benchmark/tests/T0005'><span class='test-square' style='background-color: #27ae60;'>T0005</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/test_benchmark2/">test_benchmark2</a></td>
     <td><span class='test-rectangle' style='background-color: #ffcc33;'>genai</span></td>
     <td><span class='test-rectangle' style='background-color: #f39c12;'>gemini-2.0-flash</span></td>
     <td></td>
@@ -120,8 +144,8 @@ This page provides an overview of all tests. Click on the test name to see the d
     <td>false</td>
 </tr>
 <tr>
-    <td><a href='tests/T06'><span class='test-square' style='background-color: #33ccff;'>T06</span></a></td>
-    <td><a href="/benchmarks/test_benchmark2/">test_benchmark2</a></td>
+    <td><a href='/humanities_data_benchmark/tests/T0006'><span class='test-square' style='background-color: #f39c12;'>T0006</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/test_benchmark2/">test_benchmark2</a></td>
     <td><span class='test-rectangle' style='background-color: #ff5050;'>anthropic</span></td>
     <td><span class='test-rectangle' style='background-color: #cc6699;'>claude-3-5-sonnet-20241022</span></td>
     <td></td>
@@ -131,8 +155,8 @@ This page provides an overview of all tests. Click on the test name to see the d
     <td>false</td>
 </tr>
 <tr>
-    <td><a href='tests/T07'><span class='test-square' style='background-color: #ff99cc;'>T07</span></a></td>
-    <td><a href="/benchmarks/bibliographic_data/">bibliographic_data</a></td>
+    <td><a href='/humanities_data_benchmark/tests/T0007'><span class='test-square' style='background-color: #66cc99;'>T0007</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/bibliographic_data/">bibliographic_data</a></td>
     <td><span class='test-rectangle' style='background-color: #ff0066;'>openai</span></td>
     <td><span class='test-rectangle' style='background-color: #33ccff;'>gpt-4o</span></td>
     <td>Document</td>
@@ -142,8 +166,8 @@ This page provides an overview of all tests. Click on the test name to see the d
     <td>false</td>
 </tr>
 <tr>
-    <td><a href='tests/T08'><span class='test-square' style='background-color: #ffcc33;'>T08</span></a></td>
-    <td><a href="/benchmarks/bibliographic_data/">bibliographic_data</a></td>
+    <td><a href='/humanities_data_benchmark/tests/T0008'><span class='test-square' style='background-color: #ffcc00;'>T0008</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/bibliographic_data/">bibliographic_data</a></td>
     <td><span class='test-rectangle' style='background-color: #ffcc33;'>genai</span></td>
     <td><span class='test-rectangle' style='background-color: #f39c12;'>gemini-2.0-flash</span></td>
     <td>Document</td>
@@ -153,8 +177,8 @@ This page provides an overview of all tests. Click on the test name to see the d
     <td>false</td>
 </tr>
 <tr>
-    <td><a href='tests/T09'><span class='test-square' style='background-color: #ff0066;'>T09</span></a></td>
-    <td><a href="/benchmarks/bibliographic_data/">bibliographic_data</a></td>
+    <td><a href='/humanities_data_benchmark/tests/T0009'><span class='test-square' style='background-color: #f39c12;'>T0009</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/bibliographic_data/">bibliographic_data</a></td>
     <td><span class='test-rectangle' style='background-color: #ff5050;'>anthropic</span></td>
     <td><span class='test-rectangle' style='background-color: #cc6699;'>claude-3-5-sonnet-20241022</span></td>
     <td>Document</td>
@@ -164,8 +188,8 @@ This page provides an overview of all tests. Click on the test name to see the d
     <td>false</td>
 </tr>
 <tr>
-    <td><a href='tests/T10'><span class='test-square' style='background-color: #ff6600;'>T10</span></a></td>
-    <td><a href="/benchmarks/metadata_extraction/">metadata_extraction</a></td>
+    <td><a href='/humanities_data_benchmark/tests/T0010'><span class='test-square' style='background-color: #99ff33;'>T0010</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/metadata_extraction/">metadata_extraction</a></td>
     <td><span class='test-rectangle' style='background-color: #ff0066;'>openai</span></td>
     <td><span class='test-rectangle' style='background-color: #33ccff;'>gpt-4o</span></td>
     <td>Document</td>
@@ -175,8 +199,8 @@ This page provides an overview of all tests. Click on the test name to see the d
     <td>false</td>
 </tr>
 <tr>
-    <td><a href='tests/T11'><span class='test-square' style='background-color: #ff6600;'>T11</span></a></td>
-    <td><a href="/benchmarks/metadata_extraction/">metadata_extraction</a></td>
+    <td><a href='/humanities_data_benchmark/tests/T0011'><span class='test-square' style='background-color: #33ccff;'>T0011</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/metadata_extraction/">metadata_extraction</a></td>
     <td><span class='test-rectangle' style='background-color: #ff0066;'>openai</span></td>
     <td><span class='test-rectangle' style='background-color: #9b59b6;'>gpt-4.5-preview</span></td>
     <td>Document</td>
@@ -186,8 +210,8 @@ This page provides an overview of all tests. Click on the test name to see the d
     <td>false</td>
 </tr>
 <tr>
-    <td><a href='tests/T12'><span class='test-square' style='background-color: #6633ff;'>T12</span></a></td>
-    <td><a href="/benchmarks/metadata_extraction/">metadata_extraction</a></td>
+    <td><a href='/humanities_data_benchmark/tests/T0012'><span class='test-square' style='background-color: #ff6600;'>T0012</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/metadata_extraction/">metadata_extraction</a></td>
     <td><span class='test-rectangle' style='background-color: #ff0066;'>openai</span></td>
     <td><span class='test-rectangle' style='background-color: #34495e;'>gpt-4o-mini</span></td>
     <td>Document</td>
@@ -197,8 +221,8 @@ This page provides an overview of all tests. Click on the test name to see the d
     <td>false</td>
 </tr>
 <tr>
-    <td><a href='tests/T13'><span class='test-square' style='background-color: #ff6600;'>T13</span></a></td>
-    <td><a href="/benchmarks/metadata_extraction/">metadata_extraction</a></td>
+    <td><a href='/humanities_data_benchmark/tests/T0013'><span class='test-square' style='background-color: #0099ff;'>T0013</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/metadata_extraction/">metadata_extraction</a></td>
     <td><span class='test-rectangle' style='background-color: #ffcc33;'>genai</span></td>
     <td><span class='test-rectangle' style='background-color: #f39c12;'>gemini-2.0-flash</span></td>
     <td>Document</td>
@@ -208,41 +232,41 @@ This page provides an overview of all tests. Click on the test name to see the d
     <td>false</td>
 </tr>
 <tr>
-    <td><a href='tests/T14'><span class='test-square' style='background-color: #34495e;'>T14</span></a></td>
-    <td><a href="/benchmarks/metadata_extraction/">metadata_extraction</a></td>
+    <td><a href='/humanities_data_benchmark/tests/T0014'><span class='test-square' style='background-color: #7f8c8d;'>T0014</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/metadata_extraction/">metadata_extraction</a></td>
     <td><span class='test-rectangle' style='background-color: #ffcc33;'>genai</span></td>
     <td><span class='test-rectangle' style='background-color: #9b59b6;'>gemini-exp-1206</span></td>
     <td>Document</td>
     <td>0.0</td>
     <td>You are a historian with keyword knowledge and an expert in the field of 20th century Swiss history</td>
     <td>prompt.txt</td>
-    <td>false</td>
+    <td>true</td>
 </tr>
 <tr>
-    <td><a href='tests/T15'><span class='test-square' style='background-color: #ff0099;'>T15</span></a></td>
-    <td><a href="/benchmarks/metadata_extraction/">metadata_extraction</a></td>
+    <td><a href='/humanities_data_benchmark/tests/T0015'><span class='test-square' style='background-color: #cc33ff;'>T0015</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/metadata_extraction/">metadata_extraction</a></td>
     <td><span class='test-rectangle' style='background-color: #ffcc33;'>genai</span></td>
     <td><span class='test-rectangle' style='background-color: #2ecc71;'>gemini-1.5-flash</span></td>
     <td>Document</td>
     <td>0.0</td>
     <td>You are a historian with keyword knowledge and an expert in the field of 20th century Swiss history</td>
     <td>prompt.txt</td>
-    <td>false</td>
+    <td>true</td>
 </tr>
 <tr>
-    <td><a href='tests/T16'><span class='test-square' style='background-color: #33ffcc;'>T16</span></a></td>
-    <td><a href="/benchmarks/metadata_extraction/">metadata_extraction</a></td>
+    <td><a href='/humanities_data_benchmark/tests/T0016'><span class='test-square' style='background-color: #33ccff;'>T0016</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/metadata_extraction/">metadata_extraction</a></td>
     <td><span class='test-rectangle' style='background-color: #ffcc33;'>genai</span></td>
     <td><span class='test-rectangle' style='background-color: #3399ff;'>gemini-1.5-pro</span></td>
     <td>Document</td>
     <td>0.0</td>
     <td>You are a historian with keyword knowledge and an expert in the field of 20th century Swiss history</td>
     <td>prompt.txt</td>
-    <td>false</td>
+    <td>true</td>
 </tr>
 <tr>
-    <td><a href='tests/T17'><span class='test-square' style='background-color: #9b59b6;'>T17</span></a></td>
-    <td><a href="/benchmarks/metadata_extraction/">metadata_extraction</a></td>
+    <td><a href='/humanities_data_benchmark/tests/T0017'><span class='test-square' style='background-color: #ff6600;'>T0017</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/metadata_extraction/">metadata_extraction</a></td>
     <td><span class='test-rectangle' style='background-color: #ff5050;'>anthropic</span></td>
     <td><span class='test-rectangle' style='background-color: #f1c40f;'>claude-3-7-sonnet-20250219</span></td>
     <td>Document</td>
@@ -252,8 +276,8 @@ This page provides an overview of all tests. Click on the test name to see the d
     <td>false</td>
 </tr>
 <tr>
-    <td><a href='tests/T18'><span class='test-square' style='background-color: #99ff33;'>T18</span></a></td>
-    <td><a href="/benchmarks/metadata_extraction/">metadata_extraction</a></td>
+    <td><a href='/humanities_data_benchmark/tests/T0018'><span class='test-square' style='background-color: #ff9966;'>T0018</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/metadata_extraction/">metadata_extraction</a></td>
     <td><span class='test-rectangle' style='background-color: #ff5050;'>anthropic</span></td>
     <td><span class='test-rectangle' style='background-color: #cc6699;'>claude-3-5-sonnet-20241022</span></td>
     <td>Document</td>
@@ -263,19 +287,19 @@ This page provides an overview of all tests. Click on the test name to see the d
     <td>false</td>
 </tr>
 <tr>
-    <td><a href='tests/T19'><span class='test-square' style='background-color: #0099ff;'>T19</span></a></td>
-    <td><a href="/benchmarks/metadata_extraction/">metadata_extraction</a></td>
+    <td><a href='/humanities_data_benchmark/tests/T0019'><span class='test-square' style='background-color: #ff5733;'>T0019</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/metadata_extraction/">metadata_extraction</a></td>
     <td><span class='test-rectangle' style='background-color: #ffcc33;'>genai</span></td>
     <td><span class='test-rectangle' style='background-color: #e74c3c;'>gemini-2.5-pro-exp-03-25</span></td>
     <td>Document</td>
     <td>0.0</td>
     <td>You are a historian with keyword knowledge and an expert in the field of 20th century Swiss history</td>
     <td>prompt.txt</td>
-    <td>false</td>
+    <td>true</td>
 </tr>
 <tr>
-    <td><a href='tests/T20'><span class='test-square' style='background-color: #ff5050;'>T20</span></a></td>
-    <td><a href="/benchmarks/metadata_extraction/">metadata_extraction</a></td>
+    <td><a href='/humanities_data_benchmark/tests/T0020'><span class='test-square' style='background-color: #16a085;'>T0020</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/metadata_extraction/">metadata_extraction</a></td>
     <td><span class='test-rectangle' style='background-color: #ffcc33;'>genai</span></td>
     <td><span class='test-rectangle' style='background-color: #ff0033;'>gemini-2.0-flash-lite</span></td>
     <td>Document</td>
@@ -285,30 +309,30 @@ This page provides an overview of all tests. Click on the test name to see the d
     <td>false</td>
 </tr>
 <tr>
-    <td><a href='tests/T21'><span class='test-square' style='background-color: #9933ff;'>T21</span></a></td>
-    <td><a href="/benchmarks/metadata_extraction/">metadata_extraction</a></td>
+    <td><a href='/humanities_data_benchmark/tests/T0021'><span class='test-square' style='background-color: #ff3300;'>T0021</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/metadata_extraction/">metadata_extraction</a></td>
     <td><span class='test-rectangle' style='background-color: #ffcc33;'>genai</span></td>
     <td><span class='test-rectangle' style='background-color: #7f8c8d;'>gemini-2.0-pro-exp-02-05</span></td>
     <td>Document</td>
     <td>0.0</td>
     <td>You are a historian with keyword knowledge and an expert in the field of 20th century Swiss history</td>
     <td>prompt.txt</td>
-    <td>false</td>
+    <td>true</td>
 </tr>
 <tr>
-    <td><a href='tests/T22'><span class='test-square' style='background-color: #2980b9;'>T22</span></a></td>
-    <td><a href="/benchmarks/fraktur/">fraktur</a></td>
+    <td><a href='/humanities_data_benchmark/tests/T0022'><span class='test-square' style='background-color: #99ff33;'>T0022</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/fraktur/">fraktur</a></td>
     <td><span class='test-rectangle' style='background-color: #ffcc33;'>genai</span></td>
     <td><span class='test-rectangle' style='background-color: #e74c3c;'>gemini-2.5-pro-exp-03-25</span></td>
-    <td></td>
+    <td>Document</td>
     <td>0.0</td>
     <td>You are a historian with keyword knowledge and an expert in the field of 20th century Swiss history</td>
     <td>prompt.txt</td>
-    <td>false</td>
+    <td>true</td>
 </tr>
 <tr>
-    <td><a href='tests/T23'><span class='test-square' style='background-color: #ff0066;'>T23</span></a></td>
-    <td><a href="/benchmarks/metadata_extraction/">metadata_extraction</a></td>
+    <td><a href='/humanities_data_benchmark/tests/T0023'><span class='test-square' style='background-color: #33ffcc;'>T0023</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/metadata_extraction/">metadata_extraction</a></td>
     <td><span class='test-rectangle' style='background-color: #f1c40f;'>mistral</span></td>
     <td><span class='test-rectangle' style='background-color: #34495e;'>pixtral-large-latest</span></td>
     <td>Document</td>
@@ -318,8 +342,8 @@ This page provides an overview of all tests. Click on the test name to see the d
     <td>false</td>
 </tr>
 <tr>
-    <td><a href='tests/T24'><span class='test-square' style='background-color: #e74c3c;'>T24</span></a></td>
-    <td><a href="/benchmarks/metadata_extraction/">metadata_extraction</a></td>
+    <td><a href='/humanities_data_benchmark/tests/T0024'><span class='test-square' style='background-color: #ff33cc;'>T0024</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/metadata_extraction/">metadata_extraction</a></td>
     <td><span class='test-rectangle' style='background-color: #ff5050;'>anthropic</span></td>
     <td><span class='test-rectangle' style='background-color: #f1c40f;'>claude-3-7-sonnet-20250219</span></td>
     <td>Document</td>
@@ -329,8 +353,8 @@ This page provides an overview of all tests. Click on the test name to see the d
     <td>false</td>
 </tr>
 <tr>
-    <td><a href='tests/T25'><span class='test-square' style='background-color: #ff6600;'>T25</span></a></td>
-    <td><a href="/benchmarks/metadata_extraction/">metadata_extraction</a></td>
+    <td><a href='/humanities_data_benchmark/tests/T0025'><span class='test-square' style='background-color: #33ff66;'>T0025</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/metadata_extraction/">metadata_extraction</a></td>
     <td><span class='test-rectangle' style='background-color: #ff5050;'>anthropic</span></td>
     <td><span class='test-rectangle' style='background-color: #f1c40f;'>claude-3-7-sonnet-20250219</span></td>
     <td>Document</td>
@@ -340,8 +364,8 @@ This page provides an overview of all tests. Click on the test name to see the d
     <td>false</td>
 </tr>
 <tr>
-    <td><a href='tests/T26'><span class='test-square' style='background-color: #2ecc71;'>T26</span></a></td>
-    <td><a href="/benchmarks/bibliographic_data/">bibliographic_data</a></td>
+    <td><a href='/humanities_data_benchmark/tests/T0026'><span class='test-square' style='background-color: #6633ff;'>T0026</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/bibliographic_data/">bibliographic_data</a></td>
     <td><span class='test-rectangle' style='background-color: #ff0066;'>openai</span></td>
     <td><span class='test-rectangle' style='background-color: #9b59b6;'>gpt-4.5-preview</span></td>
     <td>Document</td>
@@ -351,8 +375,8 @@ This page provides an overview of all tests. Click on the test name to see the d
     <td>false</td>
 </tr>
 <tr>
-    <td><a href='tests/T27'><span class='test-square' style='background-color: #ff33cc;'>T27</span></a></td>
-    <td><a href="/benchmarks/bibliographic_data/">bibliographic_data</a></td>
+    <td><a href='/humanities_data_benchmark/tests/T0027'><span class='test-square' style='background-color: #ff9966;'>T0027</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/bibliographic_data/">bibliographic_data</a></td>
     <td><span class='test-rectangle' style='background-color: #ff0066;'>openai</span></td>
     <td><span class='test-rectangle' style='background-color: #34495e;'>gpt-4o-mini</span></td>
     <td>Document</td>
@@ -362,41 +386,41 @@ This page provides an overview of all tests. Click on the test name to see the d
     <td>false</td>
 </tr>
 <tr>
-    <td><a href='tests/T28'><span class='test-square' style='background-color: #cc33ff;'>T28</span></a></td>
-    <td><a href="/benchmarks/bibliographic_data/">bibliographic_data</a></td>
+    <td><a href='/humanities_data_benchmark/tests/T0028'><span class='test-square' style='background-color: #ff33cc;'>T0028</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/bibliographic_data/">bibliographic_data</a></td>
     <td><span class='test-rectangle' style='background-color: #ffcc33;'>genai</span></td>
     <td><span class='test-rectangle' style='background-color: #9b59b6;'>gemini-exp-1206</span></td>
     <td>Document</td>
     <td>0.0</td>
     <td>You are a Historian</td>
     <td></td>
-    <td>false</td>
+    <td>true</td>
 </tr>
 <tr>
-    <td><a href='tests/T29'><span class='test-square' style='background-color: #f39c12;'>T29</span></a></td>
-    <td><a href="/benchmarks/bibliographic_data/">bibliographic_data</a></td>
+    <td><a href='/humanities_data_benchmark/tests/T0029'><span class='test-square' style='background-color: #ff6699;'>T0029</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/bibliographic_data/">bibliographic_data</a></td>
     <td><span class='test-rectangle' style='background-color: #ffcc33;'>genai</span></td>
     <td><span class='test-rectangle' style='background-color: #2ecc71;'>gemini-1.5-flash</span></td>
     <td>Document</td>
     <td>0.0</td>
     <td>You are a Historian</td>
     <td></td>
-    <td>false</td>
+    <td>true</td>
 </tr>
 <tr>
-    <td><a href='tests/T30'><span class='test-square' style='background-color: #1abc9c;'>T30</span></a></td>
-    <td><a href="/benchmarks/bibliographic_data/">bibliographic_data</a></td>
+    <td><a href='/humanities_data_benchmark/tests/T0030'><span class='test-square' style='background-color: #3399ff;'>T0030</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/bibliographic_data/">bibliographic_data</a></td>
     <td><span class='test-rectangle' style='background-color: #ffcc33;'>genai</span></td>
     <td><span class='test-rectangle' style='background-color: #3399ff;'>gemini-1.5-pro</span></td>
     <td>Document</td>
     <td>0.0</td>
     <td>You are a Historian</td>
     <td></td>
-    <td>false</td>
+    <td>true</td>
 </tr>
 <tr>
-    <td><a href='tests/T31'><span class='test-square' style='background-color: #9966ff;'>T31</span></a></td>
-    <td><a href="/benchmarks/bibliographic_data/">bibliographic_data</a></td>
+    <td><a href='/humanities_data_benchmark/tests/T0031'><span class='test-square' style='background-color: #ff0099;'>T0031</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/bibliographic_data/">bibliographic_data</a></td>
     <td><span class='test-rectangle' style='background-color: #ff5050;'>anthropic</span></td>
     <td><span class='test-rectangle' style='background-color: #f1c40f;'>claude-3-7-sonnet-20250219</span></td>
     <td>Document</td>
@@ -406,19 +430,19 @@ This page provides an overview of all tests. Click on the test name to see the d
     <td>false</td>
 </tr>
 <tr>
-    <td><a href='tests/T32'><span class='test-square' style='background-color: #1abc9c;'>T32</span></a></td>
-    <td><a href="/benchmarks/bibliographic_data/">bibliographic_data</a></td>
+    <td><a href='/humanities_data_benchmark/tests/T0032'><span class='test-square' style='background-color: #ff3366;'>T0032</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/bibliographic_data/">bibliographic_data</a></td>
     <td><span class='test-rectangle' style='background-color: #ffcc33;'>genai</span></td>
     <td><span class='test-rectangle' style='background-color: #e74c3c;'>gemini-2.5-pro-exp-03-25</span></td>
     <td>Document</td>
     <td>0.0</td>
     <td>You are a Historian</td>
     <td></td>
-    <td>false</td>
+    <td>true</td>
 </tr>
 <tr>
-    <td><a href='tests/T33'><span class='test-square' style='background-color: #9b59b6;'>T33</span></a></td>
-    <td><a href="/benchmarks/bibliographic_data/">bibliographic_data</a></td>
+    <td><a href='/humanities_data_benchmark/tests/T0033'><span class='test-square' style='background-color: #f39c12;'>T0033</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/bibliographic_data/">bibliographic_data</a></td>
     <td><span class='test-rectangle' style='background-color: #ffcc33;'>genai</span></td>
     <td><span class='test-rectangle' style='background-color: #ff0033;'>gemini-2.0-flash-lite</span></td>
     <td>Document</td>
@@ -428,19 +452,19 @@ This page provides an overview of all tests. Click on the test name to see the d
     <td>false</td>
 </tr>
 <tr>
-    <td><a href='tests/T34'><span class='test-square' style='background-color: #33ffcc;'>T34</span></a></td>
-    <td><a href="/benchmarks/bibliographic_data/">bibliographic_data</a></td>
+    <td><a href='/humanities_data_benchmark/tests/T0034'><span class='test-square' style='background-color: #34495e;'>T0034</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/bibliographic_data/">bibliographic_data</a></td>
     <td><span class='test-rectangle' style='background-color: #ffcc33;'>genai</span></td>
     <td><span class='test-rectangle' style='background-color: #7f8c8d;'>gemini-2.0-pro-exp-02-05</span></td>
     <td>Document</td>
     <td>0.0</td>
     <td>You are a Historian</td>
     <td></td>
-    <td>false</td>
+    <td>true</td>
 </tr>
 <tr>
-    <td><a href='tests/T35'><span class='test-square' style='background-color: #2c3e50;'>T35</span></a></td>
-    <td><a href="/benchmarks/bibliographic_data/">bibliographic_data</a></td>
+    <td><a href='/humanities_data_benchmark/tests/T0035'><span class='test-square' style='background-color: #6699ff;'>T0035</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/bibliographic_data/">bibliographic_data</a></td>
     <td><span class='test-rectangle' style='background-color: #f1c40f;'>mistral</span></td>
     <td><span class='test-rectangle' style='background-color: #34495e;'>pixtral-large-latest</span></td>
     <td>Document</td>
@@ -450,8 +474,8 @@ This page provides an overview of all tests. Click on the test name to see the d
     <td>false</td>
 </tr>
 <tr>
-    <td><a href='tests/T36'><span class='test-square' style='background-color: #ff6699;'>T36</span></a></td>
-    <td><a href="/benchmarks/metadata_extraction/">metadata_extraction</a></td>
+    <td><a href='/humanities_data_benchmark/tests/T0036'><span class='test-square' style='background-color: #ff6600;'>T0036</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/metadata_extraction/">metadata_extraction</a></td>
     <td><span class='test-rectangle' style='background-color: #ff5050;'>anthropic</span></td>
     <td><span class='test-rectangle' style='background-color: #99ff33;'>claude-3-opus-20240229</span></td>
     <td>Document</td>
@@ -461,8 +485,8 @@ This page provides an overview of all tests. Click on the test name to see the d
     <td>false</td>
 </tr>
 <tr>
-    <td><a href='tests/T37'><span class='test-square' style='background-color: #ff9966;'>T37</span></a></td>
-    <td><a href="/benchmarks/metadata_extraction/">metadata_extraction</a></td>
+    <td><a href='/humanities_data_benchmark/tests/T0037'><span class='test-square' style='background-color: #ff6600;'>T0037</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/metadata_extraction/">metadata_extraction</a></td>
     <td><span class='test-rectangle' style='background-color: #ff5050;'>anthropic</span></td>
     <td><span class='test-rectangle' style='background-color: #ff6600;'>claude-3-5-haiku-20241022</span></td>
     <td>Document</td>
@@ -472,8 +496,8 @@ This page provides an overview of all tests. Click on the test name to see the d
     <td>true</td>
 </tr>
 <tr>
-    <td><a href='tests/T38'><span class='test-square' style='background-color: #8e44ad;'>T38</span></a></td>
-    <td><a href="/benchmarks/metadata_extraction/">metadata_extraction</a></td>
+    <td><a href='/humanities_data_benchmark/tests/T0038'><span class='test-square' style='background-color: #ff9966;'>T0038</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/metadata_extraction/">metadata_extraction</a></td>
     <td><span class='test-rectangle' style='background-color: #ff0066;'>openai</span></td>
     <td><span class='test-rectangle' style='background-color: #33ccff;'>gpt-4o</span></td>
     <td>Document</td>
@@ -483,8 +507,8 @@ This page provides an overview of all tests. Click on the test name to see the d
     <td>false</td>
 </tr>
 <tr>
-    <td><a href='tests/T39'><span class='test-square' style='background-color: #3498db;'>T39</span></a></td>
-    <td><a href="/benchmarks/metadata_extraction/">metadata_extraction</a></td>
+    <td><a href='/humanities_data_benchmark/tests/T0039'><span class='test-square' style='background-color: #66cc99;'>T0039</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/metadata_extraction/">metadata_extraction</a></td>
     <td><span class='test-rectangle' style='background-color: #ff0066;'>openai</span></td>
     <td><span class='test-rectangle' style='background-color: #33ccff;'>gpt-4o</span></td>
     <td>Document</td>
@@ -494,8 +518,8 @@ This page provides an overview of all tests. Click on the test name to see the d
     <td>false</td>
 </tr>
 <tr>
-    <td><a href='tests/T40'><span class='test-square' style='background-color: #e67e22;'>T40</span></a></td>
-    <td><a href="/benchmarks/metadata_extraction/">metadata_extraction</a></td>
+    <td><a href='/humanities_data_benchmark/tests/T0040'><span class='test-square' style='background-color: #34495e;'>T0040</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/metadata_extraction/">metadata_extraction</a></td>
     <td><span class='test-rectangle' style='background-color: #ff0066;'>openai</span></td>
     <td><span class='test-rectangle' style='background-color: #9b59b6;'>gpt-4.5-preview</span></td>
     <td>Document</td>
@@ -505,8 +529,8 @@ This page provides an overview of all tests. Click on the test name to see the d
     <td>false</td>
 </tr>
 <tr>
-    <td><a href='tests/T41'><span class='test-square' style='background-color: #ff0066;'>T41</span></a></td>
-    <td><a href="/benchmarks/metadata_extraction/">metadata_extraction</a></td>
+    <td><a href='/humanities_data_benchmark/tests/T0041'><span class='test-square' style='background-color: #33ffcc;'>T0041</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/metadata_extraction/">metadata_extraction</a></td>
     <td><span class='test-rectangle' style='background-color: #ff0066;'>openai</span></td>
     <td><span class='test-rectangle' style='background-color: #9b59b6;'>gpt-4.5-preview</span></td>
     <td>Document</td>
@@ -516,8 +540,8 @@ This page provides an overview of all tests. Click on the test name to see the d
     <td>false</td>
 </tr>
 <tr>
-    <td><a href='tests/T42'><span class='test-square' style='background-color: #2980b9;'>T42</span></a></td>
-    <td><a href="/benchmarks/metadata_extraction/">metadata_extraction</a></td>
+    <td><a href='/humanities_data_benchmark/tests/T0042'><span class='test-square' style='background-color: #c0392b;'>T0042</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/metadata_extraction/">metadata_extraction</a></td>
     <td><span class='test-rectangle' style='background-color: #ff0066;'>openai</span></td>
     <td><span class='test-rectangle' style='background-color: #34495e;'>gpt-4o-mini</span></td>
     <td>Document</td>
@@ -527,8 +551,8 @@ This page provides an overview of all tests. Click on the test name to see the d
     <td>false</td>
 </tr>
 <tr>
-    <td><a href='tests/T43'><span class='test-square' style='background-color: #ff0033;'>T43</span></a></td>
-    <td><a href="/benchmarks/metadata_extraction/">metadata_extraction</a></td>
+    <td><a href='/humanities_data_benchmark/tests/T0043'><span class='test-square' style='background-color: #00ffcc;'>T0043</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/metadata_extraction/">metadata_extraction</a></td>
     <td><span class='test-rectangle' style='background-color: #ff0066;'>openai</span></td>
     <td><span class='test-rectangle' style='background-color: #34495e;'>gpt-4o-mini</span></td>
     <td>Document</td>
@@ -538,8 +562,8 @@ This page provides an overview of all tests. Click on the test name to see the d
     <td>false</td>
 </tr>
 <tr>
-    <td><a href='tests/T44'><span class='test-square' style='background-color: #66ffff;'>T44</span></a></td>
-    <td><a href="/benchmarks/metadata_extraction/">metadata_extraction</a></td>
+    <td><a href='/humanities_data_benchmark/tests/T0044'><span class='test-square' style='background-color: #ff5733;'>T0044</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/metadata_extraction/">metadata_extraction</a></td>
     <td><span class='test-rectangle' style='background-color: #ffcc33;'>genai</span></td>
     <td><span class='test-rectangle' style='background-color: #f39c12;'>gemini-2.0-flash</span></td>
     <td>Document</td>
@@ -549,8 +573,8 @@ This page provides an overview of all tests. Click on the test name to see the d
     <td>false</td>
 </tr>
 <tr>
-    <td><a href='tests/T45'><span class='test-square' style='background-color: #2980b9;'>T45</span></a></td>
-    <td><a href="/benchmarks/metadata_extraction/">metadata_extraction</a></td>
+    <td><a href='/humanities_data_benchmark/tests/T0045'><span class='test-square' style='background-color: #16a085;'>T0045</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/metadata_extraction/">metadata_extraction</a></td>
     <td><span class='test-rectangle' style='background-color: #ffcc33;'>genai</span></td>
     <td><span class='test-rectangle' style='background-color: #f39c12;'>gemini-2.0-flash</span></td>
     <td>Document</td>
@@ -560,74 +584,74 @@ This page provides an overview of all tests. Click on the test name to see the d
     <td>false</td>
 </tr>
 <tr>
-    <td><a href='tests/T46'><span class='test-square' style='background-color: #9933ff;'>T46</span></a></td>
-    <td><a href="/benchmarks/metadata_extraction/">metadata_extraction</a></td>
+    <td><a href='/humanities_data_benchmark/tests/T0046'><span class='test-square' style='background-color: #ff9933;'>T0046</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/metadata_extraction/">metadata_extraction</a></td>
     <td><span class='test-rectangle' style='background-color: #ffcc33;'>genai</span></td>
     <td><span class='test-rectangle' style='background-color: #9b59b6;'>gemini-exp-1206</span></td>
     <td>Document</td>
     <td>0.0</td>
     <td>You are a historian with keyword knowledge and an expert in the field of 20th century Swiss history</td>
     <td>prompt.txt</td>
-    <td>false</td>
+    <td>true</td>
 </tr>
 <tr>
-    <td><a href='tests/T47'><span class='test-square' style='background-color: #e67e22;'>T47</span></a></td>
-    <td><a href="/benchmarks/metadata_extraction/">metadata_extraction</a></td>
+    <td><a href='/humanities_data_benchmark/tests/T0047'><span class='test-square' style='background-color: #ff99cc;'>T0047</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/metadata_extraction/">metadata_extraction</a></td>
     <td><span class='test-rectangle' style='background-color: #ffcc33;'>genai</span></td>
     <td><span class='test-rectangle' style='background-color: #9b59b6;'>gemini-exp-1206</span></td>
     <td>Document</td>
     <td>0.0</td>
     <td>You are a historian with keyword knowledge and an expert in the field of 20th century Swiss history</td>
     <td>prompt.txt</td>
-    <td>false</td>
+    <td>true</td>
 </tr>
 <tr>
-    <td><a href='tests/T48'><span class='test-square' style='background-color: #99ccff;'>T48</span></a></td>
-    <td><a href="/benchmarks/metadata_extraction/">metadata_extraction</a></td>
+    <td><a href='/humanities_data_benchmark/tests/T0048'><span class='test-square' style='background-color: #66ff33;'>T0048</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/metadata_extraction/">metadata_extraction</a></td>
     <td><span class='test-rectangle' style='background-color: #ffcc33;'>genai</span></td>
     <td><span class='test-rectangle' style='background-color: #2ecc71;'>gemini-1.5-flash</span></td>
     <td>Document</td>
     <td>0.0</td>
     <td>You are a historian with keyword knowledge and an expert in the field of 20th century Swiss history</td>
     <td>prompt.txt</td>
-    <td>false</td>
+    <td>true</td>
 </tr>
 <tr>
-    <td><a href='tests/T49'><span class='test-square' style='background-color: #ff6699;'>T49</span></a></td>
-    <td><a href="/benchmarks/metadata_extraction/">metadata_extraction</a></td>
+    <td><a href='/humanities_data_benchmark/tests/T0049'><span class='test-square' style='background-color: #ff33cc;'>T0049</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/metadata_extraction/">metadata_extraction</a></td>
     <td><span class='test-rectangle' style='background-color: #ffcc33;'>genai</span></td>
     <td><span class='test-rectangle' style='background-color: #2ecc71;'>gemini-1.5-flash</span></td>
     <td>Document</td>
     <td>0.0</td>
     <td>You are a historian with keyword knowledge and an expert in the field of 20th century Swiss history</td>
     <td>prompt.txt</td>
-    <td>false</td>
+    <td>true</td>
 </tr>
 <tr>
-    <td><a href='tests/T50'><span class='test-square' style='background-color: #ff3399;'>T50</span></a></td>
-    <td><a href="/benchmarks/metadata_extraction/">metadata_extraction</a></td>
+    <td><a href='/humanities_data_benchmark/tests/T0050'><span class='test-square' style='background-color: #66cc99;'>T0050</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/metadata_extraction/">metadata_extraction</a></td>
     <td><span class='test-rectangle' style='background-color: #ffcc33;'>genai</span></td>
     <td><span class='test-rectangle' style='background-color: #3399ff;'>gemini-1.5-pro</span></td>
     <td>Document</td>
     <td>0.0</td>
     <td>You are a historian with keyword knowledge and an expert in the field of 20th century Swiss history</td>
     <td>prompt.txt</td>
-    <td>false</td>
+    <td>true</td>
 </tr>
 <tr>
-    <td><a href='tests/T51'><span class='test-square' style='background-color: #ccff00;'>T51</span></a></td>
-    <td><a href="/benchmarks/metadata_extraction/">metadata_extraction</a></td>
+    <td><a href='/humanities_data_benchmark/tests/T0051'><span class='test-square' style='background-color: #66ffff;'>T0051</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/metadata_extraction/">metadata_extraction</a></td>
     <td><span class='test-rectangle' style='background-color: #ffcc33;'>genai</span></td>
     <td><span class='test-rectangle' style='background-color: #3399ff;'>gemini-1.5-pro</span></td>
     <td>Document</td>
     <td>0.0</td>
     <td>You are a historian with keyword knowledge and an expert in the field of 20th century Swiss history</td>
     <td>prompt.txt</td>
-    <td>false</td>
+    <td>true</td>
 </tr>
 <tr>
-    <td><a href='tests/T52'><span class='test-square' style='background-color: #ff6600;'>T52</span></a></td>
-    <td><a href="/benchmarks/metadata_extraction/">metadata_extraction</a></td>
+    <td><a href='/humanities_data_benchmark/tests/T0052'><span class='test-square' style='background-color: #00ff99;'>T0052</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/metadata_extraction/">metadata_extraction</a></td>
     <td><span class='test-rectangle' style='background-color: #ff5050;'>anthropic</span></td>
     <td><span class='test-rectangle' style='background-color: #cc6699;'>claude-3-5-sonnet-20241022</span></td>
     <td>Document</td>
@@ -637,8 +661,8 @@ This page provides an overview of all tests. Click on the test name to see the d
     <td>false</td>
 </tr>
 <tr>
-    <td><a href='tests/T53'><span class='test-square' style='background-color: #ff9933;'>T53</span></a></td>
-    <td><a href="/benchmarks/metadata_extraction/">metadata_extraction</a></td>
+    <td><a href='/humanities_data_benchmark/tests/T0053'><span class='test-square' style='background-color: #ff9966;'>T0053</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/metadata_extraction/">metadata_extraction</a></td>
     <td><span class='test-rectangle' style='background-color: #ff5050;'>anthropic</span></td>
     <td><span class='test-rectangle' style='background-color: #cc6699;'>claude-3-5-sonnet-20241022</span></td>
     <td>Document</td>
@@ -648,30 +672,30 @@ This page provides an overview of all tests. Click on the test name to see the d
     <td>false</td>
 </tr>
 <tr>
-    <td><a href='tests/T54'><span class='test-square' style='background-color: #3399ff;'>T54</span></a></td>
-    <td><a href="/benchmarks/metadata_extraction/">metadata_extraction</a></td>
+    <td><a href='/humanities_data_benchmark/tests/T0054'><span class='test-square' style='background-color: #ffcc00;'>T0054</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/metadata_extraction/">metadata_extraction</a></td>
     <td><span class='test-rectangle' style='background-color: #ffcc33;'>genai</span></td>
     <td><span class='test-rectangle' style='background-color: #e74c3c;'>gemini-2.5-pro-exp-03-25</span></td>
     <td>Document</td>
     <td>0.0</td>
     <td>You are a historian with keyword knowledge and an expert in the field of 20th century Swiss history</td>
     <td>prompt.txt</td>
-    <td>false</td>
+    <td>true</td>
 </tr>
 <tr>
-    <td><a href='tests/T55'><span class='test-square' style='background-color: #99ccff;'>T55</span></a></td>
-    <td><a href="/benchmarks/metadata_extraction/">metadata_extraction</a></td>
+    <td><a href='/humanities_data_benchmark/tests/T0055'><span class='test-square' style='background-color: #2ecc71;'>T0055</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/metadata_extraction/">metadata_extraction</a></td>
     <td><span class='test-rectangle' style='background-color: #ffcc33;'>genai</span></td>
     <td><span class='test-rectangle' style='background-color: #e74c3c;'>gemini-2.5-pro-exp-03-25</span></td>
     <td>Document</td>
     <td>0.0</td>
     <td>You are a historian with keyword knowledge and an expert in the field of 20th century Swiss history</td>
     <td>prompt.txt</td>
-    <td>false</td>
+    <td>true</td>
 </tr>
 <tr>
-    <td><a href='tests/T56'><span class='test-square' style='background-color: #f39c12;'>T56</span></a></td>
-    <td><a href="/benchmarks/metadata_extraction/">metadata_extraction</a></td>
+    <td><a href='/humanities_data_benchmark/tests/T0056'><span class='test-square' style='background-color: #ff6600;'>T0056</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/metadata_extraction/">metadata_extraction</a></td>
     <td><span class='test-rectangle' style='background-color: #ffcc33;'>genai</span></td>
     <td><span class='test-rectangle' style='background-color: #ff0033;'>gemini-2.0-flash-lite</span></td>
     <td>Document</td>
@@ -681,8 +705,8 @@ This page provides an overview of all tests. Click on the test name to see the d
     <td>false</td>
 </tr>
 <tr>
-    <td><a href='tests/T57'><span class='test-square' style='background-color: #99ff33;'>T57</span></a></td>
-    <td><a href="/benchmarks/metadata_extraction/">metadata_extraction</a></td>
+    <td><a href='/humanities_data_benchmark/tests/T0057'><span class='test-square' style='background-color: #cc6699;'>T0057</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/metadata_extraction/">metadata_extraction</a></td>
     <td><span class='test-rectangle' style='background-color: #ffcc33;'>genai</span></td>
     <td><span class='test-rectangle' style='background-color: #ff0033;'>gemini-2.0-flash-lite</span></td>
     <td>Document</td>
@@ -692,30 +716,30 @@ This page provides an overview of all tests. Click on the test name to see the d
     <td>false</td>
 </tr>
 <tr>
-    <td><a href='tests/T58'><span class='test-square' style='background-color: #16a085;'>T58</span></a></td>
-    <td><a href="/benchmarks/metadata_extraction/">metadata_extraction</a></td>
+    <td><a href='/humanities_data_benchmark/tests/T0058'><span class='test-square' style='background-color: #33ccff;'>T0058</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/metadata_extraction/">metadata_extraction</a></td>
     <td><span class='test-rectangle' style='background-color: #ffcc33;'>genai</span></td>
     <td><span class='test-rectangle' style='background-color: #7f8c8d;'>gemini-2.0-pro-exp-02-05</span></td>
     <td>Document</td>
     <td>0.0</td>
     <td>You are a historian with keyword knowledge and an expert in the field of 20th century Swiss history</td>
     <td>prompt.txt</td>
-    <td>false</td>
+    <td>true</td>
 </tr>
 <tr>
-    <td><a href='tests/T59'><span class='test-square' style='background-color: #33ccff;'>T59</span></a></td>
-    <td><a href="/benchmarks/metadata_extraction/">metadata_extraction</a></td>
+    <td><a href='/humanities_data_benchmark/tests/T0059'><span class='test-square' style='background-color: #ff6699;'>T0059</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/metadata_extraction/">metadata_extraction</a></td>
     <td><span class='test-rectangle' style='background-color: #ffcc33;'>genai</span></td>
     <td><span class='test-rectangle' style='background-color: #7f8c8d;'>gemini-2.0-pro-exp-02-05</span></td>
     <td>Document</td>
     <td>0.0</td>
     <td>You are a historian with keyword knowledge and an expert in the field of 20th century Swiss history</td>
     <td>prompt.txt</td>
-    <td>false</td>
+    <td>true</td>
 </tr>
 <tr>
-    <td><a href='tests/T60'><span class='test-square' style='background-color: #bdc3c7;'>T60</span></a></td>
-    <td><a href="/benchmarks/metadata_extraction/">metadata_extraction</a></td>
+    <td><a href='/humanities_data_benchmark/tests/T0060'><span class='test-square' style='background-color: #ff3399;'>T0060</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/metadata_extraction/">metadata_extraction</a></td>
     <td><span class='test-rectangle' style='background-color: #f1c40f;'>mistral</span></td>
     <td><span class='test-rectangle' style='background-color: #34495e;'>pixtral-large-latest</span></td>
     <td>Document</td>
@@ -725,8 +749,8 @@ This page provides an overview of all tests. Click on the test name to see the d
     <td>false</td>
 </tr>
 <tr>
-    <td><a href='tests/T61'><span class='test-square' style='background-color: #2980b9;'>T61</span></a></td>
-    <td><a href="/benchmarks/metadata_extraction/">metadata_extraction</a></td>
+    <td><a href='/humanities_data_benchmark/tests/T0061'><span class='test-square' style='background-color: #9933ff;'>T0061</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/metadata_extraction/">metadata_extraction</a></td>
     <td><span class='test-rectangle' style='background-color: #f1c40f;'>mistral</span></td>
     <td><span class='test-rectangle' style='background-color: #34495e;'>pixtral-large-latest</span></td>
     <td>Document</td>
@@ -736,8 +760,8 @@ This page provides an overview of all tests. Click on the test name to see the d
     <td>false</td>
 </tr>
 <tr>
-    <td><a href='tests/T62'><span class='test-square' style='background-color: #ff5733;'>T62</span></a></td>
-    <td><a href="/benchmarks/metadata_extraction/">metadata_extraction</a></td>
+    <td><a href='/humanities_data_benchmark/tests/T0062'><span class='test-square' style='background-color: #cc6699;'>T0062</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/metadata_extraction/">metadata_extraction</a></td>
     <td><span class='test-rectangle' style='background-color: #ff5050;'>anthropic</span></td>
     <td><span class='test-rectangle' style='background-color: #99ff33;'>claude-3-opus-20240229</span></td>
     <td>Document</td>
@@ -747,8 +771,8 @@ This page provides an overview of all tests. Click on the test name to see the d
     <td>false</td>
 </tr>
 <tr>
-    <td><a href='tests/T63'><span class='test-square' style='background-color: #6699ff;'>T63</span></a></td>
-    <td><a href="/benchmarks/metadata_extraction/">metadata_extraction</a></td>
+    <td><a href='/humanities_data_benchmark/tests/T0063'><span class='test-square' style='background-color: #99ccff;'>T0063</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/metadata_extraction/">metadata_extraction</a></td>
     <td><span class='test-rectangle' style='background-color: #ff5050;'>anthropic</span></td>
     <td><span class='test-rectangle' style='background-color: #99ff33;'>claude-3-opus-20240229</span></td>
     <td>Document</td>
@@ -758,8 +782,8 @@ This page provides an overview of all tests. Click on the test name to see the d
     <td>false</td>
 </tr>
 <tr>
-    <td><a href='tests/T64'><span class='test-square' style='background-color: #e67e22;'>T64</span></a></td>
-    <td><a href="/benchmarks/metadata_extraction/">metadata_extraction</a></td>
+    <td><a href='/humanities_data_benchmark/tests/T0064'><span class='test-square' style='background-color: #2980b9;'>T0064</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/metadata_extraction/">metadata_extraction</a></td>
     <td><span class='test-rectangle' style='background-color: #ff5050;'>anthropic</span></td>
     <td><span class='test-rectangle' style='background-color: #ff6600;'>claude-3-5-haiku-20241022</span></td>
     <td>Document</td>
@@ -769,8 +793,8 @@ This page provides an overview of all tests. Click on the test name to see the d
     <td>true</td>
 </tr>
 <tr>
-    <td><a href='tests/T65'><span class='test-square' style='background-color: #9b59b6;'>T65</span></a></td>
-    <td><a href="/benchmarks/metadata_extraction/">metadata_extraction</a></td>
+    <td><a href='/humanities_data_benchmark/tests/T0065'><span class='test-square' style='background-color: #6699ff;'>T0065</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/metadata_extraction/">metadata_extraction</a></td>
     <td><span class='test-rectangle' style='background-color: #ff5050;'>anthropic</span></td>
     <td><span class='test-rectangle' style='background-color: #ff6600;'>claude-3-5-haiku-20241022</span></td>
     <td>Document</td>
@@ -778,6 +802,842 @@ This page provides an overview of all tests. Click on the test name to see the d
     <td>You are a historian with keyword knowledge and an expert in the field of 20th century Swiss history</td>
     <td>prompt.txt</td>
     <td>true</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0066'><span class='test-square' style='background-color: #00ff99;'>T0066</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/zettelkatalog/">zettelkatalog</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff0066;'>openai</span></td>
+    <td><span class='test-rectangle' style='background-color: #33ccff;'>gpt-4o</span></td>
+    <td>Document</td>
+    <td>0.0</td>
+    <td>You are a historian with keyword knowledge and an expert in the field of 20th century Swiss history</td>
+    <td>prompt.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0067'><span class='test-square' style='background-color: #33ff66;'>T0067</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/metadata_extraction/">metadata_extraction</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff0066;'>openai</span></td>
+    <td><span class='test-rectangle' style='background-color: #2980b9;'>gpt-4.1</span></td>
+    <td>Document</td>
+    <td>0.0</td>
+    <td>You are a historian with keyword knowledge and an expert in the field of 20th century Swiss history</td>
+    <td>prompt.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0068'><span class='test-square' style='background-color: #ff3300;'>T0068</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/metadata_extraction/">metadata_extraction</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff0066;'>openai</span></td>
+    <td><span class='test-rectangle' style='background-color: #2980b9;'>gpt-4.1</span></td>
+    <td>Document</td>
+    <td>0.0</td>
+    <td>You are a historian with keyword knowledge and an expert in the field of 20th century Swiss history</td>
+    <td>prompt.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0069'><span class='test-square' style='background-color: #33ff66;'>T0069</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/metadata_extraction/">metadata_extraction</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff0066;'>openai</span></td>
+    <td><span class='test-rectangle' style='background-color: #2980b9;'>gpt-4.1</span></td>
+    <td>Document</td>
+    <td>0.0</td>
+    <td>You are a historian with keyword knowledge and an expert in the field of 20th century Swiss history</td>
+    <td>prompt.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0070'><span class='test-square' style='background-color: #27ae60;'>T0070</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/metadata_extraction/">metadata_extraction</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff0066;'>openai</span></td>
+    <td><span class='test-rectangle' style='background-color: #9b59b6;'>gpt-4.1-mini</span></td>
+    <td>Document</td>
+    <td>0.0</td>
+    <td>You are a historian with keyword knowledge and an expert in the field of 20th century Swiss history</td>
+    <td>prompt.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0071'><span class='test-square' style='background-color: #ff0099;'>T0071</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/metadata_extraction/">metadata_extraction</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff0066;'>openai</span></td>
+    <td><span class='test-rectangle' style='background-color: #9b59b6;'>gpt-4.1-mini</span></td>
+    <td>Document</td>
+    <td>0.0</td>
+    <td>You are a historian with keyword knowledge and an expert in the field of 20th century Swiss history</td>
+    <td>prompt.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0072'><span class='test-square' style='background-color: #2ecc71;'>T0072</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/metadata_extraction/">metadata_extraction</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff0066;'>openai</span></td>
+    <td><span class='test-rectangle' style='background-color: #9b59b6;'>gpt-4.1-mini</span></td>
+    <td>Document</td>
+    <td>0.0</td>
+    <td>You are a historian with keyword knowledge and an expert in the field of 20th century Swiss history</td>
+    <td>prompt.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0073'><span class='test-square' style='background-color: #2980b9;'>T0073</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/metadata_extraction/">metadata_extraction</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff0066;'>openai</span></td>
+    <td><span class='test-rectangle' style='background-color: #ffcc33;'>gpt-4.1-nano</span></td>
+    <td>Document</td>
+    <td>0.0</td>
+    <td>You are a historian with keyword knowledge and an expert in the field of 20th century Swiss history</td>
+    <td>prompt.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0074'><span class='test-square' style='background-color: #ff9933;'>T0074</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/metadata_extraction/">metadata_extraction</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff0066;'>openai</span></td>
+    <td><span class='test-rectangle' style='background-color: #ffcc33;'>gpt-4.1-nano</span></td>
+    <td>Document</td>
+    <td>0.0</td>
+    <td>You are a historian with keyword knowledge and an expert in the field of 20th century Swiss history</td>
+    <td>prompt.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0075'><span class='test-square' style='background-color: #7f8c8d;'>T0075</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/metadata_extraction/">metadata_extraction</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff0066;'>openai</span></td>
+    <td><span class='test-rectangle' style='background-color: #ffcc33;'>gpt-4.1-nano</span></td>
+    <td>Document</td>
+    <td>0.0</td>
+    <td>You are a historian with keyword knowledge and an expert in the field of 20th century Swiss history</td>
+    <td>prompt.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0076'><span class='test-square' style='background-color: #ff3300;'>T0076</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/metadata_extraction/">metadata_extraction</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff0066;'>openai</span></td>
+    <td><span class='test-rectangle' style='background-color: #34495e;'>gpt-4o-mini</span></td>
+    <td>Document</td>
+    <td>0.0</td>
+    <td>You are a historian with keyword knowledge and an expert in the field of 20th century Swiss history</td>
+    <td>prompt.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0077'><span class='test-square' style='background-color: #e67e22;'>T0077</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/metadata_extraction/">metadata_extraction</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff0066;'>openai</span></td>
+    <td><span class='test-rectangle' style='background-color: #34495e;'>gpt-4o-mini</span></td>
+    <td>Document</td>
+    <td>0.0</td>
+    <td>You are a historian with keyword knowledge and an expert in the field of 20th century Swiss history</td>
+    <td>prompt.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0078'><span class='test-square' style='background-color: #ff0066;'>T0078</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/metadata_extraction/">metadata_extraction</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff0066;'>openai</span></td>
+    <td><span class='test-rectangle' style='background-color: #34495e;'>gpt-4o-mini</span></td>
+    <td>Document</td>
+    <td>0.0</td>
+    <td>You are a historian with keyword knowledge and an expert in the field of 20th century Swiss history</td>
+    <td>prompt.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0079'><span class='test-square' style='background-color: #00ff66;'>T0079</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/fraktur/">fraktur</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff0066;'>openai</span></td>
+    <td><span class='test-rectangle' style='background-color: #33ccff;'>gpt-4o</span></td>
+    <td>Document</td>
+    <td>0.0</td>
+    <td>You are a historian with keyword knowledge</td>
+    <td>prompt_optimized.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0080'><span class='test-square' style='background-color: #9933ff;'>T0080</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/fraktur/">fraktur</a></td>
+    <td><span class='test-rectangle' style='background-color: #ffcc33;'>genai</span></td>
+    <td><span class='test-rectangle' style='background-color: #e74c3c;'>gemini-2.5-pro-exp-03-25</span></td>
+    <td>Document</td>
+    <td>0.0</td>
+    <td>You are a historian with keyword knowledge</td>
+    <td>prompt_optimized.txt</td>
+    <td>true</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0081'><span class='test-square' style='background-color: #7f8c8d;'>T0081</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/fraktur/">fraktur</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff0066;'>openai</span></td>
+    <td><span class='test-rectangle' style='background-color: #9b59b6;'>gpt-4.5-preview</span></td>
+    <td>Document</td>
+    <td>0.0</td>
+    <td>You are a historian with keyword knowledge</td>
+    <td>prompt_optimized.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0082'><span class='test-square' style='background-color: #ff0099;'>T0082</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/fraktur/">fraktur</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff0066;'>openai</span></td>
+    <td><span class='test-rectangle' style='background-color: #34495e;'>gpt-4o-mini</span></td>
+    <td>Document</td>
+    <td>0.0</td>
+    <td>You are a historian with keyword knowledge</td>
+    <td>prompt_optimized.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0083'><span class='test-square' style='background-color: #2980b9;'>T0083</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/fraktur/">fraktur</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff0066;'>openai</span></td>
+    <td><span class='test-rectangle' style='background-color: #2980b9;'>gpt-4.1</span></td>
+    <td>Document</td>
+    <td>0.0</td>
+    <td>You are a historian with keyword knowledge</td>
+    <td>prompt_optimized.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0084'><span class='test-square' style='background-color: #66cc99;'>T0084</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/fraktur/">fraktur</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff0066;'>openai</span></td>
+    <td><span class='test-rectangle' style='background-color: #9b59b6;'>gpt-4.1-mini</span></td>
+    <td>Document</td>
+    <td>0.0</td>
+    <td>You are a historian with keyword knowledge</td>
+    <td>prompt_optimized.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0085'><span class='test-square' style='background-color: #8e44ad;'>T0085</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/fraktur/">fraktur</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff0066;'>openai</span></td>
+    <td><span class='test-rectangle' style='background-color: #ffcc33;'>gpt-4.1-nano</span></td>
+    <td>Document</td>
+    <td>0.0</td>
+    <td>You are a historian with keyword knowledge</td>
+    <td>prompt_optimized.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0086'><span class='test-square' style='background-color: #66ff33;'>T0086</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/fraktur/">fraktur</a></td>
+    <td><span class='test-rectangle' style='background-color: #ffcc33;'>genai</span></td>
+    <td><span class='test-rectangle' style='background-color: #f39c12;'>gemini-2.0-flash</span></td>
+    <td>Document</td>
+    <td>0.0</td>
+    <td>You are a historian with keyword knowledge</td>
+    <td>prompt_optimized.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0087'><span class='test-square' style='background-color: #ff5050;'>T0087</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/fraktur/">fraktur</a></td>
+    <td><span class='test-rectangle' style='background-color: #ffcc33;'>genai</span></td>
+    <td><span class='test-rectangle' style='background-color: #9b59b6;'>gemini-exp-1206</span></td>
+    <td>Document</td>
+    <td>0.0</td>
+    <td>You are a historian with keyword knowledge</td>
+    <td>prompt_optimized.txt</td>
+    <td>true</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0088'><span class='test-square' style='background-color: #cc33ff;'>T0088</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/fraktur/">fraktur</a></td>
+    <td><span class='test-rectangle' style='background-color: #ffcc33;'>genai</span></td>
+    <td><span class='test-rectangle' style='background-color: #2ecc71;'>gemini-1.5-flash</span></td>
+    <td>Document</td>
+    <td>0.0</td>
+    <td>You are a historian with keyword knowledge</td>
+    <td>prompt_optimized.txt</td>
+    <td>true</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0089'><span class='test-square' style='background-color: #2c3e50;'>T0089</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/fraktur/">fraktur</a></td>
+    <td><span class='test-rectangle' style='background-color: #ffcc33;'>genai</span></td>
+    <td><span class='test-rectangle' style='background-color: #3399ff;'>gemini-1.5-pro</span></td>
+    <td>Document</td>
+    <td>0.0</td>
+    <td>You are a historian with keyword knowledge</td>
+    <td>prompt_optimized.txt</td>
+    <td>true</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0090'><span class='test-square' style='background-color: #ff6699;'>T0090</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/fraktur/">fraktur</a></td>
+    <td><span class='test-rectangle' style='background-color: #ffcc33;'>genai</span></td>
+    <td><span class='test-rectangle' style='background-color: #ff0033;'>gemini-2.0-flash-lite</span></td>
+    <td>Document</td>
+    <td>0.0</td>
+    <td>You are a historian with keyword knowledge</td>
+    <td>prompt_optimized.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0091'><span class='test-square' style='background-color: #e74c3c;'>T0091</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/fraktur/">fraktur</a></td>
+    <td><span class='test-rectangle' style='background-color: #ffcc33;'>genai</span></td>
+    <td><span class='test-rectangle' style='background-color: #7f8c8d;'>gemini-2.0-pro-exp-02-05</span></td>
+    <td>Document</td>
+    <td>0.0</td>
+    <td>You are a historian with keyword knowledge</td>
+    <td>prompt_optimized.txt</td>
+    <td>true</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0092'><span class='test-square' style='background-color: #0099ff;'>T0092</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/fraktur/">fraktur</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff5050;'>anthropic</span></td>
+    <td><span class='test-rectangle' style='background-color: #f1c40f;'>claude-3-7-sonnet-20250219</span></td>
+    <td>Document</td>
+    <td>0.0</td>
+    <td>You are a historian with keyword knowledge</td>
+    <td>prompt_optimized.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0093'><span class='test-square' style='background-color: #ff5733;'>T0093</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/fraktur/">fraktur</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff5050;'>anthropic</span></td>
+    <td><span class='test-rectangle' style='background-color: #cc6699;'>claude-3-5-sonnet-20241022</span></td>
+    <td>Document</td>
+    <td>0.0</td>
+    <td>You are a historian with keyword knowledge</td>
+    <td>prompt_optimized.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0094'><span class='test-square' style='background-color: #0099ff;'>T0094</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/fraktur/">fraktur</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff5050;'>anthropic</span></td>
+    <td><span class='test-rectangle' style='background-color: #99ff33;'>claude-3-opus-20240229</span></td>
+    <td>Document</td>
+    <td>0.0</td>
+    <td>You are a historian with keyword knowledge</td>
+    <td>prompt_optimized.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0095'><span class='test-square' style='background-color: #e74c3c;'>T0095</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/fraktur/">fraktur</a></td>
+    <td><span class='test-rectangle' style='background-color: #f1c40f;'>mistral</span></td>
+    <td><span class='test-rectangle' style='background-color: #34495e;'>pixtral-large-latest</span></td>
+    <td>Document</td>
+    <td>0.0</td>
+    <td>You are a historian with keyword knowledge</td>
+    <td>prompt_optimized.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0096'><span class='test-square' style='background-color: #cc6699;'>T0096</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/fraktur/">fraktur</a></td>
+    <td><span class='test-rectangle' style='background-color: #ffcc33;'>genai</span></td>
+    <td><span class='test-rectangle' style='background-color: #ff0099;'>gemini-2.5-flash-preview-04-17</span></td>
+    <td>Document</td>
+    <td>0.0</td>
+    <td>You are a historian with keyword knowledge</td>
+    <td>prompt_optimized.txt</td>
+    <td>true</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0097'><span class='test-square' style='background-color: #ff3399;'>T0097</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/fraktur/">fraktur</a></td>
+    <td><span class='test-rectangle' style='background-color: #ffcc33;'>genai</span></td>
+    <td><span class='test-rectangle' style='background-color: #00ff99;'>gemini-2.5-pro-preview-05-06</span></td>
+    <td>Document</td>
+    <td>0.0</td>
+    <td>You are a historian with keyword knowledge</td>
+    <td>prompt_optimized.txt</td>
+    <td>true</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0098'><span class='test-square' style='background-color: #00ccff;'>T0098</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/fraktur/">fraktur</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff5050;'>anthropic</span></td>
+    <td><span class='test-rectangle' style='background-color: #ff6600;'>claude-opus-4-20250514</span></td>
+    <td>Document</td>
+    <td>0.0</td>
+    <td>You are a historian with keyword knowledge</td>
+    <td>prompt_optimized.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0099'><span class='test-square' style='background-color: #f1c40f;'>T0099</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/fraktur/">fraktur</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff5050;'>anthropic</span></td>
+    <td><span class='test-rectangle' style='background-color: #f1c40f;'>claude-sonnet-4-20250514</span></td>
+    <td>Document</td>
+    <td>0.0</td>
+    <td>You are a historian with keyword knowledge</td>
+    <td>prompt_optimized.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0100'><span class='test-square' style='background-color: #ff9933;'>T0100</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/metadata_extraction/">metadata_extraction</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff5050;'>anthropic</span></td>
+    <td><span class='test-rectangle' style='background-color: #ff6600;'>claude-opus-4-20250514</span></td>
+    <td>Document</td>
+    <td>0.0</td>
+    <td>You are a historian with keyword knowledge and an expert in the field of 20th century Swiss history</td>
+    <td>prompt.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0101'><span class='test-square' style='background-color: #ff6600;'>T0101</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/metadata_extraction/">metadata_extraction</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff5050;'>anthropic</span></td>
+    <td><span class='test-rectangle' style='background-color: #ff6600;'>claude-opus-4-20250514</span></td>
+    <td>Document</td>
+    <td>0.0</td>
+    <td>You are a historian with keyword knowledge and an expert in the field of 20th century Swiss history</td>
+    <td>prompt.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0102'><span class='test-square' style='background-color: #ff3300;'>T0102</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/metadata_extraction/">metadata_extraction</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff5050;'>anthropic</span></td>
+    <td><span class='test-rectangle' style='background-color: #ff6600;'>claude-opus-4-20250514</span></td>
+    <td>Document</td>
+    <td>0.0</td>
+    <td>You are a historian with keyword knowledge and an expert in the field of 20th century Swiss history</td>
+    <td>prompt.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0103'><span class='test-square' style='background-color: #ff3300;'>T0103</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/metadata_extraction/">metadata_extraction</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff5050;'>anthropic</span></td>
+    <td><span class='test-rectangle' style='background-color: #f1c40f;'>claude-sonnet-4-20250514</span></td>
+    <td>Document</td>
+    <td>0.0</td>
+    <td>You are a historian with keyword knowledge and an expert in the field of 20th century Swiss history</td>
+    <td>prompt.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0104'><span class='test-square' style='background-color: #3399ff;'>T0104</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/metadata_extraction/">metadata_extraction</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff5050;'>anthropic</span></td>
+    <td><span class='test-rectangle' style='background-color: #f1c40f;'>claude-sonnet-4-20250514</span></td>
+    <td>Document</td>
+    <td>0.0</td>
+    <td>You are a historian with keyword knowledge and an expert in the field of 20th century Swiss history</td>
+    <td>prompt.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0105'><span class='test-square' style='background-color: #00ccff;'>T0105</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/metadata_extraction/">metadata_extraction</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff5050;'>anthropic</span></td>
+    <td><span class='test-rectangle' style='background-color: #f1c40f;'>claude-sonnet-4-20250514</span></td>
+    <td>Document</td>
+    <td>0.0</td>
+    <td>You are a historian with keyword knowledge and an expert in the field of 20th century Swiss history</td>
+    <td>prompt.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0106'><span class='test-square' style='background-color: #ff6699;'>T0106</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/bibliographic_data/">bibliographic_data</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff5050;'>anthropic</span></td>
+    <td><span class='test-rectangle' style='background-color: #ff6600;'>claude-opus-4-20250514</span></td>
+    <td>Document</td>
+    <td>0.0</td>
+    <td>You are a Historian</td>
+    <td></td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0107'><span class='test-square' style='background-color: #c0392b;'>T0107</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/bibliographic_data/">bibliographic_data</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff5050;'>anthropic</span></td>
+    <td><span class='test-rectangle' style='background-color: #f1c40f;'>claude-sonnet-4-20250514</span></td>
+    <td>Document</td>
+    <td>0.0</td>
+    <td>You are a Historian</td>
+    <td></td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0108'><span class='test-square' style='background-color: #c0392b;'>T0108</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/metadata_extraction/">metadata_extraction</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff0066;'>openai</span></td>
+    <td><span class='test-rectangle' style='background-color: #ff9933;'>gpt-5</span></td>
+    <td>Document</td>
+    <td>0.0</td>
+    <td>You are a historian with keyword knowledge and an expert in the field of 20th century Swiss history</td>
+    <td>prompt.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0109'><span class='test-square' style='background-color: #ff5050;'>T0109</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/metadata_extraction/">metadata_extraction</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff0066;'>openai</span></td>
+    <td><span class='test-rectangle' style='background-color: #ff9933;'>gpt-5</span></td>
+    <td>Document</td>
+    <td>0.0</td>
+    <td>You are a historian with keyword knowledge and an expert in the field of 20th century Swiss history</td>
+    <td>prompt.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0110'><span class='test-square' style='background-color: #6633ff;'>T0110</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/metadata_extraction/">metadata_extraction</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff0066;'>openai</span></td>
+    <td><span class='test-rectangle' style='background-color: #ff9933;'>gpt-5</span></td>
+    <td>Document</td>
+    <td>0.0</td>
+    <td>You are a historian with keyword knowledge and an expert in the field of 20th century Swiss history</td>
+    <td>prompt.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0111'><span class='test-square' style='background-color: #99ff33;'>T0111</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/metadata_extraction/">metadata_extraction</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff0066;'>openai</span></td>
+    <td><span class='test-rectangle' style='background-color: #8e44ad;'>gpt-5-mini</span></td>
+    <td>Document</td>
+    <td>0.0</td>
+    <td>You are a historian with keyword knowledge and an expert in the field of 20th century Swiss history</td>
+    <td>prompt.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0112'><span class='test-square' style='background-color: #3498db;'>T0112</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/metadata_extraction/">metadata_extraction</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff0066;'>openai</span></td>
+    <td><span class='test-rectangle' style='background-color: #8e44ad;'>gpt-5-mini</span></td>
+    <td>Document</td>
+    <td>0.0</td>
+    <td>You are a historian with keyword knowledge and an expert in the field of 20th century Swiss history</td>
+    <td>prompt.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0113'><span class='test-square' style='background-color: #00ff99;'>T0113</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/metadata_extraction/">metadata_extraction</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff0066;'>openai</span></td>
+    <td><span class='test-rectangle' style='background-color: #8e44ad;'>gpt-5-mini</span></td>
+    <td>Document</td>
+    <td>0.0</td>
+    <td>You are a historian with keyword knowledge and an expert in the field of 20th century Swiss history</td>
+    <td>prompt.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0114'><span class='test-square' style='background-color: #27ae60;'>T0114</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/metadata_extraction/">metadata_extraction</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff0066;'>openai</span></td>
+    <td><span class='test-rectangle' style='background-color: #ff33cc;'>gpt-5-nano</span></td>
+    <td>Document</td>
+    <td>0.0</td>
+    <td>You are a historian with keyword knowledge and an expert in the field of 20th century Swiss history</td>
+    <td>prompt.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0115'><span class='test-square' style='background-color: #ccff00;'>T0115</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/metadata_extraction/">metadata_extraction</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff0066;'>openai</span></td>
+    <td><span class='test-rectangle' style='background-color: #ff33cc;'>gpt-5-nano</span></td>
+    <td>Document</td>
+    <td>0.0</td>
+    <td>You are a historian with keyword knowledge and an expert in the field of 20th century Swiss history</td>
+    <td>prompt.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0116'><span class='test-square' style='background-color: #9966ff;'>T0116</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/metadata_extraction/">metadata_extraction</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff0066;'>openai</span></td>
+    <td><span class='test-rectangle' style='background-color: #ff33cc;'>gpt-5-nano</span></td>
+    <td>Document</td>
+    <td>0.0</td>
+    <td>You are a historian with keyword knowledge and an expert in the field of 20th century Swiss history</td>
+    <td>prompt.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0117'><span class='test-square' style='background-color: #ff0099;'>T0117</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/metadata_extraction/">metadata_extraction</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff5050;'>anthropic</span></td>
+    <td><span class='test-rectangle' style='background-color: #0099ff;'>claude-opus-4-1-20250805</span></td>
+    <td>Document</td>
+    <td>0.0</td>
+    <td>You are a historian with keyword knowledge and an expert in the field of 20th century Swiss history</td>
+    <td>prompt.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0118'><span class='test-square' style='background-color: #33ff66;'>T0118</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/metadata_extraction/">metadata_extraction</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff5050;'>anthropic</span></td>
+    <td><span class='test-rectangle' style='background-color: #0099ff;'>claude-opus-4-1-20250805</span></td>
+    <td>Document</td>
+    <td>0.0</td>
+    <td>You are a historian with keyword knowledge and an expert in the field of 20th century Swiss history</td>
+    <td>prompt.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0119'><span class='test-square' style='background-color: #ff0066;'>T0119</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/metadata_extraction/">metadata_extraction</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff5050;'>anthropic</span></td>
+    <td><span class='test-rectangle' style='background-color: #0099ff;'>claude-opus-4-1-20250805</span></td>
+    <td>Document</td>
+    <td>0.0</td>
+    <td>You are a historian with keyword knowledge and an expert in the field of 20th century Swiss history</td>
+    <td>prompt.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0120'><span class='test-square' style='background-color: #66ff33;'>T0120</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/fraktur/">fraktur</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff0066;'>openai</span></td>
+    <td><span class='test-rectangle' style='background-color: #ff9933;'>gpt-5</span></td>
+    <td>Document</td>
+    <td>0.0</td>
+    <td>You are a historian with keyword knowledge</td>
+    <td>prompt_optimized.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0121'><span class='test-square' style='background-color: #7f8c8d;'>T0121</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/fraktur/">fraktur</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff0066;'>openai</span></td>
+    <td><span class='test-rectangle' style='background-color: #8e44ad;'>gpt-5-mini</span></td>
+    <td>Document</td>
+    <td>0.0</td>
+    <td>You are a historian with keyword knowledge</td>
+    <td>prompt_optimized.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0122'><span class='test-square' style='background-color: #9b59b6;'>T0122</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/fraktur/">fraktur</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff0066;'>openai</span></td>
+    <td><span class='test-rectangle' style='background-color: #ff33cc;'>gpt-5-nano</span></td>
+    <td>Document</td>
+    <td>0.0</td>
+    <td>You are a historian with keyword knowledge</td>
+    <td>prompt_optimized.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0123'><span class='test-square' style='background-color: #ff6699;'>T0123</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/fraktur/">fraktur</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff5050;'>anthropic</span></td>
+    <td><span class='test-rectangle' style='background-color: #0099ff;'>claude-opus-4-1-20250805</span></td>
+    <td>Document</td>
+    <td>0.0</td>
+    <td>You are a historian with keyword knowledge</td>
+    <td>prompt_optimized.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0124'><span class='test-square' style='background-color: #ff6699;'>T0124</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/metadata_extraction/">metadata_extraction</a></td>
+    <td><span class='test-rectangle' style='background-color: #ffcc33;'>genai</span></td>
+    <td><span class='test-rectangle' style='background-color: #e67e22;'>gemini-2.5-pro</span></td>
+    <td>Document</td>
+    <td>0.0</td>
+    <td>You are a historian with keyword knowledge and an expert in the field of 20th century Swiss history</td>
+    <td>prompt.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0125'><span class='test-square' style='background-color: #cc6699;'>T0125</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/metadata_extraction/">metadata_extraction</a></td>
+    <td><span class='test-rectangle' style='background-color: #ffcc33;'>genai</span></td>
+    <td><span class='test-rectangle' style='background-color: #e67e22;'>gemini-2.5-pro</span></td>
+    <td>Document</td>
+    <td>0.0</td>
+    <td>You are a historian with keyword knowledge and an expert in the field of 20th century Swiss history</td>
+    <td>prompt.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0126'><span class='test-square' style='background-color: #99ccff;'>T0126</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/metadata_extraction/">metadata_extraction</a></td>
+    <td><span class='test-rectangle' style='background-color: #ffcc33;'>genai</span></td>
+    <td><span class='test-rectangle' style='background-color: #e67e22;'>gemini-2.5-pro</span></td>
+    <td>Document</td>
+    <td>0.0</td>
+    <td>You are a historian with keyword knowledge and an expert in the field of 20th century Swiss history</td>
+    <td>prompt.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0127'><span class='test-square' style='background-color: #2980b9;'>T0127</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/bibliographic_data/">bibliographic_data</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff5050;'>anthropic</span></td>
+    <td><span class='test-rectangle' style='background-color: #0099ff;'>claude-opus-4-1-20250805</span></td>
+    <td>Document</td>
+    <td>0.0</td>
+    <td>You are a Historian</td>
+    <td></td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0128'><span class='test-square' style='background-color: #f39c12;'>T0128</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/bibliographic_data/">bibliographic_data</a></td>
+    <td><span class='test-rectangle' style='background-color: #ffcc33;'>genai</span></td>
+    <td><span class='test-rectangle' style='background-color: #e67e22;'>gemini-2.5-pro</span></td>
+    <td>Document</td>
+    <td>0.0</td>
+    <td>You are a Historian</td>
+    <td></td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0129'><span class='test-square' style='background-color: #c0392b;'>T0129</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/bibliographic_data/">bibliographic_data</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff0066;'>openai</span></td>
+    <td><span class='test-rectangle' style='background-color: #ff9933;'>gpt-5</span></td>
+    <td>Document</td>
+    <td>0.0</td>
+    <td>You are a Historian</td>
+    <td></td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0130'><span class='test-square' style='background-color: #99ff33;'>T0130</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/bibliographic_data/">bibliographic_data</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff0066;'>openai</span></td>
+    <td><span class='test-rectangle' style='background-color: #8e44ad;'>gpt-5-mini</span></td>
+    <td>Document</td>
+    <td>0.0</td>
+    <td>You are a Historian</td>
+    <td></td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0131'><span class='test-square' style='background-color: #2ecc71;'>T0131</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/bibliographic_data/">bibliographic_data</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff0066;'>openai</span></td>
+    <td><span class='test-rectangle' style='background-color: #ff33cc;'>gpt-5-nano</span></td>
+    <td>Document</td>
+    <td>0.0</td>
+    <td>You are a Historian</td>
+    <td></td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0132'><span class='test-square' style='background-color: #27ae60;'>T0132</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/fraktur/">fraktur</a></td>
+    <td><span class='test-rectangle' style='background-color: #ffcc33;'>genai</span></td>
+    <td><span class='test-rectangle' style='background-color: #e67e22;'>gemini-2.5-pro</span></td>
+    <td>Document</td>
+    <td>0.0</td>
+    <td>You are a historian with keyword knowledge</td>
+    <td>prompt_optimized.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0133'><span class='test-square' style='background-color: #ff5050;'>T0133</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/bibliographic_data/">bibliographic_data</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff0066;'>openai</span></td>
+    <td><span class='test-rectangle' style='background-color: #2980b9;'>o3</span></td>
+    <td>Document</td>
+    <td>0.0</td>
+    <td>You are a Historian</td>
+    <td></td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0134'><span class='test-square' style='background-color: #ffcc00;'>T0134</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/metadata_extraction/">metadata_extraction</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff0066;'>openai</span></td>
+    <td><span class='test-rectangle' style='background-color: #2980b9;'>o3</span></td>
+    <td>Document</td>
+    <td>0.0</td>
+    <td>You are a historian with keyword knowledge and an expert in the field of 20th century Swiss history</td>
+    <td>prompt.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0135'><span class='test-square' style='background-color: #cc6699;'>T0135</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/metadata_extraction/">metadata_extraction</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff0066;'>openai</span></td>
+    <td><span class='test-rectangle' style='background-color: #2980b9;'>o3</span></td>
+    <td>Document</td>
+    <td>0.0</td>
+    <td>You are a historian with keyword knowledge and an expert in the field of 20th century Swiss history</td>
+    <td>prompt.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0136'><span class='test-square' style='background-color: #99ff33;'>T0136</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/metadata_extraction/">metadata_extraction</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff0066;'>openai</span></td>
+    <td><span class='test-rectangle' style='background-color: #2980b9;'>o3</span></td>
+    <td>Document</td>
+    <td>0.0</td>
+    <td>You are a historian with keyword knowledge and an expert in the field of 20th century Swiss history</td>
+    <td>prompt.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0137'><span class='test-square' style='background-color: #6699ff;'>T0137</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/fraktur/">fraktur</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff0066;'>openai</span></td>
+    <td><span class='test-rectangle' style='background-color: #2980b9;'>o3</span></td>
+    <td>Document</td>
+    <td>0.0</td>
+    <td>You are a historian with keyword knowledge</td>
+    <td>prompt_optimized.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0138'><span class='test-square' style='background-color: #ff0099;'>T0138</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/bibliographic_data/">bibliographic_data</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff5050;'>anthropic</span></td>
+    <td><span class='test-rectangle' style='background-color: #99ff33;'>claude-3-opus-20240229</span></td>
+    <td>Document</td>
+    <td>0.0</td>
+    <td>You are a Historian</td>
+    <td></td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0139'><span class='test-square' style='background-color: #9933ff;'>T0139</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/bibliographic_data/">bibliographic_data</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff0066;'>openai</span></td>
+    <td><span class='test-rectangle' style='background-color: #2980b9;'>gpt-4.1</span></td>
+    <td>Document</td>
+    <td>0.0</td>
+    <td>You are a Historian</td>
+    <td></td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0140'><span class='test-square' style='background-color: #3399ff;'>T0140</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/bibliographic_data/">bibliographic_data</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff0066;'>openai</span></td>
+    <td><span class='test-rectangle' style='background-color: #9b59b6;'>gpt-4.1-mini</span></td>
+    <td>Document</td>
+    <td>0.0</td>
+    <td>You are a Historian</td>
+    <td></td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0141'><span class='test-square' style='background-color: #ff5733;'>T0141</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/bibliographic_data/">bibliographic_data</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff0066;'>openai</span></td>
+    <td><span class='test-rectangle' style='background-color: #ffcc33;'>gpt-4.1-nano</span></td>
+    <td>Document</td>
+    <td>0.0</td>
+    <td>You are a Historian</td>
+    <td></td>
+    <td>false</td>
 </tr>
 
   </tbody>

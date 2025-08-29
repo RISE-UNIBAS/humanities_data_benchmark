@@ -91,7 +91,7 @@ def main(limit_to: list[str] = None, dates: list[str] = None):
     This function reads the configuration file, loads the benchmarks,
     and runs each benchmark based on the configuration.
 
-    :param limit_to: Optional list of benchmark ids (such as T01, T99) to limit the execution to, defaults to None
+    :param limit_to: Optional list of benchmark ids (such as T0001, T0099) to limit the execution to, defaults to None
     :param dates: Optional list of dates (YYYY-MM-DD format) to limit the execution to, defaults to None
     """
 
@@ -118,8 +118,4 @@ def main(limit_to: list[str] = None, dates: list[str] = None):
                         logging.error(f"Skipping {benchmark.get_title()} (not runnable).")
 
 if __name__ == "__main__":
-    main(limit_to=["T66"],
-         dates=["2025-04-15"])
-    # main(]) #"T46", "T47"""
-
-
+    main(limit_to=["T0106"])

@@ -1,6 +1,9 @@
 import json
 import os
 import csv
+import re
+import logging
+import math
 
 from data_loader import write_file, read_file
 from report_helper import get_square, create_html_table, get_rectangle, get_badge
@@ -77,8 +80,11 @@ def create_archive_overview(dates, benchmark_names):
                 cell = ""
                 for test in os.listdir(result_path):
                     conf = load_test_configuration(test)
+                    if conf is None:
+                        print(f"Warning: Could not find configuration for test ID '{test}' in {date}")
+                        continue
                     if conf['name'] == benchmark:
-                        cell += get_square(test, href=f"/archive/{date}/{test}") + "&nbsp;"
+                        cell += get_square(test, href=f"/humanities_data_benchmark/archive/{date}/{test}") + "&nbsp;"
             else:
                 cell = ""
             row_data.append(cell)
@@ -94,6 +100,10 @@ def create_individual_reports():
     for date in os.listdir("../results"):
         for test in os.listdir("../results/" + date):
             test_config = load_test_configuration(test)
+            if test_config is None:
+                print(f"Warning: Could not find configuration for test ID '{test}' in {date}, skipping...")
+                continue
+                
             renders_directory = os.path.join("..", "renders", date, test)
 
             test_report_path = os.path.join(REPORTS_DIR, "archive", date, f"{test}.md")
@@ -109,7 +119,7 @@ def create_individual_reports():
             md_string = "# Test Report\n\n"
             md_string += f"This test has the following configuration:\n\n"
             md_string += get_badge("data", test_config['name'], "lightgrey",
-                                     href=f"/benchmarks/{test_config['name']}") + "&nbsp;"
+                                     href=f"/humanities_data_benchmark/benchmarks/{test_config['name']}") + "&nbsp;"
             md_string += get_badge("provider", test_config['provider'], "green") + "&nbsp;"
             md_string += get_badge("model", test_config['model'], "blue") + "&nbsp;"
             if test_config['dataclass'] != "":
@@ -140,6 +150,347 @@ def create_individual_reports():
             write_file(test_report_path, md_string)
 
 
+def create_leaderboard_radar_chart(leaderboard_data):
+    """Create an HTML/SVG radar chart for the top performing models in the leaderboard."""
+    if not leaderboard_data:
+        return "<p>No leaderboard data available for radar chart.</p>"
+    
+    # Take top 6 models for better readability
+    top_models = leaderboard_data[:6]
+    
+    # Categories for the radar chart
+    categories = ['bibliographic_data', 'fraktur', 'metadata_extraction']
+    category_labels = ['Bibliographic Data', 'Fraktur', 'Metadata Extraction']
+    
+    # Chart dimensions
+    size = 400
+    center_x, center_y = size // 2, size // 2
+    radius = 150
+    
+    # Color palette for models
+    colors = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd', '#8c564b']
+    
+    # Calculate angles for each category (starting from top)
+    angles = []
+    for i in range(len(categories)):
+        angle = (i * 2 * math.pi / len(categories)) - (math.pi / 2)  # Start from top
+        angles.append(angle)
+    
+    # Start building SVG
+    svg_content = f'''<div style="text-align: center; margin: 20px 0;">
+<svg width="{size + 200}" height="{size + 100}" xmlns="http://www.w3.org/2000/svg">
+    <!-- Background -->
+    <rect width="100%" height="100%" fill="white"/>
+    
+    <!-- Grid circles -->'''
+    
+    # Add concentric circles for scale
+    for scale in [0.2, 0.4, 0.6, 0.8, 1.0]:
+        circle_radius = radius * scale
+        svg_content += f'''
+    <circle cx="{center_x}" cy="{center_y}" r="{circle_radius}" 
+            fill="none" stroke="#e0e0e0" stroke-width="1"/>
+    <text x="{center_x + circle_radius + 5}" y="{center_y}" 
+          fill="#666" font-size="10" alignment-baseline="middle">{scale}</text>'''
+    
+    # Add axis lines and labels
+    for i, (angle, label) in enumerate(zip(angles, category_labels)):
+        end_x = center_x + radius * math.cos(angle)
+        end_y = center_y + radius * math.sin(angle)
+        
+        # Axis line
+        svg_content += f'''
+    <line x1="{center_x}" y1="{center_y}" x2="{end_x}" y2="{end_y}" 
+          stroke="#ccc" stroke-width="1"/>'''
+        
+        # Label positioning
+        label_offset = 25
+        label_x = center_x + (radius + label_offset) * math.cos(angle)
+        label_y = center_y + (radius + label_offset) * math.sin(angle)
+        
+        # Adjust text anchor based on position
+        anchor = "middle"
+        if label_x < center_x - 10:
+            anchor = "end"
+        elif label_x > center_x + 10:
+            anchor = "start"
+            
+        svg_content += f'''
+    <text x="{label_x}" y="{label_y}" fill="#333" font-size="11" font-weight="bold"
+          text-anchor="{anchor}" alignment-baseline="middle">{label}</text>'''
+    
+    # Plot each model
+    for i, model_data in enumerate(top_models):
+        color = colors[i % len(colors)]
+        
+        # Calculate points for this model
+        points = []
+        for j, category in enumerate(categories):
+            value = model_data[category]
+            if value is not None:
+                point_radius = radius * value
+                point_x = center_x + point_radius * math.cos(angles[j])
+                point_y = center_y + point_radius * math.sin(angles[j])
+                points.append(f"{point_x},{point_y}")
+        
+        if len(points) == len(categories):
+            # Create polygon for the model
+            points_str = " ".join(points)
+            svg_content += f'''
+    <polygon points="{points_str}" fill="{color}" fill-opacity="0.1" 
+             stroke="{color}" stroke-width="2"/>'''
+            
+            # Add dots at each point
+            for point in points:
+                x, y = point.split(',')
+                svg_content += f'''
+    <circle cx="{x}" cy="{y}" r="3" fill="{color}"/>'''
+    
+    # Add legend
+    legend_start_x = size + 20
+    legend_start_y = 50
+    
+    svg_content += f'''
+    <text x="{legend_start_x}" y="{legend_start_y - 10}" fill="#333" 
+          font-size="12" font-weight="bold">Models:</text>'''
+    
+    for i, model_data in enumerate(top_models):
+        color = colors[i % len(colors)]
+        legend_y = legend_start_y + i * 25
+        
+        svg_content += f'''
+    <rect x="{legend_start_x}" y="{legend_y - 8}" width="15" height="15" 
+          fill="{color}" fill-opacity="0.3" stroke="{color}" stroke-width="2"/>
+    <text x="{legend_start_x + 20}" y="{legend_y}" fill="#333" font-size="11" 
+          alignment-baseline="middle">{model_data['model']}</text>'''
+    
+    svg_content += '''
+</svg>
+</div>'''
+    
+    return svg_content
+
+
+def create_leaderboard():
+    """Create a leaderboard section showing global averages for each model across key benchmarks."""
+    
+    # Target benchmarks for global average calculation
+    target_benchmarks = ['bibliographic_data', 'fraktur', 'metadata_extraction']
+    
+    # Dictionary to store model scores: {model_name: {benchmark: [scores], provider: provider_name}}
+    model_scores = {}
+    
+    # Common company name mappings for providers already used
+    provider_mappings = {
+        'anthropic': 'Anthropic',
+        'openai': 'OpenAI',
+        'genai': 'Google',
+        'mistral': 'Mistral AI'
+    }
+    
+    with open(CONFIG_FILE, newline='', encoding='utf-8') as csvfile:
+        tests = csv.DictReader(csvfile)
+        for test in tests:
+            # Only process target benchmarks
+            if test['name'] not in target_benchmarks:
+                continue
+                
+            test_id = test['id']
+            model = test['model']
+            provider = test['provider']
+            benchmark = test['name']
+            
+            # Find latest date for this test
+            date = find_latest_date(test_id)
+            if date is None:
+                continue
+                
+            # Load scoring data
+            scoring_file = os.path.join('..', 'results', date, test_id, 'scoring.json')
+            scoring_data = read_file(scoring_file)
+            try:
+                scoring_data = json.loads(scoring_data)
+            except json.decoder.JSONDecodeError:
+                continue
+            
+            # Initialize model entry if not exists
+            if model not in model_scores:
+                model_scores[model] = {'provider': provider}
+            if benchmark not in model_scores[model]:
+                model_scores[model][benchmark] = []
+            
+            # Extract the main score based on benchmark type
+            score = None
+            if benchmark == 'bibliographic_data':
+                # Use fuzzy score for bibliographic_data
+                score = scoring_data.get('fuzzy')
+            elif benchmark == 'fraktur':
+                # Use fuzzy score for fraktur
+                score = scoring_data.get('fuzzy')
+            elif benchmark == 'metadata_extraction':
+                # Use f1_micro for metadata_extraction
+                score = scoring_data.get('f1_micro')
+            
+            if score is not None:
+                try:
+                    score_value = float(score) if isinstance(score, (str, int, float)) else 0
+                    model_scores[model][benchmark].append(score_value)
+                except (ValueError, TypeError):
+                    continue
+    
+    # Calculate global averages for each model
+    leaderboard_data = []
+    for model, benchmarks in model_scores.items():
+        benchmark_averages = {}
+        total_score = 0
+        benchmark_count = 0
+        
+        for benchmark_name in target_benchmarks:
+            if benchmark_name in benchmarks and benchmarks[benchmark_name]:
+                avg_score = sum(benchmarks[benchmark_name]) / len(benchmarks[benchmark_name])
+                benchmark_averages[benchmark_name] = avg_score
+                total_score += avg_score
+                benchmark_count += 1
+            else:
+                benchmark_averages[benchmark_name] = None
+        
+        # Only include models that have results for all three benchmarks
+        if benchmark_count == len(target_benchmarks):
+            global_average = total_score / benchmark_count
+            provider_name = provider_mappings.get(benchmarks.get('provider', '').lower(), benchmarks.get('provider', 'Unknown'))
+            leaderboard_data.append({
+                'model': model,
+                'provider': provider_name,
+                'global_avg': global_average,
+                'bibliographic_data': benchmark_averages['bibliographic_data'],
+                'fraktur': benchmark_averages['fraktur'],
+                'metadata_extraction': benchmark_averages['metadata_extraction']
+            })
+    
+    # Sort by global average (highest first)
+    leaderboard_data.sort(key=lambda x: x['global_avg'], reverse=True)
+    
+    # Create leaderboard HTML table
+    if not leaderboard_data:
+        return "<p>No leaderboard data available.</p>"
+    
+    leaderboard_html = '''<div>
+<table id="leaderboard-table" style="width:100%; border-collapse: collapse; margin-bottom: 20px;">
+<thead>
+<tr>
+<th onclick="sortTable(0)" style="cursor: pointer;">Model ↕</th>
+<th onclick="sortTable(1)" style="cursor: pointer;">Provider ↕</th>
+<th onclick="sortTable(2)" style="cursor: pointer;">Global Average ↕</th>
+<th onclick="sortTable(3)" style="cursor: pointer;"><a href="benchmarks/bibliographic_data/" style="color: inherit; text-decoration: none;">bibliographic_data</a> ↕</th>
+<th onclick="sortTable(4)" style="cursor: pointer;"><a href="benchmarks/fraktur/" style="color: inherit; text-decoration: none;">fraktur</a> ↕</th>
+<th onclick="sortTable(5)" style="cursor: pointer;"><a href="benchmarks/metadata_extraction/" style="color: inherit; text-decoration: none;">metadata_extraction</a> ↕</th>
+</tr>
+</thead>
+<tbody>'''
+    
+    for rank, data in enumerate(leaderboard_data, 1):
+        model_html = get_rectangle(data['model'])
+        provider_html = get_rectangle(data['provider'])
+        global_avg_badge = get_badge("global", f"{data['global_avg']:.3f}")
+        biblio_badge = get_badge("fuzzy", f"{data['bibliographic_data']:.3f}") if data['bibliographic_data'] is not None else "N/A"
+        fraktur_badge = get_badge("fuzzy", f"{data['fraktur']:.3f}") if data['fraktur'] is not None else "N/A"
+        metadata_badge = get_badge("f1_micro", f"{data['metadata_extraction']:.3f}") if data['metadata_extraction'] is not None else "N/A"
+        
+        biblio_sort = f'{data["bibliographic_data"]:.3f}' if data["bibliographic_data"] is not None else "0"
+        fraktur_sort = f'{data["fraktur"]:.3f}' if data["fraktur"] is not None else "0"  
+        metadata_sort = f'{data["metadata_extraction"]:.3f}' if data["metadata_extraction"] is not None else "0"
+        
+        leaderboard_html += f'<tr><td data-sort="{data["model"]}">{model_html}</td><td data-sort="{data["provider"]}">{provider_html}</td><td data-sort="{data["global_avg"]:.3f}">{global_avg_badge}</td><td data-sort="{biblio_sort}">{biblio_badge}</td><td data-sort="{fraktur_sort}">{fraktur_badge}</td><td data-sort="{metadata_sort}">{metadata_badge}</td></tr>'
+    
+    leaderboard_html += '''</tbody>
+</table>
+
+<script>
+function sortTable(columnIndex) {
+const table = document.getElementById("leaderboard-table");
+const tbody = table.getElementsByTagName("tbody")[0];
+const rows = Array.from(tbody.getElementsByTagName("tr"));
+
+const isAscending = table.getAttribute("data-sort-dir") !== "asc";
+table.setAttribute("data-sort-dir", isAscending ? "asc" : "desc");
+
+rows.sort((a, b) => {
+const cellA = a.getElementsByTagName("td")[columnIndex];
+const cellB = b.getElementsByTagName("td")[columnIndex];
+
+let valueA = cellA.getAttribute("data-sort") || cellA.textContent.trim();
+let valueB = cellB.getAttribute("data-sort") || cellB.textContent.trim();
+
+if (!isNaN(valueA) && !isNaN(valueB)) {
+valueA = parseFloat(valueA);
+valueB = parseFloat(valueB);
+}
+
+if (valueA < valueB) return isAscending ? -1 : 1;
+if (valueA > valueB) return isAscending ? 1 : -1;
+return 0;
+});
+
+
+rows.forEach(row => tbody.appendChild(row));
+
+const headers = table.getElementsByTagName("th");
+for (let i = 0; i < headers.length; i++) {
+const header = headers[i];
+const text = header.innerHTML.replace(/ [↕↑↓]/g, '');
+if (i === columnIndex) {
+header.innerHTML = text + (isAscending ? ' ↑' : ' ↓');
+} else {
+header.innerHTML = text + ' ↕';
+}
+}
+}
+
+// Function to sort benchmark tables
+function sortBenchmarkTable(benchmarkName, columnIndex) {
+const table = document.getElementById(benchmarkName + "-table");
+const tbody = table.getElementsByTagName("tbody")[0];
+const rows = Array.from(tbody.getElementsByTagName("tr"));
+
+const isAscending = table.getAttribute("data-sort-dir") !== "asc";
+table.setAttribute("data-sort-dir", isAscending ? "asc" : "desc");
+
+rows.sort((a, b) => {
+const cellA = a.getElementsByTagName("td")[columnIndex];
+const cellB = b.getElementsByTagName("td")[columnIndex];
+
+let valueA = cellA.getAttribute("data-sort") || cellA.textContent.trim();
+let valueB = cellB.getAttribute("data-sort") || cellB.textContent.trim();
+
+if (!isNaN(valueA) && !isNaN(valueB)) {
+valueA = parseFloat(valueA);
+valueB = parseFloat(valueB);
+}
+
+if (valueA < valueB) return isAscending ? -1 : 1;
+if (valueA > valueB) return isAscending ? 1 : -1;
+return 0;
+});
+
+rows.forEach(row => tbody.appendChild(row));
+
+const headers = table.getElementsByTagName("th");
+for (let i = 0; i < headers.length; i++) {
+const header = headers[i];
+const text = header.innerHTML.replace(/ [↕↑↓]/g, '');
+if (i === columnIndex) {
+header.innerHTML = text + (isAscending ? ' ↑' : ' ↓');
+} else {
+header.innerHTML = text + ' ↕';
+}
+}
+}
+</script>
+</div>'''
+    
+    return leaderboard_html, leaderboard_data
+
+
 def create_index():
     """Generate the index page."""
 
@@ -151,92 +502,173 @@ def create_index():
             if test['name'] not in latest_results:
                 latest_results[test['name']] = {}
 
-            latest_results[test['name']][test['id']] = find_latest_date(test['id'])
+            # Create grouping key based on prompt_file and rules
+            prompt_file = test.get('prompt_file', '') or 'prompt.txt'
+            rules = test.get('rules', '') or ''
+            group_key = f"{prompt_file}|{rules}"
+            
+            if group_key not in latest_results[test['name']]:
+                latest_results[test['name']][group_key] = []
+            
+            latest_results[test['name']][group_key].append({
+                'id': test['id'],
+                'date': find_latest_date(test['id']),
+                'config': test
+            })
 
-    # Get all available date folders (sorted by date descending)
-    table_headers = ["Benchmark", "Latest Results"]
-    table_data = []
-
+    # Create individual benchmark sections
+    benchmark_sections = ""
+    
     # Sort benchmarks alphabetically
     for benchmark in sorted(latest_results.keys()):
-        # Add link to the benchmark name with the correct URL path
-        benchmark_link = f'<a href="benchmarks/{benchmark}/">{benchmark}</a>'
-        row_data = [benchmark_link]
-
         if len(latest_results[benchmark]) == 0:
             # Skip benchmarks with no results
             continue
 
-        # Store test results to sort them later
-        test_results = []
-        for test_id in latest_results[benchmark]:
-            date = latest_results[benchmark][test_id]
-            if date is None:
-                # Add entries with no results available with score of -1 (to ensure they appear below entries with score 0)
-                test_results.append((test_id, None, None, "No results available", -1))
-                continue
+        benchmark_sections += f'### <a href="benchmarks/{benchmark}/">{benchmark}</a>\n\n'
+        
+        # Create table for this benchmark
+        benchmark_table = f'''<table class="inner-table sortable-table" id="{benchmark}-table">
+<thead>
+<tr>
+<th onclick="sortBenchmarkTable('{benchmark}', 0)" style="cursor: pointer;">Model ↕</th>
+<th onclick="sortBenchmarkTable('{benchmark}', 1)" style="cursor: pointer;">Provider ↕</th>
+<th onclick="sortBenchmarkTable('{benchmark}', 2)" style="cursor: pointer;">Test ID ↕</th>
+<th onclick="sortBenchmarkTable('{benchmark}', 3)" style="cursor: pointer;">Date ↕</th>
+<th onclick="sortBenchmarkTable('{benchmark}', 4)" style="cursor: pointer;">Prompt ↕</th>
+<th onclick="sortBenchmarkTable('{benchmark}', 5)" style="cursor: pointer;">Rules ↕</th>
+<th onclick="sortBenchmarkTable('{benchmark}', 6)" style="cursor: pointer;">Results ↕</th>
+</tr>
+</thead>
+<tbody>'''
+        
+        # Collect all tests for this benchmark (no grouping)
+        all_tests = []
+        for group_key in latest_results[benchmark].keys():
+            prompt_file, rules = group_key.split('|', 1)
+            group_tests = latest_results[benchmark][group_key]
             
-            # Get test configuration to access model information
-            test_config = load_test_configuration(test_id)
-            model_info = test_config['model'] if test_config and 'model' in test_config else "unknown"
-
-            scoring_file = os.path.join('..', 'results', date, test_id, 'scoring.json')
-            scoring_data = read_file(scoring_file)
-            try:
-                scoring_data = json.loads(scoring_data)
-            except json.decoder.JSONDecodeError:
-                scoring_data = {'Total': 0}
-
-            badges = []
-            score_value = 0
-            for key, value in scoring_data.items():
-                badges.append(get_badge(key, value))
-                # Extract numeric value for sorting
+            for test_info in group_tests:
+                test_id = test_info['id']
+                date = test_info['date']
+                test_config = test_info['config']
+                
+                if date is None:
+                    continue
+                
+                # Get scoring data
+                scoring_file = os.path.join('..', 'results', date, test_id, 'scoring.json')
+                scoring_data = read_file(scoring_file)
                 try:
-                    if isinstance(value, (int, float)):
-                        score_value = float(value)
-                    else:
-                        score_value = float(value) if value.replace('.', '', 1).isdigit() else 0
-                except (ValueError, AttributeError):
+                    scoring_data = json.loads(scoring_data)
+                except json.decoder.JSONDecodeError:
+                    scoring_data = {'Total': 0}
+
+                # Extract the main score for sorting
+                score_value = 0
+                if benchmark == 'bibliographic_data' or benchmark == 'fraktur':
+                    score_value = scoring_data.get('fuzzy', 0)
+                elif benchmark == 'metadata_extraction':
+                    score_value = scoring_data.get('f1_micro', 0)
+                
+                try:
+                    score_value = float(score_value) if score_value else 0
+                except (ValueError, TypeError):
                     score_value = 0
 
-            badge_html = " ".join(badges)
-            test_results.append((test_id, date, model_info, badge_html, score_value))
-
-        # Sort test results by score value (highest to lowest)
-        test_results.sort(key=lambda x: x[4], reverse=True)
-        
-        # Skip benchmarks where all tests have no results (date is None for all)
-        if all(date is None for _, date, _, _, _ in test_results):
-            continue
-            
-        # Create inner table for this benchmark's tests
-        inner_table = '<table class="inner-table" style="width:100%; border-collapse: collapse;">'
-        inner_table += '<tr><th>ID</th><th>Model</th><th>Date</th><th>Results</th></tr>'
-        
-        for test_id, date, model_info, badge_html, _ in test_results:
-            # Skip entries with no date (no results)
-            if date is None:
-                continue
+                # Create badges based on benchmark type
+                badges = []
+                if benchmark == 'bibliographic_data':
+                    # Show all metrics for bibliographic_data
+                    for key, value in scoring_data.items():
+                        badges.append(get_badge(key.lower(), value))
+                elif benchmark == 'fraktur':
+                    # Only show fuzzy for fraktur
+                    if 'fuzzy' in scoring_data:
+                        badges.append(get_badge('fuzzy', scoring_data['fuzzy']))
+                elif benchmark == 'metadata_extraction':
+                    # Only show f1_micro for metadata_extraction
+                    if 'f1_micro' in scoring_data:
+                        badges.append(get_badge('f1_micro', scoring_data['f1_micro']))
+                else:
+                    # For other benchmarks, show all metrics
+                    for key, value in scoring_data.items():
+                        badges.append(get_badge(key.lower(), value))
                 
-            test_id_html = get_square(test_id, href=f"archive/{date}/{test_id}")
-            model_html = get_rectangle(model_info) if model_info else "N/A"
-            
-            inner_table += f'<tr><td>{test_id_html}</td><td>{model_html}</td><td>{date}</td><td>{badge_html}</td></tr>'
+                badge_html = " ".join(badges)
+                
+                all_tests.append({
+                    'test_id': test_id,
+                    'model': test_config['model'],
+                    'provider': test_config['provider'],
+                    'date': date,
+                    'prompt': prompt_file if prompt_file else "prompt.txt",
+                    'rules': rules if rules else "None",
+                    'badges': badge_html,
+                    'score': score_value
+                })
         
-        inner_table += '</table>'
-        row_data.append(inner_table)
-        table_data.append(row_data)
+        # Sort by score (highest first)
+        all_tests.sort(key=lambda x: x['score'], reverse=True)
+        
+        # Add rows to table
+        for test in all_tests:
+            model_html = get_rectangle(test['model'])
+            
+            # Use provider mappings from leaderboard
+            provider_mappings = {
+                'anthropic': 'Anthropic',
+                'openai': 'OpenAI',
+                'genai': 'Google',
+                'mistral': 'Mistral AI'
+            }
+            provider_display = provider_mappings.get(test['provider'].lower(), test['provider'])
+            provider_html = get_rectangle(provider_display)
+            
+            # Create rules cell (always expanded)
+            if test['rules'] and test['rules'].strip() and test['rules'] != "None":
+                rules_display = f'''<div style="padding: 5px; background-color: #f5f5f5; border-radius: 3px; font-size: 0.9em; white-space: pre-wrap; max-width: 200px; overflow-wrap: break-word;">{test['rules']}</div>'''
+            else:
+                rules_display = "None"
+            
+            # Create clickable test ID using get_square for consistent styling
+            test_id_square = get_square(test["test_id"], href="/humanities_data_benchmark/tests/" + test["test_id"])
+            
+            benchmark_table += f'<tr><td data-sort="{test["model"]}">{model_html}</td><td data-sort="{provider_display}">{provider_html}</td><td data-sort="{test["test_id"]}">{test_id_square}</td><td data-sort="{test["date"]}">{test["date"]}</td><td data-sort="{test["prompt"]}">{test["prompt"]}</td><td data-sort="{test["rules"] if test["rules"] != "None" else ""}">{rules_display}</td><td data-sort="{test["score"]:.3f}">{test["badges"]}</td></tr>'
+        
+        benchmark_table += '</tbody></table>\n\n'
+        benchmark_sections += benchmark_table
 
-
+    # Import TEST_STYLE from report_helper for styling
+    from report_helper import TEST_STYLE
+    
+    # Generate leaderboard and radar chart
+    leaderboard_html, leaderboard_data = create_leaderboard()
+    
+    # Generate radar chart HTML
+    radar_chart_html = create_leaderboard_radar_chart(leaderboard_data)
+    
     index_md = f"""
 # Humanities Data Benchmark
 Welcome to the **Humanities Data Benchmark** report page. This page provides an overview of all benchmark tests, 
 results, and comparisons.
 
+{TEST_STYLE}
+
+## Leaderboard
+
+The table below shows the **global average performance** of each model across the three core benchmarks: 
+[bibliographic_data](benchmarks/bibliographic_data/), [fraktur](benchmarks/fraktur/), and [metadata_extraction](benchmarks/metadata_extraction/). Only models with results in all three benchmarks are included. Click on any column header to sort the table.
+
+{leaderboard_html}
+
+The following radar chart shows the performance distribution of top models across the three core benchmarks:
+
+{radar_chart_html}
+
 ## Latest Benchmark Results
 
-{create_html_table(table_headers, table_data)}
+{benchmark_sections}
 
 
 ## About This Page
@@ -257,7 +689,7 @@ def create_test_runs_pages():
 
             test_run_md = f"# Test {test_config['id']}\n\n"
             test_run_md += f"This test has the following configuration:\n\n"
-            test_run_md += get_badge("data", test_config['name'], "lightgrey", href=f"/benchmarks/{test_config['name']}") + "&nbsp;"
+            test_run_md += get_badge("data", test_config['name'], "lightgrey", href=f"/humanities_data_benchmark/benchmarks/{test_config['name']}") + "&nbsp;"
             test_run_md += get_badge("provider", test_config['provider'], "green") + "&nbsp;"
             test_run_md += get_badge("model", test_config['model'], "blue") + "&nbsp;"
             if test_config['dataclass'] != "":
@@ -289,7 +721,7 @@ def create_test_runs_pages():
                         for key, value in score_data.items():
                             score_html += get_badge(key, value) + "&nbsp;"
 
-                        table_data.append([date, score_html, "<a href='/archive/" + date + "/" + test + "'>Details</a>"])
+                        table_data.append([date, score_html, "<a href='/humanities_data_benchmark/archive/" + date + "/" + test + "'>Details</a>"])
 
             test_run_md += create_html_table(["Date", "Results", "Details"], table_data)
             write_file(test_run_file, test_run_md)
@@ -315,8 +747,8 @@ def create_tests_overview():
 
             test_id = test_config['id']
             row_data = [
-                get_square(test_id, href="tests/" + test_id),
-                f'<a href="/benchmarks/{test_config["name"]}/">{test_config["name"]}</a>',
+                get_square(test_id, href="/humanities_data_benchmark/tests/" + test_id),
+                f'<a href="/humanities_data_benchmark/benchmarks/{test_config["name"]}/">{test_config["name"]}</a>',
                 get_rectangle(test_config['provider']),
                 get_rectangle(test_config['model']),
                 test_config['dataclass'],
@@ -399,6 +831,92 @@ markdown_extensions:
     write_file("../mkdocs.yml", mkdocs_yml)
 
 
+def add_new_results_to_changelog():
+    """Add new test results to CHANGELOG.md under the Added section."""
+    import logging
+    
+    changelog_path = "../CHANGELOG.md"
+    results_dir = "../results"
+    
+    if not os.path.exists(changelog_path) or not os.path.exists(results_dir):
+        logging.warning("CHANGELOG.md or results directory not found")
+        return
+    
+    changelog_content = read_file(changelog_path)
+    
+    # Find existing test entries in changelog
+    existing_entries = set()
+    for line in changelog_content.split('\n'):
+        match = re.search(r'- (T\d+) on (\d{4}-\d{2}-\d{2})', line)
+        if match:
+            test_id, date = match.groups()
+            existing_entries.add(f"{test_id}_{date}")
+    
+    # Find all test results in results directory (only after 2025-08-25)
+    new_entries = []
+    cutoff_date = "2025-08-25"
+    
+    for date_folder in sorted(os.listdir(results_dir)):
+        date_path = os.path.join(results_dir, date_folder)
+        if not os.path.isdir(date_path):
+            continue
+            
+        # Skip dates that are not later than 2025-08-25
+        if date_folder <= cutoff_date:
+            continue
+            
+        for test_id in sorted(os.listdir(date_path)):
+            test_path = os.path.join(date_path, test_id)
+            if not os.path.isdir(test_path):
+                continue
+                
+            entry_key = f"{test_id}_{date_folder}"
+            if entry_key not in existing_entries:
+                new_entries.append(f"- {test_id} on {date_folder}")
+    
+    if not new_entries:
+        logging.info("No new test results to add to changelog")
+        return
+    
+    # Find the "### Added" section under "## [Unreleased]"
+    lines = changelog_content.split('\n')
+    added_section_idx = None
+    
+    for i, line in enumerate(lines):
+        if line.strip() == "### Added" and i > 0:
+            # Check if this is under the Unreleased section
+            for j in range(i-1, -1, -1):
+                if lines[j].startswith("## "):
+                    if "[Unreleased]" in lines[j]:
+                        added_section_idx = i
+                    break
+            break
+    
+    if added_section_idx is None:
+        logging.warning("Could not find '### Added' section under [Unreleased] in CHANGELOG.md")
+        return
+    
+    # Insert new entries after the "### Added" line
+    insert_idx = added_section_idx + 1
+    
+    # Skip any existing entries to find the right insertion point
+    while (insert_idx < len(lines) and 
+           (lines[insert_idx].startswith("- ") or lines[insert_idx].strip() == "")):
+        insert_idx += 1
+    
+    # Insert new entries
+    for entry in reversed(new_entries):  # Reverse to maintain chronological order
+        lines.insert(insert_idx, entry)
+    
+    # Write back to changelog
+    updated_content = '\n'.join(lines)
+    write_file(changelog_path, updated_content)
+    
+    logging.info(f"Added {len(new_entries)} new entries to CHANGELOG.md")
+    for entry in new_entries:
+        logging.info(f"  {entry}")
+
+
 if __name__ == "__main__":
     os.makedirs(REPORTS_DIR, exist_ok=True)
     test_dates = load_test_dates()
@@ -418,5 +936,6 @@ if __name__ == "__main__":
 
     generate_site_navigation()  # Generate mkdocs.yml
     create_index()
+    add_new_results_to_changelog()
 
-    print("Reports generated successfully!")
+    logging.info("Reports generated successfully!")

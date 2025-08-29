@@ -173,20 +173,51 @@ class MetadataExtraction(Benchmark):
                 alt_names = "None"
             persons_table += f"| {person.name} | {alt_names} |\n"
 
+        # Add link to raw result JSON file with model name
+        request_name = f"request_{self.id}_{image_name}"
+        raw_link = f"[View raw result from {self.model}](https://github.com/RISE-UNIBAS/humanities_data_benchmark/blob/main/results/{self.date}/{self.id}/{request_name}.json)\n\n"
+        
+        # Add all page images for this letter - letters can have multiple pages (e.g., letter01_p1.jpg, letter01_p2.jpg, etc.)
+        image_html = ""
+        images_dir = os.path.join(self.benchmark_dir, "images")
+        
+        # Find all image files for this letter (pattern: letterXX_pN.jpg)
+        page_images = []
+        page_num = 1
+        while True:
+            found_image = False
+            for ext in ['.jpg', '.jpeg', '.png']:
+                image_file = f"{image_name}_p{page_num}{ext}"
+                if os.path.exists(os.path.join(images_dir, image_file)):
+                    page_images.append((image_file, ext))
+                    found_image = True
+                    break
+            if not found_image:
+                break
+            page_num += 1
+        
+        # Generate HTML for all found images
+        for image_file, ext in page_images:
+            # Use GitHub raw URL format to ensure images display correctly on GitHub Pages
+            image_html += f"<img src=\"https://github.com/RISE-UNIBAS/humanities_data_benchmark/blob/main/benchmarks/{self.name}/images/{image_file}?raw=true\" alt=\"{image_file}\" width=\"800px\">\n\n"
+
         render = (
             f"### Result for {response_letter.document_number}\n"
+            f"{raw_link}\n"
             f"{scoring_table}\n"
             f"{persons_table}\n"
             f"#### Rules\n"
             f"`inferred_from_function`: {inferred_from_function}\n\n"
             f"`inferred_from_correspondence`: {inferred_from_correspondence}\n\n"
+
         )
 
         if self.rules is not None:
             for key, value in self.rules.items():
                 render += f"`{key}`: {value}\n\n"
 
-        # todo: display all images in the render
+        render += f"#### Letter images\n\n"
+        render += image_html
 
         return render
 

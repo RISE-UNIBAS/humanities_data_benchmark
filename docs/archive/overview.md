@@ -23,13 +23,13 @@ This page provides an overview of all benchmark tests.Click on the test name to 
     }
     .test-square {
         display: inline-flex;
-        width: 30px;
+        width: 45px;
         height: 20px;
         border-radius: 3px;
         text-align: center;
         align-items: center;
         justify-content: center;
-        font-size: 12px;
+        font-size: 11px;
         font-weight: bold;
         color: white;
     }
@@ -49,6 +49,30 @@ This page provides an overview of all benchmark tests.Click on the test name to 
         background-color: #f2f2f2;
         font-weight: bold;
     }
+    
+    /* Sortable table styles */
+    .sortable-table th[onclick] {
+        cursor: pointer;
+        user-select: none;
+        transition: background-color 0.2s;
+    }
+    .sortable-table th[onclick]:hover {
+        background-color: #e8e8e8;
+    }
+    
+    /* Rules column styles */
+    .inner-table td:nth-child(6) {
+        max-width: 200px;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+    }
+    
+    /* Radar chart container styles */
+    #performanceRadar {
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        background-color: #fafafa;
+    }
 </style>
 <table id="data-table" class="display">
   <thead><tr>
@@ -58,20 +82,95 @@ This page provides an overview of all benchmark tests.Click on the test name to 
     <th>metadata_extraction</th>
     <th>test_benchmark</th>
     <th>test_benchmark2</th>
+    <th>zettelkatalog</th>
 
   </tr></thead>
   <tbody>
 <tr>
+    <td>2025-08-27</td>
+    <td><a href='/humanities_data_benchmark/archive/2025-08-27/T0106'><span class='test-square' style='background-color: #ff6699;'>T0106</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-08-27/T0138'><span class='test-square' style='background-color: #ff0099;'>T0138</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-08-27/T0139'><span class='test-square' style='background-color: #9933ff;'>T0139</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-08-27/T0140'><span class='test-square' style='background-color: #3399ff;'>T0140</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-08-27/T0141'><span class='test-square' style='background-color: #ff5733;'>T0141</span></a>&nbsp;</td>
+    <td><a href='/humanities_data_benchmark/archive/2025-08-27/T0137'><span class='test-square' style='background-color: #6699ff;'>T0137</span></a>&nbsp;</td>
+    <td><a href='/humanities_data_benchmark/archive/2025-08-27/T0136'><span class='test-square' style='background-color: #99ff33;'>T0136</span></a>&nbsp;</td>
+    <td></td>
+    <td></td>
+    <td></td>
+</tr>
+<tr>
+    <td>2025-08-20</td>
+    <td><a href='/humanities_data_benchmark/archive/2025-08-20/T0133'><span class='test-square' style='background-color: #ff5050;'>T0133</span></a>&nbsp;</td>
+    <td></td>
+    <td><a href='/humanities_data_benchmark/archive/2025-08-20/T0134'><span class='test-square' style='background-color: #ffcc00;'>T0134</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-08-20/T0135'><span class='test-square' style='background-color: #cc6699;'>T0135</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-08-20/T0136'><span class='test-square' style='background-color: #99ff33;'>T0136</span></a>&nbsp;</td>
+    <td></td>
+    <td></td>
+    <td></td>
+</tr>
+<tr>
+    <td>2025-08-14</td>
+    <td><a href='/humanities_data_benchmark/archive/2025-08-14/T0127'><span class='test-square' style='background-color: #2980b9;'>T0127</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-08-14/T0128'><span class='test-square' style='background-color: #f39c12;'>T0128</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-08-14/T0129'><span class='test-square' style='background-color: #c0392b;'>T0129</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-08-14/T0130'><span class='test-square' style='background-color: #99ff33;'>T0130</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-08-14/T0131'><span class='test-square' style='background-color: #2ecc71;'>T0131</span></a>&nbsp;</td>
+    <td><a href='/humanities_data_benchmark/archive/2025-08-14/T0132'><span class='test-square' style='background-color: #27ae60;'>T0132</span></a>&nbsp;</td>
+    <td><a href='/humanities_data_benchmark/archive/2025-08-14/T0124'><span class='test-square' style='background-color: #ff6699;'>T0124</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-08-14/T0125'><span class='test-square' style='background-color: #cc6699;'>T0125</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-08-14/T0126'><span class='test-square' style='background-color: #99ccff;'>T0126</span></a>&nbsp;</td>
+    <td></td>
+    <td></td>
+    <td></td>
+</tr>
+<tr>
+    <td>2025-08-13</td>
+    <td></td>
+    <td><a href='/humanities_data_benchmark/archive/2025-08-13/T0120'><span class='test-square' style='background-color: #66ff33;'>T0120</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-08-13/T0121'><span class='test-square' style='background-color: #7f8c8d;'>T0121</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-08-13/T0122'><span class='test-square' style='background-color: #9b59b6;'>T0122</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-08-13/T0123'><span class='test-square' style='background-color: #ff6699;'>T0123</span></a>&nbsp;</td>
+    <td><a href='/humanities_data_benchmark/archive/2025-08-13/T0108'><span class='test-square' style='background-color: #c0392b;'>T0108</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-08-13/T0109'><span class='test-square' style='background-color: #ff5050;'>T0109</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-08-13/T0110'><span class='test-square' style='background-color: #6633ff;'>T0110</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-08-13/T0111'><span class='test-square' style='background-color: #99ff33;'>T0111</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-08-13/T0112'><span class='test-square' style='background-color: #3498db;'>T0112</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-08-13/T0113'><span class='test-square' style='background-color: #00ff99;'>T0113</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-08-13/T0114'><span class='test-square' style='background-color: #27ae60;'>T0114</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-08-13/T0115'><span class='test-square' style='background-color: #ccff00;'>T0115</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-08-13/T0116'><span class='test-square' style='background-color: #9966ff;'>T0116</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-08-13/T0117'><span class='test-square' style='background-color: #ff0099;'>T0117</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-08-13/T0118'><span class='test-square' style='background-color: #33ff66;'>T0118</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-08-13/T0119'><span class='test-square' style='background-color: #ff0066;'>T0119</span></a>&nbsp;</td>
+    <td></td>
+    <td></td>
+    <td></td>
+</tr>
+<tr>
+    <td>2025-05-23</td>
+    <td><a href='/humanities_data_benchmark/archive/2025-05-23/T0106'><span class='test-square' style='background-color: #ff6699;'>T0106</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-05-23/T0107'><span class='test-square' style='background-color: #c0392b;'>T0107</span></a>&nbsp;</td>
+    <td><a href='/humanities_data_benchmark/archive/2025-05-23/T0098'><span class='test-square' style='background-color: #00ccff;'>T0098</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-05-23/T0099'><span class='test-square' style='background-color: #f1c40f;'>T0099</span></a>&nbsp;</td>
+    <td><a href='/humanities_data_benchmark/archive/2025-05-23/T0100'><span class='test-square' style='background-color: #ff9933;'>T0100</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-05-23/T0101'><span class='test-square' style='background-color: #ff6600;'>T0101</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-05-23/T0102'><span class='test-square' style='background-color: #ff3300;'>T0102</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-05-23/T0103'><span class='test-square' style='background-color: #ff3300;'>T0103</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-05-23/T0104'><span class='test-square' style='background-color: #3399ff;'>T0104</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-05-23/T0105'><span class='test-square' style='background-color: #00ccff;'>T0105</span></a>&nbsp;</td>
+    <td></td>
+    <td></td>
+    <td></td>
+</tr>
+<tr>
+    <td>2025-05-09</td>
+    <td></td>
+    <td><a href='/humanities_data_benchmark/archive/2025-05-09/T0022'><span class='test-square' style='background-color: #99ff33;'>T0022</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-05-09/T0079'><span class='test-square' style='background-color: #00ff66;'>T0079</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-05-09/T0080'><span class='test-square' style='background-color: #9933ff;'>T0080</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-05-09/T0081'><span class='test-square' style='background-color: #7f8c8d;'>T0081</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-05-09/T0082'><span class='test-square' style='background-color: #ff0099;'>T0082</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-05-09/T0083'><span class='test-square' style='background-color: #2980b9;'>T0083</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-05-09/T0084'><span class='test-square' style='background-color: #66cc99;'>T0084</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-05-09/T0085'><span class='test-square' style='background-color: #8e44ad;'>T0085</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-05-09/T0086'><span class='test-square' style='background-color: #66ff33;'>T0086</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-05-09/T0087'><span class='test-square' style='background-color: #ff5050;'>T0087</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-05-09/T0088'><span class='test-square' style='background-color: #cc33ff;'>T0088</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-05-09/T0089'><span class='test-square' style='background-color: #2c3e50;'>T0089</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-05-09/T0090'><span class='test-square' style='background-color: #ff6699;'>T0090</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-05-09/T0091'><span class='test-square' style='background-color: #e74c3c;'>T0091</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-05-09/T0092'><span class='test-square' style='background-color: #0099ff;'>T0092</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-05-09/T0093'><span class='test-square' style='background-color: #ff5733;'>T0093</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-05-09/T0094'><span class='test-square' style='background-color: #0099ff;'>T0094</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-05-09/T0095'><span class='test-square' style='background-color: #e74c3c;'>T0095</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-05-09/T0096'><span class='test-square' style='background-color: #cc6699;'>T0096</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-05-09/T0097'><span class='test-square' style='background-color: #ff3399;'>T0097</span></a>&nbsp;</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+</tr>
+<tr>
+    <td>2025-05-07</td>
+    <td></td>
+    <td><a href='/humanities_data_benchmark/archive/2025-05-07/T0022'><span class='test-square' style='background-color: #99ff33;'>T0022</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-05-07/T0079'><span class='test-square' style='background-color: #00ff66;'>T0079</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-05-07/T0080'><span class='test-square' style='background-color: #9933ff;'>T0080</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-05-07/T0081'><span class='test-square' style='background-color: #7f8c8d;'>T0081</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-05-07/T0082'><span class='test-square' style='background-color: #ff0099;'>T0082</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-05-07/T0083'><span class='test-square' style='background-color: #2980b9;'>T0083</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-05-07/T0084'><span class='test-square' style='background-color: #66cc99;'>T0084</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-05-07/T0085'><span class='test-square' style='background-color: #8e44ad;'>T0085</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-05-07/T0086'><span class='test-square' style='background-color: #66ff33;'>T0086</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-05-07/T0087'><span class='test-square' style='background-color: #ff5050;'>T0087</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-05-07/T0088'><span class='test-square' style='background-color: #cc33ff;'>T0088</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-05-07/T0089'><span class='test-square' style='background-color: #2c3e50;'>T0089</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-05-07/T0090'><span class='test-square' style='background-color: #ff6699;'>T0090</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-05-07/T0091'><span class='test-square' style='background-color: #e74c3c;'>T0091</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-05-07/T0092'><span class='test-square' style='background-color: #0099ff;'>T0092</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-05-07/T0093'><span class='test-square' style='background-color: #ff5733;'>T0093</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-05-07/T0094'><span class='test-square' style='background-color: #0099ff;'>T0094</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-05-07/T0095'><span class='test-square' style='background-color: #e74c3c;'>T0095</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-05-07/T0096'><span class='test-square' style='background-color: #cc6699;'>T0096</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-05-07/T0097'><span class='test-square' style='background-color: #ff3399;'>T0097</span></a>&nbsp;</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+</tr>
+<tr>
+    <td>2025-04-17</td>
+    <td></td>
+    <td></td>
+    <td><a href='/humanities_data_benchmark/archive/2025-04-17/T0067'><span class='test-square' style='background-color: #33ff66;'>T0067</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-04-17/T0068'><span class='test-square' style='background-color: #ff3300;'>T0068</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-04-17/T0069'><span class='test-square' style='background-color: #33ff66;'>T0069</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-04-17/T0070'><span class='test-square' style='background-color: #27ae60;'>T0070</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-04-17/T0071'><span class='test-square' style='background-color: #ff0099;'>T0071</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-04-17/T0072'><span class='test-square' style='background-color: #2ecc71;'>T0072</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-04-17/T0073'><span class='test-square' style='background-color: #2980b9;'>T0073</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-04-17/T0074'><span class='test-square' style='background-color: #ff9933;'>T0074</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-04-17/T0075'><span class='test-square' style='background-color: #7f8c8d;'>T0075</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-04-17/T0076'><span class='test-square' style='background-color: #ff3300;'>T0076</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-04-17/T0077'><span class='test-square' style='background-color: #e67e22;'>T0077</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-04-17/T0078'><span class='test-square' style='background-color: #ff0066;'>T0078</span></a>&nbsp;</td>
+    <td></td>
+    <td></td>
+    <td></td>
+</tr>
+<tr>
     <td>2025-04-11</td>
     <td></td>
     <td></td>
-    <td><a href='/archive/2025-04-11/T10'><span class='test-square' style='background-color: #ff6600;'>T10</span></a>&nbsp;<a href='/archive/2025-04-11/T11'><span class='test-square' style='background-color: #ff6600;'>T11</span></a>&nbsp;<a href='/archive/2025-04-11/T12'><span class='test-square' style='background-color: #6633ff;'>T12</span></a>&nbsp;<a href='/archive/2025-04-11/T13'><span class='test-square' style='background-color: #ff6600;'>T13</span></a>&nbsp;<a href='/archive/2025-04-11/T14'><span class='test-square' style='background-color: #34495e;'>T14</span></a>&nbsp;<a href='/archive/2025-04-11/T15'><span class='test-square' style='background-color: #ff0099;'>T15</span></a>&nbsp;<a href='/archive/2025-04-11/T16'><span class='test-square' style='background-color: #33ffcc;'>T16</span></a>&nbsp;<a href='/archive/2025-04-11/T17'><span class='test-square' style='background-color: #9b59b6;'>T17</span></a>&nbsp;<a href='/archive/2025-04-11/T18'><span class='test-square' style='background-color: #99ff33;'>T18</span></a>&nbsp;<a href='/archive/2025-04-11/T20'><span class='test-square' style='background-color: #ff5050;'>T20</span></a>&nbsp;<a href='/archive/2025-04-11/T23'><span class='test-square' style='background-color: #ff0066;'>T23</span></a>&nbsp;<a href='/archive/2025-04-11/T24'><span class='test-square' style='background-color: #e74c3c;'>T24</span></a>&nbsp;<a href='/archive/2025-04-11/T25'><span class='test-square' style='background-color: #ff6600;'>T25</span></a>&nbsp;<a href='/archive/2025-04-11/T36'><span class='test-square' style='background-color: #ff6699;'>T36</span></a>&nbsp;<a href='/archive/2025-04-11/T38'><span class='test-square' style='background-color: #8e44ad;'>T38</span></a>&nbsp;<a href='/archive/2025-04-11/T39'><span class='test-square' style='background-color: #3498db;'>T39</span></a>&nbsp;<a href='/archive/2025-04-11/T40'><span class='test-square' style='background-color: #e67e22;'>T40</span></a>&nbsp;<a href='/archive/2025-04-11/T41'><span class='test-square' style='background-color: #ff0066;'>T41</span></a>&nbsp;<a href='/archive/2025-04-11/T42'><span class='test-square' style='background-color: #2980b9;'>T42</span></a>&nbsp;<a href='/archive/2025-04-11/T43'><span class='test-square' style='background-color: #ff0033;'>T43</span></a>&nbsp;<a href='/archive/2025-04-11/T44'><span class='test-square' style='background-color: #66ffff;'>T44</span></a>&nbsp;<a href='/archive/2025-04-11/T45'><span class='test-square' style='background-color: #2980b9;'>T45</span></a>&nbsp;<a href='/archive/2025-04-11/T48'><span class='test-square' style='background-color: #99ccff;'>T48</span></a>&nbsp;<a href='/archive/2025-04-11/T49'><span class='test-square' style='background-color: #ff6699;'>T49</span></a>&nbsp;<a href='/archive/2025-04-11/T52'><span class='test-square' style='background-color: #ff6600;'>T52</span></a>&nbsp;<a href='/archive/2025-04-11/T53'><span class='test-square' style='background-color: #ff9933;'>T53</span></a>&nbsp;<a href='/archive/2025-04-11/T56'><span class='test-square' style='background-color: #f39c12;'>T56</span></a>&nbsp;<a href='/archive/2025-04-11/T57'><span class='test-square' style='background-color: #99ff33;'>T57</span></a>&nbsp;<a href='/archive/2025-04-11/T60'><span class='test-square' style='background-color: #bdc3c7;'>T60</span></a>&nbsp;<a href='/archive/2025-04-11/T61'><span class='test-square' style='background-color: #2980b9;'>T61</span></a>&nbsp;<a href='/archive/2025-04-11/T62'><span class='test-square' style='background-color: #ff5733;'>T62</span></a>&nbsp;<a href='/archive/2025-04-11/T63'><span class='test-square' style='background-color: #6699ff;'>T63</span></a>&nbsp;</td>
+    <td><a href='/humanities_data_benchmark/archive/2025-04-11/T0010'><span class='test-square' style='background-color: #99ff33;'>T0010</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-04-11/T0011'><span class='test-square' style='background-color: #33ccff;'>T0011</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-04-11/T0012'><span class='test-square' style='background-color: #ff6600;'>T0012</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-04-11/T0013'><span class='test-square' style='background-color: #0099ff;'>T0013</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-04-11/T0014'><span class='test-square' style='background-color: #7f8c8d;'>T0014</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-04-11/T0015'><span class='test-square' style='background-color: #cc33ff;'>T0015</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-04-11/T0016'><span class='test-square' style='background-color: #33ccff;'>T0016</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-04-11/T0017'><span class='test-square' style='background-color: #ff6600;'>T0017</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-04-11/T0018'><span class='test-square' style='background-color: #ff9966;'>T0018</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-04-11/T0020'><span class='test-square' style='background-color: #16a085;'>T0020</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-04-11/T0023'><span class='test-square' style='background-color: #33ffcc;'>T0023</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-04-11/T0024'><span class='test-square' style='background-color: #ff33cc;'>T0024</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-04-11/T0025'><span class='test-square' style='background-color: #33ff66;'>T0025</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-04-11/T0036'><span class='test-square' style='background-color: #ff6600;'>T0036</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-04-11/T0038'><span class='test-square' style='background-color: #ff9966;'>T0038</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-04-11/T0039'><span class='test-square' style='background-color: #66cc99;'>T0039</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-04-11/T0040'><span class='test-square' style='background-color: #34495e;'>T0040</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-04-11/T0041'><span class='test-square' style='background-color: #33ffcc;'>T0041</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-04-11/T0042'><span class='test-square' style='background-color: #c0392b;'>T0042</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-04-11/T0043'><span class='test-square' style='background-color: #00ffcc;'>T0043</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-04-11/T0044'><span class='test-square' style='background-color: #ff5733;'>T0044</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-04-11/T0045'><span class='test-square' style='background-color: #16a085;'>T0045</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-04-11/T0048'><span class='test-square' style='background-color: #66ff33;'>T0048</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-04-11/T0049'><span class='test-square' style='background-color: #ff33cc;'>T0049</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-04-11/T0052'><span class='test-square' style='background-color: #00ff99;'>T0052</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-04-11/T0053'><span class='test-square' style='background-color: #ff9966;'>T0053</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-04-11/T0056'><span class='test-square' style='background-color: #ff6600;'>T0056</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-04-11/T0057'><span class='test-square' style='background-color: #cc6699;'>T0057</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-04-11/T0060'><span class='test-square' style='background-color: #ff3399;'>T0060</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-04-11/T0061'><span class='test-square' style='background-color: #9933ff;'>T0061</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-04-11/T0062'><span class='test-square' style='background-color: #cc6699;'>T0062</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-04-11/T0063'><span class='test-square' style='background-color: #99ccff;'>T0063</span></a>&nbsp;</td>
+    <td></td>
     <td></td>
     <td></td>
 </tr>
 <tr>
     <td>2025-04-08</td>
-    <td><a href='/archive/2025-04-08/T07'><span class='test-square' style='background-color: #ff99cc;'>T07</span></a>&nbsp;<a href='/archive/2025-04-08/T08'><span class='test-square' style='background-color: #ffcc33;'>T08</span></a>&nbsp;<a href='/archive/2025-04-08/T09'><span class='test-square' style='background-color: #ff0066;'>T09</span></a>&nbsp;<a href='/archive/2025-04-08/T26'><span class='test-square' style='background-color: #2ecc71;'>T26</span></a>&nbsp;<a href='/archive/2025-04-08/T27'><span class='test-square' style='background-color: #ff33cc;'>T27</span></a>&nbsp;<a href='/archive/2025-04-08/T29'><span class='test-square' style='background-color: #f39c12;'>T29</span></a>&nbsp;<a href='/archive/2025-04-08/T30'><span class='test-square' style='background-color: #1abc9c;'>T30</span></a>&nbsp;<a href='/archive/2025-04-08/T31'><span class='test-square' style='background-color: #9966ff;'>T31</span></a>&nbsp;<a href='/archive/2025-04-08/T33'><span class='test-square' style='background-color: #9b59b6;'>T33</span></a>&nbsp;<a href='/archive/2025-04-08/T35'><span class='test-square' style='background-color: #2c3e50;'>T35</span></a>&nbsp;</td>
+    <td><a href='/humanities_data_benchmark/archive/2025-04-08/T0007'><span class='test-square' style='background-color: #66cc99;'>T0007</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-04-08/T0008'><span class='test-square' style='background-color: #ffcc00;'>T0008</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-04-08/T0009'><span class='test-square' style='background-color: #f39c12;'>T0009</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-04-08/T0026'><span class='test-square' style='background-color: #6633ff;'>T0026</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-04-08/T0027'><span class='test-square' style='background-color: #ff9966;'>T0027</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-04-08/T0029'><span class='test-square' style='background-color: #ff6699;'>T0029</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-04-08/T0030'><span class='test-square' style='background-color: #3399ff;'>T0030</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-04-08/T0031'><span class='test-square' style='background-color: #ff0099;'>T0031</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-04-08/T0033'><span class='test-square' style='background-color: #f39c12;'>T0033</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-04-08/T0035'><span class='test-square' style='background-color: #6699ff;'>T0035</span></a>&nbsp;</td>
+    <td></td>
     <td></td>
     <td></td>
     <td></td>
@@ -81,57 +180,64 @@ This page provides an overview of all benchmark tests.Click on the test name to 
     <td>2025-04-07</td>
     <td></td>
     <td></td>
-    <td><a href='/archive/2025-04-07/T17'><span class='test-square' style='background-color: #9b59b6;'>T17</span></a>&nbsp;<a href='/archive/2025-04-07/T24'><span class='test-square' style='background-color: #e74c3c;'>T24</span></a>&nbsp;<a href='/archive/2025-04-07/T25'><span class='test-square' style='background-color: #ff6600;'>T25</span></a>&nbsp;</td>
+    <td><a href='/humanities_data_benchmark/archive/2025-04-07/T0017'><span class='test-square' style='background-color: #ff6600;'>T0017</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-04-07/T0024'><span class='test-square' style='background-color: #ff33cc;'>T0024</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-04-07/T0025'><span class='test-square' style='background-color: #33ff66;'>T0025</span></a>&nbsp;</td>
+    <td></td>
     <td></td>
     <td></td>
 </tr>
 <tr>
     <td>2025-04-02</td>
     <td></td>
-    <td><a href='/archive/2025-04-02/T22'><span class='test-square' style='background-color: #2980b9;'>T22</span></a>&nbsp;</td>
-    <td><a href='/archive/2025-04-02/T23'><span class='test-square' style='background-color: #ff0066;'>T23</span></a>&nbsp;</td>
+    <td><a href='/humanities_data_benchmark/archive/2025-04-02/T0022'><span class='test-square' style='background-color: #99ff33;'>T0022</span></a>&nbsp;</td>
+    <td><a href='/humanities_data_benchmark/archive/2025-04-02/T0023'><span class='test-square' style='background-color: #33ffcc;'>T0023</span></a>&nbsp;</td>
+    <td></td>
     <td></td>
     <td></td>
 </tr>
 <tr>
     <td>2025-04-01</td>
-    <td><a href='/archive/2025-04-01/T07'><span class='test-square' style='background-color: #ff99cc;'>T07</span></a>&nbsp;<a href='/archive/2025-04-01/T08'><span class='test-square' style='background-color: #ffcc33;'>T08</span></a>&nbsp;<a href='/archive/2025-04-01/T09'><span class='test-square' style='background-color: #ff0066;'>T09</span></a>&nbsp;</td>
+    <td><a href='/humanities_data_benchmark/archive/2025-04-01/T0007'><span class='test-square' style='background-color: #66cc99;'>T0007</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-04-01/T0008'><span class='test-square' style='background-color: #ffcc00;'>T0008</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-04-01/T0009'><span class='test-square' style='background-color: #f39c12;'>T0009</span></a>&nbsp;</td>
     <td></td>
-    <td><a href='/archive/2025-04-01/T10'><span class='test-square' style='background-color: #ff6600;'>T10</span></a>&nbsp;<a href='/archive/2025-04-01/T11'><span class='test-square' style='background-color: #ff6600;'>T11</span></a>&nbsp;<a href='/archive/2025-04-01/T12'><span class='test-square' style='background-color: #6633ff;'>T12</span></a>&nbsp;<a href='/archive/2025-04-01/T13'><span class='test-square' style='background-color: #ff6600;'>T13</span></a>&nbsp;<a href='/archive/2025-04-01/T14'><span class='test-square' style='background-color: #34495e;'>T14</span></a>&nbsp;<a href='/archive/2025-04-01/T15'><span class='test-square' style='background-color: #ff0099;'>T15</span></a>&nbsp;<a href='/archive/2025-04-01/T16'><span class='test-square' style='background-color: #33ffcc;'>T16</span></a>&nbsp;<a href='/archive/2025-04-01/T17'><span class='test-square' style='background-color: #9b59b6;'>T17</span></a>&nbsp;<a href='/archive/2025-04-01/T18'><span class='test-square' style='background-color: #99ff33;'>T18</span></a>&nbsp;<a href='/archive/2025-04-01/T19'><span class='test-square' style='background-color: #0099ff;'>T19</span></a>&nbsp;<a href='/archive/2025-04-01/T20'><span class='test-square' style='background-color: #ff5050;'>T20</span></a>&nbsp;<a href='/archive/2025-04-01/T21'><span class='test-square' style='background-color: #9933ff;'>T21</span></a>&nbsp;</td>
-    <td><a href='/archive/2025-04-01/T01'><span class='test-square' style='background-color: #99ccff;'>T01</span></a>&nbsp;<a href='/archive/2025-04-01/T02'><span class='test-square' style='background-color: #0099ff;'>T02</span></a>&nbsp;<a href='/archive/2025-04-01/T03'><span class='test-square' style='background-color: #33ccff;'>T03</span></a>&nbsp;</td>
-    <td><a href='/archive/2025-04-01/T04'><span class='test-square' style='background-color: #ff3300;'>T04</span></a>&nbsp;<a href='/archive/2025-04-01/T05'><span class='test-square' style='background-color: #2c3e50;'>T05</span></a>&nbsp;<a href='/archive/2025-04-01/T06'><span class='test-square' style='background-color: #33ccff;'>T06</span></a>&nbsp;</td>
+    <td><a href='/humanities_data_benchmark/archive/2025-04-01/T0010'><span class='test-square' style='background-color: #99ff33;'>T0010</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-04-01/T0011'><span class='test-square' style='background-color: #33ccff;'>T0011</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-04-01/T0012'><span class='test-square' style='background-color: #ff6600;'>T0012</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-04-01/T0013'><span class='test-square' style='background-color: #0099ff;'>T0013</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-04-01/T0014'><span class='test-square' style='background-color: #7f8c8d;'>T0014</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-04-01/T0015'><span class='test-square' style='background-color: #cc33ff;'>T0015</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-04-01/T0016'><span class='test-square' style='background-color: #33ccff;'>T0016</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-04-01/T0017'><span class='test-square' style='background-color: #ff6600;'>T0017</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-04-01/T0018'><span class='test-square' style='background-color: #ff9966;'>T0018</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-04-01/T0019'><span class='test-square' style='background-color: #ff5733;'>T0019</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-04-01/T0020'><span class='test-square' style='background-color: #16a085;'>T0020</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-04-01/T0021'><span class='test-square' style='background-color: #ff3300;'>T0021</span></a>&nbsp;</td>
+    <td><a href='/humanities_data_benchmark/archive/2025-04-01/T0001'><span class='test-square' style='background-color: #ff0066;'>T0001</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-04-01/T0002'><span class='test-square' style='background-color: #ff3300;'>T0002</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-04-01/T0003'><span class='test-square' style='background-color: #ff33cc;'>T0003</span></a>&nbsp;</td>
+    <td><a href='/humanities_data_benchmark/archive/2025-04-01/T0004'><span class='test-square' style='background-color: #c0392b;'>T0004</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-04-01/T0005'><span class='test-square' style='background-color: #27ae60;'>T0005</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-04-01/T0006'><span class='test-square' style='background-color: #f39c12;'>T0006</span></a>&nbsp;</td>
+    <td></td>
 </tr>
 <tr>
     <td>2025-03-05</td>
-    <td><a href='/archive/2025-03-05/T07'><span class='test-square' style='background-color: #ff99cc;'>T07</span></a>&nbsp;<a href='/archive/2025-03-05/T08'><span class='test-square' style='background-color: #ffcc33;'>T08</span></a>&nbsp;<a href='/archive/2025-03-05/T09'><span class='test-square' style='background-color: #ff0066;'>T09</span></a>&nbsp;</td>
+    <td><a href='/humanities_data_benchmark/archive/2025-03-05/T0007'><span class='test-square' style='background-color: #66cc99;'>T0007</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-03-05/T0008'><span class='test-square' style='background-color: #ffcc00;'>T0008</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-03-05/T0009'><span class='test-square' style='background-color: #f39c12;'>T0009</span></a>&nbsp;</td>
     <td></td>
-    <td><a href='/archive/2025-03-05/T10'><span class='test-square' style='background-color: #ff6600;'>T10</span></a>&nbsp;<a href='/archive/2025-03-05/T11'><span class='test-square' style='background-color: #ff6600;'>T11</span></a>&nbsp;<a href='/archive/2025-03-05/T12'><span class='test-square' style='background-color: #6633ff;'>T12</span></a>&nbsp;<a href='/archive/2025-03-05/T13'><span class='test-square' style='background-color: #ff6600;'>T13</span></a>&nbsp;<a href='/archive/2025-03-05/T14'><span class='test-square' style='background-color: #34495e;'>T14</span></a>&nbsp;<a href='/archive/2025-03-05/T15'><span class='test-square' style='background-color: #ff0099;'>T15</span></a>&nbsp;<a href='/archive/2025-03-05/T16'><span class='test-square' style='background-color: #33ffcc;'>T16</span></a>&nbsp;<a href='/archive/2025-03-05/T17'><span class='test-square' style='background-color: #9b59b6;'>T17</span></a>&nbsp;<a href='/archive/2025-03-05/T18'><span class='test-square' style='background-color: #99ff33;'>T18</span></a>&nbsp;</td>
-    <td><a href='/archive/2025-03-05/T01'><span class='test-square' style='background-color: #99ccff;'>T01</span></a>&nbsp;<a href='/archive/2025-03-05/T02'><span class='test-square' style='background-color: #0099ff;'>T02</span></a>&nbsp;<a href='/archive/2025-03-05/T03'><span class='test-square' style='background-color: #33ccff;'>T03</span></a>&nbsp;</td>
-    <td><a href='/archive/2025-03-05/T04'><span class='test-square' style='background-color: #ff3300;'>T04</span></a>&nbsp;<a href='/archive/2025-03-05/T05'><span class='test-square' style='background-color: #2c3e50;'>T05</span></a>&nbsp;<a href='/archive/2025-03-05/T06'><span class='test-square' style='background-color: #33ccff;'>T06</span></a>&nbsp;</td>
+    <td><a href='/humanities_data_benchmark/archive/2025-03-05/T0010'><span class='test-square' style='background-color: #99ff33;'>T0010</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-03-05/T0011'><span class='test-square' style='background-color: #33ccff;'>T0011</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-03-05/T0012'><span class='test-square' style='background-color: #ff6600;'>T0012</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-03-05/T0013'><span class='test-square' style='background-color: #0099ff;'>T0013</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-03-05/T0014'><span class='test-square' style='background-color: #7f8c8d;'>T0014</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-03-05/T0015'><span class='test-square' style='background-color: #cc33ff;'>T0015</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-03-05/T0016'><span class='test-square' style='background-color: #33ccff;'>T0016</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-03-05/T0017'><span class='test-square' style='background-color: #ff6600;'>T0017</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-03-05/T0018'><span class='test-square' style='background-color: #ff9966;'>T0018</span></a>&nbsp;</td>
+    <td><a href='/humanities_data_benchmark/archive/2025-03-05/T0001'><span class='test-square' style='background-color: #ff0066;'>T0001</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-03-05/T0002'><span class='test-square' style='background-color: #ff3300;'>T0002</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-03-05/T0003'><span class='test-square' style='background-color: #ff33cc;'>T0003</span></a>&nbsp;</td>
+    <td><a href='/humanities_data_benchmark/archive/2025-03-05/T0004'><span class='test-square' style='background-color: #c0392b;'>T0004</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-03-05/T0005'><span class='test-square' style='background-color: #27ae60;'>T0005</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-03-05/T0006'><span class='test-square' style='background-color: #f39c12;'>T0006</span></a>&nbsp;</td>
+    <td></td>
 </tr>
 <tr>
     <td>2025-03-04</td>
-    <td><a href='/archive/2025-03-04/T07'><span class='test-square' style='background-color: #ff99cc;'>T07</span></a>&nbsp;</td>
+    <td><a href='/humanities_data_benchmark/archive/2025-03-04/T0007'><span class='test-square' style='background-color: #66cc99;'>T0007</span></a>&nbsp;</td>
     <td></td>
     <td></td>
-    <td><a href='/archive/2025-03-04/T01'><span class='test-square' style='background-color: #99ccff;'>T01</span></a>&nbsp;</td>
+    <td><a href='/humanities_data_benchmark/archive/2025-03-04/T0001'><span class='test-square' style='background-color: #ff0066;'>T0001</span></a>&nbsp;</td>
+    <td></td>
     <td></td>
 </tr>
 <tr>
     <td>2025-03-02</td>
-    <td><a href='/archive/2025-03-02/T07'><span class='test-square' style='background-color: #ff99cc;'>T07</span></a>&nbsp;<a href='/archive/2025-03-02/T08'><span class='test-square' style='background-color: #ffcc33;'>T08</span></a>&nbsp;<a href='/archive/2025-03-02/T09'><span class='test-square' style='background-color: #ff0066;'>T09</span></a>&nbsp;</td>
+    <td><a href='/humanities_data_benchmark/archive/2025-03-02/T0007'><span class='test-square' style='background-color: #66cc99;'>T0007</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-03-02/T0008'><span class='test-square' style='background-color: #ffcc00;'>T0008</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-03-02/T0009'><span class='test-square' style='background-color: #f39c12;'>T0009</span></a>&nbsp;</td>
     <td></td>
     <td></td>
     <td></td>
-    <td><a href='/archive/2025-03-02/T06'><span class='test-square' style='background-color: #33ccff;'>T06</span></a>&nbsp;</td>
+    <td><a href='/humanities_data_benchmark/archive/2025-03-02/T0006'><span class='test-square' style='background-color: #f39c12;'>T0006</span></a>&nbsp;</td>
+    <td></td>
 </tr>
 <tr>
     <td>2025-03-01</td>
     <td></td>
     <td></td>
     <td></td>
-    <td><a href='/archive/2025-03-01/T01'><span class='test-square' style='background-color: #99ccff;'>T01</span></a>&nbsp;<a href='/archive/2025-03-01/T02'><span class='test-square' style='background-color: #0099ff;'>T02</span></a>&nbsp;<a href='/archive/2025-03-01/T03'><span class='test-square' style='background-color: #33ccff;'>T03</span></a>&nbsp;</td>
-    <td><a href='/archive/2025-03-01/T04'><span class='test-square' style='background-color: #ff3300;'>T04</span></a>&nbsp;<a href='/archive/2025-03-01/T05'><span class='test-square' style='background-color: #2c3e50;'>T05</span></a>&nbsp;</td>
+    <td><a href='/humanities_data_benchmark/archive/2025-03-01/T0001'><span class='test-square' style='background-color: #ff0066;'>T0001</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-03-01/T0002'><span class='test-square' style='background-color: #ff3300;'>T0002</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-03-01/T0003'><span class='test-square' style='background-color: #ff33cc;'>T0003</span></a>&nbsp;</td>
+    <td><a href='/humanities_data_benchmark/archive/2025-03-01/T0004'><span class='test-square' style='background-color: #c0392b;'>T0004</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-03-01/T0005'><span class='test-square' style='background-color: #27ae60;'>T0005</span></a>&nbsp;</td>
+    <td></td>
 </tr>
 
   </tbody>
