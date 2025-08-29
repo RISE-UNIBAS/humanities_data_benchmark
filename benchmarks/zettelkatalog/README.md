@@ -29,13 +29,17 @@ This benchmark was created by Gabriel Müller (https://github.com/gbmllr1) at Ba
 
 ### Contents
 The dataset contains 1000 images of index cards describing historical dissertations. Each image corresponds to one card and one dissertation. It is a random sample out of the ~600'000 dissertations collected by Basel University Library in the time period before 1980. The original works come predominantly from Switzerland and neighboring countries, but some may come from anywhere in the world.
-Strictly speaking, a typical card describes multiple things and events related to a given dissertation/PhD thesis (an abstract work): 1) The author (a person), 2) the published version of record required for the diploma (a publication), 3) the thesis defense (an event), 4) other published versions of the thesis (a publication, e.g. an extract in the form of a journal article). Not all of these elements are present in every case, and they are often not explicitly separated on the card.
-Furthermore, some of the cards do not contain a full description of a thesis, but are merely references to another card in the catalogue. In these cases, the card begins with the name of the referenced author, followed by an "s." on a separate line (German "siehe"). There may or may not be other information below that line.
+Strictly speaking, a typical card may describe multiple things and events related to a given dissertation/PhD thesis (an abstract work): 1) The author (a person), 2) the published version of record required for the diploma (a publication), 3) the thesis defense (an event), 4) other published versions of the thesis (a publication, e.g. an extract in the form of a journal article). Not all of these elements are present in every case, and they are often not explicitly separated on the card.
+Furthermore, some of the cards do not contain a full description of a thesis, but are merely references to another card in the catalogue. In these cases, the card begins with the name of the referenced author, followed by an "s." on a separate line (German "siehe"). There may or may not be other information below that.
 
 ## Ground Truth
 
 ### Ground Truth Creation
-[Explain how the ground truth was created and which guidelines were used, e.g., "The ground truth was manually annotated by domain experts", "The ground truth was created using a semi-automated process and then verified by experts", etc.]
+The ground truth was was created by manual correction of responses by chat-gpt-4o, using the ground-truther.py tool contained in the folder of this benchmark. In addition to correct readings of the text, the following rules were enforced (cf. also the instructions given in prompt.txt):
+- A card containing the note "s." on a separate line should be classified as a reference.
+- Page numbers should be given without "p." or "S.", but if there is information on additional unnumbered pages, that info should be kept (i.e. "IV S. + 67-74 S." --> "IV. 67-74")
+- A work in octavo format may be listed as "8°" or as "8'". The result should render the exact value as it is on the card.
+- The place and year of examination should only be filled out if they are explicitly mentioned on the card (not deduced from the date of publication). A shelfmark with a time and place counts as such a mention (e.g. "Diss. Basel, 1967"). 
 
 ### Ground Truth Format
 The ground truth is stored in [format, e.g., "JSON files", "CSV files", etc.] with the following structure:
