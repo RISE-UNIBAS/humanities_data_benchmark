@@ -1479,7 +1479,7 @@ class MetadataEditor:
         # In the future, we could implement change detection
         return True
     
-    def save_json(self, show_message=True):
+    def save_json(self, show_message=False):
         """Save the JSON data to file."""
         if not self.json_data:
             if show_message:
@@ -1556,20 +1556,20 @@ class MetadataEditor:
                                            f"Saving to temporary directory:\n{temp_output_dir}\n\n"
                                            f"It's recommended to configure a permanent output directory in the settings.")
             
-            # Ensure we never overwrite input JSON
-            if self.current_json_path:
-                current_json_dir = os.path.dirname(os.path.abspath(self.current_json_path))
-                output_dir = os.path.dirname(os.path.abspath(output_path))
+            # # Ensure we never overwrite input JSON
+            # if self.current_json_path:
+            #     current_json_dir = os.path.dirname(os.path.abspath(self.current_json_path))
+            #     output_dir = os.path.dirname(os.path.abspath(output_path))
                 
-                # Check if we're trying to save to the same directory as the input
-                if os.path.normpath(current_json_dir) == os.path.normpath(output_dir):
-                    # Only take action if the filenames would conflict
-                    if os.path.basename(self.current_json_path) == os.path.basename(output_path):
-                        self.logger.warning(f"Preventing potential overwrite by adding prefix to filename")
-                        # Modify the filename in this directory to avoid conflict
-                        dir_path = os.path.dirname(output_path)
-                        base_name = os.path.basename(output_path)
-                        output_path = os.path.join(dir_path, base_name)
+            #     # Check if we're trying to save to the same directory as the input
+            #     if os.path.normpath(current_json_dir) == os.path.normpath(output_dir):
+            #         # Only take action if the filenames would conflict
+            #         if os.path.basename(self.current_json_path) == os.path.basename(output_path):
+            #             self.logger.warning(f"Preventing potential overwrite by adding prefix to filename")
+            #             # Modify the filename in this directory to avoid conflict
+            #             dir_path = os.path.dirname(output_path)
+            #             base_name = os.path.basename(output_path)
+            #             output_path = os.path.join(dir_path, base_name)
             
             # Create parent directory if it doesn't exist
             os.makedirs(os.path.dirname(output_path), exist_ok=True)
