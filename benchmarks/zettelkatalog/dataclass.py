@@ -1,60 +1,42 @@
 from __future__ import annotations
 from dataclasses import dataclass, field
-from typing import List, Optional
+from typing import List, Optional, Literal
 from pydantic import BaseModel
 
+@dataclass
+class WorkType:
+    type: Literal["Dissertation or thesis", "Reference"]
 
 @dataclass
 class Author:
     last_name: str
     first_name: str
 
-
 @dataclass
 class Publication:
-    place: str
+    title: str
     year: int
+    place: Optional[str] = None
     pages: Optional[str] = None
     publisher: Optional[str] = None
     format: Optional[str] = None
-
-
-@dataclass
-class Education:
-    secondary: Optional[str] = None
-    university: List[str] = field(default_factory=list)
-
+    reprint_note: Optional[str] = None
 
 @dataclass
 class Examination:
-    location: str
-    count: int
-
+    place: Optional[str] = None
+    year: Optional[int] = None
 
 @dataclass
-class PersonalData:
-    birth_date: Optional[str] = None
-    birth_place: Optional[str] = None
-    residence: Optional[str] = None
-    nationality: Optional[str] = None
-    education: Optional[Education] = None
-    examinations: List[Examination] = field(default_factory=list)
-    final_exam_location: Optional[str] = None
-    final_exam_date: Optional[str] = None
-
+class LibraryReference:
+    shelfmark: Optional[str] = None
+    publication_number: Optional[str] = None
+    subjects: Optional[str] = None
 
 @dataclass
 class Document(BaseModel):
+    type: WorkType
     author: Author
-    title: str
     publication: Publication
-    type: str
-    institution: Optional[str] = None
-    language: Optional[str] = None
-    notes: Optional[str] = None
-    defense_date: Optional[str] = None
-    advisor: Optional[str] = None
-    department: Optional[str] = None
-    director: Optional[str] = None
-    personal_data: Optional[PersonalData] = None
-    library_reference: Optional[str] = None
+    examination: Examination
+    library_reference: LibraryReference
