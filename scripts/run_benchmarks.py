@@ -10,7 +10,7 @@ import logging
 # Add project root to sys.path
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 load_dotenv()
-
+print(os.getenv("GENAI_API_KEY"))
 REGENERATE_RESULTS = False
 
 BENCHMARKS_DIR = '../benchmarks'
@@ -116,7 +116,6 @@ def main(limit_to: list[str] = None, dates: list[str] = None):
                         benchmark.run(regenerate_existing_results=REGENERATE_RESULTS)
                     else:
                         logging.error(f"Skipping {benchmark.get_title()} (not runnable).")
-
 
 if __name__ == "__main__":
     main(limit_to=["T0106"])
