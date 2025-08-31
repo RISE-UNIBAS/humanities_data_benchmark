@@ -30,6 +30,7 @@ This benchmark suite focuses on tasks essential to digital humanities work with 
 - [What is Benchmarking and Why Should You Care?](#what-is-benchmarking-and-why-should-you-care)
 - [Terminology](#terminology)
 - [How it Works](#how-it-works)
+- [Available Benchmarks](#available-benchmarks)
 - [Expand on this Benchmark Suite](#expand-on-this-benchmark-suite)
   - [Create a new benchmark](#create-a-new-benchmark)
   - [API Keys](#api-keys)
@@ -91,6 +92,34 @@ and a prompt. The model will generate a response based on the request. At least 
 
 <img src="benchmark_run.png" alt="Test Results" width="80%">
 
+## Available Benchmarks
+
+This benchmark suite currently includes the following benchmarks for evaluating LLM performance on humanities tasks:
+
+### Bibliographic Data
+Evaluates models' ability to extract bibliographic information from historical documents such as publication details, authors, dates, and other metadata from digitized sources.
+
+📁 [View benchmark details](benchmarks/bibliographic_data/)
+
+### Metadata Extraction
+Tests models on extracting structured metadata from historical correspondence, including person names, organizations, dates, locations, and other contextual information from 20th century Swiss historical letters.
+
+📁 [View benchmark details](benchmarks/metadata_extraction/)
+
+### Fraktur Text Recognition
+Assesses models' capability to recognize and transcribe historical German Fraktur script, a Gothic typeface commonly used in German-language documents from the 16th to 20th centuries.
+
+📁 [View benchmark details](benchmarks/fraktur/)
+
+### Zettelkatalog (In Development)
+An upcoming benchmark focused on catalog card analysis and information extraction from historical library catalog systems. This benchmark is currently under development and will evaluate models on structured data extraction from digitized catalog cards.
+
+📁 [View benchmark details](benchmarks/zettelkatalog/)
+
+### Test Benchmarks
+Two simple test benchmarks (`test_benchmark` and `test_benchmark2`) used for system validation and basic functionality testing.
+
+📁 [test_benchmark](benchmarks/test_benchmark/) | 📁 [test_benchmark2](benchmarks/test_benchmark2/)
 
 ## Expand on this Benchmark Suite
 
@@ -177,19 +206,19 @@ To run a specific test ID from the benchmarks_tests.csv file:
 ```python
 # In scripts/run_benchmarks.py
 from scripts.run_benchmarks import main
-main(limit_to=["T17"])  # Run only the T17 test
-main(limit_to=["T10", "T11"], dates=["2025-03-01", "2025-04-01"])  # Run T10 and T11 for specific dates
+main(limit_to=["T0017"])  # Run only the T0017 test
+main(limit_to=["T0010", "T0011"], dates=["2025-03-01", "2025-04-01"])  # Run T0010 and T0011 for specific dates
 ```
 
 ### Add Configuration to the Suite
 To add a configuration, you need to add a new row to the `benchmarks_tests.csv` file. The file has the following structure:
 
 ```csv
-id,name,provider,model,dataclass,temperature,role_description,prompt_file,legacy_test
-T01,test_benchmark,openai,gpt-4o,,,,,false
+id,name,provider,model,dataclass,temperature,role_description,prompt_file,rules,legacy_test
+T0001,test_benchmark,openai,gpt-4o,,,,,,false
 ```
 
-- `id`: A unique identifier for the benchmark. This can be any string.
+- `id`: A unique identifier for the benchmark using 4-digit zero-padded format (e.g., T0001, T0002).
 - `name`: The name of the benchmark. This must match the name of the directory in the `benchmarks` folder.
 - `provider`: The provider of the model. This can be `openai`, `genai`, `anthropic`, or `mistral`.
 - `model`: The name of the model. This can be any model name that is supported by the provider.
@@ -197,6 +226,7 @@ T01,test_benchmark,openai,gpt-4o,,,,,false
 - `temperature`: The temperature parameter for the model. This can be any value between 0 and 1.
 - `role_description`: A description of the role that the model should take on. This can be any description that is supported by the provider.
 - `prompt_file`: The name of the prompt file in the `prompts` directory.
+- `rules`: Additional configuration rules in JSON format for specialized test scenarios.
 - `legacy_test`: A boolean value that indicates whether the benchmark is a legacy test. This can be `true` or `false`.
 
 This allows you to run the benchmark with different models, prompts, and configurations.
@@ -258,6 +288,13 @@ This benchmark suite currently tests models from the following providers:
 - **gpt-4o**: OpenAI's multimodal model capable of processing both text and images
 - **gpt-4.5-preview**: An updated version of GPT-4 with improved capabilities
 - **gpt-4o-mini**: A smaller, faster version of GPT-4o with reduced capabilities
+- **gpt-4.1**: Latest GPT-4 iteration with enhanced capabilities
+- **gpt-4.1-mini**: Smaller version of GPT-4.1 optimized for efficiency
+- **gpt-4.1-nano**: Ultra-compact version of GPT-4.1 for lightweight tasks
+- **gpt-5**: OpenAI's next-generation model with advanced reasoning capabilities
+- **gpt-5-mini**: Efficient version of GPT-5 with reduced resource requirements
+- **gpt-5-nano**: Compact version of GPT-5 optimized for speed
+- **o3**: OpenAI's reasoning-focused model for complex problem-solving tasks
 
 ### Google/Gemini
 - **gemini-2.0-flash**: Fast response multimodal model from Google's Gemini line
@@ -267,10 +304,18 @@ This benchmark suite currently tests models from the following providers:
 - **gemini-1.5-pro**: Higher capability model from the Gemini 1.5 series
 - **gemini-2.0-pro-exp-02-05**: Experimental model from the Gemini 2.0 pro line
 - **gemini-2.5-pro-exp-03-25**: Latest experimental Gemini model in the benchmark suite
+- **gemini-2.5-pro**: Production version of the Gemini 2.5 pro model
+- **gemini-2.5-flash-preview-04-17**: Preview version of Gemini 2.5 flash model
+- **gemini-2.5-pro-preview-05-06**: Preview version of Gemini 2.5 pro model
 
 ### Anthropic
 - **claude-3-5-sonnet-20241022**: Mid-tier Claude model with strong reasoning capabilities
 - **claude-3-7-sonnet-20250219**: More advanced Claude model with improved capabilities
+- **claude-3-opus-20240229**: Anthropic's highest capability Claude 3 model
+- **claude-3-5-haiku-20241022**: Anthropic's fastest/smallest Claude 3.5 model
+- **claude-opus-4-20250514**: Next-generation Claude 4 Opus with enhanced capabilities
+- **claude-sonnet-4-20250514**: Claude 4 Sonnet with improved reasoning and efficiency
+- **claude-opus-4-1-20250805**: Updated Claude 4.1 Opus with latest improvements
 
 ### Mistral AI
 - **pixtral-large-latest**: Mistral's multimodal model for vision tasks
@@ -309,30 +354,28 @@ These metrics evaluate factors beyond task performance that impact usability:
 The benchmark suite currently has several limitations that could be addressed in future iterations:
 
 ### Additional Models
-Several important models are not yet included:
-- **Anthropic Claude 3 Opus**: Anthropic's highest capability model
-- **Anthropic Claude 3 Haiku**: Anthropic's fastest/smallest model
+Several important model families are not yet included:
 - **Meta/Llama models**: The entire Llama model family is absent (Llama 3/4 series)
-- **Additional Mistral models**: Only Pixtral is represented, missing other Mistral models
+- **Additional Mistral models**: Only Pixtral is represented, missing other Mistral models like Mistral Large
 - **Cohere Command models**: Entirely absent from the benchmark
 - **Various open-source models**: Falcon, Mixtral, and other open-source alternatives
+- **Local/self-hosted models**: Limited support for models that can be run locally
 
 ### Specialized Capabilities
 - **Domain-specific fine-tuned models**: Models specifically optimized for historical research
 - **OCR-specialized models**: Models with particular strength in document processing/OCR
 - **Multilingual capabilities**: Systematic testing across different languages
 
-### Benchmark Dimensions
-- **Cost efficiency**: Evaluating performance relative to token cost
-- **Speed metrics**: Response time measurements
-- **Context window testing**: Evaluation across different context window sizes
-- **Advanced prompt engineering**: Testing with different prompting strategies
+### Benchmark Coverage
+- **Limited benchmark diversity**: Currently focused on document analysis tasks; missing benchmarks for other humanities domains like art history, archaeology, or musicology
+- **Language coverage**: Primarily focused on German and English materials; limited coverage of other European languages and non-Western scripts
+- **Historical period coverage**: Concentrated on 19th-20th century materials; limited representation of medieval, early modern, or contemporary sources
 
-### Other Areas for Improvement
-- **Standardized error analysis**: More granular error categorization
-- **Interdisciplinary evaluation**: Additional humanities domains beyond current benchmarks
-- **Time-series analysis**: Tracking model improvements over successive versions
-- **Human baseline comparison**: Comparing model performance to human expert performance
+### Evaluation Metrics
+- **Cost efficiency**: Performance evaluation relative to token cost and processing time
+- **Speed metrics**: Systematic response time measurements across different model sizes
+- **Context window testing**: Evaluation across different context window sizes and document lengths
+- **Standardized error analysis**: More granular error categorization and failure mode analysis
 
 ## Practical Considerations
 
