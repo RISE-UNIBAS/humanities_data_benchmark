@@ -152,6 +152,15 @@ class AiApiClient:
                     }],
                     model=model,
                 )
+            elif model in ["claude-3-5-sonnet-20241022"]:
+                message = self.api_client.messages.create(
+                    max_tokens=8192,
+                    messages=[{
+                        "role": "user",
+                        "content": content,
+                    }],
+                    model=model,
+                )
             else:
                 message = self.api_client.messages.create(
                     max_tokens=10000,
