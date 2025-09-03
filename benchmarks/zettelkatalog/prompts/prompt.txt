@@ -1,5 +1,60 @@
-Extract the bibliographic information about a historical dissertation from this index card. 
-There might be some information on the card that does not fit into any of the properties of the dataclass. Disregard this information.
-If a card contains the note "s." on a separate line, it is a reference. In this case, the bibliographic entry follows after the "s.".
-Shelf marks often begin with "Diss." or "AT" and are often marked with "Standort:", whereas publication numbers begin with "U" or "DN".
-Format is a single value, usally "8°" or "8'" or "4°". If a page number ends in " S.", do not include that in the value. 
+Extract the bibliographic information about a historical dissertation from this index card and return it as a structured JSON object with the following exact format:
+
+```json
+{
+  "type": {
+    "type": "Dissertation or thesis" OR "Reference"
+  },
+  "author": {
+    "last_name": "string",
+    "first_name": "string"
+  },
+  "publication": {
+    "title": "string",
+    "year": integer,
+    "place": "string or empty string",
+    "pages": "string or empty string",
+    "publisher": "string or empty string",
+    "format": "string or empty string",
+    "reprint_note": "string or empty string"
+  },
+  "examination": {
+    "place": "string or empty string",
+    "year": integer or empty string
+  },
+  "library_reference": {
+    "shelfmark": "string or empty string",
+    "publication_number": "string or empty string",
+    "subjects": "string or empty string"
+  }
+}
+```
+
+EXTRACTION RULES:
+1. **Card Type**: If a card contains the note "s." on a separate line, it is a "Reference". Otherwise, it is a "Dissertation or thesis".
+
+2. **Author**: Extract last_name and first_name. If only one name is given, put it in last_name and leave first_name empty.
+
+3. **Publication**:
+   - title: The main title of the work
+   - year: Publication year as integer
+   - place: Publication place
+   - pages: Page count (remove " S." suffix if present)
+   - publisher: Publishing house/institution
+   - format: Usually "8°", "8'", or "4°" - single value only
+   - reprint_note: Any notes about reprints
+
+4. **Examination**:
+   - place: Where the dissertation was examined/defended
+   - year: Year of examination as integer
+
+5. **Library Reference**:
+   - shelfmark: Often begins with "Diss." or "AT", may be marked with "Standort:"
+   - publication_number: Often begins with "U" or "DN"
+   - subjects: Subject classifications or keywords
+
+6. **Missing Information**: Use empty string "" for missing text fields, omit year fields entirely if not present.
+
+7. **Ignore**: Disregard any information that doesn't fit into these categories.
+
+Return ONLY the JSON object, no additional text or explanation.
