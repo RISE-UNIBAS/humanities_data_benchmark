@@ -3,14 +3,17 @@ from dataclasses import dataclass, field
 from typing import List, Optional, Literal
 from pydantic import BaseModel
 
+
 @dataclass
 class WorkType:
     type: Literal["Dissertation or thesis", "Reference"]
+
 
 @dataclass
 class Author:
     last_name: str
     first_name: str
+
 
 @dataclass
 class Publication:
@@ -22,16 +25,19 @@ class Publication:
     format: Optional[str] = None
     reprint_note: Optional[str] = None
 
+
 @dataclass
 class Examination:
     place: Optional[str] = None
     year: Optional[int] = None
+
 
 @dataclass
 class LibraryReference:
     shelfmark: Optional[str] = None
     publication_number: Optional[str] = None
     subjects: Optional[str] = None
+
 
 @dataclass
 class Document(BaseModel):
