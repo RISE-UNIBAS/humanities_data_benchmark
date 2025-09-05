@@ -9,7 +9,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - Zettelkatalog first draft.
-
+- T0066 on 2025-09-02
+- T0143 on 2025-09-02
+- T0144 on 2025-09-02
+- T0145 on 2025-09-02
+- T0146 on 2025-09-02
+- T0147 on 2025-09-02
+- T0148 on 2025-09-02
+- T0159 on 2025-09-02
+- T0160 on 2025-09-02
+- T0161 on 2025-09-02
+- T0162 on 2025-09-02
+- T0164 on 2025-09-02
+- T0165 on 2025-09-02
+- T0166 on 2025-09-02
+- 
 ## [v0.2.0] - 2025-08-31
 
 ### Added

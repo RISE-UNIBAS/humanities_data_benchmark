@@ -1639,6 +1639,303 @@ This page provides an overview of all tests. Click on the test name to see the d
     <td></td>
     <td>false</td>
 </tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0142'><span class='test-square' style='background-color: #66ff33;'>T0142</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/zettelkatalog/">zettelkatalog</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff5050;'>anthropic</span></td>
+    <td><span class='test-rectangle' style='background-color: #ff6600;'>claude-3-5-haiku-20241022</span></td>
+    <td>Document</td>
+    <td>0.0</td>
+    <td>You are a historian with keyword knowledge</td>
+    <td>prompt.txt</td>
+    <td>true</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0143'><span class='test-square' style='background-color: #66ffff;'>T0143</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/zettelkatalog/">zettelkatalog</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff5050;'>anthropic</span></td>
+    <td><span class='test-rectangle' style='background-color: #cc6699;'>claude-3-5-sonnet-20241022</span></td>
+    <td>Document</td>
+    <td>0.0</td>
+    <td>You are a historian with keyword knowledge</td>
+    <td>prompt.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0144'><span class='test-square' style='background-color: #ff5733;'>T0144</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/zettelkatalog/">zettelkatalog</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff5050;'>anthropic</span></td>
+    <td><span class='test-rectangle' style='background-color: #f1c40f;'>claude-3-7-sonnet-20250219</span></td>
+    <td>Document</td>
+    <td>0.0</td>
+    <td>You are a historian with keyword knowledge</td>
+    <td>prompt.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0145'><span class='test-square' style='background-color: #00ccff;'>T0145</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/zettelkatalog/">zettelkatalog</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff5050;'>anthropic</span></td>
+    <td><span class='test-rectangle' style='background-color: #99ff33;'>claude-3-opus-20240229</span></td>
+    <td>Document</td>
+    <td>0.0</td>
+    <td>You are a historian with keyword knowledge</td>
+    <td>prompt.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0146'><span class='test-square' style='background-color: #6699ff;'>T0146</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/zettelkatalog/">zettelkatalog</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff5050;'>anthropic</span></td>
+    <td><span class='test-rectangle' style='background-color: #0099ff;'>claude-opus-4-1-20250805</span></td>
+    <td>Document</td>
+    <td>0.0</td>
+    <td>You are a historian with keyword knowledge</td>
+    <td>prompt.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0147'><span class='test-square' style='background-color: #c0392b;'>T0147</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/zettelkatalog/">zettelkatalog</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff5050;'>anthropic</span></td>
+    <td><span class='test-rectangle' style='background-color: #ff6600;'>claude-opus-4-20250514</span></td>
+    <td>Document</td>
+    <td>0.0</td>
+    <td>You are a historian with keyword knowledge</td>
+    <td>prompt.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0148'><span class='test-square' style='background-color: #3498db;'>T0148</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/zettelkatalog/">zettelkatalog</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff5050;'>anthropic</span></td>
+    <td><span class='test-rectangle' style='background-color: #f1c40f;'>claude-sonnet-4-20250514</span></td>
+    <td>Document</td>
+    <td>0.0</td>
+    <td>You are a historian with keyword knowledge</td>
+    <td>prompt.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0149'><span class='test-square' style='background-color: #8e44ad;'>T0149</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/zettelkatalog/">zettelkatalog</a></td>
+    <td><span class='test-rectangle' style='background-color: #ffcc33;'>genai</span></td>
+    <td><span class='test-rectangle' style='background-color: #2ecc71;'>gemini-1.5-flash</span></td>
+    <td>Document</td>
+    <td>0.0</td>
+    <td>You are a historian with keyword knowledge</td>
+    <td>prompt.txt</td>
+    <td>true</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0150'><span class='test-square' style='background-color: #ff33cc;'>T0150</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/zettelkatalog/">zettelkatalog</a></td>
+    <td><span class='test-rectangle' style='background-color: #ffcc33;'>genai</span></td>
+    <td><span class='test-rectangle' style='background-color: #3399ff;'>gemini-1.5-pro</span></td>
+    <td>Document</td>
+    <td>0.0</td>
+    <td>You are a historian with keyword knowledge</td>
+    <td>prompt.txt</td>
+    <td>true</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0151'><span class='test-square' style='background-color: #ffcc00;'>T0151</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/zettelkatalog/">zettelkatalog</a></td>
+    <td><span class='test-rectangle' style='background-color: #ffcc33;'>genai</span></td>
+    <td><span class='test-rectangle' style='background-color: #f39c12;'>gemini-2.0-flash</span></td>
+    <td>Document</td>
+    <td>0.0</td>
+    <td>You are a historian with keyword knowledge</td>
+    <td>prompt.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0152'><span class='test-square' style='background-color: #0099ff;'>T0152</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/zettelkatalog/">zettelkatalog</a></td>
+    <td><span class='test-rectangle' style='background-color: #ffcc33;'>genai</span></td>
+    <td><span class='test-rectangle' style='background-color: #ff0033;'>gemini-2.0-flash-lite</span></td>
+    <td>Document</td>
+    <td>0.0</td>
+    <td>You are a historian with keyword knowledge</td>
+    <td>prompt.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0153'><span class='test-square' style='background-color: #ff6600;'>T0153</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/zettelkatalog/">zettelkatalog</a></td>
+    <td><span class='test-rectangle' style='background-color: #ffcc33;'>genai</span></td>
+    <td><span class='test-rectangle' style='background-color: #7f8c8d;'>gemini-2.0-pro-exp-02-05</span></td>
+    <td>Document</td>
+    <td>0.0</td>
+    <td>You are a historian with keyword knowledge</td>
+    <td>prompt.txt</td>
+    <td>true</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0154'><span class='test-square' style='background-color: #ff3366;'>T0154</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/zettelkatalog/">zettelkatalog</a></td>
+    <td><span class='test-rectangle' style='background-color: #ffcc33;'>genai</span></td>
+    <td><span class='test-rectangle' style='background-color: #ff0099;'>gemini-2.5-flash-preview-04-17</span></td>
+    <td>Document</td>
+    <td>0.0</td>
+    <td>You are a historian with keyword knowledge</td>
+    <td>prompt.txt</td>
+    <td>true</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0155'><span class='test-square' style='background-color: #ff5733;'>T0155</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/zettelkatalog/">zettelkatalog</a></td>
+    <td><span class='test-rectangle' style='background-color: #ffcc33;'>genai</span></td>
+    <td><span class='test-rectangle' style='background-color: #e67e22;'>gemini-2.5-pro</span></td>
+    <td>Document</td>
+    <td>0.0</td>
+    <td>You are a historian with keyword knowledge</td>
+    <td>prompt.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0156'><span class='test-square' style='background-color: #00ff66;'>T0156</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/zettelkatalog/">zettelkatalog</a></td>
+    <td><span class='test-rectangle' style='background-color: #ffcc33;'>genai</span></td>
+    <td><span class='test-rectangle' style='background-color: #e74c3c;'>gemini-2.5-pro-exp-03-25</span></td>
+    <td>Document</td>
+    <td>0.0</td>
+    <td>You are a historian with keyword knowledge</td>
+    <td>prompt.txt</td>
+    <td>true</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0157'><span class='test-square' style='background-color: #cc33ff;'>T0157</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/zettelkatalog/">zettelkatalog</a></td>
+    <td><span class='test-rectangle' style='background-color: #ffcc33;'>genai</span></td>
+    <td><span class='test-rectangle' style='background-color: #00ff99;'>gemini-2.5-pro-preview-05-06</span></td>
+    <td>Document</td>
+    <td>0.0</td>
+    <td>You are a historian with keyword knowledge</td>
+    <td>prompt.txt</td>
+    <td>true</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0158'><span class='test-square' style='background-color: #ffcc00;'>T0158</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/zettelkatalog/">zettelkatalog</a></td>
+    <td><span class='test-rectangle' style='background-color: #ffcc33;'>genai</span></td>
+    <td><span class='test-rectangle' style='background-color: #9b59b6;'>gemini-exp-1206</span></td>
+    <td>Document</td>
+    <td>0.0</td>
+    <td>You are a historian with keyword knowledge</td>
+    <td>prompt.txt</td>
+    <td>true</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0159'><span class='test-square' style='background-color: #ff99cc;'>T0159</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/zettelkatalog/">zettelkatalog</a></td>
+    <td><span class='test-rectangle' style='background-color: #f1c40f;'>mistral</span></td>
+    <td><span class='test-rectangle' style='background-color: #34495e;'>pixtral-large-latest</span></td>
+    <td>Document</td>
+    <td>0.0</td>
+    <td>You are a historian with keyword knowledge</td>
+    <td>prompt.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0160'><span class='test-square' style='background-color: #2c3e50;'>T0160</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/zettelkatalog/">zettelkatalog</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff0066;'>openai</span></td>
+    <td><span class='test-rectangle' style='background-color: #2980b9;'>gpt-4.1</span></td>
+    <td>Document</td>
+    <td>0.0</td>
+    <td>You are a historian with keyword knowledge</td>
+    <td>prompt.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0161'><span class='test-square' style='background-color: #d35400;'>T0161</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/zettelkatalog/">zettelkatalog</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff0066;'>openai</span></td>
+    <td><span class='test-rectangle' style='background-color: #9b59b6;'>gpt-4.1-mini</span></td>
+    <td>Document</td>
+    <td>0.0</td>
+    <td>You are a historian with keyword knowledge</td>
+    <td>prompt.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0162'><span class='test-square' style='background-color: #66ff33;'>T0162</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/zettelkatalog/">zettelkatalog</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff0066;'>openai</span></td>
+    <td><span class='test-rectangle' style='background-color: #ffcc33;'>gpt-4.1-nano</span></td>
+    <td>Document</td>
+    <td>0.0</td>
+    <td>You are a historian with keyword knowledge</td>
+    <td>prompt.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0163'><span class='test-square' style='background-color: #34495e;'>T0163</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/zettelkatalog/">zettelkatalog</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff0066;'>openai</span></td>
+    <td><span class='test-rectangle' style='background-color: #9b59b6;'>gpt-4.5-preview</span></td>
+    <td>Document</td>
+    <td>0.0</td>
+    <td>You are a historian with keyword knowledge</td>
+    <td>prompt.txt</td>
+    <td>true</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0164'><span class='test-square' style='background-color: #ff0066;'>T0164</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/zettelkatalog/">zettelkatalog</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff0066;'>openai</span></td>
+    <td><span class='test-rectangle' style='background-color: #34495e;'>gpt-4o-mini</span></td>
+    <td>Document</td>
+    <td>0.0</td>
+    <td>You are a historian with keyword knowledge</td>
+    <td>prompt.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0165'><span class='test-square' style='background-color: #ccff00;'>T0165</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/zettelkatalog/">zettelkatalog</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff0066;'>openai</span></td>
+    <td><span class='test-rectangle' style='background-color: #ff9933;'>gpt-5</span></td>
+    <td>Document</td>
+    <td>0.0</td>
+    <td>You are a historian with keyword knowledge</td>
+    <td>prompt.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0166'><span class='test-square' style='background-color: #9966ff;'>T0166</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/zettelkatalog/">zettelkatalog</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff0066;'>openai</span></td>
+    <td><span class='test-rectangle' style='background-color: #8e44ad;'>gpt-5-mini</span></td>
+    <td>Document</td>
+    <td>0.0</td>
+    <td>You are a historian with keyword knowledge</td>
+    <td>prompt.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0167'><span class='test-square' style='background-color: #ff5733;'>T0167</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/zettelkatalog/">zettelkatalog</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff0066;'>openai</span></td>
+    <td><span class='test-rectangle' style='background-color: #ff33cc;'>gpt-5-nano</span></td>
+    <td>Document</td>
+    <td>0.0</td>
+    <td>You are a historian with keyword knowledge</td>
+    <td>prompt.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0168'><span class='test-square' style='background-color: #ff0066;'>T0168</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/zettelkatalog/">zettelkatalog</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff0066;'>openai</span></td>
+    <td><span class='test-rectangle' style='background-color: #2980b9;'>o3</span></td>
+    <td>Document</td>
+    <td>0.0</td>
+    <td>You are a historian with keyword knowledge</td>
+    <td>prompt.txt</td>
+    <td>false</td>
+</tr>
 
   </tbody>
 </table>
