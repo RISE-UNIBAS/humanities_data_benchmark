@@ -25,7 +25,7 @@ This benchmark was created by [Gabriel Müller](https://github.com/gbmllr1) at B
 - **Language**: German, Latin
 - **Format**: Mixed
 - **Link**: https://ub.unibas.ch/cmsdata/spezialkataloge/ipac/searchform.php?KatalogID=ak2
-- **License**: [License information for the dataset]
+- **License**: CC0
 
 ### Contents
 The dataset contains 263 images of index cards describing historical dissertations. Each image corresponds to one card and one dissertation. It is a random sample out of the ~600'000 dissertations collected by Basel University Library in the time period before 1980. The original works come predominantly from Switzerland and neighboring countries, but some may come from anywhere in the world.
