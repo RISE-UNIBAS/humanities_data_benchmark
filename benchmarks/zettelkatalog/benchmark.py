@@ -85,7 +85,15 @@ class Zettelkatalog(Benchmark):
         # Get all unique keys from both datasets
         all_keys = set(response_keys + gt_keys)
         
+        # Filter out parent keys when child keys exist
+        filtered_keys = []
         for key in all_keys:
+            # Check if this key has any children in the key set
+            has_children = any(other_key.startswith(key + '.') for other_key in all_keys if other_key != key)
+            if not has_children:
+                filtered_keys.append(key)
+        
+        for key in filtered_keys:
             response_value = get_nested_value(data, key)
             gt_value = get_nested_value(ground_truth_data, key)
             
