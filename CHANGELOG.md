@@ -24,6 +24,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - T0165 on 2025-09-02
 - T0166 on 2025-09-02
 - 
+- T0151 on 2025-09-02
+- T0152 on 2025-09-02
+- T0155 on 2025-09-02
 ## [v0.2.0] - 2025-08-31
 
 ### Added

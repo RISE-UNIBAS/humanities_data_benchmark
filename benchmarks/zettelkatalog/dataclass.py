@@ -1,6 +1,6 @@
 from __future__ import annotations
 from dataclasses import dataclass, field
-from typing import List, Optional, Literal
+from typing import List, Optional, Literal, Union
 from pydantic import BaseModel
 
 
@@ -18,12 +18,13 @@ class Author:
 @dataclass
 class Publication:
     title: str
-    year: int
+    year: Union[int, str]  # Can be either int or string
     place: Optional[str] = None
     pages: Optional[str] = None
     publisher: Optional[str] = None
     format: Optional[str] = None
     reprint_note: Optional[str] = None
+    editor: Optional[str] = None  # Missing field found in ground truth
 
 
 @dataclass

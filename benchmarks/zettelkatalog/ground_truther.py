@@ -457,7 +457,7 @@ class MetadataEditor:
                 "execution_time": datetime.datetime.now().isoformat(),
                 "response_text": {
                     "type": {
-                        "type": ""  # Literal["Dissertation or thesis", "Other"]
+                        "type": ""  # Literal["Dissertation or thesis", "Reference"]
                     },
                     "author": {
                         "last_name": "",
@@ -466,21 +466,15 @@ class MetadataEditor:
                     "publication": {
                         "title": "",
                         "year": 0,
-                        "place": "",
-                        "pages": "",
-                        "publisher": "",
-                        "format": "",
-                        "reprint_note": ""
+                        "place": None,
+                        "pages": None,
+                        "publisher": None,
+                        "format": None,
+                        "reprint_note": None,
+                        "editor": None
                     },
-                    "examination": {
-                        "place": "",
-                        "year": 0
-                    },
-                    "library_reference": {
-                        "shelfmark": "",
-                        "publication_number": "",
-                        "subjects": ""
-                    }
+                    "examination": "",
+                    "library_reference": ""
                 },
                 "scores": {}
             }
@@ -722,7 +716,7 @@ class MetadataEditor:
             # Initialize type structure if needed
             if "type" not in self.json_data["response_text"]:
                 self.json_data["response_text"]["type"] = {
-                    "type": ""  # Literal["Dissertation or thesis", "Other"]
+                    "type": ""  # Literal["Dissertation or thesis", "Reference"]
                 }
                 
             # Initialize author structure if needed
@@ -744,13 +738,13 @@ class MetadataEditor:
                     "reprint_note": None
                 }
                 
-            # Initialize examination structure if needed
+            # Initialize examination structure if needed (can be string, dict, or None)
             if "examination" not in self.json_data["response_text"]:
-                self.json_data["response_text"]["examination"] = None
+                self.json_data["response_text"]["examination"] = ""
             
-            # Initialize library_reference structure if needed
+            # Initialize library_reference structure if needed (can be string, dict, or None)
             if "library_reference" not in self.json_data["response_text"]:
-                self.json_data["response_text"]["library_reference"] = None
+                self.json_data["response_text"]["library_reference"] = ""
                 
             # Clear existing form elements
             for widget in self.scrollable_frame.winfo_children():
@@ -784,7 +778,7 @@ class MetadataEditor:
                     "execution_time": datetime.datetime.now().isoformat(),
                     "response_text": {
                         "type": {
-                            "type": ""  # Literal["Dissertation or thesis", "Other"]
+                            "type": ""  # Literal["Dissertation or thesis", "Reference"]
                         },
 
                         "author": {
@@ -794,21 +788,15 @@ class MetadataEditor:
                         "publication": {
                             "title": "",
                             "year": 0,
-                            "place": "",
-                            "pages": "",
-                            "publisher": "",
-                            "format": "",
-                            "reprint_note": ""
+                            "place": None,
+                            "pages": None,
+                            "publisher": None,
+                            "format": None,
+                            "reprint_note": None,
+                            "editor": None
                         },
-                        "examination": {
-                            "place": "",
-                            "year": 0
-                        },
-                        "library_reference": {
-                            "shelfmark": "",
-                            "publication_number": "",
-                            "subjects": ""
-                        }
+                        "examination": "",
+                        "library_reference": ""
                     },
                     "scores": {}
                 }
@@ -836,7 +824,7 @@ class MetadataEditor:
             "execution_time": datetime.datetime.now().isoformat(),
             "response_text": {
                 "type": {
-                    "type": ""  # Literal["Dissertation or thesis", "Other"]
+                    "type": ""  # Literal["Dissertation or thesis", "Reference"]
                 },
                 "author": {
                     "last_name": "",
@@ -1011,7 +999,7 @@ class MetadataEditor:
                 
                 # Create a dropdown for type with allowed values
                 type_combo = ttk.Combobox(type_field_frame, textvariable=type_var, width=40)
-                type_combo['values'] = ("Dissertation or thesis", "Other")
+                type_combo['values'] = ("Dissertation or thesis", "Reference")
                 type_combo.pack(side=tk.LEFT, fill=tk.X, expand=True, padx=5)
                 
                 # Save the variable
@@ -1099,7 +1087,7 @@ class MetadataEditor:
                 
                 # Mark this path as the university list
                 self.form_elements[path] = {"type": "university_list", "path": path}
-            # Special handling for examination (singular, not a list in the new structure)
+            # Special handling for examination (can be string, dict, or None)
             elif path.endswith("examination") and isinstance(data, dict):
                 # We'll handle this as a single examination object
                 # Container for examination entry
@@ -1135,14 +1123,30 @@ class MetadataEditor:
                     return exam_entry
                 
                 # Create the examination entry with existing data
-                place = data.get("place", "")
-                year = data.get("year", 0)
+                place = data.get("place", "") or ""
+                year = data.get("year", 0) or 0
                 create_examination_entry(place=place, year=year)
                 
                 # Mark this path as the examination object
                 self.form_elements[path] = {"type": "examination_object", "path": path}
                 
-            # Special handling for library_reference
+            # Special handling for examination when it's a string
+            elif path.endswith("examination") and isinstance(data, str):
+                # Handle examination as a simple string field
+                frame = ttk.Frame(parent_frame)
+                frame.pack(fill=tk.X, pady=2)
+                
+                display_key = path.split('.')[-1] if path else ""
+                ttk.Label(frame, text=f"{display_key}:").pack(side=tk.LEFT, padx=5)
+                
+                var = tk.StringVar(value=data)
+                entry = ttk.Entry(frame, textvariable=var)
+                entry.pack(side=tk.LEFT, fill=tk.X, expand=True, padx=5)
+                
+                # Save the variable and its path
+                self.form_elements[path] = {"type": "string", "var": var, "path": path}
+            
+            # Special handling for library_reference when it's a dict
             elif path.endswith("library_reference") and isinstance(data, dict):
                 # We'll handle this as a single library_reference object
                 # Container for library_reference entry
@@ -1160,7 +1164,7 @@ class MetadataEditor:
                 shelfmark_frame = ttk.Frame(entry_frame)
                 shelfmark_frame.pack(fill=tk.X, pady=2)
                 ttk.Label(shelfmark_frame, text="Shelfmark:").pack(side=tk.LEFT, padx=5)
-                shelfmark_var = tk.StringVar(value=data.get("shelfmark", ""))
+                shelfmark_var = tk.StringVar(value=data.get("shelfmark", "") or "")
                 shelfmark_entry = ttk.Entry(shelfmark_frame, textvariable=shelfmark_var, width=30)
                 shelfmark_entry.pack(side=tk.LEFT, fill=tk.X, expand=True, padx=5)
                 
@@ -1168,7 +1172,7 @@ class MetadataEditor:
                 publication_number_frame = ttk.Frame(entry_frame)
                 publication_number_frame.pack(fill=tk.X, pady=2)
                 ttk.Label(publication_number_frame, text="publication_number:").pack(side=tk.LEFT, padx=5)
-                publication_number_var = tk.StringVar(value=data.get("publication_number", ""))
+                publication_number_var = tk.StringVar(value=data.get("publication_number", "") or "")
                 publication_number_entry = ttk.Entry(publication_number_frame, textvariable=publication_number_var, width=30)
                 publication_number_entry.pack(side=tk.LEFT, fill=tk.X, expand=True, padx=5)
                 
@@ -1176,7 +1180,7 @@ class MetadataEditor:
                 subjects_frame = ttk.Frame(entry_frame)
                 subjects_frame.pack(fill=tk.X, pady=2)
                 ttk.Label(subjects_frame, text="Subjects:").pack(side=tk.LEFT, padx=5)
-                subjects_var = tk.StringVar(value=data.get("subjects", ""))
+                subjects_var = tk.StringVar(value=data.get("subjects", "") or "")
                 subjects_entry = ttk.Entry(subjects_frame, textvariable=subjects_var, width=30)
                 subjects_entry.pack(side=tk.LEFT, fill=tk.X, expand=True, padx=5)
                 
@@ -1190,6 +1194,22 @@ class MetadataEditor:
                 
                 # Mark this path as the library_reference object
                 self.form_elements[path] = {"type": "library_reference_object", "path": path}
+            
+            # Special handling for library_reference when it's a string
+            elif path.endswith("library_reference") and isinstance(data, str):
+                # Handle library_reference as a simple string field
+                frame = ttk.Frame(parent_frame)
+                frame.pack(fill=tk.X, pady=2)
+                
+                display_key = path.split('.')[-1] if path else ""
+                ttk.Label(frame, text=f"{display_key}:").pack(side=tk.LEFT, padx=5)
+                
+                var = tk.StringVar(value=data)
+                entry = ttk.Entry(frame, textvariable=var)
+                entry.pack(side=tk.LEFT, fill=tk.X, expand=True, padx=5)
+                
+                # Save the variable and its path
+                self.form_elements[path] = {"type": "string", "var": var, "path": path}
             else:
                 # Generic list handling
                 for i, item in enumerate(data):
@@ -1311,15 +1331,13 @@ class MetadataEditor:
             except ValueError:
                 year = 0
                 
-            # Only add if we have a place (required field)
-            if place.strip():
-                # Ensure the examination object exists
-                if "examination" not in self.json_data["response_text"]:
-                    self.json_data["response_text"]["examination"] = {}
-                
-                # Update examination
-                self.json_data["response_text"]["examination"]["place"] = place
-                self.json_data["response_text"]["examination"]["year"] = year
+            # Ensure the examination object exists
+            if "examination" not in self.json_data["response_text"]:
+                self.json_data["response_text"]["examination"] = {}
+            
+            # Update examination (convert empty strings to None for optional fields)
+            self.json_data["response_text"]["examination"]["place"] = place if place.strip() else None
+            self.json_data["response_text"]["examination"]["year"] = year if year > 0 else None
         
         # Special handling for library_reference
         if hasattr(self, 'library_reference_entry') and self.library_reference_entry:
@@ -1333,10 +1351,10 @@ class MetadataEditor:
             if "library_reference" not in self.json_data["response_text"]:
                 self.json_data["response_text"]["library_reference"] = {}
             
-            # Update library_reference
-            self.json_data["response_text"]["library_reference"]["shelfmark"] = shelfmark
-            self.json_data["response_text"]["library_reference"]["publication_number"] = publication_number
-            self.json_data["response_text"]["library_reference"]["subjects"] = subjects
+            # Update library_reference (convert empty strings to None for optional fields)
+            self.json_data["response_text"]["library_reference"]["shelfmark"] = shelfmark if shelfmark.strip() else None
+            self.json_data["response_text"]["library_reference"]["publication_number"] = publication_number if publication_number.strip() else None
+            self.json_data["response_text"]["library_reference"]["subjects"] = subjects if subjects.strip() else None
         
         # Handle all other form elements based on their paths
         for path, element_info in self.form_elements.items():
@@ -1378,6 +1396,11 @@ class MetadataEditor:
                 # Extract just the part after response_text.
                 path_in_response = path[len("response_text."):]
                 path_parts = path_in_response.split('.')
+                
+                # Special handling for optional publication fields - convert empty strings to None
+                if len(path_parts) == 2 and path_parts[0] == "publication" and path_parts[1] in ["place", "pages", "publisher", "format", "reprint_note", "editor"]:
+                    if isinstance(value, str) and value.strip() == "":
+                        value = None
                 
                 # Navigate to the correct position in response_text
                 current = self.json_data["response_text"]
@@ -1558,6 +1581,12 @@ class MetadataEditor:
                         messagebox.showwarning("Using Temporary Output Directory", 
                                            f"Saving to temporary directory:\n{temp_output_dir}\n\n"
                                            f"It's recommended to configure a permanent output directory in the settings.")
+                else:
+                    # Auto-save mode - create temporary output directory without prompting
+                    temp_output_dir = os.path.join(os.getcwd(), "output")
+                    os.makedirs(temp_output_dir, exist_ok=True)
+                    output_path = os.path.join(temp_output_dir, json_filename)
+                    self.logger.info(f"Auto-save: No output directory configured, using temporary output directory: {temp_output_dir}")
                       
             # Create parent directory if it doesn't exist
             os.makedirs(os.path.dirname(output_path), exist_ok=True)
