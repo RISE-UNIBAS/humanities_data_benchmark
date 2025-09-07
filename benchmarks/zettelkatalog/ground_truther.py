@@ -7,7 +7,7 @@ import argparse
 import logging
 from typing import Dict, Any, List, Optional, Union
 import datetime
-from dataclass import Author, Publication, Examination, LibraryReference, Document, WorkType
+from dataclass import Author, Publication, LibraryReference, Document, WorkType
 
 class Config:
     def __init__(self, image_dir=None, json_dir=None, output_dir=None, prefix="request_T66_"):
@@ -473,7 +473,6 @@ class MetadataEditor:
                         "reprint_note": None,
                         "editor": None
                     },
-                    "examination": "",
                     "library_reference": ""
                 },
                 "scores": {}
@@ -737,10 +736,6 @@ class MetadataEditor:
                     "format": None,
                     "reprint_note": None
                 }
-                
-            # Initialize examination structure if needed (can be string, dict, or None)
-            if "examination" not in self.json_data["response_text"]:
-                self.json_data["response_text"]["examination"] = ""
             
             # Initialize library_reference structure if needed (can be string, dict, or None)
             if "library_reference" not in self.json_data["response_text"]:
@@ -795,7 +790,6 @@ class MetadataEditor:
                             "reprint_note": None,
                             "editor": None
                         },
-                        "examination": "",
                         "library_reference": ""
                     },
                     "scores": {}
@@ -838,10 +832,6 @@ class MetadataEditor:
                     "publisher": "",
                     "format": "",
                     "reprint_note": ""
-                },
-                "examination": {
-                    "place": "",
-                    "year": 0
                 },
                 "library_reference": {
                     "shelfmark": "",
@@ -896,18 +886,6 @@ class MetadataEditor:
         if subjects_match:
             repaired_data["response_text"]["library_reference"]["subjects"] = subjects_match.group(1).strip()
             
-        # Look for examination details
-        examination_place_match = re.search(r'"examination".*?"place".*?:"(.*?)"', json_text, re.DOTALL)
-        if examination_place_match:
-            repaired_data["response_text"]["examination"]["place"] = examination_place_match.group(1).strip()
-            
-        examination_year_match = re.search(r'"examination".*?"year".*?:(\d+)', json_text, re.DOTALL)
-        if examination_year_match:
-            try:
-                repaired_data["response_text"]["examination"]["year"] = int(examination_year_match.group(1))
-            except:
-                pass
-            
         # Log what we managed to extract
         self.logger.info(f"Extracted data from corrupted JSON: {repaired_data}")
         
@@ -921,7 +899,7 @@ class MetadataEditor:
         # This removes all ASCII control characters (0-31) except newline, tab, and carriage return
         cleaned_str = re.sub(r'[\x00-\x09\x0B\x0C\x0E-\x1F\x7F]', '', json_str)
         
-        # 2. Second approach: Character by character examination and removal
+        # 2. Second approach: Character by character analysis and removal
         result = []
         for char in cleaned_str:
             # Only keep characters that are valid in JSON
@@ -1087,64 +1065,6 @@ class MetadataEditor:
                 
                 # Mark this path as the university list
                 self.form_elements[path] = {"type": "university_list", "path": path}
-            # Special handling for examination (can be string, dict, or None)
-            elif path.endswith("examination") and isinstance(data, dict):
-                # We'll handle this as a single examination object
-                # Container for examination entry
-                exam_container = ttk.Frame(frame)
-                exam_container.pack(fill=tk.X, padx=5, pady=5)
-                
-                # Keep track of examination entries
-                self.examination_entries = []
-                
-                # Function to create examination entry
-                def create_examination_entry(place="", year=0):
-                    entry_frame = ttk.LabelFrame(exam_container, text="Examination")
-                    entry_frame.pack(fill=tk.X, pady=2)
-                    
-                    # Place field
-                    place_frame = ttk.Frame(entry_frame)
-                    place_frame.pack(fill=tk.X, pady=2)
-                    ttk.Label(place_frame, text="Place:").pack(side=tk.LEFT, padx=5)
-                    place_var = tk.StringVar(value=place)
-                    place_entry = ttk.Entry(place_frame, textvariable=place_var, width=30)
-                    place_entry.pack(side=tk.LEFT, fill=tk.X, expand=True, padx=5)
-                    
-                    # Year field
-                    year_frame = ttk.Frame(entry_frame)
-                    year_frame.pack(fill=tk.X, pady=2)
-                    ttk.Label(year_frame, text="Year:").pack(side=tk.LEFT, padx=5)
-                    year_var = tk.StringVar(value=str(year))
-                    year_entry = ttk.Entry(year_frame, textvariable=year_var, width=10)
-                    year_entry.pack(side=tk.LEFT, padx=5)
-                    
-                    exam_entry = {"frame": entry_frame, "location": place_var, "count": year_var}
-                    self.examination_entries.append(exam_entry)
-                    return exam_entry
-                
-                # Create the examination entry with existing data
-                place = data.get("place", "") or ""
-                year = data.get("year", 0) or 0
-                create_examination_entry(place=place, year=year)
-                
-                # Mark this path as the examination object
-                self.form_elements[path] = {"type": "examination_object", "path": path}
-                
-            # Special handling for examination when it's a string
-            elif path.endswith("examination") and isinstance(data, str):
-                # Handle examination as a simple string field
-                frame = ttk.Frame(parent_frame)
-                frame.pack(fill=tk.X, pady=2)
-                
-                display_key = path.split('.')[-1] if path else ""
-                ttk.Label(frame, text=f"{display_key}:").pack(side=tk.LEFT, padx=5)
-                
-                var = tk.StringVar(value=data)
-                entry = ttk.Entry(frame, textvariable=var)
-                entry.pack(side=tk.LEFT, fill=tk.X, expand=True, padx=5)
-                
-                # Save the variable and its path
-                self.form_elements[path] = {"type": "string", "var": var, "path": path}
             
             # Special handling for library_reference when it's a dict
             elif path.endswith("library_reference") and isinstance(data, dict):
@@ -1318,34 +1238,12 @@ class MetadataEditor:
         # We no longer have university_entries in the new data structure
         # so that part has been removed
         
-        # Special handling for examination - the new structure has a single examination
-        # rather than a list of examinations
-        if hasattr(self, 'examination_entries') and self.examination_entries:
-            # Get the first examination entry (since we now only have one examination)
-            exam_entry = self.examination_entries[0]
-            place = exam_entry["location"].get() if "location" in exam_entry else ""
-            year_str = exam_entry["count"].get() if "count" in exam_entry else "0"
-            
-            try:
-                year = int(year_str)
-            except ValueError:
-                year = 0
-                
-            # Ensure the examination object exists
-            if "examination" not in self.json_data["response_text"]:
-                self.json_data["response_text"]["examination"] = {}
-            
-            # Update examination (convert empty strings to None for optional fields)
-            self.json_data["response_text"]["examination"]["place"] = place if place.strip() else None
-            self.json_data["response_text"]["examination"]["year"] = year if year > 0 else None
-        
         # Special handling for library_reference
         if hasattr(self, 'library_reference_entry') and self.library_reference_entry:
             # Get the library reference entry
             shelfmark = self.library_reference_entry["shelfmark"].get() if "shelfmark" in self.library_reference_entry else ""
             publication_number = self.library_reference_entry["publication_number"].get() if "publication_number" in self.library_reference_entry else ""
             subjects = self.library_reference_entry["subjects"].get() if "subjects" in self.library_reference_entry else ""
-            
 
             # Ensure the library_reference object exists
             if "library_reference" not in self.json_data["response_text"]:
@@ -1359,7 +1257,7 @@ class MetadataEditor:
         # Handle all other form elements based on their paths
         for path, element_info in self.form_elements.items():
             # Skip specially handled types
-            if element_info.get("type") in ["work_type_object", "author_object", "university_list", "examinations_list", "examination_object", "library_reference_object"]:
+            if element_info.get("type") in ["work_type_object", "author_object", "university_list", "library_reference_object"]:
                 continue
                 
             # Get the variable and its value

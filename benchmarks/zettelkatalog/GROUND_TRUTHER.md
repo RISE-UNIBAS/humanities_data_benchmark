@@ -112,7 +112,7 @@ These settings can be changed at any time during your editing session. Click "Ap
 3. Edit the metadata in the form on the right
    - Text fields for simple data like title, type
    - Specialized editors for complex fields like author (first/last name)
-   - List editors for collections like examinations
+   - List editors for collections
    
 4. Save your edits with "Save JSON" button or Ctrl+S
    - Files are always saved to the output directory to protect originals
@@ -170,12 +170,6 @@ The tool works with JSON files that follow the structure defined in `dataclass.p
                 "secondary": "string",
                 "university": ["string", ...]
             },
-            "examinations": [
-                {
-                    "location": "string",
-                    "count": number
-                }
-            ],
             "final_exam_location": "string",
             "final_exam_date": "string"
         }

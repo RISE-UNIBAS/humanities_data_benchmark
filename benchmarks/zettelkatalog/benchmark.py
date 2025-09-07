@@ -85,11 +85,19 @@ class Zettelkatalog(Benchmark):
         # Get all unique keys from both datasets
         all_keys = set(response_keys + gt_keys)
         
+        # Filter out examination fields manually (for backward compatibility with old results)
+        filtered_keys_temp = []
+        for key in all_keys:
+            # Skip examination fields
+            if key.startswith('examination.') or key == 'examination':
+                continue
+            filtered_keys_temp.append(key)
+        
         # Filter out parent keys when child keys exist
         filtered_keys = []
-        for key in all_keys:
+        for key in filtered_keys_temp:
             # Check if this key has any children in the key set
-            has_children = any(other_key.startswith(key + '.') for other_key in all_keys if other_key != key)
+            has_children = any(other_key.startswith(key + '.') for other_key in filtered_keys_temp if other_key != key)
             if not has_children:
                 filtered_keys.append(key)
         
@@ -177,7 +185,12 @@ class Zettelkatalog(Benchmark):
         render += f"**True Positives:** {score['true_positives']}<br>"
         render += f"**False Positives:** {score['false_positives']}<br>"
         render += f"**False Negatives:** {score['false_negatives']}<br>"
-        render += f"**Total Fields:** {score['total_fields']}<br>"
+        
+        # Calculate filtered field count for display
+        field_scores = score.get('field_scores', {})
+        filtered_field_count = sum(1 for key in field_scores.keys() 
+                                 if not (key.startswith('examination.') or key == 'examination'))
+        render += f"**Total Fields:** {filtered_field_count}<br>"
 
         # Add link to raw result JSON file with model name
         request_name = f"request_{self.id}_{image_name}"
@@ -192,7 +205,16 @@ class Zettelkatalog(Benchmark):
 
         # Sort fields by key name for consistent ordering
         field_scores = score.get('field_scores', {})
-        sorted_fields = sorted(field_scores.items())
+        
+        # Filter out examination fields from rendering (for backward compatibility with old results)
+        filtered_field_scores = {}
+        for field_key, field_data in field_scores.items():
+            # Skip examination fields
+            if field_key.startswith('examination.') or field_key == 'examination':
+                continue
+            filtered_field_scores[field_key] = field_data
+        
+        sorted_fields = sorted(filtered_field_scores.items())
         
         for field_key, field_data in sorted_fields:
             response_value = field_data.get('response', 'None')

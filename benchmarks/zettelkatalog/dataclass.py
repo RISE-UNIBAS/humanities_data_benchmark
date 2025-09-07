@@ -28,12 +28,6 @@ class Publication:
 
 
 @dataclass
-class Examination:
-    place: Optional[str] = None
-    year: Optional[int] = None
-
-
-@dataclass
 class LibraryReference:
     shelfmark: Optional[str] = None
     publication_number: Optional[str] = None
@@ -45,5 +39,4 @@ class Document(BaseModel):
     type: WorkType
     author: Author
     publication: Publication
-    examination: Examination
     library_reference: LibraryReference
