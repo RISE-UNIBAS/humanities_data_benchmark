@@ -23,14 +23,12 @@ class Publication:
     pages: Optional[str] = None
     publisher: Optional[str] = None
     format: Optional[str] = None
-    reprint_note: Optional[str] = None
     editor: Optional[str] = None  # Missing field found in ground truth
 
 
 @dataclass
 class LibraryReference:
     shelfmark: Optional[str] = None
-    publication_number: Optional[str] = None
     subjects: Optional[str] = None
 
 

@@ -72,12 +72,10 @@ The ground truth is stored in JSON files with the following structure based on t
       "place": "string (optional)",
       "pages": "string (optional)", 
       "publisher": "string (optional)",
-      "format": "string (optional)",
-      "reprint_note": "string (optional)"
+      "format": "string (optional)"
     },
     "library_reference": {
       "shelfmark": "string (optional)",
-      "publication_number": "string (optional)",
       "subjects": "string (optional)"
     }
   },
@@ -92,8 +90,8 @@ The models are tasked with extracting bibliographic information from historical 
 **Key extraction requirements:**
 - **Type classification**: Determine if the card contains a full dissertation description or is merely a reference to another record
 - **Author information**: Extract first and last names of the thesis author
-- **Publication details**: Extract title, year, place, pages, publisher, format, and reprint notes where available
-- **Library reference**: Extract shelfmark, publication number, and subject classifications
+- **Publication details**: Extract title, year, place, pages, publisher, and format where available  
+- **Library reference**: Extract shelfmark and subject classifications
 
 **Expected output format sample:**
 ```json
@@ -106,12 +104,10 @@ The models are tasked with extracting bibliographic information from historical 
     "place": "Basel",
     "pages": "IV, 127",
     "publisher": "Helbing & Lichtenhahn",
-    "format": "8°",
-    "reprint_note": null
+    "format": "8°"
   },
   "library_reference": {
     "shelfmark": "Diss. Basel, 1924",
-    "publication_number": null,
     "subjects": "Geschichte"
   }
 }

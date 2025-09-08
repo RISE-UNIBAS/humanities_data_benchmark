@@ -85,11 +85,14 @@ class Zettelkatalog(Benchmark):
         # Get all unique keys from both datasets
         all_keys = set(response_keys + gt_keys)
         
-        # Filter out examination fields manually (for backward compatibility with old results)
+        # Filter out examination fields and removed fields manually (for backward compatibility with old results)
         filtered_keys_temp = []
         for key in all_keys:
             # Skip examination fields
             if key.startswith('examination.') or key == 'examination':
+                continue
+            # Skip removed fields
+            if key == 'publication.reprint_note' or key == 'library_reference.publication_number':
                 continue
             filtered_keys_temp.append(key)
         
@@ -189,7 +192,8 @@ class Zettelkatalog(Benchmark):
         # Calculate filtered field count for display
         field_scores = score.get('field_scores', {})
         filtered_field_count = sum(1 for key in field_scores.keys() 
-                                 if not (key.startswith('examination.') or key == 'examination'))
+                                 if not (key.startswith('examination.') or key == 'examination' or 
+                                        key == 'publication.reprint_note' or key == 'library_reference.publication_number'))
         render += f"**Total Fields:** {filtered_field_count}<br>"
 
         # Add link to raw result JSON file with model name
@@ -206,11 +210,14 @@ class Zettelkatalog(Benchmark):
         # Sort fields by key name for consistent ordering
         field_scores = score.get('field_scores', {})
         
-        # Filter out examination fields from rendering (for backward compatibility with old results)
+        # Filter out examination fields and removed fields from rendering (for backward compatibility with old results)
         filtered_field_scores = {}
         for field_key, field_data in field_scores.items():
             # Skip examination fields
             if field_key.startswith('examination.') or field_key == 'examination':
+                continue
+            # Skip removed fields
+            if field_key == 'publication.reprint_note' or field_key == 'library_reference.publication_number':
                 continue
             filtered_field_scores[field_key] = field_data
         
