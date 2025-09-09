@@ -159,8 +159,8 @@ def create_leaderboard_radar_chart(leaderboard_data):
     top_models = leaderboard_data[:6]
     
     # Categories for the radar chart
-    categories = ['bibliographic_data', 'fraktur', 'metadata_extraction']
-    category_labels = ['Bibliographic Data', 'Fraktur', 'Metadata Extraction']
+    categories = ['bibliographic_data', 'fraktur', 'metadata_extraction', 'zettelkatalog']
+    category_labels = ['Bibliographic Data', 'Fraktur', 'Metadata Extraction', 'Zettelkatalog']
     
     # Chart dimensions
     size = 400
@@ -275,7 +275,7 @@ def create_leaderboard():
     """Create a leaderboard section showing global averages for each model across key benchmarks."""
     
     # Target benchmarks for global average calculation
-    target_benchmarks = ['bibliographic_data', 'fraktur', 'metadata_extraction']
+    target_benchmarks = ['bibliographic_data', 'fraktur', 'metadata_extraction', 'zettelkatalog']
     
     # Dictionary to store model scores: {model_name: {benchmark: [scores], provider: provider_name}}
     model_scores = {}
@@ -330,6 +330,9 @@ def create_leaderboard():
             elif benchmark == 'metadata_extraction':
                 # Use f1_micro for metadata_extraction
                 score = scoring_data.get('f1_micro')
+            elif benchmark == 'zettelkatalog':
+                # Use f1_micro for zettelkatalog
+                score = scoring_data.get('f1_micro')
             
             if score is not None:
                 try:
@@ -354,7 +357,7 @@ def create_leaderboard():
             else:
                 benchmark_averages[benchmark_name] = None
         
-        # Only include models that have results for all three benchmarks
+        # Only include models that have results for all four benchmarks
         if benchmark_count == len(target_benchmarks):
             global_average = total_score / benchmark_count
             provider_name = provider_mappings.get(benchmarks.get('provider', '').lower(), benchmarks.get('provider', 'Unknown'))
@@ -364,7 +367,8 @@ def create_leaderboard():
                 'global_avg': global_average,
                 'bibliographic_data': benchmark_averages['bibliographic_data'],
                 'fraktur': benchmark_averages['fraktur'],
-                'metadata_extraction': benchmark_averages['metadata_extraction']
+                'metadata_extraction': benchmark_averages['metadata_extraction'],
+                'zettelkatalog': benchmark_averages['zettelkatalog']
             })
     
     # Sort by global average (highest first)
@@ -384,6 +388,7 @@ def create_leaderboard():
 <th onclick="sortTable(3)" style="cursor: pointer;"><a href="benchmarks/bibliographic_data/" style="color: inherit; text-decoration: none;">bibliographic_data</a> ↕</th>
 <th onclick="sortTable(4)" style="cursor: pointer;"><a href="benchmarks/fraktur/" style="color: inherit; text-decoration: none;">fraktur</a> ↕</th>
 <th onclick="sortTable(5)" style="cursor: pointer;"><a href="benchmarks/metadata_extraction/" style="color: inherit; text-decoration: none;">metadata_extraction</a> ↕</th>
+<th onclick="sortTable(6)" style="cursor: pointer;"><a href="benchmarks/zettelkatalog/" style="color: inherit; text-decoration: none;">zettelkatalog</a> ↕</th>
 </tr>
 </thead>
 <tbody>'''
@@ -395,12 +400,14 @@ def create_leaderboard():
         biblio_badge = get_badge("fuzzy", f"{data['bibliographic_data']:.3f}") if data['bibliographic_data'] is not None else "N/A"
         fraktur_badge = get_badge("fuzzy", f"{data['fraktur']:.3f}") if data['fraktur'] is not None else "N/A"
         metadata_badge = get_badge("f1_micro", f"{data['metadata_extraction']:.3f}") if data['metadata_extraction'] is not None else "N/A"
+        zettelkatalog_badge = get_badge("f1_micro", f"{data['zettelkatalog']:.3f}") if data['zettelkatalog'] is not None else "N/A"
         
         biblio_sort = f'{data["bibliographic_data"]:.3f}' if data["bibliographic_data"] is not None else "0"
         fraktur_sort = f'{data["fraktur"]:.3f}' if data["fraktur"] is not None else "0"  
         metadata_sort = f'{data["metadata_extraction"]:.3f}' if data["metadata_extraction"] is not None else "0"
+        zettelkatalog_sort = f'{data["zettelkatalog"]:.3f}' if data["zettelkatalog"] is not None else "0"
         
-        leaderboard_html += f'<tr><td data-sort="{data["model"]}">{model_html}</td><td data-sort="{data["provider"]}">{provider_html}</td><td data-sort="{data["global_avg"]:.3f}">{global_avg_badge}</td><td data-sort="{biblio_sort}">{biblio_badge}</td><td data-sort="{fraktur_sort}">{fraktur_badge}</td><td data-sort="{metadata_sort}">{metadata_badge}</td></tr>'
+        leaderboard_html += f'<tr><td data-sort="{data["model"]}">{model_html}</td><td data-sort="{data["provider"]}">{provider_html}</td><td data-sort="{data["global_avg"]:.3f}">{global_avg_badge}</td><td data-sort="{biblio_sort}">{biblio_badge}</td><td data-sort="{fraktur_sort}">{fraktur_badge}</td><td data-sort="{metadata_sort}">{metadata_badge}</td><td data-sort="{zettelkatalog_sort}">{zettelkatalog_badge}</td></tr>'
     
     leaderboard_html += '''</tbody>
 </table>
@@ -568,7 +575,7 @@ def create_index():
                 score_value = 0
                 if benchmark == 'bibliographic_data' or benchmark == 'fraktur':
                     score_value = scoring_data.get('fuzzy', 0)
-                elif benchmark == 'metadata_extraction':
+                elif benchmark == 'metadata_extraction' or benchmark == 'zettelkatalog':
                     score_value = scoring_data.get('f1_micro', 0)
                 
                 try:
@@ -588,6 +595,10 @@ def create_index():
                         badges.append(get_badge('fuzzy', scoring_data['fuzzy']))
                 elif benchmark == 'metadata_extraction':
                     # Only show f1_micro for metadata_extraction
+                    if 'f1_micro' in scoring_data:
+                        badges.append(get_badge('f1_micro', scoring_data['f1_micro']))
+                elif benchmark == 'zettelkatalog':
+                    # Only show f1_micro for zettelkatalog
                     if 'f1_micro' in scoring_data:
                         badges.append(get_badge('f1_micro', scoring_data['f1_micro']))
                 else:
@@ -657,12 +668,12 @@ results, and comparisons.
 
 ## Leaderboard
 
-The table below shows the **global average performance** of each model across the three core benchmarks: 
-[bibliographic_data](benchmarks/bibliographic_data/), [fraktur](benchmarks/fraktur/), and [metadata_extraction](benchmarks/metadata_extraction/). Only models with results in all three benchmarks are included. Click on any column header to sort the table.
+The table below shows the **global average performance** of each model across the four core benchmarks: 
+[bibliographic_data](benchmarks/bibliographic_data/), [fraktur](benchmarks/fraktur/), [metadata_extraction](benchmarks/metadata_extraction/), and [zettelkatalog](benchmarks/zettelkatalog/). Only models with results in all four benchmarks are included. Click on any column header to sort the table.
 
 {leaderboard_html}
 
-The following radar chart shows the performance distribution of top models across the three core benchmarks:
+The following radar chart shows the performance distribution of top models across the four core benchmarks:
 
 {radar_chart_html}
 
