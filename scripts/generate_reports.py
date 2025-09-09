@@ -4,6 +4,9 @@ import csv
 import re
 import logging
 import math
+import matplotlib.pyplot as plt
+import numpy as np
+from datetime import datetime
 
 from data_loader import write_file, read_file
 from report_helper import get_square, create_html_table, get_rectangle, get_badge
@@ -151,125 +154,99 @@ def create_individual_reports():
 
 
 def create_leaderboard_radar_chart(leaderboard_data):
-    """Create an HTML/SVG radar chart for the top performing models in the leaderboard."""
+    """Create a radar chart image for the top performing models in the leaderboard."""
     if not leaderboard_data:
         return "<p>No leaderboard data available for radar chart.</p>"
     
-    # Take top 6 models for better readability
-    top_models = leaderboard_data[:6]
+    # Take top 10 models for better readability
+    top_models = leaderboard_data[:10]
     
     # Categories for the radar chart
     categories = ['bibliographic_data', 'fraktur', 'metadata_extraction', 'zettelkatalog']
     category_labels = ['Bibliographic Data', 'Fraktur', 'Metadata Extraction', 'Zettelkatalog']
     
-    # Chart dimensions
-    size = 400
-    # Adjust center to provide more space for labels on the left
-    center_x, center_y = size // 2 + 80, size // 2
-    radius = 150
+    # Number of variables
+    N = len(categories)
     
-    # Color palette for models
-    colors = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd', '#8c564b']
+    # Compute angle for each axis
+    angles = [n / float(N) * 2 * np.pi for n in range(N)]
+    angles += angles[:1]  # Complete the circle
     
-    # Calculate angles for each category (starting from top)
-    angles = []
-    for i in range(len(categories)):
-        angle = (i * 2 * math.pi / len(categories)) - (math.pi / 2)  # Start from top
-        angles.append(angle)
+    # Create the plot with better styling
+    plt.style.use('default')
+    fig, ax = plt.subplots(figsize=(12, 10), subplot_kw=dict(projection='polar'))
+    fig.patch.set_facecolor('white')
     
-    # Start building SVG
-    svg_content = f'''<div style="text-align: center; margin: 20px 0;">
-<svg width="{size + 300}" height="{size + 100}" xmlns="http://www.w3.org/2000/svg">
-    <!-- Background -->
-    <rect width="100%" height="100%" fill="white"/>
+    # Extended color palette for 10 models with better contrast
+    colors = ['#2E86AB', '#A23B72', '#F18F01', '#C73E1D', '#592E83', 
+              '#0D7377', '#14A085', '#7209B7', '#B08D57', '#E74C3C']
+    line_styles = ['-', '--', '-.', ':', '-', '--', '-.', ':', '-', '--']
     
-    <!-- Grid circles -->'''
+    # Customize grid appearance
+    ax.set_ylim(0, 1)
+    ax.set_yticks([0.2, 0.4, 0.6, 0.8, 1.0])
+    ax.set_yticklabels(['0.2', '0.4', '0.6', '0.8', '1.0'], fontsize=10, alpha=0.7)
+    ax.grid(True, alpha=0.4, linewidth=0.8)
+    ax.set_facecolor('#fafafa')
     
-    # Add concentric circles for scale
-    for scale in [0.2, 0.4, 0.6, 0.8, 1.0]:
-        circle_radius = radius * scale
-        svg_content += f'''
-    <circle cx="{center_x}" cy="{center_y}" r="{circle_radius}" 
-            fill="none" stroke="#e0e0e0" stroke-width="1"/>
-    <text x="{center_x + circle_radius + 5}" y="{center_y}" 
-          fill="#666" font-size="10" alignment-baseline="middle">{scale}</text>'''
-    
-    # Add axis lines and labels
-    for i, (angle, label) in enumerate(zip(angles, category_labels)):
-        end_x = center_x + radius * math.cos(angle)
-        end_y = center_y + radius * math.sin(angle)
-        
-        # Axis line
-        svg_content += f'''
-    <line x1="{center_x}" y1="{center_y}" x2="{end_x}" y2="{end_y}" 
-          stroke="#ccc" stroke-width="1"/>'''
-        
-        # Label positioning
-        label_offset = 25
-        label_x = center_x + (radius + label_offset) * math.cos(angle)
-        label_y = center_y + (radius + label_offset) * math.sin(angle)
-        
-        # Adjust text anchor based on position
-        anchor = "middle"
-        if label_x < center_x - 10:
-            anchor = "end"
-        elif label_x > center_x + 10:
-            anchor = "start"
-            
-        svg_content += f'''
-    <text x="{label_x}" y="{label_y}" fill="#333" font-size="11" font-weight="bold"
-          text-anchor="{anchor}" alignment-baseline="middle">{label}</text>'''
-    
-    # Plot each model
+    # Plot each model with improved styling
     for i, model_data in enumerate(top_models):
-        color = colors[i % len(colors)]
-        
-        # Calculate points for this model
-        points = []
-        for j, category in enumerate(categories):
+        if i >= len(colors):
+            break
+            
+        # Get values for this model
+        values = []
+        for category in categories:
             value = model_data[category]
             if value is not None:
-                point_radius = radius * value
-                point_x = center_x + point_radius * math.cos(angles[j])
-                point_y = center_y + point_radius * math.sin(angles[j])
-                points.append(f"{point_x},{point_y}")
+                values.append(value)
+            else:
+                values.append(0)
         
-        if len(points) == len(categories):
-            # Create polygon for the model
-            points_str = " ".join(points)
-            svg_content += f'''
-    <polygon points="{points_str}" fill="{color}" fill-opacity="0.1" 
-             stroke="{color}" stroke-width="2"/>'''
-            
-            # Add dots at each point
-            for point in points:
-                x, y = point.split(',')
-                svg_content += f'''
-    <circle cx="{x}" cy="{y}" r="3" fill="{color}"/>'''
-    
-    # Add legend
-    legend_start_x = size + 120
-    legend_start_y = 50
-    
-    svg_content += f'''
-    <text x="{legend_start_x}" y="{legend_start_y - 10}" fill="#333" 
-          font-size="12" font-weight="bold">Models:</text>'''
-    
-    for i, model_data in enumerate(top_models):
-        color = colors[i % len(colors)]
-        legend_y = legend_start_y + i * 25
+        values += values[:1]  # Complete the circle
         
-        svg_content += f'''
-    <rect x="{legend_start_x}" y="{legend_y - 8}" width="15" height="15" 
-          fill="{color}" fill-opacity="0.3" stroke="{color}" stroke-width="2"/>
-    <text x="{legend_start_x + 20}" y="{legend_y}" fill="#333" font-size="11" 
-          alignment-baseline="middle">{model_data['model']}</text>'''
+        # Plot with improved styling
+        ax.plot(angles, values, 'o', linewidth=3, label=model_data['model'], 
+                color=colors[i], linestyle=line_styles[i], markersize=8, 
+                markerfacecolor='white', markeredgecolor=colors[i], markeredgewidth=2)
+        ax.fill(angles, values, alpha=0.1, color=colors[i])
     
-    svg_content += '''
-</svg>
-</div>'''
+    # Add category labels with better formatting
+    ax.set_xticks(angles[:-1])
+    ax.set_xticklabels(category_labels, fontsize=12, fontweight='bold', color='#333333')
     
-    return svg_content
+    # Remove radial labels at 0 degrees to reduce clutter
+    ax.set_rlabel_position(45)
+    
+    # Add legend with better positioning and styling
+    legend = plt.legend(loc='center left', bbox_to_anchor=(1.15, 0.5), fontsize=11, 
+                       frameon=True, fancybox=True, shadow=True, framealpha=0.9)
+    legend.get_frame().set_facecolor('white')
+    legend.get_frame().set_edgecolor('#cccccc')
+    
+    # Set title with better styling
+    plt.title('Model Performance Across Benchmarks', size=16, fontweight='bold', 
+              color='#2c3e50', y=1.12, pad=20)
+    
+    # Add subtitle
+    plt.figtext(0.5, 0.93, 'Comparison of Top 10 Models', ha='center', va='top', 
+                fontsize=12, alpha=0.8, style='italic')
+    
+    # Add generation date with better styling
+    generation_date = datetime.now().strftime('%Y-%m-%d %H:%M:%S UTC')
+    plt.figtext(0.99, 0.02, f'Generated: {generation_date}', 
+                ha='right', va='bottom', fontsize=9, alpha=0.6, 
+                bbox=dict(boxstyle='round,pad=0.3', facecolor='white', alpha=0.8))
+    
+    # Save the plot with higher quality
+    chart_path = os.path.join(REPORTS_DIR, 'radar_chart.png')
+    plt.tight_layout()
+    plt.savefig(chart_path, dpi=200, bbox_inches='tight', facecolor='white', 
+                edgecolor='none', pad_inches=0.2)
+    plt.close()
+    
+    # Return HTML to embed the image
+    return f'<div style="text-align: center; margin: 20px 0;"><img src="radar_chart.png" alt="Radar Chart" style="max-width: 100%; height: auto; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);"></div>'
 
 
 def create_leaderboard():
