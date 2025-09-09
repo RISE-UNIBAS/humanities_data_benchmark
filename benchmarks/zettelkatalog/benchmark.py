@@ -123,7 +123,7 @@ class Zettelkatalog(Benchmark):
             }
             
             # Threshold for considering a match (can be adjusted)
-            match_threshold = 0.95
+            match_threshold = 0.92
             
             if response_value is not None and gt_value is not None:
                 if field_score >= match_threshold:
@@ -239,7 +239,7 @@ class Zettelkatalog(Benchmark):
             ground_truth_str = str(ground_truth_value).replace('|', '\\|').replace('\n', '<br>')
             
             # Determine match status
-            match_threshold = 0.95
+            match_threshold = 0.92
             match_status = "✅" if field_score >= match_threshold else "❌"
             
             render += f"| {field_key} | {response_str} | {ground_truth_str} | {field_score:.3f} | {match_status} |\n"

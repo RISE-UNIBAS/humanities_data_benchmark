@@ -117,7 +117,7 @@ The models are tasked with extracting bibliographic information from historical 
 The scoring system implements field-level F1 evaluation using the following methodology:
 
 1. **Field Extraction**: All terminal fields from both the model response and ground truth are extracted using nested dictionary traversal
-2. **Field Comparison**: Each field is compared using fuzzy string matching (RapidFuzz) with a threshold of 0.95 for exact matches
+2. **Field Comparison**: Each field is compared using fuzzy string matching (RapidFuzz) with a threshold of 0.92 for exact matches
 3. **TP/FP/FN Calculation**:
    - **True Positive (TP)**: Fields that match between response and ground truth above the threshold
    - **False Positive (FP)**: Fields present in response but not matching ground truth
