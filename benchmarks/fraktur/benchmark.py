@@ -39,21 +39,21 @@ class Fraktur(Benchmark):
         """
         if not reference_text:
             return 1.0  # Maximum error if reference is empty
-            
+
         if not hypothesis_text:
             return 1.0  # Maximum error if hypothesis is empty
-        
+
         # Normalize strings - lowercase and remove extra whitespace
         ref_normalized = ' '.join(reference_text.lower().split())
         hyp_normalized = ' '.join(hypothesis_text.lower().split())
-        
+
         # If strings are identical after normalization
         if ref_normalized == hyp_normalized:
             return 0.0
-            
+
         # Calculate Levenshtein distance (minimum number of single-character edits)
         edit_distance = Levenshtein.distance(ref_normalized, hyp_normalized)
-        
+
         # Divide by the length of the reference text
         return min(1.0, edit_distance / max(1, len(ref_normalized)))
 
@@ -76,7 +76,7 @@ class Fraktur(Benchmark):
 
         total_fuzzy = 0
         total_cer = 0
-        
+
         for score in all_scores:
             total_fuzzy += score['fuzzy']
             total_cer += score['cer']
@@ -119,22 +119,22 @@ class Fraktur(Benchmark):
 
         data = self.prepare_scoring_data(response)
         results = self.compare_ads(response=data,
-                                  ground_truth=ground_truth,
-                                  image_name=image_name)
+                                   ground_truth=ground_truth,
+                                   image_name=image_name)
 
         # Calculate scores
         total_fuzzy = 0
         total_cer = 0
-        
+
         for result in results:
             total_fuzzy += result["similarity"]
-            
+
             # Calculate CER if we have both texts
             if result["match_found"]:
                 # Use the text from the ground truth and the response for CER calculation
                 gt_text = result["ground_truth_text"]
                 resp_text = result["response_text"]
-                
+
                 # Calculate and store the CER
                 cer = self.calculate_cer(gt_text, resp_text)
                 result["cer"] = round(cer, 3)
@@ -143,7 +143,7 @@ class Fraktur(Benchmark):
                 # Missing advertisement is maximum error
                 result["cer"] = 1.0
                 total_cer += 1.0
-        
+
         # Ensure we don't divide by zero
         if len(results) > 0:
             avg_fuzzy = total_fuzzy / len(results)
@@ -202,24 +202,24 @@ class Fraktur(Benchmark):
                  and advertisement_dict is the full advertisement object.
         """
         grouped = defaultdict(dict)
-        
+
         # Handle empty or invalid ad_list
         if not ad_list or not isinstance(ad_list, list):
             return grouped
-            
+
         for ad in ad_list:
             if not isinstance(ad, dict):
                 continue  # skip malformed entries
-                
+
             try:
                 # Get section and strip whitespace
                 section = ad.get("tags_section", "").strip()
-                
+
                 # Special handling for image_4
                 if image_name == "image_4" and not section:
                     section = DEFAULT_SECTION
                     ad["tags_section"] = DEFAULT_SECTION
-                
+
                 # Extract number from text and add to grouped structure
                 number = self.extract_number_prefix(ad.get("text", ""))
                 if section and number:
@@ -227,7 +227,7 @@ class Fraktur(Benchmark):
             except (AttributeError, TypeError) as e:
                 logging.warning(f"Error grouping advertisement: {e}")
                 continue
-                
+
         return grouped
 
     def compare_ads(self,
@@ -266,15 +266,15 @@ class Fraktur(Benchmark):
             # For image_4, we need special handling
             if image_name == "image_4":
                 logging.info(f"Using special handling for image_4")
-                
+
                 # Get advertisements from response
                 response_ads = response.get("advertisements", [])
-                
+
                 # Force the section name for ads without a section
                 for ad in response_ads:
                     if isinstance(ad, dict) and ("tags_section" not in ad or not ad.get("tags_section")):
                         ad["tags_section"] = DEFAULT_SECTION
-                
+
                 # Group the modified ads
                 response_grouped = self.group_by_section_and_number(response_ads, image_name)
             else:
@@ -287,16 +287,16 @@ class Fraktur(Benchmark):
         # Group ground truth data
         ground_truth_grouped = self.group_by_section_and_number(ground_truth_flat, image_name)
         results = []
-        
+
         # Special handling for image_4 with default section
         if image_name == "image_4" and DEFAULT_SECTION in ground_truth_grouped:
             gt_ads = ground_truth_grouped[DEFAULT_SECTION]
             response_ads = response_grouped.get(DEFAULT_SECTION, {})
-            
+
             # Process each advertisement in ground truth
             for number, gt_ad in gt_ads.items():
                 match_found = False
-                
+
                 # First try direct match by number in default section
                 response_ad = response_ads.get(number)
                 if response_ad:
@@ -326,7 +326,7 @@ class Fraktur(Benchmark):
                                 "ground_truth_text": gt_ad["text"]
                             })
                             break
-                    
+
                     # If still no match found, mark as not found
                     if not match_found:
                         results.append({
@@ -342,7 +342,7 @@ class Fraktur(Benchmark):
             for section, gt_ads in ground_truth_grouped.items():
                 # First try exact match by section name
                 response_ads = response_grouped.get(section, {})
-                
+
                 # If no exact match, try fuzzy matching of section names
                 if not response_ads:
                     for resp_section, resp_ads in response_grouped.items():
@@ -350,7 +350,7 @@ class Fraktur(Benchmark):
                         if similarity >= SECTION_MATCH_THRESHOLD:
                             response_ads = resp_ads
                             break
-    
+
                 # Process each advertisement in this section
                 for number, gt_ad in gt_ads.items():
                     response_ad = response_ads.get(number)
@@ -375,7 +375,7 @@ class Fraktur(Benchmark):
                             "response_text": None,
                             "ground_truth_text": gt_ad["text"]
                         })
-                        
+
         return results
 
     def create_request_render(self,
@@ -405,7 +405,7 @@ class Fraktur(Benchmark):
         """
         data = self.prepare_scoring_data(result)
         results = self.compare_ads(response=data, ground_truth=truth, image_name=image_name)
-        
+
         # Ensure CER scores are calculated for all results
         for item in results:
             if "cer" not in item and item["match_found"]:
@@ -415,12 +415,12 @@ class Fraktur(Benchmark):
                 item["cer"] = round(self.calculate_cer(gt_text, resp_text), 3)
             elif "cer" not in item:
                 item["cer"] = 1.0
-        
+
         # Add result header and overall scores at the top
         render = f"### Result for {image_name}\n"
         render += f"**Average fuzzy score:** {score['fuzzy']:.3f} (higher is better)<br>"
         render += f"**Average character error rate (CER):** {score['cer']:.3f} (lower is better)<br>"
-        
+
         # Add link to raw result JSON file with model name
         request_name = f"request_{self.id}_{image_name}"
         render += f"[View raw result from {self.model}](https://github.com/RISE-UNIBAS/humanities_data_benchmark/blob/main/results/{self.date}/{self.id}/{request_name}.json)\n\n"
@@ -440,18 +440,18 @@ class Fraktur(Benchmark):
         render += "<style>\n"
         render += ".diff { text-decoration: underline; text-decoration-color: #ffcccc; text-decoration-style: wavy; }\n"
         render += "</style>\n\n"
-        
+
         # Create markdown table with 5 columns
         render += "| Section | Prediction | Ground Truth | Fuzzy Score | CER |\n"
         render += "|---------|------------|--------------|-------------|-----|\n"
-        
+
         for item in results:
             section = item["section"]
             prediction_text = item["response_text"]
             ground_truth_text = item["ground_truth_text"]
             similarity = f"{item['similarity']:.3f}"
             cer = f"{item['cer']:.3f}"
-            
+
             # Handle case where prediction is missing
             if prediction_text is None:
                 prediction = "N/A"
@@ -459,11 +459,11 @@ class Fraktur(Benchmark):
             else:
                 # Highlight differences between prediction and ground truth
                 prediction, ground_truth = self._highlight_differences(prediction_text, ground_truth_text)
-            
+
             render += f"| {section} | {prediction} | {ground_truth} | {similarity} | {cer} |\n"
-        
+
         return render
-        
+
     def _highlight_differences(self, prediction_text: str, ground_truth_text: str) -> tuple:
         """
         Highlight differences between prediction and ground truth texts with visual styling.
@@ -482,14 +482,14 @@ class Fraktur(Benchmark):
                   Newlines are also replaced with <br> tags for proper rendering in markdown tables.
         """
         from difflib import SequenceMatcher
-        
+
         # Compare sequences
         matcher = SequenceMatcher(None, prediction_text, ground_truth_text)
-        
+
         # Build formatted strings with highlighted differences
         pred_formatted = ""
         truth_formatted = ""
-        
+
         for op, i1, i2, j1, j2 in matcher.get_opcodes():
             if op == 'equal':
                 # Identical text
@@ -511,9 +511,9 @@ class Fraktur(Benchmark):
                 # Text in ground truth but not in prediction
                 truth_part = ground_truth_text[j1:j2]
                 truth_formatted += f'<span class="diff">{truth_part}</span>'
-        
+
         # Replace newlines for markdown table compatibility
         pred_formatted = pred_formatted.replace("\n", "<br>")
         truth_formatted = truth_formatted.replace("\n", "<br>")
-        
+
         return pred_formatted, truth_formatted
