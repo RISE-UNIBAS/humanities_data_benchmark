@@ -165,7 +165,7 @@ def create_leaderboard_radar_chart(leaderboard_data):
     # Chart dimensions
     size = 400
     # Adjust center to provide more space for labels on the left
-    center_x, center_y = size // 2 + 50, size // 2
+    center_x, center_y = size // 2 + 80, size // 2
     radius = 150
     
     # Color palette for models
@@ -179,7 +179,7 @@ def create_leaderboard_radar_chart(leaderboard_data):
     
     # Start building SVG
     svg_content = f'''<div style="text-align: center; margin: 20px 0;">
-<svg width="{size + 250}" height="{size + 100}" xmlns="http://www.w3.org/2000/svg">
+<svg width="{size + 300}" height="{size + 100}" xmlns="http://www.w3.org/2000/svg">
     <!-- Background -->
     <rect width="100%" height="100%" fill="white"/>
     
@@ -248,7 +248,7 @@ def create_leaderboard_radar_chart(leaderboard_data):
     <circle cx="{x}" cy="{y}" r="3" fill="{color}"/>'''
     
     # Add legend
-    legend_start_x = size + 70
+    legend_start_x = size + 120
     legend_start_y = 50
     
     svg_content += f'''
