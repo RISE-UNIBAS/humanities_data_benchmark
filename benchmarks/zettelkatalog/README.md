@@ -88,6 +88,7 @@ The ground truth is stored in JSON files with the following structure based on t
 The models are tasked with extracting bibliographic information from historical dissertation index cards. Models must output a JSON structure with the fields defined in `dataclass.py`. 
 
 **Key extraction requirements:**
+
 - **Type classification**: Determine if the card contains a full dissertation description or is merely a reference to another record
 - **Author information**: Extract first and last names of the thesis author
 - **Publication details**: Extract title, year, place, pages, publisher, and format where available  
@@ -126,16 +127,19 @@ The scoring system implements field-level F1 evaluation using the following meth
 
 ### Benchmark Scoring
 The benchmark provides both micro and macro F1 scores:
+
 - **Micro F1**: Aggregates TP/FP/FN across all test instances, then calculates a single F1 score
 - **Macro F1**: Calculates F1 for each instance individually, then averages all F1 scores
 
 ### Example Scoring
 For a response with 10 total fields:
+
 - 7 fields match ground truth exactly (TP = 7)
 - 2 fields in response don't match ground truth (FP = 2) 
 - 1 field missing from response but in ground truth (FN = 1)
 
 Results:
+
 - Precision = 7/(7+2) = 0.78
 - Recall = 7/(7+1) = 0.88
 - F1 = 2 * 0.78 * 0.88 / (0.78 + 0.88) = 0.82
