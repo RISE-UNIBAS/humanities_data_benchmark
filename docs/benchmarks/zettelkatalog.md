@@ -32,10 +32,10 @@ The dataset contains 263 images of index cards describing historical dissertatio
 
 Strictly speaking, a typical card may describe multiple things and events related to a given dissertation/PhD thesis (an abstract work): 
 
-1) The author (a person), 
-2) the published version of record required for the diploma (a publication), 
-3) the thesis defense (an event), 
-4) other published versions of the thesis (a publication, e.g. an extract in the form of a journal article). 
+- The author (a person), 
+- the published version of record required for the diploma (a publication), 
+- the thesis defense (an event), 
+- other published versions of the thesis (a publication, e.g. an extract in the form of a journal article). 
 
 Not all of these elements are present in every case, and they are often not explicitly separated on the card.
 Furthermore, some of the cards do not contain a full description of a thesis, but are merely references to another card in the catalogue. In these cases, the card begins with the name of the referenced author, followed by an "s." on a separate line (German "siehe"). There may or may not be other information below that.
@@ -89,16 +89,16 @@ The ground truth is stored in JSON files with the following structure based on t
 ### Evaluation Criteria
 The models are tasked with extracting bibliographic information from historical dissertation index cards. Models must output a JSON structure with the fields defined in `dataclass.py`. 
 
-**Key extraction requirements:**
+#### Key extraction requirements
 
 - **Type classification**: Determine if the card contains a full dissertation description or is merely a reference to another record
 - **Author information**: Extract first and last names of the thesis author
 - **Publication details**: Extract title, year, place, pages, publisher, and format where available  
 - **Library reference**: Extract shelfmark and subject classifications
 
-**Expected output format sample (from image 00423152.jpg):**
+#### Expected output format sample (from image 00423152.jpg)
 
-![Index card 00423152](images/00423152.jpg)
+![Index card 00423152](https://github.com/RISE-UNIBAS/humanities_data_benchmark/blob/main/benchmarks/zettelkatalog/images/00423152.jpg?raw=true)
 
 ```json
 {
@@ -138,7 +138,7 @@ The benchmark provides both micro and macro F1 scores:
 
 ### Example Scoring
 
-**Ground Truth** (from image 00423152.jpg, see above):
+#### Ground Truth (from image 00423152.jpg, see above)
 ```json
 {
   "type": {"type": "Dissertation or thesis"},
@@ -155,7 +155,7 @@ The benchmark provides both micro and macro F1 scores:
 }
 ```
 
-**Model Response**:
+#### Model Response
 ```json
 {
   "type": {"type": "Dissertation or thesis"},
@@ -172,7 +172,7 @@ The benchmark provides both micro and macro F1 scores:
 }
 ```
 
-**Field-by-Field Analysis**:
+#### Field-by-Field Analysis
 
 - `type.type`: "Dissertation or thesis" = "Dissertation or thesis" ✓ **TP**
 - `author.last_name`: "Müller" = "Müller" ✓ **TP** 
@@ -186,13 +186,13 @@ The benchmark provides both micro and macro F1 scores:
 - `library_reference.shelfmark`: "AT Zürich 7" = "AT Zürich 7" ✓ **TP**
 - `library_reference.subjects`: "" = "" ✓ **TP**
 
-**Results**:
+#### Results
 
 - **True Positives (TP)**: 8 (exact matches above fuzzy threshold)
 - **False Positives (FP)**: 3 (fields in response not matching ground truth)
 - **False Negatives (FN)**: 3 (fields in ground truth not matching response)
 
-**Calculations**:
+#### Calculations
 
 - **Precision** = TP/(TP+FP) = 8/(8+3) = 0.73
 - **Recall** = TP/(TP+FN) = 8/(8+3) = 0.73  
