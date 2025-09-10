@@ -111,8 +111,8 @@ Assesses models' capability to recognize and transcribe historical German Fraktu
 
 📁 [View benchmark details](benchmarks/fraktur/)
 
-### Zettelkatalog (In Development)
-An upcoming benchmark focused on catalog card analysis and information extraction from historical library catalog systems. This benchmark is currently under development and will evaluate models on structured data extraction from digitized catalog cards.
+### Zettelkatalog
+A comprehensive benchmark focused on catalog card analysis and information extraction from historical library catalog systems. This benchmark evaluates models on structured data extraction from digitized catalog cards, testing their ability to parse complex bibliographic information, author names, dates, and hierarchical catalog structures from historical Swiss library records.
 
 📁 [View benchmark details](benchmarks/zettelkatalog/)
 
