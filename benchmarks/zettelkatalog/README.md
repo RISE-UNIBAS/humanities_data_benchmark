@@ -22,13 +22,14 @@ This benchmark was created by [Gabriel Müller](https://github.com/gbmllr1) at B
 ### Source
 - **Collection**: Dissertationenkatalog bis 1980
 - **Time Period**: -1980
-- **Language**: German, Latin
+- **Languages**: Mostly German; some French, English, Latin, Greek, Finnish, Swedish, Polish
 - **Format**: Mixed
 - **Link**: https://ub.unibas.ch/cmsdata/spezialkataloge/ipac/searchform.php?KatalogID=ak2
 - **License**: CC0
 
 ### Contents
-The dataset contains 263 images of index cards describing historical dissertations. Each image corresponds to one card and one dissertation. It is a random sample out of the ~600'000 dissertations collected by Basel University Library in the time period before 1980. The original works come predominantly from Switzerland and neighboring countries, but some may come from anywhere in the world.
+The dataset contains 263 images of index cards describing historical dissertations (96.2%) or references to such dissertations (3.8%). Each image corresponds to one card and one dissertation. It is a random sample out of the ~700'000 dissertations collected by Basel University Library in the time period before 1980. The original works come predominantly from Switzerland and neighboring countries, but some may come from anywhere in the world.
+
 Strictly speaking, a typical card may describe multiple things and events related to a given dissertation/PhD thesis (an abstract work): 
 1) The author (a person), 
 2) the published version of record required for the diploma (a publication), 
@@ -94,22 +95,25 @@ The models are tasked with extracting bibliographic information from historical 
 - **Publication details**: Extract title, year, place, pages, publisher, and format where available  
 - **Library reference**: Extract shelfmark and subject classifications
 
-**Expected output format sample:**
+**Expected output format sample (from image 00423152.jpg):**
+
+![Index card 00423152](images/00423152.jpg)
+
 ```json
 {
   "type": {"type": "Dissertation or thesis"},
-  "author": {"last_name": "Müller", "first_name": "Hans"},
+  "author": {"last_name": "Müller", "first_name": "Maurice Edmond"},
   "publication": {
-    "title": "Über die Geschichte der Schweiz",
-    "year": 1925,
-    "place": "Basel",
-    "pages": "IV, 127",
-    "publisher": "Helbing & Lichtenhahn",
-    "format": "8°"
+    "title": "Die hüftnahen Femurosteotomien unter Berücksichtigung der Form,Funktion und Beanspruchung des Hüftgelenkes",
+    "year": 1957,
+    "place": "Stuttgart",
+    "pages": "X,184",
+    "publisher": "Thieme",
+    "format": "4'"
   },
   "library_reference": {
-    "shelfmark": "Diss. Basel, 1924",
-    "subjects": "Geschichte"
+    "shelfmark": "AT Zürich 7",
+    "subjects": ""
   }
 }
 ```
@@ -132,32 +136,100 @@ The benchmark provides both micro and macro F1 scores:
 - **Macro F1**: Calculates F1 for each instance individually, then averages all F1 scores
 
 ### Example Scoring
-For a response with 10 total fields:
 
-- 7 fields match ground truth exactly (TP = 7)
-- 2 fields in response don't match ground truth (FP = 2) 
-- 1 field missing from response but in ground truth (FN = 1)
+**Ground Truth** (from image 00423152.jpg, see above):
+```json
+{
+  "type": {"type": "Dissertation or thesis"},
+  "author": {"last_name": "Müller", "first_name": "Maurice Edmond"},
+  "publication": {
+    "title": "Die hüftnahen Femurosteotomien unter Berücksichtigung der Form, Funktion und Beanspruchung des Hüftgelenkes",
+    "year": 1957,
+    "place": "Stuttgart", 
+    "pages": "X,184",
+    "publisher": "Thieme",
+    "format": "4'"
+  },
+  "library_reference": {"shelfmark": "AT Zürich 7", "subjects": ""}
+}
+```
 
-Results:
+**Model Response**:
+```json
+{
+  "type": {"type": "Dissertation or thesis"},
+  "author": {"last_name": "Müller", "first_name": "Maurice"},
+  "publication": {
+    "title": "Die hüftnahen Femurosteotomien unter Berücksichtigung der Form, Funktion und Beanspruchung des Hüftgelenkes", 
+    "year": 1957,
+    "place": "Stuttgart",
+    "pages": "X, 184",
+    "publisher": "Thieme Verlag",
+    "format": "4'"
+  },
+  "library_reference": {"shelfmark": "AT Zürich 7", "subjects": ""}
+}
+```
 
-- Precision = 7/(7+2) = 0.78
-- Recall = 7/(7+1) = 0.88
-- F1 = 2 * 0.78 * 0.88 / (0.78 + 0.88) = 0.82
+**Field-by-Field Analysis**:
+- `type.type`: "Dissertation or thesis" = "Dissertation or thesis" ✓ **TP**
+- `author.last_name`: "Müller" = "Müller" ✓ **TP** 
+- `author.first_name`: "Maurice" ≠ "Maurice Edmond" (fuzzy match < 0.92) ✗ **FP/FN**
+- `publication.title`: Perfect match ✓ **TP**
+- `publication.year`: 1957 = 1957 ✓ **TP**
+- `publication.place`: "Stuttgart" = "Stuttgart" ✓ **TP**
+- `publication.pages`: "X, 184" ≠ "X,184" (fuzzy match < 0.92) ✗ **FP/FN**
+- `publication.publisher`: "Thieme Verlag" ≠ "Thieme" (fuzzy match < 0.92) ✗ **FP/FN** 
+- `publication.format`: "4'" = "4'" ✓ **TP**
+- `library_reference.shelfmark`: "AT Zürich 7" = "AT Zürich 7" ✓ **TP**
+- `library_reference.subjects`: "" = "" ✓ **TP**
+
+**Results**:
+- **True Positives (TP)**: 8 (exact matches above fuzzy threshold)
+- **False Positives (FP)**: 3 (fields in response not matching ground truth)
+- **False Negatives (FN)**: 3 (fields in ground truth not matching response)
+
+**Calculations**:
+- **Precision** = TP/(TP+FP) = 8/(8+3) = 0.73
+- **Recall** = TP/(TP+FN) = 8/(8+3) = 0.73  
+- **F1 Score** = 2 × Precision × Recall / (Precision + Recall) = 2 × 0.73 × 0.73 / (0.73 + 0.73) = **0.73**
 
 ## Observations
 
-[Include any notable observations about model performance, patterns, or insights gained from the benchmark results]
+Preliminary results indicate that models generally perform well on clearly typed cards with standard formats. However, performance drops on handwritten cards and those with non-standard layouts or abbreviations. Common error patterns include:
+
+- Shelf marks and subject classifications are often omitted or incorrectly parsed
+- Minor formatting differences in complex fields (pages, publisher details)
+- Over-specification of publisher names ("Verlag" additions)
+- Subtle variations in format notations and academic abbreviations
 
 ## Limitations and Future Work
 
-- [Describe any limitations of the current benchmark]
-- [Suggest potential improvements or extensions for future versions]
-- [Mention any work in progress related to this benchmark]
+### Current Limitations
 
-## To Dos
-- [x] specify metadata schema
-- [x] create random sample of 1000 images from 1-680671, put into /images folder
-- [x] get completions for these images (run main script on T66)
-- [x] create ground truth for 1000 images based on completions
-- [x] put ground truth into /ground_truth folder
-- [x] conceptualize scoring, implement scoring method
+#### Dataset Limitations
+- **Sample Size**: While 263 cards provide statistical significance, the dataset represents only ~0.04% of the full collection, potentially missing edge cases
+- **Selection Bias**: Random sampling may not adequately represent the full range of historical periods, languages, and card conditions present in the complete archive
+- **Format Standardization**: Ground truth creation involved some normalization decisions that may not capture all valid interpretations of ambiguous content
+
+#### Evaluation Limitations
+- **Fuzzy Matching Threshold**: The 0.92 similarity threshold for field matching may be too strict for some legitimate variations while too lenient for others
+- **Field Weighting**: All fields contribute equally to the F1 score, but some fields (e.g., author names) may be more critical than others (e.g., format notation)
+- **Semantic vs. Syntactic**: Current scoring focuses on string similarity rather than semantic equivalence (e.g., "Stuttgart" vs "Stuttgart, Germany")
+
+### Future Work
+
+#### Dataset Enhancements
+- **Expanded Sampling**: Increase dataset size to 500-1000 cards with stratified sampling across time periods and institutions
+- **Quality Stratification**: Categorize cards by image quality, handwriting clarity, and formatting complexity for targeted evaluation
+- **Cross-institutional Validation**: Include cards from other university archives to test generalizability
+
+#### Evaluation Improvements
+- **Hierarchical Scoring**: Implement weighted scoring that reflects the relative importance of different bibliographic fields
+- **Semantic Similarity**: Integrate semantic similarity measures for publisher names, place names, and academic terminology
+- **Error Type Classification**: Develop taxonomy of error types (OCR-like, formatting, semantic) for more targeted analysis
+- **Human Evaluation**: Conduct inter-annotator agreement studies to validate ground truth quality
+
+#### Benchmark Extensions
+- **Multi-modal Baselines**: Compare pure vision models, OCR+NLP pipelines, and end-to-end multimodal approaches
+- **Cross-domain Transfer**: Test model performance on related bibliographic extraction tasks (modern citations, manuscript catalogues)

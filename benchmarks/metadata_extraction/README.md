@@ -61,6 +61,7 @@ The `ground_truth` tab of the Google Sheet uses the following metadata schema:
 Persons are recorded in the `persons` tab of the Google Sheet. The metadata schema and workflow for persons is described in [`ground_truth_persons_organizations.md`](ground_truth_persons_organizations).
 
 For `sender_persons_inscribed`, `sender_persons` `receiver_persons_inscribed`, `receiver_persons`:
+
 - Pipe `|` is used to separate multiple values: `Mustermann, Hans | Musterfrau, Maria`.
 - Indicate persons inferred from function & date with angle brackets: `<Mustermann, Hans>`
 - Indicate persons inferred from the correspondence history with double angle brackets: `<<Musterfrau, Maria>>`
