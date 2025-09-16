@@ -12,7 +12,7 @@
 - [Limitations and Future Work](#limitations-and-future-work)
 
 ## Overview
-This benchmark evaluates the performance of large language models on extracting bibliograhic information from index cards. The benchmark consists of 263 images containing descriptions of historical dissertations (before 1980, some well before 1900). The set contains both typeset and handwritten cards, and the format and exact content of the descriptions varies. 
+This benchmark evaluates the performance of large language models on extracting bibliographic information from index cards. The benchmark consists of 263 images containing descriptions of historical dissertations (before 1980, some well before 1900). The set contains both typeset and handwritten cards, and the format and exact content of the descriptions varies. 
 
 ## Creator
 This benchmark was created by [Gabriel Müller](https://github.com/gbmllr1) at Basel University Library and [Maximilian Hindermann](https://orcid.org/0000-0002-9337-4655) of the University of Basel's Research and Infrastructure Support RISE (rise@unibas.ch) in 2025.
