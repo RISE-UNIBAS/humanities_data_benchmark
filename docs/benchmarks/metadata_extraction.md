@@ -21,6 +21,16 @@ This benchmark focuses on the extraction of metadata from historic letters. It p
 
 This benchmark was created by the University of Basel's Research and Infrastructure Support RISE (rise@unibas.ch) between 2022 and 2025.
 
+| Role | Contributors |
+|------|-------------|
+| Domain expert | [Eric Decker], [Maximilian Hindermann], [Lea Kasper] |
+| Data curator | [Anthea Alberto], [Eric Decker], [Maximilian Hindermann] |
+| Annotator | [Anthea Alberto], [Eric Decker], [Pema Frick], [Maximilian Hindermann], [Lea Kasper], [José Luis Losada Palenzuela], [Sorin Marti], [Elena Spadini] |
+| Analyst | [Maximilian Hindermann] |
+| Engineer | [Maximilian Hindermann] |
+
+For detailed contributor information and role descriptions, see [CONTRIBUTORS.md](../../CONTRIBUTORS.md).
+
 ## Historic Rheinschifffahrt Letters
 
 This benchmark uses as input the digital collection "Basler Rheinschifffahrt-Aktiengesellschaft, insbesondere über die Veräusserung des Dieselmotorbootes 'Rheinfelden' und die Gewährung eines Darlehens zur Finanzierung der Erstellung des Dieselmotorbootes 'Rhyblitz' an diese Firma" (shelf mark: `CH SWA HS 191 V 10`, persistent link: http://dx.doi.org/10.7891/e-manuscripta-54917, referred to as "the collection" in what follows) of the Schweizer Wirtschaftsarchiv. 
@@ -130,10 +140,21 @@ With scores for each letter in place, we can calculate the overall performance o
 - `skip_signatures`: If true, then letters with signatures are not scored.
 - `skip_non_signatures`: If true, then letters without signatures are not scored.
 
-
 ## To Dos
 
 - [ ] Add more fields to the metadata schema, namely `sender_organization` (inscribed and normalized), `receiver_organization` (inscribed and normalized),  fields for entities mentioned (persons, places, organizations, ships; inscribed and normalized).		
+
+[Anthea Alberto]: https://orcid.org/0009-0007-0430-0050
+[Sven Burkhardt]: https://orcid.org/0009-0001-4954-4426
+[Eric Decker]: https://orcid.org/0000-0003-3035-2413
+[Pema Frick]: https://orcid.org/0000-0002-8733-7161
+[Maximilian Hindermann]: https://orcid.org/0000-0002-9337-4655
+[Lea Kasper]: https://orcid.org/0000-0002-4671-1700
+[José Luis Losada Palenzuela]: https://orcid.org/0000-0002-6530-1328
+[Gabriel Müller]: https://orcid.org/0000-0001-8320-5148
+[Sorin Marti]: https://orcid.org/0000-0002-9541-1202
+[Ina Serif]: https://orcid.org/0000-0003-2419-4252
+[Elena Spadini]: https://orcid.org/0000-0002-4522-2833
 
 ## Test Results
 

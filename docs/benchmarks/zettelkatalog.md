@@ -15,7 +15,17 @@
 This benchmark evaluates the performance of large language models on extracting bibliographic information from index cards. The benchmark consists of 263 images containing descriptions of historical dissertations (before 1980, some well before 1900). The set contains both typeset and handwritten cards, and the format and exact content of the descriptions varies. 
 
 ## Creator
-This benchmark was created by [Gabriel Müller](https://github.com/gbmllr1) at Basel University Library and [Maximilian Hindermann](https://orcid.org/0000-0002-9337-4655) of the University of Basel's Research and Infrastructure Support RISE (rise@unibas.ch) in 2025.
+This benchmark was created by the University of Basel's University Library and Research and Infrastructure Support RISE (rise@unibas.ch) in 2025.
+
+| Role | Contributors |
+|------|-------------|
+| Domain expert | [Gabriel Müller] |
+| Data curator | [Gabriel Müller] |
+| Annotator | [Maximilian Hindermann], [Gabriel Müller] |
+| Analyst | [Maximilian Hindermann] |
+| Engineer | [Maximilian Hindermann] |
+
+For detailed contributor information and role descriptions, see [CONTRIBUTORS.md](../../CONTRIBUTORS.md).
 
 ## Dataset Description
 
@@ -238,6 +248,8 @@ Preliminary results indicate that models generally perform well on clearly typed
 - **Multi-modal Baselines**: Compare pure vision models, OCR+NLP pipelines, and end-to-end multimodal approaches
 - **Cross-domain Transfer**: Test model performance on related bibliographic extraction tasks (modern citations, manuscript catalogues)
 
+[Maximilian Hindermann]: https://orcid.org/0000-0002-9337-4655
+[Gabriel Müller]: https://orcid.org/0000-0001-8320-5148
 
 ## Test Results
 
