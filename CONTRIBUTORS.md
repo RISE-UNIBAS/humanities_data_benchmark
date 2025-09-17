@@ -32,32 +32,44 @@ Contributions are in alphabetical order by last name within each category. Contr
 | Engineer      | Implement benchmark                                              | [Other](https://datacite-metadata-schema.readthedocs.io/en/4.6/appendices/appendix-1/contributorType/#other)             |
 
 ### [Bibliographic Data](benchmarks/bibliographic_data/)
-- **Domain expert**: [Pema Frick]
-- **Data curator**: [Pema Frick]
-- **Annotator**: [Pema Frick]
-- **Analyst**: [Pema Frick], [Sorin Marti]
-- **Engineer**: [Pema Frick], [Sorin Marti]
+
+| Role | Contributors |
+|------|-------------|
+| Domain expert | [Pema Frick] |
+| Data curator | [Pema Frick] |
+| Annotator | [Pema Frick] |
+| Analyst | [Pema Frick], [Sorin Marti] |
+| Engineer | [Pema Frick], [Sorin Marti] |
 
 ### [Metadata Extraction](benchmarks/metadata_extraction/)
-- **Domain expert**: [Eric Decker], [Maximilian Hindermann], [Lea Kasper]
-- **Data curator**: [Anthea Alberto], [Eric Decker], [Maximilian Hindermann]
-- **Annotator**: [Anthea Alberto], [Eric Decker], [Pema Frick], [Maximilian Hindermann], [Lea Kasper], [José Luis Losada Palenzuela], [Sorin Marti], [Elena Spadini]
-- **Analyst**: [Maximilian Hindermann]
-- **Engineer**: [Maximilian Hindermann]
+
+| Role | Contributors |
+|------|-------------|
+| Domain expert | [Eric Decker], [Maximilian Hindermann], [Lea Kasper] |
+| Data curator | [Anthea Alberto], [Eric Decker], [Maximilian Hindermann] |
+| Annotator | [Anthea Alberto], [Eric Decker], [Pema Frick], [Maximilian Hindermann], [Lea Kasper], [José Luis Losada Palenzuela], [Sorin Marti], [Elena Spadini] |
+| Analyst | [Maximilian Hindermann] |
+| Engineer | [Maximilian Hindermann] |
 
 ### [Fraktur Text Recognition](benchmarks/fraktur/)
-- **Domain expert**: [Ina Serif]
-- **Data curator**: [Ina Serif]
-- **Annotator**: [Ina Serif]
-- **Analyst**: [Maximilian Hindermann]
-- **Engineer**: [Maximilian Hindermann], [Ina Serif]
+
+| Role | Contributors |
+|------|-------------|
+| Domain expert | [Ina Serif] |
+| Data curator | [Ina Serif] |
+| Annotator | [Ina Serif] |
+| Analyst | [Maximilian Hindermann] |
+| Engineer | [Maximilian Hindermann], [Ina Serif] |
 
 ### [Zettelkatalog](benchmarks/zettelkatalog/)
-- **Domain expert**: [Gabriel Müller]
-- **Data curator**: [Gabriel Müller]
-- **Annotator**: [Maximilian Hindermann], [Gabriel Müller]
-- **Analyst**: [Maximilian Hindermann]
-- **Engineer**: [Maximilian Hindermann]
+
+| Role | Contributors |
+|------|-------------|
+| Domain expert | [Gabriel Müller] |
+| Data curator | [Gabriel Müller] |
+| Annotator | [Maximilian Hindermann], [Gabriel Müller] |
+| Analyst | [Maximilian Hindermann] |
+| Engineer | [Maximilian Hindermann] |
 
 ### Contributors Across All Benchmarks
 

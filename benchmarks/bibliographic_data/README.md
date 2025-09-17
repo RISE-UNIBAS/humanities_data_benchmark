@@ -18,6 +18,17 @@ This benchmark evaluates the performance of large language models on extracting 
 
 This benchmark was created by the University of Basel's Research and Infrastructure Support RISE (rise@unibas.ch) in 2025, based on the scholarly resource compiled by John C. Rule and published in 1961.
 
+| Role | Contributors |
+|------|-------------|
+| Domain expert | [Pema Frick] |
+| Data curator | [Pema Frick] |
+| Annotator | [Pema Frick] |
+| Analyst | [Pema Frick], [Sorin Marti] |
+| Engineer | [Pema Frick], [Sorin Marti] |
+
+
+For detailed contributor information and role descriptions, see [CONTRIBUTORS.md](../../CONTRIBUTORS.md).
+
 ## Dataset Description
 
 ### Source
@@ -129,3 +140,6 @@ Common challenges include:
 - **Cross-domain Testing**: Test on bibliographies from different academic disciplines
 - **Temporal Coverage**: Include bibliographies from different historical periods
 - **Advanced Features**: Add support for more complex citation relationships and metadata
+
+[Pema Frick]: https://orcid.org/0000-0002-8733-7161
+[Sorin Marti]: https://orcid.org/0000-0002-9541-1202

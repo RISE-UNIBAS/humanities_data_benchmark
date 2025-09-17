@@ -26,6 +26,16 @@ This benchmark evaluates the ability of language models to extract structured in
 
 This benchmark was created by the University of Basel's Research and Infrastructure Support RISE (rise@unibas.ch) in 2025.
 
+| Role | Contributors |
+|------|-------------|
+| Domain expert | [Ina Serif] |
+| Data curator | [Ina Serif] |
+| Annotator | [Ina Serif] |
+| Analyst | [Maximilian Hindermann] |
+| Engineer | [Maximilian Hindermann], [Ina Serif] |
+
+For detailed contributor information and role descriptions, see [CONTRIBUTORS.md](../../CONTRIBUTORS.md).
+
 ## Basler Avisblatt
 
 The "Basler Avisblatt" was an early advertisement newspaper published in Basel, Switzerland. This benchmark uses the digital collection available at the University Library Basel (shelf mark: `UBH Ztg 1`, digital collection: [https://avisblatt.dg-basel.hasdai.org](https://avisblatt.dg-basel.hasdai.org/search?q=&l=list&p=1&s=10&sort=newest)).
@@ -136,3 +146,6 @@ Planned extensions to this benchmark include:
 2. **Expanded Dataset**: Including more pages and time periods from the Basler Avisblatt collection
 3. **Fine-grained Categorization**: Adding classification of advertisement types (sales, rentals, lost items, etc.)
 4. **Multi-language Support**: Extending to other historical newspapers with mixed language content
+
+[Maximilian Hindermann]: https://orcid.org/0000-0002-9337-4655
+[Ina Serif]: https://orcid.org/0000-0003-2419-4252
