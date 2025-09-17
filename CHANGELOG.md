@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - bibliographic_data README.md sections.
+- CONTRIBUTING.md
+- CONTRIBUTORS.md
 
 ## [v0.2.1] - 2025-09-10
 
