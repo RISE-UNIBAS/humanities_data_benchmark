@@ -25,7 +25,7 @@ This benchmark was created by the University of Basel's University Library and R
 | Analyst | [Maximilian Hindermann] |
 | Engineer | [Maximilian Hindermann] |
 
-For detailed contributor information and role descriptions, see [CONTRIBUTORS.md](../../CONTRIBUTORS.md).
+For detailed contributor information and role descriptions, see [CONTRIBUTORS.md](https://github.com/RISE-UNIBAS/humanities_data_benchmark/blob/main/CONTRIBUTORS.md).
 
 ## Dataset Description
 

@@ -27,7 +27,7 @@ This benchmark was created by the University of Basel's Research and Infrastruct
 | Engineer | [Pema Frick], [Sorin Marti] |
 
 
-For detailed contributor information and role descriptions, see [CONTRIBUTORS.md](../../CONTRIBUTORS.md).
+For detailed contributor information and role descriptions, see [CONTRIBUTORS.md](https://github.com/RISE-UNIBAS/humanities_data_benchmark/blob/main/CONTRIBUTORS.md).
 
 ## Dataset Description
 
