@@ -13,15 +13,7 @@ This file acknowledges the contributions of individuals and institutions to the 
 
 ## Benchmark-Specific Contributions
 
-Contributions are categorized by benchmark and type of contribution. There are five categories of contributions:
-
-- **Domain expert**: Shape research questions and provide subject knowledge
-- **Data curator**: Collect, clean, and prepare data following FAIR principles
-- **Annotator**: Create ground truth data and reference annotations
-- **Analyst**: Develop meaningful scoring (evaluation criteria and methodology) 
-- **Engineer**: Implement ground truth data and evaluation metrics given the benchmark suite
-
-Contributions are in alphabetical order by last name within each category. Contribution categories map as follows to [DataCite Metadata Schema 4.6 contributorType](https://doi.org/10.14454/mzv1-5b55):
+Contributions are categorized by benchmark and type of contribution, and in alphabetical order by last name within each type of contribution. Our contribution categories map as follows to [DataCite Metadata Schema 4.6 contributorType](https://doi.org/10.14454/mzv1-5b55):
 
 | Category      | Description                                                      | DataCite contributorType                                                                                                 |
 |---------------|------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------|
