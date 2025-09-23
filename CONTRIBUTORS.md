@@ -65,19 +65,19 @@ Contributions are categorized by benchmark and type of contribution, and in alph
 
 ### Contributors Across All Benchmarks
 
-| Name | GitHub | ORCID |
-|------|--------|-------|
-| Anthea Alberto | [@antheajeanne](https://github.com/antheajeanne) | [0009-0007-0430-0050](https://orcid.org/0009-0007-0430-0050) |
-| Sven Burkhardt | [@Sveburk](https://github.com/Sveburk) | [0009-0001-4954-4426](https://orcid.org/0009-0001-4954-4426) |
-| Eric Decker | [@edecker](https://github.com/edecker) | [0000-0003-3035-2413](https://orcid.org/0000-0003-3035-2413) |
-| Pema Frick | - | [0000-0002-8733-7161](https://orcid.org/0000-0002-8733-7161) |
-| Maximilian Hindermann | [@MHindermann](https://github.com/MHindermann) | [0000-0002-9337-4655](https://orcid.org/0000-0002-9337-4655) |
-| Lea Kasper | [@lekasp](https://github.com/lekasp) | [0000-0002-4671-1700](https://orcid.org/0000-0002-4671-1700) |
-| José Luis Losada Palenzuela | [@editio](https://github.com/editio) | [0000-0002-6530-1328](https://orcid.org/0000-0002-6530-1328) |
-| Sorin Marti | [@sorinmarti](https://github.com/sorinmarti) | [0000-0002-9541-1202](https://orcid.org/0000-0002-9541-1202) |
-| Gabriel Müller | [@gbmllr1](https://github.com/gbmllr1) | [0000-0001-8320-5148](https://orcid.org/0000-0001-8320-5148) |
-| Ina Serif | [@wissen-ist-acht](https://github.com/wissen-ist-acht) | [0000-0003-2419-4252](https://orcid.org/0000-0003-2419-4252) |
-| Elena Spadini | [@elespdn](https://github.com/elespdn) | [0000-0002-4522-2833](https://orcid.org/0000-0002-4522-2833) |
+| Name                        | GitHub                                                 | ORCID                                                        |
+|-----------------------------|--------------------------------------------------------|--------------------------------------------------------------|
+| Anthea Alberto              | [@antheajeanne](https://github.com/antheajeanne)       | [0009-0007-0430-0050](https://orcid.org/0009-0007-0430-0050) |
+| Sven Burkhardt              | [@Sveburk](https://github.com/Sveburk)                 | [0009-0001-4954-4426](https://orcid.org/0009-0001-4954-4426) |
+| Eric Decker                 | [@edecker](https://github.com/edecker)                 | [0000-0003-3035-2413](https://orcid.org/0000-0003-3035-2413) |
+| Pema Frick                  | [@pwmff](https://github.com/pwmff)                     | [0000-0002-8733-7161](https://orcid.org/0000-0002-8733-7161) |
+| Maximilian Hindermann       | [@MHindermann](https://github.com/MHindermann)         | [0000-0002-9337-4655](https://orcid.org/0000-0002-9337-4655) |
+| Lea Kasper                  | [@lekasp](https://github.com/lekasp)                   | [0000-0002-4671-1700](https://orcid.org/0000-0002-4671-1700) |
+| José Luis Losada Palenzuela | [@editio](https://github.com/editio)                   | [0000-0002-6530-1328](https://orcid.org/0000-0002-6530-1328) |
+| Sorin Marti                 | [@sorinmarti](https://github.com/sorinmarti)           | [0000-0002-9541-1202](https://orcid.org/0000-0002-9541-1202) |
+| Gabriel Müller              | [@gbmllr1](https://github.com/gbmllr1)                 | [0000-0001-8320-5148](https://orcid.org/0000-0001-8320-5148) |
+| Ina Serif                   | [@wissen-ist-acht](https://github.com/wissen-ist-acht) | [0000-0003-2419-4252](https://orcid.org/0000-0003-2419-4252) |
+| Elena Spadini               | [@elespdn](https://github.com/elespdn)                 | [0000-0002-4522-2833](https://orcid.org/0000-0002-4522-2833) |
 
 ## Contributing
 
