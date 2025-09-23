@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+- bibliographic_data attributions
+
 ## [v0.2.2] - 2025-09-19
 
 ### Added
