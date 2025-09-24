@@ -10,6 +10,7 @@ from openai import OpenAI
 from anthropic import Anthropic
 from mistralai import Mistral
 import instructor
+from instructor.exceptions import InstructorRetryException
 
 
 class AiApiClient:
@@ -161,6 +162,7 @@ class AiApiClient:
 
             # Use instructor client for structured output, regular client otherwise
             if self.dataclass:
+                try:
                     message = self.instructor_client.messages.create(
                         model=model,
                         max_tokens=max_tokens,
@@ -170,8 +172,23 @@ class AiApiClient:
                         }],
                         response_model=self.dataclass,
                         timeout=300.0,
+                        max_retries=1,  # Limit retries to avoid infinite loops
                     )
-                    logging.info(message)
+                    logging.debug(f"Instructor successful: {type(message)}")
+                except (InstructorRetryException, Exception) as e:
+                    logging.warning(f"Instructor failed, falling back to raw response: {e}")
+                    # Fallback to regular API call
+                    message = self.api_client.messages.create(
+                        model=model,
+                        max_tokens=max_tokens,
+                        messages=[{
+                            "role": "user",
+                            "content": content,
+                        }],
+                        timeout=300.0,
+                    )
+                    # Mark as fallback for special handling in create_answer
+                    message._is_fallback = True
             else:
                 message = self.api_client.messages.create(
                     model=model,
@@ -230,11 +247,11 @@ class AiApiClient:
         elif self.api == 'genai':
             answer['response_text'] = response.text
         elif self.api == 'anthropic':
-            if self.dataclass:
-                # For structured output with instructor, the response is a Pydantic model
+            if self.dataclass and not hasattr(response, '_is_fallback'):
+                # For successful structured output with instructor, the response is a Pydantic model
                 answer['response_text'] = response.model_dump()
             else:
-                # Regular text response
+                # Regular text response or fallback from instructor failure
                 answer['response_text'] = response.content[0].text
         elif self.api == 'mistral':
             answer['response_text'] = response.choices[0].message.content
