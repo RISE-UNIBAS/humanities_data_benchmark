@@ -14,12 +14,12 @@ class Author(BaseModel):
 
 class Publication(BaseModel):
     title: str
-    year: Any  # Can be either int or string
+    year: str
     place: Optional[str] = None
     pages: Optional[str] = None
     publisher: Optional[str] = None
     format: Optional[str] = None
-    editor: Optional[str] = None  # Missing field found in ground truth
+    editor: Optional[str] = None
 
 
 class LibraryReference(BaseModel):
