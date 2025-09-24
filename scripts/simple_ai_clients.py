@@ -1,5 +1,6 @@
 """Simple AI API client for OpenAI, GenAI, Anthropic, and Mistral AI."""
 import base64
+import logging
 from dataclasses import asdict
 from datetime import datetime
 import time
@@ -8,6 +9,7 @@ import google.generativeai as genai
 from openai import OpenAI
 from anthropic import Anthropic
 from mistralai import Mistral
+import instructor
 
 
 class AiApiClient:
@@ -19,6 +21,7 @@ class AiApiClient:
                       'mistral']
 
     api_client = None
+    instructor_client = None
     image_resources = []
     dataclass = None
 
@@ -53,7 +56,10 @@ class AiApiClient:
         if self.api == 'anthropic':
             self.api_client = Anthropic(
                 api_key=self.api_key,
+                timeout=300.0,  # 5 minutes timeout instead of default
             )
+            # Initialize instructor client for structured output
+            self.instructor_client = instructor.from_anthropic(self.api_client)
 
         if self.api == 'mistral':
             self.api_client = Mistral(
@@ -70,11 +76,13 @@ class AiApiClient:
     def end_client(self):
         """End the client session."""
         self.api_client = None
+        self.instructor_client = None
         self.end_time = time.time()
 
     def add_image_resource(self, path):
         """Add an image resource to the client"""
         self.image_resources.append(path)
+
 
     def clear_image_resources(self):
         """Clear the image resources"""
@@ -130,7 +138,6 @@ class AiApiClient:
             answer = response
 
         if self.api == 'anthropic':
-            # Anthropic supports images via base64 inline embedding
             content = [{"type": "text", "text": prompt}]
             for img_path in self.image_resources:
                 with open(img_path, "rb") as image_file:
@@ -143,32 +150,37 @@ class AiApiClient:
                             "data": base64_image
                         }
                     })
+
+            # Determine max_tokens based on model
             if model in ["claude-3-opus-20240229"]:
-                message = self.api_client.messages.create(
-                    max_tokens=4096,
-                    messages=[{
-                        "role": "user",
-                        "content": content,
-                    }],
-                    model=model,
-                )
+                max_tokens = 4096
             elif model in ["claude-3-5-sonnet-20241022"]:
-                message = self.api_client.messages.create(
-                    max_tokens=8192,
-                    messages=[{
-                        "role": "user",
-                        "content": content,
-                    }],
-                    model=model,
-                )
+                max_tokens = 8192
+            else:
+                max_tokens = 10000
+
+            # Use instructor client for structured output, regular client otherwise
+            if self.dataclass:
+                    message = self.instructor_client.messages.create(
+                        model=model,
+                        max_tokens=max_tokens,
+                        messages=[{
+                            "role": "user",
+                            "content": content,
+                        }],
+                        response_model=self.dataclass,
+                        timeout=300.0,
+                    )
+                    logging.info(message)
             else:
                 message = self.api_client.messages.create(
-                    max_tokens=10000,
+                    model=model,
+                    max_tokens=max_tokens,
                     messages=[{
                         "role": "user",
                         "content": content,
                     }],
-                    model=model,
+                    timeout=300.0,
                 )
             answer = message
 
@@ -218,7 +230,12 @@ class AiApiClient:
         elif self.api == 'genai':
             answer['response_text'] = response.text
         elif self.api == 'anthropic':
-            answer['response_text'] = response.content[0].text
+            if self.dataclass:
+                # For structured output with instructor, the response is a Pydantic model
+                answer['response_text'] = response.model_dump()
+            else:
+                # Regular text response
+                answer['response_text'] = response.content[0].text
         elif self.api == 'mistral':
             answer['response_text'] = response.choices[0].message.content
 
