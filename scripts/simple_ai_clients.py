@@ -1,11 +1,12 @@
 """Simple AI API client for OpenAI, GenAI, Anthropic, and Mistral AI."""
 import base64
 import logging
-from dataclasses import asdict
 from datetime import datetime
 import time
+import json
 
-import google.generativeai as genai
+from google import genai
+from google.genai.types import GenerateContentConfig, Part
 from openai import OpenAI
 from anthropic import Anthropic
 from mistralai import Mistral
@@ -23,6 +24,7 @@ class AiApiClient:
 
     api_client = None
     instructor_client = None
+    genai_client = None
     image_resources = []
     dataclass = None
 
@@ -52,7 +54,7 @@ class AiApiClient:
             )
 
         if self.api == 'genai':
-            genai.configure(api_key=self.api_key)
+            self.genai_client = genai.Client(api_key=self.api_key)
 
         if self.api == 'anthropic':
             self.api_client = Anthropic(
@@ -78,6 +80,7 @@ class AiApiClient:
         """End the client session."""
         self.api_client = None
         self.instructor_client = None
+        self.genai_client = None
         self.end_time = time.time()
 
     def add_image_resource(self, path):
@@ -88,6 +91,7 @@ class AiApiClient:
     def clear_image_resources(self):
         """Clear the image resources"""
         self.image_resources = []
+
 
     def prompt(self, model, prompt):
         """Prompt the AI model with a given prompt."""
@@ -129,13 +133,37 @@ class AiApiClient:
             answer = chat_completion
 
         if self.api == 'genai':
-            model_obj = genai.GenerativeModel(model)
-            images = []
+            contents = [prompt]
             for img_path in self.image_resources:
-                image_file = genai.upload_file(path=img_path)
-                images.append(image_file)
+                with open(img_path, 'rb') as f:
+                    image_data = f.read()
+                image_part = Part(
+                    inline_data={
+                        "mime_type": "image/jpeg",
+                        "data": base64.b64encode(image_data).decode('utf-8')
+                    }
+                )
+                contents.append(image_part)
 
-            response = model_obj.generate_content([prompt] + images)
+            if self.dataclass:
+                response = self.genai_client.models.generate_content(
+                    model=model,
+                    contents=contents,
+                    config=GenerateContentConfig(
+                        response_mime_type="application/json",
+                        response_schema=self.dataclass,
+                        temperature=self.temperature,
+                    ),
+                )
+            else:
+                response = self.genai_client.models.generate_content(
+                    model=model,
+                    contents=contents,
+                    config=GenerateContentConfig(
+                        temperature=self.temperature,
+                    ),
+                )
+
             answer = response
 
         if self.api == 'anthropic':
@@ -176,7 +204,7 @@ class AiApiClient:
                     )
                     logging.debug(f"Instructor successful: {type(message)}")
                 except (InstructorRetryException, Exception) as e:
-                    logging.warning(f"Instructor failed, falling back to raw response: {e}")
+                    logging.warning(f"Anthropic structured output failed, trying without data schema: {e}")
                     # Fallback to regular API call
                     message = self.api_client.messages.create(
                         model=model,
@@ -241,11 +269,32 @@ class AiApiClient:
         if self.api == 'openai':
             if self.dataclass:
                 text = response.choices[0].message.parsed
-                answer['response_text'] = asdict(text)
+                answer['response_text'] = text.model_dump()
             else:
                 answer['response_text'] = response.choices[0].message.content
         elif self.api == 'genai':
-            answer['response_text'] = response.text
+            if self.dataclass:
+                # For structured output, parse JSON and validate with Pydantic
+                try:
+                    # Check if response has parsed attribute first
+                    if hasattr(response, 'parsed') and response.parsed is not None:
+                        # response.parsed should be a Pydantic model instance
+                        if hasattr(response.parsed, 'model_dump'):
+                            answer['response_text'] = response.parsed.model_dump()
+                        else:
+                            # If parsed is a dict, use it directly
+                            answer['response_text'] = response.parsed
+                    else:
+                        # Fallback to manual JSON parsing from response.text
+                        json_response = json.loads(response.text)
+                        pydantic_response = self.dataclass(**json_response)
+                        answer['response_text'] = pydantic_response.model_dump()
+                except (json.JSONDecodeError, Exception) as e:
+                    logging.warning(f"Failed to parse GenAI structured response, using raw text: {e}")
+                    answer['response_text'] = response.text
+            else:
+                # Regular text response
+                answer['response_text'] = response.text
         elif self.api == 'anthropic':
             if self.dataclass and not hasattr(response, '_is_fallback'):
                 # For successful structured output with instructor, the response is a Pydantic model
