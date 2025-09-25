@@ -12,6 +12,7 @@ from anthropic import Anthropic
 from mistralai import Mistral
 import instructor
 from instructor.exceptions import InstructorRetryException
+from pydantic import BaseModel
 
 
 class AiApiClient:
@@ -202,7 +203,7 @@ class AiApiClient:
                         timeout=300.0,
                         max_retries=1,  # Limit retries to avoid infinite loops
                     )
-                    logging.debug(f"Instructor successful: {type(message)}")
+                    logging.info(f"Instructor successful: {type(message)}")
                 except (InstructorRetryException, Exception) as e:
                     logging.warning(f"Anthropic structured output failed, trying without data schema: {e}")
                     # Fallback to regular API call
@@ -242,13 +243,33 @@ class AiApiClient:
                         }
                     })
 
-            message = self.api_client.chat.complete(
-                messages=[{
+            kwargs = {
+                "messages": [{
                     "role": "user",
                     "content": content,
                 }],
-                model=model,
-            )
+                "model": model,
+            }
+            logging.info(self.dataclass)
+            if self.dataclass:
+                # Add schema to system message and use json_object mode
+                schema_prompt = f"Return a JSON response matching this exact schema: {self.dataclass.model_json_schema()}"
+
+                # Add schema instruction to the first message
+                messages = kwargs["messages"].copy()
+                if messages and messages[0]["role"] == "system":
+                    messages[0]["content"] = messages[0]["content"] + "\n\n" + schema_prompt
+                else:
+                    messages.insert(0, {"role": "system", "content": schema_prompt})
+
+                message = self.api_client.chat.complete(
+                    messages=messages,
+                    model=kwargs["model"],
+                    response_format={"type": "json_object"}
+                )
+            else:
+                # Use regular chat.complete() for unstructured output
+                message = self.api_client.chat.complete(**kwargs)
             answer = message
 
         end_time = time.time()
@@ -303,7 +324,18 @@ class AiApiClient:
                 # Regular text response or fallback from instructor failure
                 answer['response_text'] = response.content[0].text
         elif self.api == 'mistral':
-            answer['response_text'] = response.choices[0].message.content
+            if self.dataclass:
+                # For structured output, parse JSON and validate with Pydantic
+                try:
+                    content = response.choices[0].message.content
+                    json_response = json.loads(content)
+                    pydantic_response = self.dataclass(**json_response)
+                    answer['response_text'] = pydantic_response.model_dump()
+                except (json.JSONDecodeError, Exception) as e:
+                    logging.warning(f"Failed to parse Mistral structured response, using raw text: {e}")
+                    answer['response_text'] = response.choices[0].message.content
+            else:
+                answer['response_text'] = response.choices[0].message.content
 
         return answer
 
