@@ -8,7 +8,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
-- Structured outputs for Google Gen AI, Anthropic and Mistral models 
+- Structured outputs for Google Gen AI, Anthropic and Mistral models
+- T0008 on 2025-09-24
+- T0099 on 2025-09-24
+- T0107 on 2025-09-24
+- T0117 on 2025-09-24
+- T0120 on 2025-09-24
+- T0125 on 2025-09-24
+- T0130 on 2025-09-24
+- T0132 on 2025-09-24
+- T0134 on 2025-09-24
+- T0145 on 2025-09-24
+- T0151 on 2025-09-24
+- T0162 on 2025-09-24
+- T0023 on 2025-09-25
+- T0035 on 2025-09-25
+- T0095 on 2025-09-25
+- T0159 on 2025-09-25
 
 ### Fixed
 - bibliographic_data attributions
