@@ -7,8 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- Structured outputs for Google Gen AI, Anthropic and Mistral models 
+
 ### Fixed
 - bibliographic_data attributions
+- Pydantic dataclass models
 
 ## [v0.2.2] - 2025-09-19
 

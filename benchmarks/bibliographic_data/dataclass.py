@@ -1,47 +1,47 @@
 from enum import Enum
-from typing import List, Optional, Dict
-from dataclasses import dataclass, field
+from typing import List, Optional, Dict, Any
 from pydantic import BaseModel
+
 
 class EntryType(str, Enum):
     BOOK = "book"
     ARTICLE = "journal-article"
     OTHER = "other"
 
-@dataclass
-class Author:
+
+class Author(BaseModel):
     family: str
     given: str
 
-@dataclass
-class Entry:
+
+class Entry(BaseModel):
     id: str
     type: EntryType
     title: str
     container_title: Optional[str] = None
-    author: Optional[List[Author]] = field(default_factory=list)
+    author: Optional[List[Author]] = None
     note: Optional[str] = None
     publisher: Optional[str] = None
-    editor: Optional[List[str]] = field(default_factory=list)
+    editor: Optional[List[str]] = None
     publisher_place: Optional[str] = None
     issued: Optional[str] = None
     event_date: Optional[str] = None
-    related: Optional[List[str]] = field(default_factory=list)
-    relation: Optional[Dict] = field(default_factory=dict)
+    related: Optional[List[str]] = None
+    relation: Optional[str] = None
     volume: Optional[str] = None
     page: Optional[str] = None
     fascicle: Optional[str] = None
-    reprint: Optional[Dict] = field(default_factory=dict)
+    reprint: Optional[str] = None
     edition: Optional[str] = None
     incomplete: Optional[bool] = None
 
-@dataclass
-class Metadata:
+
+class Metadata(BaseModel):
     title: str
     year: str
     page_number: Optional[int] = None
 
-@dataclass
+
 class Document(BaseModel):
     metadata: Metadata
     entries: List[Entry]
