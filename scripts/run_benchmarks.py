@@ -117,18 +117,5 @@ def main(limit_to: list[str] = None, dates: list[str] = None):
                         logging.error(f"Skipping {benchmark.get_title()} (not runnable).")
 
 if __name__ == "__main__":
-    main(limit_to=["T0167", "T0168"], dates=["2025-09-02"])
-#
-"""
-["T0142", "T0143", "T0144", "T0145", "T0146", "T0147", "T0148",
-                   "T0159",
-                   "T0160", "T0161", "T0162", "T0163", "T0164", "T0165", "T0166", "T0066",
-
-        "T0149", "T0150", "T0151", "T0152", "T0153", "T0154", "T0155", "T0156", "T0157", "T0158",
-
-                   ]
-
-
-
-"""
+    main(limit_to=["T0169", "T0170", "T0171", "T0172", "T0173", "T0174", "T0175", "T0176", "T0177", "T0178", "T0179", "T0180"])
 

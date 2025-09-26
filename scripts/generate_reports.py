@@ -661,7 +661,7 @@ The following radar chart shows the performance distribution of top models acros
 
 
 ## About This Page
-This benchmark suite is designed to test **AI models** on humanities data tasks. The tests run **weekly** and 
+This benchmark suite is designed to test **AI models** on humanities data tasks. The tests run **monthly** and 
 results are automatically updated.
 
 For more details, visit the [GitHub repository](https://github.com/RISE-UNIBAS/humanities_data_benchmark)."""

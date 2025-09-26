@@ -25,6 +25,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - T0035 on 2025-09-25
 - T0095 on 2025-09-25
 - T0159 on 2025-09-25
+- T0169 on 2025-09-26
+- T0170 on 2025-09-26
+- T0171 on 2025-09-26
+- T0172 on 2025-09-26
+- T0173 on 2025-09-26
+- T0174 on 2025-09-26
+- T0175 on 2025-09-26
+- T0176 on 2025-09-26
+- T0177 on 2025-09-26
+- T0178 on 2025-09-26
+- T0179 on 2025-09-26
+- T0180 on 2025-09-26
 
 ### Fixed
 - bibliographic_data attributions
