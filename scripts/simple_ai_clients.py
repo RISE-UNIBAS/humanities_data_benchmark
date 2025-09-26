@@ -11,8 +11,7 @@ from openai import OpenAI
 from anthropic import Anthropic
 from mistralai import Mistral
 import instructor
-from instructor.exceptions import InstructorRetryException
-from pydantic import BaseModel
+from instructor.exceptions import InstructorRetryException  # TODO: change to instructor.core
 
 
 class AiApiClient:
