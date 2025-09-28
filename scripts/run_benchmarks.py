@@ -106,6 +106,20 @@ def main(limit_to: list[str] = None, dates: list[str] = None):
                         if benchmark.is_runnable():
                             logging.info(f"Running {benchmark.get_title()} for date {date}...")
                             benchmark.run(regenerate_existing_results=REGENERATE_RESULTS)
+
+                            # Log cost information if available
+                            try:
+                                scoring_file = os.path.join("..", "results", date, benchmark.id, "scoring.json")
+                                if os.path.exists(scoring_file):
+                                    import json
+                                    with open(scoring_file, 'r') as f:
+                                        scoring_data = json.load(f)
+                                    if 'cost_summary' in scoring_data:
+                                        cost_summary = scoring_data['cost_summary']
+                                        logging.info(f"Cost: ${cost_summary['total_cost_usd']:.4f} "
+                                                   f"({cost_summary['total_tokens']} tokens)")
+                            except Exception as e:
+                                logging.debug(f"Could not read cost information: {e}")
                         else:
                             logging.error(f"Skipping {benchmark.get_title()} for date {date} (not runnable).")
                 else:
@@ -113,9 +127,23 @@ def main(limit_to: list[str] = None, dates: list[str] = None):
                     if benchmark.is_runnable():
                         logging.info(f"Running {benchmark.get_title()}...")
                         benchmark.run(regenerate_existing_results=REGENERATE_RESULTS)
+
+                        # Log cost information if available
+                        try:
+                            scoring_file = os.path.join("..", "results", benchmark.date, benchmark.id, "scoring.json")
+                            if os.path.exists(scoring_file):
+                                import json
+                                with open(scoring_file, 'r') as f:
+                                    scoring_data = json.load(f)
+                                if 'cost_summary' in scoring_data:
+                                    cost_summary = scoring_data['cost_summary']
+                                    logging.info(f"Cost: ${cost_summary['total_cost_usd']:.4f} "
+                                               f"({cost_summary['total_tokens']} tokens)")
+                        except Exception as e:
+                            logging.debug(f"Could not read cost information: {e}")
                     else:
                         logging.error(f"Skipping {benchmark.get_title()} (not runnable).")
 
 if __name__ == "__main__":
-    main()
+    main(limit_to=["T0130"])
 

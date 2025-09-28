@@ -234,6 +234,9 @@ class Benchmark(ABC):
 
         # Process each image group
         benchmark_scores = []
+        total_input_tokens = 0
+        total_output_tokens = 0
+
         for image_name, img_files in image_groups.items():
             image_paths = [os.path.join(images_dir, img) for img in img_files]
             if self.skip_image(image_name):
@@ -249,6 +252,12 @@ class Benchmark(ABC):
                 answer_text = read_file(self.get_request_answer_file_name(image_name))
                 answer = json.loads(answer_text)
 
+            # Aggregate token information (cost will be calculated fresh when saving)
+            if 'cost_info' in answer:
+                cost_info = answer['cost_info']
+                total_input_tokens += cost_info.get('input_tokens', 0)
+                total_output_tokens += cost_info.get('output_tokens', 0)
+
             ground_truth = self.load_ground_truth(image_name)
             score = self.score_request_answer(image_name, answer, ground_truth)
             benchmark_scores.append(score)
@@ -256,6 +265,24 @@ class Benchmark(ABC):
             self.save_render(image_name, render)
 
         benchmark_score = self.score_benchmark(benchmark_scores)
+
+        # Calculate cost using historical pricing for the benchmark run date
+        from simple_ai_clients import CostCalculator
+        total_cost = CostCalculator.calculate_cost_for_date(
+            self.date, self.provider, self.model, total_input_tokens, total_output_tokens
+        )
+
+        # Add cost information to benchmark score
+        benchmark_score['cost_summary'] = {
+            'total_cost_usd': round(total_cost, 4),
+            'total_input_tokens': total_input_tokens,
+            'total_output_tokens': total_output_tokens,
+            'total_tokens': total_input_tokens + total_output_tokens,
+            'provider': self.provider,
+            'model': self.model,
+            'num_requests': len([name for name in image_groups.keys() if not self.skip_image(name)])
+        }
+
         self.save_benchmark_score(benchmark_score)
 
     def get_request_name(self, image_name: str) -> str:

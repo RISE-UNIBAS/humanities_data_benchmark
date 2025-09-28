@@ -14,6 +14,121 @@ import instructor
 from instructor.exceptions import InstructorRetryException  # TODO: change to instructor.core
 
 
+class CostCalculator:
+    """Calculate API costs based on token usage and provider pricing."""
+
+    # Pricing per 1M tokens (input, output) in USD
+    # Sources updated: September 28, 2025
+    PRICING = {
+        'openai': {  # Source: https://platform.openai.com/docs/pricing (as of Sep 28, 2025)
+            'gpt-4o': (2.50, 10.00),
+            'gpt-4o-mini': (0.150, 0.600),
+            'gpt-4.5-preview': (10.00, 30.00),
+            'gpt-4.1': (5.00, 15.00),
+            'gpt-4.1-mini': (1.00, 3.00),
+            'gpt-4.1-nano': (0.25, 1.00),
+            'gpt-5': (1.25, 10.00),
+            'gpt-5-mini': (0.25, 2.00),
+            'gpt-5-nano': (0.05, 0.40),
+            'o3': (100.00, 400.00),
+        },
+        'anthropic': {  # Source: https://docs.claude.com/en/docs/about-claude/pricing (as of Sep 28, 2025)
+            'claude-3-5-sonnet-20241022': (3.00, 15.00),
+            'claude-3-5-haiku-20241022': (0.25, 1.25),
+            'claude-3-opus-20240229': (15.00, 75.00),
+            'claude-3-7-sonnet-20250219': (3.00, 15.00),
+            'claude-opus-4-20250514': (15.00, 75.00),  # Corrected from search results
+            'claude-sonnet-4-20250514': (3.00, 15.00),  # Corrected from search results
+            'claude-opus-4-1-20250805': (20.00, 80.00),  # Updated 4.1 model pricing
+        },
+        'genai': {  # Source: https://ai.google.dev/gemini-api/docs/pricing (as of Sep 28, 2025)
+            'gemini-2.0-flash': (0.075, 0.30),
+            'gemini-2.0-flash-lite': (0.04, 0.16),
+            'gemini-1.5-flash': (0.075, 0.30),
+            'gemini-1.5-pro': (1.25, 5.00),
+            'gemini-2.5-pro': (2.50, 10.00),
+            'gemini-exp-1206': (1.25, 5.00),
+            'gemini-2.0-pro-exp-02-05': (2.50, 10.00),
+            'gemini-2.5-pro-exp-03-25': (2.50, 10.00),
+            'gemini-2.5-flash-preview-04-17': (0.075, 0.30),
+            'gemini-2.5-pro-preview-05-06': (2.50, 10.00),
+        },
+        'mistral': {  # Source: https://mistral.ai/technology/#pricing (as of Sep 28, 2025)
+            'pixtral-large-latest': (3.00, 9.00),
+            'mistral-medium-2508': (2.75, 8.25),
+            'mistral-medium-2505': (2.75, 8.25),
+        }
+    }
+
+    @classmethod
+    def calculate_cost_for_date(cls, date: str, provider: str, model: str,
+                               input_tokens: int, output_tokens: int) -> float:
+        """Calculate cost using historical pricing for specific date."""
+        try:
+            from historical_pricing_db import get_historical_pricing_db
+
+            db = get_historical_pricing_db()
+            pricing = db.get_pricing_for_date(date, provider, model)
+
+            if pricing:
+                input_price, output_price = pricing
+                input_cost = (input_tokens / 1_000_000) * input_price
+                output_cost = (output_tokens / 1_000_000) * output_price
+                logging.debug(f"Using historical pricing for {date}: {provider}/{model} ${input_price}/${output_price}")
+                return input_cost + output_cost
+            else:
+                logging.warning(f"No historical pricing found for {date}: {provider}/{model}, falling back to current pricing")
+                return cls.calculate_cost(provider, model, input_tokens, output_tokens)
+
+        except ImportError:
+            logging.warning("Historical pricing database not available, using current pricing")
+            return cls.calculate_cost(provider, model, input_tokens, output_tokens)
+        except Exception as e:
+            logging.warning(f"Error accessing historical pricing: {e}, falling back to current pricing")
+            return cls.calculate_cost(provider, model, input_tokens, output_tokens)
+
+    @classmethod
+    def calculate_cost(cls, provider: str, model: str, input_tokens: int, output_tokens: int) -> float:
+        """Calculate cost based on current pricing. USE calculate_cost_for_date() for historical accuracy."""
+        if provider not in cls.PRICING:
+            logging.warning(f"Unknown provider for cost calculation: {provider}")
+            return 0.0
+
+        if model not in cls.PRICING[provider]:
+            logging.warning(f"Unknown model for cost calculation: {provider}/{model}")
+            return 0.0
+
+        input_price, output_price = cls.PRICING[provider][model]
+        input_cost = (input_tokens / 1_000_000) * input_price
+        output_cost = (output_tokens / 1_000_000) * output_price
+
+        return input_cost + output_cost
+
+    @classmethod
+    def get_pricing_info(cls, provider: str = None, model: str = None) -> dict:
+        """Get pricing information for debugging and verification."""
+        if provider and model:
+            if provider in cls.PRICING and model in cls.PRICING[provider]:
+                input_price, output_price = cls.PRICING[provider][model]
+                return {
+                    'provider': provider,
+                    'model': model,
+                    'input_price_per_1m': input_price,
+                    'output_price_per_1m': output_price
+                }
+            else:
+                return {'error': f'Model {provider}/{model} not found'}
+        elif provider:
+            return cls.PRICING.get(provider, {'error': f'Provider {provider} not found'})
+        else:
+            return cls.PRICING
+
+    @classmethod
+    def verify_model_availability(cls, provider: str, model: str) -> bool:
+        """Check if model is available for cost calculation."""
+        return provider in cls.PRICING and model in cls.PRICING[provider]
+
+
 class AiApiClient:
     """Simple AI API client for OpenAI, GenAI, and Anthropic."""
 
@@ -87,11 +202,9 @@ class AiApiClient:
         """Add an image resource to the client"""
         self.image_resources.append(path)
 
-
     def clear_image_resources(self):
         """Clear the image resources"""
         self.image_resources = []
-
 
     def prompt(self, model, prompt):
         """Prompt the AI model with a given prompt."""
@@ -284,6 +397,12 @@ class AiApiClient:
             'execution_time': datetime.now().isoformat(),
             'response_text': "",
             'scores': {},
+            'cost_info': {
+                'input_tokens': 0,
+                'output_tokens': 0,
+                'total_tokens': 0,
+                'estimated_cost_usd': 0.0
+            }
         }
 
         if self.api == 'openai':
@@ -292,6 +411,15 @@ class AiApiClient:
                 answer['response_text'] = text.model_dump()
             else:
                 answer['response_text'] = response.choices[0].message.content
+
+            # Extract token usage from OpenAI response
+            if hasattr(response, 'usage') and response.usage:
+                answer['cost_info']['input_tokens'] = response.usage.prompt_tokens
+                answer['cost_info']['output_tokens'] = response.usage.completion_tokens
+                answer['cost_info']['total_tokens'] = response.usage.total_tokens
+                answer['cost_info']['estimated_cost_usd'] = CostCalculator.calculate_cost(
+                    self.api, model, response.usage.prompt_tokens, response.usage.completion_tokens
+                )
         elif self.api == 'genai':
             if self.dataclass:
                 # For structured output, parse JSON and validate with Pydantic
@@ -315,6 +443,16 @@ class AiApiClient:
             else:
                 # Regular text response
                 answer['response_text'] = response.text
+
+            # Extract token usage from GenAI response
+            if hasattr(response, 'usage_metadata') and response.usage_metadata:
+                answer['cost_info']['input_tokens'] = response.usage_metadata.prompt_token_count
+                answer['cost_info']['output_tokens'] = response.usage_metadata.candidates_token_count
+                answer['cost_info']['total_tokens'] = response.usage_metadata.total_token_count
+                answer['cost_info']['estimated_cost_usd'] = CostCalculator.calculate_cost(
+                    self.api, model, response.usage_metadata.prompt_token_count,
+                    response.usage_metadata.candidates_token_count
+                )
         elif self.api == 'anthropic':
             if self.dataclass and not hasattr(response, '_is_fallback'):
                 # For successful structured output with instructor, the response is a Pydantic model
@@ -322,6 +460,15 @@ class AiApiClient:
             else:
                 # Regular text response or fallback from instructor failure
                 answer['response_text'] = response.content[0].text
+
+            # Extract token usage from Anthropic response
+            if hasattr(response, 'usage') and response.usage:
+                answer['cost_info']['input_tokens'] = response.usage.input_tokens
+                answer['cost_info']['output_tokens'] = response.usage.output_tokens
+                answer['cost_info']['total_tokens'] = response.usage.input_tokens + response.usage.output_tokens
+                answer['cost_info']['estimated_cost_usd'] = CostCalculator.calculate_cost(
+                    self.api, model, response.usage.input_tokens, response.usage.output_tokens
+                )
         elif self.api == 'mistral':
             if self.dataclass:
                 # For structured output, parse JSON and validate with Pydantic
@@ -335,6 +482,15 @@ class AiApiClient:
                     answer['response_text'] = response.choices[0].message.content
             else:
                 answer['response_text'] = response.choices[0].message.content
+
+            # Extract token usage from Mistral response
+            if hasattr(response, 'usage') and response.usage:
+                answer['cost_info']['input_tokens'] = response.usage.prompt_tokens
+                answer['cost_info']['output_tokens'] = response.usage.completion_tokens
+                answer['cost_info']['total_tokens'] = response.usage.total_tokens
+                answer['cost_info']['estimated_cost_usd'] = CostCalculator.calculate_cost(
+                    self.api, model, response.usage.prompt_tokens, response.usage.completion_tokens
+                )
 
         return answer
 
