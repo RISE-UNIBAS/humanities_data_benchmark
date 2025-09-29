@@ -17,7 +17,7 @@ how well various LLMs perform on digital humanities (DH) tasks involving visual 
 Benchmarking is the process of systematically evaluating and ranking various models for specific tasks using well-defined ground truths and metrics. For humanities research, benchmarking provides:
 
 - **Evidence-based decision making** about which model(s) to use for which humanities-specific task(s)
-- **Quantifiable comparisons** between different AI models on humanities data
+- **Quantifiable comparisons** between different AI models on humanities data, including cost efficiency analysis
 - **Standardized evaluation** of model performance on tasks like historical document analysis, transcription, and metadata extraction
 
 This benchmark suite focuses on tasks essential to digital humanities work with visual materials, helping researchers make informed choices about which AI systems best suit their specific research needs.
@@ -302,6 +302,10 @@ This benchmark suite currently tests models from the following providers:
 ### Google/Gemini
 - **gemini-2.0-flash**: Fast response multimodal model from Google's Gemini line
 - **gemini-2.0-flash-lite**: A lighter version of gemini-2.0-flash
+- **gemini-2.5-flash**: Latest generation flash model with improved performance
+- **gemini-2.5-flash-lite**: Efficient version of Gemini 2.5 flash for lightweight tasks
+- **gemini-2.5-flash-lite-preview-09-2025**: Preview version of the lite flash model
+- **gemini-2.5-flash-preview-09-2025**: Preview version of Gemini 2.5 flash
 - **gemini-exp-1206**: An experimental Gemini model
 - **gemini-1.5-flash**: Earlier generation of the Gemini flash model
 - **gemini-1.5-pro**: Higher capability model from the Gemini 1.5 series
@@ -322,6 +326,10 @@ This benchmark suite currently tests models from the following providers:
 
 ### Mistral AI
 - **pixtral-large-latest**: Mistral's multimodal model for vision tasks
+- **pixtral-12b**: Efficient 12-billion parameter multimodal model
+- **mistral-large-latest**: Mistral's latest and most capable language model
+- **mistral-medium-2505**: Mid-tier Mistral model optimized for balanced performance
+- **mistral-medium-2508**: Updated version of Mistral Medium with enhanced capabilities
 
 ## Benchmarking Methodology
 
@@ -348,6 +356,9 @@ These metrics evaluate how well the model performs the specific task. Examples i
 These metrics evaluate factors beyond task performance that impact usability:
 
 - **Compute Cost**: The financial cost of running the model on humanities-scale datasets
+  - **Automatic Cost Tracking**: The suite automatically tracks API costs for each test execution
+  - **Cost per Performance Point**: Efficiency metric showing cost relative to performance ($/performance point)
+  - **Historical Pricing**: Wayback Machine integration captures pricing snapshots for reproducible cost analysis
 - **Speed**: Response time and throughput for processing humanities materials
 - **Deployment Options**: Whether the model can be run locally or requires API calls
 - **Legal and Ethical Considerations**: Including data privacy, IP compliance, and model bias
@@ -359,7 +370,6 @@ The benchmark suite currently has several limitations that could be addressed in
 ### Additional Models
 Several important model families are not yet included:
 - **Meta/Llama models**: The entire Llama model family is absent (Llama 3/4 series)
-- **Additional Mistral models**: Only Pixtral is represented, missing other Mistral models like Mistral Large
 - **Cohere Command models**: Entirely absent from the benchmark
 - **Various open-source models**: Falcon, Mixtral, and other open-source alternatives
 - **Local/self-hosted models**: Limited support for models that can be run locally
@@ -375,7 +385,6 @@ Several important model families are not yet included:
 - **Historical period coverage**: Concentrated on 19th-20th century materials; limited representation of medieval, early modern, or contemporary sources
 
 ### Evaluation Metrics
-- **Cost efficiency**: Performance evaluation relative to token cost and processing time
 - **Speed metrics**: Systematic response time measurements across different model sizes
 - **Context window testing**: Evaluation across different context window sizes and document lengths
 - **Standardized error analysis**: More granular error categorization and failure mode analysis
