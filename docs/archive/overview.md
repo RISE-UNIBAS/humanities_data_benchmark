@@ -96,15 +96,6 @@ This page provides an overview of all benchmark tests.Click on the test name to 
     <td></td>
 </tr>
 <tr>
-    <td>2025-09-28</td>
-    <td><a href='/humanities_data_benchmark/archive/2025-09-28/T0130'><span class='test-square' style='background-color: #99ff33;'>T0130</span></a>&nbsp;</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-</tr>
-<tr>
     <td>2025-09-26</td>
     <td><a href='/humanities_data_benchmark/archive/2025-09-26/T0169'><span class='test-square' style='background-color: #ff3300;'>T0169</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-09-26/T0170'><span class='test-square' style='background-color: #ffcc33;'>T0170</span></a>&nbsp;</td>
     <td><a href='/humanities_data_benchmark/archive/2025-09-26/T0177'><span class='test-square' style='background-color: #ccff00;'>T0177</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-09-26/T0178'><span class='test-square' style='background-color: #ff0066;'>T0178</span></a>&nbsp;</td>

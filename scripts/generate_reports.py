@@ -293,7 +293,7 @@ def create_leaderboard():
             
             # Initialize model entry if not exists
             if model not in model_scores:
-                model_scores[model] = {'provider': provider}
+                model_scores[model] = {'provider': provider, 'costs': []}
             if benchmark not in model_scores[model]:
                 model_scores[model][benchmark] = []
             
@@ -316,6 +316,15 @@ def create_leaderboard():
                 try:
                     score_value = float(score) if isinstance(score, (str, int, float)) else 0
                     model_scores[model][benchmark].append(score_value)
+
+                    # Extract cost information
+                    if 'cost_summary' in scoring_data and scoring_data['cost_summary'] and 'total_cost_usd' in scoring_data['cost_summary']:
+                        try:
+                            cost_usd = float(scoring_data['cost_summary']['total_cost_usd'])
+                            model_scores[model]['costs'].append(cost_usd)
+                        except (ValueError, TypeError):
+                            pass
+
                 except (ValueError, TypeError):
                     continue
     
@@ -339,10 +348,21 @@ def create_leaderboard():
         if benchmark_count == len(target_benchmarks):
             global_average = total_score / benchmark_count
             provider_name = provider_mappings.get(benchmarks.get('provider', '').lower(), benchmarks.get('provider', 'Unknown'))
+
+            # Calculate average cost and cost per point
+            avg_cost = None
+            cost_per_point = None
+            if 'costs' in benchmarks and benchmarks['costs']:
+                avg_cost = sum(benchmarks['costs']) / len(benchmarks['costs'])
+                if global_average > 0:
+                    cost_per_point = avg_cost / global_average
+
             leaderboard_data.append({
                 'model': model,
                 'provider': provider_name,
                 'global_avg': global_average,
+                'avg_cost': avg_cost,
+                'cost_per_point': cost_per_point,
                 'bibliographic_data': benchmark_averages['bibliographic_data'],
                 'fraktur': benchmark_averages['fraktur'],
                 'metadata_extraction': benchmark_averages['metadata_extraction'],
@@ -363,10 +383,11 @@ def create_leaderboard():
 <th onclick="sortTable(0)" style="cursor: pointer;">Model ↕</th>
 <th onclick="sortTable(1)" style="cursor: pointer;">Provider ↕</th>
 <th onclick="sortTable(2)" style="cursor: pointer;">Global Average ↕</th>
-<th onclick="sortTable(3)" style="cursor: pointer;"><a href="benchmarks/bibliographic_data/" style="color: inherit; text-decoration: none;">bibliographic_data</a> ↕</th>
-<th onclick="sortTable(4)" style="cursor: pointer;"><a href="benchmarks/fraktur/" style="color: inherit; text-decoration: none;">fraktur</a> ↕</th>
-<th onclick="sortTable(5)" style="cursor: pointer;"><a href="benchmarks/metadata_extraction/" style="color: inherit; text-decoration: none;">metadata_extraction</a> ↕</th>
-<th onclick="sortTable(6)" style="cursor: pointer;"><a href="benchmarks/zettelkatalog/" style="color: inherit; text-decoration: none;">zettelkatalog</a> ↕</th>
+<th onclick="sortTable(3)" style="cursor: pointer;">Cost per Point ↕</th>
+<th onclick="sortTable(4)" style="cursor: pointer;"><a href="benchmarks/bibliographic_data/" style="color: inherit; text-decoration: none;">bibliographic_data</a> ↕</th>
+<th onclick="sortTable(5)" style="cursor: pointer;"><a href="benchmarks/fraktur/" style="color: inherit; text-decoration: none;">fraktur</a> ↕</th>
+<th onclick="sortTable(6)" style="cursor: pointer;"><a href="benchmarks/metadata_extraction/" style="color: inherit; text-decoration: none;">metadata_extraction</a> ↕</th>
+<th onclick="sortTable(7)" style="cursor: pointer;"><a href="benchmarks/zettelkatalog/" style="color: inherit; text-decoration: none;">zettelkatalog</a> ↕</th>
 </tr>
 </thead>
 <tbody>'''
@@ -375,6 +396,14 @@ def create_leaderboard():
         model_html = get_rectangle(data['model'])
         provider_html = get_rectangle(data['provider'])
         global_avg_badge = get_badge("global", f"{data['global_avg']:.3f}")
+
+        # Create cost per point badge
+        cost_per_point_badge = "N/A"
+        cost_per_point_sort = "999"  # High value for N/A entries to sort last
+        if data['cost_per_point'] is not None:
+            cost_per_point_badge = get_badge("cost/pt", f"${data['cost_per_point']:.4f}/pt")
+            cost_per_point_sort = f"{data['cost_per_point']:.4f}"
+
         biblio_badge = get_badge("fuzzy", f"{data['bibliographic_data']:.3f}") if data['bibliographic_data'] is not None else "N/A"
         fraktur_badge = get_badge("fuzzy", f"{data['fraktur']:.3f}") if data['fraktur'] is not None else "N/A"
         metadata_badge = get_badge("f1_micro", f"{data['metadata_extraction']:.3f}") if data['metadata_extraction'] is not None else "N/A"
@@ -385,7 +414,7 @@ def create_leaderboard():
         metadata_sort = f'{data["metadata_extraction"]:.3f}' if data["metadata_extraction"] is not None else "0"
         zettelkatalog_sort = f'{data["zettelkatalog"]:.3f}' if data["zettelkatalog"] is not None else "0"
         
-        leaderboard_html += f'<tr><td data-sort="{data["model"]}">{model_html}</td><td data-sort="{data["provider"]}">{provider_html}</td><td data-sort="{data["global_avg"]:.3f}">{global_avg_badge}</td><td data-sort="{biblio_sort}">{biblio_badge}</td><td data-sort="{fraktur_sort}">{fraktur_badge}</td><td data-sort="{metadata_sort}">{metadata_badge}</td><td data-sort="{zettelkatalog_sort}">{zettelkatalog_badge}</td></tr>'
+        leaderboard_html += f'<tr><td data-sort="{data["model"]}">{model_html}</td><td data-sort="{data["provider"]}">{provider_html}</td><td data-sort="{data["global_avg"]:.3f}">{global_avg_badge}</td><td data-sort="{cost_per_point_sort}">{cost_per_point_badge}</td><td data-sort="{biblio_sort}">{biblio_badge}</td><td data-sort="{fraktur_sort}">{fraktur_badge}</td><td data-sort="{metadata_sort}">{metadata_badge}</td><td data-sort="{zettelkatalog_sort}">{zettelkatalog_badge}</td></tr>'
     
     leaderboard_html += '''</tbody>
 </table>
@@ -523,6 +552,7 @@ def create_index():
 <th onclick="sortBenchmarkTable('{benchmark}', 4)" style="cursor: pointer;">Prompt ↕</th>
 <th onclick="sortBenchmarkTable('{benchmark}', 5)" style="cursor: pointer;">Rules ↕</th>
 <th onclick="sortBenchmarkTable('{benchmark}', 6)" style="cursor: pointer;">Results ↕</th>
+<th onclick="sortBenchmarkTable('{benchmark}', 7)" style="cursor: pointer;">Cost (USD) ↕</th>
 </tr>
 </thead>
 <tbody>'''
@@ -561,30 +591,35 @@ def create_index():
                 except (ValueError, TypeError):
                     score_value = 0
 
-                # Create badges based on benchmark type
-                badges = []
-                if benchmark == 'bibliographic_data':
-                    # Show all metrics for bibliographic_data
-                    for key, value in scoring_data.items():
-                        badges.append(get_badge(key.lower(), value))
-                elif benchmark == 'fraktur':
-                    # Only show fuzzy for fraktur
-                    if 'fuzzy' in scoring_data:
-                        badges.append(get_badge('fuzzy', scoring_data['fuzzy']))
-                elif benchmark == 'metadata_extraction':
-                    # Only show f1_micro for metadata_extraction
+                # Show appropriate score with 3 decimal places as badge based on benchmark type
+                badge_html = "N/A"
+                if benchmark == 'metadata_extraction' or benchmark == 'zettelkatalog':
+                    # Use f1_micro for metadata_extraction and zettelkatalog
                     if 'f1_micro' in scoring_data:
-                        badges.append(get_badge('f1_micro', scoring_data['f1_micro']))
-                elif benchmark == 'zettelkatalog':
-                    # Only show f1_micro for zettelkatalog
-                    if 'f1_micro' in scoring_data:
-                        badges.append(get_badge('f1_micro', scoring_data['f1_micro']))
+                        f1_value = scoring_data['f1_micro']
+                        try:
+                            f1_float = float(f1_value) if f1_value else 0
+                            badge_html = get_badge('f1_micro', f"{f1_float:.3f}")
+                        except (ValueError, TypeError):
+                            badge_html = "N/A"
                 else:
-                    # For other benchmarks, show all metrics
-                    for key, value in scoring_data.items():
-                        badges.append(get_badge(key.lower(), value))
-                
-                badge_html = " ".join(badges)
+                    # Use fuzzy for bibliographic_data, fraktur, and other benchmarks
+                    if 'fuzzy' in scoring_data:
+                        fuzzy_value = scoring_data['fuzzy']
+                        try:
+                            fuzzy_float = float(fuzzy_value) if fuzzy_value else 0
+                            badge_html = get_badge('fuzzy', f"{fuzzy_float:.3f}")
+                        except (ValueError, TypeError):
+                            badge_html = "N/A"
+
+                # Extract cost information
+                cost_html = "N/A"
+                if 'cost_summary' in scoring_data and scoring_data['cost_summary'] and 'total_cost_usd' in scoring_data['cost_summary']:
+                    try:
+                        cost_usd = float(scoring_data['cost_summary']['total_cost_usd'])
+                        cost_html = f"${cost_usd:.4f}"
+                    except (ValueError, TypeError):
+                        cost_html = "N/A"
                 
                 all_tests.append({
                     'test_id': test_id,
@@ -594,6 +629,7 @@ def create_index():
                     'prompt': prompt_file if prompt_file else "prompt.txt",
                     'rules': rules if rules else "None",
                     'badges': badge_html,
+                    'cost': cost_html,
                     'score': score_value
                 })
         
@@ -623,7 +659,7 @@ def create_index():
             # Create clickable test ID using get_square for consistent styling
             test_id_square = get_square(test["test_id"], href="/humanities_data_benchmark/tests/" + test["test_id"])
             
-            benchmark_table += f'<tr><td data-sort="{test["model"]}">{model_html}</td><td data-sort="{provider_display}">{provider_html}</td><td data-sort="{test["test_id"]}">{test_id_square}</td><td data-sort="{test["date"]}">{test["date"]}</td><td data-sort="{test["prompt"]}">{test["prompt"]}</td><td data-sort="{test["rules"] if test["rules"] != "None" else ""}">{rules_display}</td><td data-sort="{test["score"]:.3f}">{test["badges"]}</td></tr>'
+            benchmark_table += f'<tr><td data-sort="{test["model"]}">{model_html}</td><td data-sort="{provider_display}">{provider_html}</td><td data-sort="{test["test_id"]}">{test_id_square}</td><td data-sort="{test["date"]}">{test["date"]}</td><td data-sort="{test["prompt"]}">{test["prompt"]}</td><td data-sort="{test["rules"] if test["rules"] != "None" else ""}">{rules_display}</td><td data-sort="{test["score"]:.3f}">{test["badges"]}</td><td data-sort="{test["cost"]}">{test["cost"]}</td></tr>'
         
         benchmark_table += '</tbody></table>\n\n'
         benchmark_sections += benchmark_table
