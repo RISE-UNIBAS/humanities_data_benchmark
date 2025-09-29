@@ -15,118 +15,106 @@ from instructor.exceptions import InstructorRetryException  # TODO: change to in
 
 
 class CostCalculator:
-    """Calculate API costs based on token usage and provider pricing."""
-
-    # Pricing per 1M tokens (input, output) in USD
-    # Sources updated: September 28, 2025
-    PRICING = {
-        'openai': {  # Source: https://platform.openai.com/docs/pricing (as of Sep 28, 2025)
-            'gpt-4o': (2.50, 10.00),
-            'gpt-4o-mini': (0.150, 0.600),
-            'gpt-4.5-preview': (10.00, 30.00),
-            'gpt-4.1': (5.00, 15.00),
-            'gpt-4.1-mini': (1.00, 3.00),
-            'gpt-4.1-nano': (0.25, 1.00),
-            'gpt-5': (1.25, 10.00),
-            'gpt-5-mini': (0.25, 2.00),
-            'gpt-5-nano': (0.05, 0.40),
-            'o3': (100.00, 400.00),
-        },
-        'anthropic': {  # Source: https://docs.claude.com/en/docs/about-claude/pricing (as of Sep 28, 2025)
-            'claude-3-5-sonnet-20241022': (3.00, 15.00),
-            'claude-3-5-haiku-20241022': (0.25, 1.25),
-            'claude-3-opus-20240229': (15.00, 75.00),
-            'claude-3-7-sonnet-20250219': (3.00, 15.00),
-            'claude-opus-4-20250514': (15.00, 75.00),  # Corrected from search results
-            'claude-sonnet-4-20250514': (3.00, 15.00),  # Corrected from search results
-            'claude-opus-4-1-20250805': (20.00, 80.00),  # Updated 4.1 model pricing
-        },
-        'genai': {  # Source: https://ai.google.dev/gemini-api/docs/pricing (as of Sep 28, 2025)
-            'gemini-2.0-flash': (0.075, 0.30),
-            'gemini-2.0-flash-lite': (0.04, 0.16),
-            'gemini-1.5-flash': (0.075, 0.30),
-            'gemini-1.5-pro': (1.25, 5.00),
-            'gemini-2.5-pro': (2.50, 10.00),
-            'gemini-exp-1206': (1.25, 5.00),
-            'gemini-2.0-pro-exp-02-05': (2.50, 10.00),
-            'gemini-2.5-pro-exp-03-25': (2.50, 10.00),
-            'gemini-2.5-flash-preview-04-17': (0.075, 0.30),
-            'gemini-2.5-pro-preview-05-06': (2.50, 10.00),
-        },
-        'mistral': {  # Source: https://mistral.ai/technology/#pricing (as of Sep 28, 2025)
-            'pixtral-large-latest': (3.00, 9.00),
-            'mistral-medium-2508': (2.75, 8.25),
-            'mistral-medium-2505': (2.75, 8.25),
-        }
-    }
+    """Calculate API costs using dynamic pricing lookup with database caching and Wayback fallback."""
 
     @classmethod
     def calculate_cost_for_date(cls, date: str, provider: str, model: str,
                                input_tokens: int, output_tokens: int) -> float:
-        """Calculate cost using historical pricing for specific date."""
+        """Calculate cost using pricing database with Wayback fallback."""
         try:
-            from historical_pricing_db import get_historical_pricing_db
+            from pricing_database import get_pricing_database
+            from wayback_scraper import WaybackScraper
 
-            db = get_historical_pricing_db()
-            pricing = db.get_pricing_for_date(date, provider, model)
+            logging.info(f"Calculating cost: {input_tokens} input tokens, {output_tokens} output tokens")
 
-            if pricing:
-                input_price, output_price = pricing
+            db = get_pricing_database()
+
+            # Try to get pricing from database
+            pricing_data = db.get_pricing(date, provider, model)
+
+            if pricing_data:
+                input_price, output_price, source_url = pricing_data
                 input_cost = (input_tokens / 1_000_000) * input_price
                 output_cost = (output_tokens / 1_000_000) * output_price
-                logging.debug(f"Using historical pricing for {date}: {provider}/{model} ${input_price}/${output_price}")
-                return input_cost + output_cost
-            else:
-                logging.warning(f"No historical pricing found for {date}: {provider}/{model}, falling back to current pricing")
-                return cls.calculate_cost(provider, model, input_tokens, output_tokens)
+                total_cost = input_cost + output_cost
+                logging.info(f"Using cached pricing for {provider}/{model}: ${input_price}/${output_price}")
+                logging.info(f"Cost breakdown: ${input_cost:.6f} + ${output_cost:.6f} = ${total_cost:.6f}")
+                return total_cost
 
-        except ImportError:
-            logging.warning("Historical pricing database not available, using current pricing")
-            return cls.calculate_cost(provider, model, input_tokens, output_tokens)
+            # Pricing not found - fetch from Wayback Machine
+            logging.info(f"Pricing not found for {date} {provider}/{model}, fetching from Wayback Machine")
+            scraper = WaybackScraper()
+            scraped_data = scraper.scrape_pricing(provider, date)
+
+            if model in scraped_data:
+                input_price, output_price, source_url = scraped_data[model]
+
+                # Save to database
+                db.add_pricing(date, provider, model, input_price, output_price, source_url)
+
+                # Calculate cost
+                input_cost = (input_tokens / 1_000_000) * input_price
+                output_cost = (output_tokens / 1_000_000) * output_price
+                logging.info(f"Scraped and cached pricing for {provider}/{model}: ${input_price}/${output_price}")
+                return input_cost + output_cost
+
+            logging.error(f"No pricing found for {date} {provider}/{model}")
+            return 0.0
+
         except Exception as e:
-            logging.warning(f"Error accessing historical pricing: {e}, falling back to current pricing")
-            return cls.calculate_cost(provider, model, input_tokens, output_tokens)
+            logging.error(f"Error calculating cost: {e}")
+            return 0.0
 
     @classmethod
     def calculate_cost(cls, provider: str, model: str, input_tokens: int, output_tokens: int) -> float:
-        """Calculate cost based on current pricing. USE calculate_cost_for_date() for historical accuracy."""
-        if provider not in cls.PRICING:
-            logging.warning(f"Unknown provider for cost calculation: {provider}")
-            return 0.0
-
-        if model not in cls.PRICING[provider]:
-            logging.warning(f"Unknown model for cost calculation: {provider}/{model}")
-            return 0.0
-
-        input_price, output_price = cls.PRICING[provider][model]
-        input_cost = (input_tokens / 1_000_000) * input_price
-        output_cost = (output_tokens / 1_000_000) * output_price
-
-        return input_cost + output_cost
+        """Calculate cost based on current pricing (today's date)."""
+        today = datetime.now().strftime('%Y-%m-%d')
+        return cls.calculate_cost_for_date(today, provider, model, input_tokens, output_tokens)
 
     @classmethod
-    def get_pricing_info(cls, provider: str = None, model: str = None) -> dict:
+    def get_pricing_info(cls, provider: str, model: str, date: str = None) -> dict:
         """Get pricing information for debugging and verification."""
-        if provider and model:
-            if provider in cls.PRICING and model in cls.PRICING[provider]:
-                input_price, output_price = cls.PRICING[provider][model]
+        try:
+            from pricing_database import get_pricing_database
+
+            if not date:
+                date = datetime.now().strftime('%Y-%m-%d')
+
+            db = get_pricing_database()
+            pricing_data = db.get_pricing(date, provider, model)
+
+            if pricing_data:
+                input_price, output_price, source_url = pricing_data
                 return {
                     'provider': provider,
                     'model': model,
+                    'date': date,
                     'input_price_per_1m': input_price,
-                    'output_price_per_1m': output_price
+                    'output_price_per_1m': output_price,
+                    'source_url': source_url
                 }
             else:
-                return {'error': f'Model {provider}/{model} not found'}
-        elif provider:
-            return cls.PRICING.get(provider, {'error': f'Provider {provider} not found'})
-        else:
-            return cls.PRICING
+                return {'error': f'No pricing found for {provider}/{model} on {date}'}
+
+        except Exception as e:
+            return {'error': f'Error getting pricing info: {e}'}
 
     @classmethod
-    def verify_model_availability(cls, provider: str, model: str) -> bool:
-        """Check if model is available for cost calculation."""
-        return provider in cls.PRICING and model in cls.PRICING[provider]
+    def verify_model_availability(cls, provider: str, model: str, date: str = None) -> bool:
+        """Check if model pricing is available for cost calculation."""
+        try:
+            from pricing_database import get_pricing_database
+
+            if not date:
+                date = datetime.now().strftime('%Y-%m-%d')
+
+            db = get_pricing_database()
+            pricing_data = db.get_pricing(date, provider, model)
+            return pricing_data is not None
+
+        except Exception as e:
+            logging.error(f"Error verifying model availability: {e}")
+            return False
 
 
 class AiApiClient:
