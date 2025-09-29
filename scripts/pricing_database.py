@@ -70,7 +70,7 @@ class PricingDatabase:
 
     def add_pricing(self, date: str, provider: str, model: str,
                    input_price: float, output_price: float, source_url: str) -> None:
-        """Add pricing data to database."""
+        """Add pricing data to database. Prices can be None for manual intervention."""
         try:
             # Initialize nested structure if needed
             if date not in self._data["pricing"]:
@@ -87,7 +87,10 @@ class PricingDatabase:
             }
 
             self._save_database()
-            logging.info(f"Added pricing: {date} {provider}/{model} = ${input_price}/${output_price}")
+            if input_price is None or output_price is None:
+                logging.warning(f"Added pricing requiring manual intervention: {date} {provider}/{model} = ${input_price}/${output_price}")
+            else:
+                logging.info(f"Added pricing: {date} {provider}/{model} = ${input_price}/${output_price}")
 
         except Exception as e:
             logging.error(f"Error adding pricing: {e}")

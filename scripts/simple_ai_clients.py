@@ -34,6 +34,13 @@ class CostCalculator:
 
             if pricing_data:
                 input_price, output_price, source_url = pricing_data
+
+                # Check if pricing requires manual intervention
+                if input_price is None or output_price is None:
+                    logging.error(f"Pricing for {provider}/{model} requires manual intervention - prices are None")
+                    logging.error(f"Please update the pricing database with actual prices for {date}")
+                    return 0.0
+
                 input_cost = (input_tokens / 1_000_000) * input_price
                 output_cost = (output_tokens / 1_000_000) * output_price
                 total_cost = input_cost + output_cost
@@ -52,13 +59,27 @@ class CostCalculator:
                 # Save to database
                 db.add_pricing(date, provider, model, input_price, output_price, source_url)
 
+                # Check if pricing requires manual intervention
+                if input_price is None or output_price is None:
+                    logging.error(f"Pricing for {provider}/{model} requires manual intervention - prices are None")
+                    logging.error(f"Please update the pricing database with actual prices for {date}")
+                    return 0.0
+
                 # Calculate cost
                 input_cost = (input_tokens / 1_000_000) * input_price
                 output_cost = (output_tokens / 1_000_000) * output_price
                 logging.info(f"Scraped and cached pricing for {provider}/{model}: ${input_price}/${output_price}")
                 return input_cost + output_cost
 
+            # No pricing found at all - model wasn't in scraped data, which means scraping failed
             logging.error(f"No pricing found for {date} {provider}/{model}")
+            logging.warning(f"Adding {provider}/{model} to database with None prices for manual intervention")
+
+            # Add None entry to database for manual intervention
+            from datetime import datetime
+            wayback_url = f"http://web.archive.org/web/{datetime.now().strftime('%Y%m%d%H%M%S')}/https://{provider}.ai/pricing"
+            db.add_pricing(date, provider, model, None, None, f"{wayback_url} (MANUAL_INTERVENTION_REQUIRED)")
+
             return 0.0
 
         except Exception as e:
@@ -146,6 +167,7 @@ class AiApiClient:
             self.gpt_role_description = "A useful assistant that can help you with a variety of tasks."
         self.dataclass = dataclass
         self.temperature = temperature
+        self.calculate_cost = True  # Flag to enable/disable cost calculation
 
         self.init_client()
 
@@ -405,9 +427,10 @@ class AiApiClient:
                 answer['cost_info']['input_tokens'] = response.usage.prompt_tokens
                 answer['cost_info']['output_tokens'] = response.usage.completion_tokens
                 answer['cost_info']['total_tokens'] = response.usage.total_tokens
-                answer['cost_info']['estimated_cost_usd'] = CostCalculator.calculate_cost(
-                    self.api, model, response.usage.prompt_tokens, response.usage.completion_tokens
-                )
+                if self.calculate_cost:
+                    answer['cost_info']['estimated_cost_usd'] = CostCalculator.calculate_cost(
+                        self.api, model, response.usage.prompt_tokens, response.usage.completion_tokens
+                    )
         elif self.api == 'genai':
             if self.dataclass:
                 # For structured output, parse JSON and validate with Pydantic
@@ -437,10 +460,11 @@ class AiApiClient:
                 answer['cost_info']['input_tokens'] = response.usage_metadata.prompt_token_count
                 answer['cost_info']['output_tokens'] = response.usage_metadata.candidates_token_count
                 answer['cost_info']['total_tokens'] = response.usage_metadata.total_token_count
-                answer['cost_info']['estimated_cost_usd'] = CostCalculator.calculate_cost(
-                    self.api, model, response.usage_metadata.prompt_token_count,
-                    response.usage_metadata.candidates_token_count
-                )
+                if self.calculate_cost:
+                    answer['cost_info']['estimated_cost_usd'] = CostCalculator.calculate_cost(
+                        self.api, model, response.usage_metadata.prompt_token_count,
+                        response.usage_metadata.candidates_token_count
+                    )
         elif self.api == 'anthropic':
             if self.dataclass and not hasattr(response, '_is_fallback'):
                 # For successful structured output with instructor, the response is a Pydantic model
@@ -454,9 +478,10 @@ class AiApiClient:
                 answer['cost_info']['input_tokens'] = response.usage.input_tokens
                 answer['cost_info']['output_tokens'] = response.usage.output_tokens
                 answer['cost_info']['total_tokens'] = response.usage.input_tokens + response.usage.output_tokens
-                answer['cost_info']['estimated_cost_usd'] = CostCalculator.calculate_cost(
-                    self.api, model, response.usage.input_tokens, response.usage.output_tokens
-                )
+                if self.calculate_cost:
+                    answer['cost_info']['estimated_cost_usd'] = CostCalculator.calculate_cost(
+                        self.api, model, response.usage.input_tokens, response.usage.output_tokens
+                    )
         elif self.api == 'mistral':
             if self.dataclass:
                 # For structured output, parse JSON and validate with Pydantic
@@ -476,9 +501,10 @@ class AiApiClient:
                 answer['cost_info']['input_tokens'] = response.usage.prompt_tokens
                 answer['cost_info']['output_tokens'] = response.usage.completion_tokens
                 answer['cost_info']['total_tokens'] = response.usage.total_tokens
-                answer['cost_info']['estimated_cost_usd'] = CostCalculator.calculate_cost(
-                    self.api, model, response.usage.prompt_tokens, response.usage.completion_tokens
-                )
+                if self.calculate_cost:
+                    answer['cost_info']['estimated_cost_usd'] = CostCalculator.calculate_cost(
+                        self.api, model, response.usage.prompt_tokens, response.usage.completion_tokens
+                    )
 
         return answer
 

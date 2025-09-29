@@ -86,8 +86,48 @@ class TestWaybackScraper(unittest.TestCase):
 
         self.assertIsNone(content)
 
-    def test_parse_openai_pricing(self):
-        """Test parsing OpenAI pricing from HTML."""
+    @patch('wayback_scraper.requests.Session.get')
+    def test_save_to_wayback_success(self, mock_get):
+        """Test successful saving to Wayback Machine."""
+        mock_response = Mock()
+        mock_response.status_code = 200
+        mock_response.url = "http://web.archive.org/web/20250929120000/https://example.com"
+        mock_get.return_value = mock_response
+
+        result = self.scraper.save_to_wayback('https://example.com')
+
+        self.assertEqual(result, "http://web.archive.org/web/20250929120000/https://example.com")
+        mock_get.assert_called_once_with('https://web.archive.org/save/https://example.com', timeout=30)
+
+    @patch('wayback_scraper.requests.Session.get')
+    def test_save_to_wayback_construct_url(self, mock_get):
+        """Test Wayback URL construction when response doesn't contain archive URL."""
+        mock_response = Mock()
+        mock_response.status_code = 200
+        mock_response.url = "https://example.com"  # No archive URL in response
+        mock_get.return_value = mock_response
+
+        result = self.scraper.save_to_wayback('https://example.com')
+
+        # Should construct a Wayback URL (timestamp will be current time)
+        self.assertIsNotNone(result)
+        self.assertIn("http://web.archive.org/web/", result)
+        self.assertIn("https://example.com", result)
+
+    @patch('wayback_scraper.requests.Session.get')
+    def test_save_to_wayback_error(self, mock_get):
+        """Test saving to Wayback Machine with error."""
+        mock_get.side_effect = requests.RequestException("Save error")
+
+        result = self.scraper.save_to_wayback('https://example.com')
+
+        self.assertIsNone(result)
+
+    @patch('wayback_scraper.WaybackScraper.extract_pricing_with_ai')
+    def test_parse_openai_pricing(self, mock_extract_ai):
+        """Test parsing OpenAI pricing from HTML using AI."""
+        mock_extract_ai.return_value = {'gpt-4o': (2.5, 10.0), 'gpt-4o-mini': (0.15, 0.6)}
+
         html_content = """
         <html>
         <body>
@@ -99,12 +139,15 @@ class TestWaybackScraper(unittest.TestCase):
 
         models = self.scraper.parse_openai_pricing(html_content)
 
-        # Should parse at least one model if patterns match
-        # Note: This depends on the regex patterns in the actual implementation
+        # Should use AI extraction and return models
         self.assertIsInstance(models, dict)
+        mock_extract_ai.assert_called_once_with(html_content, 'openai')
 
-    def test_parse_genai_pricing(self):
-        """Test parsing GenAI pricing from HTML."""
+    @patch('wayback_scraper.WaybackScraper.extract_pricing_with_ai')
+    def test_parse_genai_pricing(self, mock_extract_ai):
+        """Test parsing GenAI pricing from HTML using AI."""
+        mock_extract_ai.return_value = {'gemini-2.0-flash': (0.075, 0.3)}
+
         html_content = """
         <html>
         <body>
@@ -118,6 +161,27 @@ class TestWaybackScraper(unittest.TestCase):
         models = self.scraper.parse_genai_pricing(html_content)
 
         self.assertIsInstance(models, dict)
+        mock_extract_ai.assert_called_once_with(html_content, 'genai')
+
+    @patch('wayback_scraper.WaybackScraper.extract_pricing_with_ai')
+    def test_parse_mistral_pricing(self, mock_extract_ai):
+        """Test parsing Mistral pricing from HTML using AI."""
+        mock_extract_ai.return_value = {'mistral-medium-2508': (0.4, 2.0)}
+
+        html_content = """
+        <html>
+        <body>
+        <h3>Mistral Medium 2508</h3>
+        <p>Input: $0.40 per 1M tokens</p>
+        <p>Output: $2.00 per 1M tokens</p>
+        </body>
+        </html>
+        """
+
+        models = self.scraper.parse_mistral_pricing(html_content)
+
+        self.assertIsInstance(models, dict)
+        mock_extract_ai.assert_called_once_with(html_content, 'mistral')
 
     @patch('wayback_scraper.WaybackScraper.find_available_snapshots')
     @patch('wayback_scraper.WaybackScraper.fetch_content')
@@ -179,6 +243,87 @@ class TestWaybackScraper(unittest.TestCase):
 
         self.assertEqual(snapshots, [])
         self.assertEqual(mock_get_snapshots.call_count, 3)  # Original date + 2 days back
+
+    @patch('wayback_scraper.WaybackScraper.extract_pricing_with_ai')
+    def test_extract_pricing_with_ai_success(self, mock_extract_ai):
+        """Test successful AI pricing extraction."""
+        mock_extract_ai.return_value = {'gpt-4o': (2.5, 10.0)}
+
+        html_content = "<html><body>GPT-4o pricing: input $2.50, output $10.00</body></html>"
+
+        result = self.scraper.extract_pricing_with_ai(html_content, 'openai')
+
+        # Should successfully extract pricing
+        self.assertEqual(result, {'gpt-4o': (2.5, 10.0)})
+
+    @patch('wayback_scraper.WaybackScraper.extract_pricing_with_ai')
+    def test_extract_pricing_with_ai_empty_response(self, mock_extract_ai):
+        """Test AI pricing extraction with empty response."""
+        mock_extract_ai.return_value = {}
+
+        result = self.scraper.extract_pricing_with_ai('<html></html>', 'mistral')
+
+        # Should return empty dict when no models found
+        self.assertEqual(result, {})
+
+    @patch('wayback_scraper.WaybackScraper.extract_pricing_with_ai')
+    def test_extract_pricing_with_ai_json_error(self, mock_extract_ai):
+        """Test AI pricing extraction with invalid JSON."""
+        mock_extract_ai.return_value = {}
+
+        result = self.scraper.extract_pricing_with_ai('<html></html>', 'openai')
+
+        # Should return empty dict on JSON parse error
+        self.assertEqual(result, {})
+
+    @patch('wayback_scraper.WaybackScraper.save_to_wayback')
+    @patch('wayback_scraper.WaybackScraper.fetch_content')
+    @patch('wayback_scraper.WaybackScraper.parse_genai_pricing')
+    @patch('wayback_scraper.datetime')
+    def test_scrape_pricing_current_date(self, mock_datetime, mock_parse, mock_fetch, mock_save):
+        """Test scraping pricing for current date (fetches live and saves to Wayback)."""
+        # Mock current date
+        mock_datetime.now.return_value.strftime.return_value = '2025-09-29'
+
+        # Mock successful current content fetch and parsing
+        mock_fetch.return_value = "<html>Live content</html>"
+        mock_parse.return_value = {'gemini-2.0-flash': (0.1, 0.4)}
+        mock_save.return_value = "http://web.archive.org/web/20250929120000/https://ai.google.dev/gemini-api/docs/pricing"
+
+        result = self.scraper.scrape_pricing('genai', '2025-09-29')
+
+        # Should fetch current content and save to Wayback
+        mock_fetch.assert_called_with('https://ai.google.dev/gemini-api/docs/pricing')
+        mock_parse.assert_called_once_with("<html>Live content</html>")
+        mock_save.assert_called_once_with('https://ai.google.dev/gemini-api/docs/pricing')
+
+        # Should return pricing with Wayback URL
+        self.assertIn('gemini-2.0-flash', result)
+        self.assertEqual(result['gemini-2.0-flash'][0], 0.1)
+        self.assertEqual(result['gemini-2.0-flash'][1], 0.4)
+        self.assertEqual(result['gemini-2.0-flash'][2], "http://web.archive.org/web/20250929120000/https://ai.google.dev/gemini-api/docs/pricing")
+
+    def test_scrape_pricing_none_values_returned(self):
+        """Test that None pricing values are returned when extraction fails."""
+        with patch('wayback_scraper.datetime') as mock_datetime:
+            mock_datetime.now.return_value.strftime.return_value = '20250929160000'
+
+            # Mock snapshots found but content extraction fails
+            mock_snapshot_url = "http://web.archive.org/web/123/mistral.ai"
+            with patch.object(self.scraper, 'find_available_snapshots', return_value=[mock_snapshot_url]):
+                with patch.object(self.scraper, 'fetch_content', return_value="<html>No useful pricing info</html>"):
+                    with patch.object(self.scraper, 'parse_mistral_pricing', return_value={}):
+                        result = self.scraper.scrape_pricing('mistral', '2025-01-01')
+
+                        # Should return None values for manual intervention
+                        self.assertIn('mistral-medium-2508', result)
+                        self.assertIn('mistral-medium-2505', result)
+
+                        # Check None values
+                        input_price, output_price, source_url = result['mistral-medium-2508']
+                        self.assertIsNone(input_price)
+                        self.assertIsNone(output_price)
+                        self.assertIn('MANUAL_INTERVENTION_REQUIRED', source_url)
 
 
 if __name__ == '__main__':

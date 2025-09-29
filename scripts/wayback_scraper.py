@@ -6,7 +6,6 @@ import logging
 import re
 from datetime import datetime
 from typing import Dict, List, Optional, Tuple
-from bs4 import BeautifulSoup
 
 
 class WaybackScraper:
@@ -22,9 +21,9 @@ class WaybackScraper:
         # Provider pricing URLs
         self.provider_urls = {
             'openai': 'https://openai.com/pricing',
-            'anthropic': 'https://claude.ai/pricing',
+            'anthropic': 'https://docs.claude.com/en/docs/about-claude/pricing',
             'genai': 'https://ai.google.dev/gemini-api/docs/pricing',
-            'mistral': 'https://mistral.ai/pricing'
+            'mistral': 'https://mistral.ai/pricing#api-pricing'
         }
 
     def get_snapshots(self, url: str, date: str) -> List[str]:
@@ -63,81 +62,142 @@ class WaybackScraper:
 
         return None
 
-    def parse_openai_pricing(self, html: str) -> Dict[str, Tuple[float, float]]:
-        """Parse OpenAI pricing from HTML."""
-        models = {}
+    def save_to_wayback(self, url: str) -> Optional[str]:
+        """Save a URL to Wayback Machine and return the archive URL."""
         try:
-            soup = BeautifulSoup(html, 'html.parser')
-            text = soup.get_text()
+            # Submit URL to Wayback Machine for archiving
+            save_url = "https://web.archive.org/save/"
+            response = self.session.get(save_url + url, timeout=30)
 
-            # Common OpenAI models and their pricing patterns
-            model_patterns = [
-                r'gpt-4o[^a-z]*?input.*?(\d+\.?\d*)[^\d]*?output.*?(\d+\.?\d*)',
-                r'gpt-4o-mini[^a-z]*?input.*?(\d+\.?\d*)[^\d]*?output.*?(\d+\.?\d*)',
-            ]
-
-            # Try to find model pricing
-            for pattern in model_patterns:
-                matches = re.finditer(pattern, text, re.IGNORECASE | re.DOTALL)
-                for match in matches:
-                    model_name = 'gpt-4o' if 'gpt-4o' in match.group(0).lower() else 'gpt-4o-mini'
-                    input_price = float(match.group(1))
-                    output_price = float(match.group(2))
-                    models[model_name] = (input_price, output_price)
-                    break  # Use first match
+            if response.status_code == 200:
+                # Extract the archived URL from the response
+                # The Wayback Machine typically redirects to the archived version
+                archived_url = response.url
+                if "web.archive.org/web/" in archived_url:
+                    logging.info(f"Successfully saved {url} to Wayback Machine: {archived_url}")
+                    return archived_url
+                else:
+                    # Try to construct the URL based on current timestamp
+                    from datetime import datetime
+                    timestamp = datetime.now().strftime('%Y%m%d%H%M%S')
+                    archived_url = f"http://web.archive.org/web/{timestamp}/{url}"
+                    logging.info(f"Constructed Wayback URL: {archived_url}")
+                    return archived_url
+            else:
+                logging.warning(f"Failed to save to Wayback Machine: {response.status_code}")
 
         except Exception as e:
-            logging.error(f"Error parsing OpenAI pricing: {e}")
+            logging.error(f"Error saving to Wayback Machine: {e}")
 
-        return models
+        return None
+
+    def extract_pricing_with_ai(self, html: str, provider: str) -> Dict[str, Tuple[float, float]]:
+        """Extract pricing using AI API."""
+        try:
+            from simple_ai_clients import AiApiClient
+            import os
+
+            # Get OpenAI API key for parsing
+            api_key = os.getenv('OPENAI_API_KEY')
+            if not api_key:
+                logging.error("No OpenAI API key found for pricing extraction")
+                return {}
+
+            client = AiApiClient('openai', api_key)
+            client.init_client()
+
+            # Disable cost calculation to avoid circular dependency
+            client.calculate_cost = False
+
+            # Extract text content from HTML using regex (simple approach)
+            text = re.sub(r'<[^>]+>', ' ', html)  # Remove HTML tags
+            text = ' '.join(text.split())  # Normalize whitespace
+
+            # Define expected models for each provider
+            expected_models = {
+                'openai': ['gpt-4o', 'gpt-4o-mini', 'gpt-5'],
+                'genai': ['gemini-2.0-flash', 'gemini-1.5-pro'],
+                'mistral': ['mistral-medium-2508', 'mistral-medium-2505'],
+                'anthropic': ['claude-3-5-sonnet', 'claude-3-haiku', 'claude-opus-4-1-20250805', 'claude-opus-4-20250514', 'claude-sonnet-4-20250514']
+            }
+
+            models_to_find = expected_models.get(provider, [])
+
+            prompt = f"""Extract pricing information from the following {provider} pricing page content.
+
+Look for these specific models: {', '.join(models_to_find)}
+
+For each model found, extract:
+- Input token price per 1M tokens (in USD)
+- Output token price per 1M tokens (in USD)
+
+Return the results in this exact JSON format:
+{{
+  "model_name": {{"input_price": X.XX, "output_price": Y.YY}},
+  "model_name2": {{"input_price": X.XX, "output_price": Y.YY}}
+}}
+
+If a model is not found or pricing is unclear, don't include it. But note that sometimes a model falls under an 
+umbrella term, for example, the pricing for 'claude-opus-4-1-20250805' might be found under "Claude Opus 4.1".
+Only return valid JSON, no explanations, no mapping.
+
+Page content:
+{text}"""
+
+            # Make API request
+            response = client.prompt("gpt-4.1", prompt)
+
+            if 'response_text' in response and response['response_text']:
+                import json
+                try:
+                    ai_response = response['response_text'].strip()
+                    logging.info(f"AI response for {provider} pricing: {ai_response[:200]}...")
+
+                    # Try to parse the JSON response
+                    pricing_data = json.loads(ai_response)
+
+                    # Convert to expected format
+                    models = {}
+                    for model_name, prices in pricing_data.items():
+                        if isinstance(prices, dict) and 'input_price' in prices and 'output_price' in prices:
+                            models[model_name] = (float(prices['input_price']), float(prices['output_price']))
+
+                    if models:
+                        logging.info(f"AI extracted pricing for {provider}: {models}")
+                        return models
+                    else:
+                        logging.warning(f"AI response parsed but no valid models found for {provider}")
+
+                except (json.JSONDecodeError, KeyError, ValueError) as e:
+                    logging.error(f"Error parsing AI response for {provider}: {e}")
+                    logging.error(f"Full AI response was: {response['response_text']}")
+
+                    # No fallback - return empty
+                    return {}
+
+            else:
+                logging.error(f"No response_text in AI response for {provider}: {response}")
+
+        except Exception as e:
+            logging.error(f"Error using AI to extract {provider} pricing: {e}")
+
+        return {}
+
+    def parse_openai_pricing(self, html: str) -> Dict[str, Tuple[float, float]]:
+        """Parse OpenAI pricing from HTML using AI."""
+        return self.extract_pricing_with_ai(html, 'openai')
 
     def parse_genai_pricing(self, html: str) -> Dict[str, Tuple[float, float]]:
-        """Parse GenAI pricing from HTML."""
-        models = {}
-        try:
-            soup = BeautifulSoup(html, 'html.parser')
-            text = soup.get_text()
+        """Parse GenAI pricing from HTML using AI."""
+        return self.extract_pricing_with_ai(html, 'genai')
 
-            logging.info("Searching for GenAI pricing patterns...")
+    def parse_mistral_pricing(self, html: str) -> Dict[str, Tuple[float, float]]:
+        """Parse Mistral pricing from HTML using AI."""
+        return self.extract_pricing_with_ai(html, 'mistral')
 
-            # Look for Gemini pricing patterns with input/output indicators
-            patterns = [
-                r'gemini-2\.0-flash.*?input.*?(\d+\.?\d*).*?output.*?(\d+\.?\d*)',
-                r'gemini-1\.5-pro.*?input.*?(\d+\.?\d*).*?output.*?(\d+\.?\d*)',
-                r'gemini.*?2\.0.*?flash.*?input.*?(\d+\.?\d*).*?output.*?(\d+\.?\d*)',
-                r'gemini.*?1\.5.*?pro.*?input.*?(\d+\.?\d*).*?output.*?(\d+\.?\d*)',
-                # Also try reverse order (output first)
-                r'gemini-2\.0-flash.*?output.*?(\d+\.?\d*).*?input.*?(\d+\.?\d*)',
-                r'gemini-1\.5-pro.*?output.*?(\d+\.?\d*).*?input.*?(\d+\.?\d*)',
-            ]
-
-            for i, pattern in enumerate(patterns):
-                logging.debug(f"Trying pattern {i+1}: {pattern}")
-                matches = re.finditer(pattern, text, re.IGNORECASE | re.DOTALL)
-                for match in matches:
-                    logging.debug(f"Found match: {match.group(0)[:300]}...")
-                    model_name = 'gemini-2.0-flash' if ('2.0' in match.group(0).lower() or '2-0' in match.group(0).lower()) else 'gemini-1.5-pro'
-
-                    # Check if pattern has output first (patterns 4-5)
-                    if i >= 4:
-                        # output first, input second
-                        output_price = float(match.group(1))
-                        input_price = float(match.group(2))
-                    else:
-                        # input first, output second
-                        input_price = float(match.group(1))
-                        output_price = float(match.group(2))
-
-                    models[model_name] = (input_price, output_price)
-                    logging.info(f"Extracted pricing for {model_name}: input=${input_price}, output=${output_price}")
-                    break
-                if models:
-                    break
-
-        except Exception as e:
-            logging.error(f"Error parsing GenAI pricing: {e}")
-
-        return models
+    def parse_anthropic_pricing(self, html: str) -> Dict[str, Tuple[float, float]]:
+        """Parse Anthropic pricing from HTML using AI."""
+        return self.extract_pricing_with_ai(html, 'anthropic')
 
     def find_available_snapshots(self, url: str, start_date: str, days_back: int = 365) -> List[str]:
         """Find snapshots by searching backwards from start_date."""
@@ -183,6 +243,50 @@ class WaybackScraper:
         url = self.provider_urls[provider]
         logging.info(f"Scraping {provider} pricing for {date}")
 
+        # For current date, try fetching from live site first
+        from datetime import datetime
+        today = datetime.now().strftime('%Y-%m-%d')
+
+        if date == today:
+            logging.info(f"Date is today ({today}), fetching current pricing and saving to Wayback Machine")
+            try:
+                # Fetch current content
+                current_content = self.fetch_content(url)
+                if current_content:
+                    # Parse the content
+                    if provider == 'openai':
+                        models = self.parse_openai_pricing(current_content)
+                    elif provider == 'genai':
+                        models = self.parse_genai_pricing(current_content)
+                    elif provider == 'mistral':
+                        models = self.parse_mistral_pricing(current_content)
+                    elif provider == 'anthropic':
+                        models = self.parse_anthropic_pricing(current_content)
+                    else:
+                        models = {}
+
+                    if models:
+                        # Save current page to Wayback Machine to get a proper source URL
+                        wayback_url = self.save_to_wayback(url)
+                        if not wayback_url:
+                            # Fallback: construct expected Wayback URL
+                            timestamp = datetime.now().strftime('%Y%m%d%H%M%S')
+                            wayback_url = f"http://web.archive.org/web/{timestamp}/{url}"
+
+                        logging.info(f"Successfully extracted current pricing for {provider}: {models}")
+                        return {model: (input_p, output_p, wayback_url)
+                               for model, (input_p, output_p) in models.items()}
+                    else:
+                        logging.warning(f"No models extracted from current {provider} pricing page")
+                else:
+                    logging.warning(f"No content retrieved from current {provider} pricing page")
+            except Exception as e:
+                logging.error(f"Error fetching current pricing: {e}")
+
+            # If current pricing failed for today's date, return empty - don't fall back
+            logging.warning(f"Could not get current pricing for {provider} on today's date")
+            return {}
+
         # Find snapshots, searching backwards if needed
         snapshots = self.find_available_snapshots(url, date)
         if not snapshots:
@@ -204,6 +308,10 @@ class WaybackScraper:
                 models = self.parse_openai_pricing(content)
             elif provider == 'genai':
                 models = self.parse_genai_pricing(content)
+            elif provider == 'mistral':
+                models = self.parse_mistral_pricing(content)
+            elif provider == 'anthropic':
+                models = self.parse_anthropic_pricing(content)
             else:
                 logging.warning(f"No parser for {provider}")
                 continue
@@ -226,6 +334,10 @@ class WaybackScraper:
                         models = self.parse_openai_pricing(current_content)
                     elif provider == 'genai':
                         models = self.parse_genai_pricing(current_content)
+                    elif provider == 'mistral':
+                        models = self.parse_mistral_pricing(current_content)
+                    elif provider == 'anthropic':
+                        models = self.parse_anthropic_pricing(current_content)
                     else:
                         models = {}
 
@@ -236,5 +348,18 @@ class WaybackScraper:
                 logging.error(f"Error fetching current pricing: {e}")
 
 
-        logging.warning(f"No pricing data extracted for {provider} on {date}")
-        return {}
+        # No pricing data found - add entries with None prices for manual intervention
+        logging.warning(f"No pricing data extracted for {provider} on {date}, adding None entries for manual intervention")
+
+        expected_models = {
+            'openai': ['gpt-4o', 'gpt-4o-mini', 'gpt-5'],
+            'genai': ['gemini-2.0-flash', 'gemini-1.5-pro'],
+            'mistral': ['mistral-medium-2508', 'mistral-medium-2505'],
+            'anthropic': ['claude-3-5-sonnet', 'claude-3-haiku', 'claude-opus-4-1-20250805', 'claude-opus-4-20250514', 'claude-sonnet-4-20250514']
+        }
+
+        models_to_add = expected_models.get(provider, [])
+        wayback_url = f"http://web.archive.org/web/{datetime.now().strftime('%Y%m%d%H%M%S')}/{self.provider_urls[provider]}"
+
+        return {model: (None, None, f"{wayback_url} (MANUAL_INTERVENTION_REQUIRED)")
+               for model in models_to_add}
