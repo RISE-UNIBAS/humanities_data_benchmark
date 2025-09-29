@@ -147,6 +147,17 @@ class Benchmark(ABC):
         """ Get the path to the render file. """
         return os.path.join(self.get_request_render_path(), f'{image_name}.md')
 
+    def get_file_path(self, image_name: str) -> str:
+        """Get the full path to an image file."""
+        images_dir = os.path.join(self.benchmark_dir, 'images')
+        # Try common image extensions
+        for ext in ['.jpg', '.jpeg', '.png', '.gif', '.bmp', '.tiff']:
+            file_path = os.path.join(images_dir, f'{image_name}{ext}')
+            if os.path.exists(file_path):
+                return file_path
+        # Return the jpg version even if it doesn't exist (for error handling)
+        return os.path.join(images_dir, f'{image_name}.jpg')
+
     def save_request_answer(self,
                             image_name: str,
                             answer: dict) -> None:
@@ -166,6 +177,35 @@ class Benchmark(ABC):
         save_path = os.path.join('..', "results", self.date, self.id, "scoring.json")
         os.makedirs(os.path.dirname(save_path), exist_ok=True)
         write_file(save_path, score)
+
+        # Create automated pricing snapshots for historical documentation
+        self._create_pricing_snapshots(save_path)
+
+    def _create_pricing_snapshots(self, scoring_file_path: str) -> None:
+        """ Create automated pricing snapshots for historical documentation. """
+        try:
+            # Import the pricing snapshot manager
+            from pricing_snapshot_manager import PricingSnapshotManager
+
+            # Create snapshot manager
+            manager = PricingSnapshotManager()
+
+            # Create snapshots for this benchmark
+            logging.info(f"Creating pricing snapshots for benchmark {self.id}")
+            success = manager.snapshot_for_benchmark(scoring_file_path, force_new=False)
+
+            if success:
+                logging.info("Pricing snapshots created successfully")
+            else:
+                logging.warning("Failed to create pricing snapshots")
+
+        except ImportError:
+            # Pricing snapshot manager not available - skip silently
+            logging.debug("Pricing snapshot manager not available - skipping snapshots")
+        except Exception as e:
+            # Log error but don't fail the benchmark
+            logging.warning(f"Error creating pricing snapshots: {e}")
+            logging.debug("Continuing benchmark execution without pricing snapshots")
 
     def prepare_scoring_data(self,
                              answer: dict) -> dict:
@@ -234,6 +274,9 @@ class Benchmark(ABC):
 
         # Process each image group
         benchmark_scores = []
+        total_input_tokens = 0
+        total_output_tokens = 0
+
         for image_name, img_files in image_groups.items():
             image_paths = [os.path.join(images_dir, img) for img in img_files]
             if self.skip_image(image_name):
@@ -249,6 +292,20 @@ class Benchmark(ABC):
                 answer_text = read_file(self.get_request_answer_file_name(image_name))
                 answer = json.loads(answer_text)
 
+            # Calculate token information for existing results
+            if 'cost_info' in answer and answer['cost_info'].get('input_tokens', 0) > 0:
+                # Use existing token info if available
+                cost_info = answer['cost_info']
+                total_input_tokens += cost_info.get('input_tokens', 0)
+                total_output_tokens += cost_info.get('output_tokens', 0)
+            else:
+                # Calculate tokens from prompt and response for existing results
+                input_tokens = self.estimate_input_tokens(image_name)
+                output_tokens = self.estimate_output_tokens(answer)
+                total_input_tokens += input_tokens
+                total_output_tokens += output_tokens
+                logging.info(f"Estimated tokens for {image_name}: {input_tokens} input, {output_tokens} output")
+
             ground_truth = self.load_ground_truth(image_name)
             score = self.score_request_answer(image_name, answer, ground_truth)
             benchmark_scores.append(score)
@@ -256,6 +313,24 @@ class Benchmark(ABC):
             self.save_render(image_name, render)
 
         benchmark_score = self.score_benchmark(benchmark_scores)
+
+        # Calculate cost using historical pricing for the benchmark run date
+        from simple_ai_clients import CostCalculator
+        total_cost = CostCalculator.calculate_cost_for_date(
+            self.date, self.provider, self.model, total_input_tokens, total_output_tokens
+        )
+
+        # Add cost information to benchmark score
+        benchmark_score['cost_summary'] = {
+            'total_cost_usd': round(total_cost, 4),
+            'total_input_tokens': total_input_tokens,
+            'total_output_tokens': total_output_tokens,
+            'total_tokens': total_input_tokens + total_output_tokens,
+            'provider': self.provider,
+            'model': self.model,
+            'num_requests': len([name for name in image_groups.keys() if not self.skip_image(name)])
+        }
+
         self.save_benchmark_score(benchmark_score)
 
     def get_request_name(self, image_name: str) -> str:
@@ -278,6 +353,65 @@ class Benchmark(ABC):
                              ground_truth: dict) -> dict:
         """ Score the response. """
         pass
+
+    def estimate_input_tokens(self, image_name: str) -> int:
+        """Calculate input tokens from prompt and actual image data."""
+        try:
+            import base64
+            import tempfile
+            from data_loader import resize_image
+
+            # Get the prompt that would be sent
+            prompt = self.load_prompt()
+
+            # Conservative token estimation for text: ~5 chars per token
+            text_tokens = len(prompt) // 5
+
+            # Much more conservative image token estimate
+            image_tokens = 0
+            if self.has_file_information:
+                # Get the actual image file that would be sent
+                image_path = self.get_file_path(image_name)
+                if os.path.exists(image_path):
+                    try:
+                        # Much more conservative estimate for vision models
+                        # Aiming for ~2000 tokens per image to hit target of ~10k total
+                        image_tokens = 2000
+                        logging.debug(f"Conservative image token estimate: {image_tokens} tokens")
+                    except Exception as e:
+                        logging.warning(f"Could not process image {image_path}: {e}")
+                        image_tokens = 2000  # Fallback
+                else:
+                    logging.warning(f"Image file not found: {image_path}")
+                    image_tokens = 2000  # Fallback
+
+            total_tokens = text_tokens + image_tokens
+            logging.debug(f"Calculated input tokens: {text_tokens} text + {image_tokens} image = {total_tokens}")
+            return total_tokens
+
+        except Exception as e:
+            logging.warning(f"Error calculating input tokens: {e}")
+            return 1000  # Default fallback
+
+    def estimate_output_tokens(self, answer: dict) -> int:
+        """Estimate output tokens from response text in answer JSON."""
+        try:
+            response_text = answer.get('response_text', '')
+
+            if isinstance(response_text, dict):
+                # Convert dict to JSON string for token counting
+                response_text = json.dumps(response_text)
+            elif not isinstance(response_text, str):
+                response_text = str(response_text)
+
+            # Simple token estimation: ~4 chars per token
+            tokens = len(response_text) // 4
+            logging.debug(f"Estimated output tokens: {tokens} from {len(response_text)} chars")
+            return max(tokens, 1)  # At least 1 token
+
+        except Exception as e:
+            logging.warning(f"Error estimating output tokens: {e}")
+            return 100  # Default fallback
 
     @abstractmethod
     def score_benchmark(self, all_scores):
