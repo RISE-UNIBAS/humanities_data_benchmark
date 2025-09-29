@@ -39,6 +39,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - T0180 on 2025-09-26
 
 - T0130 on 2025-09-28
+- T0008 on 2025-09-29
+- T0127 on 2025-09-29
+- T0130 on 2025-09-29
+- T0169 on 2025-09-29
 ### Fixed
 - bibliographic_data attributions
 - Pydantic dataclass models

@@ -20,7 +20,7 @@ class WaybackScraper:
 
         # Provider pricing URLs
         self.provider_urls = {
-            'openai': 'https://openai.com/pricing',
+            'openai': 'https://platform.openai.com/docs/pricing',
             'anthropic': 'https://docs.claude.com/en/docs/about-claude/pricing',
             'genai': 'https://ai.google.dev/gemini-api/docs/pricing',
             'mistral': 'https://mistral.ai/pricing#api-pricing'
@@ -51,14 +51,74 @@ class WaybackScraper:
 
         return []
 
-    def fetch_content(self, wayback_url: str) -> Optional[str]:
-        """Fetch content from Wayback Machine URL."""
+    def fetch_content(self, url: str) -> Optional[str]:
+        """Fetch content from URL (both live and Wayback Machine URLs)."""
         try:
-            response = self.session.get(wayback_url, timeout=60)
-            if response.status_code == 200:
-                return response.text
+            # Use enhanced headers for live URLs to avoid bot detection
+            headers = {}
+            if not url.startswith('http://web.archive.org/'):
+                headers = {
+                    'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+                    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7',
+                    'Accept-Language': 'en-US,en;q=0.9',
+                    'Accept-Encoding': 'gzip, deflate, br',
+                    'DNT': '1',
+                    'Connection': 'keep-alive',
+                    'Upgrade-Insecure-Requests': '1',
+                    'Sec-Fetch-Dest': 'document',
+                    'Sec-Fetch-Mode': 'navigate',
+                    'Sec-Fetch-Site': 'none',
+                    'Sec-Ch-Ua': '"Not_A Brand";v="8", "Chromium";v="120", "Google Chrome";v="120"',
+                    'Sec-Ch-Ua-Mobile': '?0',
+                    'Sec-Ch-Ua-Platform': '"macOS"',
+                }
+
+            # For live URLs, try multiple strategies if first attempt fails
+            if not url.startswith('http://web.archive.org/'):
+                # Strategy 1: Enhanced browser headers
+                response = self.session.get(url, headers=headers, timeout=60, allow_redirects=True)
+                if response.status_code == 200:
+                    return response.text
+                elif response.status_code == 403:
+                    logging.info(f"First attempt got 403 for {url}, trying alternative approaches...")
+
+                    # Strategy 2: Clear session and try again with different headers
+                    import time
+                    import requests
+                    time.sleep(2)  # Brief delay
+
+                    alt_session = requests.Session()
+                    alt_headers = {
+                        'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+                        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+                        'Accept-Language': 'en-US,en;q=0.5',
+                        'Accept-Encoding': 'gzip, deflate, br',
+                        'Connection': 'keep-alive',
+                        'Upgrade-Insecure-Requests': '1',
+                    }
+
+                    response = alt_session.get(url, headers=alt_headers, timeout=60, allow_redirects=True)
+                    alt_session.close()
+
+                    if response.status_code == 200:
+                        return response.text
+                    else:
+                        logging.warning(f"403 Forbidden when fetching {url} - site may be blocking bot access")
+                        return None
+                else:
+                    logging.warning(f"HTTP {response.status_code} when fetching {url}")
+                    return None
+            else:
+                # For Wayback Machine URLs, use simpler approach
+                response = self.session.get(url, headers=headers, timeout=60)
+                if response.status_code == 200:
+                    return response.text
+                else:
+                    logging.warning(f"HTTP {response.status_code} when fetching Wayback URL {url}")
+                    return None
+
         except Exception as e:
-            logging.error(f"Error fetching {wayback_url}: {e}")
+            logging.error(f"Error fetching {url}: {e}")
 
         return None
 
@@ -113,12 +173,28 @@ class WaybackScraper:
             text = re.sub(r'<[^>]+>', ' ', html)  # Remove HTML tags
             text = ' '.join(text.split())  # Normalize whitespace
 
-            # Define expected models for each provider
+            # Define expected models for each provider (from benchmarks_tests.csv)
             expected_models = {
-                'openai': ['gpt-4o', 'gpt-4o-mini', 'gpt-5'],
-                'genai': ['gemini-2.0-flash', 'gemini-1.5-pro'],
-                'mistral': ['mistral-medium-2508', 'mistral-medium-2505'],
-                'anthropic': ['claude-3-5-sonnet', 'claude-3-haiku', 'claude-opus-4-1-20250805', 'claude-opus-4-20250514', 'claude-sonnet-4-20250514']
+                'openai': [
+                    'gpt-4.1', 'gpt-4.1-mini', 'gpt-4.1-nano', 'gpt-4.5-preview',
+                    'gpt-4o', 'gpt-4o-mini', 'gpt-5', 'gpt-5-mini', 'gpt-5-nano', 'o3'
+                ],
+                'genai': [
+                    'gemini-1.5-flash', 'gemini-1.5-pro', 'gemini-2.0-flash', 'gemini-2.0-flash-lite',
+                    'gemini-2.0-pro-exp-02-05', 'gemini-2.5-flash', 'gemini-2.5-flash-lite',
+                    'gemini-2.5-flash-lite-preview-09-2025', 'gemini-2.5-flash-preview-04-17',
+                    'gemini-2.5-flash-preview-09-2025', 'gemini-2.5-pro', 'gemini-2.5-pro-exp-03-25',
+                    'gemini-2.5-pro-preview-05-06', 'gemini-exp-1206'
+                ],
+                'mistral': [
+                    'mistral-large-latest', 'mistral-medium-2505', 'mistral-medium-2508',
+                    'pixtral-12b', 'pixtral-large-latest'
+                ],
+                'anthropic': [
+                    'claude-3-5-haiku-20241022', 'claude-3-5-sonnet-20241022', 'claude-3-7-sonnet-20250219',
+                    'claude-3-opus-20240229', 'claude-opus-4-1-20250805', 'claude-opus-4-20250514',
+                    'claude-sonnet-4-20250514'
+                ]
             }
 
             models_to_find = expected_models.get(provider, [])
@@ -283,9 +359,8 @@ Page content:
             except Exception as e:
                 logging.error(f"Error fetching current pricing: {e}")
 
-            # If current pricing failed for today's date, return empty - don't fall back
-            logging.warning(f"Could not get current pricing for {provider} on today's date")
-            return {}
+            # If current pricing failed for today's date, fall back to recent historical snapshots
+            logging.warning(f"Could not get current pricing for {provider} on today's date, falling back to recent historical snapshots")
 
         # Find snapshots, searching backwards if needed
         snapshots = self.find_available_snapshots(url, date)
@@ -352,10 +427,26 @@ Page content:
         logging.warning(f"No pricing data extracted for {provider} on {date}, adding None entries for manual intervention")
 
         expected_models = {
-            'openai': ['gpt-4o', 'gpt-4o-mini', 'gpt-5'],
-            'genai': ['gemini-2.0-flash', 'gemini-1.5-pro'],
-            'mistral': ['mistral-medium-2508', 'mistral-medium-2505'],
-            'anthropic': ['claude-3-5-sonnet', 'claude-3-haiku', 'claude-opus-4-1-20250805', 'claude-opus-4-20250514', 'claude-sonnet-4-20250514']
+            'openai': [
+                'gpt-4.1', 'gpt-4.1-mini', 'gpt-4.1-nano', 'gpt-4.5-preview',
+                'gpt-4o', 'gpt-4o-mini', 'gpt-5', 'gpt-5-mini', 'gpt-5-nano', 'o3'
+            ],
+            'genai': [
+                'gemini-1.5-flash', 'gemini-1.5-pro', 'gemini-2.0-flash', 'gemini-2.0-flash-lite',
+                'gemini-2.0-pro-exp-02-05', 'gemini-2.5-flash', 'gemini-2.5-flash-lite',
+                'gemini-2.5-flash-lite-preview-09-2025', 'gemini-2.5-flash-preview-04-17',
+                'gemini-2.5-flash-preview-09-2025', 'gemini-2.5-pro', 'gemini-2.5-pro-exp-03-25',
+                'gemini-2.5-pro-preview-05-06', 'gemini-exp-1206'
+            ],
+            'mistral': [
+                'mistral-large-latest', 'mistral-medium-2505', 'mistral-medium-2508',
+                'pixtral-12b', 'pixtral-large-latest'
+            ],
+            'anthropic': [
+                'claude-3-5-haiku-20241022', 'claude-3-5-sonnet-20241022', 'claude-3-7-sonnet-20250219',
+                'claude-3-opus-20240229', 'claude-opus-4-1-20250805', 'claude-opus-4-20250514',
+                'claude-sonnet-4-20250514'
+            ]
         }
 
         models_to_add = expected_models.get(provider, [])

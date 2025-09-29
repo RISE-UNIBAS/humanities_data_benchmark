@@ -183,6 +183,32 @@ class TestWaybackScraper(unittest.TestCase):
         self.assertIsInstance(models, dict)
         mock_extract_ai.assert_called_once_with(html_content, 'mistral')
 
+    @patch('wayback_scraper.WaybackScraper.extract_pricing_with_ai')
+    def test_parse_anthropic_pricing(self, mock_extract_ai):
+        """Test parsing Anthropic pricing from HTML using AI."""
+        mock_extract_ai.return_value = {
+            'claude-3-5-sonnet': (3.0, 15.0),
+            'claude-opus-4-1-20250805': (15.0, 75.0)
+        }
+
+        html_content = """
+        <html>
+        <body>
+        <h3>Claude 3.5 Sonnet</h3>
+        <p>Input: $3.00 per 1M tokens</p>
+        <p>Output: $15.00 per 1M tokens</p>
+        <h3>Claude Opus 4.1</h3>
+        <p>Input: $15.00 per 1M tokens</p>
+        <p>Output: $75.00 per 1M tokens</p>
+        </body>
+        </html>
+        """
+
+        models = self.scraper.parse_anthropic_pricing(html_content)
+
+        self.assertIsInstance(models, dict)
+        mock_extract_ai.assert_called_once_with(html_content, 'anthropic')
+
     @patch('wayback_scraper.WaybackScraper.find_available_snapshots')
     @patch('wayback_scraper.WaybackScraper.fetch_content')
     @patch('wayback_scraper.WaybackScraper.parse_genai_pricing')
@@ -197,6 +223,27 @@ class TestWaybackScraper(unittest.TestCase):
         self.assertIn('gemini-2.0-flash', result)
         self.assertEqual(result['gemini-2.0-flash'][0], 0.075)
         self.assertEqual(result['gemini-2.0-flash'][1], 0.3)
+
+    @patch('wayback_scraper.WaybackScraper.find_available_snapshots')
+    @patch('wayback_scraper.WaybackScraper.fetch_content')
+    @patch('wayback_scraper.WaybackScraper.parse_anthropic_pricing')
+    def test_scrape_pricing_anthropic_success(self, mock_parse, mock_fetch, mock_snapshots):
+        """Test successful Anthropic pricing scraping."""
+        mock_snapshots.return_value = ['http://web.archive.org/web/123/claude.com/pricing']
+        mock_fetch.return_value = "<html>Claude pricing content</html>"
+        mock_parse.return_value = {
+            'claude-3-5-sonnet': (3.0, 15.0),
+            'claude-opus-4-1-20250805': (15.0, 75.0)
+        }
+
+        result = self.scraper.scrape_pricing('anthropic', '2025-01-01')
+
+        self.assertIn('claude-3-5-sonnet', result)
+        self.assertEqual(result['claude-3-5-sonnet'][0], 3.0)
+        self.assertEqual(result['claude-3-5-sonnet'][1], 15.0)
+        self.assertIn('claude-opus-4-1-20250805', result)
+        self.assertEqual(result['claude-opus-4-1-20250805'][0], 15.0)
+        self.assertEqual(result['claude-opus-4-1-20250805'][1], 75.0)
 
     @patch('wayback_scraper.WaybackScraper.find_available_snapshots')
     def test_scrape_pricing_no_snapshots(self, mock_snapshots):
