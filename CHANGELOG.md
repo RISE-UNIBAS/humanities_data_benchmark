@@ -8,6 +8,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- Cost tracking system with pricing database and Wayback Machine integration
+- Automated pricing extraction for OpenAI, Google GenAI, Mistral, and Anthropic models
+- 6 new models: pixtral-12b, mistral-large-latest, gemini-2.5-flash, gemini-2.5-flash-lite, gemini-2.5-flash-lite-preview-09-2025, gemini-2.5-flash-preview-09-2025
+- 44 new benchmark test configurations (T0181-T0224) for new models across all benchmark variants
 - Structured outputs for Google Gen AI, Anthropic and Mistral models
 - T0008 on 2025-09-24
 - T0099 on 2025-09-24
@@ -37,13 +41,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - T0178 on 2025-09-26
 - T0179 on 2025-09-26
 - T0180 on 2025-09-26
-
 - T0130 on 2025-09-28
 - T0008 on 2025-09-29
 - T0127 on 2025-09-29
 - T0130 on 2025-09-29
 - T0169 on 2025-09-29
+
 ### Fixed
+
 - bibliographic_data attributions
 - Pydantic dataclass models
 
