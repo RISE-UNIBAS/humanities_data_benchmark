@@ -323,6 +323,7 @@ This benchmark suite currently tests models from the following providers:
 - **claude-opus-4-20250514**: Next-generation Claude 4 Opus with enhanced capabilities
 - **claude-sonnet-4-20250514**: Claude 4 Sonnet with improved reasoning and efficiency
 - **claude-opus-4-1-20250805**: Updated Claude 4.1 Opus with latest improvements
+- **claude-sonnet-4-5-20250929**: Latest Claude 4.5 Sonnet with enhanced performance
 
 ### Mistral AI
 - **pixtral-large-latest**: Mistral's multimodal model for vision tasks

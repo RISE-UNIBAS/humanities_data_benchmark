@@ -12,8 +12,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Token usage extraction for all providers (OpenAI, GenAI, Anthropic, Mistral)
 - Automatic cost calculation based on token usage and date-based pricing data
 - Cost summary in benchmark scoring files with detailed token and cost breakdowns
-- 6 new models: pixtral-12b, mistral-large-latest, gemini-2.5-flash, gemini-2.5-flash-lite, gemini-2.5-flash-lite-preview-09-2025, gemini-2.5-flash-preview-09-2025
-- 44 new benchmark test configurations (T0181-T0224) for new models across all benchmark variants
+- 7 new models: pixtral-12b, mistral-large-latest, gemini-2.5-flash, gemini-2.5-flash-lite, gemini-2.5-flash-lite-preview-09-2025, gemini-2.5-flash-preview-09-2025, claude-sonnet-4-5-20250929
+- 50 new benchmark test configurations (T0181-T0230) for new models across all benchmark variants
 - Cost (USD) column in benchmark tables showing test execution costs
 - Cost per Point metric in global leaderboard showing cost efficiency ($/performance point)
 - Structured outputs for Google Gen AI, Anthropic (native tool calling), and Mistral models
@@ -48,9 +48,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - T0180 on 2025-09-26
 - T0107 on 2025-09-30
 - T0169 on 2025-09-30
-- 
-### Fixed
 
+### Changed
+- All provider response objects now converted to JSON-serializable format before storage
+- Schema default values automatically removed for GenAI API compatibility
+
+### Fixed
+- Empty log files (FileHandler now properly configured)
+- JSON serialization errors for OpenAI, GenAI, Anthropic, and Mistral response objects
+- Pydantic validation errors now handled gracefully with fallback to raw tool input
+- Letter dataclass normalization for list-formatted fields (letter_title, send_date)
 - bibliographic_data attributions
 - Pydantic dataclass models
 
