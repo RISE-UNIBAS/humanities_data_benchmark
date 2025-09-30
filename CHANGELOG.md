@@ -8,8 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
-- Cost tracking system with pricing database and Wayback Machine integration
-- Automated pricing extraction for OpenAI, Google GenAI, Mistral, and Anthropic models
+- Cost tracking system with pricing database
 - 6 new models: pixtral-12b, mistral-large-latest, gemini-2.5-flash, gemini-2.5-flash-lite, gemini-2.5-flash-lite-preview-09-2025, gemini-2.5-flash-preview-09-2025
 - 44 new benchmark test configurations (T0181-T0224) for new models across all benchmark variants
 - Cost (USD) column in benchmark tables showing test execution costs

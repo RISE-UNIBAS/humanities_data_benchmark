@@ -10,132 +10,6 @@ from google.genai.types import GenerateContentConfig, Part
 from openai import OpenAI
 from anthropic import Anthropic
 from mistralai import Mistral
-import instructor
-from instructor.exceptions import InstructorRetryException  # TODO: change to instructor.core
-
-
-class CostCalculator:
-    """Calculate API costs using dynamic pricing lookup with database caching and Wayback fallback."""
-
-    @classmethod
-    def calculate_cost_for_date(cls, date: str, provider: str, model: str,
-                               input_tokens: int, output_tokens: int) -> float:
-        """Calculate cost using pricing database with Wayback fallback."""
-        try:
-            from pricing_database import get_pricing_database
-            from wayback_scraper import WaybackScraper
-
-            logging.info(f"Calculating cost: {input_tokens} input tokens, {output_tokens} output tokens")
-
-            db = get_pricing_database()
-
-            # Try to get pricing from database
-            pricing_data = db.get_pricing(date, provider, model)
-
-            if pricing_data:
-                input_price, output_price, source_url = pricing_data
-
-                # Check if pricing requires manual intervention
-                if input_price is None or output_price is None:
-                    logging.error(f"Pricing for {provider}/{model} requires manual intervention - prices are None")
-                    logging.error(f"Please update the pricing database with actual prices for {date}")
-                    return 0.0
-
-                input_cost = (input_tokens / 1_000_000) * input_price
-                output_cost = (output_tokens / 1_000_000) * output_price
-                total_cost = input_cost + output_cost
-                logging.info(f"Using cached pricing for {provider}/{model}: ${input_price}/${output_price}")
-                logging.info(f"Cost breakdown: ${input_cost:.6f} + ${output_cost:.6f} = ${total_cost:.6f}")
-                return total_cost
-
-            # Pricing not found - fetch from Wayback Machine
-            logging.info(f"Pricing not found for {date} {provider}/{model}, fetching from Wayback Machine")
-            scraper = WaybackScraper()
-            scraped_data = scraper.scrape_pricing(provider, date)
-
-            if model in scraped_data:
-                input_price, output_price, source_url = scraped_data[model]
-
-                # Save to database
-                db.add_pricing(date, provider, model, input_price, output_price, source_url)
-
-                # Check if pricing requires manual intervention
-                if input_price is None or output_price is None:
-                    logging.error(f"Pricing for {provider}/{model} requires manual intervention - prices are None")
-                    logging.error(f"Please update the pricing database with actual prices for {date}")
-                    return 0.0
-
-                # Calculate cost
-                input_cost = (input_tokens / 1_000_000) * input_price
-                output_cost = (output_tokens / 1_000_000) * output_price
-                logging.info(f"Scraped and cached pricing for {provider}/{model}: ${input_price}/${output_price}")
-                return input_cost + output_cost
-
-            # No pricing found at all - model wasn't in scraped data, which means scraping failed
-            logging.error(f"No pricing found for {date} {provider}/{model}")
-            logging.warning(f"Adding {provider}/{model} to database with None prices for manual intervention")
-
-            # Add None entry to database for manual intervention
-            from datetime import datetime
-            wayback_url = f"http://web.archive.org/web/{datetime.now().strftime('%Y%m%d%H%M%S')}/https://{provider}.ai/pricing"
-            db.add_pricing(date, provider, model, None, None, f"{wayback_url} (MANUAL_INTERVENTION_REQUIRED)")
-
-            return 0.0
-
-        except Exception as e:
-            logging.error(f"Error calculating cost: {e}")
-            return 0.0
-
-    @classmethod
-    def calculate_cost(cls, provider: str, model: str, input_tokens: int, output_tokens: int) -> float:
-        """Calculate cost based on current pricing (today's date)."""
-        today = datetime.now().strftime('%Y-%m-%d')
-        return cls.calculate_cost_for_date(today, provider, model, input_tokens, output_tokens)
-
-    @classmethod
-    def get_pricing_info(cls, provider: str, model: str, date: str = None) -> dict:
-        """Get pricing information for debugging and verification."""
-        try:
-            from pricing_database import get_pricing_database
-
-            if not date:
-                date = datetime.now().strftime('%Y-%m-%d')
-
-            db = get_pricing_database()
-            pricing_data = db.get_pricing(date, provider, model)
-
-            if pricing_data:
-                input_price, output_price, source_url = pricing_data
-                return {
-                    'provider': provider,
-                    'model': model,
-                    'date': date,
-                    'input_price_per_1m': input_price,
-                    'output_price_per_1m': output_price,
-                    'source_url': source_url
-                }
-            else:
-                return {'error': f'No pricing found for {provider}/{model} on {date}'}
-
-        except Exception as e:
-            return {'error': f'Error getting pricing info: {e}'}
-
-    @classmethod
-    def verify_model_availability(cls, provider: str, model: str, date: str = None) -> bool:
-        """Check if model pricing is available for cost calculation."""
-        try:
-            from pricing_database import get_pricing_database
-
-            if not date:
-                date = datetime.now().strftime('%Y-%m-%d')
-
-            db = get_pricing_database()
-            pricing_data = db.get_pricing(date, provider, model)
-            return pricing_data is not None
-
-        except Exception as e:
-            logging.error(f"Error verifying model availability: {e}")
-            return False
 
 
 class AiApiClient:
@@ -147,7 +21,6 @@ class AiApiClient:
                       'mistral']
 
     api_client = None
-    instructor_client = None
     genai_client = None
     image_resources = []
     dataclass = None
@@ -167,7 +40,6 @@ class AiApiClient:
             self.gpt_role_description = "A useful assistant that can help you with a variety of tasks."
         self.dataclass = dataclass
         self.temperature = temperature
-        self.calculate_cost = True  # Flag to enable/disable cost calculation
 
         self.init_client()
 
@@ -186,8 +58,6 @@ class AiApiClient:
                 api_key=self.api_key,
                 timeout=300.0,  # 5 minutes timeout instead of default
             )
-            # Initialize instructor client for structured output
-            self.instructor_client = instructor.from_anthropic(self.api_client)
 
         if self.api == 'mistral':
             self.api_client = Mistral(
@@ -204,7 +74,6 @@ class AiApiClient:
     def end_client(self):
         """End the client session."""
         self.api_client = None
-        self.instructor_client = None
         self.genai_client = None
         self.end_time = time.time()
 
@@ -311,22 +180,35 @@ class AiApiClient:
             else:
                 max_tokens = 10000
 
-            # Use instructor client for structured output, regular client otherwise
+            # Use tools for structured output, regular client otherwise
             if self.dataclass:
+                # Convert Pydantic model to JSON schema
+                json_schema = self.dataclass.model_json_schema()
+
+                # Define tool with the schema
+                tools = [
+                    {
+                        "name": "extract_structured_data",
+                        "description": "Extract structured data according to the provided schema",
+                        "input_schema": json_schema,
+                    }
+                ]
+
                 try:
-                    message = self.instructor_client.messages.create(
+                    # Call Anthropic with tool_choice to enforce structured output
+                    message = self.api_client.messages.create(
                         model=model,
                         max_tokens=max_tokens,
+                        tools=tools,
+                        tool_choice={"type": "tool", "name": "extract_structured_data"},
                         messages=[{
                             "role": "user",
                             "content": content,
                         }],
-                        response_model=self.dataclass,
                         timeout=300.0,
-                        max_retries=1,  # Limit retries to avoid infinite loops
                     )
-                    logging.info(f"Instructor successful: {type(message)}")
-                except (InstructorRetryException, Exception) as e:
+                    logging.info(f"Anthropic structured output successful")
+                except Exception as e:
                     logging.warning(f"Anthropic structured output failed, trying without data schema: {e}")
                     # Fallback to regular API call
                     message = self.api_client.messages.create(
@@ -406,14 +288,17 @@ class AiApiClient:
             'test_time': elapsed_time,
             'execution_time': datetime.now().isoformat(),
             'response_text': "",
+            'raw': response,
+            'usage': {},
             'scores': {},
-            'cost_info': {
-                'input_tokens': 0,
-                'output_tokens': 0,
-                'total_tokens': 0,
-                'estimated_cost_usd': 0.0
-            }
         }
+        #todo: extract input, ouput and total tokens from response and store in answer['usage']
+        #gemini: candidates_token_count, prompt_token_count, total_token_count
+        #mistral: usage=UsageInfo(prompt_tokens=1873, completion_tokens=1486, total_tokens=3359)
+        #openai: usage=CompletionUsage(completion_tokens=2166, prompt_tokens=2333, total_tokens=4499,...)
+        #anthropic:
+
+        logging.info(response)
 
         if self.api == 'openai':
             if self.dataclass:
@@ -421,16 +306,6 @@ class AiApiClient:
                 answer['response_text'] = text.model_dump()
             else:
                 answer['response_text'] = response.choices[0].message.content
-
-            # Extract token usage from OpenAI response
-            if hasattr(response, 'usage') and response.usage:
-                answer['cost_info']['input_tokens'] = response.usage.prompt_tokens
-                answer['cost_info']['output_tokens'] = response.usage.completion_tokens
-                answer['cost_info']['total_tokens'] = response.usage.total_tokens
-                if self.calculate_cost:
-                    answer['cost_info']['estimated_cost_usd'] = CostCalculator.calculate_cost(
-                        self.api, model, response.usage.prompt_tokens, response.usage.completion_tokens
-                    )
         elif self.api == 'genai':
             if self.dataclass:
                 # For structured output, parse JSON and validate with Pydantic
@@ -454,34 +329,39 @@ class AiApiClient:
             else:
                 # Regular text response
                 answer['response_text'] = response.text
-
-            # Extract token usage from GenAI response
-            if hasattr(response, 'usage_metadata') and response.usage_metadata:
-                answer['cost_info']['input_tokens'] = response.usage_metadata.prompt_token_count
-                answer['cost_info']['output_tokens'] = response.usage_metadata.candidates_token_count
-                answer['cost_info']['total_tokens'] = response.usage_metadata.total_token_count
-                if self.calculate_cost:
-                    answer['cost_info']['estimated_cost_usd'] = CostCalculator.calculate_cost(
-                        self.api, model, response.usage_metadata.prompt_token_count,
-                        response.usage_metadata.candidates_token_count
-                    )
         elif self.api == 'anthropic':
-            if self.dataclass and not hasattr(response, '_is_fallback'):
-                # For successful structured output with instructor, the response is a Pydantic model
-                answer['response_text'] = response.model_dump()
-            else:
-                # Regular text response or fallback from instructor failure
-                answer['response_text'] = response.content[0].text
+            # Convert Message object to dict for JSON serialization
+            answer['raw'] = {
+                'id': response.id,
+                'model': response.model,
+                'role': response.role,
+                'content': [{'type': block.type, 'text': block.text if hasattr(block, 'text') else None} if block.type == 'text'
+                           else {'type': block.type, 'id': block.id, 'name': block.name, 'input': block.input}
+                           for block in response.content],
+                'stop_reason': response.stop_reason,
+                'usage': {
+                    'input_tokens': response.usage.input_tokens,
+                    'output_tokens': response.usage.output_tokens,
+                } if hasattr(response, 'usage') else {}
+            }
 
-            # Extract token usage from Anthropic response
-            if hasattr(response, 'usage') and response.usage:
-                answer['cost_info']['input_tokens'] = response.usage.input_tokens
-                answer['cost_info']['output_tokens'] = response.usage.output_tokens
-                answer['cost_info']['total_tokens'] = response.usage.input_tokens + response.usage.output_tokens
-                if self.calculate_cost:
-                    answer['cost_info']['estimated_cost_usd'] = CostCalculator.calculate_cost(
-                        self.api, model, response.usage.input_tokens, response.usage.output_tokens
-                    )
+            if self.dataclass and not hasattr(response, '_is_fallback'):
+                # For successful structured output via tools, parse the tool_use block
+                structured = None
+                for block in response.content:
+                    if block.type == "tool_use" and block.name == "extract_structured_data":
+                        # Validate with Pydantic and convert to dict
+                        structured = self.dataclass(**block.input)
+                        answer['response_text'] = structured.model_dump()
+                        break
+
+                # If no tool_use found, fall back to text content
+                if structured is None:
+                    logging.warning("No tool_use block found in Anthropic response, using text content")
+                    answer['response_text'] = response.content[0].text if response.content else ""
+            else:
+                # Regular text response or fallback from tool failure
+                answer['response_text'] = response.content[0].text if response.content else ""
         elif self.api == 'mistral':
             if self.dataclass:
                 # For structured output, parse JSON and validate with Pydantic
@@ -495,16 +375,6 @@ class AiApiClient:
                     answer['response_text'] = response.choices[0].message.content
             else:
                 answer['response_text'] = response.choices[0].message.content
-
-            # Extract token usage from Mistral response
-            if hasattr(response, 'usage') and response.usage:
-                answer['cost_info']['input_tokens'] = response.usage.prompt_tokens
-                answer['cost_info']['output_tokens'] = response.usage.completion_tokens
-                answer['cost_info']['total_tokens'] = response.usage.total_tokens
-                if self.calculate_cost:
-                    answer['cost_info']['estimated_cost_usd'] = CostCalculator.calculate_cost(
-                        self.api, model, response.usage.prompt_tokens, response.usage.completion_tokens
-                    )
 
         return answer
 
