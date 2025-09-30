@@ -66,8 +66,8 @@ directory of the benchmark.
 provider.
 - **Scoring Function**: The scoring function is a function that is used to evaluate the model's response. 
 It must be provided by overriding the `score_answer` method in the benchmark class.
-- **Dataclass**: The use of Pydantic models (structured data schemas) for expected output is now supported across multiple providers.
-OpenAI, Google GenAI, and Anthropic (via instructor) all support structured output using Pydantic BaseModel classes.
+- **Dataclass**: The use of Pydantic models (structured data schemas) for expected output is supported across all providers.
+OpenAI, Google GenAI, Anthropic (via native tool calling), and Mistral all support structured output using Pydantic BaseModel classes.
 - **Test**: A test is a specific instance of a benchmark. A test is run with a configuration which indicates the provider, model, 
 temperature, role description, prompt file and dataclass.
 - **Test Configuration**: A test configuration is a set of parameters that are used to run a test. 

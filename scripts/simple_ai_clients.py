@@ -292,21 +292,31 @@ class AiApiClient:
             'usage': {},
             'scores': {},
         }
-        #todo: extract input, ouput and total tokens from response and store in answer['usage']
-        #gemini: candidates_token_count, prompt_token_count, total_token_count
-        #mistral: usage=UsageInfo(prompt_tokens=1873, completion_tokens=1486, total_tokens=3359)
-        #openai: usage=CompletionUsage(completion_tokens=2166, prompt_tokens=2333, total_tokens=4499,...)
-        #anthropic:
 
-        logging.info(response)
-
+        # Extract token usage from response
         if self.api == 'openai':
+            # Extract usage: CompletionUsage(completion_tokens=2166, prompt_tokens=2333, total_tokens=4499,...)
+            if hasattr(response, 'usage') and response.usage:
+                answer['usage'] = {
+                    'input_tokens': response.usage.prompt_tokens,
+                    'output_tokens': response.usage.completion_tokens,
+                    'total_tokens': response.usage.total_tokens,
+                }
+
             if self.dataclass:
                 text = response.choices[0].message.parsed
                 answer['response_text'] = text.model_dump()
             else:
                 answer['response_text'] = response.choices[0].message.content
         elif self.api == 'genai':
+            # Extract usage: candidates_token_count, prompt_token_count, total_token_count
+            if hasattr(response, 'usage_metadata'):
+                answer['usage'] = {
+                    'input_tokens': response.usage_metadata.prompt_token_count,
+                    'output_tokens': response.usage_metadata.candidates_token_count,
+                    'total_tokens': response.usage_metadata.total_token_count,
+                }
+
             if self.dataclass:
                 # For structured output, parse JSON and validate with Pydantic
                 try:
@@ -330,6 +340,14 @@ class AiApiClient:
                 # Regular text response
                 answer['response_text'] = response.text
         elif self.api == 'anthropic':
+            # Extract usage: Usage(input_tokens=2285, output_tokens=2040)
+            if hasattr(response, 'usage') and response.usage:
+                answer['usage'] = {
+                    'input_tokens': response.usage.input_tokens,
+                    'output_tokens': response.usage.output_tokens,
+                    'total_tokens': response.usage.input_tokens + response.usage.output_tokens,
+                }
+
             # Convert Message object to dict for JSON serialization
             answer['raw'] = {
                 'id': response.id,
@@ -363,6 +381,14 @@ class AiApiClient:
                 # Regular text response or fallback from tool failure
                 answer['response_text'] = response.content[0].text if response.content else ""
         elif self.api == 'mistral':
+            # Extract usage: UsageInfo(prompt_tokens=1873, completion_tokens=1486, total_tokens=3359)
+            if hasattr(response, 'usage') and response.usage:
+                answer['usage'] = {
+                    'input_tokens': response.usage.prompt_tokens,
+                    'output_tokens': response.usage.completion_tokens,
+                    'total_tokens': response.usage.total_tokens,
+                }
+
             if self.dataclass:
                 # For structured output, parse JSON and validate with Pydantic
                 try:
