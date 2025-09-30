@@ -87,8 +87,8 @@ This page provides an overview of all benchmark tests.Click on the test name to 
   </tr></thead>
   <tbody>
 <tr>
-    <td>2025-09-29</td>
-    <td><a href='/humanities_data_benchmark/archive/2025-09-29/T0008'><span class='test-square' style='background-color: #ffcc00;'>T0008</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-09-29/T0127'><span class='test-square' style='background-color: #2980b9;'>T0127</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-09-29/T0130'><span class='test-square' style='background-color: #99ff33;'>T0130</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-09-29/T0169'><span class='test-square' style='background-color: #ff3300;'>T0169</span></a>&nbsp;</td>
+    <td>2025-09-30</td>
+    <td><a href='/humanities_data_benchmark/archive/2025-09-30/T0107'><span class='test-square' style='background-color: #c0392b;'>T0107</span></a>&nbsp;</td>
     <td></td>
     <td></td>
     <td></td>
@@ -115,7 +115,7 @@ This page provides an overview of all benchmark tests.Click on the test name to 
 </tr>
 <tr>
     <td>2025-09-24</td>
-    <td><a href='/humanities_data_benchmark/archive/2025-09-24/T0008'><span class='test-square' style='background-color: #ffcc00;'>T0008</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-09-24/T0107'><span class='test-square' style='background-color: #c0392b;'>T0107</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-09-24/T0130'><span class='test-square' style='background-color: #99ff33;'>T0130</span></a>&nbsp;</td>
+    <td><a href='/humanities_data_benchmark/archive/2025-09-24/T0107'><span class='test-square' style='background-color: #c0392b;'>T0107</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-09-24/T0130'><span class='test-square' style='background-color: #99ff33;'>T0130</span></a>&nbsp;</td>
     <td><a href='/humanities_data_benchmark/archive/2025-09-24/T0099'><span class='test-square' style='background-color: #f1c40f;'>T0099</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-09-24/T0120'><span class='test-square' style='background-color: #66ff33;'>T0120</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-09-24/T0132'><span class='test-square' style='background-color: #27ae60;'>T0132</span></a>&nbsp;</td>
     <td><a href='/humanities_data_benchmark/archive/2025-09-24/T0117'><span class='test-square' style='background-color: #ff0099;'>T0117</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-09-24/T0125'><span class='test-square' style='background-color: #cc6699;'>T0125</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-09-24/T0134'><span class='test-square' style='background-color: #ffcc00;'>T0134</span></a>&nbsp;</td>
     <td></td>
