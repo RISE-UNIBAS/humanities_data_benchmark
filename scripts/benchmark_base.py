@@ -214,6 +214,7 @@ class Benchmark(ABC):
 
         # Group images by request
         image_groups = {}
+        all_answers = []  # Track all answers for cost calculation
 
         for image_file in image_files:
             if image_file in processed_images:
@@ -266,11 +267,77 @@ class Benchmark(ABC):
             ground_truth = self.load_ground_truth(image_name)
             score = self.score_request_answer(image_name, answer, ground_truth)
             benchmark_scores.append(score)
+            all_answers.append(answer)  # Track answer for cost calculation
             render = self.create_request_render(image_name, answer, score, ground_truth)
             self.save_render(image_name, render)
 
         benchmark_score = self.score_benchmark(benchmark_scores)
+
+        # Calculate cost based on usage tokens and pricing data
+        cost_summary = self.calculate_cost(all_answers)
+        benchmark_score['cost_summary'] = cost_summary
+
         self.save_benchmark_score(benchmark_score)
+
+    def calculate_cost(self, all_answers):
+        """Calculate cost based on usage tokens and pricing data."""
+        # Load pricing data
+        pricing_file = os.path.join(os.path.dirname(__file__), 'data', 'pricing.json')
+        try:
+            with open(pricing_file, 'r') as f:
+                pricing_data = json.load(f)
+        except FileNotFoundError:
+            logging.warning(f"Pricing file not found: {pricing_file}")
+            return None
+
+        # Get pricing for the current date (or fallback to most recent)
+        date_pricing = pricing_data.get('pricing', {}).get(self.date)
+        if not date_pricing:
+            # Fallback to most recent pricing
+            available_dates = sorted(pricing_data.get('pricing', {}).keys(), reverse=True)
+            if available_dates:
+                date_pricing = pricing_data['pricing'][available_dates[0]]
+                logging.info(f"No pricing for {self.date}, using {available_dates[0]}")
+            else:
+                logging.warning("No pricing data available")
+                return None
+
+        # Get model pricing
+        provider_pricing = date_pricing.get(self.provider, {})
+        model_pricing = provider_pricing.get(self.model)
+
+        if not model_pricing:
+            logging.warning(f"No pricing found for {self.provider}/{self.model}")
+            return None
+
+        input_price = model_pricing['input_price']  # USD per million tokens
+        output_price = model_pricing['output_price']  # USD per million tokens
+
+        # Calculate total tokens and cost from answers
+        total_input_tokens = 0
+        total_output_tokens = 0
+
+        for answer in all_answers:
+            if 'usage' in answer and answer['usage']:
+                total_input_tokens += answer['usage'].get('input_tokens', 0)
+                total_output_tokens += answer['usage'].get('output_tokens', 0)
+
+        # Calculate costs (prices are per million tokens)
+        input_cost = (total_input_tokens / 1_000_000) * input_price
+        output_cost = (total_output_tokens / 1_000_000) * output_price
+        total_cost = input_cost + output_cost
+
+        return {
+            'total_input_tokens': total_input_tokens,
+            'total_output_tokens': total_output_tokens,
+            'total_tokens': total_input_tokens + total_output_tokens,
+            'input_cost_usd': round(input_cost, 6),
+            'output_cost_usd': round(output_cost, 6),
+            'total_cost_usd': round(total_cost, 6),
+            'pricing_date': self.date,
+            'input_price_per_million': input_price,
+            'output_price_per_million': output_price
+        }
 
     def get_request_name(self, image_name: str) -> str:
         """ Get the name of the request. """

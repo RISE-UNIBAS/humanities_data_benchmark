@@ -356,7 +356,10 @@ These metrics evaluate how well the model performs the specific task. Examples i
 These metrics evaluate factors beyond task performance that impact usability:
 
 - **Compute Cost**: The financial cost of running the model on humanities-scale datasets
-  - **Automatic Cost Tracking**: The suite automatically tracks API costs for each test execution
+  - **Automatic Cost Tracking**: The suite automatically tracks API costs for each test execution based on actual token usage
+  - **Token Usage Extraction**: Input, output, and total tokens are automatically extracted from all provider responses
+  - **Cost Calculation**: Costs are calculated using date-based pricing data (USD per million tokens) stored in `scripts/data/pricing.json`
+  - **Cost Summary**: Each benchmark run includes detailed cost breakdown (input cost, output cost, total cost, token counts)
   - **Cost per Performance Point**: Efficiency metric showing cost relative to performance ($/performance point)
   - **Historical Pricing**: Wayback Machine integration captures pricing snapshots for reproducible cost analysis
 - **Speed**: Response time and throughput for processing humanities materials
