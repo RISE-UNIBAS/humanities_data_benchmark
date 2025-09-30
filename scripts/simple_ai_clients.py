@@ -303,6 +303,25 @@ class AiApiClient:
                     'total_tokens': response.usage.total_tokens,
                 }
 
+            # Convert response to JSON-serializable format
+            answer['raw'] = {
+                'id': response.id,
+                'model': response.model,
+                'choices': [{
+                    'finish_reason': choice.finish_reason,
+                    'index': choice.index,
+                    'message': {
+                        'content': choice.message.content,
+                        'role': choice.message.role,
+                    }
+                } for choice in response.choices],
+                'usage': {
+                    'prompt_tokens': response.usage.prompt_tokens,
+                    'completion_tokens': response.usage.completion_tokens,
+                    'total_tokens': response.usage.total_tokens,
+                } if hasattr(response, 'usage') and response.usage else {}
+            }
+
             if self.dataclass:
                 text = response.choices[0].message.parsed
                 answer['response_text'] = text.model_dump()
@@ -316,6 +335,16 @@ class AiApiClient:
                     'output_tokens': response.usage_metadata.candidates_token_count,
                     'total_tokens': response.usage_metadata.total_token_count,
                 }
+
+            # Convert response to JSON-serializable format (keep text only)
+            answer['raw'] = {
+                'text': response.text if hasattr(response, 'text') else '',
+                'usage_metadata': {
+                    'prompt_token_count': response.usage_metadata.prompt_token_count,
+                    'candidates_token_count': response.usage_metadata.candidates_token_count,
+                    'total_token_count': response.usage_metadata.total_token_count,
+                } if hasattr(response, 'usage_metadata') else {}
+            }
 
             if self.dataclass:
                 # For structured output, parse JSON and validate with Pydantic
@@ -365,21 +394,41 @@ class AiApiClient:
 
             if self.dataclass and not hasattr(response, '_is_fallback'):
                 # For successful structured output via tools, parse the tool_use block
-                structured = None
+                tool_found = False
                 for block in response.content:
                     if block.type == "tool_use" and block.name == "extract_structured_data":
-                        # Validate with Pydantic and convert to dict
-                        structured = self.dataclass(**block.input)
-                        answer['response_text'] = structured.model_dump()
+                        tool_found = True
+                        try:
+                            # Validate with Pydantic and convert to dict
+                            structured = self.dataclass(**block.input)
+                            answer['response_text'] = structured.model_dump()
+                        except Exception as e:
+                            logging.warning(f"Pydantic validation failed for Anthropic tool output: {e}")
+                            # Use raw tool input without validation
+                            answer['response_text'] = block.input
                         break
 
                 # If no tool_use found, fall back to text content
-                if structured is None:
+                if not tool_found:
                     logging.warning("No tool_use block found in Anthropic response, using text content")
-                    answer['response_text'] = response.content[0].text if response.content else ""
+                    # Find first text block
+                    for block in response.content:
+                        if block.type == "text":
+                            answer['response_text'] = block.text
+                            break
+                    else:
+                        answer['response_text'] = ""
             else:
                 # Regular text response or fallback from tool failure
-                answer['response_text'] = response.content[0].text if response.content else ""
+                if response.content:
+                    for block in response.content:
+                        if block.type == "text":
+                            answer['response_text'] = block.text
+                            break
+                    else:
+                        answer['response_text'] = ""
+                else:
+                    answer['response_text'] = ""
         elif self.api == 'mistral':
             # Extract usage: UsageInfo(prompt_tokens=1873, completion_tokens=1486, total_tokens=3359)
             if hasattr(response, 'usage') and response.usage:
@@ -388,6 +437,25 @@ class AiApiClient:
                     'output_tokens': response.usage.completion_tokens,
                     'total_tokens': response.usage.total_tokens,
                 }
+
+            # Convert response to JSON-serializable format
+            answer['raw'] = {
+                'id': response.id if hasattr(response, 'id') else None,
+                'model': response.model if hasattr(response, 'model') else None,
+                'choices': [{
+                    'finish_reason': choice.finish_reason if hasattr(choice, 'finish_reason') else None,
+                    'index': choice.index if hasattr(choice, 'index') else None,
+                    'message': {
+                        'content': choice.message.content if hasattr(choice.message, 'content') else None,
+                        'role': choice.message.role if hasattr(choice.message, 'role') else None,
+                    } if hasattr(choice, 'message') else {}
+                } for choice in response.choices] if hasattr(response, 'choices') else [],
+                'usage': {
+                    'prompt_tokens': response.usage.prompt_tokens,
+                    'completion_tokens': response.usage.completion_tokens,
+                    'total_tokens': response.usage.total_tokens,
+                } if hasattr(response, 'usage') and response.usage else {}
+            }
 
             if self.dataclass:
                 # For structured output, parse JSON and validate with Pydantic

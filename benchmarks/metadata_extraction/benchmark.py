@@ -301,10 +301,25 @@ class MetadataExtraction(Benchmark):
         """
 
         try:
+            # Handle case where raw_letter might be a string (JSON string or Python repr)
+            if isinstance(raw_letter, str):
+                try:
+                    # Try parsing as JSON first
+                    raw_letter = json.loads(raw_letter)
+                except json.JSONDecodeError:
+                    try:
+                        # Try using ast.literal_eval for Python string representations
+                        import ast
+                        raw_letter = ast.literal_eval(raw_letter)
+                    except (ValueError, SyntaxError) as e:
+                        logging.error(f"Failed to parse raw_letter string: {e} for {image_name}!")
+                        return None
+
             raw_letter["document_number"] = image_name
             return Letter(**raw_letter)
-        except (ValueError, TypeError) as e:
+        except (ValueError, TypeError, AttributeError) as e:
             logging.error(f"{e} parsing {raw_letter} for {image_name}!")
+            return None
 
     @staticmethod
     def _make_render_person(persons: list[Person]) -> str | None:
