@@ -85,6 +85,23 @@ class AiApiClient:
         """Clear the image resources"""
         self.image_resources = []
 
+    @staticmethod
+    def _remove_defaults_from_schema(schema):
+        """Recursively remove default values from JSON schema (for GenAI compatibility)."""
+        if isinstance(schema, dict):
+            # Remove 'default' key at current level
+            if 'default' in schema:
+                del schema['default']
+
+            # Recurse into nested schemas
+            for key, value in schema.items():
+                if isinstance(value, (dict, list)):
+                    AiApiClient._remove_defaults_from_schema(value)
+        elif isinstance(schema, list):
+            for item in schema:
+                if isinstance(item, (dict, list)):
+                    AiApiClient._remove_defaults_from_schema(item)
+
     def prompt(self, model, prompt):
         """Prompt the AI model with a given prompt."""
         prompt_start = time.time()
@@ -138,12 +155,16 @@ class AiApiClient:
                 contents.append(image_part)
 
             if self.dataclass:
+                # GenAI doesn't support default values in schema, strip them
+                schema = self.dataclass.model_json_schema()
+                self._remove_defaults_from_schema(schema)
+
                 response = self.genai_client.models.generate_content(
                     model=model,
                     contents=contents,
                     config=GenerateContentConfig(
                         response_mime_type="application/json",
-                        response_schema=self.dataclass,
+                        response_schema=schema,
                         temperature=self.temperature,
                     ),
                 )

@@ -119,8 +119,4 @@ def main(limit_to: list[str] = None, dates: list[str] = None):
                         logging.error(f"Skipping {benchmark.get_title()} (not runnable).")
 
 if __name__ == "__main__":
-    main(limit_to="T0107"
-         )
-    # T0008
-    # T0169
-    # T0141
+    main()
