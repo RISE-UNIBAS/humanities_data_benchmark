@@ -15,7 +15,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - 7 new models: pixtral-12b, mistral-large-latest, gemini-2.5-flash, gemini-2.5-flash-lite, gemini-2.5-flash-lite-preview-09-2025, gemini-2.5-flash-preview-09-2025, claude-sonnet-4-5-20250929
 - 50 new benchmark test configurations (T0181-T0230) for new models across all benchmark variants
 - Cost (USD) column in benchmark tables showing test execution costs
-- Cost per Point metric in global leaderboard showing cost efficiency ($/performance point)
+- Cost per Point metric in global leaderboard showing normalized cost efficiency ($/performance point)
+  - Normalized calculation: average of per-benchmark cost/point ratios
+  - Accounts for different benchmark scales and test item counts
+- Test Time tracking and metrics
+  - Test Time (s) column in benchmark tables showing total execution time per test
+  - Time per Point column in benchmark tables showing time efficiency (seconds/point per item)
+  - Time/Point metric in global leaderboard showing normalized time efficiency
+  - Multi-level normalized calculation: per-test (average time per item / score), per-benchmark (average of test ratios), global (average of benchmark ratios)
+  - Analogous to cost calculation methodology for consistency
 - Structured outputs for Google Gen AI, Anthropic (native tool calling), and Mistral models
 - Automatic regeneration of empty or invalid JSON result files
 - Logging to file enabled by default
@@ -48,7 +56,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - T0180 on 2025-09-26
 - T0107 on 2025-09-30
 - T0169 on 2025-09-30
-
 - T0001 on 2025-09-30
 - T0002 on 2025-09-30
 - T0003 on 2025-09-30
@@ -235,6 +242,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - T0191 on 2025-10-01
 - T0192 on 2025-10-01
 - T0168 on 2025-10-01
+- T0166 on 2025-10-01
+- T0167 on 2025-10-01
+
 ### Changed
 - All provider response objects now converted to JSON-serializable format before storage
 - Schema default values automatically removed for GenAI API compatibility

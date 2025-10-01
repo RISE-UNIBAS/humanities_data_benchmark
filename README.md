@@ -362,12 +362,22 @@ These metrics evaluate factors beyond task performance that impact usability:
   - **Cost Calculation**: Costs are calculated using date-based pricing data (USD per million tokens) stored in `scripts/data/pricing.json`
   - **Cost Summary**: Each benchmark run includes detailed cost breakdown (input cost, output cost, total cost, token counts)
   - **Cost per Performance Point**: Efficiency metric showing cost relative to performance ($/performance point)
-    - **Normalized Calculation**: Cost per point is calculated separately for each benchmark, then averaged to account for different benchmark scales
-    - For each benchmark: `cost_per_point = average_benchmark_cost / average_benchmark_score`
-    - Global cost per point: average of all per-benchmark cost/point ratios
-    - This normalization ensures fair comparison across benchmarks with different numbers of test items
+    - **Normalized Calculation**: Calculated per test, averaged per benchmark, then averaged globally
+    - For each test: `cost_per_point = total_test_cost / test_score`
+    - For each benchmark: `benchmark_cost_per_point = average(cost_per_point_for_all_tests_in_benchmark)`
+    - Global cost per point: average of the 4 benchmark cost/point values
+    - This multi-level normalization ensures fair comparison across different test configurations per benchmark and different benchmark scales
+    - Uses only the most recent test results for each test configuration
   - **Historical Pricing**: Wayback Machine integration captures pricing snapshots for reproducible cost analysis
-- **Speed**: Response time and throughput for processing humanities materials
+- **Test Time**: Response time for processing humanities materials
+  - **Automatic Time Tracking**: Test execution time is tracked for each API call
+  - **Time per Performance Point**: Efficiency metric showing time relative to performance (seconds/point per item)
+    - **Normalized Calculation**: Calculated per test, averaged per benchmark, then averaged globally (analogous to cost calculation)
+    - For each test: `time_per_point = (average_time_per_item) / test_score`
+    - For each benchmark: `benchmark_time_per_point = average(time_per_point_for_all_tests_in_benchmark)`
+    - Global time per point: average of the 4 benchmark time/point values
+    - This multi-level normalization ensures fair comparison across different numbers of items per test, different test configurations per benchmark, and different benchmark complexities
+    - Uses only the most recent test results for each test configuration
 - **Deployment Options**: Whether the model can be run locally or requires API calls
 - **Legal and Ethical Considerations**: Including data privacy, IP compliance, and model bias
 

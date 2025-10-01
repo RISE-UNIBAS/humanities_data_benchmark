@@ -255,7 +255,7 @@ def create_leaderboard():
     # Target benchmarks for global average calculation
     target_benchmarks = ['bibliographic_data', 'fraktur', 'metadata_extraction', 'zettelkatalog']
     
-    # Dictionary to store model scores: {model_name: {benchmark: [scores], provider: provider_name, benchmark_costs: {benchmark: [costs]}}}
+    # Dictionary to store model scores: {model_name: {benchmark: [scores], provider: provider_name, benchmark_costs: {benchmark: [costs]}, benchmark_times: {benchmark: [times]}}}
     model_scores = {}
     
     # Common company name mappings for providers already used
@@ -290,14 +290,33 @@ def create_leaderboard():
                 scoring_data = json.loads(scoring_data)
             except json.decoder.JSONDecodeError:
                 continue
+
+            # Collect all test times from answer files in this test to calculate average
+            test_result_dir = os.path.join('..', 'results', date, test_id)
+            avg_test_time = None
+            if os.path.exists(test_result_dir):
+                test_times = []
+                for answer_file in os.listdir(test_result_dir):
+                    if answer_file.endswith('.json') and answer_file != 'scoring.json':
+                        answer_path = os.path.join(test_result_dir, answer_file)
+                        try:
+                            answer_data = json.loads(read_file(answer_path))
+                            if 'test_time' in answer_data:
+                                test_times.append(float(answer_data['test_time']))
+                        except (json.JSONDecodeError, ValueError, KeyError):
+                            pass
+                if test_times:
+                    avg_test_time = sum(test_times) / len(test_times)
             
             # Initialize model entry if not exists
             if model not in model_scores:
-                model_scores[model] = {'provider': provider, 'benchmark_costs': {}}
+                model_scores[model] = {'provider': provider, 'benchmark_costs': {}, 'benchmark_times': {}}
             if benchmark not in model_scores[model]:
                 model_scores[model][benchmark] = []
             if benchmark not in model_scores[model]['benchmark_costs']:
                 model_scores[model]['benchmark_costs'][benchmark] = []
+            if benchmark not in model_scores[model]['benchmark_times']:
+                model_scores[model]['benchmark_times'][benchmark] = []
             
             # Extract the main score based on benchmark type
             score = None
@@ -326,6 +345,10 @@ def create_leaderboard():
                             model_scores[model]['benchmark_costs'][benchmark].append(cost_usd)
                         except (ValueError, TypeError):
                             pass
+
+                    # Store average test time per benchmark (analogous to cost)
+                    if avg_test_time is not None:
+                        model_scores[model]['benchmark_times'][benchmark].append(avg_test_time)
 
                 except (ValueError, TypeError):
                     continue
@@ -373,11 +396,34 @@ def create_leaderboard():
                 if benchmark_cost_ratios:
                     cost_per_point = sum(benchmark_cost_ratios) / len(benchmark_cost_ratios)
 
+            # Calculate normalized time per point: average of per-benchmark time/point ratios
+            time_per_point = None
+            benchmark_time_ratios = []
+
+            if 'benchmark_times' in benchmarks:
+                for benchmark_name in target_benchmarks:
+                    if (benchmark_name in benchmark_averages and
+                        benchmark_averages[benchmark_name] is not None and
+                        benchmark_averages[benchmark_name] > 0 and
+                        benchmark_name in benchmarks['benchmark_times'] and
+                        benchmarks['benchmark_times'][benchmark_name]):
+
+                        # Calculate average time for this benchmark
+                        avg_benchmark_time = sum(benchmarks['benchmark_times'][benchmark_name]) / len(benchmarks['benchmark_times'][benchmark_name])
+                        # Calculate time per point for this benchmark
+                        benchmark_time_ratio = avg_benchmark_time / benchmark_averages[benchmark_name]
+                        benchmark_time_ratios.append(benchmark_time_ratio)
+
+                # Average the per-benchmark time/point ratios
+                if benchmark_time_ratios:
+                    time_per_point = sum(benchmark_time_ratios) / len(benchmark_time_ratios)
+
             leaderboard_data.append({
                 'model': model,
                 'provider': provider_name,
                 'global_avg': global_average,
                 'cost_per_point': cost_per_point,
+                'time_per_point': time_per_point,
                 'bibliographic_data': benchmark_averages['bibliographic_data'],
                 'fraktur': benchmark_averages['fraktur'],
                 'metadata_extraction': benchmark_averages['metadata_extraction'],
@@ -398,11 +444,12 @@ def create_leaderboard():
 <th onclick="sortTable(0)" style="cursor: pointer;">Model ↕</th>
 <th onclick="sortTable(1)" style="cursor: pointer;">Provider ↕</th>
 <th onclick="sortTable(2)" style="cursor: pointer;">Global Average ↕</th>
-<th onclick="sortTable(3)" style="cursor: pointer;">Cost per Point ↕</th>
-<th onclick="sortTable(4)" style="cursor: pointer;"><a href="benchmarks/bibliographic_data/" style="color: inherit; text-decoration: none;">bibliographic_data</a> ↕</th>
-<th onclick="sortTable(5)" style="cursor: pointer;"><a href="benchmarks/fraktur/" style="color: inherit; text-decoration: none;">fraktur</a> ↕</th>
-<th onclick="sortTable(6)" style="cursor: pointer;"><a href="benchmarks/metadata_extraction/" style="color: inherit; text-decoration: none;">metadata_extraction</a> ↕</th>
-<th onclick="sortTable(7)" style="cursor: pointer;"><a href="benchmarks/zettelkatalog/" style="color: inherit; text-decoration: none;">zettelkatalog</a> ↕</th>
+<th onclick="sortTable(3)" style="cursor: pointer;">Cost/Point ↕</th>
+<th onclick="sortTable(4)" style="cursor: pointer;">Time/Point ↕</th>
+<th onclick="sortTable(5)" style="cursor: pointer;"><a href="benchmarks/bibliographic_data/" style="color: inherit; text-decoration: none;">bibliographic_data</a> ↕</th>
+<th onclick="sortTable(6)" style="cursor: pointer;"><a href="benchmarks/fraktur/" style="color: inherit; text-decoration: none;">fraktur</a> ↕</th>
+<th onclick="sortTable(7)" style="cursor: pointer;"><a href="benchmarks/metadata_extraction/" style="color: inherit; text-decoration: none;">metadata_extraction</a> ↕</th>
+<th onclick="sortTable(8)" style="cursor: pointer;"><a href="benchmarks/zettelkatalog/" style="color: inherit; text-decoration: none;">zettelkatalog</a> ↕</th>
 </tr>
 </thead>
 <tbody>'''
@@ -419,6 +466,13 @@ def create_leaderboard():
             cost_per_point_display = f"${data['cost_per_point']:.4f}"
             cost_per_point_sort = f"{data['cost_per_point']:.4f}"
 
+        # Create time per point display (without badge)
+        time_per_point_display = "N/A"
+        time_per_point_sort = "999"  # High value for N/A entries to sort last
+        if data['time_per_point'] is not None:
+            time_per_point_display = f"{data['time_per_point']:.2f}s"
+            time_per_point_sort = f"{data['time_per_point']:.2f}"
+
         biblio_badge = get_badge("fuzzy", f"{data['bibliographic_data']:.3f}") if data['bibliographic_data'] is not None else "N/A"
         fraktur_badge = get_badge("fuzzy", f"{data['fraktur']:.3f}") if data['fraktur'] is not None else "N/A"
         metadata_badge = get_badge("f1_micro", f"{data['metadata_extraction']:.3f}") if data['metadata_extraction'] is not None else "N/A"
@@ -429,7 +483,7 @@ def create_leaderboard():
         metadata_sort = f'{data["metadata_extraction"]:.3f}' if data["metadata_extraction"] is not None else "0"
         zettelkatalog_sort = f'{data["zettelkatalog"]:.3f}' if data["zettelkatalog"] is not None else "0"
         
-        leaderboard_html += f'<tr><td data-sort="{data["model"]}">{model_html}</td><td data-sort="{data["provider"]}">{provider_html}</td><td data-sort="{data["global_avg"]:.3f}">{global_avg_display}</td><td data-sort="{cost_per_point_sort}">{cost_per_point_display}</td><td data-sort="{biblio_sort}">{biblio_badge}</td><td data-sort="{fraktur_sort}">{fraktur_badge}</td><td data-sort="{metadata_sort}">{metadata_badge}</td><td data-sort="{zettelkatalog_sort}">{zettelkatalog_badge}</td></tr>'
+        leaderboard_html += f'<tr><td data-sort="{data["model"]}">{model_html}</td><td data-sort="{data["provider"]}">{provider_html}</td><td data-sort="{data["global_avg"]:.3f}">{global_avg_display}</td><td data-sort="{cost_per_point_sort}">{cost_per_point_display}</td><td data-sort="{time_per_point_sort}">{time_per_point_display}</td><td data-sort="{biblio_sort}">{biblio_badge}</td><td data-sort="{fraktur_sort}">{fraktur_badge}</td><td data-sort="{metadata_sort}">{metadata_badge}</td><td data-sort="{zettelkatalog_sort}">{zettelkatalog_badge}</td></tr>'
     
     leaderboard_html += '''</tbody>
 </table>
@@ -569,6 +623,8 @@ def create_index():
 <th onclick="sortBenchmarkTable('{benchmark}', 6)" style="cursor: pointer;">Results ↕</th>
 <th onclick="sortBenchmarkTable('{benchmark}', 7)" style="cursor: pointer;">Cost (USD) ↕</th>
 <th onclick="sortBenchmarkTable('{benchmark}', 8)" style="cursor: pointer;">Cost/Point ↕</th>
+<th onclick="sortBenchmarkTable('{benchmark}', 9)" style="cursor: pointer;">Test Time (s) ↕</th>
+<th onclick="sortBenchmarkTable('{benchmark}', 10)" style="cursor: pointer;">Time/Point ↕</th>
 </tr>
 </thead>
 <tbody>'''
@@ -645,6 +701,33 @@ def create_index():
                     except (ValueError, TypeError):
                         cost_html = "N/A"
 
+                # Extract test time information from answer files
+                test_time_html = "N/A"
+                time_per_point_html = "N/A"
+                time_per_point_sort = "999"
+                test_result_dir = os.path.join('..', 'results', date, test_id)
+                if os.path.exists(test_result_dir):
+                    test_times = []
+                    for answer_file in os.listdir(test_result_dir):
+                        if answer_file.endswith('.json') and answer_file != 'scoring.json':
+                            answer_path = os.path.join(test_result_dir, answer_file)
+                            try:
+                                answer_data = json.loads(read_file(answer_path))
+                                if 'test_time' in answer_data:
+                                    test_times.append(float(answer_data['test_time']))
+                            except (json.JSONDecodeError, ValueError, KeyError):
+                                pass
+
+                    if test_times:
+                        total_test_time = sum(test_times)
+                        test_time_html = f"{total_test_time:.2f}"
+
+                        # Calculate time per point for this test
+                        if score_value > 0:
+                            time_per_point = total_test_time / score_value
+                            time_per_point_html = f"{time_per_point:.2f}"
+                            time_per_point_sort = f"{time_per_point:.2f}"
+
                 all_tests.append({
                     'test_id': test_id,
                     'model': test_config['model'],
@@ -656,6 +739,9 @@ def create_index():
                     'cost': cost_html,
                     'cost_per_point': cost_per_point_html,
                     'cost_per_point_sort': cost_per_point_sort,
+                    'test_time': test_time_html,
+                    'time_per_point': time_per_point_html,
+                    'time_per_point_sort': time_per_point_sort,
                     'score': score_value
                 })
         
@@ -685,7 +771,7 @@ def create_index():
             # Create clickable test ID using get_square for consistent styling
             test_id_square = get_square(test["test_id"], href="/humanities_data_benchmark/tests/" + test["test_id"])
 
-            benchmark_table += f'<tr><td data-sort="{test["model"]}">{model_html}</td><td data-sort="{provider_display}">{provider_html}</td><td data-sort="{test["test_id"]}">{test_id_square}</td><td data-sort="{test["date"]}">{test["date"]}</td><td data-sort="{test["prompt"]}">{test["prompt"]}</td><td data-sort="{test["rules"] if test["rules"] != "None" else ""}">{rules_display}</td><td data-sort="{test["score"]:.3f}">{test["badges"]}</td><td data-sort="{test["cost"]}">{test["cost"]}</td><td data-sort="{test["cost_per_point_sort"]}">{test["cost_per_point"]}</td></tr>'
+            benchmark_table += f'<tr><td data-sort="{test["model"]}">{model_html}</td><td data-sort="{provider_display}">{provider_html}</td><td data-sort="{test["test_id"]}">{test_id_square}</td><td data-sort="{test["date"]}">{test["date"]}</td><td data-sort="{test["prompt"]}">{test["prompt"]}</td><td data-sort="{test["rules"] if test["rules"] != "None" else ""}">{rules_display}</td><td data-sort="{test["score"]:.3f}">{test["badges"]}</td><td data-sort="{test["cost"]}">{test["cost"]}</td><td data-sort="{test["cost_per_point_sort"]}">{test["cost_per_point"]}</td><td data-sort="{test["test_time"]}">{test["test_time"]}</td><td data-sort="{test["time_per_point_sort"]}">{test["time_per_point"]}</td></tr>'
         
         benchmark_table += '</tbody></table>\n\n'
         benchmark_sections += benchmark_table
@@ -708,12 +794,18 @@ results, and comparisons.
 
 ## Leaderboard
 
-The table below shows the **global average performance** and **cost efficiency** of each model across the four core 
-benchmarks: [bibliographic_data](benchmarks/bibliographic_data/), [fraktur](benchmarks/fraktur/), 
-[metadata_extraction](benchmarks/metadata_extraction/), and [zettelkatalog](benchmarks/zettelkatalog/). The "Cost per 
-Point" column shows the normalized cost efficiency (calculated as the average of per-benchmark cost/point ratios to 
-account for different benchmark scales), helping you identify the most cost-effective models for your research. Only 
-models with results in all four benchmarks are included. Click on any column header to sort the table.
+The table below shows the **global average performance**, **cost efficiency**, and **time efficiency** of each model
+across the four core benchmarks: [bibliographic_data](benchmarks/bibliographic_data/), [fraktur](
+benchmarks/fraktur/), [metadata_extraction](benchmarks/metadata_extraction/), and [zettelkatalog](
+benchmarks/zettelkatalog/).
+
+The **Model** and **Provider** columns identify each AI system. **Global Average** represents the mean performance 
+score across all four benchmarks (higher is better). **Cost/Point** and **Time/Point** show normalized efficiency 
+metrics calculated per test, averaged per benchmark, then averaged globally; this multi-level normalization accounts 
+for different numbers of items, test configurations, and benchmark scales. For efficiency metrics, lower values are 
+better, indicating less cost or time needed per performance point achieved. The four benchmark-specific columns show 
+average performance for each individual benchmark. Only models with results in all four benchmarks are included. 
+Click on any column header to sort the table.
 
 {leaderboard_html}
 
@@ -722,6 +814,15 @@ The following radar chart shows the performance distribution of top models acros
 {radar_chart_html}
 
 ## Latest Benchmark Results
+
+The tables below show detailed results for each benchmark, with each row representing a single test configuration run 
+on the most recent date. The **Model** and **Provider** columns identify the AI system used. Each test has a unique 
+**Test ID** (click to see full history) and shows the most recent execution **Date**. The **Prompt** and **Rules** 
+columns indicate the configuration used. **Results** show the performance score (fuzzy match for 
+bibliographic_data/fraktur, F1-micro for metadata_extraction/zettelkatalog; higher is better). **Cost (USD)** 
+represents the total cost for processing all items in the test. **Cost/Point** shows cost efficiency ($/performance 
+point; lower is better). **Test Time (s)** is the total execution time for all items. **Time/Point** shows time 
+efficiency (seconds/performance point; lower is better).
 
 {benchmark_sections}
 
