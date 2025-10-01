@@ -362,6 +362,10 @@ These metrics evaluate factors beyond task performance that impact usability:
   - **Cost Calculation**: Costs are calculated using date-based pricing data (USD per million tokens) stored in `scripts/data/pricing.json`
   - **Cost Summary**: Each benchmark run includes detailed cost breakdown (input cost, output cost, total cost, token counts)
   - **Cost per Performance Point**: Efficiency metric showing cost relative to performance ($/performance point)
+    - **Normalized Calculation**: Cost per point is calculated separately for each benchmark, then averaged to account for different benchmark scales
+    - For each benchmark: `cost_per_point = average_benchmark_cost / average_benchmark_score`
+    - Global cost per point: average of all per-benchmark cost/point ratios
+    - This normalization ensures fair comparison across benchmarks with different numbers of test items
   - **Historical Pricing**: Wayback Machine integration captures pricing snapshots for reproducible cost analysis
 - **Speed**: Response time and throughput for processing humanities materials
 - **Deployment Options**: Whether the model can be run locally or requires API calls

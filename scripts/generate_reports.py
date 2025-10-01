@@ -255,7 +255,7 @@ def create_leaderboard():
     # Target benchmarks for global average calculation
     target_benchmarks = ['bibliographic_data', 'fraktur', 'metadata_extraction', 'zettelkatalog']
     
-    # Dictionary to store model scores: {model_name: {benchmark: [scores], provider: provider_name}}
+    # Dictionary to store model scores: {model_name: {benchmark: [scores], provider: provider_name, benchmark_costs: {benchmark: [costs]}}}
     model_scores = {}
     
     # Common company name mappings for providers already used
@@ -293,9 +293,11 @@ def create_leaderboard():
             
             # Initialize model entry if not exists
             if model not in model_scores:
-                model_scores[model] = {'provider': provider, 'costs': []}
+                model_scores[model] = {'provider': provider, 'benchmark_costs': {}}
             if benchmark not in model_scores[model]:
                 model_scores[model][benchmark] = []
+            if benchmark not in model_scores[model]['benchmark_costs']:
+                model_scores[model]['benchmark_costs'][benchmark] = []
             
             # Extract the main score based on benchmark type
             score = None
@@ -317,11 +319,11 @@ def create_leaderboard():
                     score_value = float(score) if isinstance(score, (str, int, float)) else 0
                     model_scores[model][benchmark].append(score_value)
 
-                    # Extract cost information
+                    # Extract cost information and store per benchmark
                     if 'cost_summary' in scoring_data and scoring_data['cost_summary'] and 'total_cost_usd' in scoring_data['cost_summary']:
                         try:
                             cost_usd = float(scoring_data['cost_summary']['total_cost_usd'])
-                            model_scores[model]['costs'].append(cost_usd)
+                            model_scores[model]['benchmark_costs'][benchmark].append(cost_usd)
                         except (ValueError, TypeError):
                             pass
 
@@ -349,19 +351,32 @@ def create_leaderboard():
             global_average = total_score / benchmark_count
             provider_name = provider_mappings.get(benchmarks.get('provider', '').lower(), benchmarks.get('provider', 'Unknown'))
 
-            # Calculate average cost and cost per point
-            avg_cost = None
+            # Calculate normalized cost per point: average of per-benchmark cost/point ratios
             cost_per_point = None
-            if 'costs' in benchmarks and benchmarks['costs']:
-                avg_cost = sum(benchmarks['costs']) / len(benchmarks['costs'])
-                if global_average > 0:
-                    cost_per_point = avg_cost / global_average
+            benchmark_cost_ratios = []
+
+            if 'benchmark_costs' in benchmarks:
+                for benchmark_name in target_benchmarks:
+                    if (benchmark_name in benchmark_averages and
+                        benchmark_averages[benchmark_name] is not None and
+                        benchmark_averages[benchmark_name] > 0 and
+                        benchmark_name in benchmarks['benchmark_costs'] and
+                        benchmarks['benchmark_costs'][benchmark_name]):
+
+                        # Calculate average cost for this benchmark
+                        avg_benchmark_cost = sum(benchmarks['benchmark_costs'][benchmark_name]) / len(benchmarks['benchmark_costs'][benchmark_name])
+                        # Calculate cost per point for this benchmark
+                        benchmark_cost_ratio = avg_benchmark_cost / benchmark_averages[benchmark_name]
+                        benchmark_cost_ratios.append(benchmark_cost_ratio)
+
+                # Average the per-benchmark cost/point ratios
+                if benchmark_cost_ratios:
+                    cost_per_point = sum(benchmark_cost_ratios) / len(benchmark_cost_ratios)
 
             leaderboard_data.append({
                 'model': model,
                 'provider': provider_name,
                 'global_avg': global_average,
-                'avg_cost': avg_cost,
                 'cost_per_point': cost_per_point,
                 'bibliographic_data': benchmark_averages['bibliographic_data'],
                 'fraktur': benchmark_averages['fraktur'],
@@ -553,6 +568,7 @@ def create_index():
 <th onclick="sortBenchmarkTable('{benchmark}', 5)" style="cursor: pointer;">Rules ↕</th>
 <th onclick="sortBenchmarkTable('{benchmark}', 6)" style="cursor: pointer;">Results ↕</th>
 <th onclick="sortBenchmarkTable('{benchmark}', 7)" style="cursor: pointer;">Cost (USD) ↕</th>
+<th onclick="sortBenchmarkTable('{benchmark}', 8)" style="cursor: pointer;">Cost/Point ↕</th>
 </tr>
 </thead>
 <tbody>'''
@@ -614,13 +630,21 @@ def create_index():
 
                 # Extract cost information
                 cost_html = "N/A"
+                cost_per_point_html = "N/A"
+                cost_per_point_sort = "999"
                 if 'cost_summary' in scoring_data and scoring_data['cost_summary'] and 'total_cost_usd' in scoring_data['cost_summary']:
                     try:
                         cost_usd = float(scoring_data['cost_summary']['total_cost_usd'])
                         cost_html = f"${cost_usd:.4f}"
+
+                        # Calculate cost per point for this test
+                        if score_value > 0:
+                            cost_per_point = cost_usd / score_value
+                            cost_per_point_html = f"${cost_per_point:.4f}"
+                            cost_per_point_sort = f"{cost_per_point:.4f}"
                     except (ValueError, TypeError):
                         cost_html = "N/A"
-                
+
                 all_tests.append({
                     'test_id': test_id,
                     'model': test_config['model'],
@@ -630,6 +654,8 @@ def create_index():
                     'rules': rules if rules else "None",
                     'badges': badge_html,
                     'cost': cost_html,
+                    'cost_per_point': cost_per_point_html,
+                    'cost_per_point_sort': cost_per_point_sort,
                     'score': score_value
                 })
         
@@ -658,8 +684,8 @@ def create_index():
             
             # Create clickable test ID using get_square for consistent styling
             test_id_square = get_square(test["test_id"], href="/humanities_data_benchmark/tests/" + test["test_id"])
-            
-            benchmark_table += f'<tr><td data-sort="{test["model"]}">{model_html}</td><td data-sort="{provider_display}">{provider_html}</td><td data-sort="{test["test_id"]}">{test_id_square}</td><td data-sort="{test["date"]}">{test["date"]}</td><td data-sort="{test["prompt"]}">{test["prompt"]}</td><td data-sort="{test["rules"] if test["rules"] != "None" else ""}">{rules_display}</td><td data-sort="{test["score"]:.3f}">{test["badges"]}</td><td data-sort="{test["cost"]}">{test["cost"]}</td></tr>'
+
+            benchmark_table += f'<tr><td data-sort="{test["model"]}">{model_html}</td><td data-sort="{provider_display}">{provider_html}</td><td data-sort="{test["test_id"]}">{test_id_square}</td><td data-sort="{test["date"]}">{test["date"]}</td><td data-sort="{test["prompt"]}">{test["prompt"]}</td><td data-sort="{test["rules"] if test["rules"] != "None" else ""}">{rules_display}</td><td data-sort="{test["score"]:.3f}">{test["badges"]}</td><td data-sort="{test["cost"]}">{test["cost"]}</td><td data-sort="{test["cost_per_point_sort"]}">{test["cost_per_point"]}</td></tr>'
         
         benchmark_table += '</tbody></table>\n\n'
         benchmark_sections += benchmark_table
@@ -683,7 +709,7 @@ results, and comparisons.
 ## Leaderboard
 
 The table below shows the **global average performance** and **cost efficiency** of each model across the four core benchmarks:
-[bibliographic_data](benchmarks/bibliographic_data/), [fraktur](benchmarks/fraktur/), [metadata_extraction](benchmarks/metadata_extraction/), and [zettelkatalog](benchmarks/zettelkatalog/). The "Cost per Point" column shows how much each performance point costs in USD, helping you identify the most cost-effective models for your research. Only models with results in all four benchmarks are included. Click on any column header to sort the table.
+[bibliographic_data](benchmarks/bibliographic_data/), [fraktur](benchmarks/fraktur/), [metadata_extraction](benchmarks/metadata_extraction/), and [zettelkatalog](benchmarks/zettelkatalog/). The "Cost per Point" column shows the normalized cost efficiency—calculated as the average of per-benchmark cost/point ratios to account for different benchmark scales, helping you identify the most cost-effective models for your research. Only models with results in all four benchmarks are included. Click on any column header to sort the table.
 
 {leaderboard_html}
 

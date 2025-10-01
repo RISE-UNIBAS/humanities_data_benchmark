@@ -234,6 +234,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - T0190 on 2025-10-01
 - T0191 on 2025-10-01
 - T0192 on 2025-10-01
+- T0168 on 2025-10-01
 ### Changed
 - All provider response objects now converted to JSON-serializable format before storage
 - Schema default values automatically removed for GenAI API compatibility
