@@ -292,12 +292,27 @@ class Benchmark(ABC):
 
         # Get pricing for the current date (or fallback to most recent)
         date_pricing = pricing_data.get('pricing', {}).get(self.date)
+        fallback_date = None
         if not date_pricing:
             # Fallback to most recent pricing
             available_dates = sorted(pricing_data.get('pricing', {}).keys(), reverse=True)
             if available_dates:
-                date_pricing = pricing_data['pricing'][available_dates[0]]
-                logging.info(f"No pricing for {self.date}, using {available_dates[0]}")
+                fallback_date = available_dates[0]
+                date_pricing = pricing_data['pricing'][fallback_date]
+
+                # Calculate age of fallback pricing
+                from datetime import datetime, timedelta
+                try:
+                    fallback_datetime = datetime.strptime(fallback_date, '%Y-%m-%d')
+                    current_datetime = datetime.strptime(self.date, '%Y-%m-%d')
+                    age_days = (current_datetime - fallback_datetime).days
+
+                    if age_days > 30:
+                        logging.error(f"No pricing for {self.date}, using fallback {fallback_date} which is {age_days} days old (>30 days)")
+                    else:
+                        logging.warning(f"No pricing for {self.date}, using fallback {fallback_date} which is {age_days} days old")
+                except ValueError:
+                    logging.warning(f"No pricing for {self.date}, using {fallback_date}")
             else:
                 logging.warning("No pricing data available")
                 return None
