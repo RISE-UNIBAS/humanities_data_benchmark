@@ -77,7 +77,7 @@ results, and comparisons.
 ## Leaderboard
 
 The table below shows the **global average performance** and **cost efficiency** of each model across the four core benchmarks:
-[bibliographic_data](benchmarks/bibliographic_data/), [fraktur](benchmarks/fraktur/), [metadata_extraction](benchmarks/metadata_extraction/), and [zettelkatalog](benchmarks/zettelkatalog/). The "Cost per Point" column shows how much each performance point costs in USD, helping you identify the most cost-effective models for your research. Only models with results in all four benchmarks are included. Click on any column header to sort the table.
+[bibliographic_data](benchmarks/bibliographic_data/), [fraktur](benchmarks/fraktur/), [metadata_extraction](benchmarks/metadata_extraction/), and [zettelkatalog](benchmarks/zettelkatalog/). The "Cost per Point" column shows the normalized cost efficiency—calculated as the average of per-benchmark cost/point ratios to account for different benchmark scales, helping you identify the most cost-effective models for your research. Only models with results in all four benchmarks are included. Click on any column header to sort the table.
 
 <div>
 <table id="leaderboard-table" style="width:100%; border-collapse: collapse; margin-bottom: 20px;">
