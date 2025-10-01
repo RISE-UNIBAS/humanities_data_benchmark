@@ -395,13 +395,13 @@ def create_leaderboard():
     for rank, data in enumerate(leaderboard_data, 1):
         model_html = get_rectangle(data['model'])
         provider_html = get_rectangle(data['provider'])
-        global_avg_badge = get_badge("global", f"{data['global_avg']:.3f}")
+        global_avg_display = f"{data['global_avg']:.3f}"
 
-        # Create cost per point badge
-        cost_per_point_badge = "N/A"
+        # Create cost per point display (without badge)
+        cost_per_point_display = "N/A"
         cost_per_point_sort = "999"  # High value for N/A entries to sort last
         if data['cost_per_point'] is not None:
-            cost_per_point_badge = get_badge("cost/pt", f"${data['cost_per_point']:.4f}/pt")
+            cost_per_point_display = f"${data['cost_per_point']:.4f}"
             cost_per_point_sort = f"{data['cost_per_point']:.4f}"
 
         biblio_badge = get_badge("fuzzy", f"{data['bibliographic_data']:.3f}") if data['bibliographic_data'] is not None else "N/A"
@@ -414,7 +414,7 @@ def create_leaderboard():
         metadata_sort = f'{data["metadata_extraction"]:.3f}' if data["metadata_extraction"] is not None else "0"
         zettelkatalog_sort = f'{data["zettelkatalog"]:.3f}' if data["zettelkatalog"] is not None else "0"
         
-        leaderboard_html += f'<tr><td data-sort="{data["model"]}">{model_html}</td><td data-sort="{data["provider"]}">{provider_html}</td><td data-sort="{data["global_avg"]:.3f}">{global_avg_badge}</td><td data-sort="{cost_per_point_sort}">{cost_per_point_badge}</td><td data-sort="{biblio_sort}">{biblio_badge}</td><td data-sort="{fraktur_sort}">{fraktur_badge}</td><td data-sort="{metadata_sort}">{metadata_badge}</td><td data-sort="{zettelkatalog_sort}">{zettelkatalog_badge}</td></tr>'
+        leaderboard_html += f'<tr><td data-sort="{data["model"]}">{model_html}</td><td data-sort="{data["provider"]}">{provider_html}</td><td data-sort="{data["global_avg"]:.3f}">{global_avg_display}</td><td data-sort="{cost_per_point_sort}">{cost_per_point_display}</td><td data-sort="{biblio_sort}">{biblio_badge}</td><td data-sort="{fraktur_sort}">{fraktur_badge}</td><td data-sort="{metadata_sort}">{metadata_badge}</td><td data-sort="{zettelkatalog_sort}">{zettelkatalog_badge}</td></tr>'
     
     leaderboard_html += '''</tbody>
 </table>
