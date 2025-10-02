@@ -468,7 +468,7 @@ def create_leaderboard():
 
         # Create time per point display (without badge)
         time_per_point_display = "N/A"
-        time_per_point_sort = "999"  # High value for N/A entries to sort last
+        time_per_point_sort = "999999"  # High value for N/A entries to sort last
         if data['time_per_point'] is not None:
             time_per_point_display = f"{data['time_per_point']:.2f}s"
             time_per_point_sort = f"{data['time_per_point']:.2f}"
@@ -704,7 +704,7 @@ def create_index():
                 # Extract test time information from answer files
                 test_time_html = "N/A"
                 time_per_point_html = "N/A"
-                time_per_point_sort = "999"
+                time_per_point_sort = "999999"
                 test_result_dir = os.path.join('..', 'results', date, test_id)
                 if os.path.exists(test_result_dir):
                     test_times = []
