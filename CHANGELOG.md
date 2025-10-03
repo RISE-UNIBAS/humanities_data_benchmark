@@ -9,15 +9,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - Cost tracking system with pricing database and automatic cost calculation
-- Token usage extraction for all providers (OpenAI, GenAI, Anthropic, Mistral)
-- Automatic cost calculation based on token usage and date-based pricing data
-- Cost summary in benchmark scoring files with detailed token and cost breakdowns
+- T0161 on 2025-10-02
+- T0162 on 2025-10-02
+- T0164 on 2025-10-02
+  - Token usage extraction for all providers (OpenAI, GenAI, Anthropic, Mistral)
+  - Automatic cost calculation based on token usage and date-based pricing data
+  - Cost summary in benchmark scoring files with detailed token and cost breakdowns
+  - tables showing test execution costs
+  - Cost per Point metric in global leaderboard showing normalized cost efficiency ($/performance point)
 - 7 new models: pixtral-12b, mistral-large-latest, gemini-2.5-flash, gemini-2.5-flash-lite, gemini-2.5-flash-lite-preview-09-2025, gemini-2.5-flash-preview-09-2025, claude-sonnet-4-5-20250929
 - 50 new benchmark test configurations (T0181-T0230) for new models across all benchmark variants
-- Cost (USD) column in benchmark tables showing test execution costs
-- Cost per Point metric in global leaderboard showing normalized cost efficiency ($/performance point)
-  - Normalized calculation: average of per-benchmark cost/point ratios
-  - Accounts for different benchmark scales and test item counts
 - Test Time tracking and metrics
   - Test Time (s) column in benchmark tables showing total execution time per test
   - Time per Point column in benchmark tables showing time efficiency (seconds/point per item)
@@ -26,7 +27,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Analogous to cost calculation methodology for consistency
 - Structured outputs for Google Gen AI, Anthropic (native tool calling), and Mistral models
 - Automatic regeneration of empty or invalid JSON result files
-- Logging to file enabled by default
 - T0099 on 2025-09-24
 - T0107 on 2025-09-24
 - T0117 on 2025-09-24
@@ -257,6 +257,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - bibliographic_data attributions
 - Pydantic dataclass models
 
+## [v0.3.0] - 2025-10-03
+
 ## [v0.2.2] - 2025-09-19
 
 ### Added
@@ -318,3 +320,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [v0.2.0]: https://github.com/RISE-UNIBAS/humanities_data_benchmark/releases/tag/v0.2.0
 [v0.2.1]: https://github.com/RISE-UNIBAS/humanities_data_benchmark/releases/tag/v0.2.1
 [v0.2.2]: https://github.com/RISE-UNIBAS/humanities_data_benchmark/releases/tag/v0.2.2
+[v0.3.0]: https://github.com/RISE-UNIBAS/humanities_data_benchmark/releases/tag/v0.3.0
