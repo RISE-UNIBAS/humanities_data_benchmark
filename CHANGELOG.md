@@ -7,11 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [v0.3.0] - 2025-10-03
+
 ### Added
 - Cost tracking system with pricing database and automatic cost calculation
-- T0161 on 2025-10-02
-- T0162 on 2025-10-02
-- T0164 on 2025-10-02
   - Token usage extraction for all providers (OpenAI, GenAI, Anthropic, Mistral)
   - Automatic cost calculation based on token usage and date-based pricing data
   - Cost summary in benchmark scoring files with detailed token and cost breakdowns
@@ -244,6 +243,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - T0168 on 2025-10-01
 - T0166 on 2025-10-01
 - T0167 on 2025-10-01
+- T0161 on 2025-10-02
+- T0162 on 2025-10-02
+- T0164 on 2025-10-02
 
 ### Changed
 - All provider response objects now converted to JSON-serializable format before storage
@@ -256,8 +258,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Letter dataclass normalization for list-formatted fields (letter_title, send_date)
 - bibliographic_data attributions
 - Pydantic dataclass models
-
-## [v0.3.0] - 2025-10-03
 
 ## [v0.2.2] - 2025-09-19
 
