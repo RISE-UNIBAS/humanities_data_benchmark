@@ -1,9 +1,18 @@
 import logging
+from typing import Dict
+
 from scripts.benchmark_base import Benchmark
 from scripts.scoring_helper import get_all_keys, get_nested_value, calculate_fuzzy_score
 
 
 class BibliographicData(Benchmark):
+
+    def get_prompt_kwargs(self, filename: str) -> Dict:
+        """If the prompt file contains file information."""
+        page_number = filename.split("_")[-1].split(".")[0]  # Extract page number from filename
+        return {
+            "page_number": page_number
+        }
 
     def score_benchmark(self, all_scores):
         total_score = 0
