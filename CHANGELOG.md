@@ -8,9 +8,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
-- OpenRouter support with fallback for models not supporting structured outputs
+- OpenRouter provider support with fallback for models not supporting structured outputs
+- sciCORE provider support (LiteLLM-based OpenAI-compatible API)
 - T0233 on 2025-10-17
 - T0234 on 2025-10-17
+- T0237 on 2025-10-17
 
 ## [v0.3.0] - 2025-10-03
 
