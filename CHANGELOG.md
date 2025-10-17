@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- OpenRouter support with fallback for models not supporting structured outputs
+- T0233 on 2025-10-17
+- T0234 on 2025-10-17
+
 ## [v0.3.0] - 2025-10-03
 
 ### Added

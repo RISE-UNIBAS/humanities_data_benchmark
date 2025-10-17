@@ -1,4 +1,4 @@
-"""Simple AI API client for OpenAI, GenAI, Anthropic, and Mistral AI."""
+"""Simple AI API client for OpenAI, GenAI, Anthropic, Mistral AI, and OpenRouter."""
 import base64
 import logging
 from datetime import datetime
@@ -7,18 +7,19 @@ import json
 
 from google import genai
 from google.genai.types import GenerateContentConfig, Part
-from openai import OpenAI
+from openai import OpenAI, APITimeoutError, LengthFinishReasonError
 from anthropic import Anthropic
 from mistralai import Mistral
 
 
 class AiApiClient:
-    """Simple AI API client for OpenAI, GenAI, and Anthropic."""
+    """Simple AI API client for OpenAI, GenAI, Anthropic, Mistral, and OpenRouter."""
 
     SUPPORTED_APIS = ['openai',
                       'genai',
                       'anthropic',
-                      'mistral']
+                      'mistral',
+                      'openrouter']
 
     api_client = None
     genai_client = None
@@ -62,6 +63,16 @@ class AiApiClient:
         if self.api == 'mistral':
             self.api_client = Mistral(
                 api_key=self.api_key
+            )
+
+        if self.api == 'openrouter':
+            self.api_client = OpenAI(
+                base_url="https://openrouter.ai/api/v1",
+                api_key=self.api_key,
+                default_headers={
+                    "HTTP-Referer": "https://github.com/Digital-History-Berlin/humanities-data-benchmark",
+                    "X-Title": "Humanities Data Benchmark"
+                }
             )
 
     @property
@@ -140,6 +151,63 @@ class AiApiClient:
 
             chat_completion = self.api_client.beta.chat.completions.parse(**kwargs)
             answer = chat_completion
+
+        if self.api == 'openrouter':
+            workload_json = [{
+                "role": "user",
+                "content": [
+                    {"type": "text", "text": prompt},
+                ]
+                },
+                {
+                    "role": "system",
+                    "content": self.gpt_role_description
+                }
+            ]
+
+            for img_path in self.image_resources:
+                with open(img_path, "rb") as image_file:
+                    base64_image = base64.b64encode(image_file.read()).decode("utf-8")
+
+                workload_json[0]['content'].append(
+                    {"type": "image_url", "image_url": {"url": f"data:image/jpeg;base64,{base64_image}"}}
+                )
+
+            kwargs = {
+                "messages": workload_json,
+                "model": model,
+                "temperature": self.temperature,
+                "max_tokens": 16000,  # Ensure enough tokens for long responses
+            }
+
+            if self.dataclass:
+                # Try strict mode first, fall back to json_object mode if that fails
+                schema = self.dataclass.model_json_schema()
+                try:
+                    # Try with strict mode first (OpenAI-compatible models)
+                    kwargs_strict = kwargs.copy()
+                    kwargs_strict["response_format"] = {
+                        "type": "json_schema",
+                        "json_schema": {
+                            "name": self.dataclass.__name__,
+                            "strict": True,
+                            "schema": schema
+                        }
+                    }
+                    chat_completion = self.api_client.chat.completions.create(**kwargs_strict)
+                    answer = chat_completion
+                except Exception as e:
+                    # Fall back to json_object mode for models that don't support strict mode
+                    logging.warning(f"OpenRouter strict mode failed, falling back to json_object mode: {e}")
+                    kwargs["response_format"] = {"type": "json_object"}
+                    # Add schema to system message
+                    schema_prompt = f"\n\nYou MUST respond with valid JSON matching this exact schema: {json.dumps(schema)}"
+                    kwargs["messages"][1]["content"] = self.gpt_role_description + schema_prompt
+                    chat_completion = self.api_client.chat.completions.create(**kwargs)
+                    answer = chat_completion
+            else:
+                chat_completion = self.api_client.chat.completions.create(**kwargs)
+                answer = chat_completion
 
         if self.api == 'genai':
             contents = [prompt]
@@ -309,7 +377,7 @@ class AiApiClient:
             'test_time': elapsed_time,
             'execution_time': datetime.now().isoformat(),
             'response_text': "",
-            'raw': response,
+            'raw': {},  # Will be populated below, don't set to response object as it's not JSON-serializable
             'usage': {},
             'scores': {},
         }
@@ -346,6 +414,85 @@ class AiApiClient:
             if self.dataclass:
                 text = response.choices[0].message.parsed
                 answer['response_text'] = text.model_dump()
+            else:
+                answer['response_text'] = response.choices[0].message.content
+        elif self.api == 'openrouter':
+            # OpenRouter returns OpenAI-compatible responses with additional cost field
+            if hasattr(response, 'usage') and response.usage:
+                answer['usage'] = {
+                    'input_tokens': response.usage.prompt_tokens,
+                    'output_tokens': response.usage.completion_tokens,
+                    'total_tokens': response.usage.total_tokens,
+                }
+                # OpenRouter includes cost information when usage tracking is enabled
+                if hasattr(response.usage, 'cost'):
+                    answer['usage']['cost'] = response.usage.cost
+                if hasattr(response.usage, 'cached_tokens'):
+                    answer['usage']['cached_tokens'] = response.usage.cached_tokens
+
+            # Convert response to JSON-serializable format
+            raw_data = {
+                'id': response.id,
+                'model': response.model,
+                'choices': [{
+                    'finish_reason': choice.finish_reason,
+                    'index': choice.index,
+                    'message': {
+                        'content': choice.message.content,
+                        'role': choice.message.role,
+                    }
+                } for choice in response.choices],
+                'usage': {
+                    'prompt_tokens': response.usage.prompt_tokens,
+                    'completion_tokens': response.usage.completion_tokens,
+                    'total_tokens': response.usage.total_tokens,
+                } if hasattr(response, 'usage') and response.usage else {}
+            }
+
+            # Add OpenRouter-specific fields if present
+            if hasattr(response, 'usage') and response.usage:
+                if hasattr(response.usage, 'cost'):
+                    raw_data['usage']['cost'] = response.usage.cost
+                if hasattr(response.usage, 'cached_tokens'):
+                    raw_data['usage']['cached_tokens'] = response.usage.cached_tokens
+
+            # IMPORTANT: Save raw data BEFORE attempting to parse
+            answer['raw'] = raw_data
+
+            if self.dataclass:
+                # Parse JSON response and validate with Pydantic
+                try:
+                    content = response.choices[0].message.content
+                    # Try to extract JSON if it's wrapped in markdown code blocks
+                    if "```json" in content:
+                        import re
+                        json_match = re.search(r'```json\s*([\s\S]*?)\s*```', content)
+                        if json_match:
+                            content = json_match.group(1)
+                    elif "```" in content:
+                        # Try generic code block
+                        import re
+                        json_match = re.search(r'```\s*([\s\S]*?)\s*```', content)
+                        if json_match:
+                            content = json_match.group(1)
+
+                    json_response = json.loads(content)
+                    pydantic_response = self.dataclass(**json_response)
+                    answer['response_text'] = pydantic_response.model_dump()
+                except json.JSONDecodeError as e:
+                    logging.error(f"Failed to parse OpenRouter JSON response: {e}")
+                    content_text = response.choices[0].message.content
+                    logging.error(f"Raw content length: {len(content_text)}")
+                    logging.error(f"Last 200 chars: ...{content_text[-200:]}")
+                    logging.error(f"Finish reason: {response.choices[0].finish_reason}")
+                    # Store raw content for debugging
+                    answer['response_text'] = ""
+                    answer['error'] = 'JSONDecodeError'
+                    answer['error_message'] = str(e)
+                    answer['finish_reason'] = response.choices[0].finish_reason if hasattr(response.choices[0], 'finish_reason') else 'unknown'
+                except Exception as e:
+                    logging.warning(f"Failed to validate OpenRouter structured response with Pydantic: {e}")
+                    answer['response_text'] = response.choices[0].message.content
             else:
                 answer['response_text'] = response.choices[0].message.content
         elif self.api == 'genai':
@@ -508,4 +655,7 @@ class AiApiClient:
             return self.api_client.models.list()
 
         if self.api == 'mistral':
+            return self.api_client.models.list()
+
+        if self.api == 'openrouter':
             return self.api_client.models.list()
