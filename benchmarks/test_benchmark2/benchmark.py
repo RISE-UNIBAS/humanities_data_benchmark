@@ -20,7 +20,7 @@ class TestBenchmark2(Benchmark):
 ### Result for image: {image_name}
 
 #### Prompt:
-  {self.load_prompt()}
+  {self.load_prompt(image_name)}
 
 #### Response:
   {result['response_text']}
