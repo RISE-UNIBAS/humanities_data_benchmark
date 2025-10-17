@@ -177,25 +177,37 @@ class AiApiClient:
                 "messages": workload_json,
                 "model": model,
                 "temperature": self.temperature,
-                "extra_body": {
-                    "usage": {"include": True}  # Enable cost tracking for OpenRouter
-                }
+                "max_tokens": 16000,  # Ensure enough tokens for long responses
             }
 
             if self.dataclass:
-                # OpenRouter requires specific json_schema format
+                # Try strict mode first, fall back to json_object mode if that fails
                 schema = self.dataclass.model_json_schema()
-                kwargs["response_format"] = {
-                    "type": "json_schema",
-                    "json_schema": {
-                        "name": self.dataclass.__name__,
-                        "strict": True,
-                        "schema": schema
+                try:
+                    # Try with strict mode first (OpenAI-compatible models)
+                    kwargs_strict = kwargs.copy()
+                    kwargs_strict["response_format"] = {
+                        "type": "json_schema",
+                        "json_schema": {
+                            "name": self.dataclass.__name__,
+                            "strict": True,
+                            "schema": schema
+                        }
                     }
-                }
-
-            chat_completion = self.api_client.chat.completions.create(**kwargs)
-            answer = chat_completion
+                    chat_completion = self.api_client.chat.completions.create(**kwargs_strict)
+                    answer = chat_completion
+                except Exception as e:
+                    # Fall back to json_object mode for models that don't support strict mode
+                    logging.warning(f"OpenRouter strict mode failed, falling back to json_object mode: {e}")
+                    kwargs["response_format"] = {"type": "json_object"}
+                    # Add schema to system message
+                    schema_prompt = f"\n\nYou MUST respond with valid JSON matching this exact schema: {json.dumps(schema)}"
+                    kwargs["messages"][1]["content"] = self.gpt_role_description + schema_prompt
+                    chat_completion = self.api_client.chat.completions.create(**kwargs)
+                    answer = chat_completion
+            else:
+                chat_completion = self.api_client.chat.completions.create(**kwargs)
+                answer = chat_completion
 
         if self.api == 'genai':
             contents = [prompt]
@@ -365,7 +377,7 @@ class AiApiClient:
             'test_time': elapsed_time,
             'execution_time': datetime.now().isoformat(),
             'response_text': "",
-            'raw': response,
+            'raw': {},  # Will be populated below, don't set to response object as it's not JSON-serializable
             'usage': {},
             'scores': {},
         }
@@ -444,17 +456,42 @@ class AiApiClient:
                 if hasattr(response.usage, 'cached_tokens'):
                     raw_data['usage']['cached_tokens'] = response.usage.cached_tokens
 
+            # IMPORTANT: Save raw data BEFORE attempting to parse
             answer['raw'] = raw_data
 
             if self.dataclass:
                 # Parse JSON response and validate with Pydantic
                 try:
                     content = response.choices[0].message.content
+                    # Try to extract JSON if it's wrapped in markdown code blocks
+                    if "```json" in content:
+                        import re
+                        json_match = re.search(r'```json\s*([\s\S]*?)\s*```', content)
+                        if json_match:
+                            content = json_match.group(1)
+                    elif "```" in content:
+                        # Try generic code block
+                        import re
+                        json_match = re.search(r'```\s*([\s\S]*?)\s*```', content)
+                        if json_match:
+                            content = json_match.group(1)
+
                     json_response = json.loads(content)
                     pydantic_response = self.dataclass(**json_response)
                     answer['response_text'] = pydantic_response.model_dump()
-                except (json.JSONDecodeError, Exception) as e:
-                    logging.warning(f"Failed to parse OpenRouter structured response, using raw text: {e}")
+                except json.JSONDecodeError as e:
+                    logging.error(f"Failed to parse OpenRouter JSON response: {e}")
+                    content_text = response.choices[0].message.content
+                    logging.error(f"Raw content length: {len(content_text)}")
+                    logging.error(f"Last 200 chars: ...{content_text[-200:]}")
+                    logging.error(f"Finish reason: {response.choices[0].finish_reason}")
+                    # Store raw content for debugging
+                    answer['response_text'] = ""
+                    answer['error'] = 'JSONDecodeError'
+                    answer['error_message'] = str(e)
+                    answer['finish_reason'] = response.choices[0].finish_reason if hasattr(response.choices[0], 'finish_reason') else 'unknown'
+                except Exception as e:
+                    logging.warning(f"Failed to validate OpenRouter structured response with Pydantic: {e}")
                     answer['response_text'] = response.choices[0].message.content
             else:
                 answer['response_text'] = response.choices[0].message.content
