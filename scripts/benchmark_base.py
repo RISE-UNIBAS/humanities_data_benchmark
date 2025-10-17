@@ -11,6 +11,7 @@ from datetime import datetime
 from data_loader import read_file, resize_image, write_file
 from scoring_helper import remove_none
 from simple_ai_clients import AiApiClient
+from openai import LengthFinishReasonError
 
 
 class Benchmark(ABC):
@@ -64,7 +65,7 @@ class Benchmark(ABC):
         if not os.path.exists(os.path.join(self.benchmark_dir, "ground_truths")):
             logging.error(f"Ground truths directory not found: {self.benchmark_dir}")
             return False
-        if not self.provider in ["openai", "genai", "anthropic", "mistral"]:
+        if not self.provider in ["openai", "genai", "anthropic", "mistral", "openrouter"]:
             logging.error(f"Invalid provider: {self.provider}")
             return False
         if not self.model:
@@ -259,8 +260,35 @@ class Benchmark(ABC):
 
             if should_process:
                 logging.info(f"Processing {self.id}, {image_name}...")
-                answer = self.ask_llm(image_paths)
-                self.save_request_answer(image_name, answer)
+                try:
+                    answer = self.ask_llm(image_paths)
+                    self.save_request_answer(image_name, answer)
+                except LengthFinishReasonError as e:
+                    logging.error(f"Length limit exceeded for {image_name}: {e}")
+                    answer = {
+                        'provider': self.provider,
+                        'model': self.model,
+                        'execution_time': datetime.now().isoformat(),
+                        'response_text': "",
+                        'error': 'length_limit_exceeded',
+                        'error_message': str(e),
+                        'usage': {},
+                        'scores': {},
+                    }
+                    self.save_request_answer(image_name, answer)
+                except Exception as e:
+                    logging.error(f"Error processing {image_name}: {e}")
+                    answer = {
+                        'provider': self.provider,
+                        'model': self.model,
+                        'execution_time': datetime.now().isoformat(),
+                        'response_text': "",
+                        'error': type(e).__name__,
+                        'error_message': str(e),
+                        'usage': {},
+                        'scores': {},
+                    }
+                    self.save_request_answer(image_name, answer)
             else:
                 logging.info(f"Skipping {image_name} as the answer already exists.")
 
