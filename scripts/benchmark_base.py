@@ -67,7 +67,7 @@ class Benchmark(ABC):
         if not os.path.exists(os.path.join(self.benchmark_dir, "ground_truths")):
             logging.error(f"Ground truths directory not found: {self.benchmark_dir}")
             return False
-        if not self.provider in ["openai", "genai", "anthropic", "mistral", "openrouter"]:
+        if not self.provider in ["openai", "genai", "anthropic", "mistral", "openrouter", "scicore"]:
             logging.error(f"Invalid provider: {self.provider}")
             return False
         if not self.model:
@@ -267,7 +267,7 @@ class Benchmark(ABC):
             if should_process:
                 logging.info(f"Processing {self.id}, {image_name}...")
                 try:
-                    answer = self.ask_llm(image_paths)
+                    answer = self.ask_llm(image_paths, image_name)
                     self.save_request_answer(image_name, answer)
                 except LengthFinishReasonError as e:
                     logging.error(f"Length limit exceeded for {image_name}: {e}")
