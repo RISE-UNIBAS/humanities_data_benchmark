@@ -1,5 +1,34 @@
-Additional information:
- - The page number of this page is {page_number}.
- - If an entry reviews another entry, the `relation` field should contain the `id` of the reviewed entry.
- - The last entry on a page might be incomplete. This means that the entry continues on the next page.
-   If so, set the `incomplete` field to `true`.
+The image you are presented with stems from a digitized book containing lists of companies.
+Your task is to extract structured information about each company listed on the page.
+
+About the source:
+- The image stems from a trade index of the British Swiss Chamber of Commerce.
+- The image can show an alphabetical or a thematic list of companies.
+- The companies are mostly located in Switzerland and the UK.
+- The image stems from a trade index between 1925 and 1958.
+- Most pages have one column but some years have two columns.
+- The source itself is in English and German but the company names can be in English, German, French or Italian.
+
+About the entries:
+- Each entry describes a single company or person.
+- Alphabetical entries have filling dots between the company name and the page number. Dots and page numbers are not part of the data and should be ignored.
+- Alphabetical entries seldom to never have locations.
+- Thematic entries often have locations.
+- Thematic entries are listed under headings that describe the type of business.
+- Some thematic headings are only references to other headings, e.g. "X, s. Y".
+
+About the output:
+- Answer in valid JSON. The JSON should be an array of objects with the following fields:
+- The page ID is given as {page_id}.
+
+{
+  "entry_id": "A unique identifier for the entry, e.g. '{page_id}-1'",
+  "company_name": "The name of the company or person",
+  "location": "The location of the company, e.g. 'Zurich' or 'London, UK'. If no location is given, set to null.",
+  "industry": "The industry of the company, e.g. 'Manufacture of chemicals and chemical products'. If no industry is given, set to null.",
+  "additional_information": [
+    # Any additional information about the company, e.g. 'address', 'phone', 'telegraph', 'telegrams'
+    {"type": "phone" "value": "123456789"},
+    {"type": "address" "value": "Some street 1, Zurich"}
+  ]
+}

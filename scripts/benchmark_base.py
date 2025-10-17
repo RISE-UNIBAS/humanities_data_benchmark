@@ -7,6 +7,7 @@ import re
 import tempfile
 from abc import ABC, abstractmethod
 from datetime import datetime
+from typing import Dict
 
 from data_loader import read_file, resize_image, write_file
 from scoring_helper import remove_none
@@ -31,7 +32,8 @@ class Benchmark(ABC):
         self.date = date or datetime.now().strftime('%Y-%m-%d')
         if self.prompt_file is None or self.prompt_file == "":
             self.prompt_file = "prompt.txt"
-        self.prompt = self.load_prompt()
+        self.prompt_file_exists = os.path.exists(os.path.join(self.benchmark_dir, "prompts", self.prompt_file))
+        self.prompt = None # Load later to allow dynamic formatting on request basis
         self.request_render = ""
         self.dataclass_name = config['dataclass']
         self.dataclass = self.load_dataclass()
@@ -53,7 +55,7 @@ class Benchmark(ABC):
 
     def is_runnable(self) -> bool:
         """ Check if the benchmark is runnable. """
-        if not self.prompt:
+        if not self.prompt_file_exists:
             logging.error(f"Prompt not found for {self.name}")
             return False
         if not os.path.exists(self.benchmark_dir):
@@ -73,16 +75,18 @@ class Benchmark(ABC):
             return False
         return True
 
-    def load_prompt(self) -> str:
+    def load_prompt(self,
+                    image_filename: str) -> str:
         """ Load the prompt from the benchmark directory. """
         prompt_path = os.path.join(self.benchmark_dir, "prompts", self.prompt_file)
         prompt = read_file(prompt_path)
         logging.debug(f"Loaded prompt from {prompt_path}")
-        if self.has_file_information:
+        prompt_kwargs = self.get_prompt_kwargs(image_filename)
+        if prompt_kwargs:
             try:
-                kwargs = {}  # Add file information here
-                return prompt.format(**kwargs)
+                return prompt.format(**prompt_kwargs)
             except KeyError as e:
+                logging.error(f"Missing key in prompt formatting: {e}")
                 return prompt
         return prompt
 
@@ -113,9 +117,11 @@ class Benchmark(ABC):
         return {"response_text": ground_truth_text}
 
     def ask_llm(self,
-                image_paths: list[str]) -> dict:
+                image_paths: list[str],
+                image_name: str) -> dict:
         """ Ask the language model a question. """
         self.client.clear_image_resources()
+        self.prompt = self.load_prompt(image_name)
 
         if self.resize_images:
             with tempfile.TemporaryDirectory() as temp_dir:
@@ -432,9 +438,10 @@ class Benchmark(ABC):
         """Title of the benchmark. Used in the result table."""
         return f"{self.name} ({self.provider}/{self.model})"
 
-    def has_file_information(self) -> bool:
+    def get_prompt_kwargs(self,
+                          filename: str) -> Dict:
         """If the prompt file contains file information."""
-        return False
+        return {}
 
     def skip_image(self,
                    image_name: str) -> bool:
