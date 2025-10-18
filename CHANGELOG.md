@@ -19,6 +19,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - T0240 on 2025-10-17
 - T0241 on 2025-10-17
 - T0242 on 2025-10-17
+- T0243 on 2025-10-17
+- T0244 on 2025-10-17
+- T0245 on 2025-10-17
+- T0246 on 2025-10-17
+- T0247 on 2025-10-17
+- T0248 on 2025-10-17
+- T0249 on 2025-10-17
+- T0250 on 2025-10-17
+- T0251 on 2025-10-17
+- T0252 on 2025-10-17
 
 ### Fixed
 - metadata_extraction scoring now correctly counts failed requests as complete failures (0 TP, all FN) instead of excluding them
