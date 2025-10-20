@@ -1,5 +1,5 @@
 ### Result for image: page_2
-Average Fuzzy Score: **0.5231749827771869**
+Average Fuzzy Score: **0.5554330472933161**
 <small>
 
 | Key | Value | Ground Truth | Score |
@@ -11,7 +11,7 @@ Average Fuzzy Score: **0.5231749827771869**
 | entries[0].author[0].given | Hubert G. | Hubert G. | 1.0 |
 | entries[0].publisher | University of New Mexico Press | University of New Mexico Press | 1.0 |
 | entries[0].publisher_place | Albuquerque | Albuquerque | 1.0 |
-| entries[0].issued | 1945 | 1945 | 0.0 |
+| entries[0].issued | 1945 | 1945 | 1.0 |
 | entries[1].id | 2 | 2 | 1.0 |
 | entries[1].type | book | book | 1.0 |
 | entries[1].title | Wahrheit und Ideologie | Wahrheit und Ideologie | 1.0 |
@@ -56,7 +56,7 @@ Average Fuzzy Score: **0.5231749827771869**
 | entries[5].author[0].given | R. T. | R. T. | 1.0 |
 | entries[5].container_title | The American Journal of Sociology | The American Journal of Sociology | 1.0 |
 | entries[5].volume | LII | LII | 1.0 |
-| entries[5].issued | 1946 | 1946 | 0.0 |
+| entries[5].issued | 1946 | 1946 | 1.0 |
 | entries[5].relation.reviewed | None | 5 | 0.0 |
 | entries[6].id | 6 | 7 | 0.0 |
 | entries[6].type | book | book | 1.0 |
@@ -72,7 +72,7 @@ Average Fuzzy Score: **0.5231749827771869**
 | entries[7].container_title | Revue philosophique | Revue philosophique | 1.0 |
 | entries[7].volume | CXL | CXL | 1.0 |
 | entries[7].page | 528 | 528 | 1.0 |
-| entries[7].issued | 1950 | 1950 | 0.0 |
+| entries[7].issued | 1950 | 1950 | 1.0 |
 | entries[7].relation.reviewed | None | 7 | 0.0 |
 | entries[8].id | 8 | 9 | 0.0 |
 | entries[8].type | book | book | 1.0 |
@@ -101,7 +101,7 @@ Average Fuzzy Score: **0.5231749827771869**
 | entries[10].author[0].given | Max | William | 0.19999999999999996 |
 | entries[10].publisher | None | Scribner | 0.0 |
 | entries[10].publisher_place | None | New York | 0.0 |
-| entries[10].issued | 1945 | 1945 | 0.0 |
+| entries[10].issued | 1945 | 1945 | 1.0 |
 | entries[11].id | 11 | 12 | 0.5 |
 | entries[11].type | book | book | 1.0 |
 | entries[11].title | The Social Interpretation of History | The Open Society and Its Enemies | 0.4705882352941176 |

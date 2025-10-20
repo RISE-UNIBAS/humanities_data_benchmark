@@ -1,12 +1,12 @@
 ### Result for image: page_3
-Average Fuzzy Score: **0.3841948734661729**
+Average Fuzzy Score: **0.3997616630586303**
 <small>
 
 | Key | Value | Ground Truth | Score |
 | --- | --- | --- | --- |
 | entries[0].type | journal-article | journal-article | 1.0 |
 | entries[0].container_title | American Journal of Economics and Sociology | American Journal of Economics and Sociology | 1.0 |
-| entries[0].issued | X (1951), 211-219 | 1951 | 0.0 |
+| entries[0].issued | X (1951), 211-219 | 1951 | 0.38095238095238093 |
 | entries[0].volume | X | X | 1.0 |
 | entries[0].page | 211-219 | 211-219 | 1.0 |
 | entries[0].incomplete | None | True | 0.0 |
@@ -18,7 +18,7 @@ Average Fuzzy Score: **0.3841948734661729**
 | entries[1].container_title | British Journal of Sociology | British Journal of Sociology | 1.0 |
 | entries[1].volume | III | III | 1.0 |
 | entries[1].page | 264-273 | 264-273 | 1.0 |
-| entries[1].issued | III (1952), 264-273 | 1952 | 0.0 |
+| entries[1].issued | III (1952), 264-273 | 1952 | 0.34782608695652173 |
 | entries[2].id | 17 | 16 | 0.5 |
 | entries[2].type | journal-article | journal-article | 1.0 |
 | entries[2].title | The Open Society – a Rejoinder | The Open Society – a comment | 0.7931034482758621 |
@@ -27,7 +27,7 @@ Average Fuzzy Score: **0.3841948734661729**
 | entries[2].container_title | British Journal of Sociology | British Journal of Sociology | 1.0 |
 | entries[2].volume | III | III | 1.0 |
 | entries[2].page | 358-360 | 355-360 | 0.8571428571428572 |
-| entries[2].issued | III (1952), 358-360 | 1952 | 0.0 |
+| entries[2].issued | III (1952), 358-360 | 1952 | 0.34782608695652173 |
 | entries[2].relation.reviewed | None | 15 | 0.0 |
 | entries[3].id | 18 | 17 | 0.5 |
 | entries[3].type | journal-article | journal-article | 1.0 |
@@ -37,7 +37,7 @@ Average Fuzzy Score: **0.3841948734661729**
 | entries[3].container_title | Political Science Quarterly | British Journal of Sociology | 0.4 |
 | entries[3].volume | LXXIX | VI | 0.2857142857142857 |
 | entries[3].page | 119-126 | 76-77 | 0.16666666666666663 |
-| entries[3].issued | LXXIX (1954), 119-126 | 1953 | 0.0 |
+| entries[3].issued | LXXIX (1954), 119-126 | 1953 | 0.24 |
 | entries[4].id | 19 | 18 | 0.5 |
 | entries[4].type | journal-article | journal-article | 1.0 |
 | entries[4].title | Has History a Meaning? | The Open Society: a Reconsideration | 0.38596491228070173 |
@@ -46,7 +46,7 @@ Average Fuzzy Score: **0.3841948734661729**
 | entries[4].container_title | British Journal for the Philosophy of Science | Political Science Quarterly | 0.36111111111111116 |
 | entries[4].volume | IV | LXIX | 0.33333333333333337 |
 | entries[4].page | 164-169 | 119-126 | 0.5714285714285714 |
-| entries[4].issued | IV (1955), 164-169 | 1955 | 0.0 |
+| entries[4].issued | IV (1955), 164-169 | 1955 | 0.36363636363636365 |
 | entries[5].id | 20 | 19 | 0.0 |
 | entries[5].type | book | journal-article | 0.10526315789473684 |
 | entries[5].title | War and History | Has History a Meaning? | 0.4864864864864865 |
@@ -55,7 +55,7 @@ Average Fuzzy Score: **0.3841948734661729**
 | entries[5].container_title | None | British Journal for the Philosophy of Science | 0.0 |
 | entries[5].volume | None | VI | 0.0 |
 | entries[5].page | None | 164-169 | 0.0 |
-| entries[5].issued | 1959 | 1955 | 0.0 |
+| entries[5].issued | 1959 | 1955 | 0.75 |
 | entries[6].id | 21 | 20 | 0.5 |
 | entries[6].type | book | book | 1.0 |
 | entries[6].title | The Philosophy of American History | War and History | 0.4489795918367348 |
@@ -71,7 +71,7 @@ Average Fuzzy Score: **0.3841948734661729**
 | entries[7].publisher | None | Arnold and Howard | 0.0 |
 | entries[7].publisher_place | None | New York | 0.0 |
 | entries[7].note | None | 2 vols. | 0.0 |
-| entries[7].issued | VI, 81-88 | 1945 | 0.0 |
+| entries[7].issued | VI, 81-88 | 1945 | 0.15384615384615385 |
 | entries[8].id | 23 | 22 | 0.5 |
 | entries[8].type | journal-article | journal-article | 1.0 |
 | entries[8].title | The Study of Contemporary History: Some Further Reflections | History as a Liberal Art | 0.3132530120481928 |

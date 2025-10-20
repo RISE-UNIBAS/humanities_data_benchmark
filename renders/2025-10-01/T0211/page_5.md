@@ -1,5 +1,5 @@
 ### Result for image: page_5
-Average Fuzzy Score: **0.7352190157249276**
+Average Fuzzy Score: **0.7523130328189447**
 <small>
 
 | Key | Value | Ground Truth | Score |
@@ -26,7 +26,7 @@ Average Fuzzy Score: **0.7352190157249276**
 | entries[2].title | Review: | Sophia I | 0.1333333333333333 |
 | entries[2].author[0].family | Cafaro | Cafaro | 1.0 |
 | entries[2].author[0].given | Sophia I | F. | 0.0 |
-| entries[2].issued | 1947 | 1947 | 0.0 |
+| entries[2].issued | 1947 | 1947 | 1.0 |
 | entries[2].relation.reviewed | None | 50 | 0.0 |
 | entries[3].id | DARDEL1947 | 52 | 0.0 |
 | entries[3].type | book | book | 1.0 |
@@ -97,7 +97,7 @@ Average Fuzzy Score: **0.7352190157249276**
 | entries[11].container_title | Revue historique CXCVII | Revue historique | 0.8205128205128205 |
 | entries[11].volume | None | CXCII | 0.0 |
 | entries[11].page | 55-61 | 55-61 | 1.0 |
-| entries[11].issued | 1947 | 1947 | 0.0 |
+| entries[11].issued | 1947 | 1947 | 1.0 |
 | entries[11].relation.reviewed | None | 58 | 0.0 |
 | entries[12].id | HUIZINGA1947A | 61 | 0.1333333333333333 |
 | entries[12].type | other | book | 0.2222222222222222 |

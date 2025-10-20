@@ -1,5 +1,5 @@
 ### Result for image: page_3
-Average Fuzzy Score: **0.20656851656529612**
+Average Fuzzy Score: **0.20790720465097215**
 <small>
 
 | Key | Value | Ground Truth | Score |
@@ -9,7 +9,7 @@ Average Fuzzy Score: **0.20656851656529612**
 | entries[0].issued | None | 1951 | 0.0 |
 | entries[0].volume | None | X | 0.0 |
 | entries[0].page | - | 211-219 | 0.25 |
-| entries[0].incomplete | False | True | 0.0 |
+| entries[0].incomplete | False | True | 0.2222222222222222 |
 | entries[1].id | - | 15 | 0.0 |
 | entries[1].type | journal-article | journal-article | 1.0 |
 | entries[1].title | J. Plamenatz, "The Open Society and Its Enemies", British Journal of Sociology III (1952), 264-273. | The Open Society and Its Enemies | 0.4885496183206107 |

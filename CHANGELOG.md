@@ -32,6 +32,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - metadata_extraction scoring now correctly counts failed requests as complete failures (0 TP, all FN) instead of excluding them
+- Fuzzy score matching now handles type mismatches between strings and integers (e.g., "1965" vs 1965 for year fields)
 
 ## [v0.3.0] - 2025-10-03
 

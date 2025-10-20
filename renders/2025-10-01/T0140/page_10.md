@@ -1,5 +1,5 @@
 ### Result for image: page_10
-Average Fuzzy Score: **0.3270293454708626**
+Average Fuzzy Score: **0.35505073584519414**
 <small>
 
 | Key | Value | Ground Truth | Score |
@@ -11,7 +11,7 @@ Average Fuzzy Score: **0.3270293454708626**
 | entries[0].author[0].given | K. B. | K. B. | 1.0 |
 | entries[0].publisher | P. Elek | P. Elek | 1.0 |
 | entries[0].publisher-place | None | London | 0.0 |
-| entries[0].issued | 1947 | 1947 | 0.0 |
+| entries[0].issued | 1947 | 1947 | 1.0 |
 | entries[1].id | 141 | 141 | 1.0 |
 | entries[1].type | book | book | 1.0 |
 | entries[1].title | A Study of History | A Study of History | 1.0 |
@@ -20,7 +20,7 @@ Average Fuzzy Score: **0.3270293454708626**
 | entries[1].publisher | Oxford (Abridgegement of vols. I-VI of A Study of History) | Oxford | 0.1875 |
 | entries[1].publisher-place | None | New York | 0.0 |
 | entries[1].note | abridged by D. C. Somervell | Abridged by D. C. Somervell. Abridgement of vols. I-VI of A Study of History. | 0.5 |
-| entries[1].issued | 1947 | 1947 | 0.0 |
+| entries[1].issued | 1947 | 1947 | 1.0 |
 | entries[2].id | 142 | 142 | 1.0 |
 | entries[2].type | book | book | 1.0 |
 | entries[2].title | In den spiegel van het verleden: historische opstellen | In den spiegel van het verleden: historische opstellen | 1.0 |
@@ -28,7 +28,7 @@ Average Fuzzy Score: **0.3270293454708626**
 | entries[2].author[0].given | L. G. J. | L. G. J. | 1.0 |
 | entries[2].publisher | Bruna | Bruna | 1.0 |
 | entries[2].publisher-place | None | Utrecht, Antwerpen | 0.0 |
-| entries[2].issued | 1947 | 1947 | 0.0 |
+| entries[2].issued | 1947 | 1947 | 1.0 |
 | entries[3].id | 143 | 143 | 1.0 |
 | entries[3].type | book | book | 1.0 |
 | entries[3].title | Esquemas de metodologia eclesiástica | Esquemas de metodología eclesiástica | 0.9722222222222221 |
@@ -36,7 +36,7 @@ Average Fuzzy Score: **0.3270293454708626**
 | entries[3].author[0].given | José | José | 1.0 |
 | entries[3].publisher | Instituto | Instituto | 1.0 |
 | entries[3].publisher-place | None | Barcelona | 0.0 |
-| entries[3].issued | 1947 | 1947 | 0.0 |
+| entries[3].issued | 1947 | 1947 | 1.0 |
 | entries[4].id | 144 | 144 | 1.0 |
 | entries[4].type | book | book | 1.0 |
 | entries[4].title | Sinn und Ziel der Geschichte | Sinn und Ziel der Geschichte | 1.0 |
@@ -44,14 +44,14 @@ Average Fuzzy Score: **0.3270293454708626**
 | entries[4].author[0].given | Hans H. | Hans H. | 1.0 |
 | entries[4].publisher | Universitäts-Verlag | Universitäts-Verlag | 1.0 |
 | entries[4].publisher-place | None | Bonn | 0.0 |
-| entries[4].issued | 1947 | 1947 | 0.0 |
+| entries[4].issued | 1947 | 1947 | 1.0 |
 | entries[5].id | 145 | 145 | 1.0 |
 | entries[5].type | other | book | 0.2222222222222222 |
 | entries[5].title | Atti del congresso internazionale di filosofia 15-20 November, 1946 | Atti del congresso internazionale di filosofia | 0.8141592920353982 |
 | entries[5].event-date | None | 1946-11-15/1946-11-20 | 0.0 |
 | entries[5].publisher | Castellani | Castellani | 1.0 |
 | entries[5].publisher-place | None | Milano | 0.0 |
-| entries[5].issued | 1946-11-15/1946-11-20 | 1947 | 0.0 |
+| entries[5].issued | 1946-11-15/1946-11-20 | 1947 | 0.24 |
 | entries[5].note | Relevant articles: | Mentions relevant articles. | 0.7111111111111111 |
 | entries[5].related[0].id | None | 146 | 0.0 |
 | entries[5].related[0].type | None | article-journal | 0.0 |

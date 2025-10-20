@@ -1,5 +1,5 @@
 ### Result for image: page_5
-Average Fuzzy Score: **0.8468760059826792**
+Average Fuzzy Score: **0.8605512196578928**
 <small>
 
 | Key | Value | Ground Truth | Score |
@@ -26,7 +26,7 @@ Average Fuzzy Score: **0.8468760059826792**
 | entries[2].title | Sophia I (1947), 206-207 | Sophia I | 0.5 |
 | entries[2].author[0].family | Cafaro | Cafaro | 1.0 |
 | entries[2].author[0].given | F. | F. | 1.0 |
-| entries[2].issued | (1947) | 1947 | 0.0 |
+| entries[2].issued | (1947) | 1947 | 0.8 |
 | entries[2].relation.reviewed | None | 50 | 0.0 |
 | entries[3].id | 52 | 52 | 1.0 |
 | entries[3].type | book | book | 1.0 |
@@ -97,7 +97,7 @@ Average Fuzzy Score: **0.8468760059826792**
 | entries[11].container_title | Revue historique CXCVII | Revue historique | 0.8205128205128205 |
 | entries[11].volume | None | CXCII | 0.0 |
 | entries[11].page | 55-61 | 55-61 | 1.0 |
-| entries[11].issued | (1947) | 1947 | 0.0 |
+| entries[11].issued | (1947) | 1947 | 0.8 |
 | entries[11].relation.reviewed | None | 58 | 0.0 |
 | entries[12].id | 61 | 61 | 1.0 |
 | entries[12].type | book | book | 1.0 |

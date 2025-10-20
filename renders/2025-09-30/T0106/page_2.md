@@ -1,5 +1,5 @@
 ### Result for image: page_2
-Average Fuzzy Score: **0.3999396494060068**
+Average Fuzzy Score: **0.42614932682536166**
 <small>
 
 | Key | Value | Ground Truth | Score |
@@ -11,7 +11,7 @@ Average Fuzzy Score: **0.3999396494060068**
 | entries[0].author[0].given | Hubert G. | Hubert G. | 1.0 |
 | entries[0].publisher | University of New Mexico Press | University of New Mexico Press | 1.0 |
 | entries[0].publisher_place | Albuquerque | Albuquerque | 1.0 |
-| entries[0].issued | 1945 | 1945 | 0.0 |
+| entries[0].issued | 1945 | 1945 | 1.0 |
 | entries[1].id | 2 | 2 | 1.0 |
 | entries[1].type | book | book | 1.0 |
 | entries[1].title | Wahrheit und Ideologie | Wahrheit und Ideologie | 1.0 |
@@ -65,7 +65,7 @@ Average Fuzzy Score: **0.3999396494060068**
 | entries[6].author[0].given | R. T. | Bogumil | 0.0 |
 | entries[6].publisher | None | Universidad de Chile | 0.0 |
 | entries[6].publisher_place | None | Santiago, Chile | 0.0 |
-| entries[6].issued | 1946 | 1945 | 0.0 |
+| entries[6].issued | 1946 | 1945 | 0.75 |
 | entries[7].id | 7 | 8 | 0.0 |
 | entries[7].type | book | review | 0.0 |
 | entries[7].title | El problema de la historia y su lugar en el conocimiento | Review of El problema de la historia y su lugar en el conocimiento | 0.9180327868852458 |
@@ -92,7 +92,7 @@ Average Fuzzy Score: **0.3999396494060068**
 | entries[9].container_title | None | Journal of Modern History | 0.0 |
 | entries[9].volume | CXL | XVII | 0.2857142857142857 |
 | entries[9].page | 528 | 153-162 | 0.4 |
-| entries[9].issued | 1950 | 1945 | 0.0 |
+| entries[9].issued | 1950 | 1945 | 0.75 |
 | entries[9].relation.reviewed | None | 9 | 0.0 |
 | entries[10].id | 9 | 11 | 0.0 |
 | entries[10].type | book | book | 1.0 |
@@ -119,7 +119,7 @@ Average Fuzzy Score: **0.3999396494060068**
 | entries[12].container_title | Journal of Modern History | Journal of Philosophy | 0.6521739130434783 |
 | entries[12].volume | XVII | XLIV | 0.5 |
 | entries[12].page | 153-162 | 459-479 | 0.2857142857142857 |
-| entries[12].issued | 1945 | 1947 | 0.0 |
+| entries[12].issued | 1945 | 1947 | 0.75 |
 | entries[12].relation.reviewed | None | 12 | 0.0 |
 | entries[13].id | 11 | 14 | 0.5 |
 | entries[13].type | book | journal-article | 0.10526315789473684 |

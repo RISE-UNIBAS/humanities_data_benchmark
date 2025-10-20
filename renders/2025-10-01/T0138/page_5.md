@@ -1,5 +1,5 @@
 ### Result for image: page_5
-Average Fuzzy Score: **0.42274829167484534**
+Average Fuzzy Score: **0.43984230876886243**
 <small>
 
 | Key | Value | Ground Truth | Score |
@@ -10,7 +10,7 @@ Average Fuzzy Score: **0.42274829167484534**
 | entries[0].author[0].given | None | Manfred | 0.0 |
 | entries[0].container_title | Historische Zeitschrift | Historische Zeitschrift | 1.0 |
 | entries[0].volume | CLXXXIV | CLXXXIV | 1.0 |
-| entries[0].issued | 1957 | 1957 | 0.0 |
+| entries[0].issued | 1957 | 1957 | 1.0 |
 | entries[0].page | 594-597 | 594-597 | 1.0 |
 | entries[0].relation.reviewed | None | 37 | 0.0 |
 | entries[0].note | Review of the German translation | [Review of the German translation] | 0.9696969696969697 |
@@ -26,7 +26,7 @@ Average Fuzzy Score: **0.42274829167484534**
 | entries[2].title | Sophia I (1947), 206-207 | Sophia I | 0.5 |
 | entries[2].author[0].family | Cataro | Cafaro | 0.8333333333333335 |
 | entries[2].author[0].given | F. | F. | 1.0 |
-| entries[2].issued | 1947 | 1947 | 0.0 |
+| entries[2].issued | 1947 | 1947 | 1.0 |
 | entries[2].relation.reviewed | None | 50 | 0.0 |
 | entries[3].id | 52 | 52 | 1.0 |
 | entries[3].type | book | book | 1.0 |

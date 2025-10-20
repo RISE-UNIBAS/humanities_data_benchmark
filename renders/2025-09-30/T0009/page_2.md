@@ -1,5 +1,5 @@
 ### Result for image: page_2
-Average Fuzzy Score: **0.8112982922670295**
+Average Fuzzy Score: **0.8435563567831585**
 <small>
 
 | Key | Value | Ground Truth | Score |
@@ -56,7 +56,7 @@ Average Fuzzy Score: **0.8112982922670295**
 | entries[5].author[0].given | R. T. | R. T. | 1.0 |
 | entries[5].container_title | The American Journal of Sociology | The American Journal of Sociology | 1.0 |
 | entries[5].volume | LII | LII | 1.0 |
-| entries[5].issued | 1946 | 1946 | 0.0 |
+| entries[5].issued | 1946 | 1946 | 1.0 |
 | entries[5].relation.reviewed | None | 5 | 0.0 |
 | entries[6].id | 7 | 7 | 1.0 |
 | entries[6].type | book | book | 1.0 |
@@ -72,7 +72,7 @@ Average Fuzzy Score: **0.8112982922670295**
 | entries[7].container_title | Revue philosophique | Revue philosophique | 1.0 |
 | entries[7].volume | CXL | CXL | 1.0 |
 | entries[7].page | 528 | 528 | 1.0 |
-| entries[7].issued | 1950 | 1950 | 0.0 |
+| entries[7].issued | 1950 | 1950 | 1.0 |
 | entries[7].relation.reviewed | None | 7 | 0.0 |
 | entries[8].id | 9 | 9 | 1.0 |
 | entries[8].type | book | book | 1.0 |
@@ -92,7 +92,7 @@ Average Fuzzy Score: **0.8112982922670295**
 | entries[9].container_title | Journal of Modern History | Journal of Modern History | 1.0 |
 | entries[9].volume | XVII | XVII | 1.0 |
 | entries[9].page | 153-162 | 153-162 | 1.0 |
-| entries[9].issued | 1945 | 1945 | 0.0 |
+| entries[9].issued | 1945 | 1945 | 1.0 |
 | entries[9].relation.reviewed | None | 9 | 0.0 |
 | entries[10].id | 11 | 11 | 1.0 |
 | entries[10].type | book | book | 1.0 |
@@ -119,7 +119,7 @@ Average Fuzzy Score: **0.8112982922670295**
 | entries[12].container_title | Journal of Philosophy | Journal of Philosophy | 1.0 |
 | entries[12].volume | XLIV | XLIV | 1.0 |
 | entries[12].page | 459-479 | 459-479 | 1.0 |
-| entries[12].issued | 1947 | 1947 | 0.0 |
+| entries[12].issued | 1947 | 1947 | 1.0 |
 | entries[12].relation.reviewed | None | 12 | 0.0 |
 | entries[13].id | 14 | 14 | 1.0 |
 | entries[13].type | journal-article | journal-article | 1.0 |

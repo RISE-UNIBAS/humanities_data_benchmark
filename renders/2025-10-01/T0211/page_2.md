@@ -1,5 +1,5 @@
 ### Result for image: page_2
-Average Fuzzy Score: **0.6625617703343759**
+Average Fuzzy Score: **0.6948198348505051**
 <small>
 
 | Key | Value | Ground Truth | Score |
@@ -56,7 +56,7 @@ Average Fuzzy Score: **0.6625617703343759**
 | entries[5].author[0].given | R. T. | R. T. | 1.0 |
 | entries[5].container_title | The American Journal of Sociology | The American Journal of Sociology | 1.0 |
 | entries[5].volume | LII | LII | 1.0 |
-| entries[5].issued | 1946 | 1946 | 0.0 |
+| entries[5].issued | 1946 | 1946 | 1.0 |
 | entries[5].relation.reviewed | None | 5 | 0.0 |
 | entries[6].id | Jasinowski1945 | 7 | 0.0 |
 | entries[6].type | book | book | 1.0 |
@@ -72,7 +72,7 @@ Average Fuzzy Score: **0.6625617703343759**
 | entries[7].container_title | None | Revue philosophique | 0.0 |
 | entries[7].volume | None | CXL | 0.0 |
 | entries[7].page | 528 | 528 | 1.0 |
-| entries[7].issued | 1950 | 1950 | 0.0 |
+| entries[7].issued | 1950 | 1950 | 1.0 |
 | entries[7].relation.reviewed | None | 7 | 0.0 |
 | entries[8].id | Kahler1943 | 9 | 0.18181818181818177 |
 | entries[8].type | book | book | 1.0 |
@@ -92,7 +92,7 @@ Average Fuzzy Score: **0.6625617703343759**
 | entries[9].container_title | Journal of Modern History | Journal of Modern History | 1.0 |
 | entries[9].volume | XVII | XVII | 1.0 |
 | entries[9].page | 153-162 | 153-162 | 1.0 |
-| entries[9].issued | 1945 | 1945 | 0.0 |
+| entries[9].issued | 1945 | 1945 | 1.0 |
 | entries[9].relation.reviewed | None | 9 | 0.0 |
 | entries[10].id | Maurice1945 | 11 | 0.15384615384615385 |
 | entries[10].type | book | book | 1.0 |
@@ -119,7 +119,7 @@ Average Fuzzy Score: **0.6625617703343759**
 | entries[12].container_title | None | Journal of Philosophy | 0.0 |
 | entries[12].volume | None | XLIV | 0.0 |
 | entries[12].page | 459-479 | 459-479 | 1.0 |
-| entries[12].issued | 1947 | 1947 | 0.0 |
+| entries[12].issued | 1947 | 1947 | 1.0 |
 | entries[12].relation.reviewed | None | 12 | 0.0 |
 | entries[13].id | Bock | 14 | 0.0 |
 | entries[13].type | other | journal-article | 0.30000000000000004 |

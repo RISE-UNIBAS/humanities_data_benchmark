@@ -1,5 +1,5 @@
 ### Result for image: page_2
-Average Fuzzy Score: **0.704382730465293**
+Average Fuzzy Score: **0.7184956336910994**
 <small>
 
 | Key | Value | Ground Truth | Score |
@@ -92,7 +92,7 @@ Average Fuzzy Score: **0.704382730465293**
 | entries[9].container_title | None | Journal of Modern History | 0.0 |
 | entries[9].volume | XVII | XVII | 1.0 |
 | entries[9].page | 153-162 | 153-162 | 1.0 |
-| entries[9].issued | 1945 | 1945 | 0.0 |
+| entries[9].issued | 1945 | 1945 | 1.0 |
 | entries[9].relation.reviewed | None | 9 | 0.0 |
 | entries[10].id | 11 | 11 | 1.0 |
 | entries[10].type | book | book | 1.0 |
@@ -110,7 +110,7 @@ Average Fuzzy Score: **0.704382730465293**
 | entries[11].publisher | Princeton University Press | Routledge | 0.17142857142857137 |
 | entries[11].publisher_place | Princeton | London | 0.4 |
 | entries[11].note | None | Consists of two volumes. Revised edition published in 1950 in Princeton, Princeton University Press | 0.0 |
-| entries[11].issued | 1950 | 1945 | 0.0 |
+| entries[11].issued | 1950 | 1945 | 0.75 |
 | entries[12].id | 13 | 13 | 1.0 |
 | entries[12].type | journal-article | journal-article | 1.0 |
 | entries[12].title | Journal of Philosophy XLIV (1947) | Review of The Open Society and Its Enemies | 0.2666666666666667 |

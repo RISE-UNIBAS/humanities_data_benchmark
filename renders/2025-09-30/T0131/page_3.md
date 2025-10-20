@@ -1,5 +1,5 @@
 ### Result for image: page_3
-Average Fuzzy Score: **0.17683034645422466**
+Average Fuzzy Score: **0.1781690345399007**
 <small>
 
 | Key | Value | Ground Truth | Score |
@@ -9,7 +9,7 @@ Average Fuzzy Score: **0.17683034645422466**
 | entries[0].issued | None | 1951 | 0.0 |
 | entries[0].volume | VI | X | 0.0 |
 | entries[0].page | 81-88 | 211-219 | 0.33333333333333337 |
-| entries[0].incomplete | False | True | 0.0 |
+| entries[0].incomplete | False | True | 0.2222222222222222 |
 | entries[1].id | 23 | 15 | 0.0 |
 | entries[1].type | journal-article | journal-article | 1.0 |
 | entries[1].title | The Study of Contemporary History: Some Further Reflections | The Open Society and Its Enemies | 0.3516483516483516 |

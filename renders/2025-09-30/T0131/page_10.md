@@ -1,5 +1,5 @@
 ### Result for image: page_10
-Average Fuzzy Score: **0.3217040853925487**
+Average Fuzzy Score: **0.3270516789754364**
 <small>
 
 | Key | Value | Ground Truth | Score |
@@ -11,7 +11,7 @@ Average Fuzzy Score: **0.3217040853925487**
 | entries[0].author[0].given | K. B. | K. B. | 1.0 |
 | entries[0].publisher | P. Elek | P. Elek | 1.0 |
 | entries[0].publisher-place | None | London | 0.0 |
-| entries[0].issued | 1947 | 1947 | 0.0 |
+| entries[0].issued | 1947 | 1947 | 1.0 |
 | entries[1].id | 141 | 141 | 1.0 |
 | entries[1].type | book | book | 1.0 |
 | entries[1].title | A Study of History | A Study of History | 1.0 |

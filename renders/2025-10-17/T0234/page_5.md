@@ -1,5 +1,5 @@
 ### Result for image: page_5
-Average Fuzzy Score: **0.6230658428695894**
+Average Fuzzy Score: **0.6487068685106151**
 <small>
 
 | Key | Value | Ground Truth | Score |
@@ -10,7 +10,7 @@ Average Fuzzy Score: **0.6230658428695894**
 | entries[0].author[0].given | Manfred | Manfred | 1.0 |
 | entries[0].container_title | None | Historische Zeitschrift | 0.0 |
 | entries[0].volume | None | CLXXXIV | 0.0 |
-| entries[0].issued | 1957 | 1957 | 0.0 |
+| entries[0].issued | 1957 | 1957 | 1.0 |
 | entries[0].page | None | 594-597 | 0.0 |
 | entries[0].relation.reviewed | None | 37 | 0.0 |
 | entries[0].note | None | [Review of the German translation] | 0.0 |
@@ -26,7 +26,7 @@ Average Fuzzy Score: **0.6230658428695894**
 | entries[2].title | Sophia I | Sophia I | 1.0 |
 | entries[2].author[0].family | Cafaro | Cafaro | 1.0 |
 | entries[2].author[0].given | F. | F. | 1.0 |
-| entries[2].issued | 1947 | 1947 | 0.0 |
+| entries[2].issued | 1947 | 1947 | 1.0 |
 | entries[2].relation.reviewed | None | 50 | 0.0 |
 | entries[3].id | 52 | 52 | 1.0 |
 | entries[3].type | book | book | 1.0 |
@@ -97,7 +97,7 @@ Average Fuzzy Score: **0.6230658428695894**
 | entries[11].container_title | None | Revue historique | 0.0 |
 | entries[11].volume | None | CXCII | 0.0 |
 | entries[11].page | None | 55-61 | 0.0 |
-| entries[11].issued | 1947 | 1947 | 0.0 |
+| entries[11].issued | 1947 | 1947 | 1.0 |
 | entries[11].relation.reviewed | None | 58 | 0.0 |
 | entries[12].id | 61 | 61 | 1.0 |
 | entries[12].type | book | book | 1.0 |
