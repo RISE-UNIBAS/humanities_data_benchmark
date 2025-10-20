@@ -4,14 +4,14 @@ Average Fuzzy Score: **0.17683034645422466**
 
 | Key | Value | Ground Truth | Score |
 | --- | --- | --- | --- |
-| entries[0].type | EntryType.ARTICLE | journal-article | 1.0 |
+| entries[0].type | journal-article | journal-article | 1.0 |
 | entries[0].container_title | Journal of the History of Ideas | American Journal of Economics and Sociology | 0.40540540540540543 |
 | entries[0].issued | None | 1951 | 0.0 |
 | entries[0].volume | VI | X | 0.0 |
 | entries[0].page | 81-88 | 211-219 | 0.33333333333333337 |
 | entries[0].incomplete | False | True | 0.0 |
 | entries[1].id | 23 | 15 | 0.0 |
-| entries[1].type | EntryType.ARTICLE | journal-article | 1.0 |
+| entries[1].type | journal-article | journal-article | 1.0 |
 | entries[1].title | The Study of Contemporary History: Some Further Reflections | The Open Society and Its Enemies | 0.3516483516483516 |
 | entries[1].author[0].family | Beloff | Plamenatz | 0.1333333333333333 |
 | entries[1].author[0].given | Max | J. | 0.0 |
@@ -20,7 +20,7 @@ Average Fuzzy Score: **0.17683034645422466**
 | entries[1].page | 75-84 | 264-273 | 0.16666666666666663 |
 | entries[1].issued | None | 1952 | 0.0 |
 | entries[2].id | 24 | 16 | 0.0 |
-| entries[2].type | EntryType.ARTICLE | journal-article | 1.0 |
+| entries[2].type | journal-article | journal-article | 1.0 |
 | entries[2].title | Appunti sullo 'storicismo' | The Open Society – a comment | 0.2592592592592593 |
 | entries[2].author[0].family | Cantimori | Gombrich | 0.3529411764705882 |
 | entries[2].author[0].given | Delio | E.H. | 0.0 |
@@ -30,7 +30,7 @@ Average Fuzzy Score: **0.17683034645422466**
 | entries[2].issued | None | 1952 | 0.0 |
 | entries[2].relation.reviewed | None | 15 | 0.0 |
 | entries[3].id | 25 | 17 | 0.0 |
-| entries[3].type | EntryType.ARTICLE | journal-article | 1.0 |
+| entries[3].type | journal-article | journal-article | 1.0 |
 | entries[3].title | The Meaning of History | The Open Society – a Rejoinder | 0.4615384615384615 |
 | entries[3].author[0].family | Coulborn | Plamenatz | 0.23529411764705888 |
 | entries[3].author[0].given | Rushton | J. | 0.0 |
@@ -39,7 +39,7 @@ Average Fuzzy Score: **0.17683034645422466**
 | entries[3].page | 46-63 | 76-77 | 0.4 |
 | entries[3].issued | None | 1953 | 0.0 |
 | entries[4].id | 26 | 18 | 0.0 |
-| entries[4].type | EntryType.ARTICLE | journal-article | 1.0 |
+| entries[4].type | journal-article | journal-article | 1.0 |
 | entries[4].title | History - a Science? | The Open Society: a Reconsideration | 0.36363636363636365 |
 | entries[4].author[0].family | Gould | Cobban | 0.18181818181818177 |
 | entries[4].author[0].given | Clarence F. | Alfred | 0.3529411764705882 |
@@ -48,7 +48,7 @@ Average Fuzzy Score: **0.17683034645422466**
 | entries[4].page | 375-388 | 119-126 | 0.1428571428571429 |
 | entries[4].issued | None | 1955 | 0.0 |
 | entries[5].id | 27 | 19 | 0.0 |
-| entries[5].type | EntryType.ARTICLE | journal-article | 1.0 |
+| entries[5].type | journal-article | journal-article | 1.0 |
 | entries[5].title | Generality and Singularity in Historical Judgment | Has History a Meaning? | 0.3380281690140845 |
 | entries[5].author[0].family | Hofstadter | Bernal | 0.25 |
 | entries[5].author[0].given | A. | J.D. | 0.33333333333333337 |
@@ -57,14 +57,14 @@ Average Fuzzy Score: **0.17683034645422466**
 | entries[5].page | 57-65 | 164-169 | 0.33333333333333337 |
 | entries[5].issued | None | 1955 | 0.0 |
 | entries[6].id | 28 | 20 | 0.5 |
-| entries[6].type | EntryType.ARTICLE | book | 0.10526315789473684 |
+| entries[6].type | journal-article | book | 0.10526315789473684 |
 | entries[6].title | Les nouvelles conceptions de l'histoire | War and History | 0.33333333333333337 |
 | entries[6].author[0].family | Lenoble | Sumner | 0.3076923076923077 |
 | entries[6].author[0].given | R. | B.H. | 0.33333333333333337 |
 | entries[6].publisher | None | Oliver and Boyd | 0.0 |
 | entries[6].publisher_place | None | Edinburgh | 0.0 |
 | entries[7].id | 29 | 21 | 0.5 |
-| entries[7].type | EntryType.ARTICLE | book | 0.10526315789473684 |
+| entries[7].type | journal-article | book | 0.10526315789473684 |
 | entries[7].title | In History or Beyond History | The Philosophy of American History | 0.5806451612903225 |
 | entries[7].author[0].family | McCown | Zucker | 0.16666666666666663 |
 | entries[7].author[0].given | C. C. | Morris | 0.0 |
@@ -73,7 +73,7 @@ Average Fuzzy Score: **0.17683034645422466**
 | entries[7].note | None | 2 vols. | 0.0 |
 | entries[7].issued | None | 1945 | 0.0 |
 | entries[8].id | 30 | 22 | 0.0 |
-| entries[8].type | EntryType.ARTICLE | journal-article | 1.0 |
+| entries[8].type | journal-article | journal-article | 1.0 |
 | entries[8].title | History and the Social Science Research Council | History as a Liberal Art | 0.45070422535211263 |
 | entries[8].author[0].family | Nichols | Barzun | 0.0 |
 | entries[8].author[0].given | Roy F. | Jacques | 0.0 |
@@ -81,7 +81,7 @@ Average Fuzzy Score: **0.17683034645422466**
 | entries[8].volume | L | VI | 0.0 |
 | entries[8].page | 491-499 | 81-88 | 0.33333333333333337 |
 | entries[9].id | 31 | 23 | 0.5 |
-| entries[9].type | EntryType.ARTICLE | journal-article | 1.0 |
+| entries[9].type | journal-article | journal-article | 1.0 |
 | entries[9].title | The Poverty of Historicism, Part III | The Study of Contemporary History: Some Further Reflections | 0.4421052631578948 |
 | entries[9].author[0].family | Popper | Beloff | 0.16666666666666663 |
 | entries[9].author[0].given | Karl | Max | 0.2857142857142857 |
@@ -89,7 +89,7 @@ Average Fuzzy Score: **0.17683034645422466**
 | entries[9].volume | XII | XXX | 0.33333333333333337 |
 | entries[9].page | 69-89 | 75-84 | 0.4 |
 | entries[10].id | 32 | 24 | 0.5 |
-| entries[10].type | EntryType.ARTICLE | journal-article | 1.0 |
+| entries[10].type | journal-article | journal-article | 1.0 |
 | entries[10].title | History and the Historian | Appunti sullo 'storicismo' | 0.3529411764705882 |
 | entries[10].author[0].family | Weiss | Cantimori | 0.1428571428571429 |
 | entries[10].author[0].given | Paul | Delio | 0.2222222222222222 |
@@ -98,7 +98,7 @@ Average Fuzzy Score: **0.17683034645422466**
 | entries[10].page | 169-179 | 1-45 | 0.36363636363636365 |
 | entries[10].note | None | (Reprinted in D.Cantimori, Studi di storia, Torino: Einaudi, 1959, 1-45) | 0.0 |
 | entries[11].id | 33 | 25 | 0.0 |
-| entries[11].type | EntryType.ARTICLE | journal-article | 1.0 |
+| entries[11].type | journal-article | journal-article | 1.0 |
 | entries[11].title | The Attack on the Historical Method | The Meaning of History | 0.49122807017543857 |
 | entries[11].author[0].family | White | Coulborn | 0.0 |
 | entries[11].author[0].given | Morton G. | Rushton | 0.375 |
