@@ -179,7 +179,6 @@ GENAI_API_KEY=<your_genai_api_key>
 ANTHROPIC_API_KEY=<your_anthropic_api_key>
 MISTRAL_API_KEY=<your_mistral_api_key>
 OPENROUTER_API_KEY=<your_openrouter_api_key>
-SCICORE_API_KEY=<your_scicore_api_key>
 SCICORE_API_KEY=<your_scicore_api_base_url>
 ```
 
