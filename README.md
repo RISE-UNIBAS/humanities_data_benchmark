@@ -16,7 +16,7 @@ how well various LLMs perform on digital humanities (DH) tasks involving visual 
 
 Benchmarking is the process of systematically evaluating and ranking various models for specific tasks using well-defined ground truths and metrics. For humanities research, benchmarking provides:
 
-- **Evidence-based decision making** about which model(s) to use for which humanities-specific task(s)
+- **Evidence-based decision-making** about which model(s) to use for which humanities-specific task(s)
 - **Quantifiable comparisons** between different AI models on humanities data, including cost efficiency analysis
 - **Standardized evaluation** of model performance on tasks like historical document analysis, transcription, and metadata extraction
 
@@ -61,7 +61,7 @@ dataclasses and a scoring function. A benchmark can be used as the basis for a *
 truth file with the same base name.
 - **Image**: An image is a visual representation of the task. The model should use the image to generate its response. Images are stored in the `images` 
 directory of the benchmark.
-- **Provider**: The provider is the company that provides the model. The provider can be `openai`, `genai`, `anthropic`, or `mistral`.
+- **Provider**: The provider is the company or service that provides access to the model. The provider can be `openai`, `genai`, `anthropic`, `mistral`, `openrouter`, or `scicore`.
 - **Model**: The model is the specific model that is used to perform the task. The model can be any model that is supported by the 
 provider.
 - **Scoring Function**: The scoring function is a function that is used to evaluate the model's response. 
@@ -178,6 +178,9 @@ OPENAI_API_KEY=<your_openai_api_key>
 GENAI_API_KEY=<your_genai_api_key>
 ANTHROPIC_API_KEY=<your_anthropic_api_key>
 MISTRAL_API_KEY=<your_mistral_api_key>
+OPENROUTER_API_KEY=<your_openrouter_api_key>
+SCICORE_API_KEY=<your_scicore_api_key>
+SCICORE_API_KEY=<your_scicore_api_base_url>
 ```
 
 ### Run a Benchmark Test
@@ -223,7 +226,7 @@ T0001,test_benchmark,openai,gpt-4o,,,,,,false
 
 - `id`: A unique identifier for the benchmark using 4-digit zero-padded format (e.g., T0001, T0002).
 - `name`: The name of the benchmark. This must match the name of the directory in the `benchmarks` folder.
-- `provider`: The provider of the model. This can be `openai`, `genai`, `anthropic`, or `mistral`.
+- `provider`: The provider of the model. This can be `openai`, `genai`, `anthropic`, `mistral`, `openrouter`, or `scicore`.
 - `model`: The name of the model. This can be any model name that is supported by the provider.
 - `dataclass`: The Pydantic model class name (from dataclass.py) used to structure the response of the request.
 - `temperature`: The temperature parameter for the model. This can be any value between 0 and 1.
@@ -331,6 +334,15 @@ This benchmark suite currently tests models from the following providers:
 - **mistral-large-latest**: Mistral's latest and most capable language model
 - **mistral-medium-2505**: Mid-tier Mistral model optimized for balanced performance
 - **mistral-medium-2508**: Updated version of Mistral Medium with enhanced capabilities
+
+### OpenRouter
+OpenRouter provides access to models from multiple providers through a unified API:
+- **meta-llama/llama-4-maverick**: Meta's latest Llama 4 model accessed via OpenRouter
+- **qwen/qwen3-vl-8b-thinking**: Alibaba's Qwen3 Vision-Language model (8B parameters) with enhanced reasoning capabilities
+
+### sciCORE
+sciCORE provides access to models hosted on the University of Basel's high-performance computing infrastructure:
+- **GLM-4.5V-FP8**: Z.ai's GLM-4.5V model optimized with FP8 quantization for efficient inference
 
 ## Benchmarking Methodology
 
