@@ -338,6 +338,9 @@ This benchmark suite currently tests models from the following providers:
 OpenRouter provides access to models from multiple providers through a unified API:
 - **meta-llama/llama-4-maverick**: Meta's latest Llama 4 model accessed via OpenRouter
 - **qwen/qwen3-vl-8b-thinking**: Alibaba's Qwen3 Vision-Language model (8B parameters) with enhanced reasoning capabilities
+- **qwen/qwen3-vl-8b-instruct**: Alibaba's Qwen3 Vision-Language model (8B parameters) optimized for instruction following
+- **qwen/qwen3-vl-30b-a3b-instruct**: Alibaba's larger Qwen3 Vision-Language model (30B parameters) with enhanced instruction capabilities
+- **x-ai/grok-4**: xAI's Grok 4 model with multimodal capabilities
 
 ### sciCORE
 sciCORE provides access to models hosted on the University of Basel's high-performance computing infrastructure:
