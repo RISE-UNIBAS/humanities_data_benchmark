@@ -89,6 +89,17 @@ This page provides an overview of all benchmark tests.Click on the test name to 
   </tr></thead>
   <tbody>
 <tr>
+    <td>2025-10-20</td>
+    <td><a href='/humanities_data_benchmark/archive/2025-10-20/T0253'><span class='test-square' style='background-color: #33ff66;'>T0253</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-10-20/T0259'><span class='test-square' style='background-color: #6699ff;'>T0259</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-10-20/T0265'><span class='test-square' style='background-color: #ff6600;'>T0265</span></a>&nbsp;</td>
+    <td></td>
+    <td></td>
+    <td><a href='/humanities_data_benchmark/archive/2025-10-20/T0257'><span class='test-square' style='background-color: #ff3366;'>T0257</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-10-20/T0263'><span class='test-square' style='background-color: #9966ff;'>T0263</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-10-20/T0269'><span class='test-square' style='background-color: #bdc3c7;'>T0269</span></a>&nbsp;</td>
+    <td><a href='/humanities_data_benchmark/archive/2025-10-20/T0254'><span class='test-square' style='background-color: #ccff00;'>T0254</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-10-20/T0255'><span class='test-square' style='background-color: #e67e22;'>T0255</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-10-20/T0256'><span class='test-square' style='background-color: #6699ff;'>T0256</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-10-20/T0260'><span class='test-square' style='background-color: #339933;'>T0260</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-10-20/T0261'><span class='test-square' style='background-color: #33ccff;'>T0261</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-10-20/T0262'><span class='test-square' style='background-color: #34495e;'>T0262</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-10-20/T0266'><span class='test-square' style='background-color: #f1c40f;'>T0266</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-10-20/T0267'><span class='test-square' style='background-color: #ff9966;'>T0267</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-10-20/T0268'><span class='test-square' style='background-color: #00ff66;'>T0268</span></a>&nbsp;</td>
+    <td></td>
+    <td></td>
+    <td><a href='/humanities_data_benchmark/archive/2025-10-20/T0258'><span class='test-square' style='background-color: #ff99cc;'>T0258</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-10-20/T0264'><span class='test-square' style='background-color: #2ecc71;'>T0264</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-10-20/T0270'><span class='test-square' style='background-color: #ff9933;'>T0270</span></a>&nbsp;</td>
+</tr>
+<tr>
     <td>2025-10-17</td>
     <td><a href='/humanities_data_benchmark/archive/2025-10-17/T0233'><span class='test-square' style='background-color: #66ff33;'>T0233</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-10-17/T0234'><span class='test-square' style='background-color: #ff5733;'>T0234</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-10-17/T0237'><span class='test-square' style='background-color: #ff33cc;'>T0237</span></a>&nbsp;</td>
     <td></td>

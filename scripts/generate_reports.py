@@ -266,6 +266,9 @@ def get_provider_display_name(provider, model):
     model_specific_mappings = {
         'meta-llama/llama-4-maverick': 'Meta (via OpenRouter)',
         'qwen/qwen3-vl-8b-thinking': 'Alibaba (via OpenRouter)',
+        'qwen/qwen3-vl-30b-a3b-instruct': 'Alibaba (via OpenRouter)',
+        'qwen/qwen3-vl-8b-instruct': 'Alibaba (via OpenRouter)',
+        'x-ai/grok-4': 'xAI (via OpenRouter)',
         'GLM-4.5V-FP8': 'Z.ai (via sciCORE)'
     }
 

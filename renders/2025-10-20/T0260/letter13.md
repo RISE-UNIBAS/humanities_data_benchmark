@@ -1,0 +1,27 @@
+### Result for letter13
+[View raw result from qwen/qwen3-vl-8b-instruct](https://github.com/RISE-UNIBAS/humanities_data_benchmark/blob/main/results/2025-10-20/T0260/request_T0260_letter13.json)
+
+
+| Category          | Ground Truth | Prediction | TP | FP | FN |
+|------------------|--------------|------------|----|----|----|
+| `send_date`        | 1927-09-15 | 1927-09-15 | 1 | 0 | 0 |
+| `sender_persons`  | Groschupf-Jaeger, Louis<br>Kachelhofer-Gerber, Frederick Charles | Basler Rheinschiffahrt-Aktiengesellschaft | 0 | 1 | 2 |
+| `receiver_persons` | Rupprecht, Karl | Herrn Rupprecht, Hotelier, Soolbad "Eden", Rheinfelden | 0 | 1 | 1 |
+
+| Name | Alternate Names |
+| --- | --- |
+| Groschupf-Jaeger, Louis | Groschopf<br>Groschupf<br>Herr Groschupf<br>Herrn Groschupf |
+| Kachelhofer-Gerber, Frederick Charles | None |
+| Rupprecht, Karl | Herr Rupprecht<br>Herrn Rupprecht |
+
+#### Rules
+`inferred_from_function`: False
+
+`inferred_from_correspondence`: False
+
+#### Letter images
+
+<img src="https://github.com/RISE-UNIBAS/humanities_data_benchmark/blob/main/benchmarks/metadata_extraction/images/letter13_p1.jpg?raw=true" alt="letter13_p1.jpg" width="800px">
+
+<img src="https://github.com/RISE-UNIBAS/humanities_data_benchmark/blob/main/benchmarks/metadata_extraction/images/letter13_p2.jpg?raw=true" alt="letter13_p2.jpg" width="800px">
+
