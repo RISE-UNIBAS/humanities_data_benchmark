@@ -324,40 +324,50 @@ class Benchmark(ABC):
             logging.warning(f"Pricing file not found: {pricing_file}")
             return None
 
-        # Get pricing for the current date (or fallback to most recent)
+        # Get pricing for the current date (or fallback to find provider/model)
         date_pricing = pricing_data.get('pricing', {}).get(self.date)
         fallback_date = None
-        if not date_pricing:
-            # Fallback to most recent pricing
+        model_pricing = None
+
+        if date_pricing:
+            # Try to get pricing from current date first
+            provider_pricing = date_pricing.get(self.provider, {})
+            model_pricing = provider_pricing.get(self.model)
+
+        if not model_pricing:
+            # Need to search through available dates to find pricing for this provider/model
             available_dates = sorted(pricing_data.get('pricing', {}).keys(), reverse=True)
-            if available_dates:
-                fallback_date = available_dates[0]
-                date_pricing = pricing_data['pricing'][fallback_date]
-
-                # Calculate age of fallback pricing
-                from datetime import datetime, timedelta
-                try:
-                    fallback_datetime = datetime.strptime(fallback_date, '%Y-%m-%d')
-                    current_datetime = datetime.strptime(self.date, '%Y-%m-%d')
-                    age_days = (current_datetime - fallback_datetime).days
-
-                    if age_days > 30:
-                        logging.error(f"No pricing for {self.date}, using fallback {fallback_date} which is {age_days} days old (>30 days)")
-                    else:
-                        logging.warning(f"No pricing for {self.date}, using fallback {fallback_date} which is {age_days} days old")
-                except ValueError:
-                    logging.warning(f"No pricing for {self.date}, using {fallback_date}")
-            else:
+            if not available_dates:
                 logging.warning("No pricing data available")
                 return None
 
-        # Get model pricing
-        provider_pricing = date_pricing.get(self.provider, {})
-        model_pricing = provider_pricing.get(self.model)
+            # Iterate through dates until we find pricing for this provider/model
+            for date in available_dates:
+                date_pricing = pricing_data['pricing'][date]
+                provider_pricing = date_pricing.get(self.provider, {})
+                model_pricing = provider_pricing.get(self.model)
 
-        if not model_pricing:
-            logging.warning(f"No pricing found for {self.provider}/{self.model}")
-            return None
+                if model_pricing:
+                    fallback_date = date
+                    break
+
+            if not model_pricing:
+                logging.warning(f"No pricing found for {self.provider}/{self.model} in any available date")
+                return None
+
+            # Calculate age of fallback pricing
+            from datetime import datetime, timedelta
+            try:
+                fallback_datetime = datetime.strptime(fallback_date, '%Y-%m-%d')
+                current_datetime = datetime.strptime(self.date, '%Y-%m-%d')
+                age_days = (current_datetime - fallback_datetime).days
+
+                if age_days > 30:
+                    logging.error(f"No pricing for {self.date}, using fallback {fallback_date} which is {age_days} days old (>30 days)")
+                else:
+                    logging.warning(f"No pricing for {self.date}, using fallback {fallback_date} which is {age_days} days old")
+            except ValueError:
+                logging.warning(f"No pricing for {self.date}, using {fallback_date}")
 
         input_price = model_pricing['input_price']  # USD per million tokens
         output_price = model_pricing['output_price']  # USD per million tokens
