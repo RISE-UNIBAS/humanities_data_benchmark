@@ -116,6 +116,11 @@ A comprehensive benchmark focused on catalog card analysis and information extra
 
 📁 [View benchmark details](benchmarks/zettelkatalog/)
 
+### Medieval Manuscripts
+Evaluates models on page segmentation and handwritten text extraction from 15th century medieval manuscripts written in late medieval German. Tests the ability to transcribe historical handwriting, identify folio numbers, distinguish main text from marginal additions, and maintain historical spelling and formatting. Performance is measured using fuzzy string matching and Character Error Rate (CER).
+
+📁 [View benchmark details](benchmarks/medieval_manuscripts/)
+
 ### Test Benchmarks
 Two simple test benchmarks (`test_benchmark` and `test_benchmark2`) used for system validation and basic functionality testing.
 

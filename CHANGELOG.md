@@ -10,14 +10,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - OpenRouter provider support with fallback for models not supporting structured outputs
 - sciCORE provider support (LiteLLM-based OpenAI-compatible API)
+- medieval_manuscripts benchmark for 15th century page segmentation and handwritten text extraction with CER and fuzzy matching
 - 5 new models: qwen/qwen3-vl-8b-thinking, qwen/qwen3-vl-30b-a3b-instruct, qwen/qwen3-vl-8b-instruct, meta-llama/llama-4-maverick, x-ai/grok-4 (OpenRouter), GLM-4.5V-FP8 (sciCORE)
-- 38 new benchmark test configurations (T0233-T0270) for new models across all benchmark variants
+- 39 new benchmark test configurations (T0233-T0271) for new models across all benchmark variants
 - Tests on 2025-10-03: T0164
 - Tests on 2025-10-17: T0233-T0234, T0237-T0252
 - Tests on 2025-10-20: T0253-T0270
+- Tests on 2025-10-21: T0271
+
 ### Fixed
 - metadata_extraction scoring now correctly counts failed requests as complete failures (0 TP, all FN) instead of excluding them
 - Fuzzy score matching now handles type mismatches between strings and integers (e.g., "1965" vs 1965 for year fields)
+- Pricing lookup now searches through all available dates to find provider/model pricing instead of only checking the most recent date
 
 ## [v0.3.0] - 2025-10-03
 
