@@ -1,5 +1,5 @@
 ### Result for image: page_3
-Average Fuzzy Score: **0.5917718564771194**
+Average Fuzzy Score: **0.5931105445627953**
 <small>
 
 | Key | Value | Ground Truth | Score |
@@ -9,7 +9,7 @@ Average Fuzzy Score: **0.5917718564771194**
 | entries[0].issued | None | 1951 | 0.0 |
 | entries[0].volume | None | X | 0.0 |
 | entries[0].page | 211-219 | 211-219 | 1.0 |
-| entries[0].incomplete | False | True | 0.0 |
+| entries[0].incomplete | False | True | 0.2222222222222222 |
 | entries[1].id | 16 | 15 | 0.5 |
 | entries[1].type | journal-article | journal-article | 1.0 |
 | entries[1].title | "The Open Society and Its Enemies" | The Open Society and Its Enemies | 0.9696969696969697 |

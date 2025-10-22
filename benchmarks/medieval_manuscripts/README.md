@@ -64,9 +64,11 @@ Each manuscript page in the ground truth is represented as a JSON object with th
 
 | Field | Type | Description |
 |-------|------|-------------|
-| `folio` | integer | folio number |
+| `folio` | string | Folio number (e.g., "3", "4") |
 | `text` | string | Complete text of the main text as it appears in the original |
-| `addition` | string | Complete text of the additions as it appears in the original |
+| `addition1` | string | Complete text of the first marginal addition (empty string if not present) |
+| `addition2` | string | Complete text of the second marginal addition (empty string if not present) |
+| `addition3` | string | Complete text of the third marginal addition (empty string if not present) |
 
 
 The entire ground truth file follows this structure:
@@ -76,28 +78,28 @@ The entire ground truth file follows this structure:
   "[3r]": [
     {
       "folio": "3",
-      "text": Vnd ein pferit die mir vnd\n minen knechten vber hulfend\n den do was nienan kein weg\n denne den wir machtend\n vnd vielend die knecht dick\n vnd vil in untz an den ars\n vnd die pferit vntz an die \n settel vnd was ze mol ein grosser\n nebel dz wir kum gesachend\n vnd also mit grosser arbeit kome\n wir ze mittem tag zuo sant\n kristoffel vff den berg Do\n Do sach ich die buecher Do gar\n vil herren wopen in stond\n die ir stür do hin geben hand\n do stuond mines vatters seligen\n wopen och in dem einen",
+      "text": "Vnd ein pferit die mir vnd\n minen knechten vber hulfend\n den do was nienan kein weg\n denne den wir machtend\n vnd vielend die knecht dick\n vnd vil in untz an den ars\n vnd die pferit vntz an die \n settel vnd was ze mol ein grosser\n nebel dz wir kum gesachend\n vnd also mit grosser arbeit kome\n wir ze mittem tag zuo sant\n kristoffel vff den berg Do\n Do sach ich die buecher Do gar\n vil herren wopen in stond\n die ir stür do hin geben hand\n do stuond mines vatters seligen\n wopen och in dem einen",
       "addition1": ""
     }
-  ],
-  ...
+  ]
 }
 ```
 
 ## Scoring
 
-The benchmark uses two complementary metrics to evaluate the accuracy of extracted advertisements: Fuzzy String Matching and Character Error Rate (CER).
+The benchmark uses two complementary metrics to evaluate the accuracy of extracted text: Fuzzy String Matching and Character Error Rate (CER).
 
-### Scoring 
+### Scoring a page
 
-Each element - "folio", "text" and "addition" is scored by comparing it to the corresponding ground truth entry using the following process:
+Each element - "folio", "text" and "addition1", "addition2", "addition3", etc. - is scored by comparing it to the corresponding ground truth entry using the following process:
 
-1. **Section Matching**: Texts are matched across response and ground truth based on section names, i.e. main text or adddition.
-2. **Folio Matching**: 
-3. **Text Comparison**: Two metrics are calculated for each matched advertisement:
+1. **Entry Matching**: Model responses are matched to ground truth entries by position. Ground truth entries are sorted alphabetically by folio reference (e.g., [3r], [4v]), and the first response entry is matched to the first ground truth entry, the second to the second, etc.
+2. **Field Comparison**: For each matched entry, individual fields (folio, text, additions) are compared between the model's response and ground truth
+3. **Text Comparison**: Two metrics are calculated for each field:
    - **Fuzzy Score**: Text content is compared using fuzzy string matching, resulting in a similarity score between 0.0 and 1.0 (higher is better)
    - **Character Error Rate (CER)**: Calculated using Levenshtein distance as a ratio of the reference text length, resulting in an error rate between 0.0 and 1.0 (lower is better)
-4. **Missing Matches**: Additions in the ground truth that is not found in the response receive a fuzzy score of 0.0 and a CER of 1.0
+4. **Empty Field Handling**: Fields that are empty in both ground truth and prediction are excluded from scoring (correctly empty fields don't affect the score)
+5. **Missing Content**: Fields with content in ground truth but missing in the response receive a fuzzy score of 0.0 and a CER of 1.0
 
 #### Fuzzy Matching Example
 

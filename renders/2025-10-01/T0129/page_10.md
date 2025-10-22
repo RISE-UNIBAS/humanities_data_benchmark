@@ -1,5 +1,5 @@
 ### Result for image: page_10
-Average Fuzzy Score: **0.33824970629184936**
+Average Fuzzy Score: **0.43450639078382836**
 <small>
 
 | Key | Value | Ground Truth | Score |
@@ -11,7 +11,7 @@ Average Fuzzy Score: **0.33824970629184936**
 | entries[0].author[0].given | K. B. | K. B. | 1.0 |
 | entries[0].publisher | P. Elek | P. Elek | 1.0 |
 | entries[0].publisher-place | None | London | 0.0 |
-| entries[0].issued | 1947 | 1947 | 0.0 |
+| entries[0].issued | 1947 | 1947 | 1.0 |
 | entries[1].id | 141 | 141 | 1.0 |
 | entries[1].type | book | book | 1.0 |
 | entries[1].title | A Study of History (abridged) | A Study of History | 0.7659574468085107 |
@@ -20,7 +20,7 @@ Average Fuzzy Score: **0.33824970629184936**
 | entries[1].publisher | Oxford | Oxford | 1.0 |
 | entries[1].publisher-place | None | New York | 0.0 |
 | entries[1].note | Abridgement of vols. I–VI of A Study of History. | Abridged by D. C. Somervell. Abridgement of vols. I-VI of A Study of History. | 0.752 |
-| entries[1].issued | 1947 | 1947 | 0.0 |
+| entries[1].issued | 1947 | 1947 | 1.0 |
 | entries[2].id | 142 | 142 | 1.0 |
 | entries[2].type | book | book | 1.0 |
 | entries[2].title | In den spiegel van het verleden: historische opstellen | In den spiegel van het verleden: historische opstellen | 1.0 |
@@ -28,7 +28,7 @@ Average Fuzzy Score: **0.33824970629184936**
 | entries[2].author[0].given | L. G. J. | L. G. J. | 1.0 |
 | entries[2].publisher | Bruna | Bruna | 1.0 |
 | entries[2].publisher-place | None | Utrecht, Antwerpen | 0.0 |
-| entries[2].issued | 1947 | 1947 | 0.0 |
+| entries[2].issued | 1947 | 1947 | 1.0 |
 | entries[3].id | 143 | 143 | 1.0 |
 | entries[3].type | book | book | 1.0 |
 | entries[3].title | Esquemas de metodología eclesiástica | Esquemas de metodología eclesiástica | 1.0 |
@@ -36,7 +36,7 @@ Average Fuzzy Score: **0.33824970629184936**
 | entries[3].author[0].given | José | José | 1.0 |
 | entries[3].publisher | Instituto | Instituto | 1.0 |
 | entries[3].publisher-place | None | Barcelona | 0.0 |
-| entries[3].issued | 1947 | 1947 | 0.0 |
+| entries[3].issued | 1947 | 1947 | 1.0 |
 | entries[4].id | 144 | 144 | 1.0 |
 | entries[4].type | book | book | 1.0 |
 | entries[4].title | Sinn und Ziel der Geschichte | Sinn und Ziel der Geschichte | 1.0 |
@@ -44,14 +44,14 @@ Average Fuzzy Score: **0.33824970629184936**
 | entries[4].author[0].given | Hans H. | Hans H. | 1.0 |
 | entries[4].publisher | Universitäts-Verlag | Universitäts-Verlag | 1.0 |
 | entries[4].publisher-place | None | Bonn | 0.0 |
-| entries[4].issued | 1947 | 1947 | 0.0 |
+| entries[4].issued | 1947 | 1947 | 1.0 |
 | entries[5].id | 145 | 145 | 1.0 |
 | entries[5].type | other | book | 0.2222222222222222 |
 | entries[5].title | Atti del congresso internazionale di filosofia, 15–20 November, 1946 | Atti del congresso internazionale di filosofia | 0.8070175438596492 |
 | entries[5].event-date | None | 1946-11-15/1946-11-20 | 0.0 |
 | entries[5].publisher | Castellani | Castellani | 1.0 |
 | entries[5].publisher-place | None | Milano | 0.0 |
-| entries[5].issued | 1947 | 1947 | 0.0 |
+| entries[5].issued | 1947 | 1947 | 1.0 |
 | entries[5].note | Relevant articles listed in the following entries. | Mentions relevant articles. | 0.4415584415584416 |
 | entries[5].related[0].id | None | 146 | 0.0 |
 | entries[5].related[0].type | None | article-journal | 0.0 |
@@ -85,7 +85,7 @@ Average Fuzzy Score: **0.33824970629184936**
 | entries[6].container-title | None | Les temps modernes | 0.0 |
 | entries[6].volume | I | II | 0.6666666666666667 |
 | entries[6].page | 109-117 | 623-634 | 0.1428571428571429 |
-| entries[6].issued | 1947 | 1947 | 0.0 |
+| entries[6].issued | 1947 | 1947 | 1.0 |
 | entries[7].id | 147 | 150 | 0.33333333333333337 |
 | entries[7].type | journal-article | chapter | 0.2727272727272727 |
 | entries[7].title | Critica del giudizio storico | Philosophy of History | 0.36734693877551017 |
@@ -97,7 +97,7 @@ Average Fuzzy Score: **0.33824970629184936**
 | entries[7].publisher | None | Philosophical Library | 0.0 |
 | entries[7].publisher-place | None | New York | 0.0 |
 | entries[7].page | 281-290 | 89-106 | 0.4615384615384615 |
-| entries[7].issued | 1947 | 1947 | 0.0 |
+| entries[7].issued | 1947 | 1947 | 1.0 |
 | entries[8].id | 148 | 151 | 0.33333333333333337 |
 | entries[8].type | journal-article | article-journal | 0.4666666666666666 |
 | entries[8].title | Forza e spirito nella storia | De la perception à l'histoire. La philosophie de M. Merleau-Ponty | 0.32258064516129037 |
@@ -106,7 +106,7 @@ Average Fuzzy Score: **0.33824970629184936**
 | entries[8].container-title | None | Deucalion | 0.0 |
 | entries[8].volume | I | II | 0.6666666666666667 |
 | entries[8].page | 191-200 | 57-85 | 0.16666666666666663 |
-| entries[8].issued | 1947 | 1947 | 0.0 |
+| entries[8].issued | 1947 | 1947 | 1.0 |
 | entries[9].id | 149 | 152 | 0.33333333333333337 |
 | entries[9].type | journal-article | article-journal | 0.4666666666666666 |
 | entries[9].title | Sur le concept d’histoire | Commemorazione di Adolfo Omodeo | 0.3214285714285714 |
@@ -118,7 +118,7 @@ Average Fuzzy Score: **0.33824970629184936**
 | entries[9].reprint.publisher | None | Einaudi | 0.0 |
 | entries[9].reprint.publisher-place | None | Torino | 0.0 |
 | entries[9].reprint.issued | None | 1959 | 0.0 |
-| entries[9].issued | 1947 | 1947 | 0.0 |
+| entries[9].issued | 1947 | 1947 | 1.0 |
 | entries[10].id | 150 | 153 | 0.6666666666666667 |
 | entries[10].type | other | article-journal | 0.30000000000000004 |
 | entries[10].title | Philosophy of History | The Historian and the Philosophy of Science | 0.46875 |
@@ -127,7 +127,7 @@ Average Fuzzy Score: **0.33824970629184936**
 | entries[10].container-title | None | Isis | 0.0 |
 | entries[10].volume | None | XXXVIII | 0.0 |
 | entries[10].page | 89-106 | 11-18 | 0.36363636363636365 |
-| entries[10].issued | 1947 | 1947 | 0.0 |
+| entries[10].issued | 1947 | 1947 | 1.0 |
 | entries[11].id | 151 | 154 | 0.6666666666666667 |
 | entries[11].type | journal-article | article-journal | 0.4666666666666666 |
 | entries[11].title | De la perception à l’histoire. La philosophie de M. Merleau-Ponty | History as a Science | 0.2823529411764706 |
@@ -136,7 +136,7 @@ Average Fuzzy Score: **0.33824970629184936**
 | entries[11].container-title | None | Historical Studies: Australia and New Zealand | 0.0 |
 | entries[11].volume | II | III | 0.8 |
 | entries[11].page | 57-85 | 153-175 | 0.5 |
-| entries[11].issued | 1947 | 1947 | 0.0 |
+| entries[11].issued | 1947 | 1947 | 1.0 |
 | entries[12].id | 152 | 155 | 0.6666666666666667 |
 | entries[12].type | journal-article | article-journal | 0.4666666666666666 |
 | entries[12].title | Commemorazione di Adolfo Omodeo | Christianisme et histoire | 0.3214285714285714 |
@@ -145,7 +145,7 @@ Average Fuzzy Score: **0.33824970629184936**
 | entries[12].container-title | None | Etudes | 0.0 |
 | entries[12].volume | None | CCLIV | 0.0 |
 | entries[12].page | None | 166-184 | 0.0 |
-| entries[12].issued | 1947 | 1947 | 0.0 |
+| entries[12].issued | 1947 | 1947 | 1.0 |
 | entries[13].id | 153 | 156 | 0.6666666666666667 |
 | entries[13].type | journal-article | article-journal | 0.4666666666666666 |
 | entries[13].title | The Historian and the Philosophy of Science | Wahrheit der Geschichte. Geschichte der Wahrheit | 0.3516483516483516 |
@@ -154,7 +154,7 @@ Average Fuzzy Score: **0.33824970629184936**
 | entries[13].container-title | None | Amerikanische Rundschau | 0.0 |
 | entries[13].volume | XXXVIII | III | 0.6 |
 | entries[13].page | 11-18 | 44-53 | 0.19999999999999996 |
-| entries[13].issued | 1947 | 1947 | 0.0 |
+| entries[13].issued | 1947 | 1947 | 1.0 |
 | entries[14].id | 154 | 157 | 0.6666666666666667 |
 | entries[14].type | journal-article | article-journal | 0.4666666666666666 |
 | entries[14].title | History as a Science | The Idea of Progress | 0.25 |
@@ -163,7 +163,7 @@ Average Fuzzy Score: **0.33824970629184936**
 | entries[14].container-title | None | American Historical Review | 0.0 |
 | entries[14].volume | III | LII | 0.6666666666666667 |
 | entries[14].page | 153-175 | 231-246 | 0.2857142857142857 |
-| entries[14].issued | 1947 | 1947 | 0.0 |
+| entries[14].issued | 1947 | 1947 | 1.0 |
 | entries[15].id | 155 | 158 | 0.6666666666666667 |
 | entries[15].type | journal-article | article-journal | 0.4666666666666666 |
 | entries[15].title | Christianisme et histoire | Théologie et histoire | 0.6521739130434783 |
@@ -172,7 +172,7 @@ Average Fuzzy Score: **0.33824970629184936**
 | entries[15].container-title | None | Dieu vivant | 0.0 |
 | entries[15].volume | CCLIV | VIII | 0.2222222222222222 |
 | entries[15].page | 166-184 | 39-65 | 0.16666666666666663 |
-| entries[15].issued | 1947 | 1947 | 0.0 |
+| entries[15].issued | 1947 | 1947 | 1.0 |
 | entries[16].id | 156 | 159 | 0.6666666666666667 |
 | entries[16].type | journal-article | article-journal | 0.4666666666666666 |
 | entries[16].title | Wahrheit der Geschichte. Geschichte der Wahrheit | Acton, Creighton, and Lea: a Study in History and Ethics | 0.32692307692307687 |
@@ -181,7 +181,7 @@ Average Fuzzy Score: **0.33824970629184936**
 | entries[16].container-title | None | Pacific Historical Review | 0.0 |
 | entries[16].volume | III | XVI | 0.33333333333333337 |
 | entries[16].page | 44-53 | 59-69 | 0.19999999999999996 |
-| entries[16].issued | 1947 | 1947 | 0.0 |
+| entries[16].issued | 1947 | 1947 | 1.0 |
 | entries[17].id | 157 | 160 | 0.33333333333333337 |
 | entries[17].type | journal-article | article-journal | 0.4666666666666666 |
 | entries[17].title | The Idea of Progress | Le conscience historique en Italie | 0.2592592592592593 |
@@ -190,6 +190,6 @@ Average Fuzzy Score: **0.33824970629184936**
 | entries[17].container-title | None | Les temps modernes | 0.0 |
 | entries[17].volume | LII | III | 0.6666666666666667 |
 | entries[17].page | 231-246 | 23-24 | 0.8333333333333335 |
-| entries[17].issued | 1947 | 1947 | 0.0 |
+| entries[17].issued | 1947 | 1947 | 1.0 |
 
 </small>

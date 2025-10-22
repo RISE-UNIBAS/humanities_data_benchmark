@@ -72,10 +72,19 @@ def calculate_fuzzy_score(test_value, gold_value):
     if test_value is None or gold_value is None:
         return 0.0
 
-    if not isinstance(test_value, str) or not isinstance(gold_value, str):
+    # Convert both values to strings for comparison (handles int/str mismatches like year fields)
+    test_str = str(test_value) if test_value is not None else None
+    gold_str = str(gold_value) if gold_value is not None else None
+
+    # Check if string representations match exactly
+    if test_str == gold_str:
+        return 1.0
+
+    # If either original value was not a string or number, return 0
+    if not isinstance(test_value, (str, int, float)) or not isinstance(gold_value, (str, int, float)):
         return 0.0
 
-    similarity = fuzz.ratio(test_value, gold_value)
+    similarity = fuzz.ratio(test_str, gold_str)
 
     return similarity / 100.0
 

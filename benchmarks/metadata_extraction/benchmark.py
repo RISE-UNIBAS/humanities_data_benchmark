@@ -26,20 +26,17 @@ class MetadataExtraction(Benchmark):
         receiver_persons = Category(used=True)
 
         for score in all_scores:
-            try:
-                send_date.tp += score["send_date_tp"]
-                send_date.fp += score["send_date_fp"]
-                send_date.fn += score["send_date_fn"]
+            send_date.tp += score["send_date_tp"]
+            send_date.fp += score["send_date_fp"]
+            send_date.fn += score["send_date_fn"]
 
-                sender_persons.tp += score["sender_persons_tp"]
-                sender_persons.fp += score["sender_persons_fp"]
-                sender_persons.fn += score["sender_persons_fn"]
+            sender_persons.tp += score["sender_persons_tp"]
+            sender_persons.fp += score["sender_persons_fp"]
+            sender_persons.fn += score["sender_persons_fn"]
 
-                receiver_persons.tp += score["receiver_persons_tp"]
-                receiver_persons.fp += score["receiver_persons_fp"]
-                receiver_persons.fn += score["receiver_persons_fn"]
-            except (KeyError, TypeError):
-                continue
+            receiver_persons.tp += score["receiver_persons_tp"]
+            receiver_persons.fp += score["receiver_persons_fp"]
+            receiver_persons.fn += score["receiver_persons_fn"]
 
         categories = [send_date, sender_persons, receiver_persons]
         f1_macro = self._get_f1_macro(categories)
@@ -64,16 +61,47 @@ class MetadataExtraction(Benchmark):
         """
 
         data = self.prepare_scoring_data(response)
+        ground_truth_letter = self._initialize_letter(raw_letter=ground_truth,
+                                                      image_name=image_name)
 
+        # Handle errors: count as complete failure (0 TP, all FN)
         try:
             response_letter = self._initialize_letter(raw_letter=data["metadata"],
                                                       image_name=image_name)
         except KeyError:
             if "error" in data:
-                return None
+                # Model failed - return score with 0 TP and all ground truth as FN
+                try:
+                    persons = json.load(open(os.path.join(self.benchmark_dir, "ground_truths", "persons.json")))
+                except FileNotFoundError as e:
+                    logging.error(f"{e}: Persons ground truth not found!")
+                    persons = []
+
+                # Count ground truth items for FN
+                sender_persons_gt = self._select_persons(sender_or_receiver="sender",
+                                                        ground_truth_letter=ground_truth_letter,
+                                                        inferred_from_function=inferred_from_function,
+                                                        inferred_from_correspondence=inferred_from_correspondence)
+                receiver_persons_gt = self._select_persons(sender_or_receiver="receiver",
+                                                          ground_truth_letter=ground_truth_letter,
+                                                          inferred_from_function=inferred_from_function,
+                                                          inferred_from_correspondence=inferred_from_correspondence)
+
+                sender_count = len([p for p in sender_persons_gt if p.name != "None"])
+                receiver_count = len([p for p in receiver_persons_gt if p.name != "None"])
+
+                return {
+                    "send_date_tp": 0,
+                    "send_date_fp": 0,
+                    "send_date_fn": 1 if ground_truth_letter.send_date else 0,
+                    "sender_persons_tp": 0,
+                    "sender_persons_fp": 0,
+                    "sender_persons_fn": sender_count,
+                    "receiver_persons_tp": 0,
+                    "receiver_persons_fp": 0,
+                    "receiver_persons_fn": receiver_count
+                }
             response_letter = self._initialize_letter(raw_letter=data,
-                                                      image_name=image_name)
-        ground_truth_letter = self._initialize_letter(raw_letter=ground_truth,
                                                       image_name=image_name)
 
         score = self._score_send_date(ground_truth_letter=ground_truth_letter,

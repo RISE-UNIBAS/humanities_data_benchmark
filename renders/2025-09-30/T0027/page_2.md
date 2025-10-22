@@ -1,5 +1,5 @@
 ### Result for image: page_2
-Average Fuzzy Score: **0.6842124690163808**
+Average Fuzzy Score: **0.7020312094157662**
 <small>
 
 | Key | Value | Ground Truth | Score |
@@ -56,7 +56,7 @@ Average Fuzzy Score: **0.6842124690163808**
 | entries[5].author[0].given | R. T. | R. T. | 1.0 |
 | entries[5].container_title | None | The American Journal of Sociology | 0.0 |
 | entries[5].volume | None | LII | 0.0 |
-| entries[5].issued | LII (1946) | 1946 | 0.0 |
+| entries[5].issued | LII (1946) | 1946 | 0.5714285714285714 |
 | entries[5].relation.reviewed | None | 5 | 0.0 |
 | entries[6].id | 7 | 7 | 1.0 |
 | entries[6].type | book | book | 1.0 |
@@ -72,7 +72,7 @@ Average Fuzzy Score: **0.6842124690163808**
 | entries[7].container_title | None | Revue philosophique | 0.0 |
 | entries[7].volume | None | CXL | 0.0 |
 | entries[7].page | 528 | 528 | 1.0 |
-| entries[7].issued | CXL (1950) | 1950 | 0.0 |
+| entries[7].issued | CXL (1950) | 1950 | 0.5714285714285714 |
 | entries[7].relation.reviewed | None | 7 | 0.0 |
 | entries[8].id | 9 | 9 | 1.0 |
 | entries[8].type | book | book | 1.0 |
@@ -92,7 +92,7 @@ Average Fuzzy Score: **0.6842124690163808**
 | entries[9].container_title | Journal of Modern History | Journal of Modern History | 1.0 |
 | entries[9].volume | None | XVII | 0.0 |
 | entries[9].page | 153-162 | 153-162 | 1.0 |
-| entries[9].issued | XVII (1945) | 1945 | 0.0 |
+| entries[9].issued | XVII (1945) | 1945 | 0.5333333333333333 |
 | entries[9].relation.reviewed | None | 9 | 0.0 |
 | entries[10].id | 11 | 11 | 1.0 |
 | entries[10].type | book | book | 1.0 |
@@ -119,7 +119,7 @@ Average Fuzzy Score: **0.6842124690163808**
 | entries[12].container_title | Journal of Philosophy | Journal of Philosophy | 1.0 |
 | entries[12].volume | None | XLIV | 0.0 |
 | entries[12].page | None | 459-479 | 0.0 |
-| entries[12].issued | XLIV (1947) | 1947 | 0.0 |
+| entries[12].issued | XLIV (1947) | 1947 | 0.5333333333333333 |
 | entries[12].relation.reviewed | None | 12 | 0.0 |
 | entries[13].id | 14 | 14 | 1.0 |
 | entries[13].type | other | journal-article | 0.30000000000000004 |

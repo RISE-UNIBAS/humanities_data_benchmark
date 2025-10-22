@@ -1,5 +1,5 @@
 ### Result for image: page_2
-Average Fuzzy Score: **0.8054381061829547**
+Average Fuzzy Score: **0.811486493279729**
 <small>
 
 | Key | Value | Ground Truth | Score |
@@ -110,7 +110,7 @@ Average Fuzzy Score: **0.8054381061829547**
 | entries[11].publisher | Routledge | Routledge | 1.0 |
 | entries[11].publisher_place | London | London | 1.0 |
 | entries[11].note | Princeton: Princeton University Press, 1950 | Consists of two volumes. Revised edition published in 1950 in Princeton, Princeton University Press | 0.5070422535211268 |
-| entries[11].issued | 1950 | 1945 | 0.0 |
+| entries[11].issued | 1950 | 1945 | 0.75 |
 | entries[12].id | 13 | 13 | 1.0 |
 | entries[12].type | journal-article | journal-article | 1.0 |
 | entries[12].title | Review | Review of The Open Society and Its Enemies | 0.25 |

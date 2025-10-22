@@ -1,5 +1,5 @@
 ### Result for image: page_4
-Average Fuzzy Score: **0.6759676743719808**
+Average Fuzzy Score: **0.7426343410386474**
 <small>
 
 | Key | Value | Ground Truth | Score |
@@ -48,7 +48,7 @@ Average Fuzzy Score: **0.6759676743719808**
 | entries[5].author[0].given | R. | R. | 1.0 |
 | entries[5].container_title | Canadian Historical Review XXVIII (1947), 68-72. | Canadian Historical Review | 0.7027027027027026 |
 | entries[5].volume | XXVIII | XXVII | 0.9090909090909091 |
-| entries[5].issued | 1947 | 1947 | 0.0 |
+| entries[5].issued | 1947 | 1947 | 1.0 |
 | entries[5].page | 68-72 | 68-72 | 1.0 |
 | entries[5].relation.reviewed | None | 37 | 0.0 |
 | entries[6].id | Mandelbaum1947 | 40 | 0.125 |
@@ -57,7 +57,7 @@ Average Fuzzy Score: **0.6759676743719808**
 | entries[6].author[0].given | M. | M. | 1.0 |
 | entries[6].container_title | None | Journal of Philosophy | 0.0 |
 | entries[6].volume | XLIV | LVIV | 0.75 |
-| entries[6].issued | 1947 | 1947 | 0.0 |
+| entries[6].issued | 1947 | 1947 | 1.0 |
 | entries[6].page | 184-188 | 184-188 | 1.0 |
 | entries[6].relation.reviewed | None | 37 | 0.0 |
 | entries[7].id | Murphy1947 | 41 | 0.16666666666666663 |
@@ -66,7 +66,7 @@ Average Fuzzy Score: **0.6759676743719808**
 | entries[7].author[0].given | A. E. | A.E. | 0.8888888888888888 |
 | entries[7].container_title | None | Philosophical Review | 0.0 |
 | entries[7].volume | LVI | LVI | 1.0 |
-| entries[7].issued | 1947 | 1947 | 0.0 |
+| entries[7].issued | 1947 | 1947 | 1.0 |
 | entries[7].page | 587-592 | 587-592 | 1.0 |
 | entries[7].relation.reviewed | None | 37 | 0.0 |
 | entries[8].id | Walsh1947 | 42 | 0.18181818181818177 |
@@ -76,7 +76,7 @@ Average Fuzzy Score: **0.6759676743719808**
 | entries[8].author[0].given | W. H. | W.H. | 0.8888888888888888 |
 | entries[8].container_title | Philosophy XXII (1947), 153-160. | Philosophy | 0.4761904761904761 |
 | entries[8].volume | XXII | XXII | 1.0 |
-| entries[8].issued | 1947 | 1947 | 0.0 |
+| entries[8].issued | 1947 | 1947 | 1.0 |
 | entries[8].page | 153-160 | 153-160 | 1.0 |
 | entries[8].relation.reviewed | None | 37 | 0.0 |
 | entries[9].id | Buchdahl1948 | 43 | 0.1428571428571429 |
@@ -86,7 +86,7 @@ Average Fuzzy Score: **0.6759676743719808**
 | entries[9].author[0].given | G. | G. | 1.0 |
 | entries[9].container_title | Australasian Journal of Philosophy XXVI (1948), 94-114. | Australasian Journal of Philosophy | 0.7640449438202246 |
 | entries[9].volume | XXVI | XXVI | 1.0 |
-| entries[9].issued | 1948 | 1948 | 0.0 |
+| entries[9].issued | 1948 | 1948 | 1.0 |
 | entries[9].page | 94-114 | 94-114 | 1.0 |
 | entries[9].relation.reviewed | None | 37 | 0.0 |
 | entries[10].id | Strauss1952 | 44 | 0.0 |
@@ -96,7 +96,7 @@ Average Fuzzy Score: **0.6759676743719808**
 | entries[10].author[0].given | Leo | Leo | 1.0 |
 | entries[10].container_title | Review of Metaphysics V (1952), 559-586. | Review of Metaphysics | 0.6885245901639344 |
 | entries[10].volume | V | XXIIV | 0.33333333333333337 |
-| entries[10].issued | 1952 | 1952 | 0.0 |
+| entries[10].issued | 1952 | 1952 | 1.0 |
 | entries[10].page | 559-586 | 559-586 | 1.0 |
 | entries[10].relation.reviewed | None | 37 | 0.0 |
 | entries[11].id | Gardiner1952 | 45 | 0.1428571428571429 |
@@ -106,7 +106,7 @@ Average Fuzzy Score: **0.6759676743719808**
 | entries[11].author[0].given | P. L. | P.L. | 0.8888888888888888 |
 | entries[11].container_title | Philosophy XXVII (1952), 211-220. | Philosophy | 0.4651162790697675 |
 | entries[11].volume | XXVII | XXVII | 1.0 |
-| entries[11].issued | 1952 | 1952 | 0.0 |
+| entries[11].issued | 1952 | 1952 | 1.0 |
 | entries[11].page | 211-220 | 211-220 | 1.0 |
 | entries[11].relation.reviewed | None | 37 | 0.0 |
 | entries[12].id | Harris1952 | 46 | 0.0 |
@@ -116,7 +116,7 @@ Average Fuzzy Score: **0.6759676743719808**
 | entries[12].author[0].given | R. W. | R.W. | 0.8888888888888888 |
 | entries[12].container_title | History N. S. XXXVII (1952), 1-7. | History N. S. | 0.5652173913043479 |
 | entries[12].volume | XXXVII | XXXVII | 1.0 |
-| entries[12].issued | 1952 | 1952 | 0.0 |
+| entries[12].issued | 1952 | 1952 | 1.0 |
 | entries[12].page | 1-7 | 1-7 | 1.0 |
 | entries[12].relation.reviewed | None | 37 | 0.0 |
 | entries[13].id | Hartt1953 | 47 | 0.0 |
@@ -126,7 +126,7 @@ Average Fuzzy Score: **0.6759676743719808**
 | entries[13].author[0].given | J. N. | J.N. | 0.8888888888888888 |
 | entries[13].container_title | Journal of Religion XXXIII (1953), 198-211. | Journal of Religion | 0.6129032258064516 |
 | entries[13].volume | XXXIII | XXXIII | 1.0 |
-| entries[13].issued | 1953 | 1953 | 0.0 |
+| entries[13].issued | 1953 | 1953 | 1.0 |
 | entries[13].page | 198-211 | 198-211 | 1.0 |
 | entries[13].relation.reviewed | None | 37 | 0.0 |
 | entries[14].id | Schneider1952-53 | 48 | 0.0 |

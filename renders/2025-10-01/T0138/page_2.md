@@ -1,5 +1,5 @@
 ### Result for image: page_2
-Average Fuzzy Score: **0.5308540210274383**
+Average Fuzzy Score: **0.5389185371564706**
 <small>
 
 | Key | Value | Ground Truth | Score |
@@ -56,7 +56,7 @@ Average Fuzzy Score: **0.5308540210274383**
 | entries[5].author[0].given | R. T. | R. T. | 1.0 |
 | entries[5].container_title | The American Journal of Sociology | The American Journal of Sociology | 1.0 |
 | entries[5].volume | LII | LII | 1.0 |
-| entries[5].issued | 1946 | 1946 | 0.0 |
+| entries[5].issued | 1946 | 1946 | 1.0 |
 | entries[5].relation.reviewed | None | 5 | 0.0 |
 | entries[6].id | 7 | 7 | 1.0 |
 | entries[6].type | book | book | 1.0 |

@@ -1,12 +1,12 @@
 ### Result for image: page_3
-Average Fuzzy Score: **0.3399574295851016**
+Average Fuzzy Score: **0.36254779103088475**
 <small>
 
 | Key | Value | Ground Truth | Score |
 | --- | --- | --- | --- |
 | entries[0].type | journal-article | journal-article | 1.0 |
 | entries[0].container_title | British Journal of Sociology | American Journal of Economics and Sociology | 0.6478873239436621 |
-| entries[0].issued | 1952 | 1951 | 0.0 |
+| entries[0].issued | 1952 | 1951 | 0.75 |
 | entries[0].volume | None | X | 0.0 |
 | entries[0].page | 211-219 | 211-219 | 1.0 |
 | entries[0].incomplete | None | True | 0.0 |
@@ -18,7 +18,7 @@ Average Fuzzy Score: **0.3399574295851016**
 | entries[1].container_title | British Journal of Sociology | British Journal of Sociology | 1.0 |
 | entries[1].volume | None | III | 0.0 |
 | entries[1].page | None | 264-273 | 0.0 |
-| entries[1].issued | 1958-360 | 1952 | 0.0 |
+| entries[1].issued | 1958-360 | 1952 | 0.5 |
 | entries[2].id | 17 | 16 | 0.5 |
 | entries[2].type | journal-article | journal-article | 1.0 |
 | entries[2].title | The Open Society – a Rejoinder | The Open Society – a comment | 0.7931034482758621 |
@@ -27,7 +27,7 @@ Average Fuzzy Score: **0.3399574295851016**
 | entries[2].container_title | British Journal of Sociology | British Journal of Sociology | 1.0 |
 | entries[2].volume | None | III | 0.0 |
 | entries[2].page | 76-77 | 355-360 | 0.16666666666666663 |
-| entries[2].issued | 1953 | 1952 | 0.0 |
+| entries[2].issued | 1953 | 1952 | 0.75 |
 | entries[2].relation.reviewed | None | 15 | 0.0 |
 | entries[3].id | 18 | 17 | 0.5 |
 | entries[3].type | journal-article | journal-article | 1.0 |
@@ -37,7 +37,7 @@ Average Fuzzy Score: **0.3399574295851016**
 | entries[3].container_title | Political Science Quarterly | British Journal of Sociology | 0.4 |
 | entries[3].volume | None | VI | 0.0 |
 | entries[3].page | 119-126 | 76-77 | 0.16666666666666663 |
-| entries[3].issued | 1954 | 1953 | 0.0 |
+| entries[3].issued | 1954 | 1953 | 0.75 |
 | entries[4].id | 19 | 18 | 0.5 |
 | entries[4].type | journal-article | journal-article | 1.0 |
 | entries[4].title | Has History a Meaning? | The Open Society: a Reconsideration | 0.38596491228070173 |
@@ -46,7 +46,7 @@ Average Fuzzy Score: **0.3399574295851016**
 | entries[4].container_title | British Journal for the Philosophy of Science | Political Science Quarterly | 0.36111111111111116 |
 | entries[4].volume | None | LXIX | 0.0 |
 | entries[4].page | 164-169 | 119-126 | 0.5714285714285714 |
-| entries[4].issued | 1955 | 1955 | 0.0 |
+| entries[4].issued | 1955 | 1955 | 1.0 |
 | entries[5].id | 20 | 19 | 0.0 |
 | entries[5].type | journal-article | journal-article | 1.0 |
 | entries[5].title | War and History | Has History a Meaning? | 0.4864864864864865 |

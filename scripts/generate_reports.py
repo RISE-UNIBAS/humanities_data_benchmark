@@ -249,22 +249,45 @@ def create_leaderboard_radar_chart(leaderboard_data):
     return f'<div style="text-align: center; margin: 20px 0;"><img src="radar_chart.png" alt="Radar Chart" style="max-width: 100%; height: auto; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);"></div>'
 
 
-def create_leaderboard():
-    """Create a leaderboard section showing global averages for each model across key benchmarks."""
-    
-    # Target benchmarks for global average calculation
-    target_benchmarks = ['bibliographic_data', 'fraktur', 'metadata_extraction', 'zettelkatalog']
-    
-    # Dictionary to store model scores: {model_name: {benchmark: [scores], provider: provider_name, benchmark_costs: {benchmark: [costs]}, benchmark_times: {benchmark: [times]}}}
-    model_scores = {}
-    
-    # Common company name mappings for providers already used
+def get_provider_display_name(provider, model):
+    """
+    Get the display name for a provider based on the model.
+    Handles special cases for models accessed via intermediaries.
+    """
+    # Direct provider mappings (existing)
     provider_mappings = {
         'anthropic': 'Anthropic',
         'openai': 'OpenAI',
         'genai': 'Google',
         'mistral': 'Mistral AI'
     }
+
+    # Special model-specific mappings (override provider)
+    model_specific_mappings = {
+        'meta-llama/llama-4-maverick': 'Meta (via OpenRouter)',
+        'qwen/qwen3-vl-8b-thinking': 'Alibaba (via OpenRouter)',
+        'qwen/qwen3-vl-30b-a3b-instruct': 'Alibaba (via OpenRouter)',
+        'qwen/qwen3-vl-8b-instruct': 'Alibaba (via OpenRouter)',
+        'x-ai/grok-4': 'xAI (via OpenRouter)',
+        'GLM-4.5V-FP8': 'Z.ai (via sciCORE)'
+    }
+
+    # Check if model has a specific mapping first
+    if model in model_specific_mappings:
+        return model_specific_mappings[model]
+
+    # Fall back to provider mapping
+    return provider_mappings.get(provider.lower(), provider)
+
+
+def create_leaderboard():
+    """Create a leaderboard section showing global averages for each model across key benchmarks."""
+
+    # Target benchmarks for global average calculation
+    target_benchmarks = ['bibliographic_data', 'fraktur', 'metadata_extraction', 'zettelkatalog']
+
+    # Dictionary to store model scores: {model_name: {benchmark: [scores], provider: provider_name, benchmark_costs: {benchmark: [costs]}, benchmark_times: {benchmark: [times]}}}
+    model_scores = {}
     
     with open(CONFIG_FILE, newline='', encoding='utf-8') as csvfile:
         tests = csv.DictReader(csvfile)
@@ -372,7 +395,7 @@ def create_leaderboard():
         # Only include models that have results for all four benchmarks
         if benchmark_count == len(target_benchmarks):
             global_average = total_score / benchmark_count
-            provider_name = provider_mappings.get(benchmarks.get('provider', '').lower(), benchmarks.get('provider', 'Unknown'))
+            provider_name = get_provider_display_name(benchmarks.get('provider', ''), model)
 
             # Calculate normalized cost per point: average of per-benchmark cost/point ratios
             cost_per_point = None
@@ -653,7 +676,7 @@ def create_index():
 
                 # Extract the main score for sorting
                 score_value = 0
-                if benchmark == 'bibliographic_data' or benchmark == 'fraktur':
+                if benchmark == 'bibliographic_data' or benchmark == 'fraktur' or benchmark == 'medieval_manuscripts':
                     score_value = scoring_data.get('fuzzy', 0)
                 elif benchmark == 'metadata_extraction' or benchmark == 'zettelkatalog':
                     score_value = scoring_data.get('f1_micro', 0)
@@ -751,15 +774,9 @@ def create_index():
         # Add rows to table
         for test in all_tests:
             model_html = get_rectangle(test['model'])
-            
-            # Use provider mappings from leaderboard
-            provider_mappings = {
-                'anthropic': 'Anthropic',
-                'openai': 'OpenAI',
-                'genai': 'Google',
-                'mistral': 'Mistral AI'
-            }
-            provider_display = provider_mappings.get(test['provider'].lower(), test['provider'])
+
+            # Use get_provider_display_name for consistent provider naming
+            provider_display = get_provider_display_name(test['provider'], test['model'])
             provider_html = get_rectangle(provider_display)
             
             # Create rules cell (always expanded)

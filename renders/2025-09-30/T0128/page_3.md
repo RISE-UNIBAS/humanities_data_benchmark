@@ -1,12 +1,12 @@
 ### Result for image: page_3
-Average Fuzzy Score: **0.3593159145689363**
+Average Fuzzy Score: **0.38943639649664713**
 <small>
 
 | Key | Value | Ground Truth | Score |
 | --- | --- | --- | --- |
 | entries[0].type | journal-article | journal-article | 1.0 |
 | entries[0].container_title | British Journal of Sociology | American Journal of Economics and Sociology | 0.6478873239436621 |
-| entries[0].issued | 1952 | 1951 | 0.0 |
+| entries[0].issued | 1952 | 1951 | 0.75 |
 | entries[0].volume | III | X | 0.0 |
 | entries[0].page | 264-273 | 211-219 | 0.4285714285714286 |
 | entries[0].incomplete | None | True | 0.0 |
@@ -27,7 +27,7 @@ Average Fuzzy Score: **0.3593159145689363**
 | entries[2].container_title | British Journal of Sociology | British Journal of Sociology | 1.0 |
 | entries[2].volume | IV | III | 0.4 |
 | entries[2].page | 76-77 | 355-360 | 0.16666666666666663 |
-| entries[2].issued | 1953 | 1952 | 0.0 |
+| entries[2].issued | 1953 | 1952 | 0.75 |
 | entries[2].relation.reviewed | None | 15 | 0.0 |
 | entries[3].id | 18 | 17 | 0.5 |
 | entries[3].type | journal-article | journal-article | 1.0 |
@@ -37,7 +37,7 @@ Average Fuzzy Score: **0.3593159145689363**
 | entries[3].container_title | Political Science Quarterly | British Journal of Sociology | 0.4 |
 | entries[3].volume | LXIX | VI | 0.33333333333333337 |
 | entries[3].page | 119-126 | 76-77 | 0.16666666666666663 |
-| entries[3].issued | 1954 | 1953 | 0.0 |
+| entries[3].issued | 1954 | 1953 | 0.75 |
 | entries[4].id | 19 | 18 | 0.5 |
 | entries[4].type | journal-article | journal-article | 1.0 |
 | entries[4].title | Has History a Meaning? | The Open Society: a Reconsideration | 0.38596491228070173 |
@@ -46,7 +46,7 @@ Average Fuzzy Score: **0.3593159145689363**
 | entries[4].container_title | British Journal for the Philosophy of Science | Political Science Quarterly | 0.36111111111111116 |
 | entries[4].volume | VI | LXIX | 0.33333333333333337 |
 | entries[4].page | 164-169 | 119-126 | 0.5714285714285714 |
-| entries[4].issued | 1955 | 1955 | 0.0 |
+| entries[4].issued | 1955 | 1955 | 1.0 |
 | entries[5].id | 20 | 19 | 0.0 |
 | entries[5].type | book | journal-article | 0.10526315789473684 |
 | entries[5].title | War and History | Has History a Meaning? | 0.4864864864864865 |
@@ -55,7 +55,7 @@ Average Fuzzy Score: **0.3593159145689363**
 | entries[5].container_title | None | British Journal for the Philosophy of Science | 0.0 |
 | entries[5].volume | None | VI | 0.0 |
 | entries[5].page | None | 164-169 | 0.0 |
-| entries[5].issued | 1945 | 1955 | 0.0 |
+| entries[5].issued | 1945 | 1955 | 0.75 |
 | entries[6].id | 21 | 20 | 0.5 |
 | entries[6].type | book | book | 1.0 |
 | entries[6].title | The Philosophy of American History | War and History | 0.4489795918367348 |
@@ -71,7 +71,7 @@ Average Fuzzy Score: **0.3593159145689363**
 | entries[7].publisher | None | Arnold and Howard | 0.0 |
 | entries[7].publisher_place | None | New York | 0.0 |
 | entries[7].note | None | 2 vols. | 0.0 |
-| entries[7].issued | 1945 | 1945 | 0.0 |
+| entries[7].issued | 1945 | 1945 | 1.0 |
 | entries[8].id | 23 | 22 | 0.5 |
 | entries[8].type | journal-article | journal-article | 1.0 |
 | entries[8].title | The Study of Contemporary History: Some Further Reflections | History as a Liberal Art | 0.3132530120481928 |
