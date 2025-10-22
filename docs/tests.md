@@ -3058,6 +3058,50 @@ This page provides an overview of all tests. Click on the test name to see the d
     <td>prompt.txt</td>
     <td>false</td>
 </tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0271'><span class='test-square' style='background-color: #cc33ff;'>T0271</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/medieval_manuscripts/">medieval_manuscripts</a></td>
+    <td><span class='test-rectangle' style='background-color: #ffcc33;'>genai</span></td>
+    <td><span class='test-rectangle' style='background-color: #ff6600;'>gemini-2.5-flash</span></td>
+    <td>Document</td>
+    <td>0.0</td>
+    <td>You are a historian with expertise in medieval manuscripts and paleography</td>
+    <td>prompt.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0272'><span class='test-square' style='background-color: #3399ff;'>T0272</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/medieval_manuscripts/">medieval_manuscripts</a></td>
+    <td><span class='test-rectangle' style='background-color: #ffcc33;'>genai</span></td>
+    <td><span class='test-rectangle' style='background-color: #e67e22;'>gemini-2.5-pro</span></td>
+    <td>Document</td>
+    <td>0.0</td>
+    <td>You are a historian with expertise in medieval manuscripts and paleography</td>
+    <td>prompt.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0273'><span class='test-square' style='background-color: #ff6600;'>T0273</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/medieval_manuscripts/">medieval_manuscripts</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff0066;'>openai</span></td>
+    <td><span class='test-rectangle' style='background-color: #2980b9;'>gpt-4.1</span></td>
+    <td>Document</td>
+    <td>0.0</td>
+    <td>You are a historian with expertise in medieval manuscripts and paleography</td>
+    <td>prompt.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0274'><span class='test-square' style='background-color: #ff33cc;'>T0274</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/medieval_manuscripts/">medieval_manuscripts</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff5050;'>anthropic</span></td>
+    <td><span class='test-rectangle' style='background-color: #f1c40f;'>claude-3-7-sonnet-20250219</span></td>
+    <td>Document</td>
+    <td>0.0</td>
+    <td>You are a historian with expertise in medieval manuscripts and paleography</td>
+    <td>prompt.txt</td>
+    <td>false</td>
+</tr>
 
   </tbody>
 </table>

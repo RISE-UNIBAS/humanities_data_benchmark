@@ -676,7 +676,7 @@ def create_index():
 
                 # Extract the main score for sorting
                 score_value = 0
-                if benchmark == 'bibliographic_data' or benchmark == 'fraktur':
+                if benchmark == 'bibliographic_data' or benchmark == 'fraktur' or benchmark == 'medieval_manuscripts':
                     score_value = scoring_data.get('fuzzy', 0)
                 elif benchmark == 'metadata_extraction' or benchmark == 'zettelkatalog':
                     score_value = scoring_data.get('f1_micro', 0)
