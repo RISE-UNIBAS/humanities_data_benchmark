@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ground Truth Corrector - {{ benchmark }}</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background: #f5f5f5;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: #2c3e50;
+            color: white;
+            padding: 20px;
+        }
+
+        .header h1 {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        .progress {
+            background: rgba(255,255,255,0.2);
+            border-radius: 10px;
+            height: 20px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+
+        .progress-bar {
+            background: #27ae60;
+            height: 100%;
+            transition: width 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .main {
+            display: flex;
+            height: calc(100vh - 180px);
+        }
+
+        .sidebar {
+            width: 300px;
+            border-right: 1px solid #ddd;
+            overflow-y: auto;
+            background: #fafafa;
+        }
+
+        .sidebar-header {
+            padding: 15px;
+            background: #ecf0f1;
+            border-bottom: 1px solid #ddd;
+            font-weight: 600;
+        }
+
+        .item-list {
+            list-style: none;
+        }
+
+        .item {
+            padding: 12px 15px;
+            border-bottom: 1px solid #eee;
+            cursor: pointer;
+            transition: background 0.2s;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .item:hover {
+            background: #e8e8e8;
+        }
+
+        .item.active {
+            background: #3498db;
+            color: white;
+        }
+
+        .item.corrected {
+            background: #d4edda;
+        }
+
+        .item.corrected.active {
+            background: #27ae60;
+            color: white;
+        }
+
+        .status-badge {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #e74c3c;
+        }
+
+        .item.corrected .status-badge {
+            background: #27ae60;
+        }
+
+        .content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        .editor {
+            display: none;
+        }
+
+        .editor.active {
+            display: flex;
+            gap: 20px;
+            height: 100%;
+        }
+
+        .image-container {
+            flex: 1;
+            text-align: center;
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            overflow: auto;
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+        }
+
+        .image-container img {
+            max-width: 100%;
+            height: auto;
+            border: 2px solid #ddd;
+            border-radius: 4px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .form-container {
+            flex: 1;
+            overflow-y: auto;
+            padding-right: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #2c3e50;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+            font-family: inherit;
+        }
+
+        .form-group textarea {
+            min-height: 80px;
+            resize: vertical;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 30px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background: #3498db;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #2980b9;
+        }
+
+        .btn-success {
+            background: #27ae60;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #229954;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #7f8c8d;
+        }
+
+        .empty-state h2 {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        .nested-field {
+            margin-left: 20px;
+            padding-left: 15px;
+            border-left: 3px solid #ecf0f1;
+        }
+
+        .save-status {
+            display: inline-block;
+            margin-left: 10px;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .save-status.success {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .save-status.error {
+            background: #f8d7da;
+            color: #721c24;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Ground Truth Corrector - {{ benchmark }}</h1>
+            <div style="color: rgba(255,255,255,0.8); margin-top: 5px;">
+                {{ corrected }} / {{ total }} corrected ({{ (corrected / total * 100) | round(1) if total > 0 else 0 }}%)
+            </div>
+            <div class="progress">
+                <div class="progress-bar" style="width: {{ (corrected / total * 100) if total > 0 else 0 }}%">
+                    {% if total > 0 %}{{ (corrected / total * 100) | round(1) }}%{% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="main">
+            <div class="sidebar">
+                <div class="sidebar-header">Items ({{ total }})</div>
+                <ul class="item-list" id="itemList">
+                    {% for item in items %}
+                    <li class="item {% if item.corrected %}corrected{% endif %}"
+                        data-id="{{ item.id }}"
+                        onclick="loadItem('{{ item.id }}')">
+                        <span>{{ item.id }}</span>
+                        <span class="status-badge"></span>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+            <div class="content">
+                <div class="empty-state" id="emptyState">
+                    <h2>Select an item to start correcting</h2>
+                    <p>Click on an item in the sidebar to view and edit its ground truth</p>
+                </div>
+
+                <div class="editor" id="editor">
+                    <div class="image-container">
+                        <img id="itemImage" src="" alt="Item image">
+                    </div>
+
+                    <div class="form-container">
+                        <form id="truthForm">
+                            <div id="formFields"></div>
+
+                            <div class="form-actions">
+                                <button type="submit" class="btn btn-success">Save & Mark as Corrected</button>
+                                <span class="save-status" id="saveStatus"></span>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const benchmark = "{{ benchmark }}";
+        let currentItemId = null;
+
+        function loadItem(itemId) {
+            currentItemId = itemId;
+
+            // Update active state in sidebar
+            document.querySelectorAll('.item').forEach(item => {
+                item.classList.remove('active');
+            });
+            document.querySelector(`[data-id="${itemId}"]`).classList.add('active');
+
+            // Show editor, hide empty state
+            document.getElementById('emptyState').style.display = 'none';
+            document.getElementById('editor').classList.add('active');
+
+            // Load image
+            document.getElementById('itemImage').src = `/images/${benchmark}/${itemId}.jpg`;
+
+            // Load ground truth data
+            fetch(`/api/item/${benchmark}/${itemId}`)
+                .then(res => res.json())
+                .then(data => {
+                    renderForm(data);
+                });
+        }
+
+        function renderForm(data) {
+            const formFields = document.getElementById('formFields');
+            formFields.innerHTML = '';
+
+            // Render fields based on data structure
+            for (const [key, value] of Object.entries(data)) {
+                const fieldGroup = document.createElement('div');
+                fieldGroup.className = 'form-group';
+
+                if (typeof value === 'object' && value !== null && !Array.isArray(value)) {
+                    // Nested object (e.g., company with transcription)
+                    const label = document.createElement('label');
+                    label.textContent = formatLabel(key);
+                    fieldGroup.appendChild(label);
+
+                    const nestedDiv = document.createElement('div');
+                    nestedDiv.className = 'nested-field';
+
+                    for (const [subKey, subValue] of Object.entries(value)) {
+                        const subGroup = document.createElement('div');
+                        subGroup.className = 'form-group';
+
+                        const subLabel = document.createElement('label');
+                        subLabel.textContent = formatLabel(subKey);
+                        subGroup.appendChild(subLabel);
+
+                        const input = document.createElement('input');
+                        input.type = 'text';
+                        input.name = `${key}.${subKey}`;
+                        input.value = subValue || '';
+                        subGroup.appendChild(input);
+
+                        nestedDiv.appendChild(subGroup);
+                    }
+
+                    fieldGroup.appendChild(nestedDiv);
+                } else if (Array.isArray(value)) {
+                    // Array field - check if it contains objects
+                    const label = document.createElement('label');
+                    label.textContent = formatLabel(key);
+                    fieldGroup.appendChild(label);
+
+                    const nestedDiv = document.createElement('div');
+                    nestedDiv.className = 'nested-field';
+
+                    // Check if array contains objects
+                    const hasObjects = value.length > 0 && typeof value[0] === 'object';
+
+                    if (hasObjects) {
+                        // Array of objects - render each object
+                        value.forEach((item, idx) => {
+                            const itemGroup = document.createElement('div');
+                            itemGroup.style.marginBottom = '15px';
+                            itemGroup.style.padding = '10px';
+                            itemGroup.style.background = '#f9f9f9';
+                            itemGroup.style.borderRadius = '4px';
+
+                            const itemLabel = document.createElement('div');
+                            itemLabel.style.fontWeight = '600';
+                            itemLabel.style.marginBottom = '8px';
+                            itemLabel.textContent = `Item ${idx + 1}`;
+                            itemGroup.appendChild(itemLabel);
+
+                            for (const [subKey, subValue] of Object.entries(item)) {
+                                const subGroup = document.createElement('div');
+                                subGroup.className = 'form-group';
+
+                                const subLabel = document.createElement('label');
+                                subLabel.textContent = formatLabel(subKey);
+                                subGroup.appendChild(subLabel);
+
+                                const textarea = document.createElement('textarea');
+                                textarea.name = `${key}[${idx}].${subKey}`;
+                                textarea.value = subValue || '';
+                                textarea.rows = 3;
+                                subGroup.appendChild(textarea);
+
+                                itemGroup.appendChild(subGroup);
+                            }
+
+                            nestedDiv.appendChild(itemGroup);
+                        });
+                    } else {
+                        // Simple array - one item per line
+                        const textarea = document.createElement('textarea');
+                        textarea.name = key;
+                        textarea.value = value.join('\n');
+                        textarea.placeholder = 'One item per line';
+                        nestedDiv.appendChild(textarea);
+                    }
+
+                    fieldGroup.appendChild(nestedDiv);
+                } else {
+                    // Simple field
+                    const label = document.createElement('label');
+                    label.textContent = formatLabel(key);
+                    fieldGroup.appendChild(label);
+
+                    const input = document.createElement('input');
+                    input.type = 'text';
+                    input.name = key;
+                    input.value = value || '';
+                    fieldGroup.appendChild(input);
+                }
+
+                formFields.appendChild(fieldGroup);
+            }
+        }
+
+        function formatLabel(key) {
+            return key.split('_').map(word =>
+                word.charAt(0).toUpperCase() + word.slice(1)
+            ).join(' ');
+        }
+
+        document.getElementById('truthForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const formData = new FormData(e.target);
+            const data = {};
+
+            // Parse form data back into nested structure
+            for (const [key, value] of formData.entries()) {
+                // Check for array of objects pattern: key[0].subkey
+                const arrayMatch = key.match(/^(.+)\[(\d+)\]\.(.+)$/);
+
+                if (arrayMatch) {
+                    const [, arrayName, index, subKey] = arrayMatch;
+                    if (!data[arrayName]) data[arrayName] = [];
+                    if (!data[arrayName][index]) data[arrayName][index] = {};
+                    data[arrayName][index][subKey] = value;
+                } else if (key.includes('.')) {
+                    const [parent, child] = key.split('.');
+                    if (!data[parent]) data[parent] = {};
+                    data[parent][child] = value;
+                } else {
+                    // Check if this should be an array
+                    if (typeof value === 'string' && value.includes('\n')) {
+                        data[key] = value.split('\n').filter(line => line.trim());
+                    } else {
+                        data[key] = value;
+                    }
+                }
+            }
+
+            const saveStatus = document.getElementById('saveStatus');
+            saveStatus.textContent = 'Saving...';
+            saveStatus.className = 'save-status';
+
+            try {
+                const response = await fetch(`/api/item/${benchmark}/${currentItemId}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                if (response.ok) {
+                    saveStatus.textContent = 'Saved!';
+                    saveStatus.classList.add('success');
+
+                    // Mark as corrected in sidebar
+                    const item = document.querySelector(`[data-id="${currentItemId}"]`);
+                    item.classList.add('corrected');
+
+                    // Update progress
+                    location.reload();
+                } else {
+                    throw new Error('Save failed');
+                }
+            } catch (error) {
+                saveStatus.textContent = 'Error saving';
+                saveStatus.classList.add('error');
+            }
+
+            setTimeout(() => {
+                saveStatus.textContent = '';
+                saveStatus.className = 'save-status';
+            }, 3000);
+        });
+    </script>
+</body>
+</html>
