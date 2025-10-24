@@ -63,6 +63,16 @@ Contributions are categorized by benchmark and type of contribution, and in alph
 | Analyst | [Maximilian Hindermann] |
 | Engineer | [Maximilian Hindermann] |
 
+### [Medieval Manuscripts](benchmarks/medieval_manuscripts/)
+
+| Role | Contributors |
+|------|-------------|
+| Domain expert | [Ina Serif] |
+| Data curator | [Ina Serif] |
+| Annotator | [Ina Serif] |
+| Analyst | [Maximilian Hindermann] |
+| Engineer | [Maximilian Hindermann], [Ina Serif] |
+
 ### Contributors Across All Benchmarks
 
 | Name                        | GitHub                                                 | ORCID                                                        |

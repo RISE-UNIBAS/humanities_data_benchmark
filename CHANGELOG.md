@@ -11,12 +11,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - OpenRouter provider support with fallback for models not supporting structured outputs
 - sciCORE provider support (LiteLLM-based OpenAI-compatible API)
 - medieval_manuscripts benchmark for 15th century page segmentation and handwritten text extraction with CER and fuzzy matching
-- 5 new models: qwen/qwen3-vl-8b-thinking, qwen/qwen3-vl-30b-a3b-instruct, qwen/qwen3-vl-8b-instruct, meta-llama/llama-4-maverick, x-ai/grok-4 (OpenRouter), GLM-4.5V-FP8 (sciCORE)
-- 39 new benchmark test configurations (T0233-T0271) for new models across all benchmark variants
+- 6 new models: qwen/qwen3-vl-8b-thinking, qwen/qwen3-vl-30b-a3b-instruct, qwen/qwen3-vl-8b-instruct, meta-llama/llama-4-maverick, x-ai/grok-4, GLM-4.5V-FP8
+- 170 new benchmark test configurations (T0233-T0402) across medieval_manuscripts, blacklist, and company_lists benchmarks
 - Tests on 2025-10-03: T0164
 - Tests on 2025-10-17: T0233-T0234, T0237-T0252
 - Tests on 2025-10-20: T0253-T0270
-- Tests on 2025-10-21: T0271
+- Tests on 2025-10-24: T0271-T0402
 
 ### Fixed
 - metadata_extraction scoring now correctly counts failed requests as complete failures (0 TP, all FN) instead of excluding them
