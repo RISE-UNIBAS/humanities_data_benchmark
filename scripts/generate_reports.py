@@ -676,7 +676,7 @@ def create_index():
 
                 # Extract the main score for sorting
                 score_value = 0
-                if benchmark == 'bibliographic_data' or benchmark == 'fraktur' or benchmark == 'medieval_manuscripts':
+                if benchmark == 'bibliographic_data' or benchmark == 'fraktur' or benchmark == 'medieval_manuscripts' or benchmark == 'blacklist':
                     score_value = scoring_data.get('fuzzy', 0)
                 elif benchmark == 'metadata_extraction' or benchmark == 'zettelkatalog':
                     score_value = scoring_data.get('f1_micro', 0)
@@ -698,7 +698,7 @@ def create_index():
                         except (ValueError, TypeError):
                             badge_html = "N/A"
                 else:
-                    # Use fuzzy for bibliographic_data, fraktur, and other benchmarks
+                    # Use fuzzy for bibliographic_data, fraktur, blacklist, and other benchmarks
                     if 'fuzzy' in scoring_data:
                         fuzzy_value = scoring_data['fuzzy']
                         try:
