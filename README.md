@@ -121,6 +121,16 @@ Evaluates models on page segmentation and handwritten text extraction from 15th 
 
 📁 [View benchmark details](benchmarks/medieval_manuscripts/)
 
+### Blacklist
+Assesses models' ability to extract and structure information from historical blacklist cards, testing OCR and data extraction capabilities on archival materials.
+
+📁 [View benchmark details](benchmarks/blacklist/)
+
+### Company Lists
+Evaluates models on extracting structured company information from historical business listings and directories, testing the ability to parse tabular data and identify company names, locations, and other business details.
+
+📁 [View benchmark details](benchmarks/company_lists/)
+
 ### Test Benchmarks
 Two simple test benchmarks (`test_benchmark` and `test_benchmark2`) used for system validation and basic functionality testing.
 
