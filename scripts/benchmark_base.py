@@ -34,7 +34,6 @@ class Benchmark(ABC):
             self.prompt_file = "prompt.txt"
         self.prompt_file_exists = os.path.exists(os.path.join(self.benchmark_dir, "prompts", self.prompt_file))
         self.prompt = None # Load later to allow dynamic formatting on request basis
-        self.request_render = ""
         self.dataclass_name = config['dataclass']
         self.dataclass = self.load_dataclass()
         if config['rules'] == "":
@@ -147,13 +146,6 @@ class Benchmark(ABC):
         """ Get the path to the answer file. """
         return os.path.join(self.get_request_answer_path(), self.get_request_name(image_name) + ".json")
 
-    def get_request_render_path(self):
-        return str(os.path.join('..', 'renders', self.date, self.id))
-
-    def get_request_render_file_name(self, image_name):
-        """ Get the path to the render file. """
-        return os.path.join(self.get_request_render_path(), f'{image_name}.md')
-
     def save_request_answer(self,
                             image_name: str,
                             answer: dict) -> None:
@@ -205,14 +197,6 @@ class Benchmark(ABC):
                 return {"error": f"Invalid JSON format: {str(e)}"}
 
         return {"error": "No response text found."}
-
-    def save_render(self,
-                    image_name: str,
-                    render: str) -> None:
-
-        save_path = self.get_request_render_path()
-        os.makedirs(save_path, exist_ok=True)
-        write_file(self.get_request_render_file_name(image_name), render)
 
     def run(self, regenerate_existing_results=True):
         """Run the benchmark."""
@@ -307,8 +291,6 @@ class Benchmark(ABC):
             score = self.score_request_answer(image_name, answer, ground_truth)
             benchmark_scores.append(score)
             all_answers.append(answer)  # Track answer for cost calculation
-            render = self.create_request_render(image_name, answer, score, ground_truth)
-            self.save_render(image_name, render)
 
         benchmark_score = self.score_benchmark(benchmark_scores)
 
@@ -407,14 +389,6 @@ class Benchmark(ABC):
         """ Get the name of the request. """
         return f"request_{self.id}_{os.path.splitext(image_name)[0]}"
 
-    @abstractmethod
-    def create_request_render(self,
-                              image_name: str,
-                              result: dict,
-                              score: dict,
-                              truth) -> str:
-        """ Create a markdown render of the request. """
-        pass
 
     @abstractmethod
     def score_request_answer(self,
@@ -485,13 +459,3 @@ class DefaultBenchmark(Benchmark):
                              ground_truth: dict) -> dict:
         """ Score the response. """
         return {}
-
-    def create_request_render(self,
-                              image_name: str,
-                              result: dict,
-                              score: dict,
-                              truth) -> str:
-        """ Create a markdown render of the request. """
-        return ("### Result for image: {image_name}"
-                "\n\n"
-                "no details available")

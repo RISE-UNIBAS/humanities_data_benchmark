@@ -1,6 +1,6 @@
 from scripts.benchmark_base import Benchmark
 
-class TestBenchmark2(Benchmark):
+class TestBenchmark(Benchmark):
 
     def resize_images(self) -> bool:
         return True

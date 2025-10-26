@@ -43,7 +43,3 @@ class CompanyLists(Benchmark):
             avg_score = 0
             
         return {"fuzzy": avg_score}
-
-    def create_request_render(self, image_name, result, score, truth):
-        render = "not applicable anymore"
-        return render
