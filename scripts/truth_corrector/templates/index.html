@@ -418,11 +418,60 @@
                                 subLabel.textContent = formatLabel(subKey);
                                 subGroup.appendChild(subLabel);
 
-                                const textarea = document.createElement('textarea');
-                                textarea.name = `${key}[${idx}].${subKey}`;
-                                textarea.value = subValue || '';
-                                textarea.rows = 3;
-                                subGroup.appendChild(textarea);
+                                // Check if subValue is an array of objects (deeper nesting)
+                                if (Array.isArray(subValue) && subValue.length > 0 && typeof subValue[0] === 'object') {
+                                    const nestedNestedDiv = document.createElement('div');
+                                    nestedNestedDiv.style.marginLeft = '15px';
+                                    nestedNestedDiv.style.paddingLeft = '10px';
+                                    nestedNestedDiv.style.borderLeft = '2px solid #ddd';
+
+                                    subValue.forEach((nestedItem, nestedIdx) => {
+                                        const nestedItemGroup = document.createElement('div');
+                                        nestedItemGroup.style.marginBottom = '10px';
+                                        nestedItemGroup.style.padding = '8px';
+                                        nestedItemGroup.style.background = '#fff';
+                                        nestedItemGroup.style.borderRadius = '4px';
+                                        nestedItemGroup.style.border = '1px solid #e0e0e0';
+
+                                        const nestedItemLabel = document.createElement('div');
+                                        nestedItemLabel.style.fontWeight = '600';
+                                        nestedItemLabel.style.fontSize = '12px';
+                                        nestedItemLabel.style.marginBottom = '5px';
+                                        nestedItemLabel.style.color = '#666';
+                                        nestedItemLabel.textContent = `${formatLabel(subKey)} ${nestedIdx + 1}`;
+                                        nestedItemGroup.appendChild(nestedItemLabel);
+
+                                        for (const [nestedKey, nestedValue] of Object.entries(nestedItem)) {
+                                            const nestedSubGroup = document.createElement('div');
+                                            nestedSubGroup.style.marginBottom = '5px';
+
+                                            const nestedSubLabel = document.createElement('label');
+                                            nestedSubLabel.style.fontSize = '12px';
+                                            nestedSubLabel.textContent = formatLabel(nestedKey);
+                                            nestedSubGroup.appendChild(nestedSubLabel);
+
+                                            const nestedInput = document.createElement('input');
+                                            nestedInput.type = 'text';
+                                            nestedInput.name = `${key}[${idx}].${subKey}[${nestedIdx}].${nestedKey}`;
+                                            nestedInput.value = nestedValue || '';
+                                            nestedInput.style.fontSize = '13px';
+                                            nestedSubGroup.appendChild(nestedInput);
+
+                                            nestedItemGroup.appendChild(nestedSubGroup);
+                                        }
+
+                                        nestedNestedDiv.appendChild(nestedItemGroup);
+                                    });
+
+                                    subGroup.appendChild(nestedNestedDiv);
+                                } else {
+                                    // Regular field
+                                    const textarea = document.createElement('textarea');
+                                    textarea.name = `${key}[${idx}].${subKey}`;
+                                    textarea.value = subValue || '';
+                                    textarea.rows = 3;
+                                    subGroup.appendChild(textarea);
+                                }
 
                                 itemGroup.appendChild(subGroup);
                             }
@@ -470,24 +519,36 @@
 
             // Parse form data back into nested structure
             for (const [key, value] of formData.entries()) {
-                // Check for array of objects pattern: key[0].subkey
-                const arrayMatch = key.match(/^(.+)\[(\d+)\]\.(.+)$/);
+                // Check for deeply nested array pattern: key[0].subkey[0].field
+                const deepArrayMatch = key.match(/^(.+)\[(\d+)\]\.(.+)\[(\d+)\]\.(.+)$/);
 
-                if (arrayMatch) {
-                    const [, arrayName, index, subKey] = arrayMatch;
+                if (deepArrayMatch) {
+                    const [, arrayName, index, subKey, nestedIndex, nestedKey] = deepArrayMatch;
                     if (!data[arrayName]) data[arrayName] = [];
                     if (!data[arrayName][index]) data[arrayName][index] = {};
-                    data[arrayName][index][subKey] = value;
-                } else if (key.includes('.')) {
-                    const [parent, child] = key.split('.');
-                    if (!data[parent]) data[parent] = {};
-                    data[parent][child] = value;
+                    if (!data[arrayName][index][subKey]) data[arrayName][index][subKey] = [];
+                    if (!data[arrayName][index][subKey][nestedIndex]) data[arrayName][index][subKey][nestedIndex] = {};
+                    data[arrayName][index][subKey][nestedIndex][nestedKey] = value;
                 } else {
-                    // Check if this should be an array
-                    if (typeof value === 'string' && value.includes('\n')) {
-                        data[key] = value.split('\n').filter(line => line.trim());
+                    // Check for array of objects pattern: key[0].subkey
+                    const arrayMatch = key.match(/^(.+)\[(\d+)\]\.(.+)$/);
+
+                    if (arrayMatch) {
+                        const [, arrayName, index, subKey] = arrayMatch;
+                        if (!data[arrayName]) data[arrayName] = [];
+                        if (!data[arrayName][index]) data[arrayName][index] = {};
+                        data[arrayName][index][subKey] = value;
+                    } else if (key.includes('.')) {
+                        const [parent, child] = key.split('.');
+                        if (!data[parent]) data[parent] = {};
+                        data[parent][child] = value;
                     } else {
-                        data[key] = value;
+                        // Check if this should be an array
+                        if (typeof value === 'string' && value.includes('\n')) {
+                            data[key] = value.split('\n').filter(line => line.trim());
+                        } else {
+                            data[key] = value;
+                        }
                     }
                 }
             }
