@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [v0.3.1] - 2025-10-28
+
 ### Added
 - OpenRouter provider support with fallback for models not supporting structured outputs
 - sciCORE provider support (LiteLLM-based OpenAI-compatible API)
@@ -14,7 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - company_lists benchmark
 - medieval_manuscripts benchmark for 15th century page segmentation and handwritten text extraction with CER and fuzzy matching
 - 6 new models: qwen/qwen3-vl-8b-thinking, qwen/qwen3-vl-30b-a3b-instruct, qwen/qwen3-vl-8b-instruct, meta-llama/llama-4-maverick, x-ai/grok-4, GLM-4.5V-FP8
-- 170 new benchmark test configurations (T0233-T0402) across medieval_manuscripts, blacklist, and company_lists benchmarks
+- 170 new benchmark test configurations (T0233-T0402) across blacklist, medieval_manuscripts, and company_lists benchmarks
 - Tests on 2025-10-03: T0164
 - Tests on 2025-10-17: T0233-T0234, T0237-T0252
 - Tests on 2025-10-20: T0253-T0270
@@ -101,3 +103,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [v0.2.1]: https://github.com/RISE-UNIBAS/humanities_data_benchmark/releases/tag/v0.2.1
 [v0.2.2]: https://github.com/RISE-UNIBAS/humanities_data_benchmark/releases/tag/v0.2.2
 [v0.3.0]: https://github.com/RISE-UNIBAS/humanities_data_benchmark/releases/tag/v0.3.0
+[v0.3.1]: https://github.com/RISE-UNIBAS/humanities_data_benchmark/releases/tag/v0.3.1
