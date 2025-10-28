@@ -180,10 +180,15 @@ class Benchmark(ABC):
         if "response_text" in answer:
             response_text = answer["response_text"]
             json_text = None
-            if self.convert_result_to_json and "```json" in response_text:
-                json_match = re.search(r'```json\s*([\[{].*?[]}])\s*```', response_text, re.DOTALL)
-                if json_match:
-                    json_text = json_match.group(1)
+
+            try:
+                if self.convert_result_to_json and "```json" in response_text:
+                    json_match = re.search(r'```json\s*([\[{].*?[]}])\s*```', response_text, re.DOTALL)
+                    if json_match:
+                        json_text = json_match.group(1)
+            except (TypeError, AttributeError):
+                # response_text is None or not a string
+                pass
 
             if json_text is None:
                 json_text = response_text
@@ -196,8 +201,8 @@ class Benchmark(ABC):
                 if self.remove_none_values:
                     return remove_none(json_dict)
                 return json_dict
-            except json.JSONDecodeError as e:
-                return {"error": "Invalid JSON format."}
+            except (json.JSONDecodeError, TypeError) as e:
+                return {"error": f"Invalid JSON format: {str(e)}"}
 
         return {"error": "No response text found."}
 
@@ -378,8 +383,8 @@ class Benchmark(ABC):
 
         for answer in all_answers:
             if 'usage' in answer and answer['usage']:
-                total_input_tokens += answer['usage'].get('input_tokens', 0)
-                total_output_tokens += answer['usage'].get('output_tokens', 0)
+                total_input_tokens += answer['usage'].get('input_tokens', 0) or 0
+                total_output_tokens += answer['usage'].get('output_tokens', 0) or 0
 
         # Calculate costs (prices are per million tokens)
         input_cost = (total_input_tokens / 1_000_000) * input_price

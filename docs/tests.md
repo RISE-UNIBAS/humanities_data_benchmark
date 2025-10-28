@@ -3102,6 +3102,1414 @@ This page provides an overview of all tests. Click on the test name to see the d
     <td>prompt.txt</td>
     <td>false</td>
 </tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0275'><span class='test-square' style='background-color: #0099ff;'>T0275</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/medieval_manuscripts/">medieval_manuscripts</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff0066;'>openai</span></td>
+    <td><span class='test-rectangle' style='background-color: #33ccff;'>gpt-4o</span></td>
+    <td>Document</td>
+    <td>0.0</td>
+    <td>You are a historian with expertise in medieval manuscripts and paleography</td>
+    <td>prompt.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0276'><span class='test-square' style='background-color: #ff5733;'>T0276</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/medieval_manuscripts/">medieval_manuscripts</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff0066;'>openai</span></td>
+    <td><span class='test-rectangle' style='background-color: #34495e;'>gpt-4o-mini</span></td>
+    <td>Document</td>
+    <td>0.0</td>
+    <td>You are a historian with expertise in medieval manuscripts and paleography</td>
+    <td>prompt.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0277'><span class='test-square' style='background-color: #ff0099;'>T0277</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/medieval_manuscripts/">medieval_manuscripts</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff0066;'>openai</span></td>
+    <td><span class='test-rectangle' style='background-color: #9b59b6;'>gpt-4.1-mini</span></td>
+    <td>Document</td>
+    <td>0.0</td>
+    <td>You are a historian with expertise in medieval manuscripts and paleography</td>
+    <td>prompt.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0278'><span class='test-square' style='background-color: #ffcc33;'>T0278</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/medieval_manuscripts/">medieval_manuscripts</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff0066;'>openai</span></td>
+    <td><span class='test-rectangle' style='background-color: #ffcc33;'>gpt-4.1-nano</span></td>
+    <td>Document</td>
+    <td>0.0</td>
+    <td>You are a historian with expertise in medieval manuscripts and paleography</td>
+    <td>prompt.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0279'><span class='test-square' style='background-color: #00ff99;'>T0279</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/medieval_manuscripts/">medieval_manuscripts</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff0066;'>openai</span></td>
+    <td><span class='test-rectangle' style='background-color: #ff9933;'>gpt-5</span></td>
+    <td>Document</td>
+    <td>0.0</td>
+    <td>You are a historian with expertise in medieval manuscripts and paleography</td>
+    <td>prompt.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0280'><span class='test-square' style='background-color: #2c3e50;'>T0280</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/medieval_manuscripts/">medieval_manuscripts</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff0066;'>openai</span></td>
+    <td><span class='test-rectangle' style='background-color: #8e44ad;'>gpt-5-mini</span></td>
+    <td>Document</td>
+    <td>0.0</td>
+    <td>You are a historian with expertise in medieval manuscripts and paleography</td>
+    <td>prompt.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0281'><span class='test-square' style='background-color: #ff5733;'>T0281</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/medieval_manuscripts/">medieval_manuscripts</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff0066;'>openai</span></td>
+    <td><span class='test-rectangle' style='background-color: #ff33cc;'>gpt-5-nano</span></td>
+    <td>Document</td>
+    <td>0.0</td>
+    <td>You are a historian with expertise in medieval manuscripts and paleography</td>
+    <td>prompt.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0282'><span class='test-square' style='background-color: #ff9966;'>T0282</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/medieval_manuscripts/">medieval_manuscripts</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff0066;'>openai</span></td>
+    <td><span class='test-rectangle' style='background-color: #2980b9;'>o3</span></td>
+    <td>Document</td>
+    <td>0.0</td>
+    <td>You are a historian with expertise in medieval manuscripts and paleography</td>
+    <td>prompt.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0283'><span class='test-square' style='background-color: #16a085;'>T0283</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/medieval_manuscripts/">medieval_manuscripts</a></td>
+    <td><span class='test-rectangle' style='background-color: #ffcc33;'>genai</span></td>
+    <td><span class='test-rectangle' style='background-color: #f39c12;'>gemini-2.0-flash</span></td>
+    <td>Document</td>
+    <td>0.0</td>
+    <td>You are a historian with expertise in medieval manuscripts and paleography</td>
+    <td>prompt.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0284'><span class='test-square' style='background-color: #bdc3c7;'>T0284</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/medieval_manuscripts/">medieval_manuscripts</a></td>
+    <td><span class='test-rectangle' style='background-color: #ffcc33;'>genai</span></td>
+    <td><span class='test-rectangle' style='background-color: #ff0033;'>gemini-2.0-flash-lite</span></td>
+    <td>Document</td>
+    <td>0.0</td>
+    <td>You are a historian with expertise in medieval manuscripts and paleography</td>
+    <td>prompt.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0285'><span class='test-square' style='background-color: #ff3366;'>T0285</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/medieval_manuscripts/">medieval_manuscripts</a></td>
+    <td><span class='test-rectangle' style='background-color: #ffcc33;'>genai</span></td>
+    <td><span class='test-rectangle' style='background-color: #cc6699;'>gemini-2.5-flash-lite</span></td>
+    <td>Document</td>
+    <td>0.0</td>
+    <td>You are a historian with expertise in medieval manuscripts and paleography</td>
+    <td>prompt.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0286'><span class='test-square' style='background-color: #0099ff;'>T0286</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/medieval_manuscripts/">medieval_manuscripts</a></td>
+    <td><span class='test-rectangle' style='background-color: #ffcc33;'>genai</span></td>
+    <td><span class='test-rectangle' style='background-color: #6699ff;'>gemini-2.5-flash-lite-preview-09-2025</span></td>
+    <td>Document</td>
+    <td>0.0</td>
+    <td>You are a historian with expertise in medieval manuscripts and paleography</td>
+    <td>prompt.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0287'><span class='test-square' style='background-color: #33ccff;'>T0287</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/medieval_manuscripts/">medieval_manuscripts</a></td>
+    <td><span class='test-rectangle' style='background-color: #ffcc33;'>genai</span></td>
+    <td><span class='test-rectangle' style='background-color: #34495e;'>gemini-2.5-flash-preview-09-2025</span></td>
+    <td>Document</td>
+    <td>0.0</td>
+    <td>You are a historian with expertise in medieval manuscripts and paleography</td>
+    <td>prompt.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0288'><span class='test-square' style='background-color: #9933ff;'>T0288</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/medieval_manuscripts/">medieval_manuscripts</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff5050;'>anthropic</span></td>
+    <td><span class='test-rectangle' style='background-color: #cc6699;'>claude-3-5-sonnet-20241022</span></td>
+    <td>Document</td>
+    <td>0.0</td>
+    <td>You are a historian with expertise in medieval manuscripts and paleography</td>
+    <td>prompt.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0289'><span class='test-square' style='background-color: #339933;'>T0289</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/medieval_manuscripts/">medieval_manuscripts</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff5050;'>anthropic</span></td>
+    <td><span class='test-rectangle' style='background-color: #99ff33;'>claude-3-opus-20240229</span></td>
+    <td>Document</td>
+    <td>0.0</td>
+    <td>You are a historian with expertise in medieval manuscripts and paleography</td>
+    <td>prompt.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0290'><span class='test-square' style='background-color: #33ffcc;'>T0290</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/medieval_manuscripts/">medieval_manuscripts</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff5050;'>anthropic</span></td>
+    <td><span class='test-rectangle' style='background-color: #ff6600;'>claude-opus-4-20250514</span></td>
+    <td>Document</td>
+    <td>0.0</td>
+    <td>You are a historian with expertise in medieval manuscripts and paleography</td>
+    <td>prompt.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0291'><span class='test-square' style='background-color: #f1c40f;'>T0291</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/medieval_manuscripts/">medieval_manuscripts</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff5050;'>anthropic</span></td>
+    <td><span class='test-rectangle' style='background-color: #f1c40f;'>claude-sonnet-4-20250514</span></td>
+    <td>Document</td>
+    <td>0.0</td>
+    <td>You are a historian with expertise in medieval manuscripts and paleography</td>
+    <td>prompt.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0292'><span class='test-square' style='background-color: #7f8c8d;'>T0292</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/medieval_manuscripts/">medieval_manuscripts</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff5050;'>anthropic</span></td>
+    <td><span class='test-rectangle' style='background-color: #0099ff;'>claude-opus-4-1-20250805</span></td>
+    <td>Document</td>
+    <td>0.0</td>
+    <td>You are a historian with expertise in medieval manuscripts and paleography</td>
+    <td>prompt.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0293'><span class='test-square' style='background-color: #ff9966;'>T0293</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/medieval_manuscripts/">medieval_manuscripts</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff5050;'>anthropic</span></td>
+    <td><span class='test-rectangle' style='background-color: #7f8c8d;'>claude-sonnet-4-5-20250929</span></td>
+    <td>Document</td>
+    <td>0.0</td>
+    <td>You are a historian with expertise in medieval manuscripts and paleography</td>
+    <td>prompt.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0294'><span class='test-square' style='background-color: #9b59b6;'>T0294</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/medieval_manuscripts/">medieval_manuscripts</a></td>
+    <td><span class='test-rectangle' style='background-color: #f1c40f;'>mistral</span></td>
+    <td><span class='test-rectangle' style='background-color: #34495e;'>pixtral-large-latest</span></td>
+    <td>Document</td>
+    <td>0.0</td>
+    <td>You are a historian with expertise in medieval manuscripts and paleography</td>
+    <td>prompt.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0295'><span class='test-square' style='background-color: #ff5733;'>T0295</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/medieval_manuscripts/">medieval_manuscripts</a></td>
+    <td><span class='test-rectangle' style='background-color: #f1c40f;'>mistral</span></td>
+    <td><span class='test-rectangle' style='background-color: #7f8c8d;'>mistral-medium-2508</span></td>
+    <td>Document</td>
+    <td>0.0</td>
+    <td>You are a historian with expertise in medieval manuscripts and paleography</td>
+    <td>prompt.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0296'><span class='test-square' style='background-color: #3399ff;'>T0296</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/medieval_manuscripts/">medieval_manuscripts</a></td>
+    <td><span class='test-rectangle' style='background-color: #f1c40f;'>mistral</span></td>
+    <td><span class='test-rectangle' style='background-color: #27ae60;'>mistral-medium-2505</span></td>
+    <td>Document</td>
+    <td>0.0</td>
+    <td>You are a historian with expertise in medieval manuscripts and paleography</td>
+    <td>prompt.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0297'><span class='test-square' style='background-color: #e74c3c;'>T0297</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/medieval_manuscripts/">medieval_manuscripts</a></td>
+    <td><span class='test-rectangle' style='background-color: #f1c40f;'>mistral</span></td>
+    <td><span class='test-rectangle' style='background-color: #bdc3c7;'>pixtral-12b</span></td>
+    <td>Document</td>
+    <td>0.0</td>
+    <td>You are a historian with expertise in medieval manuscripts and paleography</td>
+    <td>prompt.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0298'><span class='test-square' style='background-color: #ff9933;'>T0298</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/medieval_manuscripts/">medieval_manuscripts</a></td>
+    <td><span class='test-rectangle' style='background-color: #f1c40f;'>mistral</span></td>
+    <td><span class='test-rectangle' style='background-color: #d35400;'>mistral-large-latest</span></td>
+    <td>Document</td>
+    <td>0.0</td>
+    <td>You are a historian with expertise in medieval manuscripts and paleography</td>
+    <td>prompt.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0299'><span class='test-square' style='background-color: #cc6699;'>T0299</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/medieval_manuscripts/">medieval_manuscripts</a></td>
+    <td><span class='test-rectangle' style='background-color: #e67e22;'>scicore</span></td>
+    <td><span class='test-rectangle' style='background-color: #ff9933;'>GLM-4.5V-FP8</span></td>
+    <td>Document</td>
+    <td>0.0</td>
+    <td>You are a historian with expertise in medieval manuscripts and paleography</td>
+    <td>prompt.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0300'><span class='test-square' style='background-color: #33cccc;'>T0300</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/medieval_manuscripts/">medieval_manuscripts</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff33cc;'>openrouter</span></td>
+    <td><span class='test-rectangle' style='background-color: #33ff66;'>qwen/qwen3-vl-8b-thinking</span></td>
+    <td>Document</td>
+    <td>0.0</td>
+    <td>You are a historian with expertise in medieval manuscripts and paleography</td>
+    <td>prompt.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0301'><span class='test-square' style='background-color: #ff99cc;'>T0301</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/medieval_manuscripts/">medieval_manuscripts</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff33cc;'>openrouter</span></td>
+    <td><span class='test-rectangle' style='background-color: #ff0066;'>meta-llama/llama-4-maverick</span></td>
+    <td>Document</td>
+    <td>0.0</td>
+    <td>You are a historian with expertise in medieval manuscripts and paleography</td>
+    <td>prompt.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0302'><span class='test-square' style='background-color: #ff3366;'>T0302</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/medieval_manuscripts/">medieval_manuscripts</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff33cc;'>openrouter</span></td>
+    <td><span class='test-rectangle' style='background-color: #6699ff;'>qwen/qwen3-vl-30b-a3b-instruct</span></td>
+    <td>Document</td>
+    <td>0.0</td>
+    <td>You are a historian with expertise in medieval manuscripts and paleography</td>
+    <td>prompt.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0303'><span class='test-square' style='background-color: #ff33cc;'>T0303</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/medieval_manuscripts/">medieval_manuscripts</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff33cc;'>openrouter</span></td>
+    <td><span class='test-rectangle' style='background-color: #7f8c8d;'>qwen/qwen3-vl-8b-instruct</span></td>
+    <td>Document</td>
+    <td>0.0</td>
+    <td>You are a historian with expertise in medieval manuscripts and paleography</td>
+    <td>prompt.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0304'><span class='test-square' style='background-color: #ff9966;'>T0304</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/medieval_manuscripts/">medieval_manuscripts</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff33cc;'>openrouter</span></td>
+    <td><span class='test-rectangle' style='background-color: #ffcc33;'>x-ai/grok-4</span></td>
+    <td>Document</td>
+    <td>0.0</td>
+    <td>You are a historian with expertise in medieval manuscripts and paleography</td>
+    <td>prompt.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0305'><span class='test-square' style='background-color: #ff0099;'>T0305</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/blacklist/">blacklist</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff0066;'>openai</span></td>
+    <td><span class='test-rectangle' style='background-color: #33ccff;'>gpt-4o</span></td>
+    <td>Card</td>
+    <td>0.5</td>
+    <td>You are a Historian</td>
+    <td>prompt.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0306'><span class='test-square' style='background-color: #ff99cc;'>T0306</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/blacklist/">blacklist</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff0066;'>openai</span></td>
+    <td><span class='test-rectangle' style='background-color: #34495e;'>gpt-4o-mini</span></td>
+    <td>Card</td>
+    <td>0.5</td>
+    <td>You are a Historian</td>
+    <td>prompt.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0307'><span class='test-square' style='background-color: #0099ff;'>T0307</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/blacklist/">blacklist</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff0066;'>openai</span></td>
+    <td><span class='test-rectangle' style='background-color: #9b59b6;'>gpt-4.1-mini</span></td>
+    <td>Card</td>
+    <td>0.5</td>
+    <td>You are a Historian</td>
+    <td>prompt.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0308'><span class='test-square' style='background-color: #ff9933;'>T0308</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/blacklist/">blacklist</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff0066;'>openai</span></td>
+    <td><span class='test-rectangle' style='background-color: #ffcc33;'>gpt-4.1-nano</span></td>
+    <td>Card</td>
+    <td>0.5</td>
+    <td>You are a Historian</td>
+    <td>prompt.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0309'><span class='test-square' style='background-color: #66cc99;'>T0309</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/blacklist/">blacklist</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff0066;'>openai</span></td>
+    <td><span class='test-rectangle' style='background-color: #ff9933;'>gpt-5</span></td>
+    <td>Card</td>
+    <td>0.5</td>
+    <td>You are a Historian</td>
+    <td>prompt.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0310'><span class='test-square' style='background-color: #66ff33;'>T0310</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/blacklist/">blacklist</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff0066;'>openai</span></td>
+    <td><span class='test-rectangle' style='background-color: #8e44ad;'>gpt-5-mini</span></td>
+    <td>Card</td>
+    <td>0.5</td>
+    <td>You are a Historian</td>
+    <td>prompt.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0311'><span class='test-square' style='background-color: #9b59b6;'>T0311</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/blacklist/">blacklist</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff0066;'>openai</span></td>
+    <td><span class='test-rectangle' style='background-color: #ff33cc;'>gpt-5-nano</span></td>
+    <td>Card</td>
+    <td>0.5</td>
+    <td>You are a Historian</td>
+    <td>prompt.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0312'><span class='test-square' style='background-color: #ff9966;'>T0312</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/blacklist/">blacklist</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff0066;'>openai</span></td>
+    <td><span class='test-rectangle' style='background-color: #2980b9;'>o3</span></td>
+    <td>Card</td>
+    <td>0.5</td>
+    <td>You are a Historian</td>
+    <td>prompt.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0313'><span class='test-square' style='background-color: #ff6699;'>T0313</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/blacklist/">blacklist</a></td>
+    <td><span class='test-rectangle' style='background-color: #ffcc33;'>genai</span></td>
+    <td><span class='test-rectangle' style='background-color: #f39c12;'>gemini-2.0-flash</span></td>
+    <td>Card</td>
+    <td>0.5</td>
+    <td>You are a Historian</td>
+    <td>prompt.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0314'><span class='test-square' style='background-color: #ff0099;'>T0314</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/blacklist/">blacklist</a></td>
+    <td><span class='test-rectangle' style='background-color: #ffcc33;'>genai</span></td>
+    <td><span class='test-rectangle' style='background-color: #ff0033;'>gemini-2.0-flash-lite</span></td>
+    <td>Card</td>
+    <td>0.5</td>
+    <td>You are a Historian</td>
+    <td>prompt.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0315'><span class='test-square' style='background-color: #ff6699;'>T0315</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/blacklist/">blacklist</a></td>
+    <td><span class='test-rectangle' style='background-color: #ffcc33;'>genai</span></td>
+    <td><span class='test-rectangle' style='background-color: #ff6600;'>gemini-2.5-flash</span></td>
+    <td>Card</td>
+    <td>0.5</td>
+    <td>You are a Historian</td>
+    <td>prompt.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0316'><span class='test-square' style='background-color: #ff0099;'>T0316</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/blacklist/">blacklist</a></td>
+    <td><span class='test-rectangle' style='background-color: #ffcc33;'>genai</span></td>
+    <td><span class='test-rectangle' style='background-color: #e67e22;'>gemini-2.5-pro</span></td>
+    <td>Card</td>
+    <td>0.5</td>
+    <td>You are a Historian</td>
+    <td>prompt.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0317'><span class='test-square' style='background-color: #ffcc33;'>T0317</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/blacklist/">blacklist</a></td>
+    <td><span class='test-rectangle' style='background-color: #ffcc33;'>genai</span></td>
+    <td><span class='test-rectangle' style='background-color: #cc6699;'>gemini-2.5-flash-lite</span></td>
+    <td>Card</td>
+    <td>0.5</td>
+    <td>You are a Historian</td>
+    <td>prompt.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0318'><span class='test-square' style='background-color: #00ff66;'>T0318</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/blacklist/">blacklist</a></td>
+    <td><span class='test-rectangle' style='background-color: #ffcc33;'>genai</span></td>
+    <td><span class='test-rectangle' style='background-color: #6699ff;'>gemini-2.5-flash-lite-preview-09-2025</span></td>
+    <td>Card</td>
+    <td>0.5</td>
+    <td>You are a Historian</td>
+    <td>prompt.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0319'><span class='test-square' style='background-color: #ff0066;'>T0319</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/blacklist/">blacklist</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff5050;'>anthropic</span></td>
+    <td><span class='test-rectangle' style='background-color: #cc6699;'>claude-3-5-sonnet-20241022</span></td>
+    <td>Card</td>
+    <td>0.5</td>
+    <td>You are a Historian</td>
+    <td>prompt.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0320'><span class='test-square' style='background-color: #2980b9;'>T0320</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/blacklist/">blacklist</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff5050;'>anthropic</span></td>
+    <td><span class='test-rectangle' style='background-color: #f1c40f;'>claude-3-7-sonnet-20250219</span></td>
+    <td>Card</td>
+    <td>0.5</td>
+    <td>You are a Historian</td>
+    <td>prompt.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0321'><span class='test-square' style='background-color: #00ff99;'>T0321</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/blacklist/">blacklist</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff5050;'>anthropic</span></td>
+    <td><span class='test-rectangle' style='background-color: #99ff33;'>claude-3-opus-20240229</span></td>
+    <td>Card</td>
+    <td>0.5</td>
+    <td>You are a Historian</td>
+    <td>prompt.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0322'><span class='test-square' style='background-color: #2980b9;'>T0322</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/blacklist/">blacklist</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff5050;'>anthropic</span></td>
+    <td><span class='test-rectangle' style='background-color: #ff6600;'>claude-opus-4-20250514</span></td>
+    <td>Card</td>
+    <td>0.5</td>
+    <td>You are a Historian</td>
+    <td>prompt.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0323'><span class='test-square' style='background-color: #1abc9c;'>T0323</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/blacklist/">blacklist</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff5050;'>anthropic</span></td>
+    <td><span class='test-rectangle' style='background-color: #f1c40f;'>claude-sonnet-4-20250514</span></td>
+    <td>Card</td>
+    <td>0.5</td>
+    <td>You are a Historian</td>
+    <td>prompt.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0324'><span class='test-square' style='background-color: #00ff66;'>T0324</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/blacklist/">blacklist</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff5050;'>anthropic</span></td>
+    <td><span class='test-rectangle' style='background-color: #0099ff;'>claude-opus-4-1-20250805</span></td>
+    <td>Card</td>
+    <td>0.5</td>
+    <td>You are a Historian</td>
+    <td>prompt.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0325'><span class='test-square' style='background-color: #33cccc;'>T0325</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/blacklist/">blacklist</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff5050;'>anthropic</span></td>
+    <td><span class='test-rectangle' style='background-color: #7f8c8d;'>claude-sonnet-4-5-20250929</span></td>
+    <td>Card</td>
+    <td>0.5</td>
+    <td>You are a Historian</td>
+    <td>prompt.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0326'><span class='test-square' style='background-color: #ff3366;'>T0326</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/blacklist/">blacklist</a></td>
+    <td><span class='test-rectangle' style='background-color: #f1c40f;'>mistral</span></td>
+    <td><span class='test-rectangle' style='background-color: #34495e;'>pixtral-large-latest</span></td>
+    <td>Card</td>
+    <td>0.5</td>
+    <td>You are a Historian</td>
+    <td>prompt.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0327'><span class='test-square' style='background-color: #ff0099;'>T0327</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/blacklist/">blacklist</a></td>
+    <td><span class='test-rectangle' style='background-color: #f1c40f;'>mistral</span></td>
+    <td><span class='test-rectangle' style='background-color: #7f8c8d;'>mistral-medium-2508</span></td>
+    <td>Card</td>
+    <td>0.5</td>
+    <td>You are a Historian</td>
+    <td>prompt.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0328'><span class='test-square' style='background-color: #6699ff;'>T0328</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/blacklist/">blacklist</a></td>
+    <td><span class='test-rectangle' style='background-color: #f1c40f;'>mistral</span></td>
+    <td><span class='test-rectangle' style='background-color: #27ae60;'>mistral-medium-2505</span></td>
+    <td>Card</td>
+    <td>0.5</td>
+    <td>You are a Historian</td>
+    <td>prompt.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0329'><span class='test-square' style='background-color: #6633ff;'>T0329</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/blacklist/">blacklist</a></td>
+    <td><span class='test-rectangle' style='background-color: #f1c40f;'>mistral</span></td>
+    <td><span class='test-rectangle' style='background-color: #bdc3c7;'>pixtral-12b</span></td>
+    <td>Card</td>
+    <td>0.5</td>
+    <td>You are a Historian</td>
+    <td>prompt.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0330'><span class='test-square' style='background-color: #ff0099;'>T0330</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/blacklist/">blacklist</a></td>
+    <td><span class='test-rectangle' style='background-color: #f1c40f;'>mistral</span></td>
+    <td><span class='test-rectangle' style='background-color: #d35400;'>mistral-large-latest</span></td>
+    <td>Card</td>
+    <td>0.5</td>
+    <td>You are a Historian</td>
+    <td>prompt.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0331'><span class='test-square' style='background-color: #d35400;'>T0331</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/blacklist/">blacklist</a></td>
+    <td><span class='test-rectangle' style='background-color: #e67e22;'>scicore</span></td>
+    <td><span class='test-rectangle' style='background-color: #ff9933;'>GLM-4.5V-FP8</span></td>
+    <td>Card</td>
+    <td>0.5</td>
+    <td>You are a Historian</td>
+    <td>prompt.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0332'><span class='test-square' style='background-color: #ffcc33;'>T0332</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/blacklist/">blacklist</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff33cc;'>openrouter</span></td>
+    <td><span class='test-rectangle' style='background-color: #33ff66;'>qwen/qwen3-vl-8b-thinking</span></td>
+    <td>Card</td>
+    <td>0.5</td>
+    <td>You are a Historian</td>
+    <td>prompt.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0333'><span class='test-square' style='background-color: #ff99cc;'>T0333</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/blacklist/">blacklist</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff33cc;'>openrouter</span></td>
+    <td><span class='test-rectangle' style='background-color: #ff0066;'>meta-llama/llama-4-maverick</span></td>
+    <td>Card</td>
+    <td>0.5</td>
+    <td>You are a Historian</td>
+    <td>prompt.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0334'><span class='test-square' style='background-color: #339933;'>T0334</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/blacklist/">blacklist</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff33cc;'>openrouter</span></td>
+    <td><span class='test-rectangle' style='background-color: #6699ff;'>qwen/qwen3-vl-30b-a3b-instruct</span></td>
+    <td>Card</td>
+    <td>0.5</td>
+    <td>You are a Historian</td>
+    <td>prompt.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0335'><span class='test-square' style='background-color: #66ff33;'>T0335</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/blacklist/">blacklist</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff33cc;'>openrouter</span></td>
+    <td><span class='test-rectangle' style='background-color: #7f8c8d;'>qwen/qwen3-vl-8b-instruct</span></td>
+    <td>Card</td>
+    <td>0.5</td>
+    <td>You are a Historian</td>
+    <td>prompt.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0336'><span class='test-square' style='background-color: #00ffcc;'>T0336</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/blacklist/">blacklist</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff33cc;'>openrouter</span></td>
+    <td><span class='test-rectangle' style='background-color: #ffcc33;'>x-ai/grok-4</span></td>
+    <td>Card</td>
+    <td>0.5</td>
+    <td>You are a Historian</td>
+    <td>prompt.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0337'><span class='test-square' style='background-color: #f39c12;'>T0337</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/company_lists/">company_lists</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff0066;'>openai</span></td>
+    <td><span class='test-rectangle' style='background-color: #33ccff;'>gpt-4o</span></td>
+    <td>ListPage</td>
+    <td>0.5</td>
+    <td>You are a Historian</td>
+    <td>prompt.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0338'><span class='test-square' style='background-color: #27ae60;'>T0338</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/company_lists/">company_lists</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff0066;'>openai</span></td>
+    <td><span class='test-rectangle' style='background-color: #33ccff;'>gpt-4o</span></td>
+    <td>ListPage</td>
+    <td>0.5</td>
+    <td>You are a Historian</td>
+    <td>prompt_min.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0339'><span class='test-square' style='background-color: #9b59b6;'>T0339</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/company_lists/">company_lists</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff0066;'>openai</span></td>
+    <td><span class='test-rectangle' style='background-color: #34495e;'>gpt-4o-mini</span></td>
+    <td>ListPage</td>
+    <td>0.5</td>
+    <td>You are a Historian</td>
+    <td>prompt.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0340'><span class='test-square' style='background-color: #ff33cc;'>T0340</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/company_lists/">company_lists</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff0066;'>openai</span></td>
+    <td><span class='test-rectangle' style='background-color: #34495e;'>gpt-4o-mini</span></td>
+    <td>ListPage</td>
+    <td>0.5</td>
+    <td>You are a Historian</td>
+    <td>prompt_min.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0341'><span class='test-square' style='background-color: #ff0033;'>T0341</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/company_lists/">company_lists</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff0066;'>openai</span></td>
+    <td><span class='test-rectangle' style='background-color: #2980b9;'>gpt-4.1</span></td>
+    <td>ListPage</td>
+    <td>0.5</td>
+    <td>You are a Historian</td>
+    <td>prompt.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0342'><span class='test-square' style='background-color: #bdc3c7;'>T0342</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/company_lists/">company_lists</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff0066;'>openai</span></td>
+    <td><span class='test-rectangle' style='background-color: #2980b9;'>gpt-4.1</span></td>
+    <td>ListPage</td>
+    <td>0.5</td>
+    <td>You are a Historian</td>
+    <td>prompt_min.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0343'><span class='test-square' style='background-color: #ff9966;'>T0343</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/company_lists/">company_lists</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff0066;'>openai</span></td>
+    <td><span class='test-rectangle' style='background-color: #9b59b6;'>gpt-4.1-mini</span></td>
+    <td>ListPage</td>
+    <td>0.5</td>
+    <td>You are a Historian</td>
+    <td>prompt.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0344'><span class='test-square' style='background-color: #66ff33;'>T0344</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/company_lists/">company_lists</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff0066;'>openai</span></td>
+    <td><span class='test-rectangle' style='background-color: #9b59b6;'>gpt-4.1-mini</span></td>
+    <td>ListPage</td>
+    <td>0.5</td>
+    <td>You are a Historian</td>
+    <td>prompt_min.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0345'><span class='test-square' style='background-color: #ff0099;'>T0345</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/company_lists/">company_lists</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff0066;'>openai</span></td>
+    <td><span class='test-rectangle' style='background-color: #ffcc33;'>gpt-4.1-nano</span></td>
+    <td>ListPage</td>
+    <td>0.5</td>
+    <td>You are a Historian</td>
+    <td>prompt.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0346'><span class='test-square' style='background-color: #6633ff;'>T0346</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/company_lists/">company_lists</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff0066;'>openai</span></td>
+    <td><span class='test-rectangle' style='background-color: #ffcc33;'>gpt-4.1-nano</span></td>
+    <td>ListPage</td>
+    <td>0.5</td>
+    <td>You are a Historian</td>
+    <td>prompt_min.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0347'><span class='test-square' style='background-color: #ff3366;'>T0347</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/company_lists/">company_lists</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff0066;'>openai</span></td>
+    <td><span class='test-rectangle' style='background-color: #ff9933;'>gpt-5</span></td>
+    <td>ListPage</td>
+    <td>0.5</td>
+    <td>You are a Historian</td>
+    <td>prompt.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0348'><span class='test-square' style='background-color: #34495e;'>T0348</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/company_lists/">company_lists</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff0066;'>openai</span></td>
+    <td><span class='test-rectangle' style='background-color: #ff9933;'>gpt-5</span></td>
+    <td>ListPage</td>
+    <td>0.5</td>
+    <td>You are a Historian</td>
+    <td>prompt_min.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0349'><span class='test-square' style='background-color: #34495e;'>T0349</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/company_lists/">company_lists</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff0066;'>openai</span></td>
+    <td><span class='test-rectangle' style='background-color: #8e44ad;'>gpt-5-mini</span></td>
+    <td>ListPage</td>
+    <td>0.5</td>
+    <td>You are a Historian</td>
+    <td>prompt.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0350'><span class='test-square' style='background-color: #6633ff;'>T0350</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/company_lists/">company_lists</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff0066;'>openai</span></td>
+    <td><span class='test-rectangle' style='background-color: #8e44ad;'>gpt-5-mini</span></td>
+    <td>ListPage</td>
+    <td>0.5</td>
+    <td>You are a Historian</td>
+    <td>prompt_min.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0351'><span class='test-square' style='background-color: #ff0099;'>T0351</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/company_lists/">company_lists</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff0066;'>openai</span></td>
+    <td><span class='test-rectangle' style='background-color: #ff33cc;'>gpt-5-nano</span></td>
+    <td>ListPage</td>
+    <td>0.5</td>
+    <td>You are a Historian</td>
+    <td>prompt.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0352'><span class='test-square' style='background-color: #ff5050;'>T0352</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/company_lists/">company_lists</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff0066;'>openai</span></td>
+    <td><span class='test-rectangle' style='background-color: #ff33cc;'>gpt-5-nano</span></td>
+    <td>ListPage</td>
+    <td>0.5</td>
+    <td>You are a Historian</td>
+    <td>prompt_min.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0353'><span class='test-square' style='background-color: #ff9966;'>T0353</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/company_lists/">company_lists</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff0066;'>openai</span></td>
+    <td><span class='test-rectangle' style='background-color: #2980b9;'>o3</span></td>
+    <td>ListPage</td>
+    <td>0.5</td>
+    <td>You are a Historian</td>
+    <td>prompt.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0354'><span class='test-square' style='background-color: #6633ff;'>T0354</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/company_lists/">company_lists</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff0066;'>openai</span></td>
+    <td><span class='test-rectangle' style='background-color: #2980b9;'>o3</span></td>
+    <td>ListPage</td>
+    <td>0.5</td>
+    <td>You are a Historian</td>
+    <td>prompt_min.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0355'><span class='test-square' style='background-color: #ff0066;'>T0355</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/company_lists/">company_lists</a></td>
+    <td><span class='test-rectangle' style='background-color: #ffcc33;'>genai</span></td>
+    <td><span class='test-rectangle' style='background-color: #f39c12;'>gemini-2.0-flash</span></td>
+    <td>ListPage</td>
+    <td>0.5</td>
+    <td>You are a Historian</td>
+    <td>prompt.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0356'><span class='test-square' style='background-color: #bdc3c7;'>T0356</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/company_lists/">company_lists</a></td>
+    <td><span class='test-rectangle' style='background-color: #ffcc33;'>genai</span></td>
+    <td><span class='test-rectangle' style='background-color: #f39c12;'>gemini-2.0-flash</span></td>
+    <td>ListPage</td>
+    <td>0.5</td>
+    <td>You are a Historian</td>
+    <td>prompt_min.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0357'><span class='test-square' style='background-color: #ccff00;'>T0357</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/company_lists/">company_lists</a></td>
+    <td><span class='test-rectangle' style='background-color: #ffcc33;'>genai</span></td>
+    <td><span class='test-rectangle' style='background-color: #ff0033;'>gemini-2.0-flash-lite</span></td>
+    <td>ListPage</td>
+    <td>0.5</td>
+    <td>You are a Historian</td>
+    <td>prompt.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0358'><span class='test-square' style='background-color: #ff3300;'>T0358</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/company_lists/">company_lists</a></td>
+    <td><span class='test-rectangle' style='background-color: #ffcc33;'>genai</span></td>
+    <td><span class='test-rectangle' style='background-color: #ff0033;'>gemini-2.0-flash-lite</span></td>
+    <td>ListPage</td>
+    <td>0.5</td>
+    <td>You are a Historian</td>
+    <td>prompt_min.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0359'><span class='test-square' style='background-color: #e74c3c;'>T0359</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/company_lists/">company_lists</a></td>
+    <td><span class='test-rectangle' style='background-color: #ffcc33;'>genai</span></td>
+    <td><span class='test-rectangle' style='background-color: #ff6600;'>gemini-2.5-flash</span></td>
+    <td>ListPage</td>
+    <td>0.5</td>
+    <td>You are a Historian</td>
+    <td>prompt.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0360'><span class='test-square' style='background-color: #00ffcc;'>T0360</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/company_lists/">company_lists</a></td>
+    <td><span class='test-rectangle' style='background-color: #ffcc33;'>genai</span></td>
+    <td><span class='test-rectangle' style='background-color: #ff6600;'>gemini-2.5-flash</span></td>
+    <td>ListPage</td>
+    <td>0.5</td>
+    <td>You are a Historian</td>
+    <td>prompt_min.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0361'><span class='test-square' style='background-color: #ff0033;'>T0361</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/company_lists/">company_lists</a></td>
+    <td><span class='test-rectangle' style='background-color: #ffcc33;'>genai</span></td>
+    <td><span class='test-rectangle' style='background-color: #e67e22;'>gemini-2.5-pro</span></td>
+    <td>ListPage</td>
+    <td>0.5</td>
+    <td>You are a Historian</td>
+    <td>prompt.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0362'><span class='test-square' style='background-color: #bdc3c7;'>T0362</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/company_lists/">company_lists</a></td>
+    <td><span class='test-rectangle' style='background-color: #ffcc33;'>genai</span></td>
+    <td><span class='test-rectangle' style='background-color: #e67e22;'>gemini-2.5-pro</span></td>
+    <td>ListPage</td>
+    <td>0.5</td>
+    <td>You are a Historian</td>
+    <td>prompt_min.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0363'><span class='test-square' style='background-color: #33ff66;'>T0363</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/company_lists/">company_lists</a></td>
+    <td><span class='test-rectangle' style='background-color: #ffcc33;'>genai</span></td>
+    <td><span class='test-rectangle' style='background-color: #cc6699;'>gemini-2.5-flash-lite</span></td>
+    <td>ListPage</td>
+    <td>0.5</td>
+    <td>You are a Historian</td>
+    <td>prompt.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0364'><span class='test-square' style='background-color: #c0392b;'>T0364</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/company_lists/">company_lists</a></td>
+    <td><span class='test-rectangle' style='background-color: #ffcc33;'>genai</span></td>
+    <td><span class='test-rectangle' style='background-color: #cc6699;'>gemini-2.5-flash-lite</span></td>
+    <td>ListPage</td>
+    <td>0.5</td>
+    <td>You are a Historian</td>
+    <td>prompt_min.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0365'><span class='test-square' style='background-color: #6699ff;'>T0365</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/company_lists/">company_lists</a></td>
+    <td><span class='test-rectangle' style='background-color: #ffcc33;'>genai</span></td>
+    <td><span class='test-rectangle' style='background-color: #6699ff;'>gemini-2.5-flash-lite-preview-09-2025</span></td>
+    <td>ListPage</td>
+    <td>0.5</td>
+    <td>You are a Historian</td>
+    <td>prompt.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0366'><span class='test-square' style='background-color: #ff6600;'>T0366</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/company_lists/">company_lists</a></td>
+    <td><span class='test-rectangle' style='background-color: #ffcc33;'>genai</span></td>
+    <td><span class='test-rectangle' style='background-color: #6699ff;'>gemini-2.5-flash-lite-preview-09-2025</span></td>
+    <td>ListPage</td>
+    <td>0.5</td>
+    <td>You are a Historian</td>
+    <td>prompt_min.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0367'><span class='test-square' style='background-color: #7f8c8d;'>T0367</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/company_lists/">company_lists</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff5050;'>anthropic</span></td>
+    <td><span class='test-rectangle' style='background-color: #cc6699;'>claude-3-5-sonnet-20241022</span></td>
+    <td>ListPage</td>
+    <td>0.5</td>
+    <td>You are a Historian</td>
+    <td>prompt.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0368'><span class='test-square' style='background-color: #27ae60;'>T0368</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/company_lists/">company_lists</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff5050;'>anthropic</span></td>
+    <td><span class='test-rectangle' style='background-color: #cc6699;'>claude-3-5-sonnet-20241022</span></td>
+    <td>ListPage</td>
+    <td>0.5</td>
+    <td>You are a Historian</td>
+    <td>prompt_min.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0369'><span class='test-square' style='background-color: #27ae60;'>T0369</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/company_lists/">company_lists</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff5050;'>anthropic</span></td>
+    <td><span class='test-rectangle' style='background-color: #f1c40f;'>claude-3-7-sonnet-20250219</span></td>
+    <td>ListPage</td>
+    <td>0.5</td>
+    <td>You are a Historian</td>
+    <td>prompt.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0370'><span class='test-square' style='background-color: #ffcc00;'>T0370</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/company_lists/">company_lists</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff5050;'>anthropic</span></td>
+    <td><span class='test-rectangle' style='background-color: #f1c40f;'>claude-3-7-sonnet-20250219</span></td>
+    <td>ListPage</td>
+    <td>0.5</td>
+    <td>You are a Historian</td>
+    <td>prompt_min.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0371'><span class='test-square' style='background-color: #ff0099;'>T0371</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/company_lists/">company_lists</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff5050;'>anthropic</span></td>
+    <td><span class='test-rectangle' style='background-color: #99ff33;'>claude-3-opus-20240229</span></td>
+    <td>ListPage</td>
+    <td>0.5</td>
+    <td>You are a Historian</td>
+    <td>prompt.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0372'><span class='test-square' style='background-color: #c0392b;'>T0372</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/company_lists/">company_lists</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff5050;'>anthropic</span></td>
+    <td><span class='test-rectangle' style='background-color: #99ff33;'>claude-3-opus-20240229</span></td>
+    <td>ListPage</td>
+    <td>0.5</td>
+    <td>You are a Historian</td>
+    <td>prompt_min.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0373'><span class='test-square' style='background-color: #bdc3c7;'>T0373</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/company_lists/">company_lists</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff5050;'>anthropic</span></td>
+    <td><span class='test-rectangle' style='background-color: #ff6600;'>claude-opus-4-20250514</span></td>
+    <td>ListPage</td>
+    <td>0.5</td>
+    <td>You are a Historian</td>
+    <td>prompt.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0374'><span class='test-square' style='background-color: #ff5050;'>T0374</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/company_lists/">company_lists</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff5050;'>anthropic</span></td>
+    <td><span class='test-rectangle' style='background-color: #ff6600;'>claude-opus-4-20250514</span></td>
+    <td>ListPage</td>
+    <td>0.5</td>
+    <td>You are a Historian</td>
+    <td>prompt_min.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0375'><span class='test-square' style='background-color: #ccff00;'>T0375</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/company_lists/">company_lists</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff5050;'>anthropic</span></td>
+    <td><span class='test-rectangle' style='background-color: #f1c40f;'>claude-sonnet-4-20250514</span></td>
+    <td>ListPage</td>
+    <td>0.5</td>
+    <td>You are a Historian</td>
+    <td>prompt.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0376'><span class='test-square' style='background-color: #3399ff;'>T0376</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/company_lists/">company_lists</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff5050;'>anthropic</span></td>
+    <td><span class='test-rectangle' style='background-color: #f1c40f;'>claude-sonnet-4-20250514</span></td>
+    <td>ListPage</td>
+    <td>0.5</td>
+    <td>You are a Historian</td>
+    <td>prompt_min.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0377'><span class='test-square' style='background-color: #6699ff;'>T0377</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/company_lists/">company_lists</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff5050;'>anthropic</span></td>
+    <td><span class='test-rectangle' style='background-color: #0099ff;'>claude-opus-4-1-20250805</span></td>
+    <td>ListPage</td>
+    <td>0.5</td>
+    <td>You are a Historian</td>
+    <td>prompt.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0378'><span class='test-square' style='background-color: #d35400;'>T0378</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/company_lists/">company_lists</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff5050;'>anthropic</span></td>
+    <td><span class='test-rectangle' style='background-color: #0099ff;'>claude-opus-4-1-20250805</span></td>
+    <td>ListPage</td>
+    <td>0.5</td>
+    <td>You are a Historian</td>
+    <td>prompt_min.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0379'><span class='test-square' style='background-color: #9933ff;'>T0379</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/company_lists/">company_lists</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff5050;'>anthropic</span></td>
+    <td><span class='test-rectangle' style='background-color: #7f8c8d;'>claude-sonnet-4-5-20250929</span></td>
+    <td>ListPage</td>
+    <td>0.5</td>
+    <td>You are a Historian</td>
+    <td>prompt.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0380'><span class='test-square' style='background-color: #f1c40f;'>T0380</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/company_lists/">company_lists</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff5050;'>anthropic</span></td>
+    <td><span class='test-rectangle' style='background-color: #7f8c8d;'>claude-sonnet-4-5-20250929</span></td>
+    <td>ListPage</td>
+    <td>0.5</td>
+    <td>You are a Historian</td>
+    <td>prompt_min.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0381'><span class='test-square' style='background-color: #ff9966;'>T0381</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/company_lists/">company_lists</a></td>
+    <td><span class='test-rectangle' style='background-color: #f1c40f;'>mistral</span></td>
+    <td><span class='test-rectangle' style='background-color: #34495e;'>pixtral-large-latest</span></td>
+    <td>ListPage</td>
+    <td>0.5</td>
+    <td>You are a Historian</td>
+    <td>prompt.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0382'><span class='test-square' style='background-color: #1abc9c;'>T0382</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/company_lists/">company_lists</a></td>
+    <td><span class='test-rectangle' style='background-color: #f1c40f;'>mistral</span></td>
+    <td><span class='test-rectangle' style='background-color: #34495e;'>pixtral-large-latest</span></td>
+    <td>ListPage</td>
+    <td>0.5</td>
+    <td>You are a Historian</td>
+    <td>prompt_min.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0383'><span class='test-square' style='background-color: #339933;'>T0383</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/company_lists/">company_lists</a></td>
+    <td><span class='test-rectangle' style='background-color: #f1c40f;'>mistral</span></td>
+    <td><span class='test-rectangle' style='background-color: #7f8c8d;'>mistral-medium-2508</span></td>
+    <td>ListPage</td>
+    <td>0.5</td>
+    <td>You are a Historian</td>
+    <td>prompt.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0384'><span class='test-square' style='background-color: #33ffcc;'>T0384</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/company_lists/">company_lists</a></td>
+    <td><span class='test-rectangle' style='background-color: #f1c40f;'>mistral</span></td>
+    <td><span class='test-rectangle' style='background-color: #7f8c8d;'>mistral-medium-2508</span></td>
+    <td>ListPage</td>
+    <td>0.5</td>
+    <td>You are a Historian</td>
+    <td>prompt_min.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0385'><span class='test-square' style='background-color: #9966ff;'>T0385</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/company_lists/">company_lists</a></td>
+    <td><span class='test-rectangle' style='background-color: #f1c40f;'>mistral</span></td>
+    <td><span class='test-rectangle' style='background-color: #27ae60;'>mistral-medium-2505</span></td>
+    <td>ListPage</td>
+    <td>0.5</td>
+    <td>You are a Historian</td>
+    <td>prompt.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0386'><span class='test-square' style='background-color: #9933ff;'>T0386</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/company_lists/">company_lists</a></td>
+    <td><span class='test-rectangle' style='background-color: #f1c40f;'>mistral</span></td>
+    <td><span class='test-rectangle' style='background-color: #27ae60;'>mistral-medium-2505</span></td>
+    <td>ListPage</td>
+    <td>0.5</td>
+    <td>You are a Historian</td>
+    <td>prompt_min.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0387'><span class='test-square' style='background-color: #7f8c8d;'>T0387</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/company_lists/">company_lists</a></td>
+    <td><span class='test-rectangle' style='background-color: #f1c40f;'>mistral</span></td>
+    <td><span class='test-rectangle' style='background-color: #bdc3c7;'>pixtral-12b</span></td>
+    <td>ListPage</td>
+    <td>0.5</td>
+    <td>You are a Historian</td>
+    <td>prompt.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0388'><span class='test-square' style='background-color: #f1c40f;'>T0388</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/company_lists/">company_lists</a></td>
+    <td><span class='test-rectangle' style='background-color: #f1c40f;'>mistral</span></td>
+    <td><span class='test-rectangle' style='background-color: #bdc3c7;'>pixtral-12b</span></td>
+    <td>ListPage</td>
+    <td>0.5</td>
+    <td>You are a Historian</td>
+    <td>prompt_min.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0389'><span class='test-square' style='background-color: #e67e22;'>T0389</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/company_lists/">company_lists</a></td>
+    <td><span class='test-rectangle' style='background-color: #f1c40f;'>mistral</span></td>
+    <td><span class='test-rectangle' style='background-color: #d35400;'>mistral-large-latest</span></td>
+    <td>ListPage</td>
+    <td>0.5</td>
+    <td>You are a Historian</td>
+    <td>prompt.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0390'><span class='test-square' style='background-color: #ff6600;'>T0390</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/company_lists/">company_lists</a></td>
+    <td><span class='test-rectangle' style='background-color: #f1c40f;'>mistral</span></td>
+    <td><span class='test-rectangle' style='background-color: #d35400;'>mistral-large-latest</span></td>
+    <td>ListPage</td>
+    <td>0.5</td>
+    <td>You are a Historian</td>
+    <td>prompt_min.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0391'><span class='test-square' style='background-color: #3498db;'>T0391</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/company_lists/">company_lists</a></td>
+    <td><span class='test-rectangle' style='background-color: #e67e22;'>scicore</span></td>
+    <td><span class='test-rectangle' style='background-color: #ff9933;'>GLM-4.5V-FP8</span></td>
+    <td>ListPage</td>
+    <td>0.5</td>
+    <td>You are a Historian</td>
+    <td>prompt.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0392'><span class='test-square' style='background-color: #66cc99;'>T0392</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/company_lists/">company_lists</a></td>
+    <td><span class='test-rectangle' style='background-color: #e67e22;'>scicore</span></td>
+    <td><span class='test-rectangle' style='background-color: #ff9933;'>GLM-4.5V-FP8</span></td>
+    <td>ListPage</td>
+    <td>0.5</td>
+    <td>You are a Historian</td>
+    <td>prompt_min.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0393'><span class='test-square' style='background-color: #ff9966;'>T0393</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/company_lists/">company_lists</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff33cc;'>openrouter</span></td>
+    <td><span class='test-rectangle' style='background-color: #33ff66;'>qwen/qwen3-vl-8b-thinking</span></td>
+    <td>ListPage</td>
+    <td>0.5</td>
+    <td>You are a Historian</td>
+    <td>prompt.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0394'><span class='test-square' style='background-color: #ccff00;'>T0394</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/company_lists/">company_lists</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff33cc;'>openrouter</span></td>
+    <td><span class='test-rectangle' style='background-color: #33ff66;'>qwen/qwen3-vl-8b-thinking</span></td>
+    <td>ListPage</td>
+    <td>0.5</td>
+    <td>You are a Historian</td>
+    <td>prompt_min.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0395'><span class='test-square' style='background-color: #33cccc;'>T0395</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/company_lists/">company_lists</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff33cc;'>openrouter</span></td>
+    <td><span class='test-rectangle' style='background-color: #ff0066;'>meta-llama/llama-4-maverick</span></td>
+    <td>ListPage</td>
+    <td>0.5</td>
+    <td>You are a Historian</td>
+    <td>prompt.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0396'><span class='test-square' style='background-color: #00ccff;'>T0396</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/company_lists/">company_lists</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff33cc;'>openrouter</span></td>
+    <td><span class='test-rectangle' style='background-color: #ff0066;'>meta-llama/llama-4-maverick</span></td>
+    <td>ListPage</td>
+    <td>0.5</td>
+    <td>You are a Historian</td>
+    <td>prompt_min.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0397'><span class='test-square' style='background-color: #ff5733;'>T0397</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/company_lists/">company_lists</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff33cc;'>openrouter</span></td>
+    <td><span class='test-rectangle' style='background-color: #6699ff;'>qwen/qwen3-vl-30b-a3b-instruct</span></td>
+    <td>ListPage</td>
+    <td>0.5</td>
+    <td>You are a Historian</td>
+    <td>prompt.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0398'><span class='test-square' style='background-color: #ff33cc;'>T0398</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/company_lists/">company_lists</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff33cc;'>openrouter</span></td>
+    <td><span class='test-rectangle' style='background-color: #6699ff;'>qwen/qwen3-vl-30b-a3b-instruct</span></td>
+    <td>ListPage</td>
+    <td>0.5</td>
+    <td>You are a Historian</td>
+    <td>prompt_min.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0399'><span class='test-square' style='background-color: #6699ff;'>T0399</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/company_lists/">company_lists</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff33cc;'>openrouter</span></td>
+    <td><span class='test-rectangle' style='background-color: #7f8c8d;'>qwen/qwen3-vl-8b-instruct</span></td>
+    <td>ListPage</td>
+    <td>0.5</td>
+    <td>You are a Historian</td>
+    <td>prompt.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0400'><span class='test-square' style='background-color: #c0392b;'>T0400</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/company_lists/">company_lists</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff33cc;'>openrouter</span></td>
+    <td><span class='test-rectangle' style='background-color: #7f8c8d;'>qwen/qwen3-vl-8b-instruct</span></td>
+    <td>ListPage</td>
+    <td>0.5</td>
+    <td>You are a Historian</td>
+    <td>prompt_min.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0401'><span class='test-square' style='background-color: #6699ff;'>T0401</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/company_lists/">company_lists</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff33cc;'>openrouter</span></td>
+    <td><span class='test-rectangle' style='background-color: #ffcc33;'>x-ai/grok-4</span></td>
+    <td>ListPage</td>
+    <td>0.5</td>
+    <td>You are a Historian</td>
+    <td>prompt.txt</td>
+    <td>false</td>
+</tr>
+<tr>
+    <td><a href='/humanities_data_benchmark/tests/T0402'><span class='test-square' style='background-color: #1abc9c;'>T0402</span></a></td>
+    <td><a href="/humanities_data_benchmark/benchmarks/company_lists/">company_lists</a></td>
+    <td><span class='test-rectangle' style='background-color: #ff33cc;'>openrouter</span></td>
+    <td><span class='test-rectangle' style='background-color: #ffcc33;'>x-ai/grok-4</span></td>
+    <td>ListPage</td>
+    <td>0.5</td>
+    <td>You are a Historian</td>
+    <td>prompt_min.txt</td>
+    <td>false</td>
+</tr>
 
   </tbody>
 </table>

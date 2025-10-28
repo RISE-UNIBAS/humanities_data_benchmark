@@ -676,7 +676,7 @@ def create_index():
 
                 # Extract the main score for sorting
                 score_value = 0
-                if benchmark == 'bibliographic_data' or benchmark == 'fraktur' or benchmark == 'medieval_manuscripts':
+                if benchmark == 'bibliographic_data' or benchmark == 'fraktur' or benchmark == 'medieval_manuscripts' or benchmark == 'blacklist':
                     score_value = scoring_data.get('fuzzy', 0)
                 elif benchmark == 'metadata_extraction' or benchmark == 'zettelkatalog':
                     score_value = scoring_data.get('f1_micro', 0)
@@ -698,7 +698,7 @@ def create_index():
                         except (ValueError, TypeError):
                             badge_html = "N/A"
                 else:
-                    # Use fuzzy for bibliographic_data, fraktur, and other benchmarks
+                    # Use fuzzy for bibliographic_data, fraktur, blacklist, and other benchmarks
                     if 'fuzzy' in scoring_data:
                         fuzzy_value = scoring_data['fuzzy']
                         try:
@@ -1004,92 +1004,6 @@ markdown_extensions:
     write_file("../mkdocs.yml", mkdocs_yml)
 
 
-def add_new_results_to_changelog():
-    """Add new test results to CHANGELOG.md under the Added section."""
-    import logging
-    
-    changelog_path = "../CHANGELOG.md"
-    results_dir = "../results"
-    
-    if not os.path.exists(changelog_path) or not os.path.exists(results_dir):
-        logging.warning("CHANGELOG.md or results directory not found")
-        return
-    
-    changelog_content = read_file(changelog_path)
-    
-    # Find existing test entries in changelog
-    existing_entries = set()
-    for line in changelog_content.split('\n'):
-        match = re.search(r'- (T\d+) on (\d{4}-\d{2}-\d{2})', line)
-        if match:
-            test_id, date = match.groups()
-            existing_entries.add(f"{test_id}_{date}")
-    
-    # Find all test results in results directory (only after 2025-08-25)
-    new_entries = []
-    cutoff_date = "2025-08-25"
-    
-    for date_folder in sorted(os.listdir(results_dir)):
-        date_path = os.path.join(results_dir, date_folder)
-        if not os.path.isdir(date_path):
-            continue
-            
-        # Skip dates that are not later than 2025-08-25
-        if date_folder <= cutoff_date:
-            continue
-            
-        for test_id in sorted(os.listdir(date_path)):
-            test_path = os.path.join(date_path, test_id)
-            if not os.path.isdir(test_path):
-                continue
-                
-            entry_key = f"{test_id}_{date_folder}"
-            if entry_key not in existing_entries:
-                new_entries.append(f"- {test_id} on {date_folder}")
-    
-    if not new_entries:
-        logging.info("No new test results to add to changelog")
-        return
-    
-    # Find the "### Added" section under "## [Unreleased]"
-    lines = changelog_content.split('\n')
-    added_section_idx = None
-    
-    for i, line in enumerate(lines):
-        if line.strip() == "### Added" and i > 0:
-            # Check if this is under the Unreleased section
-            for j in range(i-1, -1, -1):
-                if lines[j].startswith("## "):
-                    if "[Unreleased]" in lines[j]:
-                        added_section_idx = i
-                    break
-            break
-    
-    if added_section_idx is None:
-        logging.warning("Could not find '### Added' section under [Unreleased] in CHANGELOG.md")
-        return
-    
-    # Insert new entries after the "### Added" line
-    insert_idx = added_section_idx + 1
-    
-    # Skip any existing entries to find the right insertion point
-    while (insert_idx < len(lines) and 
-           (lines[insert_idx].startswith("- ") or lines[insert_idx].strip() == "")):
-        insert_idx += 1
-    
-    # Insert new entries
-    for entry in reversed(new_entries):  # Reverse to maintain chronological order
-        lines.insert(insert_idx, entry)
-    
-    # Write back to changelog
-    updated_content = '\n'.join(lines)
-    write_file(changelog_path, updated_content)
-    
-    logging.info(f"Added {len(new_entries)} new entries to CHANGELOG.md")
-    for entry in new_entries:
-        logging.info(f"  {entry}")
-
-
 if __name__ == "__main__":
     os.makedirs(REPORTS_DIR, exist_ok=True)
     test_dates = load_test_dates()
@@ -1109,6 +1023,5 @@ if __name__ == "__main__":
 
     generate_site_navigation()  # Generate mkdocs.yml
     create_index()
-    add_new_results_to_changelog()
 
     logging.info("Reports generated successfully!")
