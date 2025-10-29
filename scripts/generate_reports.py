@@ -350,8 +350,8 @@ def create_leaderboard():
                 # Use fuzzy score for blacklist
                 score = scoring_data.get('fuzzy')
             elif benchmark == 'company_lists':
-                # Use fuzzy score for company_lists
-                score = scoring_data.get('fuzzy')
+                # Use f1_micro for company_lists
+                score = scoring_data.get('f1_micro')
             elif benchmark == 'fraktur':
                 # Use fuzzy score for fraktur
                 score = scoring_data.get('fuzzy')
@@ -467,10 +467,10 @@ def create_leaderboard():
     
     # Sort by global average (highest first)
     leaderboard_data.sort(key=lambda x: x['global_avg'], reverse=True)
-    
+
     # Create leaderboard HTML table
     if not leaderboard_data:
-        return "<p>No leaderboard data available.</p>"
+        return "<p>No leaderboard data available.</p>", []
     
     leaderboard_html = '''<div>
 <table id="leaderboard-table" style="width:100%; border-collapse: collapse; margin-bottom: 20px;">
@@ -513,7 +513,7 @@ def create_leaderboard():
 
         biblio_badge = get_badge("fuzzy", f"{data['bibliographic_data']:.3f}") if data['bibliographic_data'] is not None else "N/A"
         blacklist_badge = get_badge("fuzzy", f"{data['blacklist']:.3f}") if data['blacklist'] is not None else "N/A"
-        company_lists_badge = get_badge("fuzzy", f"{data['company_lists']:.3f}") if data['company_lists'] is not None else "N/A"
+        company_lists_badge = get_badge("f1_micro", f"{data['company_lists']:.3f}") if data['company_lists'] is not None else "N/A"
         fraktur_badge = get_badge("fuzzy", f"{data['fraktur']:.3f}") if data['fraktur'] is not None else "N/A"
         medieval_manuscripts_badge = get_badge("fuzzy", f"{data['medieval_manuscripts']:.3f}") if data['medieval_manuscripts'] is not None else "N/A"
         metadata_badge = get_badge("f1_micro", f"{data['metadata_extraction']:.3f}") if data['metadata_extraction'] is not None else "N/A"
@@ -697,9 +697,9 @@ def create_index():
 
                 # Extract the main score for sorting
                 score_value = 0
-                if benchmark == 'bibliographic_data' or benchmark == 'blacklist' or benchmark == 'company_lists' or benchmark == 'fraktur' or benchmark == 'medieval_manuscripts':
+                if benchmark == 'bibliographic_data' or benchmark == 'blacklist' or benchmark == 'fraktur' or benchmark == 'medieval_manuscripts':
                     score_value = scoring_data.get('fuzzy', 0)
-                elif benchmark == 'metadata_extraction' or benchmark == 'zettelkatalog':
+                elif benchmark == 'company_lists' or benchmark == 'metadata_extraction' or benchmark == 'zettelkatalog':
                     score_value = scoring_data.get('f1_micro', 0)
                 
                 try:
@@ -709,8 +709,8 @@ def create_index():
 
                 # Show appropriate score with 3 decimal places as badge based on benchmark type
                 badge_html = "N/A"
-                if benchmark == 'metadata_extraction' or benchmark == 'zettelkatalog':
-                    # Use f1_micro for metadata_extraction and zettelkatalog
+                if benchmark == 'company_lists' or benchmark == 'metadata_extraction' or benchmark == 'zettelkatalog':
+                    # Use f1_micro for company_lists, metadata_extraction and zettelkatalog
                     if 'f1_micro' in scoring_data:
                         f1_value = scoring_data['f1_micro']
                         try:
@@ -719,7 +719,7 @@ def create_index():
                         except (ValueError, TypeError):
                             badge_html = "N/A"
                 else:
-                    # Use fuzzy for bibliographic_data, fraktur, blacklist, and other benchmarks
+                    # Use fuzzy for bibliographic_data, blacklist, fraktur, medieval_manuscripts, and other benchmarks
                     if 'fuzzy' in scoring_data:
                         fuzzy_value = scoring_data['fuzzy']
                         try:
