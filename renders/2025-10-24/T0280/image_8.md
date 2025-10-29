@@ -1,0 +1,14 @@
+### Result for image_8
+**Average fuzzy score:** 0.482 (higher is better)<br>**Average character error rate (CER):** 0.542 (lower is better)<br>[View raw result from gpt-5-mini](https://github.com/RISE-UNIBAS/humanities_data_benchmark/blob/main/results/2025-10-24/T0280/request_T0280_image_8.json)
+
+<img src="https://github.com/RISE-UNIBAS/humanities_data_benchmark/blob/main/benchmarks/medieval_manuscripts/images/image_8.jpg?raw=true" alt="image_8" width="800px">
+
+<style>
+.diff { text-decoration: underline; text-decoration-color: #ffcccc; text-decoration-style: wavy; }
+</style>
+
+| Folio Ref | Field | Prediction | Ground Truth | Fuzzy Score | CER |
+|-----------|-------|------------|--------------|-------------|-----|
+| [69r] | folio | <span class="diff">69</span> |  | 0.000 | 1.000 |
+| [69r] | text | Dar<span class="diff">auff</span> kome <span class="diff">e</span>r pf<span class="diff">fister und<br>trunc</span>k<span class="diff">et zu nimmen thed als<br>die gallen vnd hos</span>p<span class="diff">eter</span>y <span class="diff">des<br>sinck gruben des gelchs denn<br>die wunderschen pffister vnd<br>trunckler vnd ieggen slader<br>und hospetery do als nach we<br>ssehet also ward nime fregesge<br>herd vnd allen den pffere vil<br>einen abbotten Ist mundet ge<br>gen vng fundent wur do danns<br>und sampt off fertung nach sint<br>rebens tag Als do vor das erst<br>tag in birthem vnu gefuncken<br>d ist ein pfann sat hint zuer<br>flecken des gleschrey ob der<br>stat den off suntag darnecht<br>siney wir da samme der off<br>suner gar sunt uns tage<br>sunder zu oder in gallen bey do</span> | Dar<span class="diff">nach</span> kome <span class="diff">i</span>r pf<span class="diff">iffer vn<br> trumeter zuo minem heren vff<br> die gallen vnd hofierten do<br> sinen gnoden des glich </span>k<span class="diff">ome<br> die windeschen </span>p<span class="diff">fiffer vnd<br> trumeter vnd böggenslaher<br> vn hofierten do och nach ire<br> sitten also ward mine gnedige<br> hern vnd allen den sine vil<br> eren do erbotten Itꝰ morndes ge<br> gen tag fuorent wir do dannen<br> vnd kamen vff freitag nach sant<br> vrbans tag der do wz der erst<br> tag im brachmonet gon kurfon<br> dz ist ein schone stat mit zwen<br> herlichen velshursern ob der<br> stat vn vff sunntag darnach<br> fuoren wir da danne vn vff<br> zinstag vor sant vitz tag<br> komen zuo vns iii gallen b</span>y <span class="diff">xx</span> | 0.686 | 0.376 |
+| [69r] | addition1 | Honor<span class="diff">iu</span>s<span class="diff"><br></span>Marchio<br>i<span class="diff">n</span> exi<span class="diff">-</span>bit<span class="diff">h</span> | Honor<span class="diff">e</span>s<span class="diff"> </span>Marchio<br><span class="diff"> n</span>i ex<span class="diff">h</span>i<span class="diff"><br> </span>bit<span class="diff">i</span> | 0.759 | 0.250 |

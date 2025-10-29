@@ -1,0 +1,13 @@
+### Result for image_10
+**Average fuzzy score:** 0.901 (higher is better)<br>**Average character error rate (CER):** 0.133 (lower is better)<br>[View raw result from qwen/qwen3-vl-30b-a3b-instruct](https://github.com/RISE-UNIBAS/humanities_data_benchmark/blob/main/results/2025-10-24/T0302/request_T0302_image_10.json)
+
+<img src="https://github.com/RISE-UNIBAS/humanities_data_benchmark/blob/main/benchmarks/medieval_manuscripts/images/image_10.jpg?raw=true" alt="image_10" width="800px">
+
+<style>
+.diff { text-decoration: underline; text-decoration-color: #ffcccc; text-decoration-style: wavy; }
+</style>
+
+| Folio Ref | Field | Prediction | Ground Truth | Fuzzy Score | CER |
+|-----------|-------|------------|--------------|-------------|-----|
+| [73r] | folio | 73 | 73 | 1.000 | 0.000 |
+| [73r] | text | I<span class="diff">st</span> zu dem ersten M<span class="diff">yn hein graff albrauht vo<br> anhalt<br> Ist hi</span>er ludwig lan<span class="diff">ggraf von lufftenberg<br> Ist graff ot von hemmenberg<br> Ist gra</span>ff Bernhart von <span class="diff">fegenstein<br> Ist gross gottfried von hahnen</span>k<span class="diff">of<br> Ist graff fu</span>ch<span class="diff">hart von manfeld<br> Ist graff lud</span>w<span class="diff">ig von renburg<br> Ist her Gotthard von stoff<br> Ist her hans von tungöns<br> Ist her von baypombein<br> Ist her</span> B<span class="diff">u</span>ppin vom <span class="diff">rein vnd Woc</span>hin R<span class="diff">uter<br> Ist lug</span> vom <span class="diff">rotenham<br> Ist her</span> von wal<span class="diff">lenstett<br> Ist hi</span>lp<span class="diff">and von thungen<br> Ist her von eichon<br> Ist henni</span>n qua<span class="diff">p</span> | I<span class="diff">tꝰ</span> zu<span class="diff">o</span> dem ersten M<span class="diff">in hern graff albracht vo<br> anhalt<br> Itꝰ h</span>er ludwig lan<span class="diff">tgraff von luchtenberg<br> Itꝰ groff ott von hennenberg<br> Itꝰ gro</span>ff Bernhart von <span class="diff">Regenstein<br> Itꝰ groff göttfrid von hochenloch<br>  Itꝰ groff gebhart von Mansfeld<br> Itꝰ groff ludwig von Isenburg<br> Itꝰ her Gotschal</span>k<span class="diff"> von Bless bedpan</span>ch<span class="diff">n<br> Itꝰ her hans von turgö</span>w<span class="diff"><br> Itꝰ Jerg vo</span> B<span class="diff">a</span>pp<span class="diff">enhein<br> Itꝰ her Buppel</span>in vom <span class="diff">stein wz vor</span>hin R<span class="diff">itter<br> Itꝰ lutz</span> vom <span class="diff">Rotenhan<br> Itꝰ Jerg</span> von wal<span class="diff">denfelss<br> Itꝰ hÿ</span>lp<span class="diff">rand von thuongen<br> Itꝰ Jerg von Slieben<br> Itꝰ henÿ</span>n qua<span class="diff">st</span> | 0.803 | 0.265 |

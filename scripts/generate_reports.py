@@ -162,8 +162,8 @@ def create_leaderboard_radar_chart(leaderboard_data):
     top_models = leaderboard_data[:10]
     
     # Categories for the radar chart
-    categories = ['bibliographic_data', 'fraktur', 'metadata_extraction', 'zettelkatalog']
-    category_labels = ['Bibliographic Data', 'Fraktur', 'Metadata Extraction', 'Zettelkatalog']
+    categories = ['bibliographic_data', 'blacklist', 'company_lists', 'fraktur', 'medieval_manuscripts', 'metadata_extraction', 'zettelkatalog']
+    category_labels = ['Bibliographic Data', 'Blacklist', 'Company Lists', 'Fraktur', 'Medieval Manuscripts', 'Metadata Extraction', 'Zettelkatalog']
     
     # Number of variables
     N = len(categories)
@@ -284,7 +284,7 @@ def create_leaderboard():
     """Create a leaderboard section showing global averages for each model across key benchmarks."""
 
     # Target benchmarks for global average calculation
-    target_benchmarks = ['bibliographic_data', 'fraktur', 'metadata_extraction', 'zettelkatalog']
+    target_benchmarks = ['bibliographic_data', 'blacklist', 'company_lists', 'fraktur', 'medieval_manuscripts', 'metadata_extraction', 'zettelkatalog']
 
     # Dictionary to store model scores: {model_name: {benchmark: [scores], provider: provider_name, benchmark_costs: {benchmark: [costs]}, benchmark_times: {benchmark: [times]}}}
     model_scores = {}
@@ -346,8 +346,17 @@ def create_leaderboard():
             if benchmark == 'bibliographic_data':
                 # Use fuzzy score for bibliographic_data
                 score = scoring_data.get('fuzzy')
+            elif benchmark == 'blacklist':
+                # Use fuzzy score for blacklist
+                score = scoring_data.get('fuzzy')
+            elif benchmark == 'company_lists':
+                # Use fuzzy score for company_lists
+                score = scoring_data.get('fuzzy')
             elif benchmark == 'fraktur':
                 # Use fuzzy score for fraktur
+                score = scoring_data.get('fuzzy')
+            elif benchmark == 'medieval_manuscripts':
+                # Use fuzzy score for medieval_manuscripts
                 score = scoring_data.get('fuzzy')
             elif benchmark == 'metadata_extraction':
                 # Use f1_micro for metadata_extraction
@@ -448,7 +457,10 @@ def create_leaderboard():
                 'cost_per_point': cost_per_point,
                 'time_per_point': time_per_point,
                 'bibliographic_data': benchmark_averages['bibliographic_data'],
+                'blacklist': benchmark_averages['blacklist'],
+                'company_lists': benchmark_averages['company_lists'],
                 'fraktur': benchmark_averages['fraktur'],
+                'medieval_manuscripts': benchmark_averages['medieval_manuscripts'],
                 'metadata_extraction': benchmark_averages['metadata_extraction'],
                 'zettelkatalog': benchmark_averages['zettelkatalog']
             })
@@ -470,9 +482,12 @@ def create_leaderboard():
 <th onclick="sortTable(3)" style="cursor: pointer;">Cost/Point ↕</th>
 <th onclick="sortTable(4)" style="cursor: pointer;">Time/Point ↕</th>
 <th onclick="sortTable(5)" style="cursor: pointer;"><a href="benchmarks/bibliographic_data/" style="color: inherit; text-decoration: none;">bibliographic_data</a> ↕</th>
-<th onclick="sortTable(6)" style="cursor: pointer;"><a href="benchmarks/fraktur/" style="color: inherit; text-decoration: none;">fraktur</a> ↕</th>
-<th onclick="sortTable(7)" style="cursor: pointer;"><a href="benchmarks/metadata_extraction/" style="color: inherit; text-decoration: none;">metadata_extraction</a> ↕</th>
-<th onclick="sortTable(8)" style="cursor: pointer;"><a href="benchmarks/zettelkatalog/" style="color: inherit; text-decoration: none;">zettelkatalog</a> ↕</th>
+<th onclick="sortTable(6)" style="cursor: pointer;"><a href="benchmarks/blacklist/" style="color: inherit; text-decoration: none;">blacklist</a> ↕</th>
+<th onclick="sortTable(7)" style="cursor: pointer;"><a href="benchmarks/company_lists/" style="color: inherit; text-decoration: none;">company_lists</a> ↕</th>
+<th onclick="sortTable(8)" style="cursor: pointer;"><a href="benchmarks/fraktur/" style="color: inherit; text-decoration: none;">fraktur</a> ↕</th>
+<th onclick="sortTable(9)" style="cursor: pointer;"><a href="benchmarks/medieval_manuscripts/" style="color: inherit; text-decoration: none;">medieval_manuscripts</a> ↕</th>
+<th onclick="sortTable(10)" style="cursor: pointer;"><a href="benchmarks/metadata_extraction/" style="color: inherit; text-decoration: none;">metadata_extraction</a> ↕</th>
+<th onclick="sortTable(11)" style="cursor: pointer;"><a href="benchmarks/zettelkatalog/" style="color: inherit; text-decoration: none;">zettelkatalog</a> ↕</th>
 </tr>
 </thead>
 <tbody>'''
@@ -497,16 +512,22 @@ def create_leaderboard():
             time_per_point_sort = f"{data['time_per_point']:.2f}"
 
         biblio_badge = get_badge("fuzzy", f"{data['bibliographic_data']:.3f}") if data['bibliographic_data'] is not None else "N/A"
+        blacklist_badge = get_badge("fuzzy", f"{data['blacklist']:.3f}") if data['blacklist'] is not None else "N/A"
+        company_lists_badge = get_badge("fuzzy", f"{data['company_lists']:.3f}") if data['company_lists'] is not None else "N/A"
         fraktur_badge = get_badge("fuzzy", f"{data['fraktur']:.3f}") if data['fraktur'] is not None else "N/A"
+        medieval_manuscripts_badge = get_badge("fuzzy", f"{data['medieval_manuscripts']:.3f}") if data['medieval_manuscripts'] is not None else "N/A"
         metadata_badge = get_badge("f1_micro", f"{data['metadata_extraction']:.3f}") if data['metadata_extraction'] is not None else "N/A"
         zettelkatalog_badge = get_badge("f1_micro", f"{data['zettelkatalog']:.3f}") if data['zettelkatalog'] is not None else "N/A"
-        
+
         biblio_sort = f'{data["bibliographic_data"]:.3f}' if data["bibliographic_data"] is not None else "0"
-        fraktur_sort = f'{data["fraktur"]:.3f}' if data["fraktur"] is not None else "0"  
+        blacklist_sort = f'{data["blacklist"]:.3f}' if data["blacklist"] is not None else "0"
+        company_lists_sort = f'{data["company_lists"]:.3f}' if data["company_lists"] is not None else "0"
+        fraktur_sort = f'{data["fraktur"]:.3f}' if data["fraktur"] is not None else "0"
+        medieval_manuscripts_sort = f'{data["medieval_manuscripts"]:.3f}' if data["medieval_manuscripts"] is not None else "0"
         metadata_sort = f'{data["metadata_extraction"]:.3f}' if data["metadata_extraction"] is not None else "0"
         zettelkatalog_sort = f'{data["zettelkatalog"]:.3f}' if data["zettelkatalog"] is not None else "0"
         
-        leaderboard_html += f'<tr><td data-sort="{data["model"]}">{model_html}</td><td data-sort="{data["provider"]}">{provider_html}</td><td data-sort="{data["global_avg"]:.3f}">{global_avg_display}</td><td data-sort="{cost_per_point_sort}">{cost_per_point_display}</td><td data-sort="{time_per_point_sort}">{time_per_point_display}</td><td data-sort="{biblio_sort}">{biblio_badge}</td><td data-sort="{fraktur_sort}">{fraktur_badge}</td><td data-sort="{metadata_sort}">{metadata_badge}</td><td data-sort="{zettelkatalog_sort}">{zettelkatalog_badge}</td></tr>'
+        leaderboard_html += f'<tr><td data-sort="{data["model"]}">{model_html}</td><td data-sort="{data["provider"]}">{provider_html}</td><td data-sort="{data["global_avg"]:.3f}">{global_avg_display}</td><td data-sort="{cost_per_point_sort}">{cost_per_point_display}</td><td data-sort="{time_per_point_sort}">{time_per_point_display}</td><td data-sort="{biblio_sort}">{biblio_badge}</td><td data-sort="{blacklist_sort}">{blacklist_badge}</td><td data-sort="{company_lists_sort}">{company_lists_badge}</td><td data-sort="{fraktur_sort}">{fraktur_badge}</td><td data-sort="{medieval_manuscripts_sort}">{medieval_manuscripts_badge}</td><td data-sort="{metadata_sort}">{metadata_badge}</td><td data-sort="{zettelkatalog_sort}">{zettelkatalog_badge}</td></tr>'
     
     leaderboard_html += '''</tbody>
 </table>
@@ -676,7 +697,7 @@ def create_index():
 
                 # Extract the main score for sorting
                 score_value = 0
-                if benchmark == 'bibliographic_data' or benchmark == 'fraktur' or benchmark == 'medieval_manuscripts' or benchmark == 'blacklist':
+                if benchmark == 'bibliographic_data' or benchmark == 'blacklist' or benchmark == 'company_lists' or benchmark == 'fraktur' or benchmark == 'medieval_manuscripts':
                     score_value = scoring_data.get('fuzzy', 0)
                 elif benchmark == 'metadata_extraction' or benchmark == 'zettelkatalog':
                     score_value = scoring_data.get('f1_micro', 0)
@@ -812,21 +833,22 @@ results, and comparisons.
 ## Leaderboard
 
 The table below shows the **global average performance**, **cost efficiency**, and **time efficiency** of each model
-across the four core benchmarks: [bibliographic_data](benchmarks/bibliographic_data/), [fraktur](
-benchmarks/fraktur/), [metadata_extraction](benchmarks/metadata_extraction/), and [zettelkatalog](
-benchmarks/zettelkatalog/).
+across the seven core benchmarks: [bibliographic_data](benchmarks/bibliographic_data/), [blacklist](
+benchmarks/blacklist/), [company_lists](benchmarks/company_lists/), [fraktur](benchmarks/fraktur/),
+[medieval_manuscripts](benchmarks/medieval_manuscripts/), [metadata_extraction](benchmarks/metadata_extraction/),
+and [zettelkatalog](benchmarks/zettelkatalog/).
 
-The **Model** and **Provider** columns identify each AI system. **Global Average** represents the mean performance 
-score across all four benchmarks (higher is better). **Cost/Point** and **Time/Point** show normalized efficiency 
-metrics calculated per test, averaged per benchmark, then averaged globally; this multi-level normalization accounts 
-for different numbers of items, test configurations, and benchmark scales. For efficiency metrics, lower values are 
-better, indicating less cost or time needed per performance point achieved. The four benchmark-specific columns show 
-average performance for each individual benchmark. Only models with results in all four benchmarks are included. 
+The **Model** and **Provider** columns identify each AI system. **Global Average** represents the mean performance
+score across all seven benchmarks (higher is better). **Cost/Point** and **Time/Point** show normalized efficiency
+metrics calculated per test, averaged per benchmark, then averaged globally; this multi-level normalization accounts
+for different numbers of items, test configurations, and benchmark scales. For efficiency metrics, lower values are
+better, indicating less cost or time needed per performance point achieved. The seven benchmark-specific columns show
+average performance for each individual benchmark. Only models with results in all seven benchmarks are included.
 Click on any column header to sort the table.
 
 {leaderboard_html}
 
-The following radar chart shows the performance distribution of top models across the four core benchmarks:
+The following radar chart shows the performance distribution of top models across the seven core benchmarks:
 
 {radar_chart_html}
 

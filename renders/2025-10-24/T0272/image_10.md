@@ -1,0 +1,14 @@
+### Result for image_10
+**Average fuzzy score:** 0.614 (higher is better)<br>**Average character error rate (CER):** 0.400 (lower is better)<br>[View raw result from gemini-2.5-pro](https://github.com/RISE-UNIBAS/humanities_data_benchmark/blob/main/results/2025-10-24/T0272/request_T0272_image_10.json)
+
+<img src="https://github.com/RISE-UNIBAS/humanities_data_benchmark/blob/main/benchmarks/medieval_manuscripts/images/image_10.jpg?raw=true" alt="image_10" width="800px">
+
+<style>
+.diff { text-decoration: underline; text-decoration-color: #ffcccc; text-decoration-style: wavy; }
+</style>
+
+| Folio Ref | Field | Prediction | Ground Truth | Fuzzy Score | CER |
+|-----------|-------|------------|--------------|-------------|-----|
+| [73r] | folio | 73 | 73 | 1.000 | 0.000 |
+| [73r] | text | It zu dem ersten Mi<span class="diff">tz herin graff albre</span>cht vo<br><span class="diff">lomhalt<br>It</span> her ludwig lantgraff von l<span class="diff">i</span>chtenberg<br><span class="diff">It graff ott von hennenberg<br>It gra</span>ff Bernhart von Regenstein<br><span class="diff">It graff gottfrid von Ratznl</span>och<span class="diff"><br>It gra</span>ff gebhart von Mansfeld<br><span class="diff">It gra</span>ff ludwig von <span class="diff">Nuburg<br>It</span> her Got<span class="diff">t</span>schalk von p<span class="diff">less<br>It her Gerhart von trugino<br>It</span> Jerg Bappenhei<span class="diff">m<br>It her S</span>uppin vom stein<span class="diff"><br>It lut</span>z von R<span class="diff">otenhan<br>It</span> Jerg von <span class="diff">Waldenseff<br>It Gy</span>lpran<span class="diff">t von thungen<br>It</span> Jerg von Sli<span class="diff">cken<br>It heni</span>n quast | It<span class="diff">ꝰ</span> zu<span class="diff">o</span> dem ersten Mi<span class="diff">n hern graff albra</span>cht vo<br><span class="diff"> anhalt<br> Itꝰ</span> her ludwig lantgraff von l<span class="diff">u</span>chtenberg<br><span class="diff"> Itꝰ groff ott von hennenberg<br> Itꝰ gro</span>ff Bernhart von Regenstein<br><span class="diff"> Itꝰ groff göttfrid von h</span>och<span class="diff">enloch<br>  Itꝰ gro</span>ff gebhart von Mansfeld<br><span class="diff"> Itꝰ gro</span>ff ludwig von <span class="diff">Isenburg<br> Itꝰ</span> her Gotschalk von <span class="diff">Bless bed</span>p<span class="diff">anchn<br> Itꝰ her hans von turgöw<br> Itꝰ</span> Jerg<span class="diff"> vo</span> Bappenhei<span class="diff">n<br> Itꝰ her B</span>upp<span class="diff">el</span>in vom stein<span class="diff"> w</span>z vo<span class="diff">rhi</span>n R<span class="diff">itter<br> Itꝰ lutz vom Rotenhan<br> Itꝰ</span> Jerg von <span class="diff">waldenfelss<br> Itꝰ hÿ</span>lpran<span class="diff">d von thuongen<br> Itꝰ</span> Jerg von Sli<span class="diff">eben<br> Itꝰ henÿ</span>n quast | 0.841 | 0.200 |
+| [73r] | addition1 | <span class="diff">bedspanchin</span> |  | 0.000 | 1.000 |

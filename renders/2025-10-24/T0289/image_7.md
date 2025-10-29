@@ -1,0 +1,13 @@
+### Result for image_7
+**Average fuzzy score:** 0.255 (higher is better)<br>**Average character error rate (CER):** 0.791 (lower is better)<br>[View raw result from claude-3-opus-20240229](https://github.com/RISE-UNIBAS/humanities_data_benchmark/blob/main/results/2025-10-24/T0289/request_T0289_image_7.json)
+
+<img src="https://github.com/RISE-UNIBAS/humanities_data_benchmark/blob/main/benchmarks/medieval_manuscripts/images/image_7.jpg?raw=true" alt="image_7" width="800px">
+
+<style>
+.diff { text-decoration: underline; text-decoration-color: #ffcccc; text-decoration-style: wavy; }
+</style>
+
+| Folio Ref | Field | Prediction | Ground Truth | Fuzzy Score | CER |
+|-----------|-------|------------|--------------|-------------|-----|
+| [62v] | text | D<span class="diff">es </span>p<span class="diff">slley wgß gay </span>p<span class="diff">slwyn Ta des wwrz<br>yen haftang dein gedultig ster</span>b<span class="diff">ñ vsz<br>Dee felkengefande mgr vnser gan<br>gay felfend ift oa dein aafgestanbe<br>var goa text sind vblelley zwey<br>eng des and sancaß oa dein galzen<br>Dagang Das do nsz der aufstun<br>zweager to my Deo meecy Vff<br>zein ewasse do texft gaar welbely<br>yft my dein a</span>p<span class="diff">ferstieg der do wz fur<br>left my ins meecy Do fosfey wu<br>chtu ntaeigey pslayey knob gust<br>pftiff aus meetigie satzee vaft sofe<br>Vont punt mag omeufae onß der<br>Durie geweelgay paluft See so zemstslig<br>gez so ino in oa gind Onig zo sae<br>ein Gatten my vnd onserdie Lraft<br>den sin wundersam groffir ob<br>vil sir gusfalten ytzß gnad Vff fae</span> | <span class="diff">des selben tags gon falzion In der wur-<br> gen Itꝰ an dem balmtag derdo wz<br> der subenzehende tag Ritten wir<br> gon felters Itꝰ an dem achzehende<br> tag gon terfis vnd bliben zwen<br> tag do vnd fuorend an dem hohen<br> donstag der do wz der acht vn<br> zwenzigest tag des mertzen vff/ dem wasser vo terfis gon venedig<br> Itꝰ an dem osteroben der do wz der<br> lest tag im mertzen do sohen wir<br> etwe manigen sitkusten vnd grosse<br> schiff als mechtige hüser och sohe<br> wir sant marx münster vnd des<br> hertzogen palast der ist zemol schön<br> vn stönd daruff vil hern Ritter<br> vnd knechten woppen die denn<br> ze venedig gewesen sind </span>D<span class="diff">o ist<br> ein Ca</span>pp<span class="diff">ell an dem münster doist<br> der stein in eine altar gevasset do<br> vnser </span>b<span class="diff">ehalter Jhs X</span>p<span class="diff">s vff fas</span> | 0.509 | 0.582 |
+| [62v] | addition1 |  | <span class="diff">Veneti<br> Ducis<br> palatiu<br> magnifi<br> cum</span> | 0.000 | 1.000 |

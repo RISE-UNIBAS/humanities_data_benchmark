@@ -1,0 +1,13 @@
+### Result for image_10
+**Average fuzzy score:** 0.879 (higher is better)<br>**Average character error rate (CER):** 0.150 (lower is better)<br>[View raw result from claude-opus-4-1-20250805](https://github.com/RISE-UNIBAS/humanities_data_benchmark/blob/main/results/2025-10-24/T0292/request_T0292_image_10.json)
+
+<img src="https://github.com/RISE-UNIBAS/humanities_data_benchmark/blob/main/benchmarks/medieval_manuscripts/images/image_10.jpg?raw=true" alt="image_10" width="800px">
+
+<style>
+.diff { text-decoration: underline; text-decoration-color: #ffcccc; text-decoration-style: wavy; }
+</style>
+
+| Folio Ref | Field | Prediction | Ground Truth | Fuzzy Score | CER |
+|-----------|-------|------------|--------------|-------------|-----|
+| [73r] | folio | 73 | 73 | 1.000 | 0.000 |
+| [73r] | text | <span class="diff">Jst</span> zuo dem ersten Mi<span class="diff">j herr graff albrai</span>cht vo<br><span class="diff">einsidel<br>Jst</span> her ludwig lan<span class="diff">graff von hi</span>chtenberg<br><span class="diff">Jst graff ott von hennenberg<br>Jst gra</span>ff Bernhart von k<span class="diff">atzenelnbogen<br>Jst graff götfried von habs</span>p<span class="diff">urg<br>Jst graff gerhart von Manssfeld<br>Jst graff ludwig Von stemberg<br>Jst her Gotfrialt von liess bodganelm<br>Jst her henri</span>ch<span class="diff"> von twe</span>göw<br>J<span class="diff">st graff</span> B<span class="diff">ragennem<br>Jst her Ru</span>p<span class="diff">elm</span> vom stein wz vorhm R<span class="diff">itter<br></span>J<span class="diff">st hug vom Rotenhon<br></span>J<span class="diff">st herg von walbenfels<br>Jst spibrend von thunigen<br>Jst h</span>erg von Slieben<br><span class="diff">Jst henꝛin guast</span> | <span class="diff">Itꝰ</span> zuo dem ersten Mi<span class="diff">n hern graff albra</span>cht vo<br><span class="diff"> anhalt<br> Itꝰ</span> her ludwig lan<span class="diff">tgraff von lu</span>chtenberg<br><span class="diff"> Itꝰ groff ott von hennenberg<br> Itꝰ gro</span>ff Bernhart von <span class="diff">Regenstein<br> Itꝰ groff göttfrid von hochenloch<br>  Itꝰ groff gebhart von Mansfeld<br> Itꝰ groff ludwig von Isenburg<br> Itꝰ her Gotschal</span>k<span class="diff"> von Bless bed</span>p<span class="diff">an</span>ch<span class="diff">n<br> Itꝰ her hans von tur</span>göw<br><span class="diff"> Itꝰ </span>J<span class="diff">erg vo</span> B<span class="diff">a</span>p<span class="diff">penhein<br> Itꝰ her Buppelin</span> vom stein wz vorh<span class="diff">in Ritter<br> Itꝰ lutz vo</span>m R<span class="diff">otenhan<br> Itꝰ </span>J<span class="diff">erg von waldenfelss<br> Itꝰ hÿlprand von thuongen<br> Itꝰ </span>Jerg von Slieben<br><span class="diff"> Itꝰ henÿn quast</span> | 0.758 | 0.300 |

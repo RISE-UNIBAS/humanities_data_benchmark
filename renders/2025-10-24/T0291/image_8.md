@@ -1,0 +1,14 @@
+### Result for image_8
+**Average fuzzy score:** 0.210 (higher is better)<br>**Average character error rate (CER):** 0.821 (lower is better)<br>[View raw result from claude-sonnet-4-20250514](https://github.com/RISE-UNIBAS/humanities_data_benchmark/blob/main/results/2025-10-24/T0291/request_T0291_image_8.json)
+
+<img src="https://github.com/RISE-UNIBAS/humanities_data_benchmark/blob/main/benchmarks/medieval_manuscripts/images/image_8.jpg?raw=true" alt="image_8" width="800px">
+
+<style>
+.diff { text-decoration: underline; text-decoration-color: #ffcccc; text-decoration-style: wavy; }
+</style>
+
+| Folio Ref | Field | Prediction | Ground Truth | Fuzzy Score | CER |
+|-----------|-------|------------|--------------|-------------|-----|
+| [69r] | folio | <span class="diff">69</span> |  | 0.000 | 1.000 |
+| [69r] | text | <span class="diff">Gar nacht</span> ko<span class="diff">nig e</span>r pfiff<span class="diff"> vn<br>tuemete zu minen heren vff<br>die galley vnd hoffenrey do<br>fnien grudten v</span>b<span class="diff"> getan</span> k<span class="diff">onig<br></span>b<span class="diff">ie</span> w<span class="diff">undaftten pfiffe vnd<br>tuemete vnd</span> b<span class="diff">epfenlie</span>b<span class="diff">er<br>vnd hoffneten so ditz nach</span> wi<span class="diff">e<br>fitten alfs ward mins gru</span>by<span class="diff">gs<br>bernd vnd alleyn den fein vil<br>e</span>x<span class="diff">erlivotten vft indandet ir<br>gey gar fachen vnd do denno<br>konig dey vyff buiter nach fint<br>von mit ferg do dytt do owlt<br>al mr zu buffonanet pfrr fenfel<br>ze ir vt vnd affane grat vont zadrat<br>gehalffen vt wffelbergna vff de ve<br>fait von vyff hun torff dunetet<br>fueren var do denno ven vyff<br>hang gytt ouer fent vytt teyf<br>kurleg zu vyb yn galley oy off</span> | <span class="diff">Darnach</span> ko<span class="diff">me i</span>r pfiff<span class="diff">er vn<br> trumeter zuo minem heren vff<br> die gallen vnd hofierten do<br> sinen gnoden des glich kome<br> die windeschen pfiffer vnd<br> trumeter vnd </span>b<span class="diff">öggenslaher<br> vn hofierten do och nach ire<br> sitten also ward mine gnedige<br> hern vnd allen den sine vil<br> eren do erbotten Itꝰ morndes ge<br> gen tag fuorent wir do dannen<br> vnd</span> k<span class="diff">amen vff freitag nach sant<br> vr</span>b<span class="diff">ans tag der do</span> w<span class="diff">z der erst<br> tag im</span> b<span class="diff">rachmonet gon kurfon<br> dz ist ein schone stat mit zwen<br> herlichen velshursern o</span>b<span class="diff"> der<br> stat vn vff sunntag darnach<br> fuoren</span> wi<span class="diff">r da danne vn vff<br> zinstag vor sant vitz tag<br> komen zuo vns iii gallen </span>by<span class="diff"> </span>x<span class="diff">x</span> | 0.630 | 0.464 |
+| [69r] | addition1 |  | <span class="diff">Honores Marchio<br> ni exhi<br> biti</span> | 0.000 | 1.000 |

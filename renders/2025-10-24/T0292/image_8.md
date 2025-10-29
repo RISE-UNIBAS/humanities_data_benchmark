@@ -1,0 +1,14 @@
+### Result for image_8
+**Average fuzzy score:** 0.251 (higher is better)<br>**Average character error rate (CER):** 0.762 (lower is better)<br>[View raw result from claude-opus-4-1-20250805](https://github.com/RISE-UNIBAS/humanities_data_benchmark/blob/main/results/2025-10-24/T0292/request_T0292_image_8.json)
+
+<img src="https://github.com/RISE-UNIBAS/humanities_data_benchmark/blob/main/benchmarks/medieval_manuscripts/images/image_8.jpg?raw=true" alt="image_8" width="800px">
+
+<style>
+.diff { text-decoration: underline; text-decoration-color: #ffcccc; text-decoration-style: wavy; }
+</style>
+
+| Folio Ref | Field | Prediction | Ground Truth | Fuzzy Score | CER |
+|-----------|-------|------------|--------------|-------------|-----|
+| [69r] | folio | <span class="diff">69</span> |  | 0.000 | 1.000 |
+| [69r] | text | <span class="diff">S</span>arnach k<span class="diff">ung</span>e ir pfi<span class="diff">ster zuͦ<br>trumette zuͦ ynnen hern vff<br>die gallen vnd hofferten do<br>sinen gnoden de</span>b<span class="diff"> gelich</span> k<span class="diff">ome<br>die vundesten pfister dar<br>trumette vnd liessen slahes<br>dar hofferten do vff nach ire<br>sitten als</span>o w<span class="diff">ard mine gnedige<br>hern vnd allen den sine </span>w<span class="diff">il<br>exentzxlietten ich morde</span>b <span class="diff">ge<br>gen hern furemt</span> wir d<span class="diff">o danne<br>vnd</span> k<span class="diff">amen vff satag nach sant<br>wilhelms tag do bo wir der erst<br>tag im kunigsmat den kusch<br>richten geslane gat sint welch<br>slabessen bufflibergn ob den<br>hat dar vff sambstag darnach<br>furen wir do denne dar vff<br>sunstag war sant wlrichs tag<br>kamen zuͦ vns in gu</span>llen by <span class="diff">pip</span> | <span class="diff">D</span>arnach k<span class="diff">om</span>e ir pfi<span class="diff">ffer vn<br> trumeter zuo minem heren vff<br> die gallen vnd hofierten do<br> sinen gnoden des glich kome<br> die windeschen pfiffer vnd<br> trumeter vnd </span>b<span class="diff">öggenslaher<br> vn hofierten do och nach ire<br> sitten also ward mine gnedige<br> hern vnd allen den sine vil<br> eren do erbotten Itꝰ morndes ge<br> gen tag fuorent wir do dannen<br> vnd</span> k<span class="diff">amen vff freitag nach sant<br> vrbans tag der d</span>o w<span class="diff">z der erst<br> tag im brachmonet gon kurfon<br> dz ist ein schone stat mit z</span>w<span class="diff">en<br> herlichen velshursern o</span>b <span class="diff">der<br> stat vn vff sunntag darnach<br> fuoren</span> wir d<span class="diff">a danne vn vff<br> zinstag vor sant vitz tag<br></span> k<span class="diff">omen zuo vns iii ga</span>llen by <span class="diff">xx</span> | 0.753 | 0.286 |
+| [69r] | addition1 |  | <span class="diff">Honores Marchio<br> ni exhi<br> biti</span> | 0.000 | 1.000 |

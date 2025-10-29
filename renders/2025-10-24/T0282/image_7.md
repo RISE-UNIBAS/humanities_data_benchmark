@@ -1,0 +1,13 @@
+### Result for image_7
+**Average fuzzy score:** 0.572 (higher is better)<br>**Average character error rate (CER):** 0.500 (lower is better)<br>[View raw result from o3](https://github.com/RISE-UNIBAS/humanities_data_benchmark/blob/main/results/2025-10-24/T0282/request_T0282_image_7.json)
+
+<img src="https://github.com/RISE-UNIBAS/humanities_data_benchmark/blob/main/benchmarks/medieval_manuscripts/images/image_7.jpg?raw=true" alt="image_7" width="800px">
+
+<style>
+.diff { text-decoration: underline; text-decoration-color: #ffcccc; text-decoration-style: wavy; }
+</style>
+
+| Folio Ref | Field | Prediction | Ground Truth | Fuzzy Score | CER |
+|-----------|-------|------------|--------------|-------------|-----|
+| [62v] | text | <span class="diff">Oet s</span>ö<span class="diff">lli</span>ch<span class="diff">er trag gen falzun In der war 2<br>zeŋ ruff an den</span> b<span class="diff">alnwng herdis uz<br>der sibenzÿtige trag hattÿ, und<br>zeÿ selbed vff ny den abſſendlich<br>dag den rechte ans ſtable, wenn<br>tag ſeund ſend an den gloſſa<br>Sonnag oder de nÿ der abten vn<br>anzege tag der maezÿ vn<br>den klaren vnd rechte gotte helsige<br>ges</span>p<span class="diff"> an den spreden der da nÿ<br>der bescheiden gelten sla folgen war<br>wendt in gemainen ſe nu folge war</span> | <span class="diff">des selben tags gon falzion In der wur-<br> gen Itꝰ an dem balmtag derdo wz<br> der subenzehende tag Ritten wir<br> gon felters Itꝰ an dem achzehende<br> tag gon terfis vnd bliben zwen<br> tag do vnd fuorend an dem hohen<br> donstag der do wz der acht vn<br> zwenzigest tag des mertzen vff/ dem wasser vo terfis gon venedig<br> Itꝰ an dem osteroben der do wz der<br> lest tag im mertzen do sohen wir<br> etwe manigen sitkusten vnd grosse<br> schiff als mechtige hüser och sohe<br> wir sant marx münster vnd des<br> hertzogen palast der ist zemol sch</span>ö<span class="diff">n<br> vn stönd daruff vil hern Ritter<br> vnd kne</span>ch<span class="diff">ten woppen die denn<br> ze venedig gewesen sind Do ist<br> ein Cappell an dem münster doist<br> der stein in eine altar gevasset do<br> vnser</span> b<span class="diff">ehalter Jhs X</span>p<span class="diff">s vff fas</span> | 0.467 | 0.657 |
+| [62v] | addition1 | Venet<span class="diff">:</span><br>Du<span class="diff">e:</span><br>palati<span class="diff">n</span><br>man<span class="diff">s</span>i<span class="diff">:</span><br><span class="diff">C</span>um<span class="diff">i:</span> | Venet<span class="diff">i</span><br><span class="diff"> </span>Du<span class="diff">cis</span><br><span class="diff"> </span>palati<span class="diff">u</span><br><span class="diff"> </span>ma<span class="diff">g</span>ni<span class="diff">fi</span><br><span class="diff"> c</span>um | 0.676 | 0.344 |

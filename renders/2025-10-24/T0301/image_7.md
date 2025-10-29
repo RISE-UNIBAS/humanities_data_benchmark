@@ -1,0 +1,13 @@
+### Result for image_7
+**Average fuzzy score:** 0.294 (higher is better)<br>**Average character error rate (CER):** 0.744 (lower is better)<br>[View raw result from meta-llama/llama-4-maverick](https://github.com/RISE-UNIBAS/humanities_data_benchmark/blob/main/results/2025-10-24/T0301/request_T0301_image_7.json)
+
+<img src="https://github.com/RISE-UNIBAS/humanities_data_benchmark/blob/main/benchmarks/medieval_manuscripts/images/image_7.jpg?raw=true" alt="image_7" width="800px">
+
+<style>
+.diff { text-decoration: underline; text-decoration-color: #ffcccc; text-decoration-style: wavy; }
+</style>
+
+| Folio Ref | Field | Prediction | Ground Truth | Fuzzy Score | CER |
+|-----------|-------|------------|--------------|-------------|-----|
+| [62v] | text | <span class="diff">O</span>c<span class="diff">t fil</span>k<span class="diff">ey tage doy falzoy</span> J<span class="diff">n der wuoch e<br>fry le</span>p<span class="diff">ay Sey baltmy̅g der do w3<br>dox filbezgefu̅de tag lutter wir<br>gay felteno off my Sey adzdehunte<br>tag doy textbe vnd obley zuoer<br>tag do firend my Sey Golley<br>Stuprag der do Noꝛ der actiov<br>frucuzgupt tag deb mercey vff<br>dey wuoche va textib gon videry<br>Tfy my dey ofrobo̅ der do w3 der<br>leyt tagin mercey da folley wir<br>etve manigey fittbuzey vnd guaff,<br>pryff als werdige giſter satfole<br>Vench von fantmavo munchen vndles<br>Ducis gezogey palap See jomulchytt<br>palalchi von paid Sevſt vil wuꝛdeter<br>magnifinuo kichetor hwuoper die Sey<br>cum. ze Nürczigewelen find Is ot<br>kin Samptt ou Jon minſter Sank<br>dein groy in widalton geuapfet od<br>wilfer Gaſttex Jg8 opti vff fas</span> | <span class="diff">des selben tags gon falzion In der wur-<br> gen Itꝰ an dem balmtag derdo wz<br> der subenzehende tag Ritten wir<br> gon felters Itꝰ an dem a</span>c<span class="diff">hzehende<br> tag gon terfis vnd bliben zwen<br> tag do vnd fuorend an dem hohen<br> donstag der do wz der acht vn<br> zwenzigest tag des mertzen vff/ dem wasser vo terfis gon venedig<br> Itꝰ an dem osteroben der do wz der<br> lest tag im mertzen do sohen wir<br> etwe manigen sit</span>k<span class="diff">usten vnd grosse<br> schiff als mechtige hüser och sohe<br> wir sant marx münster vnd des<br> hertzogen palast der ist zemol schön<br> vn stönd daruff vil hern Ritter<br> vnd knechten woppen die denn<br> ze venedig gewesen sind Do ist<br> ein Cappell an dem münster doist<br> der stein in eine altar gevasset do<br> vnser behalter</span> J<span class="diff">hs X</span>p<span class="diff">s vff fas</span> | 0.589 | 0.488 |
+| [62v] | addition1 |  | <span class="diff">Veneti<br> Ducis<br> palatiu<br> magnifi<br> cum</span> | 0.000 | 1.000 |
