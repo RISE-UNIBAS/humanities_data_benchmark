@@ -33,7 +33,7 @@ This benchmark suite focuses on tasks essential to digital humanities work with 
 - [Expand on this Benchmark Suite](#expand-on-this-benchmark-suite)
   - [Create a new benchmark](#create-a-new-benchmark)
   - [API Keys](#api-keys)
-  - [Run a Benchmark](#run-a-benchmark)
+  - [Run a Benchmark Test](#run-a-benchmark-test)
   - [Add Configuration to the Suite](#add-configuration-to-the-suite)
   - [Implement a Benchmark Class](#implement-a-benchmark-class)
 - [Providers and Models](#providers-and-models)
@@ -43,39 +43,23 @@ This benchmark suite focuses on tasks essential to digital humanities work with 
     - [Internal Metrics](#internal-metrics-task-performance)
     - [External Metrics](#external-metrics-practical-considerations)
 - [Current Limitations](#current-limitations)
-  - [Additional Models](#additional-models)
-  - [Specialized Capabilities](#specialized-capabilities)
-  - [Benchmark Dimensions](#benchmark-dimensions)
-  - [Other Areas for Improvement](#other-areas-for-improvement)
 - [Practical Considerations](#practical-considerations)
-  - [Resource Requirements](#resource-requirements)
-  - [Technical Considerations](#technical-considerations)
-  - [Compliance Considerations](#compliance-considerations)
 - [Contributors](#contributors)
 
 ## Terminology
-- **Benchmark**: A benchmark is a task that the model should perform. Its resources consist of images and their ground truths, prompts, 
-dataclasses and a scoring function. A benchmark can be used as the basis for a **test**. Each benchmark is stored in a separate directory.
-- **Prompt**: A prompt is a text that is given to the model to guide its response. All prompts are stored in the `prompts` directory of the benchmark.
-- **Ground Truth**: The ground truth is the correct answer to the task. It is used to evaluate the model's response. For each image, there is a ground 
-truth file with the same base name.
-- **Image**: An image is a visual representation of the task. The model should use the image to generate its response. Images are stored in the `images` 
-directory of the benchmark.
-- **Provider**: The provider is the company or service that provides access to the model. The provider can be `openai`, `genai`, `anthropic`, `mistral`, `openrouter`, or `scicore`.
-- **Model**: The model is the specific model that is used to perform the task. The model can be any model that is supported by the 
-provider.
-- **Scoring Function**: The scoring function is a function that is used to evaluate the model's response. 
-It must be provided by overriding the `score_answer` method in the benchmark class.
-- **Dataclass**: The use of Pydantic models (structured data schemas) for expected output is supported across all providers.
-OpenAI, Google GenAI, Anthropic (via native tool calling), and Mistral all support structured output using Pydantic BaseModel classes.
-- **Test**: A test is a specific instance of a benchmark. A test is run with a configuration which indicates the provider, model, 
-temperature, role description, prompt file and dataclass.
-- **Test Configuration**: A test configuration is a set of parameters that are used to run a test. 
-This suite uses a `benchmarks_tests.csv` file to store the test configurations.  
-- **Request**: A benchmark test will trigger requests to the provider's API. The request consists of one or multiple images 
-and a prompt. The model will generate a response based on the request. At least one, but usually multiple requests are made for each test.
-- **Response**: The response is the model's answer to the task. It is a json object that contains metadata and the model's output.
-- **Score**: The score is the result of the evaluation. It indicates how well the model performed on the task.
+- **Benchmark**: A task for models to perform, consisting of images, ground truths, prompts, dataclasses, and scoring functions. Each benchmark is stored in a separate directory.
+- **Prompt**: Text given to the model to guide its response.
+- **Ground Truth**: The correct answer used to evaluate the model's response.
+- **Image**: Visual input for the task. Images are paired with ground truth files.
+- **Provider**: Company or service providing model access (`openai`, `genai`, `anthropic`, `mistral`, `openrouter`, or `scicore`).
+- **Model**: Specific model used to perform the task.
+- **Scoring Function**: Function that evaluates the model's response, implemented via the `score_answer` method.
+- **Dataclass**: Pydantic models for structured output, supported across all providers.
+- **Test**: A specific instance of a benchmark run with a particular configuration (provider, model, temperature, role description, prompt file, dataclass).
+- **Test Configuration**: Parameters for running a test, stored in `benchmarks_tests.csv`.
+- **Request**: API call(s) made during a test, consisting of images and prompts.
+- **Response**: Model's answer containing metadata and output.
+- **Score**: Evaluation result indicating model performance.
 
 
 ## How it Works
@@ -96,92 +80,41 @@ and a prompt. The model will generate a response based on the request. At least 
 
 This benchmark suite currently includes the following benchmarks for evaluating LLM performance on humanities tasks:
 
-### Bibliographic Data
-Evaluates models' ability to extract bibliographic information from historical documents such as publication details, authors, dates, and other metadata from digitized sources.
-
-📁 [View benchmark details](benchmarks/bibliographic_data/)
-
-### Metadata Extraction
-Tests models on extracting structured metadata from historical correspondence, including person names, organizations, dates, locations, and other contextual information from 20th century Swiss historical letters.
-
-📁 [View benchmark details](benchmarks/metadata_extraction/)
-
-### Fraktur Text Recognition
-Assesses models' capability to recognize and transcribe historical German Fraktur script, a Gothic typeface commonly used in German-language documents from the 16th to 20th centuries.
-
-📁 [View benchmark details](benchmarks/fraktur/)
-
-### Zettelkatalog
-A comprehensive benchmark focused on catalog card analysis and information extraction from historical library catalog systems. This benchmark evaluates models on structured data extraction from digitized catalog cards, testing their ability to parse complex bibliographic information, author names, dates, and hierarchical catalog structures from historical Swiss library records.
-
-📁 [View benchmark details](benchmarks/zettelkatalog/)
-
-### Medieval Manuscripts
-Evaluates models on page segmentation and handwritten text extraction from 15th century medieval manuscripts written in late medieval German. Tests the ability to transcribe historical handwriting, identify folio numbers, distinguish main text from marginal additions, and maintain historical spelling and formatting. Performance is measured using fuzzy string matching and Character Error Rate (CER).
-
-📁 [View benchmark details](benchmarks/medieval_manuscripts/)
-
-### Blacklist
-Assesses models' ability to extract and structure information from historical blacklist cards, testing OCR and data extraction capabilities on archival materials.
-
-📁 [View benchmark details](benchmarks/blacklist/)
-
-### Company Lists
-Evaluates models on extracting structured company information from historical business listings and directories, testing the ability to parse tabular data and identify company names, locations, and other business details.
-
-📁 [View benchmark details](benchmarks/company_lists/)
-
-### Test Benchmarks
-Two simple test benchmarks (`test_benchmark` and `test_benchmark2`) used for system validation and basic functionality testing.
-
-📁 [test_benchmark](benchmarks/test_benchmark/) | 📁 [test_benchmark2](benchmarks/test_benchmark2/)
+| Benchmark | Description |
+|-----------|-------------|
+| **[Bibliographic Data](benchmarks/bibliographic_data/)** | Extract bibliographic information (publication details, authors, dates, metadata) from historical documents |
+| **[Blacklist](benchmarks/blacklist/)** | Extract and structure information from historical blacklist cards |
+| **[Company Lists](benchmarks/company_lists/)** | Extract structured company information from historical business listings and directories |
+| **[Fraktur Text Recognition](benchmarks/fraktur/)** | Recognize and transcribe historical German Fraktur script (16th-20th centuries) |
+| **[Medieval Manuscripts](benchmarks/medieval_manuscripts/)** | Page segmentation and handwritten text extraction from 15th century medieval German manuscripts |
+| **[Metadata Extraction](benchmarks/metadata_extraction/)** | Extract structured metadata (names, organizations, dates, locations) from 20th century Swiss historical correspondence |
+| **Test Benchmarks** | System validation and basic functionality testing ([test_benchmark](benchmarks/test_benchmark/), [test_benchmark2](benchmarks/test_benchmark2/)) |
+| **[Zettelkatalog](benchmarks/zettelkatalog/)** | Catalog card analysis and information extraction from historical library catalog systems |
 
 ## Expand on this Benchmark Suite
 
-The benchmark suite is designed to be extensible and welcomes contributions from the digital humanities community. Whether you're adding new benchmarks, improving existing ones, or enhancing the evaluation framework, your contributions help advance AI evaluation for humanities research. For detailed contribution guidelines, see [CONTRIBUTING.md](CONTRIBUTING.md).
+The benchmark suite is designed to be extensible and welcomes contributions from the digital humanities community. Whether you're adding new benchmarks, improving existing ones, or enhancing the evaluation framework, your contributions help advance AI evaluation for humanities research. For detailed contribution guidelines, see [CONTRIBUTING.md](CONTRIBUTING.md). To report bugs, suggest features, or discuss improvements, please open an issue on our [GitHub Issues page](https://github.com/rise-unibas/humanities_data_benchmark/issues).
 
 ### Create a new benchmark
-To create a new benchmark, follow these steps:
 
-- Create a new directory in the `benchmarks` folder with the name of the benchmark. 
-The directory should have the following structure:
-
-```bash
-.
-├── benchmarks
-│   ├── <new_benchmark_name>
-│   │   ├── README.md
-│   │   ├── benchmark.py (optional)
-│   │   ├── dataclass.py (optional - defines Pydantic models for structured output)
-│   │   ├── images
-│   │   │   ├── image1.(jpg|png)
-│   │   │   ├── image2.(jpg|png)
-│   │   │   ├── ...
-│   │   ├── prompts
-│   │   │   ├── prompt1.txt
-│   │   │   ├── prompt2.txt
-│   │   │   ├── ...
-│   │   ├── ground_truths
-│   │   │   ├── image1.(json|txt)
-│   │   │   ├── image2.(json|txt)
-│   │   │   ├── ...
-├── results
+**Required structure:**
+```
+benchmarks/<benchmark_name>/
+├── README.md              (use README_TEMPLATE.md)
+├── images/                (image files: jpg, png)
+├── prompts/               (text files with prompts)
+├── ground_truths/         (json or txt files)
+├── benchmark.py           (optional: custom scoring)
+└── dataclass.py           (optional: Pydantic models for structured output)
 ```
 
-- Create a `README.md` file with a description of the benchmark by adapting the [`README_TEMPLATE.md`](benchmarks/README_TEMPLATE.md) file. Make sure to include a dataset description
-and a description of the task that the model should perform. Explain your evaluation criteria and how the
-results are scored. 
-- Add images to the `/benchmarks/images` directory. You need at least one image. Per default, one image is used with one request.
-If you want to use multiple images for one prompt, format the image names like this: `image1_p1.jpg`, `image1_p2.jpg`, etc. 
-This will automatically add multiple images to the same prompt. The ground truth file for this image sequence must be 
-named like so: `image1.(txt|json)`.
-- Add at least one prompt to the `/benchmarks/prompts` directory. This is a simple text file with the prompt for the model.
-- Add the ground truth for each image (or image sequence) to the `/benchmarks/ground_truths` directory.
-- (Optional) Create a `dataclass.py` file if you want structured output. This file should contain Pydantic BaseModel classes that define the expected structure of the model's response.
-- The results are generated by the model and saved in the `/results` directory. The results are saved in a JSON file
-
-This setup will enable you to add configurations to the `benchmarks_tests.csv` file and run the benchmark with different
-LLMs, prompts, and configurations.
+**Steps:**
+1. **Create directories** following the structure above
+2. **Add README.md** using [`README_TEMPLATE.md`](benchmarks/README_TEMPLATE.md) - describe the task, dataset, and evaluation criteria
+3. **Add images** to `images/` directory (at least one). For multi-image prompts, use naming: `image1_p1.jpg`, `image1_p2.jpg`
+4. **Add prompts** to `prompts/` directory (at least one text file)
+5. **Add ground truths** to `ground_truths/` - one file per image/image sequence
+6. **Add test configurations** to `benchmarks_tests.csv` to run with different models and settings
 
 ### API Keys
 To use the benchmark suite, you need to provide API keys for the different providers.
@@ -194,41 +127,33 @@ GENAI_API_KEY=<your_genai_api_key>
 ANTHROPIC_API_KEY=<your_anthropic_api_key>
 MISTRAL_API_KEY=<your_mistral_api_key>
 OPENROUTER_API_KEY=<your_openrouter_api_key>
-SCICORE_API_KEY=<your_scicore_api_base_url>
+SCICORE_API_KEY=<your_scicore_api_key>
 ```
 
 ### Run a Benchmark Test
-To run the suite of tests, you can use the `scripts/run_benchmarks.py` script. This script will run all the tests in the `benchmarks_tests.csv` file.
 
-You also can use the command line interface to run a single test. For example:
-
+**Run all tests:**
 ```bash
+python scripts/run_benchmarks.py
+```
+
+**Run single test:**
+```bash
+# With CLI arguments
 python scripts/dhbm.py --name "folder_name" --provider "anthropic" --model "claude-3-7-sonnet-20250219" \
---role_description "A useful assistant." --prompt_file "prompt.txt" --api_key "your-api-key"
+  --role_description "A useful assistant." --prompt_file "prompt.txt"
+
+# With JSON config
+python scripts/dhbm.py --config test_config.json
+
+# With specific date
+python scripts/dhbm.py --name "folder_name" --provider "anthropic" --model "..." --date "2025-03-01"
+
+# Run specific test IDs
+python -c "from scripts.run_benchmarks import main; main(limit_to=['T0017'])"
 ```
 
-To run a test with a specific date (for re-generating renders for that date):
-
-```bash
-python scripts/dhbm.py --name "folder_name" --provider "anthropic" --model "claude-3-7-sonnet-20250219" \
---role_description "A useful assistant." --prompt_file "prompt.txt" --date "2025-03-01"
-```
-
-Alternatively, you can provide the configuration as a json file:
-
-```bash
-python scripts/dhbm.py --config test_config.json --api_key "your-api-key"
-```
-Instead of providing the api key as a command line argument, you can also set it in the `.env` file.
-
-To run a specific test ID from the benchmarks_tests.csv file:
-
-```python
-# In scripts/run_benchmarks.py
-from scripts.run_benchmarks import main
-main(limit_to=["T0017"])  # Run only the T0017 test
-main(limit_to=["T0010", "T0011"], dates=["2025-03-01", "2025-04-01"])  # Run T0010 and T0011 for specific dates
-```
+**Note:** API keys can be passed via `--api_key` argument or set in `.env` file.
 
 ### Add Configuration to the Suite
 To add a configuration, you need to add a new row to the `benchmarks_tests.csv` file. The file has the following structure:
@@ -304,62 +229,53 @@ The `title` property is used to generate the title of the benchmark.
 
 This benchmark suite currently tests models from the following providers:
 
-### OpenAI
-- **gpt-4o**: OpenAI's multimodal model capable of processing both text and images
-- **gpt-4.5-preview**: An updated version of GPT-4 with improved capabilities
-- **gpt-4o-mini**: A smaller, faster version of GPT-4o with reduced capabilities
-- **gpt-4.1**: Latest GPT-4 iteration with enhanced capabilities
-- **gpt-4.1-mini**: Smaller version of GPT-4.1 optimized for efficiency
-- **gpt-4.1-nano**: Ultra-compact version of GPT-4.1 for lightweight tasks
-- **gpt-5**: OpenAI's next-generation model with advanced reasoning capabilities
-- **gpt-5-mini**: Efficient version of GPT-5 with reduced resource requirements
-- **gpt-5-nano**: Compact version of GPT-5 optimized for speed
-- **o3**: OpenAI's reasoning-focused model for complex problem-solving tasks
+| Provider | Model | Notes |
+|----------|-------|-------|
+| **Anthropic** | claude-3-5-sonnet-20241022 | Mid-tier Claude model with strong reasoning |
+| | claude-3-7-sonnet-20250219 | Advanced Claude with improved capabilities |
+| | claude-3-opus-20240229 | Highest capability Claude 3 model |
+| | ~~claude-3-5-haiku-20241022~~ | ~~Fastest/smallest Claude 3.5~~ (legacy) |
+| | claude-opus-4-1-20250805 | Updated Claude 4.1 Opus |
+| | claude-opus-4-20250514 | Next-generation Claude 4 Opus |
+| | claude-sonnet-4-20250514 | Claude 4 Sonnet |
+| | claude-sonnet-4-5-20250929 | Latest Claude 4.5 Sonnet |
+| **Google/Gemini** | ~~gemini-1.5-flash~~ | ~~Earlier generation flash~~ (legacy) |
+| | ~~gemini-1.5-pro~~ | ~~Gemini 1.5 series~~ (legacy) |
+| | gemini-2.0-flash | Fast response multimodal model |
+| | gemini-2.0-flash-lite | Lighter version of 2.0-flash |
+| | ~~gemini-2.0-pro-exp-02-05~~ | ~~Experimental 2.0 pro~~ (legacy) |
+| | gemini-2.5-flash | Latest generation flash |
+| | gemini-2.5-flash-lite | Efficient 2.5 flash |
+| | gemini-2.5-flash-lite-preview-09-2025 | Preview lite flash |
+| | ~~gemini-2.5-flash-preview-04-17~~ | ~~Preview flash~~ (legacy) |
+| | gemini-2.5-flash-preview-09-2025 | Preview 2.5 flash |
+| | gemini-2.5-pro | Production 2.5 pro |
+| | ~~gemini-2.5-pro-exp-03-25~~ | ~~Experimental 2.5 pro~~ (legacy) |
+| | ~~gemini-2.5-pro-preview-05-06~~ | ~~Preview 2.5 pro~~ (legacy) |
+| | ~~gemini-exp-1206~~ | ~~Experimental~~ (legacy) |
+| **Mistral AI** | mistral-large-latest | Most capable language model |
+| | mistral-medium-2505 | Mid-tier balanced performance |
+| | mistral-medium-2508 | Updated Mistral Medium |
+| | pixtral-12b | 12B parameter multimodal |
+| | pixtral-large-latest | Multimodal for vision tasks |
+| **OpenAI** | gpt-4.1 | Latest GPT-4 iteration |
+| | gpt-4.1-mini | Optimized for efficiency |
+| | gpt-4.1-nano | Ultra-compact for lightweight tasks |
+| | ~~gpt-4.5-preview~~ | ~~Updated GPT-4~~ (legacy) |
+| | gpt-4o | Multimodal text and images |
+| | gpt-4o-mini | Smaller, faster GPT-4o |
+| | gpt-5 | Next-generation with advanced reasoning |
+| | gpt-5-mini | Efficient GPT-5 |
+| | gpt-5-nano | Compact GPT-5 |
+| | o3 | Reasoning-focused model |
+| **OpenRouter** | meta-llama/llama-4-maverick | Meta's Llama 4 via OpenRouter |
+| | qwen/qwen3-vl-30b-a3b-instruct | Qwen3 VL 30B instruction |
+| | qwen/qwen3-vl-8b-instruct | Qwen3 VL 8B instruction |
+| | qwen/qwen3-vl-8b-thinking | Qwen3 VL 8B reasoning |
+| | x-ai/grok-4 | xAI's Grok 4 multimodal |
+| **sciCORE** | GLM-4.5V-FP8 | GLM-4.5V with FP8 quantization (University of Basel HPC) |
 
-### Google/Gemini
-- **gemini-2.0-flash**: Fast response multimodal model from Google's Gemini line
-- **gemini-2.0-flash-lite**: A lighter version of gemini-2.0-flash
-- **gemini-2.5-flash**: Latest generation flash model with improved performance
-- **gemini-2.5-flash-lite**: Efficient version of Gemini 2.5 flash for lightweight tasks
-- **gemini-2.5-flash-lite-preview-09-2025**: Preview version of the lite flash model
-- **gemini-2.5-flash-preview-09-2025**: Preview version of Gemini 2.5 flash
-- **gemini-exp-1206**: An experimental Gemini model
-- **gemini-1.5-flash**: Earlier generation of the Gemini flash model
-- **gemini-1.5-pro**: Higher capability model from the Gemini 1.5 series
-- **gemini-2.0-pro-exp-02-05**: Experimental model from the Gemini 2.0 pro line
-- **gemini-2.5-pro-exp-03-25**: Latest experimental Gemini model in the benchmark suite
-- **gemini-2.5-pro**: Production version of the Gemini 2.5 pro model
-- **gemini-2.5-flash-preview-04-17**: Preview version of Gemini 2.5 flash model
-- **gemini-2.5-pro-preview-05-06**: Preview version of Gemini 2.5 pro model
-
-### Anthropic
-- **claude-3-5-sonnet-20241022**: Mid-tier Claude model with strong reasoning capabilities
-- **claude-3-7-sonnet-20250219**: More advanced Claude model with improved capabilities
-- **claude-3-opus-20240229**: Anthropic's highest capability Claude 3 model
-- **claude-3-5-haiku-20241022**: Anthropic's fastest/smallest Claude 3.5 model
-- **claude-opus-4-20250514**: Next-generation Claude 4 Opus with enhanced capabilities
-- **claude-sonnet-4-20250514**: Claude 4 Sonnet with improved reasoning and efficiency
-- **claude-opus-4-1-20250805**: Updated Claude 4.1 Opus with latest improvements
-- **claude-sonnet-4-5-20250929**: Latest Claude 4.5 Sonnet with enhanced performance
-
-### Mistral AI
-- **pixtral-large-latest**: Mistral's multimodal model for vision tasks
-- **pixtral-12b**: Efficient 12-billion parameter multimodal model
-- **mistral-large-latest**: Mistral's latest and most capable language model
-- **mistral-medium-2505**: Mid-tier Mistral model optimized for balanced performance
-- **mistral-medium-2508**: Updated version of Mistral Medium with enhanced capabilities
-
-### OpenRouter
-OpenRouter provides access to models from multiple providers through a unified API:
-- **meta-llama/llama-4-maverick**: Meta's latest Llama 4 model accessed via OpenRouter
-- **qwen/qwen3-vl-8b-thinking**: Alibaba's Qwen3 Vision-Language model (8B parameters) with enhanced reasoning capabilities
-- **qwen/qwen3-vl-8b-instruct**: Alibaba's Qwen3 Vision-Language model (8B parameters) optimized for instruction following
-- **qwen/qwen3-vl-30b-a3b-instruct**: Alibaba's larger Qwen3 Vision-Language model (30B parameters) with enhanced instruction capabilities
-- **x-ai/grok-4**: xAI's Grok 4 model with multimodal capabilities
-
-### sciCORE
-sciCORE provides access to models hosted on the University of Basel's high-performance computing infrastructure:
-- **GLM-4.5V-FP8**: Z.ai's GLM-4.5V model optimized with FP8 quantization for efficient inference
+**Note:** OpenRouter provides access to models from multiple providers through a unified API. sciCORE provides access to models hosted on the University of Basel's high-performance computing infrastructure.
 
 ## Benchmarking Methodology
 
@@ -385,28 +301,10 @@ These metrics evaluate how well the model performs the specific task. Examples i
 #### External Metrics (Practical Considerations)
 These metrics evaluate factors beyond task performance that impact usability:
 
-- **Compute Cost**: The financial cost of running the model on humanities-scale datasets
-  - **Automatic Cost Tracking**: The suite automatically tracks API costs for each test execution based on actual token usage
-  - **Token Usage Extraction**: Input, output, and total tokens are automatically extracted from all provider responses
-  - **Cost Calculation**: Costs are calculated using date-based pricing data (USD per million tokens) stored in `scripts/data/pricing.json`
-  - **Cost Summary**: Each benchmark run includes detailed cost breakdown (input cost, output cost, total cost, token counts)
-  - **Cost per Performance Point**: Efficiency metric showing cost relative to performance ($/performance point)
-    - **Normalized Calculation**: Calculated per test, averaged per benchmark, then averaged globally
-    - For each test: `cost_per_point = total_test_cost / test_score`
-    - For each benchmark: `benchmark_cost_per_point = average(cost_per_point_for_all_tests_in_benchmark)`
-    - Global cost per point: average of the 4 benchmark cost/point values
-    - This multi-level normalization ensures fair comparison across different test configurations per benchmark and different benchmark scales
-    - Uses only the most recent test results for each test configuration
-  - **Historical Pricing**: Wayback Machine integration captures pricing snapshots for reproducible cost analysis
-- **Test Time**: Response time for processing humanities materials
-  - **Automatic Time Tracking**: Test execution time is tracked for each API call
-  - **Time per Performance Point**: Efficiency metric showing time relative to performance (seconds/point per item)
-    - **Normalized Calculation**: Calculated per test, averaged per benchmark, then averaged globally (analogous to cost calculation)
-    - For each test: `time_per_point = (average_time_per_item) / test_score`
-    - For each benchmark: `benchmark_time_per_point = average(time_per_point_for_all_tests_in_benchmark)`
-    - Global time per point: average of the 4 benchmark time/point values
-    - This multi-level normalization ensures fair comparison across different numbers of items per test, different test configurations per benchmark, and different benchmark complexities
-    - Uses only the most recent test results for each test configuration
+- **Compute Cost**: Automatically tracked based on token usage and date-based pricing data (`scripts/data/pricing.json`). Each run includes cost breakdown and historical pricing via Wayback Machine snapshots.
+  - **Cost per Performance Point**: Efficiency metric ($/performance point) calculated per test, averaged per benchmark, then globally. Uses multi-level normalization for fair comparison across different test configurations and benchmark scales.
+- **Test Time**: Automatically tracked for each API call.
+  - **Time per Performance Point**: Efficiency metric (seconds/point per item) using the same multi-level normalization as cost calculation for fair comparison across different item counts and benchmark complexities.
 - **Deployment Options**: Whether the model can be run locally or requires API calls
 - **Legal and Ethical Considerations**: Including data privacy, IP compliance, and model bias
 
@@ -414,47 +312,34 @@ These metrics evaluate factors beyond task performance that impact usability:
 
 The benchmark suite currently has several limitations that could be addressed in future iterations:
 
-### Additional Models
-Several important model families are not yet included:
-- **Meta/Llama models**: The entire Llama model family is absent (Llama 3/4 series)
-- **Cohere Command models**: Entirely absent from the benchmark
-- **Various open-source models**: Falcon, Mixtral, and other open-source alternatives
-- **Local/self-hosted models**: Limited support for models that can be run locally
-
-### Specialized Capabilities
-- **Domain-specific fine-tuned models**: Models specifically optimized for historical research
-- **OCR-specialized models**: Models with particular strength in document processing/OCR
-- **Multilingual capabilities**: Systematic testing across different languages
-
-### Benchmark Coverage
-- **Limited benchmark diversity**: Currently focused on document analysis tasks; missing benchmarks for other humanities domains like art history, archaeology, or musicology
-- **Language coverage**: Primarily focused on German and English materials; limited coverage of other European languages and non-Western scripts
-- **Historical period coverage**: Concentrated on 19th-20th century materials; limited representation of medieval, early modern, or contemporary sources
-
-### Evaluation Metrics
-- **Speed metrics**: Systematic response time measurements across different model sizes
-- **Context window testing**: Evaluation across different context window sizes and document lengths
-- **Standardized error analysis**: More granular error categorization and failure mode analysis
+| Category | Limitation | Description |
+|----------|------------|-------------|
+| **Models** | Local/self-hosted models | Limited support for models that can be run locally |
+| **Capabilities** | Domain-specific fine-tuned models | Models specifically optimized for historical research not included |
+| | OCR-specialized models | Models with particular strength in document processing/OCR not included |
+| | Multilingual capabilities | Systematic testing across different languages not covered |
+| **Benchmark Coverage** | Limited benchmark diversity | Currently focused on document analysis; missing art history, archaeology, musicology domains |
+| | Language coverage | Primarily German and English; limited coverage of other European languages and non-Western scripts |
+| | Historical period coverage | Concentrated on 19th-20th century; limited medieval, early modern, or contemporary sources |
+| **Evaluation** | Context window testing | Evaluation across different context window sizes and document lengths not implemented |
+| | Standardized error analysis | More granular error categorization and failure mode analysis needed |
 
 ## Practical Considerations
 
 When using this benchmark suite for your own research, consider the following:
 
-### Resource Requirements
-- **Skills**: Operationalizing tasks requires both domain knowledge and technical expertise
-- **Ground Truth Creation**: Requires domain expertise and careful curation
-- **Metric Selection**: Requires understanding of both the humanities domain and evaluation methods
-
-### Technical Considerations
-- **Local vs. API Models**: Determine if you need to run models locally or can use API services
-- **Data Privacy**: Ensure you're allowed to share your data via APIs if needed
-- **Infrastructure**: Consider if you have access to appropriate computing resources
-
-### Compliance Considerations
-- **Legal Requirements**: Check for any legal restrictions on data sharing or model usage
-- **Ethical Guidelines**: Consider any ethical implications of your benchmarking approach
-- **Funder Requirements**: Verify if there are any funding agency requirements
-- **FAIR Data Principles**: Consider how to make your benchmark data Findable, Accessible, Interoperable, and Reusable
+| Category | Consideration | Description |
+|----------|---------------|-------------|
+| **Resource Requirements** | Skills | Operationalizing tasks requires both domain knowledge and technical expertise |
+| | Ground Truth Creation | Requires domain expertise and careful curation |
+| | Metric Selection | Requires understanding of both the humanities domain and evaluation methods |
+| **Technical** | Local vs. API Models | Determine if you need to run models locally or can use API services |
+| | Data Privacy | Ensure you're allowed to share your data via APIs if needed |
+| | Infrastructure | Consider if you have access to appropriate computing resources |
+| **Compliance** | Legal Requirements | Check for any legal restrictions on data sharing or model usage |
+| | Ethical Guidelines | Consider any ethical implications of your benchmarking approach |
+| | Funder Requirements | Verify if there are any funding agency requirements |
+| | FAIR Data Principles | Consider how to make your benchmark data Findable, Accessible, Interoperable, and Reusable |
 
 ## Contributors
 

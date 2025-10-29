@@ -156,9 +156,11 @@ We are committed to fostering an inclusive and respectful research environment:
 
 ## Questions and Support
 
-### Technical Issues
-- Check existing [GitHub issues](https://github.com/RISE-UNIBAS/humanities_data_benchmark/issues)
-- Create a new issue with detailed description and steps to reproduce
+### Issues, Bugs, and Feature Requests
+- Check existing [GitHub issues](https://github.com/RISE-UNIBAS/humanities_data_benchmark/issues) to see if your topic has been discussed
+- Create a new issue to report bugs, suggest features, or discuss improvements
+- Provide detailed descriptions and steps to reproduce for bug reports
+- Clearly explain the motivation and use case for feature requests
 
 ### Research Questions
 - Contact the research team for discussions about scope, methodology, or domain-specific questions
