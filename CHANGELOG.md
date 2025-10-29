@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [v0.3.1-zenodo] - 2025-10-29
+
+### Fixed
+- CITATION.cff indentation error
+
 ## [v0.3.1] - 2025-10-29
 
 ### Added
@@ -105,3 +110,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [v0.2.2]: https://github.com/RISE-UNIBAS/humanities_data_benchmark/releases/tag/v0.2.2
 [v0.3.0]: https://github.com/RISE-UNIBAS/humanities_data_benchmark/releases/tag/v0.3.0
 [v0.3.1]: https://github.com/RISE-UNIBAS/humanities_data_benchmark/releases/tag/v0.3.1
+[v0.3.1-zenodo]: https://github.com/RISE-UNIBAS/humanities_data_benchmark/releases/tag/v0.3.1-zenodo
