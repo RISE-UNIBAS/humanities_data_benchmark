@@ -21,7 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Tests on 2025-10-17: T0233-T0234, T0237-T0252
 - Tests on 2025-10-20: T0253-T0270
 - Tests on 2025-10-24: T0271-T0336
-- Tests on 2025-10-24: T0336-T0402
+- Tests on 2025-10-28: T0336-T0402
 - Update pricing data to 2025-10-28
 
 ### Fixed

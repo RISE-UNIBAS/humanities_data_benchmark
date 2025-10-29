@@ -114,18 +114,6 @@ This page provides an overview of all benchmark tests.Click on the test name to 
     <td></td>
 </tr>
 <tr>
-    <td>2025-10-21</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td><a href='/humanities_data_benchmark/archive/2025-10-21/T0272'><span class='test-square' style='background-color: #3399ff;'>T0272</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-10-21/T0273'><span class='test-square' style='background-color: #ff6600;'>T0273</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-10-21/T0274'><span class='test-square' style='background-color: #ff33cc;'>T0274</span></a>&nbsp;</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-</tr>
-<tr>
     <td>2025-10-17</td>
     <td><a href='/humanities_data_benchmark/archive/2025-10-17/T0233'><span class='test-square' style='background-color: #66ff33;'>T0233</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-10-17/T0234'><span class='test-square' style='background-color: #ff5733;'>T0234</span></a>&nbsp;<a href='/humanities_data_benchmark/archive/2025-10-17/T0237'><span class='test-square' style='background-color: #ff33cc;'>T0237</span></a>&nbsp;</td>
     <td></td>
