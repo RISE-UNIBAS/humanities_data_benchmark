@@ -1,5 +1,4 @@
-
-# LLM Benchmark Suite for Humanities Image Data
+# RISE Humanities Data Benchmark
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.17475190.svg)](https://doi.org/10.5281/zenodo.17475190)
 
