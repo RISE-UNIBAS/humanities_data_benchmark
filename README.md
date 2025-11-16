@@ -104,7 +104,8 @@ benchmarks/<benchmark_name>/
 ├── prompts/               (text files with prompts)
 ├── ground_truths/         (json or txt files)
 ├── benchmark.py           (custom scoring)
-└── dataclass.py           (optional: Pydantic models for structured output)
+├── dataclass.py           (optional: Pydantic models for structured output)
+└── meta.json              (metadata for the benchmark)
 ```
 
 **Steps:**
