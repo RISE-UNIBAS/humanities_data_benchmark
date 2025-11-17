@@ -147,22 +147,93 @@ python scripts/create_benchmark.py
 ```
 This creates a new dataset environment, like so:
 
-```
-benchmarks/<benchmark_name>/
-├── README.md              
-├── images/                (image files: jpg, png)
-├── prompts/               (text files with prompts)
-├── ground_truths/         (json or txt files)
-├── benchmark.py           (custom scoring)
-├── dataclass.py           (optional: Pydantic models for structured output)
-└── meta.json              (metadata for the benchmark)
-```
+1. **Directory Structure:**
+   - `benchmarks/[your_benchmark_name]/`
+   - `images/` or `texts/` directories (based on your choice)
+   - `ground_truths/` directory
+   - `prompts/` directory
 
-**Required steps after creating:**
-1. **Add images or texts** to `images/`, resp. to `texts/` directory.
-2. **Update prompts** in `prompts/` directory (at least one text file)
-3. **Add ground truths** to `ground_truths/` - one file per image/image sequence and or text file
-4. **Implement Dataclass** (optional) - Define the response structure.
+2. **Required Files:**
+   - `benchmark.py` - Main benchmark class with scoring logic templates
+   - `meta.json` - Benchmark metadata
+   - `README.md` - Documentation
+   - `prompts/prompt.txt` - Default prompt
+   - `dataclass.py` - Pydantic schema (optional)
+
+#### Step-by-Step Process
+
+**1. Benchmark Name**
+- Must be lowercase with underscores (e.g., `personal_letters`)
+- **Important:** Should describe the SOURCE, not the task
+  - Good: `personal_letters`, `company_registers`, `manuscript_pages`
+  - Bad: `date_recognition`, `entity_extraction`
+- **Cannot be changed later** - choose carefully!
+- Will be converted to CamelCase for the class name (e.g., `PersonalLetters`)
+
+**2. Basic Information**
+- **Title:** Full descriptive title
+- **Short Title:** Abbreviated version for displays
+- **Description:** Multi-line description (press Enter twice to finish)
+  - Should describe both SOURCES and TASK
+
+**3. Tags**
+- Structured tags from specific categories:
+  - **Source Type:** index-cards, letter-pages, manuscript-pages, book-pages, registers, lists
+  - **Structure:** text-like, list-like, table-like, mixed
+  - **Text Type:** handwritten-source, typed-source, printed-source
+  - **Century:** century-16th, century-17th, century-18th, century-19th, century-20th
+  - **Task:** ner-extraction, metadata-extraction, transcription, classification
+- Enter as comma-separated values
+
+**4. Contributors**
+- Add contributors by role:
+  - Domain Expert
+  - Data Curator
+  - Annotator
+  - Analyst
+  - Engineer
+- **Format:** firstname_lastname (e.g., john_doe, jane_smith)
+- Details of non-existing users can be added later
+
+**5. Scoring Configuration**
+- Defaults to `fuzzy` metric with `descending` order
+- Can be customized later in `meta.json`
+
+**6. Data Structure**
+- **Dataclass:** Strongly recommended - defines expected output structure using Pydantic
+  - Enables automatic validation
+  - Ensures consistent output format
+- **Dataclass Name:** Should reflect result content (e.g., Page, Letter, Document)
+  - Use CamelCase
+- **Images:** Whether the benchmark uses images
+- **Text Files:** Whether the benchmark uses text files
+
+**7. Prompt**
+- Enter the default prompt text (multi-line)
+- **This prompt is editable** and can be changed later in `prompts/prompt.txt`
+- Role description for system prompt
+
+**8. Review and Edit**
+- Review all collected settings
+- **Edit any field** by entering its number (1-12)
+- Enter 'c' to continue and create benchmark
+- Enter 'q' to quit without creating
+
+**After Creation:**
+
+1. **Add Context Data:**
+   - Place images in `benchmarks/[name]/images/`
+   - Place ground truth JSON files in `benchmarks/[name]/ground_truths/`
+   - Each ground truth filename must match its corresponding image (e.g., `image.jpg` → `image.json`)
+
+2. **Implement Scoring:**
+   - Edit `benchmarks/[name]/benchmark.py`
+   - Implement `score_request_answer()` method
+   - Implement `score_benchmark()` method
+
+3. **Define Schema (if using dataclass):**
+   - Edit `benchmarks/[name]/dataclass.py`
+   - Add fields to your Pydantic model
 
 #### Add Context Data
 You need to add at least one image or text file. This is the context data. 
@@ -206,7 +277,8 @@ def score_benchmark(self, all_scores):
 ```
 
 Return at least one metric. Commonly used metrics are fuzzy, f1_score, cer
-#### Implement a Dataclass
+
+#### Define Schema
 If you want to implement a custom dataclass.
 
 ```python
