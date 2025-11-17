@@ -30,10 +30,10 @@ This benchmark suite focuses on tasks essential to digital humanities work with 
 | | |
 |--------|-------------|
 | **[1. Overview](#1-overview)** | |
-| [1.1. Terminology](#11-terminology) | What terms ar used for what?|
+| [1.1. Terminology](#11-terminology) | What terms are used for what?|
 | [1.2. Available Benchmarks](#12-available-benchmarks) | List of currently available datasets |
 | [1.3. How it Works](#13-how-it-works) | Breakdown of the framework's functionality |
-| [1.4. Practical Considerations](#14-practical-considerations) | Breakdown of the framework's functionality |
+| [1.4. Practical Considerations](#14-practical-considerations) |  |
 | **[2. Use it!](#2-use-it)** |  |
 | [2.1. Fork and prepare](#21-fork-and-prepare) | Start here with your own benchmark project. |
 | [2.2. Run a configured test](#22-run-a-configured-test) | Test the framework and your setup. |
