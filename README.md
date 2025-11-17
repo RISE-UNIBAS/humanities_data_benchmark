@@ -2,14 +2,14 @@
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.17475190.svg)](https://doi.org/10.5281/zenodo.17475190)
 
-This repository contains benchmark datasets (images), prompts, ground truths, and evaluation scripts for
+This repository contains benchmark datasets (images and text files), prompts, ground truths, and evaluation scripts for
 assessing the performance of large language models (LLMs) on humanities-related tasks. The suite is
 designed as a resource for researchers and practitioners interested in systematically evaluating
 how well various LLMs perform on digital humanities (DH) tasks involving visual materials.
 
 > **ℹ Looking for benchmark results?**     
 > This README provides an overview of the benchmark suite and explains how to use it.  
-> For detailed test results and model comparisons, visit our [results dashboard](https://rise-unibas.github.io/humanities_data_benchmark/).
+> For detailed test results and model comparisons, visit our [results dashboard](https://rise-services.rise.unibas.ch/benchmarks/).
 
 ## What is Benchmarking and Why Should You Care?
 
@@ -26,101 +26,104 @@ This benchmark suite focuses on tasks essential to digital humanities work with 
 > Hindermann, M., & Marti, S. (2025, March 19). *RISE Crash Course: "AI Benchmarking"*. Zenodo. https://doi.org/10.5281/zenodo.15062831
 
 ## Table of Contents
-- [Terminology](#terminology)
-- [How it Works](#how-it-works)
-- [Available Benchmarks](#available-benchmarks)
-- [Expand on this Benchmark Suite](#expand-on-this-benchmark-suite)
-  - [Create a new benchmark](#create-a-new-benchmark)
-  - [API Keys](#api-keys)
-  - [Run a Benchmark Test](#run-a-benchmark-test)
-  - [Add Configuration to the Suite](#add-configuration-to-the-suite)
-  - [Implement a Benchmark Class](#implement-a-benchmark-class)
-- [Providers and Models](#providers-and-models)
-- [Benchmarking Methodology](#benchmarking-methodology)
-  - [Ground Truth](#ground-truth)
-  - [Metrics](#metrics)
-    - [Internal Metrics](#internal-metrics-task-performance)
-    - [External Metrics](#external-metrics-practical-considerations)
-- [Current Limitations](#current-limitations)
-- [Practical Considerations](#practical-considerations)
-- [Contributors](#contributors)
 
-## Terminology
+| | |
+|--------|-------------|
+| **[1. Overview](#1-overview)** | |
+| [1.1. Terminology](#11-terminology) | What terms ar used for what?|
+| [1.2. Available Benchmarks](#12-available-benchmarks) | List of currently available datasets |
+| [1.3. How it Works](#13-how-it-works) | Breakdown of the framework's functionality |
+| [1.4. Practical Considerations](#14-practical-considerations) | Breakdown of the framework's functionality |
+| **[2. Use it!](#2-use-it)** |  |
+| [2.1. Fork and prepare](#21-fork-and-prepare) | Start here with your own benchmark project. |
+| [2.2. Run a configured test](#22-run-a-configured-test) | Test the framework and your setup. |
+| [2.3. Create a new Benchmark](#23-create-a-new-benchmark) | Use our CLI tool for easy creation, add context data and implement scoring.|
+| [2.4. Run an adhoc test](#24-run-an-adhoc-test) | Test your created benchmark and inspect the test results. |
+| [2.5. Generate a result render](#25-generate-a-result-render) | Pretty-print your results for better inspection.  |
+| **[3. Share it!](#3-share-it)** | |
+| [3.1. Before Submitting](#31-before-submitting) | Did you complete the checklist? |
+| [3.2. Create a pull request](#32-create-a-pull-request) | Submit your dataset. |
+| [3.3. Review & Publication](#33-review--publication) | We check your submission. Now what? |
+| **[4. Providers & Models](#4-providers-and-models)** | List of implemented providers and models.|
+| **[5. Benchmarking Methodology](#5-benchmarking-methodology)** | |
+| [5.1. Ground Truth](#51-ground-truth) | Submit your dataset. |
+| [5.2. Metrics](#52-metrics) | We check your submission. Now what? |
+| **[6. Project Status](#6-project-status)** | |
+| [6.1. Current Limitations](#61-current-limitations) | |
+| [6.2. Outlook](#62-outlook) |  |
+| **[7. Contributors](#7-contributors)** | |
+
+
+## 1. Overview
+
+### 1.1. Terminology
 - **Benchmark**: A task for models to perform, consisting of images, ground truths, prompts, dataclasses, and scoring functions. Each benchmark is stored in a separate directory.
-- **Prompt**: Text given to the model to guide its response.
+- **Dataclass**: Pydantic models for structured output, supported across all providers.
 - **Ground Truth**: The correct answer used to evaluate the model's response.
 - **Image**: Visual input for the task. Images are paired with ground truth files.
-- **Provider**: Company or service providing model access (`openai`, `genai`, `anthropic`, `mistral`, `openrouter`, or `scicore`).
 - **Model**: Specific model used to perform the task.
-- **Scoring Function**: Function that evaluates the model's response, implemented via the `score_answer` method.
-- **Dataclass**: Pydantic models for structured output, supported across all providers.
-- **Test**: A specific instance of a benchmark run with a particular configuration (provider, model, temperature, role description, prompt file, dataclass).
-- **Test Configuration**: Parameters for running a test, stored in `benchmarks_tests.csv`.
+- **Prompt**: Text given to the model to guide its response. 
+- **Provider**: Company or service providing model access (`openai`, `genai`, `anthropic`, `mistral`, `openrouter`, or `scicore`).
 - **Request**: API call(s) made during a test, consisting of images and prompts.
 - **Response**: Model's answer containing metadata and output.
 - **Score**: Evaluation result indicating model performance.
+- **Scoring Function**: Function that evaluates the model's response, implemented via the `score_answer` method.
+- **Test**: A specific instance of a benchmark run with a particular configuration (provider, model, temperature, role description, prompt file, dataclass).
+- **Test Configuration**: Parameters for running a test, stored in `benchmarks_tests.csv`.
+- **Text file**: Textual input for the task. Text files are paired with ground truth files.
 
-
-## How it Works
-
-1. **Load Test Configuration**
-2. **Load Data from Benchmark configuration**
-3. **Create Benchmark class instance**
-4. **Run Benchmark Tests**
-   - **Create Request JSON Results**
-   - **Create Request Renders**
-   - **Create Request Scores**
-   - **Create Benchmark Scores**
-   - **Create Benchmark Result Documentation**
-
-<img src="benchmark_run.png" alt="Test Results" width="80%">
-
-## Available Benchmarks
-
+### 1.2. Available Benchmarks
 This benchmark suite currently includes the following benchmarks for evaluating LLM performance on humanities tasks:
 
 | Benchmark | Description |
 |-----------|-------------|
 | **[Bibliographic Data](benchmarks/bibliographic_data/)** | Extract bibliographic information (publication details, authors, dates, metadata) from historical documents |
-| **[Blacklist](benchmarks/blacklist/)** | Extract and structure information from historical blacklist cards |
+| **[Blacklist Cards](benchmarks/blacklist/)** | Extract and structure information from historical blacklist cards |
 | **[Company Lists](benchmarks/company_lists/)** | Extract structured company information from historical business listings and directories |
-| **[Fraktur Text Recognition](benchmarks/fraktur/)** | Recognize and transcribe historical German Fraktur script (16th-20th centuries) |
+| **[Fraktur Adverts](benchmarks/fraktur/)** | Recognize and transcribe historical German Fraktur script (16th-20th centuries) |
 | **[Medieval Manuscripts](benchmarks/medieval_manuscripts/)** | Page segmentation and handwritten text extraction from 15th century medieval German manuscripts |
-| **[Metadata Extraction](benchmarks/metadata_extraction/)** | Extract structured metadata (names, organizations, dates, locations) from 20th century Swiss historical correspondence |
+| **[Business Letters](benchmarks/metadata_extraction/)** | Extract structured metadata (names, organizations, dates, locations) from 20th century Swiss historical correspondence |
+| **[Library Cards](benchmarks/zettelkatalog/)** | Catalog card analysis and information extraction from historical library catalog systems |
 | **Test Benchmarks** | System validation and basic functionality testing ([test_benchmark](benchmarks/test_benchmark/), [test_benchmark2](benchmarks/test_benchmark2/)) |
-| **[Zettelkatalog](benchmarks/zettelkatalog/)** | Catalog card analysis and information extraction from historical library catalog systems |
 
-## Expand on this Benchmark Suite
+### 1.3. How it Works
+The RISE Humanities Data Benchmark is designed to be modular and extensible. There is a number of datasets which are submitted to tests and their results are saved.
+The whole framework, the datasets and the resukts are part of this repository.
 
-The benchmark suite is designed to be extensible and welcomes contributions from the digital humanities community. Whether you're adding new benchmarks, improving existing ones, or enhancing the evaluation framework, your contributions help advance AI evaluation for humanities research. For detailed contribution guidelines, see [CONTRIBUTING.md](CONTRIBUTING.md). To report bugs, suggest features, or discuss improvements, please open an issue on our [GitHub Issues page](https://github.com/rise-unibas/humanities_data_benchmark/issues).
+<img width="2279" height="1206" alt="how-it-works" src="https://github.com/user-attachments/assets/ae3197f1-2ea8-4d5f-bb47-94f0cb0e3a69" />
 
-### Create a new benchmark
+Refer to the [next chapter](#use-it) in order to learn about usage in your own research.
 
-**Required structure:**
-```
-benchmarks/<benchmark_name>/
-├── README.md              (use README_TEMPLATE.md)
-├── images/                (image files: jpg, png)
-├── prompts/               (text files with prompts)
-├── ground_truths/         (json or txt files)
-├── benchmark.py           (custom scoring)
-├── dataclass.py           (optional: Pydantic models for structured output)
-└── meta.json              (metadata for the benchmark)
-```
+### 1.4. Practical Considerations
+When using this benchmark suite for your own research, consider the following:
 
-**Steps:**
-1. **Create directories** following the structure above
-2. **Add README.md** using [`README_TEMPLATE.md`](benchmarks/README_TEMPLATE.md) - describe the task, dataset, and evaluation criteria
-3. **Add images** to `images/` directory (at least one). For multi-image prompts, use naming: `image1_p1.jpg`, `image1_p2.jpg`
-4. **Add prompts** to `prompts/` directory (at least one text file)
-5. **Add ground truths** to `ground_truths/` - one file per image/image sequence
-6. **Add test configurations** to `benchmarks_tests.csv` to run with different models and settings
+| Category | Consideration | Description |
+|----------|---------------|-------------|
+| **Resource Requirements** | Skills | Operationalizing tasks requires both domain knowledge and technical expertise |
+| | Ground Truth Creation | Requires domain expertise and careful curation |
+| | Metric Selection | Requires understanding of both the humanities domain and evaluation methods |
+| **Technical** | Local vs. API Models | Determine if you need to run models locally or can use API services |
+| | Data Privacy | Ensure you're allowed to share your data via APIs if needed |
+| | Infrastructure | Consider if you have access to appropriate computing resources |
+| **Compliance** | Legal Requirements | Check for any legal restrictions on data sharing or model usage |
+| | Ethical Guidelines | Consider any ethical implications of your benchmarking approach |
+| | Funder Requirements | Verify if there are any funding agency requirements |
+| | FAIR Data Principles | Consider how to make your benchmark data Findable, Accessible, Interoperable, and Reusable |
 
-### API Keys
-To use the benchmark suite, you need to provide API keys for the different providers.
+
+## 2. Use it!
+
+> **ℹ We welcome your contributions**     
+> The benchmark suite is designed to be extensible and welcomes contributions from the digital humanities community. Whether you're adding new benchmarks, improving existing ones, or enhancing the evaluation framework, your contributions help advance AI evaluation for humanities research.
+> For detailed contribution guidelines, see [CONTRIBUTING.md](CONTRIBUTING.md). To report bugs, suggest features, or discuss improvements, please open an issue on our [GitHub Issues page](https://github.com/rise-unibas/humanities_data_benchmark/issues).
+
+### 2.1. Fork and prepare
+In order to start, the following steps are in order:
+- Fork this repository and clone your fork
+- Obtain API keys to the providers you want to test
 - Create a `.env` file in the root directory of the repository.
-- Add the following lines to the `.env` file:
 
+Add the following lines as needed with the obtained API key.
 ```bash
 OPENAI_API_KEY=<your_openai_api_key>
 GENAI_API_KEY=<your_genai_api_key>
@@ -130,88 +133,84 @@ OPENROUTER_API_KEY=<your_openrouter_api_key>
 SCICORE_API_KEY=<your_scicore_api_key>
 ```
 
-### Run a Benchmark Test
+### 2.2. Run a configured test
 
-**Run all tests:**
-```bash
-python scripts/run_benchmarks.py
+```
+python scripts/run_single_test.py T0121
 ```
 
-**Run single test:**
-```bash
-# With CLI arguments
-python scripts/dhbm.py --name "folder_name" --provider "anthropic" --model "claude-3-7-sonnet-20250219" \
-  --role_description "A useful assistant." --prompt_file "prompt.txt"
+### 2.3. Create a new Benchmark
+Start with the CLI tool to create the basic structure:
 
-# With JSON config
-python scripts/dhbm.py --config test_config.json
+```
+python scripts/create_benchmark.py
+```
+This creates a new dataset environment, like so:
 
-# With specific date
-python scripts/dhbm.py --name "folder_name" --provider "anthropic" --model "..." --date "2025-03-01"
-
-# Run specific test IDs
-python -c "from scripts.run_benchmarks import main; main(limit_to=['T0017'])"
+```
+benchmarks/<benchmark_name>/
+├── README.md              
+├── images/                (image files: jpg, png)
+├── prompts/               (text files with prompts)
+├── ground_truths/         (json or txt files)
+├── benchmark.py           (custom scoring)
+├── dataclass.py           (optional: Pydantic models for structured output)
+└── meta.json              (metadata for the benchmark)
 ```
 
-**Note:** API keys can be passed via `--api_key` argument or set in `.env` file.
+**Required steps after creating:**
+1. **Add images or texts** to `images/`, resp. to `texts/` directory.
+2. **Update prompts** in `prompts/` directory (at least one text file)
+3. **Add ground truths** to `ground_truths/` - one file per image/image sequence and or text file
+4. **Implement Dataclass** (optional) - Define the response structure.
 
-### Add Configuration to the Suite
-To add a configuration, you need to add a new row to the `benchmarks_tests.csv` file. The file has the following structure:
+#### Add Context Data
+You need to add at least one image or text file. This is the context data. 
+Context data are the inputs that will be sent to the LLM. Depending on the benchmark, this may include:
 
-```csv
-id,name,provider,model,dataclass,temperature,role_description,prompt_file,rules,legacy_test
-T0001,test_benchmark,openai,gpt-4o,,,,,,false
-```
+- .txt, .json and other text-only files (historical texts, metadata records, descriptions, OCR fragments)
+- .jpg, .png or other image types (manuscript pages, document snippets, photos)
 
-- `id`: A unique identifier for the benchmark using 4-digit zero-padded format (e.g., T0001, T0002).
-- `name`: The name of the benchmark. This must match the name of the directory in the `benchmarks` folder.
-- `provider`: The provider of the model. This can be `openai`, `genai`, `anthropic`, `mistral`, `openrouter`, or `scicore`.
-- `model`: The name of the model. This can be any model name that is supported by the provider.
-- `dataclass`: The Pydantic model class name (from dataclass.py) used to structure the response of the request.
-- `temperature`: The temperature parameter for the model. This can be any value between 0 and 1.
-- `role_description`: A description of the role that the model should take on. This can be any description that is supported by the provider.
-- `prompt_file`: The name of the prompt file in the `prompts` directory.
-- `rules`: Additional configuration rules in JSON format for specialized test scenarios.
-- `legacy_test`: A boolean value that indicates whether the benchmark is a legacy test. This can be `true` or `false`.
+_Naming convention_:
+- The whole filename without its ending is treated as context object name
+- This means that all files with the same basename in the context directories (images, texts) are sent at the same time
+- For each basename you must provide a ground truth file
 
-This allows you to run the benchmark with different models, prompts, and configurations.
+#### Implement Scoring
+Each benchmark has a corresponding benchmark class in benchmark.py. Two methods have to be implemented in order for the scoring to work:
 
-### Implement a Benchmark Class
-If you want to implement a custom benchmark class, you can create a `benchmark.py` file in the benchmark directory.
-This file must contain a class that inherits from the `Benchmark` class. The class must be named like the benchmark 
-folder but in CamelCase. Example: `TestBenchmark` for the `test_benchmark` folder.
-
-The class can implement the following methods:
+_Implement the scoring of a single object/request:_
+Implement the scoring for a single request. Most of the times it is not as easy as to ask if the llm-response and the ground truth are equal. 
 
 ```python
-from scripts.benchmark_base import Benchmark
+def score_request_answer(self, object_name, response, ground_truth):
+   # object_name: basename of the processed files
+   # response: large language model response
+   # ground_truth: corresponding_ground_truth
+   
+   calculated_score = 0
+   # implement scoring for one object
+   
+   return {"fuzzy": calculated_score}
+```
 
-class TestBenchmark(Benchmark):
+_Implement the scoring of the whole test run:_
+Take the average or the mean or use any other functionality to score accross all requests for the test run.
 
-    def score_answer(self, image_name, response, ground_truth):
-        data = self.prepare_scoring_data(response)  # Extracts the relevant data from the response and returns a dictionary
-        # [...] Score the answer from the model
-        return {"total": 0} # Return a dictionary with scores   
-        
-    @property
-    def convert_result_to_json(self):
-        return True
+```python
+def score_benchmark(self, all_scores):
+       total_score = 0
+       for score in all_scores:
+           total_score += score['fuzzy']
+       return {"fuzzy": total_score / len(all_scores)}
+```
 
-    @property
-    def resize_images(self):
-        return True
+Return at least one metric. Commonly used metrics are fuzzy, f1_score, cer
+#### Implement a Dataclass
+If you want to implement a custom dataclass.
 
-    @property
-    def get_page_part_regex(self):
-        return r'(.+)_p\d+\.(jpg|jpeg|png)$'
-
-    @property
-    def get_output_format(self):
-        return "json"
-    
-    @property
-    def title(self):
-        return f"{self.name} ({self.provider}/{self.model})"
+```python
+dataclass exnmple
 ```
 
 The `score_answer` method is used to score the answer from the model. The method receives the image name, the response
@@ -225,7 +224,72 @@ The `get_page_part_regex` property is a regular expression that is used to extra
 The `get_output_format` property indicates the output format of the model response.
 The `title` property is used to generate the title of the benchmark.
 
-## Providers and Models
+
+### 2.4. Run an adhoc test
+
+```
+python scripts/run_single_test.py --adhoc
+```
+
+### 2.5. Generate a result render
+
+```
+python scripts/create_report.py path/to/result
+```
+
+
+## 3. Share it!
+We welcome contributions to the RISE Humanities Data Benchmark. 
+
+### 3.1. Before submitting
+Before submitting a pull request, please make sure your benchmark meets all of the following criteria:
+
+**Data Requirements**
+- Dataset is not too large
+  Recommended: < 50 MB total
+- Ground truths are manually checked and reliable
+- Data is legally usable
+- Must be openly available
+- No copyrighted or sensitive data
+  - A clear license is indicated (preferably open license)
+- Context files are properly named and paired with ground_truths
+
+**Technical Requirements**
+- Benchmark runs locally without errors
+- Scoring metric is clearly defined and documented
+- Directory structure follows the template
+- README.md inside the benchmark folder is fully completed
+  (template is created automatically by create_benchmark.py)
+
+**Quality Requirements**
+- Outputs are deterministic enough for fair evaluation
+- The benchmark fills a clear research gap (new task, domain, or corpus)
+- Instructions do not bias the LLM toward “right answers” via over-specification
+
+### 3.2. Create a pull request
+- Go to your fork on GitHub.
+- Click “Compare & pull request”.
+- Target: `RISE-UNIBAS/humanities_data_benchmark → main`
+
+Add a short description:
+- What your benchmark tests
+- Example ground truth formats
+- Scoring logic summary
+- How you validated the dataset
+- Any remaining issues or questions
+
+### 3.3. Review & Publication
+The maintainers will:
+
+- run the benchmark locally
+- check the metric
+- confirm licensing
+- validate folder structure
+ -potentially request revisions
+
+Once everything is green, your benchmark will be merged into the main repository.
+
+## 4. Providers and Models
 
 This benchmark suite currently tests models from the following providers:
 
@@ -277,9 +341,10 @@ This benchmark suite currently tests models from the following providers:
 
 **Note:** OpenRouter provides access to models from multiple providers through a unified API. sciCORE provides access to models hosted on the University of Basel's high-performance computing infrastructure.
 
-## Benchmarking Methodology
 
-### Ground Truth
+## 5. Benchmarking Methodology
+
+### 5.1. Ground Truth
 In this benchmark suite, a model's output for a task is compared to the ground truth (gold standard) for that task given the same input. Ground truth is the correct or verified output created by domain experts.
 
 When selecting ground truth samples, we ensure:
@@ -287,10 +352,10 @@ When selecting ground truth samples, we ensure:
 - They cover various edge cases and scenarios relevant to humanities tasks
 - The sample size is large enough to achieve statistical significance
 
-### Metrics
+### 5.2. Metrics
 We use two categories of metrics to evaluate model performance:
 
-#### Internal Metrics (Task Performance)
+#### 5.2.1. Internal Metrics (Task Performance)
 These metrics evaluate how well the model performs the specific task. Examples include:
 
 - **F1 Score**: The harmonic mean of precision and recall, balancing both metrics
@@ -298,7 +363,7 @@ These metrics evaluate how well the model performs the specific task. Examples i
 - **Recall**: The ratio of correctly predicted positive observations to all actual positives
 - **Character/Word Error Rate**: Used for evaluating text generation and transcription accuracy
 
-#### External Metrics (Practical Considerations)
+#### 5.2.2. External Metrics (Practical Considerations)
 These metrics evaluate factors beyond task performance that impact usability:
 
 - **Compute Cost**: Automatically tracked based on token usage and date-based pricing data (`scripts/data/pricing.json`). Each run includes cost breakdown and historical pricing via Wayback Machine snapshots.
@@ -308,7 +373,10 @@ These metrics evaluate factors beyond task performance that impact usability:
 - **Deployment Options**: Whether the model can be run locally or requires API calls
 - **Legal and Ethical Considerations**: Including data privacy, IP compliance, and model bias
 
-## Current Limitations
+
+## 6. Project Status
+
+## 6.1. Current Limitations
 
 The benchmark suite currently has several limitations that could be addressed in future iterations:
 
@@ -324,24 +392,10 @@ The benchmark suite currently has several limitations that could be addressed in
 | **Evaluation** | Context window testing | Evaluation across different context window sizes and document lengths not implemented |
 | | Standardized error analysis | More granular error categorization and failure mode analysis needed |
 
-## Practical Considerations
+## 6.2. Outlook
+TODO
 
-When using this benchmark suite for your own research, consider the following:
-
-| Category | Consideration | Description |
-|----------|---------------|-------------|
-| **Resource Requirements** | Skills | Operationalizing tasks requires both domain knowledge and technical expertise |
-| | Ground Truth Creation | Requires domain expertise and careful curation |
-| | Metric Selection | Requires understanding of both the humanities domain and evaluation methods |
-| **Technical** | Local vs. API Models | Determine if you need to run models locally or can use API services |
-| | Data Privacy | Ensure you're allowed to share your data via APIs if needed |
-| | Infrastructure | Consider if you have access to appropriate computing resources |
-| **Compliance** | Legal Requirements | Check for any legal restrictions on data sharing or model usage |
-| | Ethical Guidelines | Consider any ethical implications of your benchmarking approach |
-| | Funder Requirements | Verify if there are any funding agency requirements |
-| | FAIR Data Principles | Consider how to make your benchmark data Findable, Accessible, Interoperable, and Reusable |
-
-## Contributors
+## 7. Contributors
 
 This project is developed by a multidisciplinary team at the University of Basel's RISE (Research and Infrastructure Support). 
 
@@ -360,3 +414,13 @@ This project is developed by a multidisciplinary team at the University of Basel
 | Elena Spadini | [@elespdn](https://github.com/elespdn) | [0000-0002-4522-2833](https://orcid.org/0000-0002-4522-2833) |
 
 For detailed attribution by benchmark and contribution type, see our [CONTRIBUTORS.md](CONTRIBUTORS.md) file.
+
+From RISE with <3 
+
+
+
+
+
+
+
+
