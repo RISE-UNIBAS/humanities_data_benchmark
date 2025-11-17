@@ -57,7 +57,9 @@ This benchmark suite focuses on tasks essential to digital humanities work with 
 ## 1. Overview
 
 ### 1.1. Terminology
+- **Adhoc-Test**: A specific instance of a benchmark run which is only run once with the run-tests-tool CLI for testing reasons.
 - **Benchmark**: A task for models to perform, consisting of images, ground truths, prompts, dataclasses, and scoring functions. Each benchmark is stored in a separate directory.
+- **Configured Test**: A specific instance of a benchmark run with a particular configuration (ID, provider, model, temperature, role description, prompt file, dataclass).
 - **Dataclass**: Pydantic models for structured output, supported across all providers.
 - **Ground Truth**: The correct answer used to evaluate the model's response.
 - **Image**: Visual input for the task. Images are paired with ground truth files.
@@ -68,7 +70,6 @@ This benchmark suite focuses on tasks essential to digital humanities work with 
 - **Response**: Model's answer containing metadata and output.
 - **Score**: Evaluation result indicating model performance.
 - **Scoring Function**: Function that evaluates the model's response, implemented via the `score_answer` method.
-- **Test**: A specific instance of a benchmark run with a particular configuration (provider, model, temperature, role description, prompt file, dataclass).
 - **Test Configuration**: Parameters for running a test, stored in `benchmarks_tests.csv`.
 - **Text file**: Textual input for the task. Text files are paired with ground truth files.
 
@@ -134,10 +135,20 @@ SCICORE_API_KEY=<your_scicore_api_key>
 ```
 
 ### 2.2. Run a configured test
+To test if your installation works, it's easiest to run one of the configured tests. Define one of `OPENAI_API_KEY` (= `T0001`),  `GENAI_API_KEY` (= `T0002`) or `ANTHROPIC_API_KEY`  (= `T0003`) to get started.
+Start the script from tha root of your project, like so:
 
 ```
-python scripts/run_single_test.py T0121
+python scripts/run_single_test.py --test_id T0001
 ```
+
+This executes the `test_benchmark` (one image, one request) and saves the results to `results/YYYY-MM-DD/T0001`. Once these results are present, the test will **not** send requests for existing results on the same day. If you want to overwrite the existing results, you can:
+
+```
+python scripts/run_single_test.py --test_id T0001 --regenerate
+```
+
+You also can run the script without any parameters for the interactive interface. It lets you search for and select the test you might be looking for.
 
 ### 2.3. Create a new Benchmark
 Start with the CLI tool to create the basic structure:
@@ -161,6 +172,7 @@ This creates a new dataset environment, like so:
    - `dataclass.py` - Pydantic schema (optional)
 
 #### Step-by-Step Process
+When starting the `create_benchmark.py` script, you will be guided through the creation of the following data:
 
 **1. Benchmark Name**
 - Must be lowercase with underscores (e.g., `personal_letters`)
@@ -298,10 +310,16 @@ The `title` property is used to generate the title of the benchmark.
 
 
 ### 2.4. Run an adhoc test
+When you have created a benchmark you should test it first and ensure that verything works. That's what adhoc-tests are for.
+Run the following command and select from the options to create an on-the-fly configuration to test.
 
 ```
 python scripts/run_single_test.py --adhoc
 ```
+
+The results are saved to `test_runs/` directory instead of `results/` which you can easily delete and is ignored by the repository.
+Perfect for experimentation and quick testing, ID format: `ADHOC_YYYYMMDD_HHMMSS`.
+
 
 ### 2.5. Generate a result render
 
