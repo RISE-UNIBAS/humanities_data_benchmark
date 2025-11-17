@@ -46,8 +46,8 @@ This benchmark suite focuses on tasks essential to digital humanities work with 
 | [3.3. Review & Publication](#33-review--publication) | We check your submission. Now what? |
 | **[4. Providers & Models](#4-providers-and-models)** | List of implemented providers and models.|
 | **[5. Benchmarking Methodology](#5-benchmarking-methodology)** | |
-| [5.1. Ground Truth](#51-ground-truth) | Submit your dataset. |
-| [5.2. Metrics](#52-metrics) | We check your submission. Now what? |
+| [5.1. Ground Truth](#51-ground-truth) | How to create, what to consider. |
+| [5.2. Metrics](#52-metrics) | How to score, what to consider. |
 | **[6. Project Status](#6-project-status)** | |
 | [6.1. Current Limitations](#61-current-limitations) | |
 | [6.2. Outlook](#62-outlook) |  |
