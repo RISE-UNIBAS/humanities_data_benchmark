@@ -633,7 +633,7 @@ def create_cost_effectiveness_scatter(benchmarks_data, pricing_data):
 
         x_values = [m["estimated_cost_cents"] for m in models]
         y_values = [m["avg_score"] for m in models]
-        sizes = [min(m["num_runs"] * 2, 50) + 10 for m in models]  # Scale size by runs
+        sizes = [10 for m in models]  # Uniform size for all bubbles
         model_names = [m["model"] for m in models]
 
         # Create hover text
@@ -821,7 +821,7 @@ def create_speed_performance_scatter(benchmarks_data):
 
         x_values = [m["avg_time"] for m in models]
         y_values = [m["avg_score"] for m in models]
-        sizes = [min(m["num_runs"] * 2, 50) + 10 for m in models]
+        sizes = [10 for m in models]  # Uniform size for all bubbles
         model_names = [m["model"] for m in models]
 
         # Create hover text

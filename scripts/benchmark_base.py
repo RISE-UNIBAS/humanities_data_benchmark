@@ -4,32 +4,30 @@ import json
 import logging
 import os
 import re
-import tempfile
 from abc import ABC, abstractmethod
 from datetime import datetime
-from typing import Dict
+from typing import Dict, List
 
-from data_loader import read_file, resize_image, write_file
+from data_loader import read_file, write_file
 from scoring_helper import remove_none
-from simple_ai_clients import AiApiClient
-from openai import LengthFinishReasonError
+from ai_client import create_ai_client, LLMResponse
 
 
 class Benchmark(ABC):
     """ Base class for all benchmark workflows. """
 
-    def __init__(self, config, api_key, benchmark_directory, date=None):
+    def __init__(self, config, api_key, benchmark_directory):
         """ Initialize the benchmark. """
 
-        self.id = config.get('id')
-        self.name = config['name']
-        self.benchmark_dir = benchmark_directory
+        self.id = config.get('id')                  # Unique Test ID 'T0001'
+        self.name = config.get('name')              # Unique benchmark dataset name (=directory name)
+        self.benchmark_dir = benchmark_directory    # Path to the benchmark directory
         self.provider = config['provider']
         self.model = config['model']
         self.api_key = api_key
         self.role_description = config['role_description']
         self.prompt_file = config['prompt_file']
-        self.date = date or datetime.now().strftime('%Y-%m-%d')
+        self.date = datetime.now().strftime('%Y-%m-%d')
         if self.prompt_file is None or self.prompt_file == "":
             self.prompt_file = "prompt.txt"
         self.prompt_file_exists = os.path.exists(os.path.join(self.benchmark_dir, "prompts", self.prompt_file))
@@ -41,15 +39,15 @@ class Benchmark(ABC):
         else:
             self.rules = json.loads(config['rules'])
 
-        kwargs = {
-            "api": self.provider,
-            "api_key": self.api_key,
-            "gpt_role_description": self.role_description,
-        }
+        kwargs = {}
         if self.dataclass:
             kwargs["dataclass"] = self.dataclass
 
-        self.client = AiApiClient(**kwargs)
+        # self.client = AiApiClient(**kwargs)
+        self.client = create_ai_client(self.provider,
+                                       self.api_key,
+                                       system_prompt=self.role_description,
+                                       **kwargs)
         logging.debug(f"Initialized benchmark {config['name']}")
 
     def is_runnable(self) -> bool:
@@ -60,8 +58,9 @@ class Benchmark(ABC):
         if not os.path.exists(self.benchmark_dir):
             logging.error(f"Benchmark directory not found: {self.benchmark_dir}")
             return False
-        if not os.path.exists(os.path.join(self.benchmark_dir, "images")):
-            logging.error(f"Images directory not found: {self.benchmark_dir}")
+        if not os.path.exists(os.path.join(self.benchmark_dir, "images")) and \
+              not os.path.exists(os.path.join(self.benchmark_dir, "texts")):
+            logging.error(f"'images' or 'texts' directory not found: {self.benchmark_dir}")
             return False
         if not os.path.exists(os.path.join(self.benchmark_dir, "ground_truths")):
             logging.error(f"Ground truths directory not found: {self.benchmark_dir}")
@@ -116,28 +115,15 @@ class Benchmark(ABC):
         return {"response_text": ground_truth_text}
 
     def ask_llm(self,
-                image_paths: list[str],
-                image_name: str) -> dict:
+                image_paths: List[str]) -> tuple[LLMResponse, float]:
         """ Ask the language model a question. """
-        self.client.clear_image_resources()
-        self.prompt = self.load_prompt(image_name)
 
-        if self.resize_images:
-            with tempfile.TemporaryDirectory() as temp_dir:
-                resized_images = [
-                    resize_image(image_path, temp_dir)
-                    for image_path in image_paths
-                ]
+        kwargs = {}
+        kwargs["images"] = image_paths
+        if self.dataclass:
+            kwargs["response_format"] = self.dataclass
 
-                for resized_image_path in resized_images:
-                    self.client.add_image_resource(resized_image_path)
-
-                return self.client.prompt(model=self.model, prompt=self.prompt)
-        else:
-            for image_path in image_paths:
-                self.client.add_image_resource(image_path)
-
-            return self.client.prompt(model=self.model, prompt=self.prompt)
+        return self.client.prompt(self.model, self.prompt, **kwargs)
 
     def get_request_answer_path(self):
         return str(os.path.join('..', 'results', self.date, self.id))
@@ -148,15 +134,17 @@ class Benchmark(ABC):
 
     def save_request_answer(self,
                             image_name: str,
-                            answer: dict) -> None:
+                            answer: tuple[LLMResponse, float]) -> None:
         """ Save the answer to a file. """
 
         save_path = self.get_request_answer_path()
         os.makedirs(save_path, exist_ok=True)
 
+        llm_response, duration = answer
+
         file_name = os.path.join(save_path,
                                  f"{self.get_request_name(image_name)}.json")
-        write_file(file_name, answer)
+        write_file(file_name, llm_response.to_dict())
         logging.info(f"Saved answer to {file_name}")
 
     def save_benchmark_score(self,
@@ -200,7 +188,15 @@ class Benchmark(ABC):
 
     def run(self, regenerate_existing_results=True):
         """Run the benchmark."""
+
+        logging.info(f"Running {self.get_title()}...")
+        if not self.is_runnable():
+            logging.error(f"Skipping {self.get_title()} (not runnable).")
+            return
+
+        texts_dir = os.path.join(self.benchmark_dir, 'texts')
         images_dir = os.path.join(self.benchmark_dir, 'images')
+
         image_files = sorted(os.listdir(images_dir))
         processed_images = set()
 
@@ -255,35 +251,9 @@ class Benchmark(ABC):
 
             if should_process:
                 logging.info(f"Processing {self.id}, {image_name}...")
-                try:
-                    answer = self.ask_llm(image_paths, image_name)
-                    self.save_request_answer(image_name, answer)
-                except LengthFinishReasonError as e:
-                    logging.error(f"Length limit exceeded for {image_name}: {e}")
-                    answer = {
-                        'provider': self.provider,
-                        'model': self.model,
-                        'execution_time': datetime.now().isoformat(),
-                        'response_text': "",
-                        'error': 'length_limit_exceeded',
-                        'error_message': str(e),
-                        'usage': {},
-                        'scores': {},
-                    }
-                    self.save_request_answer(image_name, answer)
-                except Exception as e:
-                    logging.error(f"Error processing {image_name}: {e}")
-                    answer = {
-                        'provider': self.provider,
-                        'model': self.model,
-                        'execution_time': datetime.now().isoformat(),
-                        'response_text': "",
-                        'error': type(e).__name__,
-                        'error_message': str(e),
-                        'usage': {},
-                        'scores': {},
-                    }
-                    self.save_request_answer(image_name, answer)
+                answer = self.ask_llm(image_paths)
+                self.save_request_answer(image_name, answer)
+
             else:
                 logging.info(f"Skipping {image_name} as the answer already exists.")
 

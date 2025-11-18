@@ -43,3 +43,5 @@ class Blacklist(Benchmark):
             avg_score = 0
             
         return {"fuzzy": avg_score}
+
+
