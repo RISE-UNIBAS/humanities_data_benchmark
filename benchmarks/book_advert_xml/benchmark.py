@@ -1,6 +1,4 @@
 """Benchmark implementation for Book Advert XML files (malformed) from Avisblatt.
-
-blblb
 """
 
 from typing import Dict, List
@@ -52,17 +50,3 @@ class BookAdvertXml(Benchmark):
             "num_samples": len(all_scores),
             # Add more aggregated metrics as needed
         }
-
-    # Optional: Override these methods if needed
-
-    # def remove_none_values(self) -> bool:
-    #     """Whether to remove None values from parsed responses."""
-    #     return True
-
-    # def convert_result_to_json(self) -> bool:
-    #     """Whether to convert response to JSON before scoring."""
-    #     return True
-
-    # def get_title(self) -> str:
-    #     """Get benchmark title."""
-    #     return "Book Advert XML files (malformed) from Avisblatt"
