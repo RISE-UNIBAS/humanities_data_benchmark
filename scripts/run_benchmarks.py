@@ -3,17 +3,15 @@ import importlib
 import os
 import sys
 import time
-from benchmark_base import Benchmark, DefaultBenchmark
+from benchmark_base import DefaultBenchmark
 from dotenv import load_dotenv
 import logging
 
 # Add project root to sys.path
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 load_dotenv()
-REGENERATE_RESULTS = False
 
 BENCHMARKS_DIR = '../benchmarks'
-REPORTS_DIR = "../docs"
 CONFIG_FILE = os.path.join(BENCHMARKS_DIR, 'benchmarks_tests.csv')
 
 # Configure logging
@@ -37,7 +35,7 @@ def get_api_key(provider):
     return api_key
 
 
-def load_benchmark(test_config, date=None):
+def load_benchmark(test_config):
     """Load the benchmark class from the benchmark folder."""
     benchmark_name = test_config['name']
     api_key = get_api_key(test_config['provider'])
@@ -52,78 +50,38 @@ def load_benchmark(test_config, date=None):
         class_name = ''.join(part.capitalize() for part in benchmark_name.split('_'))
         benchmark_class = getattr(benchmark_module, class_name)
         logging.info(f"Loaded {benchmark_name} from {benchmark_file}")
-        return benchmark_class(test_config, api_key, benchmark_path, date)
+        return benchmark_class(test_config, api_key, benchmark_path)
     else:
-        logging.info(f"Loaded {benchmark_name} from Benchmark class")
-        return DefaultBenchmark(test_config, api_key, benchmark_path, date)
+        logging.info(f"Loaded {benchmark_name} from DefaultBenchmark class")
+        return DefaultBenchmark(test_config, api_key, benchmark_path)
 
 
-def create_result_table(results):
-    # First, gather all possible scores to handle missing data
-    scores = set()
-    for val in results.values():
-        scores.update(val.keys())
-
-    scores = sorted(scores)
-
-    # Create header
-    header = "key | " + " | ".join(scores)
-    separator = " | ".join(['---'] * (len(scores) + 1))
-
-    # Build rows
-    rows = []
-    for key, val in results.items():
-        row = [key]
-        for score in scores:
-            row.append(str(val.get(score, '-')))
-        rows.append(" | ".join(row))
-
-    # Combine everything
-    md_table = f"{header}\n{separator}\n" + "\n".join(rows)
-
-    table_path = os.path.join("..", "benchmarks", 'result_table.md')
-    with open(table_path, 'w', encoding='utf-8') as f:
-        f.write(md_table)
-
-
-def main(limit_to: list[str] = None, dates: list[str] = None):
+def main(limit_to: list[str] = None, regenerate_existing_results: bool = False):
     """ Main function to run benchmarks.
 
     This function reads the configuration file, loads the benchmarks,
     and runs each benchmark based on the configuration.
 
     :param limit_to: Optional list of benchmark ids (such as T0001, T0099) to limit the execution to, defaults to None
-    :param dates: Optional list of dates (YYYY-MM-DD format) to limit the execution to, defaults to None
+    :param regenerate_existing_results
     """
 
+    # Read the benchmark configuration file (csv)
     with open(CONFIG_FILE, newline='', encoding='utf-8') as csvfile:
         tests = csv.DictReader(csvfile)
+        # For each test configuration
         for test_config in tests:
+            # Only process if in limit_to list
             if limit_to and test_config['id'] not in limit_to:
                 continue
-            if test_config.get('legacy_test', 'false').lower() == 'false':
-                if dates:
-                    for date in dates:
-                        benchmark = load_benchmark(test_config, date)
-                        if benchmark.is_runnable():
-                            logging.info(f"Running {benchmark.get_title()} for date {date}...")
-                            benchmark.run(regenerate_existing_results=REGENERATE_RESULTS)
-                        else:
-                            logging.error(f"Skipping {benchmark.get_title()} for date {date} (not runnable).")
-                else:
-                    benchmark = load_benchmark(test_config)
-                    if benchmark.is_runnable():
-                        logging.info(f"Running {benchmark.get_title()}...")
-                        benchmark.run(regenerate_existing_results=REGENERATE_RESULTS)
-                    else:
-                        logging.error(f"Skipping {benchmark.get_title()} (not runnable).")
+            # Skip legacy tests
+            if test_config.get('legacy_test', 'false').lower() == 'true':
+                continue
+            # Load benchmark
+            benchmark = load_benchmark(test_config)
+            # Run benchmark
+            benchmark.run(regenerate_existing_results=regenerate_existing_results)
+
 
 if __name__ == "__main__":
-    main(limit_to= ["T0314", "T0315", "T0316", "T0317", "T0318", "T0319", "T0320", "T0321", "T0322", "T0323", "T0324"]
-
-
-
-
-
-
-)
+    main(limit_to=['T0002'])

@@ -4,37 +4,37 @@ import json
 import logging
 import os
 import re
-import tempfile
 from abc import ABC, abstractmethod
 from datetime import datetime
-from typing import Dict
+from pathlib import Path
+from typing import Dict, List, Union, Pattern, Optional, Iterable, Set
 
-from data_loader import read_file, resize_image, write_file
+from data_loader import read_file, write_file
 from scoring_helper import remove_none
-from simple_ai_clients import AiApiClient
-from openai import LengthFinishReasonError
+from ai_client import create_ai_client, LLMResponse
 
 
 class Benchmark(ABC):
     """ Base class for all benchmark workflows. """
 
-    def __init__(self, config, api_key, benchmark_directory, date=None):
+    def __init__(self, config, api_key, benchmark_directory):
         """ Initialize the benchmark. """
 
-        self.id = config.get('id')
-        self.name = config['name']
-        self.benchmark_dir = benchmark_directory
-        self.provider = config['provider']
-        self.model = config['model']
-        self.api_key = api_key
-        self.role_description = config['role_description']
-        self.prompt_file = config['prompt_file']
-        self.date = date or datetime.now().strftime('%Y-%m-%d')
+        self.id = config.get('id')                          # Unique Test ID 'T0001'
+        self.name = config.get('name')                      # Unique benchmark dataset name (=directory name)
+        self.benchmark_dir = benchmark_directory            # Path to the benchmark directory
+        self.provider = config['provider']                  # AI provider
+        self.model = config['model']                        # Model name
+        self.api_key = api_key                              # API key for the provider
+        self.role_description = config['role_description']  # Role description for the system prompt
+        self.prompt_file = config['prompt_file']            # Prompt file name
+        self.date = datetime.now().strftime('%Y-%m-%d')     # Date of the benchmark run
+
+
         if self.prompt_file is None or self.prompt_file == "":
             self.prompt_file = "prompt.txt"
         self.prompt_file_exists = os.path.exists(os.path.join(self.benchmark_dir, "prompts", self.prompt_file))
         self.prompt = None # Load later to allow dynamic formatting on request basis
-        self.request_render = ""
         self.dataclass_name = config['dataclass']
         self.dataclass = self.load_dataclass()
         if config['rules'] == "":
@@ -42,15 +42,14 @@ class Benchmark(ABC):
         else:
             self.rules = json.loads(config['rules'])
 
-        kwargs = {
-            "api": self.provider,
-            "api_key": self.api_key,
-            "gpt_role_description": self.role_description,
-        }
+        kwargs = {}
         if self.dataclass:
             kwargs["dataclass"] = self.dataclass
 
-        self.client = AiApiClient(**kwargs)
+        self.client = create_ai_client(self.provider,
+                                       self.api_key,
+                                       system_prompt=self.role_description,
+                                       **kwargs)
         logging.debug(f"Initialized benchmark {config['name']}")
 
     def is_runnable(self) -> bool:
@@ -61,8 +60,9 @@ class Benchmark(ABC):
         if not os.path.exists(self.benchmark_dir):
             logging.error(f"Benchmark directory not found: {self.benchmark_dir}")
             return False
-        if not os.path.exists(os.path.join(self.benchmark_dir, "images")):
-            logging.error(f"Images directory not found: {self.benchmark_dir}")
+        if not os.path.exists(os.path.join(self.benchmark_dir, "images")) and \
+              not os.path.exists(os.path.join(self.benchmark_dir, "texts")):
+            logging.error(f"'images' or 'texts' directory not found: {self.benchmark_dir}")
             return False
         if not os.path.exists(os.path.join(self.benchmark_dir, "ground_truths")):
             logging.error(f"Ground truths directory not found: {self.benchmark_dir}")
@@ -76,12 +76,12 @@ class Benchmark(ABC):
         return True
 
     def load_prompt(self,
-                    image_filename: str) -> str:
+                    object_basename: str) -> str:
         """ Load the prompt from the benchmark directory. """
         prompt_path = os.path.join(self.benchmark_dir, "prompts", self.prompt_file)
         prompt = read_file(prompt_path)
         logging.debug(f"Loaded prompt from {prompt_path}")
-        prompt_kwargs = self.get_prompt_kwargs(image_filename)
+        prompt_kwargs = self.get_prompt_kwargs(object_basename)
         if prompt_kwargs:
             try:
                 return prompt.format(**prompt_kwargs)
@@ -104,9 +104,10 @@ class Benchmark(ABC):
             raise ImportError(f"Could not load dataclass {class_name}: {e}")
 
     def load_ground_truth(self,
-                          image_name: str) -> dict:
+                          object_basename: str) -> dict:
         """ Load the ground truth from the benchmark directory. """
-        ground_truth_path = os.path.join(self.benchmark_dir, "ground_truths", f"{image_name}.json")
+
+        ground_truth_path = os.path.join(self.benchmark_dir, "ground_truths", f"{object_basename}.json")
         ground_truth_text = read_file(ground_truth_path)
 
         if self.convert_truth_to_json:
@@ -116,55 +117,163 @@ class Benchmark(ABC):
                 return {"error": "Invalid JSON format."}
         return {"response_text": ground_truth_text}
 
-    def ask_llm(self,
-                image_paths: list[str],
-                image_name: str) -> dict:
-        """ Ask the language model a question. """
-        self.client.clear_image_resources()
-        self.prompt = self.load_prompt(image_name)
+    @staticmethod
+    def get_all_basenames(
+            directories: Iterable[Union[str, Path]],
+            page_pattern: Optional[Pattern] = None,
+    ) -> List[str]:
+        """
+        Return all logical basenames across multiple directories.
 
-        if self.resize_images:
-            with tempfile.TemporaryDirectory() as temp_dir:
-                resized_images = [
-                    resize_image(image_path, temp_dir)
-                    for image_path in image_paths
-                ]
+        Parameters
+        ----------
+        directories : Iterable[str | Path]
+            Directories to scan (non-recursive).
+        page_pattern : Optional[regex]
+            Regex matching a variable suffix (e.g. page number) that should be removed.
+            If None: uses default "_p<digits>$" pattern.
 
-                for resized_image_path in resized_images:
-                    self.client.add_image_resource(resized_image_path)
+        Returns
+        -------
+        List[str]
+            Sorted list of unique basenames.
+        """
 
-                return self.client.prompt(model=self.model, prompt=self.prompt)
+        if page_pattern is None:
+            # default pattern: _p001, _p1, _p00042 etc. just before extension
+            page_pattern = re.compile(r"_p\d+$")
+
+        basenames: Set[str] = set()
+
+        for directory in directories:
+            directory = Path(directory)
+            if directory.is_dir():
+                for item in directory.iterdir():
+                    if not item.is_file():
+                        continue
+
+                    stem = item.stem  # filename without final .ext
+
+                    # Strip page pattern if present
+                    clean = page_pattern.sub("", stem)
+
+                    basenames.add(clean)
+
+        return sorted(basenames)
+
+    @staticmethod
+    def get_files_by_basename(
+            directory: Union[str, Path],
+            basename: Union[str, Pattern],
+            group: bool = False,
+            valid_extensions: Optional[List[str]] = None,
+    ) -> List[Path]:
+        """
+        Return files in `directory` matching a given basename pattern.
+
+        Parameters
+        ----------
+        directory : str or Path
+            Directory to search (non-recursive).
+        basename : str or compiled regex
+            For exact match: 'xy'
+            For group match: 'xy_' (matches xy_part1.ext, xy_part2.ext, ...)
+        group : bool
+            If False: exact basename.<ext>
+            If True: basename*.<ext>, but only one final extension allowed.
+        valid_extensions : list of str (optional)
+            If provided, only files whose final extension is in the list are returned.
+
+        Returns
+        -------
+        List[Path]
+            Sorted list of full file paths.
+        """
+        directory = Path(directory)
+
+        if isinstance(basename, str):
+            if group:
+                # basename*.<one-ext>
+                pattern_str = rf"^{re.escape(basename)}[^.]*\.[^.]+$"
+            else:
+                # exact basename.<one-ext>
+                pattern_str = rf"^{re.escape(basename)}\.[^.]+$"
+
+            pattern = re.compile(pattern_str)
         else:
-            for image_path in image_paths:
-                self.client.add_image_resource(image_path)
+            pattern = basename  # custom regex already given
 
-            return self.client.prompt(model=self.model, prompt=self.prompt)
+        matches: List[Path] = []
+
+        for item in directory.iterdir():
+            if item.is_file() and pattern.match(item.name):
+                if valid_extensions:
+                    if item.suffix.lower() in [e.lower() for e in valid_extensions]:
+                        matches.append(item)
+                else:
+                    matches.append(item)
+
+        return sorted(matches)
+
+    def get_image_paths(self, object_basename: str) -> List[Path]:
+        """ Get the image paths for the object. """
+        images_dir = os.path.join(self.benchmark_dir, 'images')
+        if not os.path.exists(images_dir):
+            return []
+        return self.get_files_by_basename(images_dir, object_basename, group=False)
+
+    def get_text_paths(self, object_basename: str) -> List[Path]:
+        """ Get the text paths for the object. """
+        texts_dir = os.path.join(self.benchmark_dir, 'texts')
+        if not os.path.exists(texts_dir):
+            return []
+        return self.get_files_by_basename(texts_dir, object_basename, group=False)
+
+    def ask_llm(self, object_basename: str) -> LLMResponse:
+        """ Ask the language model a question. """
+
+        kwargs = {}
+        image_paths = self.get_image_paths(object_basename)
+        text_paths = self.get_text_paths(object_basename)
+        self.prompt = self.load_prompt(object_basename)
+
+        if image_paths:
+            kwargs["images"] = image_paths
+        if text_paths:
+            kwargs["texts"] = text_paths
+
+        if self.dataclass:
+            kwargs["response_format"] = self.dataclass
+
+        return self.client.prompt(self.model, self.prompt, **kwargs)
 
     def get_request_answer_path(self):
         return str(os.path.join('..', 'results', self.date, self.id))
 
-    def get_request_answer_file_name(self, image_name):
+    def get_request_answer_file_name(self, object_basename: str) -> str:
         """ Get the path to the answer file. """
-        return os.path.join(self.get_request_answer_path(), self.get_request_name(image_name) + ".json")
-
-    def get_request_render_path(self):
-        return str(os.path.join('..', 'renders', self.date, self.id))
-
-    def get_request_render_file_name(self, image_name):
-        """ Get the path to the render file. """
-        return os.path.join(self.get_request_render_path(), f'{image_name}.md')
+        return os.path.join(self.get_request_answer_path(), self.get_request_name(object_basename) + ".json")
 
     def save_request_answer(self,
-                            image_name: str,
-                            answer: dict) -> None:
+                            object_basename: str,
+                            answer: LLMResponse,
+                            score: dict) -> None:
         """ Save the answer to a file. """
 
         save_path = self.get_request_answer_path()
         os.makedirs(save_path, exist_ok=True)
 
         file_name = os.path.join(save_path,
-                                 f"{self.get_request_name(image_name)}.json")
-        write_file(file_name, answer)
+                                 f"{self.get_request_name(object_basename)}.json")
+        answer_json = answer.to_dict()
+        answer_json['score'] = score
+        try:
+            raw_answer = answer.raw_response.json()
+            answer_json['raw_response'] = raw_answer
+        except Exception:
+            logging.warning(f"Failed to save RAW answer for {object_basename}")
+
+        write_file(file_name, answer_json)
         logging.info(f"Saved answer to {file_name}")
 
     def save_benchmark_score(self,
@@ -206,220 +315,96 @@ class Benchmark(ABC):
 
         return {"error": "No response text found."}
 
-    def save_render(self,
-                    image_name: str,
-                    render: str) -> None:
-
-        save_path = self.get_request_render_path()
-        os.makedirs(save_path, exist_ok=True)
-        write_file(self.get_request_render_file_name(image_name), render)
-
     def run(self, regenerate_existing_results=True):
         """Run the benchmark."""
-        images_dir = os.path.join(self.benchmark_dir, 'images')
-        image_files = sorted(os.listdir(images_dir))
-        processed_images = set()
 
-        # Update ground truth
+        logging.info(f"Running {self.get_title()}...")
+        if not self.is_runnable():
+            logging.error(f"Skipping {self.get_title()} (not runnable).")
+            return
+
+        # Update ground truth TODO
         if self.update_required:
             self.update_ground_truth()
 
-        # Group images by request
-        image_groups = {}
-        all_answers = []  # Track all answers for cost calculation
+        images_dir = os.path.join(self.benchmark_dir, 'images')
+        texts_dir = os.path.join(self.benchmark_dir, 'texts')
+        object_basenames = self.get_all_basenames([images_dir, texts_dir],
+                                                  page_pattern=re.compile(r"_p\d+$")) # TODO
+        logging.info(f"Found {len(object_basenames)} objects to process.")
 
-        for image_file in image_files:
-            if image_file in processed_images:
-                continue
-
-            match = re.match(self.get_page_part_regex(), image_file, re.IGNORECASE)
-            if match:
-                base_name = match.group(1)
-                grouped_images = sorted([
-                    img for img in image_files if img.startswith(base_name + '_p')
-                ])
-                image_groups[base_name] = grouped_images
-                processed_images.update(grouped_images)
-            else:
-                image_name, _ = os.path.splitext(image_file)
-                image_groups[image_name] = [image_file]
-                processed_images.add(image_file)
-
-        # Process each image group
+        # Process each object
         benchmark_scores = []
-        for image_name, img_files in image_groups.items():
-            image_paths = [os.path.join(images_dir, img) for img in img_files]
-            if self.skip_image(image_name):
-                logging.info(f"Skipping {image_name} as per configuration.")
-                continue
-            answer_file = self.get_request_answer_file_name(image_name)
-            should_process = (regenerate_existing_results and os.path.exists(answer_file)) or \
-                           (not os.path.exists(answer_file))
+        all_answers = []
+        for object_basename in object_basenames:
 
-            # Check if existing file is valid JSON
-            if not should_process and os.path.exists(answer_file):
-                try:
-                    answer_text = read_file(answer_file)
-                    if not answer_text or not answer_text.strip():
-                        logging.warning(f"Answer file for {image_name} is empty, regenerating...")
-                        should_process = True
-                    else:
-                        answer = json.loads(answer_text)
-                except json.JSONDecodeError as e:
-                    logging.warning(f"Answer file for {image_name} has invalid JSON ({e}), regenerating...")
-                    should_process = True
+            answer_file_name = self.get_request_answer_file_name(object_basename)
+            should_process = (regenerate_existing_results and os.path.exists(answer_file_name)) or \
+                             (not os.path.exists(answer_file_name))
 
             if should_process:
-                logging.info(f"Processing {self.id}, {image_name}...")
-                try:
-                    answer = self.ask_llm(image_paths, image_name)
-                    self.save_request_answer(image_name, answer)
-                except LengthFinishReasonError as e:
-                    logging.error(f"Length limit exceeded for {image_name}: {e}")
-                    answer = {
-                        'provider': self.provider,
-                        'model': self.model,
-                        'execution_time': datetime.now().isoformat(),
-                        'response_text': "",
-                        'error': 'length_limit_exceeded',
-                        'error_message': str(e),
-                        'usage': {},
-                        'scores': {},
-                    }
-                    self.save_request_answer(image_name, answer)
-                except Exception as e:
-                    logging.error(f"Error processing {image_name}: {e}")
-                    answer = {
-                        'provider': self.provider,
-                        'model': self.model,
-                        'execution_time': datetime.now().isoformat(),
-                        'response_text': "",
-                        'error': type(e).__name__,
-                        'error_message': str(e),
-                        'usage': {},
-                        'scores': {},
-                    }
-                    self.save_request_answer(image_name, answer)
+                logging.info(f"Processing {self.id}, {object_basename}...")
+                answer = self.ask_llm(object_basename)
+                ground_truth = self.load_ground_truth(object_basename)
+                score = self.score_request_answer(object_basename, answer, ground_truth)
+                self.save_request_answer(object_basename, answer, score)
+                benchmark_scores.append(score)
+                all_answers.append(answer)
+                logging.info(f"Finished {object_basename} with score: {score}")
             else:
-                logging.info(f"Skipping {image_name} as the answer already exists.")
+                logging.info(f"Skipping {self.id}, {object_basename}...")
+                benchmark_scores.append(None)
+                all_answers.append(None)
 
-            ground_truth = self.load_ground_truth(image_name)
-            score = self.score_request_answer(image_name, answer, ground_truth)
-            benchmark_scores.append(score)
-            all_answers.append(answer)  # Track answer for cost calculation
-            render = self.create_request_render(image_name, answer, score, ground_truth)
-            self.save_render(image_name, render)
-
+        # Score the benchmark
         benchmark_score = self.score_benchmark(benchmark_scores)
+        logging.info(f"Benchmark score: {benchmark_score}")
 
         # Calculate cost based on usage tokens and pricing data
         cost_summary = self.calculate_cost(all_answers)
         benchmark_score['cost_summary'] = cost_summary
+        logging.info(f"Cost summary: {cost_summary}")
 
         self.save_benchmark_score(benchmark_score)
 
     def calculate_cost(self, all_answers):
-        """Calculate cost based on usage tokens and pricing data."""
-        # Load pricing data
-        pricing_file = os.path.join(os.path.dirname(__file__), 'data', 'pricing.json')
-        try:
-            with open(pricing_file, 'r') as f:
-                pricing_data = json.load(f)
-        except FileNotFoundError:
-            logging.warning(f"Pricing file not found: {pricing_file}")
-            return None
-
-        # Get pricing for the current date (or fallback to find provider/model)
-        date_pricing = pricing_data.get('pricing', {}).get(self.date)
-        fallback_date = None
-        model_pricing = None
-
-        if date_pricing:
-            # Try to get pricing from current date first
-            provider_pricing = date_pricing.get(self.provider, {})
-            model_pricing = provider_pricing.get(self.model)
-
-        if not model_pricing:
-            # Need to search through available dates to find pricing for this provider/model
-            available_dates = sorted(pricing_data.get('pricing', {}).keys(), reverse=True)
-            if not available_dates:
-                logging.warning("No pricing data available")
-                return None
-
-            # Iterate through dates until we find pricing for this provider/model
-            for date in available_dates:
-                date_pricing = pricing_data['pricing'][date]
-                provider_pricing = date_pricing.get(self.provider, {})
-                model_pricing = provider_pricing.get(self.model)
-
-                if model_pricing:
-                    fallback_date = date
-                    break
-
-            if not model_pricing:
-                logging.warning(f"No pricing found for {self.provider}/{self.model} in any available date")
-                return None
-
-            # Calculate age of fallback pricing
-            from datetime import datetime, timedelta
-            try:
-                fallback_datetime = datetime.strptime(fallback_date, '%Y-%m-%d')
-                current_datetime = datetime.strptime(self.date, '%Y-%m-%d')
-                age_days = (current_datetime - fallback_datetime).days
-
-                if age_days > 30:
-                    logging.error(f"No pricing for {self.date}, using fallback {fallback_date} which is {age_days} days old (>30 days)")
-                else:
-                    logging.warning(f"No pricing for {self.date}, using fallback {fallback_date} which is {age_days} days old")
-            except ValueError:
-                logging.warning(f"No pricing for {self.date}, using {fallback_date}")
-
-        input_price = model_pricing['input_price']  # USD per million tokens
-        output_price = model_pricing['output_price']  # USD per million tokens
-
-        # Calculate total tokens and cost from answers
-        total_input_tokens = 0
         total_output_tokens = 0
+        total_input_tokens = 0
+        total_cached_tokens = 0
+        total_input_cost = 0.0
+        total_output_cost = 0.0
+        total_cost = 0.0
 
         for answer in all_answers:
-            if 'usage' in answer and answer['usage']:
-                total_input_tokens += answer['usage'].get('input_tokens', 0) or 0
-                total_output_tokens += answer['usage'].get('output_tokens', 0) or 0
-
-        # Calculate costs (prices are per million tokens)
-        input_cost = (total_input_tokens / 1_000_000) * input_price
-        output_cost = (total_output_tokens / 1_000_000) * output_price
-        total_cost = input_cost + output_cost
+            total_output_tokens += answer.usage.output_tokens
+            total_input_tokens += answer.usage.input_tokens
+            if answer.usage.cached_tokens:
+                total_cached_tokens += answer.usage.cached_tokens
+            if answer.usage.input_cost_usd:
+                total_input_cost += answer.usage.input_cost_usd
+            if answer.usage.output_cost_usd:
+                total_output_cost += answer.usage.output_cost_usd
+            if answer.usage.estimated_cost_usd:
+                total_cost += answer.usage.estimated_cost_usd
 
         return {
             'total_input_tokens': total_input_tokens,
             'total_output_tokens': total_output_tokens,
             'total_tokens': total_input_tokens + total_output_tokens,
-            'input_cost_usd': round(input_cost, 6),
-            'output_cost_usd': round(output_cost, 6),
-            'total_cost_usd': round(total_cost, 6),
-            'pricing_date': self.date,
-            'input_price_per_million': input_price,
-            'output_price_per_million': output_price
+            'input_cost_usd': total_input_cost,
+            'output_cost_usd': total_output_cost,
+            'total_cost_usd': total_cost,
         }
 
-    def get_request_name(self, image_name: str) -> str:
+    def get_request_name(self, object_basename: str) -> str:
         """ Get the name of the request. """
-        return f"request_{self.id}_{os.path.splitext(image_name)[0]}"
+        return f"request_{self.id}_{object_basename}"
 
-    @abstractmethod
-    def create_request_render(self,
-                              image_name: str,
-                              result: dict,
-                              score: dict,
-                              truth) -> str:
-        """ Create a markdown render of the request. """
-        pass
 
     @abstractmethod
     def score_request_answer(self,
-                             image_name: str,
-                             response: dict,
+                             object_basename: str,
+                             response: LLMResponse,
                              ground_truth: dict) -> dict:
         """ Score the response. """
         pass
@@ -444,10 +429,6 @@ class Benchmark(ABC):
     def resize_images(self) -> bool:
         """If images are too large, resize them before sending to the model."""
         return False
-
-    def get_page_part_regex(self) -> str:
-        """If multiple images are part of a single request, this regex will match the base name."""
-        return r'(.+)_p\d+\.(jpg|jpeg|png)$'
 
     def get_title(self) -> str:
         """Title of the benchmark. Used in the result table."""
@@ -485,13 +466,3 @@ class DefaultBenchmark(Benchmark):
                              ground_truth: dict) -> dict:
         """ Score the response. """
         return {}
-
-    def create_request_render(self,
-                              image_name: str,
-                              result: dict,
-                              score: dict,
-                              truth) -> str:
-        """ Create a markdown render of the request. """
-        return ("### Result for image: {image_name}"
-                "\n\n"
-                "no details available")

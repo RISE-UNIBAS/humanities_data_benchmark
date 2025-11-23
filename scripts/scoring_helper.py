@@ -31,39 +31,6 @@ def get_all_keys(obj: Any, parent_key: str = '') -> list:
     return keys
 
 
-def get_score_color(score: float) -> str:
-    """
-    Convert a score (0.0 to 1.0) to a hex color from green (1.0) to red (0.0),
-    passing through orange (~0.5).
-
-    - 1.0 -> Green (`#00FF00`)
-    - 0.5 -> Orange (`#FFA500`)
-    - 0.0 -> Red (`#FF0000`)
-    """
-    # Clamp score between 0.0 and 1.0
-    score = max(0.0, min(1.0, score))
-
-    # Define RGB values for Red, Orange, and Green
-    red = (255, 0, 0)  # #FF0000
-    orange = (255, 165, 0)  # #FFA500
-    green = (0, 255, 0)  # #00FF00
-
-    if score >= 0.5:
-        # Interpolate between Orange and Green
-        ratio = (score - 0.5) * 2  # Normalize 0.5-1.0 to 0-1
-        r = int(orange[0] + (green[0] - orange[0]) * ratio)
-        g = int(orange[1] + (green[1] - orange[1]) * ratio)
-        b = int(orange[2] + (green[2] - orange[2]) * ratio)
-    else:
-        # Interpolate between Red and Orange
-        ratio = score * 2  # Normalize 0-0.5 to 0-1
-        r = int(red[0] + (orange[0] - red[0]) * ratio)
-        g = int(red[1] + (orange[1] - red[1]) * ratio)
-        b = int(red[2] + (orange[2] - red[2]) * ratio)
-
-    return f"#{r:02X}{g:02X}{b:02X}"
-
-
 def calculate_fuzzy_score(test_value, gold_value):
     """Calculate a score based on the extracted GPT value and the gold standard value."""
     if test_value == gold_value:

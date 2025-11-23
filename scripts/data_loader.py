@@ -1,11 +1,13 @@
+"""Simple data loading and image processing utilities."""
 import json
 import logging
 import os
-
 from PIL import Image
 
 
 def read_file(path):
+    """ Reads the content of a file and returns it as a string."""
+
     try:
         with open(path, 'r', encoding="utf-8") as file:
             return file.read()
@@ -14,6 +16,8 @@ def read_file(path):
         return ""
 
 def write_file(path, content):
+    """ Writes content to a file. If content is a dict, it is converted to JSON format."""
+
     with open(path, 'w', encoding="utf-8") as file:
         if isinstance(content, dict):
             content = json.dumps(content, indent=4)
@@ -23,8 +27,7 @@ def write_file(path, content):
 def resize_image(image_path: str,
                  temp_dir: str,
                  max_size: tuple = (1024, 1024)) -> str:
-    """ Resize an image to fit within the max size.
-    """
+    """ Resize an image to fit within the max size."""
     img = Image.open(image_path)
     img.thumbnail(max_size)
 
