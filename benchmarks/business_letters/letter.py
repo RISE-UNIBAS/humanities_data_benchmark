@@ -6,7 +6,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import List, Optional, TypedDict
 from datetime import date
-from benchmarks.metadata_extraction.person import Person
+from benchmarks.business_letters.person import Person
 
 
 @dataclass
