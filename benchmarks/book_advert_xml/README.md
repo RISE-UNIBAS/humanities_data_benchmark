@@ -1,39 +1,9 @@
-# Book Advert XML files (malformed) from Avisblatt
+# book_advert_xml
 
 ## Overview
+This benchmark is in development.
 
-blblb
-
-## Benchmark Structure
-
-**Tags:** century-18th
-
-**Scoring Metric:** f1_macro (descending)
-
-## Data
-
-- **Texts:** Store text files in the `texts/` directory
-- **Ground Truths:** Store JSON ground truth files in `ground_truths/` directory
-  - Each ground truth filename must match the corresponding image/text filename (minus extension)
-
-## Ground Truth Format
-
-```json
-{
-  "field1": "value1",
-  "field2": ["item1", "item2"]
-}
-```
-
-## Scoring
-
-TODO: Describe how scoring works for this benchmark.
-
-## Examples
-
-TODO: Add example inputs and expected outputs.
-
-## Contributors
-
-- **Domain Expert:** ina_serif
-- **Data Curator:** sorin_marti
+## Description, Results, Leaderboard
+All results, details, and the leaderboard for this benchmark are available at:
+- **Benchmark detail**: https://rise-services.rise.unibas.ch/benchmarks/p/book_advert_xml
+- **Benchmark scores**: https://rise-services.rise.unibas.ch/benchmarks/p/benchmarks/?id=book_advert_xml
