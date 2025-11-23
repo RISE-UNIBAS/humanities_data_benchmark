@@ -3,6 +3,7 @@
 
 import csv
 import json
+import os
 
 from scripts.ndr_export import CONTRIBUTORS_PATH, EXPORT_PATH
 from scripts.ndr_export.meta_utils import get_benchmarks, get_meta, load_json
@@ -207,6 +208,7 @@ def get_benchmark_ndr_csv():
 
 def write_csv(data, filename):
     """Write data to a CSV file."""
+    os.makedirs(EXPORT_PATH, exist_ok=True)
     filepath = EXPORT_PATH / filename
 
     if not data:

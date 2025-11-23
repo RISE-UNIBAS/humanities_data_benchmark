@@ -6,6 +6,7 @@ This module creates ready-to-use Plotly figure dictionaries that can be:
 """
 
 import json
+import os
 from collections import defaultdict
 
 from scripts.ndr_export import EXPORT_PATH, PRICING_PATH
@@ -29,6 +30,7 @@ DEFAULT_COLORS = [
 
 def load_benchmark_export():
     """Load the benchmark export JSON file."""
+    os.makedirs(EXPORT_PATH, exist_ok=True)
     export_file = EXPORT_PATH / "benchmark_export.json"
     if not export_file.exists():
         raise FileNotFoundError(f"Benchmark export not found: {export_file}")

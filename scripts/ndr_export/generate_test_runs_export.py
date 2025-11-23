@@ -1,4 +1,5 @@
 import json
+import os
 
 from scripts.ndr_export import BENCHMARKS_PATH, RESULTS_PATH, EXPORT_PATH
 from scripts.ndr_export.meta_utils import get_meta, load_json
@@ -197,6 +198,7 @@ def generate_test_runs_export():
             test_runs_export.append(test_run)
 
     # Save the export data to a JSON file
+    os.makedirs(EXPORT_PATH, exist_ok=True)
     export_path = EXPORT_PATH / "test_runs_export.json"
     with open(export_path, "w", encoding="utf-8") as f:
         json.dump(test_runs_export, f, indent=2, ensure_ascii=False)
