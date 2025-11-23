@@ -6,11 +6,9 @@ This module creates ready-to-use Plotly figure dictionaries that can be:
 """
 
 import json
-from pathlib import Path
 from collections import defaultdict
 
-EXPORT_PATH = Path("../../ndr_export")
-PRICING_PATH = Path("../../scripts/data/pricing.json")
+from scripts.ndr_export import EXPORT_PATH, PRICING_PATH
 
 # Color palettes
 PROVIDER_COLORS = {

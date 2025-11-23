@@ -3,11 +3,12 @@ import json
 import logging
 from pathlib import Path
 
+from scripts.ndr_export import BENCHMARKS_PATH
+
 
 def get_benchmarks():
-    benchmarks_dir = os.path.join("..", "..", "benchmarks")
-    return [name for name in os.listdir(benchmarks_dir)
-            if os.path.isdir(os.path.join(benchmarks_dir, name)) and not name.startswith('.')]
+    return [name for name in os.listdir(BENCHMARKS_PATH)
+            if os.path.isdir(os.path.join(BENCHMARKS_PATH, name)) and not name.startswith('.')]
 
 def get_benchmarks_with_meta_key(key):
     benchmarks = get_benchmarks()
@@ -19,7 +20,7 @@ def get_benchmarks_with_meta_key(key):
     return benchmarks_with_key
 
 def get_meta(benchmark):
-    benchmark_meta_path = os.path.join("..", "..", "benchmarks", benchmark, "meta.json")
+    benchmark_meta_path = os.path.join(BENCHMARKS_PATH, benchmark, "meta.json")
     if os.path.isfile(benchmark_meta_path):
         meta_data = load_json(benchmark_meta_path)
         if meta_data is None:

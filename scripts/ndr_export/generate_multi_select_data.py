@@ -3,13 +3,10 @@
 
 import csv
 import json
-from pathlib import Path
 
+from scripts.ndr_export import CONTRIBUTORS_PATH, EXPORT_PATH
 from scripts.ndr_export.meta_utils import get_benchmarks, get_meta, load_json
 from scripts.ndr_export.test_utils import get_all_tests
-
-EXPORT_PATH = Path("../../ndr_export")
-CONTRIBUTORS_PATH = Path("../../scripts/data/contributors.json")
 
 def get_mentioned_contributors():
     """Returns a unique list of contributors mentioned in the meta.json files."""

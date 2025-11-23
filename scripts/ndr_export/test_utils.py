@@ -1,7 +1,7 @@
 import csv
-from pathlib import Path
 
-TESTS_CSV = Path("../../benchmarks/benchmarks_tests.csv")
+from scripts.ndr_export import TESTS_CSV
+
 
 def get_all_tests():
     """Load and parse the benchmarks_tests.csv file."""

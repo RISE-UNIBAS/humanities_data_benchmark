@@ -1,12 +1,8 @@
 import json
-from pathlib import Path
 
+from scripts.ndr_export import BENCHMARKS_PATH, RESULTS_PATH, EXPORT_PATH
 from scripts.ndr_export.meta_utils import get_meta, load_json
 from scripts.ndr_export.test_utils import get_all_tests
-
-RESULTS_PATH = Path("../../results")
-EXPORT_PATH = Path("../../ndr_export")
-BENCHMARKS_PATH = Path("../../benchmarks")
 
 def load_prompt(benchmark_name, prompt_file):
     """Load prompt content from a benchmark's prompts directory.
