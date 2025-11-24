@@ -12,7 +12,7 @@ DEFAULT_SECTION = "Es wird zum Verkauf angetragen"
 SECTION_MATCH_THRESHOLD = 0.95
 
 
-class Fraktur(Benchmark):
+class FrakturAdverts(Benchmark):
     """
     Benchmark for Fraktur text extraction from historical documents.
     

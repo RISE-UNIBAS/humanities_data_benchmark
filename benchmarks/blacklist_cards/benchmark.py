@@ -3,7 +3,7 @@ from scripts.benchmark_base import Benchmark
 from scripts.scoring_helper import get_all_keys, get_nested_value, calculate_fuzzy_score
 
 
-class Blacklist(Benchmark):
+class BlacklistCards(Benchmark):
 
     def score_benchmark(self, all_scores):
         total_score = 0
