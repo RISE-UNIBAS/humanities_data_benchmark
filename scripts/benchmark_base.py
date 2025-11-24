@@ -262,6 +262,54 @@ class Benchmark(ABC):
         """ Get the path to the answer file. """
         return os.path.join(self.get_request_answer_path(), self.get_request_name(object_basename) + ".json")
 
+    def load_saved_answer(self, object_basename: str):
+        """ Load a previously saved answer and score from file. """
+        file_name = self.get_request_answer_file_name(object_basename)
+        if not os.path.exists(file_name):
+            return None, None
+
+        try:
+            answer_json_str = read_file(file_name)
+            answer_data = json.loads(answer_json_str)
+            score = answer_data.get('score', None)
+
+            # Reconstruct Usage object
+            usage_data = answer_data.get('usage', {})
+            from ai_client.response import Usage
+            usage = Usage(
+                input_tokens=usage_data.get('input_tokens', 0),
+                output_tokens=usage_data.get('output_tokens', 0),
+                total_tokens=usage_data.get('total_tokens', 0),
+                cached_tokens=usage_data.get('cached_tokens'),
+                input_cost_usd=usage_data.get('input_cost_usd'),
+                output_cost_usd=usage_data.get('output_cost_usd'),
+                estimated_cost_usd=usage_data.get('estimated_cost_usd')
+            )
+
+            # Reconstruct LLMResponse object
+            timestamp_str = answer_data.get('timestamp')
+            if timestamp_str:
+                timestamp = datetime.fromisoformat(timestamp_str)
+            else:
+                timestamp = datetime.now()
+
+            answer = LLMResponse(
+                text=answer_data.get('text', ''),
+                model=answer_data.get('model', ''),
+                provider=answer_data.get('provider', ''),
+                finish_reason=answer_data.get('finish_reason', ''),
+                usage=usage,
+                raw_response=answer_data.get('raw_response', {}),
+                duration=answer_data.get('duration', 0.0),
+                timestamp=timestamp,
+                parsed=answer_data.get('parsed')
+            )
+
+            return answer, score
+        except Exception as e:
+            logging.warning(f"Failed to load saved answer for {object_basename}: {e}")
+            return None, None
+
     def save_request_answer(self,
                             object_basename: str,
                             answer: LLMResponse,
@@ -351,8 +399,10 @@ class Benchmark(ABC):
                 logging.info(f"Finished {object_basename} with score: {score}")
             else:
                 logging.info(f"Skipping {self.id}, {object_basename}...")
-                benchmark_scores.append(None)
-                all_answers.append(None)
+                # Load existing saved results
+                saved_answer, saved_score = self.load_saved_answer(object_basename)
+                benchmark_scores.append(saved_score)
+                all_answers.append(saved_answer)
             self.after_object(object_basename)
 
         # Score the benchmark
