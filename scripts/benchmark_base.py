@@ -337,6 +337,7 @@ class Benchmark(ABC):
             answer_file_name = self.get_request_answer_file_name(object_basename)
             should_process = (regenerate_existing_results and os.path.exists(answer_file_name)) or \
                              (not os.path.exists(answer_file_name))
+            should_process = should_process and (not self.skip_object(object_basename))
 
             self.before_object(object_basename)
             if should_process:
@@ -437,9 +438,9 @@ class Benchmark(ABC):
         """If the prompt file contains file information."""
         return {}
 
-    def skip_image(self,
-                   image_name: str) -> bool:
-        """ Skip image. """
+    def skip_object(self,
+                    object_basename: str) -> bool:
+        """ Skip object. """
         return False
 
 
