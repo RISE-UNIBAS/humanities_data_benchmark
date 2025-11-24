@@ -8,7 +8,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [v0.4.0] - 2025-11-23
 
 ### Added
-- TODO
+- Pricing for 2025-11-24
+
+### Changed
+- Suite name is now "RISE Humanities Data Benchmark"
+- Remap "latest" suffix to actual model used
+
+### Removed
+- All tests with claude-3-5-sonnet-20241022 (now legacy)
 
 ## [v0.3.1] - 2025-10-29
 
