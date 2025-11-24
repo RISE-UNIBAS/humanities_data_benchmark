@@ -16,6 +16,9 @@ from ai_client import create_ai_client, LLMResponse
 class Benchmark(ABC):
     """ Base class for all benchmark workflows. """
 
+    multi_image_support = False
+    multi_text_support = False
+
     def __init__(self, config, api_key, benchmark_directory):
         """ Initialize the benchmark. """
 
@@ -223,14 +226,14 @@ class Benchmark(ABC):
         images_dir = os.path.join(self.benchmark_dir, 'images')
         if not os.path.exists(images_dir):
             return []
-        return self.get_files_by_basename(images_dir, object_basename, group=False)
+        return self.get_files_by_basename(images_dir, object_basename, group=self.multi_image_support)
 
     def get_text_paths(self, object_basename: str) -> List[Path]:
         """ Get the text paths for the object. """
         texts_dir = os.path.join(self.benchmark_dir, 'texts')
         if not os.path.exists(texts_dir):
             return []
-        return self.get_files_by_basename(texts_dir, object_basename, group=False)
+        return self.get_files_by_basename(texts_dir, object_basename, group=self.multi_text_support)
 
     def ask_llm(self, object_basename: str) -> LLMResponse:
         """ Ask the language model a question. """
@@ -289,7 +292,7 @@ class Benchmark(ABC):
     def prepare_scoring_data(self,
                              answer: LLMResponse) -> dict:
         """ Prepare the data for scoring. """
-        pass
+        return answer.parsed
 
 
     def before_run(self):

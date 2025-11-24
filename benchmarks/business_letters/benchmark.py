@@ -6,13 +6,16 @@ import os
 import logging
 from typing import Literal, Optional
 
+from ai_client import LLMResponse
+
 from scripts.benchmark_base import Benchmark
 from benchmarks.business_letters.category import Category
 from benchmarks.business_letters.letter import Letter
 from benchmarks.business_letters.person import Person
 
 
-class MetadataExtraction(Benchmark):
+class BusinessLetters(Benchmark):
+    multi_image_support = True
 
     def before_run(self) -> None:
         self.update_ground_truth()
@@ -50,20 +53,22 @@ class MetadataExtraction(Benchmark):
 
     def score_request_answer(self,
                              image_name: str,
-                             response: dict,
-                             ground_truth: dict,
-                             inferred_from_function=False,
-                             inferred_from_correspondence=False) -> Optional[dict]:
+                             response: LLMResponse,
+                             ground_truth: dict) -> Optional[dict]:
         """ Score the answer.
 
         :param image_name: the name of the image
         :param response: the response
         :param ground_truth: the ground truth
-        :param inferred_from_function: whether to filter by persons inferred from function, defaults to False
-        :param inferred_from_correspondence: whether to filter by persons inferred from correspondence, defaults to False
         """
 
+        # These variable have been moved from being method parameters to local variables with default values.
+        # TODO
+        inferred_from_function = False,
+        inferred_from_correspondence = False
+
         data = self.prepare_scoring_data(response)
+
         ground_truth_letter = self._initialize_letter(raw_letter=ground_truth,
                                                       image_name=image_name)
 
