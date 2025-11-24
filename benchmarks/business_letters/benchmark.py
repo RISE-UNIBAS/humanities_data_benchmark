@@ -32,6 +32,8 @@ class BusinessLetters(Benchmark):
         receiver_persons = Category(used=True)
 
         for score in all_scores:
+            if score is None:
+                continue
             send_date.tp += score["send_date_tp"]
             send_date.fp += score["send_date_fp"]
             send_date.fn += score["send_date_fn"]
@@ -64,7 +66,7 @@ class BusinessLetters(Benchmark):
 
         # These variable have been moved from being method parameters to local variables with default values.
         # TODO
-        inferred_from_function = False,
+        inferred_from_function = False
         inferred_from_correspondence = False
 
         data = self.prepare_scoring_data(response)
@@ -87,13 +89,13 @@ class BusinessLetters(Benchmark):
 
                 # Count ground truth items for FN
                 sender_persons_gt = self._select_persons(sender_or_receiver="sender",
-                                                        ground_truth_letter=ground_truth_letter,
-                                                        inferred_from_function=inferred_from_function,
-                                                        inferred_from_correspondence=inferred_from_correspondence)
+                                                         ground_truth_letter=ground_truth_letter,
+                                                         inferred_from_function=inferred_from_function,
+                                                         inferred_from_correspondence=inferred_from_correspondence)
                 receiver_persons_gt = self._select_persons(sender_or_receiver="receiver",
-                                                          ground_truth_letter=ground_truth_letter,
-                                                          inferred_from_function=inferred_from_function,
-                                                          inferred_from_correspondence=inferred_from_correspondence)
+                                                           ground_truth_letter=ground_truth_letter,
+                                                           inferred_from_function=inferred_from_function,
+                                                           inferred_from_correspondence=inferred_from_correspondence)
 
                 sender_count = len([p for p in sender_persons_gt if p.name != "None"])
                 receiver_count = len([p for p in receiver_persons_gt if p.name != "None"])
@@ -134,7 +136,6 @@ class BusinessLetters(Benchmark):
                                             inferred_from_function=inferred_from_function,
                                             inferred_from_correspondence=inferred_from_correspondence)
         return score
-
 
     def skip_object(self,
                     object_basename: str) -> bool | None:

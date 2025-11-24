@@ -378,6 +378,8 @@ class Benchmark(ABC):
         total_cost = 0.0
 
         for answer in all_answers:
+            if answer is None:
+                continue
             total_output_tokens += answer.usage.output_tokens
             total_input_tokens += answer.usage.input_tokens
             if answer.usage.cached_tokens:
