@@ -213,7 +213,11 @@ class FrakturAdverts(Benchmark):
 
             try:
                 # Get section and strip whitespace
-                section = ad.get("tags_section", "").strip()
+                section = ad.get("tags_section", "")
+                if section is None:
+                    logging.warning("No tags_section found in advertisement. Skipping.")
+                    section = ""
+                section = section.strip()
 
                 # Special handling for image_4
                 if image_name == "image_4" and not section:
