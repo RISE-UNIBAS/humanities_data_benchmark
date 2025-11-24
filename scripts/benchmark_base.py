@@ -284,36 +284,10 @@ class Benchmark(ABC):
         write_file(save_path, score)
 
     def prepare_scoring_data(self,
-                             answer: dict) -> dict:
+                             answer: LLMResponse) -> dict:
         """ Prepare the data for scoring. """
-        if "response_text" in answer:
-            response_text = answer["response_text"]
-            json_text = None
+        pass
 
-            try:
-                if self.convert_result_to_json and "```json" in response_text:
-                    json_match = re.search(r'```json\s*([\[{].*?[]}])\s*```', response_text, re.DOTALL)
-                    if json_match:
-                        json_text = json_match.group(1)
-            except (TypeError, AttributeError):
-                # response_text is None or not a string
-                pass
-
-            if json_text is None:
-                json_text = response_text
-
-            if isinstance(json_text, dict):
-                return json_text
-
-            try:
-                json_dict = json.loads(json_text)
-                if self.remove_none_values:
-                    return remove_none(json_dict)
-                return json_dict
-            except (json.JSONDecodeError, TypeError) as e:
-                return {"error": f"Invalid JSON format: {str(e)}"}
-
-        return {"error": "No response text found."}
 
     def run(self, regenerate_existing_results=True):
         """Run the benchmark."""
