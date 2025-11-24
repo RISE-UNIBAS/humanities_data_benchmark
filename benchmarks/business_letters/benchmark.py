@@ -14,6 +14,9 @@ from benchmarks.business_letters.person import Person
 
 class MetadataExtraction(Benchmark):
 
+    def before_run(self) -> None:
+        self.update_ground_truth()
+
     def score_benchmark(self,
                         all_scores: list[dict]) -> dict:
         """ Score the benchmark.

@@ -10,7 +10,6 @@ from pathlib import Path
 from typing import Dict, List, Union, Pattern, Optional, Iterable, Set
 
 from data_loader import read_file, write_file
-from scoring_helper import remove_none
 from ai_client import create_ai_client, LLMResponse
 
 
@@ -30,13 +29,17 @@ class Benchmark(ABC):
         self.prompt_file = config['prompt_file']            # Prompt file name
         self.date = datetime.now().strftime('%Y-%m-%d')     # Date of the benchmark run
 
-
+        # Prompt
         if self.prompt_file is None or self.prompt_file == "":
             self.prompt_file = "prompt.txt"
         self.prompt_file_exists = os.path.exists(os.path.join(self.benchmark_dir, "prompts", self.prompt_file))
         self.prompt = None # Load later to allow dynamic formatting on request basis
+
+        # Dataclass
         self.dataclass_name = config['dataclass']
         self.dataclass = self.load_dataclass()
+
+        # Rules
         if config['rules'] == "":
             self.rules = None
         else:
@@ -289,6 +292,22 @@ class Benchmark(ABC):
         pass
 
 
+    def before_run(self):
+        """ Hook to run before the benchmark starts. """
+        pass
+
+    def after_run(self):
+        """ Hook to run after the benchmark ends. """
+        pass
+
+    def before_object(self, object_basename: str):
+        """ Hook to run before processing each object. """
+        pass
+
+    def after_object(self, object_basename: str):
+        """ Hook to run after processing each object. """
+        pass
+
     def run(self, regenerate_existing_results=True):
         """Run the benchmark."""
 
@@ -297,9 +316,7 @@ class Benchmark(ABC):
             logging.error(f"Skipping {self.get_title()} (not runnable).")
             return
 
-        # Update ground truth TODO
-        if self.update_required:
-            self.update_ground_truth()
+        self.before_run()
 
         images_dir = os.path.join(self.benchmark_dir, 'images')
         texts_dir = os.path.join(self.benchmark_dir, 'texts')
@@ -316,6 +333,7 @@ class Benchmark(ABC):
             should_process = (regenerate_existing_results and os.path.exists(answer_file_name)) or \
                              (not os.path.exists(answer_file_name))
 
+            self.before_object(object_basename)
             if should_process:
                 logging.info(f"Processing {self.id}, {object_basename}...")
                 answer = self.ask_llm(object_basename)
@@ -329,6 +347,7 @@ class Benchmark(ABC):
                 logging.info(f"Skipping {self.id}, {object_basename}...")
                 benchmark_scores.append(None)
                 all_answers.append(None)
+            self.after_object(object_basename)
 
         # Score the benchmark
         benchmark_score = self.score_benchmark(benchmark_scores)
@@ -341,7 +360,10 @@ class Benchmark(ABC):
 
         self.save_benchmark_score(benchmark_score)
 
-    def calculate_cost(self, all_answers):
+        self.after_run()
+
+    @staticmethod
+    def calculate_cost(all_answers):
         total_output_tokens = 0
         total_input_tokens = 0
         total_cached_tokens = 0
@@ -392,9 +414,6 @@ class Benchmark(ABC):
         """If True, remove None values from the response before scoring."""
         return True
 
-    def convert_result_to_json(self) -> bool:
-        """If the result is a JSON string, convert it to a JSON object."""
-        return True
 
     def convert_truth_to_json(self) -> bool:
         """If the result is a JSON string, convert it to a JSON object."""
@@ -417,14 +436,6 @@ class Benchmark(ABC):
                    image_name: str) -> bool:
         """ Skip image. """
         return False
-
-    def update_required(self) -> bool:
-        """ If an update of the ground truth is required before running the benchmark. """
-        return False
-
-    def update_ground_truth(self) -> None:
-        """ Update the ground truth. """
-        return None
 
 
 class DefaultBenchmark(Benchmark):
