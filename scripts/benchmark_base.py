@@ -221,19 +221,21 @@ class Benchmark(ABC):
 
         return sorted(matches)
 
-    def get_image_paths(self, object_basename: str) -> List[Path]:
+    def get_image_paths(self, object_basename: str) -> List[str]:
         """ Get the image paths for the object. """
         images_dir = os.path.join(self.benchmark_dir, 'images')
         if not os.path.exists(images_dir):
             return []
-        return self.get_files_by_basename(images_dir, object_basename, group=self.multi_image_support)
+        paths = self.get_files_by_basename(images_dir, object_basename, group=self.multi_image_support)
+        return [str(p) for p in paths]
 
-    def get_text_paths(self, object_basename: str) -> List[Path]:
+    def get_text_paths(self, object_basename: str) -> List[str]:
         """ Get the text paths for the object. """
         texts_dir = os.path.join(self.benchmark_dir, 'texts')
         if not os.path.exists(texts_dir):
             return []
-        return self.get_files_by_basename(texts_dir, object_basename, group=self.multi_text_support)
+        paths = self.get_files_by_basename(texts_dir, object_basename, group=self.multi_text_support)
+        return [str(p) for p in paths]
 
     def ask_llm(self, object_basename: str) -> LLMResponse:
         """ Ask the language model a question. """

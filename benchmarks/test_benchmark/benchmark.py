@@ -20,6 +20,9 @@ class TestBenchmark(Benchmark):
         structured_response = response.parsed
 
         persons_found = 0
+        if structured_response["persons_mentioned"] is None:
+            structured_response["persons_mentioned"] = []
+
         for item in ground_truth["persons_mentioned"]:
             best_match, score = score_best_match(item, structured_response["persons_mentioned"])
             if score >= 0.8:
