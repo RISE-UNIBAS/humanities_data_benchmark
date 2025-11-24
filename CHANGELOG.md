@@ -8,14 +8,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [v0.4.0] - 2025-11-23
 
 ### Added
-- Pricing for 2025-11-24
+- 4 new models: gpt-5.1 (OpenAI), gemini-3-pro-preview (GenAI), magistral-medium-2509 (Mistral), mistral-small-2506 (Mistral)
+- 42 new benchmark test configurations (T0403-T0444) across all benchmarks for new models
+- Pricing data for 2025-11-24 with updated model prices and source URLs
 
 ### Changed
+- All requests are now handled by https://pypi.org/project/generic-llm-api-client/
 - Suite name is now "RISE Humanities Data Benchmark"
 - Remap "latest" suffix to actual model used
 
 ### Removed
 - All tests with claude-3-5-sonnet-20241022 (now legacy)
+- All renders and related docs (now handled by dedicated frontend)
 
 ## [v0.3.1] - 2025-10-29
 
