@@ -777,11 +777,11 @@ def create_speed_performance_scatter(benchmarks_data):
                 try:
                     with open(request_files[0], 'r', encoding='utf-8') as f:
                         request_data = json.load(f)
-                        test_time = request_data.get("test_time")
+                        duration = request_data.get("duration")
 
-                        if test_time is not None:
+                        if duration is not None:
                             model_data[model]["scores"].append(score)
-                            model_data[model]["times"].append(test_time)
+                            model_data[model]["times"].append(duration)
                             if model_data[model]["provider"] is None:
                                 model_data[model]["provider"] = provider
                 except Exception as e:

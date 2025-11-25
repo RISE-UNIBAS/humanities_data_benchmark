@@ -206,6 +206,57 @@ def get_benchmark_ndr_csv():
 
     return csv_data
 
+def get_test_ndr_csv():
+    """Generate NDR CSV file for tests.
+
+    Returns a list of dicts with: key, value, is_printable, is_searchable, info
+    Legacy tests are marked as is_searchable: false
+    """
+    all_tests = get_all_tests()
+
+    csv_data = []
+
+    for test in all_tests:
+        test_id = test.get("id", "")
+        benchmark_name = test.get("name", "")
+        provider = test.get("provider", "")
+        model = test.get("model", "")
+
+        # Create display value: "Test_ID: Provider/Model - Benchmark"
+        display_name = f"{test_id}: {provider}/{model}"
+        if benchmark_name:
+            # Get benchmark display name
+            meta = get_meta(benchmark_name)
+            if meta:
+                benchmark_display = meta.get("title_short") or meta.get("title") or benchmark_name
+            else:
+                benchmark_display = benchmark_name
+            display_name += f" - {benchmark_display}"
+
+        # Build info string with additional details
+        info_parts = []
+        if test.get("dataclass"):
+            info_parts.append(f"Dataclass: {test.get('dataclass')}")
+        if test.get("temperature") is not None:
+            info_parts.append(f"Temp: {test.get('temperature')}")
+        if test.get("role_description"):
+            info_parts.append(f"Role: {test.get('role_description')}")
+        if test.get("prompt_file"):
+            info_parts.append(f"Prompt: {test.get('prompt_file')}")
+
+        # Legacy tests are not searchable
+        is_searchable = not test.get("legacy_test", False)
+
+        csv_data.append({
+            "key": test_id,
+            "value": display_name,
+            "is_printable": True,
+            "is_searchable": is_searchable,
+            "info": ", ".join(info_parts)
+        })
+
+    return csv_data
+
 def write_csv(data, filename):
     """Write data to a CSV file."""
     os.makedirs(EXPORT_PATH, exist_ok=True)
@@ -262,6 +313,11 @@ def generate_multi_select_data():
     benchmarks_data = get_benchmark_ndr_csv()
     write_csv(benchmarks_data, "benchmarks.csv")
     write_json(benchmarks_data, "benchmarks.json")
+
+    # Generate tests data
+    tests_data = get_test_ndr_csv()
+    write_csv(tests_data, "tests.csv")
+    write_json(tests_data, "tests.json")
 
     print("\nMulti-select data generation complete!")
 
