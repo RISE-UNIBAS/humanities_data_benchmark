@@ -276,14 +276,31 @@ class Benchmark(ABC):
             # Reconstruct Usage object
             usage_data = answer_data.get('usage', {})
             from ai_client.response import Usage
+            from ai_client.pricing import calculate_cost
+
+            input_cost = usage_data.get('input_cost_usd')
+            output_cost = usage_data.get('output_cost_usd')
+            estimated_cost = usage_data.get('estimated_cost_usd')
+
+            # Recalculate costs if missing
+            if input_cost is None or output_cost is None or estimated_cost is None:
+                provider = answer_data.get('provider', '')
+                model = answer_data.get('model', '')
+                input_tokens = usage_data.get('input_tokens', 0)
+                output_tokens = usage_data.get('output_tokens', 0)
+
+                cost_result = calculate_cost(provider, model, input_tokens, output_tokens)
+                if cost_result:
+                    input_cost, output_cost, estimated_cost = cost_result
+
             usage = Usage(
                 input_tokens=usage_data.get('input_tokens', 0),
                 output_tokens=usage_data.get('output_tokens', 0),
                 total_tokens=usage_data.get('total_tokens', 0),
                 cached_tokens=usage_data.get('cached_tokens'),
-                input_cost_usd=usage_data.get('input_cost_usd'),
-                output_cost_usd=usage_data.get('output_cost_usd'),
-                estimated_cost_usd=usage_data.get('estimated_cost_usd')
+                input_cost_usd=input_cost,
+                output_cost_usd=output_cost,
+                estimated_cost_usd=estimated_cost
             )
 
             # Reconstruct LLMResponse object
