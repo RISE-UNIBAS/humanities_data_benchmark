@@ -1,52 +1,42 @@
 """Benchmark implementation for Book Advert XML files (malformed) from Avisblatt.
 """
+from ai_client import LLMResponse
+from rapidfuzz import fuzz
 
-from typing import Dict, List
 from scripts.benchmark_base import Benchmark
 
 
 class BookAdvertXml(Benchmark):
     """Benchmark for Book Advert XML files (malformed) from Avisblatt."""
 
-    def score_request_answer(self, image_name: str, response: dict, ground_truth: dict) -> dict:
-        """Score a single request against ground truth.
+    def score_request_answer(self, image_name: str, response: LLMResponse, ground_truth: dict) -> dict:
+        """Score a single request against ground truth."""
+        if not response.parsed or "fixed_xml" not in response.parsed:
+            return {"score": 0.0, "message": "No valid response"}
 
-        Args:
-            image_name: Name of the image/file being processed
-            response: The model's response (parsed JSON)
-            ground_truth: The expected ground truth (parsed JSON)
+        fixed_xml = (response.parsed.get("fixed_xml", "")
+                     .replace("\n", "")
+                     .replace("\r", "")
+                     .replace(" ", ""))
 
-        Returns:
-            Dictionary containing scores for this request
-        """
-        # TODO: Implement scoring logic
-        # Example structure:
-        scores = {
-            "image_name": image_name,
-            "score": 0.0,
-            # Add more metrics as needed
-        }
+        gt_xml = (ground_truth.get("fixed_xml", "")
+                  .replace("\n", "")
+                  .replace("\r", "")
+                  .replace(" ", ""))
 
-        return scores
+        score = fuzz.ratio(fixed_xml, gt_xml)
+
+        return {"fuzzy": score}
 
     def score_benchmark(self, all_scores: list) -> dict:
-        """Aggregate scores from all requests.
-
-        Args:
-            all_scores: List of score dictionaries from score_request_answer
-
-        Returns:
-            Dictionary containing aggregated benchmark scores
-        """
-        # TODO: Implement aggregation logic
+        """Aggregate scores from all requests."""
         if not all_scores:
-            return {"overall_score": 0.0}
+            return {"fuzzy": 0.0}
 
         # Calculate average score
-        avg_score = sum(s.get("score", 0.0) for s in all_scores) / len(all_scores)
+        avg_score = sum(s.get("fuzzy", 0.0) for s in all_scores) / len(all_scores)
 
         return {
-            "overall_score": avg_score,
-            "num_samples": len(all_scores),
-            # Add more aggregated metrics as needed
+            "fuzzy": avg_score,
+            "n": len(all_scores)
         }
