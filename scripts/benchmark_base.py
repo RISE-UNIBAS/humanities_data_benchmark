@@ -248,7 +248,7 @@ class Benchmark(ABC):
         if image_paths:
             kwargs["images"] = image_paths
         if text_paths:
-            kwargs["texts"] = text_paths
+            kwargs["files"] = text_paths
 
         if self.dataclass:
             kwargs["response_format"] = self.dataclass
