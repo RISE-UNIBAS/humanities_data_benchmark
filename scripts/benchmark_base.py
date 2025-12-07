@@ -18,6 +18,7 @@ class Benchmark(ABC):
 
     multi_image_support = False
     multi_text_support = False
+    use_shared_context = False  # Enable multi-stage requests with shared context
 
     def __init__(self, config, api_key, benchmark_directory):
         """ Initialize the benchmark. """
@@ -56,6 +57,11 @@ class Benchmark(ABC):
                                        self.api_key,
                                        system_prompt=self.role_description,
                                        **kwargs)
+
+        # Shared context support (for multi-stage requests)
+        self.conversation_id = None  # Track conversation for subsequent requests
+        self.shared_context_established = False
+
         logging.debug(f"Initialized benchmark {config['name']}")
 
     def is_runnable(self) -> bool:
@@ -253,6 +259,10 @@ class Benchmark(ABC):
         if self.dataclass:
             kwargs["response_format"] = self.dataclass
 
+        # Add conversation continuation if shared context is enabled
+        if self.use_shared_context and self.conversation_id:
+            kwargs["conversation_id"] = self.conversation_id
+
         return self.client.prompt(self.model, self.prompt, **kwargs)
 
     def get_request_answer_path(self):
@@ -362,6 +372,85 @@ class Benchmark(ABC):
         return answer.parsed
 
 
+    def get_shared_context_files(self) -> List[str]:
+        """
+        Return list of file paths to send as shared context.
+        This context is sent once at the beginning and can be referenced in subsequent requests.
+
+        Override this method in your benchmark to specify shared context files.
+
+        Returns:
+            List of absolute file paths (e.g., ['/path/to/context/essay.txt'])
+
+        Example:
+            return [os.path.join(self.benchmark_dir, 'context', 'reference_document.txt')]
+        """
+        return []
+
+    def get_shared_context_prompt(self) -> str:
+        """
+        Return the initial prompt to accompany shared context.
+
+        This prompt is sent with the shared context files to establish the conversation.
+        It should explain what the context is and what task will follow.
+
+        Override this method in your benchmark to specify the initial prompt.
+
+        Returns:
+            Prompt text as string
+
+        Example:
+            return '''I have provided you with an essay. Please read it carefully.
+            In subsequent messages, I will ask you to analyze various texts in relation to this essay.'''
+        """
+        return ""
+
+    def _establish_shared_context(self):
+        """
+        Establish shared context by sending initial request with context files.
+
+        This is called automatically by run() if use_shared_context=True.
+        """
+        if self.shared_context_established:
+            logging.debug("Shared context already established, skipping")
+            return
+
+        shared_files = self.get_shared_context_files()
+        shared_prompt = self.get_shared_context_prompt()
+
+        if not shared_files and not shared_prompt:
+            logging.warning("use_shared_context=True but no context files or prompt provided")
+            return
+
+        logging.info(f"Establishing shared context with {len(shared_files)} file(s)")
+
+        # Send initial request to establish context
+        kwargs = {}
+        if shared_files:
+            kwargs["files"] = shared_files
+            kwargs["cache_context"] = True  # Signal to AI client to enable caching
+
+        try:
+            # This establishes the conversation/cache
+            response = self.client.prompt(
+                self.model,
+                shared_prompt,
+                **kwargs
+            )
+
+            # Store conversation ID for subsequent requests
+            if hasattr(response, 'conversation_id'):
+                self.conversation_id = response.conversation_id
+                logging.info(f"Shared context established. Conversation ID: {self.conversation_id}")
+            else:
+                logging.info("Shared context sent (no conversation ID returned)")
+
+            self.shared_context_established = True
+
+        except Exception as e:
+            logging.error(f"Failed to establish shared context: {e}")
+            raise
+
     def before_run(self):
         """ Hook to run before the benchmark starts. """
         pass
@@ -387,6 +476,10 @@ class Benchmark(ABC):
             return
 
         self.before_run()
+
+        # Establish shared context if enabled
+        if self.use_shared_context:
+            self._establish_shared_context()
 
         images_dir = os.path.join(self.benchmark_dir, 'images')
         texts_dir = os.path.join(self.benchmark_dir, 'texts')
