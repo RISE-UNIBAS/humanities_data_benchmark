@@ -6,7 +6,6 @@ Usage:
 """
 
 import json
-import os
 import re
 from pathlib import Path
 from typing import Dict, List, Optional
@@ -303,6 +302,21 @@ def collect_benchmark_info() -> Dict:
     info['use_images'] = get_yes_no("Will this benchmark use images?", default=True)
     info['use_texts'] = get_yes_no("Will this benchmark use text files?", default=False)
 
+    # Shared context support
+    print()
+    print(f"{Colors.BOLD}Shared Context:{Colors.END}")
+    print("Shared context allows sending large reference documents once, then referencing them in multiple requests.")
+    print(f"{Colors.GREEN}Use case:{Colors.END} Send a long essay once, then analyze multiple reception texts against it.")
+    print("This saves tokens and costs, especially with prompt caching (Anthropic).")
+    print()
+    info['use_shared_context'] = get_yes_no("Enable shared context support?", default=False)
+
+    if info['use_shared_context']:
+        print()
+        info['shared_context_prompt'] = get_multiline_input("Enter the initial prompt for shared context (explains what will follow)")
+    else:
+        info['shared_context_prompt'] = ""
+
     # Default prompt
     print_info("\nDefault Prompt:")
     print("(This prompt will be saved in prompts/prompt.txt and can be edited later)")
@@ -340,9 +354,13 @@ def display_configuration(info: Dict):
         print(f"   {Colors.BOLD}Dataclass Name:{Colors.END} {info['dataclass_name']}")
     print(f"{Colors.BOLD}9. Use Images:{Colors.END} {'Yes' if info['use_images'] else 'No'}")
     print(f"{Colors.BOLD}10. Use Text Files:{Colors.END} {'Yes' if info['use_texts'] else 'No'}")
-    print(f"{Colors.BOLD}11. Role Description:{Colors.END}")
+    print(f"{Colors.BOLD}11. Shared Context:{Colors.END} {'Yes' if info['use_shared_context'] else 'No'}")
+    if info['use_shared_context']:
+        shared_prompt_preview = info['shared_context_prompt'][:100] + ('...' if len(info['shared_context_prompt']) > 100 else '')
+        print(f"   {Colors.BOLD}Initial Prompt:{Colors.END} {shared_prompt_preview}")
+    print(f"{Colors.BOLD}12. Role Description:{Colors.END}")
     print(f"   {info['role_description']}")
-    print(f"{Colors.BOLD}12. Default Prompt:{Colors.END}")
+    print(f"{Colors.BOLD}13. Default Prompt:{Colors.END}")
     prompt_preview = info['default_prompt'][:150] + ('...' if len(info['default_prompt']) > 150 else '')
     print(f"   {prompt_preview}")
     print()
@@ -354,7 +372,7 @@ def edit_configuration(info: Dict) -> Dict:
         display_configuration(info)
 
         print(f"{Colors.YELLOW}Options:{Colors.END}")
-        print("  • Enter a number (1-12) to edit that field")
+        print("  • Enter a number (1-13) to edit that field")
         print("  • Enter 'c' to continue and create benchmark")
         print("  • Enter 'q' to quit without creating")
         print()
@@ -435,8 +453,19 @@ def edit_configuration(info: Dict) -> Dict:
         elif choice == '10':
             info['use_texts'] = get_yes_no("Use text files?", default=info['use_texts'])
         elif choice == '11':
-            info['role_description'] = get_input("Role description", default=info['role_description'])
+            info['use_shared_context'] = get_yes_no("Enable shared context support?", default=info['use_shared_context'])
+            if info['use_shared_context']:
+                print()
+                print(f"{Colors.BOLD}Current shared context prompt:{Colors.END}")
+                print(info.get('shared_context_prompt', ''))
+                print()
+                if get_yes_no("Edit shared context prompt?", default=True):
+                    info['shared_context_prompt'] = get_multiline_input("New shared context prompt")
+            else:
+                info['shared_context_prompt'] = ""
         elif choice == '12':
+            info['role_description'] = get_input("Role description", default=info['role_description'])
+        elif choice == '13':
             print()
             print(f"{Colors.BOLD}Current prompt:{Colors.END}")
             print(info['default_prompt'])
@@ -444,7 +473,7 @@ def edit_configuration(info: Dict) -> Dict:
             if get_yes_no("Edit prompt?", default=True):
                 info['default_prompt'] = get_multiline_input("New prompt")
         else:
-            print_error("Invalid choice. Please enter a number 1-12, 'c' to continue, or 'q' to quit.")
+            print_error("Invalid choice. Please enter a number 1-13, 'c' to continue, or 'q' to quit.")
 
         print()
 
@@ -468,6 +497,39 @@ def generate_meta_json(info: Dict) -> str:
 
 def generate_benchmark_py(info: Dict) -> str:
     """Generate benchmark.py content."""
+
+    # Add shared context methods if enabled
+    shared_context_section = ""
+    if info['use_shared_context']:
+        shared_context_section = f'''
+    # Shared context configuration
+    use_shared_context = True
+
+    def get_shared_context_files(self) -> List[str]:
+        """Return paths to shared context files.
+
+        Returns:
+            List of file paths to send as shared context
+        """
+        import os
+        # TODO: Add your context files
+        # Example:
+        # return [os.path.join(self.benchmark_dir, 'context', 'reference_essay.txt')]
+        return []
+
+    def get_shared_context_prompt(self) -> str:
+        """Return initial prompt for establishing shared context.
+
+        Returns:
+            Prompt text explaining the shared context
+        """
+        # Load from file
+        import os
+        from data_loader import read_file
+        prompt_path = os.path.join(self.benchmark_dir, 'context', 'shared_context_prompt.txt')
+        return read_file(prompt_path)
+'''
+
     template = f'''"""Benchmark implementation for {info['title']}.
 
 {info['description']}
@@ -479,7 +541,7 @@ from scripts.benchmark_base import Benchmark
 
 class {info['class_name']}(Benchmark):
     """Benchmark for {info['title']}."""
-
+{shared_context_section}
     def score_request_answer(self, image_name: str, response: dict, ground_truth: dict) -> dict:
         """Score a single request against ground truth.
 
@@ -602,9 +664,30 @@ def generate_readme(info: Dict) -> str:
         template += "- **Images:** Store images in the `images/` directory\n"
     if info['use_texts']:
         template += "- **Texts:** Store text files in the `texts/` directory\n"
+    if info['use_shared_context']:
+        template += "- **Shared Context:** Store reference documents in the `context/` directory\n"
+        template += "  - These files are sent once at the beginning and cached\n"
+        template += "  - Useful for large reference documents that all test items reference\n"
 
     template += "- **Ground Truths:** Store JSON ground truth files in `ground_truths/` directory\n"
     template += "  - Each ground truth filename must match the corresponding image/text filename (minus extension)\n\n"
+
+    if info['use_shared_context']:
+        template += '''## Shared Context
+
+This benchmark uses shared context to send reference documents once before processing test items.
+
+**How it works:**
+1. Large reference documents are placed in `context/` directory
+2. The initial prompt (`context/shared_context_prompt.txt`) is sent with these files
+3. Individual test items can then reference this context without re-sending it
+4. This saves tokens and costs, especially with Anthropic's prompt caching
+
+**Configuration:**
+- Edit `get_shared_context_files()` in `benchmark.py` to specify which files to load
+- Edit `context/shared_context_prompt.txt` to customize the initial prompt
+
+'''
 
     template += '''## Ground Truth Format
 
@@ -657,6 +740,8 @@ def create_benchmark_structure(info: Dict) -> bool:
             subdirs.append('images')
         if info['use_texts']:
             subdirs.append('texts')
+        if info['use_shared_context']:
+            subdirs.append('context')
 
         for subdir in subdirs:
             subdir_path = benchmark_dir / subdir
@@ -674,6 +759,9 @@ def create_benchmark_structure(info: Dict) -> bool:
         if info['use_dataclass']:
             files['dataclass.py'] = generate_dataclass_py(info)
 
+        if info['use_shared_context']:
+            files['context/shared_context_prompt.txt'] = info['shared_context_prompt']
+
         for filename, content in files.items():
             file_path = benchmark_dir / filename
             print_info(f"Creating file: {file_path}")
@@ -687,6 +775,22 @@ def create_benchmark_structure(info: Dict) -> bool:
         if info['use_texts']:
             placeholder = benchmark_dir / 'texts' / '.gitkeep'
             placeholder.write_text('# Add your text files here\n')
+
+        if info['use_shared_context']:
+            readme = benchmark_dir / 'context' / 'README.md'
+            readme.write_text('''# Shared Context Files
+
+Place large reference documents here that will be sent once to establish context.
+
+These files are loaded via `get_shared_context_files()` in your benchmark.py and sent before processing individual items.
+
+**Example use case:**
+- Large essay that all test items reference
+- Reference documentation
+- Background material
+
+The files here save tokens by being sent once and cached (especially with Anthropic's prompt caching).
+''')
 
         placeholder = benchmark_dir / 'ground_truths' / '.gitkeep'
         placeholder.write_text('# Add your ground truth JSON files here\n')
@@ -719,6 +823,9 @@ def print_next_steps(info: Dict):
         print(f"   - Add images to: benchmarks/{info['name']}/images/")
     if info['use_texts']:
         print(f"   - Add text files to: benchmarks/{info['name']}/texts/")
+    if info['use_shared_context']:
+        print(f"   - Add shared context files to: benchmarks/{info['name']}/context/")
+        print(f"     {Colors.YELLOW}(These are sent once and cached across all requests){Colors.END}")
     print(f"   - Add ground truth JSON files to: benchmarks/{info['name']}/ground_truths/")
     print(f"     (Filenames must match your image/text filenames)")
 
@@ -726,16 +833,26 @@ def print_next_steps(info: Dict):
     print(f"   - Edit: benchmarks/{info['name']}/benchmark.py")
     print(f"   - Implement: score_request_answer() and score_benchmark()")
 
+    step_num = 3
     if info['use_dataclass']:
-        print(f"\n{Colors.BOLD}3. Define your data schema:{Colors.END}")
+        print(f"\n{Colors.BOLD}{step_num}. Define your data schema:{Colors.END}")
         print(f"   - Edit: benchmarks/{info['name']}/dataclass.py")
         print(f"   - Add fields to the {info['dataclass_name']} class")
+        step_num += 1
 
-    print(f"\n{Colors.BOLD}4. Create and run tests:{Colors.END}")
+    if info['use_shared_context']:
+        print(f"\n{Colors.BOLD}{step_num}. Configure shared context:{Colors.END}")
+        print(f"   - Edit: benchmarks/{info['name']}/benchmark.py")
+        print(f"   - Update: get_shared_context_files() to return your context file paths")
+        print(f"   - Review: context/shared_context_prompt.txt")
+        step_num += 1
+
+    print(f"\n{Colors.BOLD}{step_num}. Create and run tests:{Colors.END}")
     print(f"   - Use the benchmark testing CLI to create test configurations")
     print(f"   - Tests can be run against different models and providers")
+    step_num += 1
 
-    print(f"\n{Colors.BOLD}5. Review and refine:{Colors.END}")
+    print(f"\n{Colors.BOLD}{step_num}. Review and refine:{Colors.END}")
     print(f"   - Check README: benchmarks/{info['name']}/README.md")
     print(f"   - Adjust prompt: benchmarks/{info['name']}/prompts/prompt.txt")
 
