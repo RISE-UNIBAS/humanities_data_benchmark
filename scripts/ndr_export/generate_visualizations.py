@@ -607,6 +607,11 @@ def create_cost_effectiveness_scatter(benchmarks_data, pricing_data):
             (output_price * TYPICAL_OUTPUT_TOKENS / 1_000_000)
         ) * 100  # Convert to cents for readability
 
+        # Handle zero cost for log scale visualization
+        # Use a small positive value (0.001 cents) for free models
+        if estimated_cost == 0:
+            estimated_cost = 0.001
+
         model_stats.append({
             "model": model,
             "avg_score": avg_score,
