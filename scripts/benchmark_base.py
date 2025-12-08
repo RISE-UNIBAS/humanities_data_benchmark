@@ -29,9 +29,10 @@ class Benchmark(ABC):
         self.provider = config['provider']                  # AI provider
         self.model = config['model']                        # Model name
         self.api_key = api_key                              # API key for the provider
-        self.role_description = config['role_description']  # Role description for the system prompt
+        self.role_description = config.get['role_description']  # Role description for the system prompt
         self.prompt_file = config['prompt_file']            # Prompt file name
         self.date = datetime.now().strftime('%Y-%m-%d')     # Date of the benchmark run
+        self.temperature = config.get('temperature', 0.5)  # Temperature setting for the model
 
         # Prompt
         if self.prompt_file is None or self.prompt_file == "":
@@ -246,7 +247,9 @@ class Benchmark(ABC):
     def ask_llm(self, object_basename: str) -> LLMResponse:
         """ Ask the language model a question. """
 
-        kwargs = {}
+        kwargs = {
+            "temperature": self.temperature
+        }
         image_paths = self.get_image_paths(object_basename)
         text_paths = self.get_text_paths(object_basename)
         self.prompt = self.load_prompt(object_basename)
