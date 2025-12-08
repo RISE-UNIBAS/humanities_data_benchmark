@@ -33,6 +33,7 @@ class Benchmark(ABC):
         self.prompt_file = config['prompt_file']            # Prompt file name
         self.date = datetime.now().strftime('%Y-%m-%d')     # Date of the benchmark run
         self.temperature = config.get('temperature', 0.5)  # Temperature setting for the model
+        self.temperature = float(self.temperature)
 
         # Prompt
         if self.prompt_file is None or self.prompt_file == "":
