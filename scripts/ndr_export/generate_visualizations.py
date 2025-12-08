@@ -9,7 +9,7 @@ import json
 import os
 from collections import defaultdict
 
-from scripts.ndr_export import EXPORT_PATH, PRICING_PATH
+from scripts.ndr_export import EXPORT_PATH, PRICING_PATH, RESULTS_PATH
 
 # Color palettes
 PROVIDER_COLORS = {
@@ -747,9 +747,6 @@ def create_speed_performance_scatter(benchmarks_data):
     """
     # We need to load test run results to get timing data
     # Since test_runs in benchmark_export don't have timing, we need to access results
-    from pathlib import Path
-
-    RESULTS_PATH = Path("../../results")
 
     # Filter benchmarks
     included_benchmarks = []
