@@ -29,10 +29,13 @@ class Benchmark(ABC):
         self.provider = config['provider']                  # AI provider
         self.model = config['model']                        # Model name
         self.api_key = api_key                              # API key for the provider
-        self.role_description = config.get['role_description']  # Role description for the system prompt
+        self.role_description = config.get('role_description')  # Role description for the system prompt
         self.prompt_file = config['prompt_file']            # Prompt file name
         self.date = datetime.now().strftime('%Y-%m-%d')     # Date of the benchmark run
-        self.temperature = config.get('temperature', 0.5)  # Temperature setting for the model
+        try:                                                # Temperature setting for the model
+            self.temperature = float(config.get('temperature', 0.5))
+        except (ValueError, TypeError):
+            self.temperature = 0.5
 
         # Prompt
         if self.prompt_file is None or self.prompt_file == "":
