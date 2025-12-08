@@ -146,10 +146,20 @@ def calculate_normalized_score(scoring_data, benchmark_name):
         return None
 
     # Normalize based on metric type and order
-    if order == "desc":
-        normalized = score_value * 100
-    else:  # order == "asc"
-        normalized = max(0, 100 - (score_value * 100))
+    # Check if score is already in 0-100 range (e.g., from fuzz.ratio)
+    # vs 0-1 range (e.g., from calculate_fuzzy_score)
+    if score_value > 1.0:
+        # Score is already in 0-100 range, no need to multiply
+        if order == "desc":
+            normalized = score_value
+        else:  # order == "asc"
+            normalized = max(0, 100 - score_value)
+    else:
+        # Score is in 0-1 range, multiply by 100
+        if order == "desc":
+            normalized = score_value * 100
+        else:  # order == "asc"
+            normalized = max(0, 100 - (score_value * 100))
 
     return min(100, max(0, normalized))
 
