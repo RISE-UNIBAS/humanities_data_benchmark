@@ -341,7 +341,8 @@ def list_available_benchmarks() -> List[str]:
 
 def get_available_providers() -> List[str]:
     """Get list of providers with configured API keys."""
-    all_providers = ["openai", "anthropic", "genai", "mistral", "openrouter", "scicore"]
+    all_providers = ["openai", "anthropic", "genai", "mistral", "openrouter", "scicore",
+                     "deepseek", "cohere"]
     available = []
 
     for provider in all_providers:
@@ -396,7 +397,9 @@ def collect_adhoc_test_params() -> Optional[Dict]:
         "genai": "gemini-2.0-flash-exp",
         "mistral": "pixtral-large-latest",
         "openrouter": "openai/gpt-4o",
-        "scicore": "meta-llama/Meta-Llama-3.1-70B-Instruct"
+        "scicore": "meta-llama/Meta-Llama-3.1-70B-Instruct",
+        "deepseek": "deepseek-3.5-turbo",
+        "cohere": "command-a-03-2025"
     }
     suggested_model = model_suggestions.get(params['provider'], "")
     params['model'] = get_input("Model name", default=suggested_model)
