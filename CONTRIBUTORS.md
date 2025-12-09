@@ -33,7 +33,7 @@ Contributions are categorized by benchmark and type of contribution, and in alph
 | Analyst       | [Pema Frick], [Sorin Marti]    |
 | Engineer      | [Pema Frick], [Sorin Marti]    |
 
-### [Blacklist](benchmarks/blacklist/)
+### [Blacklist Cards](benchmarks/blacklist_cards/)
 
 | Role | Contributors |
 |------|-------------|
@@ -42,6 +42,26 @@ Contributions are categorized by benchmark and type of contribution, and in alph
 | Annotator | [Lea Kasper], [Sorin Marti] |
 | Analyst | [Lea Kasper] |
 | Engineer | [Sorin Marti] |
+
+### [Book Advert XML](benchmarks/book_advert_xml/)
+
+| Role | Contributors               |
+|------|----------------------------|
+| Domain expert | [Ina Serif]                |
+| Data curator | [Sorin Marti]              |
+| Annotator | [Sorin Marti]              |
+| Analyst | [Ina Serif], [Sorin Marti] |
+| Engineer | [Sorin Marti]              |
+
+### [Business Letters](benchmarks/business_letters/)
+
+| Role          | Contributors                                                                                                                                        |
+|---------------|-----------------------------------------------------------------------------------------------------------------------------------------------------|
+| Domain expert | [Eric Decker], [Maximilian Hindermann], [Lea Kasper]                                                                                                |
+| Data curator  | [Anthea Alberto], [Eric Decker], [Maximilian Hindermann]                                                                                            |
+| Annotator     | [Anthea Alberto], [Eric Decker], [Pema Frick], [Maximilian Hindermann], [Lea Kasper], [José Luis Losada Palenzuela], [Sorin Marti], [Elena Spadini] |
+| Analyst       | [Maximilian Hindermann]                                                                                                                             |
+| Engineer      | [Maximilian Hindermann]      
 
 ### [Company Lists](benchmarks/company_lists/)
 
@@ -53,7 +73,7 @@ Contributions are categorized by benchmark and type of contribution, and in alph
 | Analyst | [Lea Kasper] |
 | Engineer | [Sorin Marti] |
 
-### [Fraktur Text Recognition](benchmarks/fraktur/)
+### [Fraktur Adverts](benchmarks/fraktur_adverts/)
 
 | Role | Contributors |
 |------|-------------|
@@ -62,6 +82,16 @@ Contributions are categorized by benchmark and type of contribution, and in alph
 | Annotator | [Ina Serif] |
 | Analyst | [Maximilian Hindermann] |
 | Engineer | [Maximilian Hindermann], [Ina Serif] |
+
+### [Library Cards](benchmarks/library_cards/)
+
+| Role | Contributors |
+|------|-------------|
+| Domain expert | [Gabriel Müller] |
+| Data curator | [Gabriel Müller] |
+| Annotator | [Maximilian Hindermann], [Gabriel Müller] |
+| Analyst | [Maximilian Hindermann] |
+| Engineer | [Maximilian Hindermann] |
 
 ### [Medieval Manuscripts](benchmarks/medieval_manuscripts/)
 
@@ -73,25 +103,6 @@ Contributions are categorized by benchmark and type of contribution, and in alph
 | Analyst | [Maximilian Hindermann] |
 | Engineer | [Maximilian Hindermann], [Ina Serif] |
 
-### [Metadata Extraction](benchmarks/metadata_extraction/)
-
-| Role          | Contributors                                                                                                                                        |
-|---------------|-----------------------------------------------------------------------------------------------------------------------------------------------------|
-| Domain expert | [Eric Decker], [Maximilian Hindermann], [Lea Kasper]                                                                                                |
-| Data curator  | [Anthea Alberto], [Eric Decker], [Maximilian Hindermann]                                                                                            |
-| Annotator     | [Anthea Alberto], [Eric Decker], [Pema Frick], [Maximilian Hindermann], [Lea Kasper], [José Luis Losada Palenzuela], [Sorin Marti], [Elena Spadini] |
-| Analyst       | [Maximilian Hindermann]                                                                                                                             |
-| Engineer      | [Maximilian Hindermann]                                                                                                                             |
-
-### [Zettelkatalog](benchmarks/zettelkatalog/)
-
-| Role | Contributors |
-|------|-------------|
-| Domain expert | [Gabriel Müller] |
-| Data curator | [Gabriel Müller] |
-| Annotator | [Maximilian Hindermann], [Gabriel Müller] |
-| Analyst | [Maximilian Hindermann] |
-| Engineer | [Maximilian Hindermann] |
 
 ### Contributors Across All Benchmarks
 
