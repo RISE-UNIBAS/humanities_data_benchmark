@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - 4 new models: gpt-5.1 (OpenAI), gemini-3-pro-preview (GenAI), magistral-medium-2509 (Mistral), mistral-small-2506 (Mistral)
 - 42 new benchmark test configurations (T0403-T0444) across all benchmarks for new models
 - Pricing data for 2025-11-24 with updated model prices and source URLs
+- Cohere provider support with 5 models: command-r-08-2024, command-r-plus-08-2024, command-r7b-12-2024, command-a-03-2025, command-a-vision-07-2025
+- book_advert_xml benchmark for correcting malformed XML from 18th century book advertisements
+- 43 new benchmark test configurations (T0445-T0487) for book_advert_xml across all providers
+- Pricing data for Cohere models (2025-12-09)
 
 ### Changed
 - All requests are now handled by https://pypi.org/project/generic-llm-api-client/
