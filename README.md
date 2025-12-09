@@ -65,7 +65,7 @@ This benchmark suite focuses on tasks essential to digital humanities work with 
 - **Image**: Visual input for the task. Images are paired with ground truth files.
 - **Model**: Specific model used to perform the task.
 - **Prompt**: Text given to the model to guide its response. 
-- **Provider**: Company or service providing model access (`openai`, `genai`, `anthropic`, `mistral`, `openrouter`, or `scicore`).
+- **Provider**: Company or service providing model access (`openai`, `genai`, `anthropic`, `cohere`, `mistral`, `openrouter`, or `scicore`).
 - **Request**: API call(s) made during a test, consisting of images and prompts.
 - **Response**: Model's answer containing metadata and output.
 - **Score**: Evaluation result indicating model performance.
@@ -80,6 +80,7 @@ This benchmark suite currently includes the following benchmarks for evaluating 
 |-----------|-------------|
 | **[Bibliographic Data](benchmarks/bibliographic_data/)** | Extract bibliographic information (publication details, authors, dates, metadata) from historical documents |
 | **[Blacklist Cards](benchmarks/blacklist/)** | Extract and structure information from historical blacklist cards |
+| **[Book Advert XML](benchmarks/book_advert_xml/)** | Correct malformed XML from 18th century book advertisements |
 | **[Company Lists](benchmarks/company_lists/)** | Extract structured company information from historical business listings and directories |
 | **[Fraktur Adverts](benchmarks/fraktur/)** | Recognize and transcribe historical German Fraktur script (16th-20th centuries) |
 | **[Medieval Manuscripts](benchmarks/medieval_manuscripts/)** | Page segmentation and handwritten text extraction from 15th century medieval German manuscripts |
@@ -129,6 +130,7 @@ Add the following lines as needed with the obtained API key.
 OPENAI_API_KEY=<your_openai_api_key>
 GENAI_API_KEY=<your_genai_api_key>
 ANTHROPIC_API_KEY=<your_anthropic_api_key>
+COHERE_API_KEY=<your_cohere_api_key>
 MISTRAL_API_KEY=<your_mistral_api_key>
 OPENROUTER_API_KEY=<your_openrouter_api_key>
 SCICORE_API_KEY=<your_scicore_api_key>
@@ -393,6 +395,11 @@ This benchmark suite currently tests models from the following providers:
 | | claude-opus-4-20250514 | Next-generation Claude 4 Opus |
 | | claude-sonnet-4-20250514 | Claude 4 Sonnet |
 | | claude-sonnet-4-5-20250929 | Latest Claude 4.5 Sonnet |
+| **Cohere** | command-a-03-2025 | Advanced multimodal model |
+| | command-a-vision-07-2025 | Vision-enabled Command A model |
+| | command-r-08-2024 | Balanced performance model |
+| | command-r-plus-08-2024 | Enhanced Command R with extended capabilities |
+| | command-r7b-12-2024 | Compact 7B parameter model |
 | **Google/Gemini** | ~~gemini-1.5-flash~~ | ~~Earlier generation flash~~ (legacy) |
 | | ~~gemini-1.5-pro~~ | ~~Gemini 1.5 series~~ (legacy) |
 | | gemini-2.0-flash | Fast response multimodal model |
