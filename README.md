@@ -5,7 +5,7 @@
 This repository contains benchmark datasets (images and text files), prompts, ground truths, and evaluation scripts for
 assessing the performance of large language models (LLMs) on humanities-related tasks. The suite is
 designed as a resource for researchers and practitioners interested in systematically evaluating
-how well various LLMs perform on digital humanities (DH) tasks involving visual materials.
+how well various LLMs perform on digital humanities (DH) tasks involving visual and text-like materials.
 
 > **ℹ Looking for benchmark results?**     
 > This README provides an overview of the benchmark suite and explains how to use it.  
@@ -192,11 +192,14 @@ When starting the `create_benchmark.py` script, you will be guided through the c
 
 **3. Tags**
 - Structured tags from specific categories:
-  - **Source Type:** index-cards, letter-pages, manuscript-pages, book-pages, registers, lists
+  - **Source Type:** index-cards, letter-pages, manuscript-pages, book-pages, article-pages, essay-pages, registers, lists
   - **Structure:** text-like, list-like, table-like, mixed
   - **Text Type:** handwritten-source, typed-source, printed-source
-  - **Century:** century-16th, century-17th, century-18th, century-19th, century-20th
+  - **Century:** century-15th, century-16th, century-17th, century-18th, century-19th, century-20th
+  - **Languages:** language-german, language-english
+  - **Entry Type:** company-entries, bibliographic-entries, ner-entries
   - **Task:** ner-extraction, metadata-extraction, transcription, classification
+  - **Misc:** test-benchmark
 - Enter as comma-separated values
 
 **4. Contributors**
