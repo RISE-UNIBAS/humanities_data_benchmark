@@ -81,10 +81,10 @@ This benchmark suite currently includes the following benchmarks for evaluating 
 | **[Bibliographic Data](benchmarks/bibliographic_data/)** | Extract bibliographic information (publication details, authors, dates, metadata) from historical documents |
 | **[Blacklist Cards](benchmarks/blacklist/)** | Extract and structure information from historical blacklist cards |
 | **[Book Advert XML](benchmarks/book_advert_xml/)** | Correct malformed XML from 18th century book advertisements |
+| **[Business Letters](benchmarks/metadata_extraction/)** | Extract structured metadata (names, organizations, dates, locations) from 20th century Swiss historical correspondence |
 | **[Company Lists](benchmarks/company_lists/)** | Extract structured company information from historical business listings and directories |
 | **[Fraktur Adverts](benchmarks/fraktur/)** | Recognize and transcribe historical German Fraktur script (16th-20th centuries) |
 | **[Medieval Manuscripts](benchmarks/medieval_manuscripts/)** | Page segmentation and handwritten text extraction from 15th century medieval German manuscripts |
-| **[Business Letters](benchmarks/metadata_extraction/)** | Extract structured metadata (names, organizations, dates, locations) from 20th century Swiss historical correspondence |
 | **[Library Cards](benchmarks/zettelkatalog/)** | Catalog card analysis and information extraction from historical library catalog systems |
 | **Test Benchmarks** | System validation and basic functionality testing ([test_benchmark](benchmarks/test_benchmark/), [test_benchmark2](benchmarks/test_benchmark2/)) |
 
