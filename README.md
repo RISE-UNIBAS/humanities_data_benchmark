@@ -89,8 +89,8 @@ This benchmark suite currently includes the following benchmarks for evaluating 
 | **Test Benchmarks** | System validation and basic functionality testing ([test_benchmark](benchmarks/test_benchmark/), [test_benchmark2](benchmarks/test_benchmark2/)) |
 
 ### 1.3. How it Works
-The RISE Humanities Data Benchmark is designed to be modular and extensible. There is a number of datasets which are submitted to tests and their results are saved.
-The whole framework, the datasets and the resukts are part of this repository.
+The RISE Humanities Data Benchmark is designed to be modular and extensible. There are a number of datasets which are submitted to tests and their results are saved.
+The whole framework, the datasets and the results are part of this repository.
 
 <img width="2279" height="1206" alt="how-it-works" src="https://github.com/user-attachments/assets/ae3197f1-2ea8-4d5f-bb47-94f0cb0e3a69" />
 
