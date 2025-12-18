@@ -13,6 +13,8 @@ from scripts.scoring_helper import calculate_fuzzy_score
 class MultiBibliographicData(Benchmark):
     """Benchmark for Multilanguage Multiscript Bibliographic Data."""
 
+    multi_image_support = True
+
     # Field importance weights for scoring
     FIELD_WEIGHTS = {
         # High importance - core bibliographic data
