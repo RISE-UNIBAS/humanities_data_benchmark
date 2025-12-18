@@ -6,6 +6,7 @@ Usage:
     python scripts/run_single_test.py --test_id T0001             # Run specific test
     python scripts/run_single_test.py --test_id T0001 --regenerate # Regenerate results
     python scripts/run_single_test.py --adhoc                      # Run ad-hoc test
+    python scripts/run_single_test.py --rerun-last-adhoc           # Re-run last ad-hoc test
 """
 
 import sys
@@ -14,11 +15,13 @@ import argparse
 from pathlib import Path
 from typing import Dict, List, Optional
 import os
+import json
 from datetime import datetime
 
 # Get the directory where this script is located
 SCRIPT_DIR = Path(__file__).parent.resolve()
 PROJECT_ROOT = SCRIPT_DIR.parent
+LAST_ADHOC_TEST_FILE = SCRIPT_DIR / ".last_adhoc_test.json"
 
 # Add scripts directory to path for imports
 sys.path.insert(0, str(SCRIPT_DIR))
@@ -204,6 +207,9 @@ def select_test_interactive(tests: List[Dict]) -> Optional[Dict]:
         print(f"  • Enter 'n' for next page, 'p' for previous page")
         print(f"  • Enter 's' to search/filter tests")
         print(f"  • Enter 'a' to run an ad-hoc test (custom parameters)")
+        # Check if there's a last adhoc test available
+        if load_last_adhoc_test() is not None:
+            print(f"  • Enter 'r' to re-run last ad-hoc test")
         print(f"  • Enter 'q' to quit")
         if filtered_tests != tests:
             print(f"  • Enter 'c' to clear filter")
@@ -215,6 +221,8 @@ def select_test_interactive(tests: List[Dict]) -> Optional[Dict]:
             return None
         elif choice == 'a':
             return {'_adhoc': True}  # Special marker for ad-hoc test
+        elif choice == 'r':
+            return {'_rerun_adhoc': True}  # Special marker for rerun ad-hoc test
         elif choice == 'n':
             if page < total_pages - 1:
                 page += 1
@@ -321,6 +329,28 @@ def get_input(prompt: str, default: Optional[str] = None, required: bool = True)
                 continue
         except KeyboardInterrupt:
             raise
+
+
+def save_last_adhoc_test(params: Dict):
+    """Save the last adhoc test parameters to a file."""
+    try:
+        with open(LAST_ADHOC_TEST_FILE, 'w', encoding='utf-8') as f:
+            json.dump(params, f, indent=2)
+    except Exception as e:
+        print_warning(f"Could not save last adhoc test: {e}")
+
+
+def load_last_adhoc_test() -> Optional[Dict]:
+    """Load the last adhoc test parameters from file."""
+    if not LAST_ADHOC_TEST_FILE.exists():
+        return None
+
+    try:
+        with open(LAST_ADHOC_TEST_FILE, 'r', encoding='utf-8') as f:
+            return json.load(f)
+    except Exception as e:
+        print_warning(f"Could not load last adhoc test: {e}")
+        return None
 
 
 def list_available_benchmarks() -> List[str]:
@@ -455,6 +485,9 @@ def collect_adhoc_test_params() -> Optional[Dict]:
 
 def run_adhoc_test(test_config: Dict, regenerate: bool = True):
     """Run an ad-hoc test with custom results directory."""
+    # Save the test configuration for potential rerun
+    save_last_adhoc_test(test_config)
+
     print_header(f"Running Ad-Hoc Test {test_config['id']}")
 
     try:
@@ -535,10 +568,43 @@ def main():
         action='store_true',
         help='Run an ad-hoc test with custom parameters (interactive)'
     )
+    parser.add_argument(
+        '--rerun-last-adhoc',
+        action='store_true',
+        help='Re-execute the last adhoc test'
+    )
 
     args = parser.parse_args()
 
     try:
+        # Rerun last ad-hoc test mode
+        if args.rerun_last_adhoc:
+            last_adhoc = load_last_adhoc_test()
+
+            if last_adhoc is None:
+                print_error("No previous adhoc test found.")
+                print_info("Run an adhoc test first with --adhoc or 'a' in interactive mode.")
+                return
+
+            # Generate new test ID with current timestamp
+            timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+            last_adhoc['id'] = f"ADHOC_{timestamp}"
+
+            # Display configuration
+            print_info("Re-running last adhoc test with new timestamp:")
+            display_test_config(last_adhoc)
+
+            # Check API key
+            provider = last_adhoc.get('provider', '')
+            if not check_api_key(provider):
+                return
+
+            # Confirm and run
+            test_id = last_adhoc.get('id')
+            if get_yes_no(f"Run ad-hoc test {test_id}?", default=True):
+                run_adhoc_test(last_adhoc, regenerate=True)
+            return
+
         # Ad-hoc test mode
         if args.adhoc:
             adhoc_params = collect_adhoc_test_params()
@@ -594,8 +660,38 @@ def main():
                 print_info("Goodbye!")
                 break
 
+            # Check if rerun ad-hoc test was selected
+            if selected_test.get('_rerun_adhoc'):
+                # Load last adhoc test
+                last_adhoc = load_last_adhoc_test()
+
+                if last_adhoc is None:
+                    print_error("No previous adhoc test found.")
+                    continue
+
+                # Generate new test ID with current timestamp
+                timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+                last_adhoc['id'] = f"ADHOC_{timestamp}"
+
+                # Display configuration
+                print_info("Re-running last adhoc test with new timestamp:")
+                display_test_config(last_adhoc)
+
+                # Check API key
+                provider = last_adhoc.get('provider', '')
+                if not check_api_key(provider):
+                    continue
+
+                # Confirm run
+                test_id = last_adhoc.get('id')
+                if not get_yes_no(f"Run ad-hoc test {test_id}?", default=True):
+                    continue
+
+                # Ad-hoc tests always regenerate
+                run_adhoc_test(last_adhoc, regenerate=True)
+
             # Check if ad-hoc test was selected
-            if selected_test.get('_adhoc'):
+            elif selected_test.get('_adhoc'):
                 # Collect ad-hoc test parameters
                 adhoc_params = collect_adhoc_test_params()
 
