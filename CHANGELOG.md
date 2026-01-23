@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+### Added
+- 8 new models: gpt-5.2 (OpenAI), gemini-3-flash-preview (GenAI), claude-opus-4-5-20251101, claude-haiku-4-5-20251001 (Anthropic), mistral-large-2512, ministral-14b-2512, ministral-8b-2512, magistral-small-2509 (Mistral)
+- 88 new benchmark test configurations (T0488-T0575) across all benchmarks for new models
+- Pricing data for 2026-01-23
+
+### Changed
+- Marked all claude-3-7-sonnet-20250219, claude-3-opus-20240229, and pixtral-12b benchmark tests as legacy
+
 ## [v0.4.1] - 2026-01-18
 
 ### Added

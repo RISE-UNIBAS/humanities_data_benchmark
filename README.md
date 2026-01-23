@@ -391,11 +391,13 @@ This benchmark suite currently tests models from the following providers:
 | Provider | Model | Notes |
 |----------|-------|-------|
 | **Anthropic** | claude-3-5-sonnet-20241022 | Mid-tier Claude model with strong reasoning |
-| | claude-3-7-sonnet-20250219 | Advanced Claude with improved capabilities |
-| | claude-3-opus-20240229 | Highest capability Claude 3 model |
+| | ~~claude-3-7-sonnet-20250219~~ | ~~Advanced Claude with improved capabilities~~ (legacy) |
+| | ~~claude-3-opus-20240229~~ | ~~Highest capability Claude 3 model~~ (legacy) |
 | | ~~claude-3-5-haiku-20241022~~ | ~~Fastest/smallest Claude 3.5~~ (legacy) |
+| | claude-haiku-4-5-20251001 | Efficient Claude 4.5 Haiku |
 | | claude-opus-4-1-20250805 | Updated Claude 4.1 Opus |
 | | claude-opus-4-20250514 | Next-generation Claude 4 Opus |
+| | claude-opus-4-5-20251101 | Latest Claude 4.5 Opus |
 | | claude-sonnet-4-20250514 | Claude 4 Sonnet |
 | | claude-sonnet-4-5-20250929 | Latest Claude 4.5 Sonnet |
 | **Cohere** | command-a-03-2025 | Advanced multimodal model |
@@ -417,10 +419,20 @@ This benchmark suite currently tests models from the following providers:
 | | ~~gemini-2.5-pro-exp-03-25~~ | ~~Experimental 2.5 pro~~ (legacy) |
 | | ~~gemini-2.5-pro-preview-05-06~~ | ~~Preview 2.5 pro~~ (legacy) |
 | | ~~gemini-exp-1206~~ | ~~Experimental~~ (legacy) |
-| **Mistral AI** | mistral-large-latest | Most capable language model |
+| | gemini-3-flash-preview | Preview of Gemini 3 flash |
+| | gemini-3-pro-preview | Preview of Gemini 3 pro |
+| **Mistral AI** | magistral-medium-2509 | Mid-tier magistral model |
+| | magistral-small-2509 | Compact magistral model |
+| | ministral-14b-2512 | 14B parameter efficient model |
+| | ministral-8b-2512 | 8B parameter compact model |
+| | mistral-large-2411 | Mistral Large (Nov 2024) |
+| | mistral-large-2512 | Latest Mistral Large (Dec 2025) |
 | | mistral-medium-2505 | Mid-tier balanced performance |
 | | mistral-medium-2508 | Updated Mistral Medium |
-| | pixtral-12b | 12B parameter multimodal |
+| | mistral-small-2506 | Compact Mistral model |
+| | ~~pixtral-12b~~ | ~~12B parameter multimodal~~ (legacy) |
+| | pixtral-12b-2409 | 12B parameter multimodal (Sept 2024) |
+| | pixtral-large-2411 | Multimodal large (Nov 2024) |
 | | pixtral-large-latest | Multimodal for vision tasks |
 | **OpenAI** | gpt-4.1 | Latest GPT-4 iteration |
 | | gpt-4.1-mini | Optimized for efficiency |
@@ -429,6 +441,8 @@ This benchmark suite currently tests models from the following providers:
 | | gpt-4o | Multimodal text and images |
 | | gpt-4o-mini | Smaller, faster GPT-4o |
 | | gpt-5 | Next-generation with advanced reasoning |
+| | gpt-5.1-2025-11-13 | GPT-5.1 (Nov 2025) |
+| | gpt-5.2 | Latest GPT-5 iteration |
 | | gpt-5-mini | Efficient GPT-5 |
 | | gpt-5-nano | Compact GPT-5 |
 | | o3 | Reasoning-focused model |
