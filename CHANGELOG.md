@@ -15,6 +15,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Marked all claude-3-7-sonnet-20250219, claude-3-opus-20240229, and pixtral-12b benchmark tests as legacy
 
+### Fixed
+- Converted library_cards images from PNG to JPEG format (263 files had .jpg extension but were actually PNG)
+
 ## [v0.4.1] - 2026-01-18
 
 ### Added
