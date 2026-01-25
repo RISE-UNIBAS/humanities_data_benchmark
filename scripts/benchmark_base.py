@@ -37,6 +37,10 @@ class Benchmark(ABC):
         except (ValueError, TypeError):
             self.temperature = 0.5
 
+        # TODO: hotfix, to be fixed in generic-llm-api-client
+        if self.model in ["gpt-5", "gpt-5-mini", "gpt-5-nano"]:
+            self.temperature = 1
+
         # Prompt
         if self.prompt_file is None or self.prompt_file == "":
             self.prompt_file = "prompt.txt"
