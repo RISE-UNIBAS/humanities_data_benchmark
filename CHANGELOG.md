@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - Converted library_cards images from PNG to JPEG format (263 files had .jpg extension but were actually PNG)
+- Converted fraktur_adverts images from PNG to JPEG format (3 files had .jpg extension but were actually PNG)
 
 ## [v0.4.1] - 2026-01-18
 
