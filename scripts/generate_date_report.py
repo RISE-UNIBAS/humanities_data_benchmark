@@ -2,6 +2,7 @@
 """
 Generate a report for all tests run on a specific date.
 Usage: python scripts/generate_date_report.py --date 2025-03-05 --format html
+       python scripts/generate_date_report.py --date 2025-03-05 --format both --no-warnings
 """
 
 import argparse
@@ -27,6 +28,67 @@ def load_test_metadata():
                 'temperature': row['temperature'],
             }
     return tests
+
+
+def detect_warnings(result):
+    """Detect potential issues with test results."""
+    warnings = []
+
+    # Skip warnings for test benchmarks (test_ prefix)
+    benchmark_name = result.get('name', '')
+    if benchmark_name.startswith('test_'):
+        return warnings
+
+    # Warning 1: Zero cost
+    if result['total_cost'] == 0:
+        warnings.append({
+            'code': 'ZERO_COST',
+            'severity': 'high',
+            'message': 'Total cost is $0 (pricing issue)'
+        })
+
+    # Warning 2: All metrics are N/A
+    f1_macro = result['f1_macro']
+    f1_micro = result['f1_micro']
+    fuzzy = result['fuzzy']
+    cer = result['cer']
+
+    if (f1_macro == 'N/A' and f1_micro == 'N/A' and
+        fuzzy == 'N/A' and cer == 'N/A'):
+        warnings.append({
+            'code': 'ALL_NA',
+            'severity': 'critical',
+            'message': 'All metrics are N/A (scoring failed)'
+        })
+
+    # Warning 3: Exactly one of macro/micro/fuzzy is 0
+    metrics = [f1_macro, f1_micro, fuzzy]
+    zero_count = sum(1 for m in metrics if m != 'N/A' and m == 0.0)
+
+    if zero_count == 1:
+        warnings.append({
+            'code': 'ZERO_SCORE',
+            'severity': 'medium',
+            'message': 'Score is 0 (exceptionally bad performance)'
+        })
+
+    # Warning 4: Zero items processed
+    if result['items_count'] == 0:
+        warnings.append({
+            'code': 'ZERO_ITEMS',
+            'severity': 'critical',
+            'message': 'No items processed'
+        })
+
+    # Warning 5: Zero duration
+    if result['total_duration'] == 0:
+        warnings.append({
+            'code': 'ZERO_DURATION',
+            'severity': 'high',
+            'message': 'No timing captured'
+        })
+
+    return warnings
 
 
 def analyze_test_results(results_dir, test_id):
@@ -69,7 +131,7 @@ def analyze_test_results(results_dir, test_id):
     total_output_cost = cost_summary.get('output_cost_usd', 0.0)
     total_cost = cost_summary.get('total_cost_usd', 0.0)
 
-    return {
+    result = {
         'test_id': test_id,
         'items_count': items_count,
         'f1_macro': scoring.get('f1_macro', 'N/A'),
@@ -85,23 +147,35 @@ def analyze_test_results(results_dir, test_id):
         'models': list(models),
     }
 
+    # Note: warnings will be detected after metadata is added in generate_*_report functions
+
+    return result
+
 
 def generate_html_report(date, results_dir, test_metadata, output_file):
     """Generate HTML report"""
 
     # Collect all test folders
     test_dirs = sorted([d for d in results_dir.iterdir() if d.is_dir() and d.name.startswith('T')])
+    total_tests = len(test_dirs)
+    print(f"  Found {total_tests} tests to analyze")
 
     # Analyze each test
     test_results = []
-    for test_dir in test_dirs:
+    for idx, test_dir in enumerate(test_dirs, 1):
         test_id = test_dir.name
         result = analyze_test_results(results_dir, test_id)
         if result:
             # Add metadata
             if test_id in test_metadata:
                 result.update(test_metadata[test_id])
+            # Detect warnings after metadata is available
+            result['warnings'] = detect_warnings(result)
             test_results.append(result)
+
+        # Progress indicator every 50 tests or at the end
+        if idx % 50 == 0 or idx == total_tests:
+            print(f"  Progress: {idx}/{total_tests} tests analyzed ({idx*100//total_tests}%)")
 
     # Sort by test ID
     test_results.sort(key=lambda x: x['test_id'])
@@ -225,6 +299,35 @@ def generate_html_report(date, results_dir, test_metadata, output_file):
             color: #666;
             font-size: 0.9em;
         }}
+        .warnings {{
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+        }}
+        .warning-badge {{
+            padding: 3px 8px;
+            border-radius: 3px;
+            font-size: 0.75em;
+            font-weight: 600;
+            white-space: nowrap;
+            cursor: help;
+        }}
+        .warning-critical {{
+            background: #dc3545;
+            color: white;
+        }}
+        .warning-high {{
+            background: #fd7e14;
+            color: white;
+        }}
+        .warning-medium {{
+            background: #ffc107;
+            color: #000;
+        }}
+        .warning-none {{
+            color: #28a745;
+            font-weight: 600;
+        }}
         .footer {{
             text-align: center;
             margin-top: 30px;
@@ -259,6 +362,10 @@ def generate_html_report(date, results_dir, test_metadata, output_file):
                 <div class="stat-value">${sum(r['total_cost'] for r in test_results):.6f}</div>
                 <div class="stat-label">Total Cost (USD)</div>
             </div>
+            <div class="stat-card">
+                <div class="stat-value">{sum(1 for r in test_results if r.get('warnings', []))}</div>
+                <div class="stat-label">Tests with Warnings</div>
+            </div>
         </div>
     </div>
 
@@ -279,6 +386,7 @@ def generate_html_report(date, results_dir, test_metadata, output_file):
                 <th>Input Cost ($)</th>
                 <th>Output Cost ($)</th>
                 <th>Total Cost ($)</th>
+                <th>Warnings</th>
             </tr>
         </thead>
         <tbody>
@@ -327,6 +435,17 @@ def generate_html_report(date, results_dir, test_metadata, output_file):
         output_cost_display = f"${result['output_cost']:.6f}" if result['output_cost'] > 0 else '$0.00'
         total_cost_display = f"${result['total_cost']:.6f}" if result['total_cost'] > 0 else '$0.00'
 
+        # Format warnings
+        warnings = result.get('warnings', [])
+        if warnings:
+            warnings_html = '<div class="warnings">'
+            for warning in warnings:
+                severity_class = f"warning-{warning['severity']}"
+                warnings_html += f'<span class="warning-badge {severity_class}" title="{warning["message"]}">{warning["code"]}</span>'
+            warnings_html += '</div>'
+        else:
+            warnings_html = '<span class="warning-none">✓</span>'
+
         html += f"""
             <tr>
                 <td><strong>{result['test_id']}</strong></td>
@@ -343,6 +462,7 @@ def generate_html_report(date, results_dir, test_metadata, output_file):
                 <td>{input_cost_display}</td>
                 <td>{output_cost_display}</td>
                 <td>{total_cost_display}</td>
+                <td>{warnings_html}</td>
             </tr>
 """
 
@@ -420,10 +540,11 @@ def generate_html_report(date, results_dir, test_metadata, output_file):
 </html>
 """
 
+    print(f"  Writing HTML file...")
     with open(output_file, 'w', encoding='utf-8') as f:
         f.write(html)
 
-    print(f"HTML report generated: {output_file}")
+    print(f"  ✓ HTML report generated: {output_file}")
 
 
 def generate_markdown_report(date, results_dir, test_metadata, output_file):
@@ -431,17 +552,25 @@ def generate_markdown_report(date, results_dir, test_metadata, output_file):
 
     # Collect all test folders
     test_dirs = sorted([d for d in results_dir.iterdir() if d.is_dir() and d.name.startswith('T')])
+    total_tests = len(test_dirs)
+    print(f"  Found {total_tests} tests to analyze")
 
     # Analyze each test
     test_results = []
-    for test_dir in test_dirs:
+    for idx, test_dir in enumerate(test_dirs, 1):
         test_id = test_dir.name
         result = analyze_test_results(results_dir, test_id)
         if result:
             # Add metadata
             if test_id in test_metadata:
                 result.update(test_metadata[test_id])
+            # Detect warnings after metadata is available
+            result['warnings'] = detect_warnings(result)
             test_results.append(result)
+
+        # Progress indicator every 50 tests or at the end
+        if idx % 50 == 0 or idx == total_tests:
+            print(f"  Progress: {idx}/{total_tests} tests analyzed ({idx*100//total_tests}%)")
 
     # Sort by test ID
     test_results.sort(key=lambda x: x['test_id'])
@@ -456,11 +585,12 @@ def generate_markdown_report(date, results_dir, test_metadata, output_file):
 - **Unique Benchmarks:** {len(set(r.get('name', 'Unknown') for r in test_results))}
 - **Total Duration:** {sum(r['total_duration'] for r in test_results):.1f}s
 - **Total Cost:** ${sum(r['total_cost'] for r in test_results):.6f} USD
+- **Tests with Warnings:** {sum(1 for r in test_results if r.get('warnings', []))}
 
 ## Results
 
-| Test ID | Benchmark | Provider | Model | Items | F1 Macro | F1 Micro | Fuzzy | CER | Avg Duration | Total Duration | Input Cost ($) | Output Cost ($) | Total Cost ($) |
-|---------|-----------|----------|-------|-------|----------|----------|-------|-----|--------------|----------------|----------------|-----------------|----------------|
+| Test ID | Benchmark | Provider | Model | Items | F1 Macro | F1 Micro | Fuzzy | CER | Avg Duration | Total Duration | Input Cost ($) | Output Cost ($) | Total Cost ($) | Warnings |
+|---------|-----------|----------|-------|-------|----------|----------|-------|-----|--------------|----------------|----------------|-----------------|----------------|----------|
 """
 
     for result in test_results:
@@ -479,14 +609,111 @@ def generate_markdown_report(date, results_dir, test_metadata, output_file):
         output_cost_display = f"${result['output_cost']:.6f}" if result['output_cost'] > 0 else '$0.00'
         total_cost_display = f"${result['total_cost']:.6f}" if result['total_cost'] > 0 else '$0.00'
 
-        md += f"| {result['test_id']} | {result.get('name', 'Unknown')} | {result.get('provider', 'Unknown')} | {result.get('model', 'Unknown')} | {result['items_count']} | {f1_macro_display} | {f1_micro_display} | {fuzzy_display} | {cer_display} | {result['avg_duration']:.2f}s | {result['total_duration']:.2f}s | {input_cost_display} | {output_cost_display} | {total_cost_display} |\n"
+        # Format warnings for markdown
+        warnings = result.get('warnings', [])
+        if warnings:
+            warnings_md = ', '.join([f"{w['code']}" for w in warnings])
+        else:
+            warnings_md = '✓'
+
+        md += f"| {result['test_id']} | {result.get('name', 'Unknown')} | {result.get('provider', 'Unknown')} | {result.get('model', 'Unknown')} | {result['items_count']} | {f1_macro_display} | {f1_micro_display} | {fuzzy_display} | {cer_display} | {result['avg_duration']:.2f}s | {result['total_duration']:.2f}s | {input_cost_display} | {output_cost_display} | {total_cost_display} | {warnings_md} |\n"
 
     md += f"\n---\n*Generated on {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}*\n"
 
+    print(f"  Writing Markdown file...")
     with open(output_file, 'w', encoding='utf-8') as f:
         f.write(md)
 
-    print(f"Markdown report generated: {output_file}")
+    print(f"  ✓ Markdown report generated: {output_file}")
+
+
+def generate_warnings_report(date, results_dir, test_metadata, output_file):
+    """Generate warnings-only report as GitHub issue template"""
+
+    # Collect all test folders
+    test_dirs = sorted([d for d in results_dir.iterdir() if d.is_dir() and d.name.startswith('T')])
+    total_tests = len(test_dirs)
+    print(f"  Found {total_tests} tests to analyze")
+
+    # Analyze each test
+    test_results = []
+    for idx, test_dir in enumerate(test_dirs, 1):
+        test_id = test_dir.name
+        result = analyze_test_results(results_dir, test_id)
+        if result:
+            # Add metadata
+            if test_id in test_metadata:
+                result.update(test_metadata[test_id])
+            # Detect warnings after metadata is available
+            result['warnings'] = detect_warnings(result)
+            # Only include tests with warnings
+            if result['warnings']:
+                test_results.append(result)
+
+        # Progress indicator every 50 tests or at the end
+        if idx % 50 == 0 or idx == total_tests:
+            warnings_found = len(test_results)
+            print(f"  Progress: {idx}/{total_tests} tests analyzed ({idx*100//total_tests}%) - {warnings_found} warnings found")
+
+    # Sort by test ID
+    test_results.sort(key=lambda x: x['test_id'])
+
+    # Generate warnings report
+    md = f"""# Test Warnings Report - {date}
+
+**Date:** {date}
+**Tests with warnings:** {len(test_results)}
+**Generated:** {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
+
+---
+
+**Note:** For detailed error messages and stack traces, check the log files in `scripts/logs/` with date prefix `{date.replace('-', '')}`.
+
+*Add GitHub issue links in the Ticket column for tracking.*
+
+| Test ID | Benchmark | Provider | Model | Severity | Warning Codes | Ticket |
+|---------|-----------|----------|-------|----------|---------------|--------|
+"""
+
+    for result in test_results:
+        # Get highest severity
+        severities = [w['severity'] for w in result['warnings']]
+        if 'critical' in severities:
+            severity = '🔴 Critical'
+        elif 'high' in severities:
+            severity = '🟠 High'
+        elif 'medium' in severities:
+            severity = '🟡 Medium'
+        else:
+            severity = 'Low'
+
+        warning_codes = ', '.join([w['code'] for w in result['warnings']])
+
+        md += f"| {result['test_id']} | {result.get('name', 'Unknown')} | {result.get('provider', 'Unknown')} | {result.get('model', 'Unknown')} | {severity} | {warning_codes} | |\n"
+
+    md += "\n---\n\n"
+    md += "## Warning Codes Explanation\n\n"
+    md += "| Code | Severity | Description |\n"
+    md += "|------|----------|-------------|\n"
+    md += "| **ZERO_COST** | 🟠 High | Total cost is $0 (pricing issue) |\n"
+    md += "| **ALL_NA** | 🔴 Critical | All metrics are N/A (scoring failed) |\n"
+    md += "| **ZERO_SCORE** | 🟡 Medium | Score is 0 (exceptionally bad performance) |\n"
+    md += "| **ZERO_ITEMS** | 🔴 Critical | No items processed |\n"
+    md += "| **ZERO_DURATION** | 🟠 High | No timing captured |\n"
+    md += "\n---\n\n"
+    md += "## Action Required\n\n"
+    md += "- [ ] Review all critical issues\n"
+    md += "- [ ] Investigate high priority issues\n"
+    md += "- [ ] Check medium priority issues as time permits\n"
+    md += "- [ ] Re-run failed tests if needed\n"
+    md += "- [ ] Update pricing data if ZERO_COST warnings present\n"
+    md += "- [ ] Fix scoring issues if ALL_NA or ZERO_SCORE warnings present\n"
+
+    print(f"  Writing warnings file...")
+    with open(output_file, 'w', encoding='utf-8') as f:
+        f.write(md)
+
+    print(f"  ✓ Warnings report generated: {output_file} ({len(test_results)} tests with warnings)")
 
 
 def main():
@@ -495,6 +722,8 @@ def main():
     parser.add_argument('--format', choices=['html', 'md', 'both'], default='html',
                         help='Output format (html, md, or both)')
     parser.add_argument('--output', help='Output file path (optional)')
+    parser.add_argument('--no-warnings', action='store_true',
+                        help='Skip generating the warnings report')
 
     args = parser.parse_args()
 
@@ -502,27 +731,44 @@ def main():
     base_dir = Path(__file__).parent.parent
     results_dir = base_dir / "results" / args.date
 
+    print(f"=" * 70)
+    print(f"Report Generator for {args.date}")
+    print(f"=" * 70)
+
     if not results_dir.exists():
-        print(f"Error: No results found for date {args.date}")
-        print(f"Looking in: {results_dir}")
+        print(f"❌ Error: No results found for date {args.date}")
+        print(f"   Looking in: {results_dir}")
         return
 
     # Load test metadata
-    print("Loading test metadata...")
+    print("\n📋 Loading test metadata...")
     test_metadata = load_test_metadata()
+    print(f"   ✓ Loaded metadata for {len(test_metadata)} tests")
+
+    # Create reports directory if it doesn't exist
+    reports_dir = base_dir / "reports"
+    reports_dir.mkdir(exist_ok=True)
 
     # Generate reports
     if args.format in ['html', 'both']:
-        output_file = args.output or base_dir / "results" / args.date / f"report_{args.date}.html"
-        print(f"Generating HTML report...")
+        print(f"\n📊 Generating HTML report...")
+        output_file = args.output or reports_dir / f"{args.date}_report.html"
         generate_html_report(args.date, results_dir, test_metadata, output_file)
 
     if args.format in ['md', 'both']:
-        output_file = args.output or base_dir / "results" / args.date / f"report_{args.date}.md"
-        print(f"Generating Markdown report...")
+        print(f"\n📝 Generating Markdown report...")
+        output_file = args.output or reports_dir / f"{args.date}_report.md"
         generate_markdown_report(args.date, results_dir, test_metadata, output_file)
 
-    print("Done!")
+    # Generate warnings report unless disabled
+    if not args.no_warnings:
+        print(f"\n⚠️  Generating warnings report...")
+        warnings_file = reports_dir / f"{args.date}_report_warnings.md"
+        generate_warnings_report(args.date, results_dir, test_metadata, warnings_file)
+
+    print(f"\n{'=' * 70}")
+    print(f"✅ All reports generated successfully!")
+    print(f"{'=' * 70}")
 
 
 if __name__ == '__main__':
