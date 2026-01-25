@@ -1,0 +1,89 @@
+{
+    "text": "[{\"role\": \"system\", \"content\": \"Always respond with valid JSON. Ensure the output is strictly formatted as JSON, with no additional text, explanations, or markdown formatting.\"}, {\"role\": \"user\", \"content\": \"Extract the bibliographic information about a historical dissertation from this index card and return it as a structured JSON object with the following exact format:\\n\\n```json\\n{\\n  \\\"type\\\": {\\n    \\\"type\\\": \\\"Dissertation or thesis\\\" OR \\\"Reference\\\"\\n  },\\n  \\\"author\\\": {\\n    \\\"last_name\\\": \\\"string\\\",\\n    \\\"first_name\\\": \\\"string\\\"\\n  },\\n  \\\"publication\\\": {\\n    \\\"title\\\": \\\"string\\\",\\n    \\\"year\\\": integer,\\n    \\\"place\\\": \\\"string or empty string\\\",\\n    \\\"pages\\\": \\\"string or empty string\\\",\\n    \\\"publisher\\\": \\\"string or empty string\\\",\\n    \\\"format\\\": \\\"string or empty string\\\"\\n  },\\n  \\\"library_reference\\\": {\\n    \\\"shelfmark\\\": \\\"string or empty string\\\",\\n    \\\"subjects\\\": \\\"string or empty string\\\"\\n  }\\n}\\n```\\n\\nEXTRACTION RULES:\\n1. **Card Type**: If a card contains the note \\\"s.\\\" on a separate line, it is a \\\"Reference\\\". Otherwise, it is a \\\"Dissertation or thesis\\\".\\n\\n2. **Author**: Extract last_name and first_name. If only one name is given, put it in last_name and leave first_name empty.\\n\\n3. **Publication**:\\n   - title: The main title of the work\\n   - year: Publication year as integer\\n   - place: Publication place\\n   - pages: Page count (remove \\\" S.\\\" suffix if present)\\n   - publisher: Publishing house/institution\\n   - format: Usually \\\"8\u00b0\\\", \\\"8'\\\", or \\\"4\u00b0\\\" - single value only\\n\\n4. **Library Reference**:\\n   - shelfmark: Often begins with \\\"Diss.\\\" or \\\"AT\\\", may be marked with \\\"Standort:\\\"\\n   - subjects: Subject classifications or keywords\\n\\n5. **Missing Information**: Use empty string \\\"\\\" for missing text fields, omit year fields entirely if not present.\\n\\n6. **Ignore**: Disregard any information that doesn't fit into these categories.\\n\\nReturn ONLY the JSON object, no additional text or explanation.\\n\\nReturn a JSON response matching this exact schema: {\\\"$defs\\\": {\\\"Author\\\": {\\\"description\\\": \\\"Represents an author on a library card.\\\\n\\\\nAttributes:\\\\n    last_name: Author's last name\\\\n    first_name: Author's first name\\\", \\\"properties\\\": {\\\"last_name\\\": {\\\"title\\\": \\\"Last Name\\\", \\\"type\\\": \\\"string\\\"}, \\\"first_name\\\": {\\\"title\\\": \\\"First Name\\\", \\\"type\\\": \\\"string\\\"}}, \\\"required\\\": [\\\"last_name\\\", \\\"first_name\\\"], \\\"title\\\": \\\"Author\\\", \\\"type\\\": \\\"object\\\"}, \\\"LibraryReference\\\": {\\\"description\\\": \\\"Represents library-specific reference information.\\\\n\\\\nAttributes:\\\\n    shelfmark: Library shelfmark or call number\\\\n    subjects: Subject classifications or tags\\\", \\\"properties\\\": {\\\"shelfmark\\\": {\\\"anyOf\\\": [{\\\"type\\\": \\\"string\\\"}, {\\\"type\\\": \\\"null\\\"}], \\\"default\\\": null, \\\"title\\\": \\\"Shelfmark\\\"}, \\\"subjects\\\": {\\\"anyOf\\\": [{\\\"type\\\": \\\"string\\\"}, {\\\"type\\\": \\\"null\\\"}], \\\"default\\\": null, \\\"title\\\": \\\"Subjects\\\"}}, \\\"title\\\": \\\"LibraryReference\\\", \\\"type\\\": \\\"object\\\"}, \\\"Publication\\\": {\\\"description\\\": \\\"Represents publication information from a library card.\\\\n\\\\nAttributes:\\\\n    title: Title of the publication\\\\n    year: Year of publication\\\\n    place: Place of publication\\\\n    pages: Number of pages or page range\\\\n    publisher: Publisher name\\\\n    format: Format of the publication\\\\n    editor: Editor name if applicable\\\", \\\"properties\\\": {\\\"title\\\": {\\\"title\\\": \\\"Title\\\", \\\"type\\\": \\\"string\\\"}, \\\"year\\\": {\\\"title\\\": \\\"Year\\\", \\\"type\\\": \\\"string\\\"}, \\\"place\\\": {\\\"anyOf\\\": [{\\\"type\\\": \\\"string\\\"}, {\\\"type\\\": \\\"null\\\"}], \\\"default\\\": null, \\\"title\\\": \\\"Place\\\"}, \\\"pages\\\": {\\\"anyOf\\\": [{\\\"type\\\": \\\"string\\\"}, {\\\"type\\\": \\\"null\\\"}], \\\"default\\\": null, \\\"title\\\": \\\"Pages\\\"}, \\\"publisher\\\": {\\\"anyOf\\\": [{\\\"type\\\": \\\"string\\\"}, {\\\"type\\\": \\\"null\\\"}], \\\"default\\\": null, \\\"title\\\": \\\"Publisher\\\"}, \\\"format\\\": {\\\"anyOf\\\": [{\\\"type\\\": \\\"string\\\"}, {\\\"type\\\": \\\"null\\\"}], \\\"default\\\": null, \\\"title\\\": \\\"Format\\\"}, \\\"editor\\\": {\\\"anyOf\\\": [{\\\"type\\\": \\\"string\\\"}, {\\\"type\\\": \\\"null\\\"}], \\\"default\\\": null, \\\"title\\\": \\\"Editor\\\"}}, \\\"required\\\": [\\\"title\\\", \\\"year\\\"], \\\"title\\\": \\\"Publication\\\", \\\"type\\\": \\\"object\\\"}, \\\"WorkType\\\": {\\\"description\\\": \\\"Represents the type of work referenced in a library card.\\\\n\\\\nAttributes:\\\\n    type: Type of work, either \\\\\\\"Dissertation or thesis\\\\\\\" or \\\\\\\"Reference\\\\\\\"\\\", \\\"properties\\\": {\\\"type\\\": {\\\"enum\\\": [\\\"Dissertation or thesis\\\", \\\"Reference\\\"], \\\"title\\\": \\\"Type\\\", \\\"type\\\": \\\"string\\\"}}, \\\"required\\\": [\\\"type\\\"], \\\"title\\\": \\\"WorkType\\\", \\\"type\\\": \\\"object\\\"}}, \\\"description\\\": \\\"Represents a complete library card document.\\\\n\\\\nAttributes:\\\\n    type: Type of work\\\\n    author: Author information\\\\n    publication: Publication details\\\\n    library_reference: Library reference information\\\", \\\"properties\\\": {\\\"type\\\": {\\\"$ref\\\": \\\"#/$defs/WorkType\\\"}, \\\"author\\\": {\\\"$ref\\\": \\\"#/$defs/Author\\\"}, \\\"publication\\\": {\\\"$ref\\\": \\\"#/$defs/Publication\\\"}, \\\"library_reference\\\": {\\\"$ref\\\": \\\"#/$defs/LibraryReference\\\"}}, \\\"required\\\": [\\\"type\\\", \\\"author\\\", \\\"publication\\\", \\\"library_reference\\\"], \\\"title\\\": \\\"Document\\\", \\\"type\\\": \\\"object\\\"}\"}]",
+    "model": "magistral-medium-2509",
+    "provider": "mistral",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 1196,
+        "output_tokens": 1394,
+        "total_tokens": 2590,
+        "input_cost_usd": 0.002392,
+        "output_cost_usd": 0.0069700000000000005,
+        "estimated_cost_usd": 0.009362
+    },
+    "duration": 28.916534423828125,
+    "timestamp": "2026-01-24T13:07:39.936976",
+    "conversation_id": "41c48699-4b4e-491a-b416-efac5de41b55",
+    "score": {
+        "f1_score": 0.0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "true_positives": 0,
+        "false_positives": 0,
+        "false_negatives": 8,
+        "field_scores": {
+            "": {
+                "response": null,
+                "ground_truth": null,
+                "score": 1.0
+            },
+            "publication.pages": {
+                "response": null,
+                "ground_truth": "78",
+                "score": 0.0
+            },
+            "publication.publisher": {
+                "response": null,
+                "ground_truth": null,
+                "score": 1.0
+            },
+            "author.first_name": {
+                "response": null,
+                "ground_truth": "Emile",
+                "score": 0.0
+            },
+            "publication.year": {
+                "response": null,
+                "ground_truth": 1912,
+                "score": 0.0
+            },
+            "publication.place": {
+                "response": null,
+                "ground_truth": "Montpellier",
+                "score": 0.0
+            },
+            "type.type": {
+                "response": null,
+                "ground_truth": "Dissertation or thesis",
+                "score": 0.0
+            },
+            "publication.title": {
+                "response": null,
+                "ground_truth": "D\u00e9viation du compl\u00e9ment et grossesse",
+                "score": 0.0
+            },
+            "library_reference.subjects": {
+                "response": null,
+                "ground_truth": null,
+                "score": 1.0
+            },
+            "library_reference.shelfmark": {
+                "response": null,
+                "ground_truth": null,
+                "score": 1.0
+            },
+            "author.last_name": {
+                "response": null,
+                "ground_truth": "Vayssi\u00e8re",
+                "score": 0.0
+            },
+            "publication.format": {
+                "response": null,
+                "ground_truth": "8\u00b0",
+                "score": 0.0
+            }
+        },
+        "total_fields": 12
+    },
+    "raw_response": "{\"id\":\"8558ce8ed4a7429fab6b922b12384f8b\",\"object\":\"chat.completion\",\"model\":\"magistral-medium-2509\",\"usage\":{\"prompt_tokens\":1196,\"completion_tokens\":1394,\"total_tokens\":2590,\"num_cached_tokens\":1344},\"created\":1769256431,\"choices\":[{\"index\":0,\"message\":{\"content\":\"[{\\\"role\\\": \\\"system\\\", \\\"content\\\": \\\"Always respond with valid JSON. Ensure the output is strictly formatted as JSON, with no additional text, explanations, or markdown formatting.\\\"}, {\\\"role\\\": \\\"user\\\", \\\"content\\\": \\\"Extract the bibliographic information about a historical dissertation from this index card and return it as a structured JSON object with the following exact format:\\\\n\\\\n```json\\\\n{\\\\n  \\\\\\\"type\\\\\\\": {\\\\n    \\\\\\\"type\\\\\\\": \\\\\\\"Dissertation or thesis\\\\\\\" OR \\\\\\\"Reference\\\\\\\"\\\\n  },\\\\n  \\\\\\\"author\\\\\\\": {\\\\n    \\\\\\\"last_name\\\\\\\": \\\\\\\"string\\\\\\\",\\\\n    \\\\\\\"first_name\\\\\\\": \\\\\\\"string\\\\\\\"\\\\n  },\\\\n  \\\\\\\"publication\\\\\\\": {\\\\n    \\\\\\\"title\\\\\\\": \\\\\\\"string\\\\\\\",\\\\n    \\\\\\\"year\\\\\\\": integer,\\\\n    \\\\\\\"place\\\\\\\": \\\\\\\"string or empty string\\\\\\\",\\\\n    \\\\\\\"pages\\\\\\\": \\\\\\\"string or empty string\\\\\\\",\\\\n    \\\\\\\"publisher\\\\\\\": \\\\\\\"string or empty string\\\\\\\",\\\\n    \\\\\\\"format\\\\\\\": \\\\\\\"string or empty string\\\\\\\"\\\\n  },\\\\n  \\\\\\\"library_reference\\\\\\\": {\\\\n    \\\\\\\"shelfmark\\\\\\\": \\\\\\\"string or empty string\\\\\\\",\\\\n    \\\\\\\"subjects\\\\\\\": \\\\\\\"string or empty string\\\\\\\"\\\\n  }\\\\n}\\\\n```\\\\n\\\\nEXTRACTION RULES:\\\\n1. **Card Type**: If a card contains the note \\\\\\\"s.\\\\\\\" on a separate line, it is a \\\\\\\"Reference\\\\\\\". Otherwise, it is a \\\\\\\"Dissertation or thesis\\\\\\\".\\\\n\\\\n2. **Author**: Extract last_name and first_name. If only one name is given, put it in last_name and leave first_name empty.\\\\n\\\\n3. **Publication**:\\\\n   - title: The main title of the work\\\\n   - year: Publication year as integer\\\\n   - place: Publication place\\\\n   - pages: Page count (remove \\\\\\\" S.\\\\\\\" suffix if present)\\\\n   - publisher: Publishing house/institution\\\\n   - format: Usually \\\\\\\"8\u00b0\\\\\\\", \\\\\\\"8'\\\\\\\", or \\\\\\\"4\u00b0\\\\\\\" - single value only\\\\n\\\\n4. **Library Reference**:\\\\n   - shelfmark: Often begins with \\\\\\\"Diss.\\\\\\\" or \\\\\\\"AT\\\\\\\", may be marked with \\\\\\\"Standort:\\\\\\\"\\\\n   - subjects: Subject classifications or keywords\\\\n\\\\n5. **Missing Information**: Use empty string \\\\\\\"\\\\\\\" for missing text fields, omit year fields entirely if not present.\\\\n\\\\n6. **Ignore**: Disregard any information that doesn't fit into these categories.\\\\n\\\\nReturn ONLY the JSON object, no additional text or explanation.\\\\n\\\\nReturn a JSON response matching this exact schema: {\\\\\\\"$defs\\\\\\\": {\\\\\\\"Author\\\\\\\": {\\\\\\\"description\\\\\\\": \\\\\\\"Represents an author on a library card.\\\\\\\\n\\\\\\\\nAttributes:\\\\\\\\n    last_name: Author's last name\\\\\\\\n    first_name: Author's first name\\\\\\\", \\\\\\\"properties\\\\\\\": {\\\\\\\"last_name\\\\\\\": {\\\\\\\"title\\\\\\\": \\\\\\\"Last Name\\\\\\\", \\\\\\\"type\\\\\\\": \\\\\\\"string\\\\\\\"}, \\\\\\\"first_name\\\\\\\": {\\\\\\\"title\\\\\\\": \\\\\\\"First Name\\\\\\\", \\\\\\\"type\\\\\\\": \\\\\\\"string\\\\\\\"}}, \\\\\\\"required\\\\\\\": [\\\\\\\"last_name\\\\\\\", \\\\\\\"first_name\\\\\\\"], \\\\\\\"title\\\\\\\": \\\\\\\"Author\\\\\\\", \\\\\\\"type\\\\\\\": \\\\\\\"object\\\\\\\"}, \\\\\\\"LibraryReference\\\\\\\": {\\\\\\\"description\\\\\\\": \\\\\\\"Represents library-specific reference information.\\\\\\\\n\\\\\\\\nAttributes:\\\\\\\\n    shelfmark: Library shelfmark or call number\\\\\\\\n    subjects: Subject classifications or tags\\\\\\\", \\\\\\\"properties\\\\\\\": {\\\\\\\"shelfmark\\\\\\\": {\\\\\\\"anyOf\\\\\\\": [{\\\\\\\"type\\\\\\\": \\\\\\\"string\\\\\\\"}, {\\\\\\\"type\\\\\\\": \\\\\\\"null\\\\\\\"}], \\\\\\\"default\\\\\\\": null, \\\\\\\"title\\\\\\\": \\\\\\\"Shelfmark\\\\\\\"}, \\\\\\\"subjects\\\\\\\": {\\\\\\\"anyOf\\\\\\\": [{\\\\\\\"type\\\\\\\": \\\\\\\"string\\\\\\\"}, {\\\\\\\"type\\\\\\\": \\\\\\\"null\\\\\\\"}], \\\\\\\"default\\\\\\\": null, \\\\\\\"title\\\\\\\": \\\\\\\"Subjects\\\\\\\"}}, \\\\\\\"title\\\\\\\": \\\\\\\"LibraryReference\\\\\\\", \\\\\\\"type\\\\\\\": \\\\\\\"object\\\\\\\"}, \\\\\\\"Publication\\\\\\\": {\\\\\\\"description\\\\\\\": \\\\\\\"Represents publication information from a library card.\\\\\\\\n\\\\\\\\nAttributes:\\\\\\\\n    title: Title of the publication\\\\\\\\n    year: Year of publication\\\\\\\\n    place: Place of publication\\\\\\\\n    pages: Number of pages or page range\\\\\\\\n    publisher: Publisher name\\\\\\\\n    format: Format of the publication\\\\\\\\n    editor: Editor name if applicable\\\\\\\", \\\\\\\"properties\\\\\\\": {\\\\\\\"title\\\\\\\": {\\\\\\\"title\\\\\\\": \\\\\\\"Title\\\\\\\", \\\\\\\"type\\\\\\\": \\\\\\\"string\\\\\\\"}, \\\\\\\"year\\\\\\\": {\\\\\\\"title\\\\\\\": \\\\\\\"Year\\\\\\\", \\\\\\\"type\\\\\\\": \\\\\\\"string\\\\\\\"}, \\\\\\\"place\\\\\\\": {\\\\\\\"anyOf\\\\\\\": [{\\\\\\\"type\\\\\\\": \\\\\\\"string\\\\\\\"}, {\\\\\\\"type\\\\\\\": \\\\\\\"null\\\\\\\"}], \\\\\\\"default\\\\\\\": null, \\\\\\\"title\\\\\\\": \\\\\\\"Place\\\\\\\"}, \\\\\\\"pages\\\\\\\": {\\\\\\\"anyOf\\\\\\\": [{\\\\\\\"type\\\\\\\": \\\\\\\"string\\\\\\\"}, {\\\\\\\"type\\\\\\\": \\\\\\\"null\\\\\\\"}], \\\\\\\"default\\\\\\\": null, \\\\\\\"title\\\\\\\": \\\\\\\"Pages\\\\\\\"}, \\\\\\\"publisher\\\\\\\": {\\\\\\\"anyOf\\\\\\\": [{\\\\\\\"type\\\\\\\": \\\\\\\"string\\\\\\\"}, {\\\\\\\"type\\\\\\\": \\\\\\\"null\\\\\\\"}], \\\\\\\"default\\\\\\\": null, \\\\\\\"title\\\\\\\": \\\\\\\"Publisher\\\\\\\"}, \\\\\\\"format\\\\\\\": {\\\\\\\"anyOf\\\\\\\": [{\\\\\\\"type\\\\\\\": \\\\\\\"string\\\\\\\"}, {\\\\\\\"type\\\\\\\": \\\\\\\"null\\\\\\\"}], \\\\\\\"default\\\\\\\": null, \\\\\\\"title\\\\\\\": \\\\\\\"Format\\\\\\\"}, \\\\\\\"editor\\\\\\\": {\\\\\\\"anyOf\\\\\\\": [{\\\\\\\"type\\\\\\\": \\\\\\\"string\\\\\\\"}, {\\\\\\\"type\\\\\\\": \\\\\\\"null\\\\\\\"}], \\\\\\\"default\\\\\\\": null, \\\\\\\"title\\\\\\\": \\\\\\\"Editor\\\\\\\"}}, \\\\\\\"required\\\\\\\": [\\\\\\\"title\\\\\\\", \\\\\\\"year\\\\\\\"], \\\\\\\"title\\\\\\\": \\\\\\\"Publication\\\\\\\", \\\\\\\"type\\\\\\\": \\\\\\\"object\\\\\\\"}, \\\\\\\"WorkType\\\\\\\": {\\\\\\\"description\\\\\\\": \\\\\\\"Represents the type of work referenced in a library card.\\\\\\\\n\\\\\\\\nAttributes:\\\\\\\\n    type: Type of work, either \\\\\\\\\\\\\\\"Dissertation or thesis\\\\\\\\\\\\\\\" or \\\\\\\\\\\\\\\"Reference\\\\\\\\\\\\\\\"\\\\\\\", \\\\\\\"properties\\\\\\\": {\\\\\\\"type\\\\\\\": {\\\\\\\"enum\\\\\\\": [\\\\\\\"Dissertation or thesis\\\\\\\", \\\\\\\"Reference\\\\\\\"], \\\\\\\"title\\\\\\\": \\\\\\\"Type\\\\\\\", \\\\\\\"type\\\\\\\": \\\\\\\"string\\\\\\\"}}, \\\\\\\"required\\\\\\\": [\\\\\\\"type\\\\\\\"], \\\\\\\"title\\\\\\\": \\\\\\\"WorkType\\\\\\\", \\\\\\\"type\\\\\\\": \\\\\\\"object\\\\\\\"}}, \\\\\\\"description\\\\\\\": \\\\\\\"Represents a complete library card document.\\\\\\\\n\\\\\\\\nAttributes:\\\\\\\\n    type: Type of work\\\\\\\\n    author: Author information\\\\\\\\n    publication: Publication details\\\\\\\\n    library_reference: Library reference information\\\\\\\", \\\\\\\"properties\\\\\\\": {\\\\\\\"type\\\\\\\": {\\\\\\\"$ref\\\\\\\": \\\\\\\"#/$defs/WorkType\\\\\\\"}, \\\\\\\"author\\\\\\\": {\\\\\\\"$ref\\\\\\\": \\\\\\\"#/$defs/Author\\\\\\\"}, \\\\\\\"publication\\\\\\\": {\\\\\\\"$ref\\\\\\\": \\\\\\\"#/$defs/Publication\\\\\\\"}, \\\\\\\"library_reference\\\\\\\": {\\\\\\\"$ref\\\\\\\": \\\\\\\"#/$defs/LibraryReference\\\\\\\"}}, \\\\\\\"required\\\\\\\": [\\\\\\\"type\\\\\\\", \\\\\\\"author\\\\\\\", \\\\\\\"publication\\\\\\\", \\\\\\\"library_reference\\\\\\\"], \\\\\\\"title\\\\\\\": \\\\\\\"Document\\\\\\\", \\\\\\\"type\\\\\\\": \\\\\\\"object\\\\\\\"}\\\"}]\",\"tool_calls\":null,\"prefix\":false,\"role\":\"assistant\"},\"finish_reason\":\"stop\"}]}"
+}
