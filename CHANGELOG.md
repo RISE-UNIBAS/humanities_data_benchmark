@@ -11,9 +11,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - 8 new models: gpt-5.2 (OpenAI), gemini-3-flash-preview (GenAI), claude-opus-4-5-20251101, claude-haiku-4-5-20251001 (Anthropic), mistral-large-2512, ministral-14b-2512, ministral-8b-2512, magistral-small-2509 (Mistral)
 - 88 new benchmark test configurations (T0488-T0575) across all benchmarks for new models
 - Pricing data for 2026-01-23
+- Tests on 2026-01-24 to 2026-01-26: all 484 non-legacy tests across 7 providers (Anthropic, Cohere, GenAI, Mistral, OpenAI, OpenRouter, sciCORE)
 
 ### Changed
 - Marked all claude-3-7-sonnet-20250219, claude-3-opus-20240229, and pixtral-12b benchmark tests as legacy
+- Updated generate_date_report.py: outputs to reports/ folder, filename format {date}_report, added warnings system with 5 checks (ZERO_COST, ALL_NA, ZERO_SCORE, ZERO_ITEMS, ZERO_DURATION), generates {date}_report_warnings.md for manual review, added progress reporting, added --no-warnings flag
 
 ### Fixed
 - Converted library_cards images from PNG to JPEG format (263 files had .jpg extension but were actually PNG)
