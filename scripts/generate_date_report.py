@@ -671,8 +671,8 @@ def generate_warnings_report(date, results_dir, test_metadata, output_file):
 
 *Add GitHub issue links in the Ticket column for tracking.*
 
-| Test ID | Benchmark | Provider | Model | Severity | Warning Codes | Ticket |
-|---------|-----------|----------|-------|----------|---------------|--------|
+| Test ID | Benchmark | Provider | Model | Severity | Warning Codes | Ticket | Action | Completed |
+|---------|-----------|----------|-------|----------|---------------|--------|--------|-----------|
 """
 
     for result in test_results:
@@ -689,7 +689,7 @@ def generate_warnings_report(date, results_dir, test_metadata, output_file):
 
         warning_codes = ', '.join([w['code'] for w in result['warnings']])
 
-        md += f"| {result['test_id']} | {result.get('name', 'Unknown')} | {result.get('provider', 'Unknown')} | {result.get('model', 'Unknown')} | {severity} | {warning_codes} | |\n"
+        md += f"| {result['test_id']} | {result.get('name', 'Unknown')} | {result.get('provider', 'Unknown')} | {result.get('model', 'Unknown')} | {severity} | {warning_codes} | | | |\n"
 
     md += "\n---\n\n"
     md += "## Warning Codes Explanation\n\n"
