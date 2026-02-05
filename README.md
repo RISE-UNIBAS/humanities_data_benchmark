@@ -1,14 +1,18 @@
 # RISE Humanities Data Benchmark
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.18293269.svg)](https://doi.org/10.5281/zenodo.18293269)
+[![Paper](https://img.shields.io/badge/Paper-Journal%20of%20Open%20Humanities%20Data-blue)](https://openhumanitiesdata.metajnl.com/articles/10.5334/johd.481)
 
 This repository contains benchmark datasets (images and text files), prompts, ground truths, and evaluation scripts for
 assessing the performance of large language models (LLMs) on humanities-related tasks. The suite is
 designed as a resource for researchers and practitioners interested in systematically evaluating
 how well various LLMs perform on digital humanities (DH) tasks involving visual and text-like materials.
 
-> **ℹ Looking for benchmark results?**     
-> This README provides an overview of the benchmark suite and explains how to use it.  
+> **📄 Published Paper**
+> Hindermann, M., Marti, S., Kasper, L. K., & Bosse, A. (2026). The RISE Humanities Data Benchmark: A Framework for Evaluating Large Language Models for Humanities Tasks. *Journal of Open Humanities Data*, *12*(1), 24. https://doi.org/10.5334/johd.481
+
+> **ℹ Looking for benchmark results?**
+> This README provides an overview of the benchmark suite and explains how to use it.
 > For detailed test results and model comparisons, visit our [results dashboard](https://rise-services.rise.unibas.ch/benchmarks/).
 
 ## What is Benchmarking and Why Should You Care?
@@ -85,6 +89,7 @@ This benchmark suite currently includes the following benchmarks for evaluating 
 | **[Company Lists](benchmarks/company_lists/)** | Extract structured company information from historical business listings and directories |
 | **[Fraktur Adverts](benchmarks/fraktur/)** | Recognize and transcribe historical German Fraktur script (16th-20th centuries) |
 | **[Medieval Manuscripts](benchmarks/medieval_manuscripts/)** | Page segmentation and handwritten text extraction from 15th century medieval German manuscripts |
+| **[Personnel Cards](benchmarks/personnel_cards/)** | Extract structured employment data (position, location, salary, dates) from 20th century Swiss personnel card tables |
 | **[Library Cards](benchmarks/zettelkatalog/)** | Catalog card analysis and information extraction from historical library catalog systems |
 | **Test Benchmarks** | System validation and basic functionality testing ([test_benchmark](benchmarks/test_benchmark/), [test_benchmark2](benchmarks/test_benchmark2/)) |
 
@@ -528,9 +533,6 @@ This project is developed by a multidisciplinary team at the University of Basel
 | Elena Spadini | [@elespdn](https://github.com/elespdn) | [0000-0002-4522-2833](https://orcid.org/0000-0002-4522-2833) |
 
 For detailed attribution by benchmark and contribution type, see our [CONTRIBUTORS.md](CONTRIBUTORS.md) file.
-
-From RISE with <3 
-
 
 
 

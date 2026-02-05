@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Pricing data for 2026-01-23
 - Tests on 2026-01-24 to 2026-01-26: all 484 non-legacy tests across 7 providers (Anthropic, Cohere, GenAI, Mistral, OpenAI, OpenRouter, sciCORE)
 - personnel_cards benchmark for extracting structured data from 20th century personnel card tables
+- Published paper citation in README: Hindermann et al. (2026) in Journal of Open Humanities Data (DOI: 10.5334/johd.481)
 
 ### Changed
 - Marked all claude-3-7-sonnet-20250219, claude-3-opus-20240229, and pixtral-12b benchmark tests as legacy
