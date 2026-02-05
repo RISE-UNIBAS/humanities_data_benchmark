@@ -8,9 +8,6 @@ assessing the performance of large language models (LLMs) on humanities-related 
 designed as a resource for researchers and practitioners interested in systematically evaluating
 how well various LLMs perform on digital humanities (DH) tasks involving visual and text-like materials.
 
-> **📄 Published Paper**
-> Hindermann, M., Marti, S., Kasper, L. K., & Bosse, A. (2026). The RISE Humanities Data Benchmark: A Framework for Evaluating Large Language Models for Humanities Tasks. *Journal of Open Humanities Data*, *12*(1), 24. https://doi.org/10.5334/johd.481
-
 > **ℹ Looking for benchmark results?**
 > This README provides an overview of the benchmark suite and explains how to use it.
 > For detailed test results and model comparisons, visit our [results dashboard](https://rise-services.rise.unibas.ch/benchmarks/).
@@ -25,8 +22,10 @@ Benchmarking is the process of systematically evaluating and ranking various mod
 
 This benchmark suite focuses on tasks essential to digital humanities work with visual materials, helping researchers make informed choices about which AI systems best suit their specific research needs.
 
-> **ℹ Looking for more background?**  
-> For a deeper introduction to AI benchmarking in humanities contexts, see:  
+> **ℹ Looking for more background?**
+> 
+> Hindermann, M., Marti, S., Kasper, L. K., & Bosse, A. (2026). The RISE Humanities Data Benchmark: A Framework for Evaluating Large Language Models for Humanities Tasks. *Journal of Open Humanities Data*, *12*(1), 24. https://doi.org/10.5334/johd.481
+>
 > Hindermann, M., & Marti, S. (2025, March 19). *RISE Crash Course: "AI Benchmarking"*. Zenodo. https://doi.org/10.5281/zenodo.15062831
 
 ## Table of Contents
