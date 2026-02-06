@@ -152,7 +152,16 @@
                 <div class="bg-[var(--accent)] text-white font-bold px-2 py-1 rounded text-xs">PK-EDITOR</div>
                 <span id="current-filename" class="text-sm font-medium text-gray-600">Keine Datei ausgewählt</span>
             </div>
-            <div class="flex gap-2">
+            <div class="flex gap-2 items-center">
+                <!-- Zielordner Button -->
+                <button id="set-output-dir-btn" class="flex items-center gap-2 bg-gray-100 hover:bg-gray-200 text-gray-600 px-3 py-1.5 rounded text-sm font-medium transition border border-gray-300">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"></path></svg>
+                    <span id="output-dir-label">📂 Zielordner wählen</span>
+                </button>
+
+                <div class="w-px h-6 bg-gray-300 mx-2"></div>
+
+                <!-- Speichern Button -->
                 <button id="save-json-btn" class="flex items-center gap-2 bg-[var(--primary)] hover:bg-gray-800 text-white px-3 py-1.5 rounded text-sm font-medium transition">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
                     JSON Speichern
@@ -230,6 +239,7 @@
             pairs: [],      // Array of { id, imgFile, jsonFile, status }
             currentIdx: -1,
             jsonData: null, // Das aktuell geladene JSON Objekt
+            outputDirHandle: null, // Handle für Zielordner (File System API)
 
             // View State
             scale: 1,
@@ -254,7 +264,10 @@
             transformWrapper: document.getElementById('transform-wrapper'),
             imageContainer: document.getElementById('image-container'),
             zoomLevel: document.getElementById('zoom-level'),
-            currentFilename: document.getElementById('current-filename')
+            currentFilename: document.getElementById('current-filename'),
+            setOutputDirBtn: document.getElementById('set-output-dir-btn'),
+            outputDirLabel: document.getElementById('output-dir-label'),
+            saveBtn: document.getElementById('save-json-btn')
         };
 
         // --- 1. INITIALISIERUNG & DATEI MATCHING ---
@@ -351,7 +364,6 @@
         }
 
         async function loadFile(idx) {
-            // Speichere vorheriges, wenn vorhanden (optional auto-save logic hier)
             state.currentIdx = idx;
             const pair = state.pairs[idx];
 
@@ -464,7 +476,6 @@
 
                     // Interpretation (Rechts)
                     const intContainer = document.createElement('div');
-                    // Interpretation ist optional (kann null sein)
                     const intValue = fieldData.interpretation === null ? '' : fieldData.interpretation;
                     intContainer.innerHTML = `
                         <div class="text-[9px] text-[var(--highlight)] mb-0.5 ml-1 font-bold">Interpretation</div>
@@ -508,12 +519,8 @@
         window.moveRow = function(index, direction) {
             const rows = state.jsonData.rows;
             const newIndex = index + direction;
-
             if (newIndex < 0 || newIndex >= rows.length) return;
-
-            // Swap
             [rows[index], rows[newIndex]] = [rows[newIndex], rows[index]];
-
             renumberRows();
             renderEditor();
             markEdited();
@@ -521,16 +528,11 @@
 
         window.insertRowAfter = function(index) {
             const newRow = createEmptyRow();
-            // Insert at index + 1
             state.jsonData.rows.splice(index + 1, 0, newRow);
-
             renumberRows();
             renderEditor();
             markEdited();
-
-            // Scroll to the new row (approximate)
             setTimeout(() => {
-                // Find all row elements
                 const rowElements = els.editorContainer.children;
                 if(rowElements[index + 1]) {
                     rowElements[index + 1].scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -547,15 +549,10 @@
             }
         };
 
-        // Hilfsfunktionen
         window.updateData = function(rowIndex, key, subKey, value) {
             const row = state.jsonData.rows[rowIndex];
             if (!row[key]) row[key] = {};
-
-            if (subKey === 'interpretation' && value.trim() === '') {
-                value = null;
-            }
-
+            if (subKey === 'interpretation' && value.trim() === '') value = null;
             row[key][subKey] = value;
             markEdited();
         };
@@ -571,7 +568,6 @@
         };
 
         function createEmptyRow() {
-            // Temporäre Nummer, wird durch renumberRows korrigiert
             return {
                 row_number: 0,
                 dienstliche_stellung: createEmptyField(),
@@ -597,27 +593,77 @@
                 .replace(/'/g, "&#039;");
         }
 
-        // --- 4. EXPORT ---
+        // --- 4. EXPORT / SAVE LOGIC ---
 
-        document.getElementById('save-json-btn').onclick = () => {
-            if (!state.jsonData) return;
+        // Handler: Zielordner wählen
+        els.setOutputDirBtn.onclick = async () => {
+            if (!('showDirectoryPicker' in window)) {
+                alert("Ihr Browser unterstützt diese Funktion nicht (nur Chrome/Edge/Opera). Es wird der Standard-Download verwendet.");
+                return;
+            }
+            try {
+                // Ordner-Auswahl Dialog öffnen
+                state.outputDirHandle = await window.showDirectoryPicker();
 
-            // Sauber formatieren
-            const jsonString = JSON.stringify(state.jsonData, null, 2);
-            const blob = new Blob([jsonString], { type: 'application/json' });
-            const url = URL.createObjectURL(blob);
+                // UI Feedback
+                els.setOutputDirBtn.classList.add('bg-green-100', 'text-green-800', 'border-green-300');
+                els.setOutputDirBtn.classList.remove('bg-gray-100', 'text-gray-600', 'border-gray-300');
+                els.outputDirLabel.innerText = "Ordner: " + state.outputDirHandle.name;
 
-            const pair = state.pairs[state.currentIdx];
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `${pair.id}.json`;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
+            } catch (e) {
+                // User hat abgebrochen
+                console.log("Ordnerwahl abgebrochen:", e);
+            }
         };
 
-        // --- 5. IMAGE ZOOM & PAN (Custom Implementation) ---
+        // Handler: Speichern
+        els.saveBtn.onclick = async () => {
+            if (!state.jsonData) return;
+
+            const jsonString = JSON.stringify(state.jsonData, null, 2);
+            const pair = state.pairs[state.currentIdx];
+            const filename = `${pair.id}.json`;
+
+            // MÖGLICHKEIT A: Direkt in Zielordner (wenn konfiguriert)
+            if (state.outputDirHandle) {
+                try {
+                    const btn = els.saveBtn;
+                    const oldText = btn.innerHTML;
+                    btn.innerHTML = `<svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> Speichern...`;
+
+                    // Datei erstellen/überschreiben
+                    const fileHandle = await state.outputDirHandle.getFileHandle(filename, { create: true });
+                    const writable = await fileHandle.createWritable();
+                    await writable.write(jsonString);
+                    await writable.close();
+
+                    // Feedback "Erfolg"
+                    btn.innerHTML = "Gespeichert ✓";
+                    btn.classList.replace('bg-[var(--primary)]', 'bg-green-600');
+                    setTimeout(() => {
+                        btn.innerHTML = oldText;
+                        btn.classList.replace('bg-green-600', 'bg-[var(--primary)]');
+                    }, 1500);
+
+                } catch (e) {
+                    alert("Fehler beim Speichern in den Ordner: " + e.message + "\n\nBitte prüfen Sie die Schreibrechte.");
+                }
+            }
+            // MÖGLICHKEIT B: Standard Download
+            else {
+                const blob = new Blob([jsonString], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = filename;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            }
+        };
+
+        // --- 5. IMAGE ZOOM & PAN ---
 
         function updateTransform() {
             els.transformWrapper.style.transform = `translate(${state.pointX}px, ${state.pointY}px) scale(${state.scale})`;
@@ -642,26 +688,19 @@
         }
         document.getElementById('reset-view').onclick = resetZoom;
 
-        // Mouse Wheel Zoom
         els.imageContainer.addEventListener('wheel', (e) => {
             e.preventDefault();
             const xs = (e.clientX - state.pointX) / state.scale;
             const ys = (e.clientY - state.pointY) / state.scale;
-
             const delta = -Math.sign(e.deltaY);
             (delta > 0) ? (state.scale *= 1.1) : (state.scale /= 1.1);
-
-            // Limit scale
             if (state.scale < 0.1) state.scale = 0.1;
             if (state.scale > 5) state.scale = 5;
-
             state.pointX = e.clientX - xs * state.scale;
             state.pointY = e.clientY - ys * state.scale;
-
             updateTransform();
         });
 
-        // Dragging (Panning)
         els.imageContainer.addEventListener('mousedown', (e) => {
             e.preventDefault();
             state.startX = e.clientX - state.pointX;
