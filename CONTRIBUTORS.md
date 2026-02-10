@@ -103,6 +103,16 @@ Contributions are categorized by benchmark and type of contribution, and in alph
 | Analyst | [Maximilian Hindermann] |
 | Engineer | [Maximilian Hindermann], [Ina Serif] |
 
+### [Personnel Cards](benchmarks/personnel_cards/)
+
+| Role | Contributors                           |
+|------|----------------------------------------|
+| Domain expert | [Tabea Wullschleger]                   |
+| Data curator | [Tabea Wullschleger]                   |
+| Annotator | [Tabea Wullschleger]                   |
+| Analyst | [Maximilian Hindermann]                |
+| Engineer | [Maximilian Hindermann], [Eric Decker] |
+
 
 ### Contributors Across All Benchmarks
 
@@ -119,6 +129,7 @@ Contributions are categorized by benchmark and type of contribution, and in alph
 | Gabriel Müller              | [@gbmllr1](https://github.com/gbmllr1)                 | [0000-0001-8320-5148](https://orcid.org/0000-0001-8320-5148) |
 | Ina Serif                   | [@wissen-ist-acht](https://github.com/wissen-ist-acht) | [0000-0003-2419-4252](https://orcid.org/0000-0003-2419-4252) |
 | Elena Spadini               | [@elespdn](https://github.com/elespdn)                 | [0000-0002-4522-2833](https://orcid.org/0000-0002-4522-2833) |
+| Tabea Wullschleger          | [@tabea-w](https://github.com/tabea-w) | [0000-0001-9841-0005](https://orcid.org/0000-0001-9841-0005) |
 
 ## Contributing
 
@@ -145,3 +156,4 @@ For questions about contributions or attributions, please contact:
 [Sorin Marti]: https://orcid.org/0000-0002-9541-1202
 [Ina Serif]: https://orcid.org/0000-0003-2419-4252
 [Elena Spadini]: https://orcid.org/0000-0002-4522-2833
+[Tabea Wullschleger]: #
