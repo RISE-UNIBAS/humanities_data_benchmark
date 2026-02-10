@@ -2,6 +2,8 @@ import os
 import time
 import logging
 
+from ai_client.pricing import PricingManager, set_pricing_file
+
 # Ensure the logs directory exists
 log_dir = "logs"
 if not os.path.exists(log_dir):
@@ -18,3 +20,5 @@ logging.basicConfig(
 )
 
 logger = logging.getLogger(__name__)
+
+set_pricing_file("scripts/data/pricing.json")

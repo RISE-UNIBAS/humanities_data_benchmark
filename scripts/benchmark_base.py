@@ -9,8 +9,10 @@ from datetime import datetime
 from pathlib import Path
 from typing import Dict, List, Union, Pattern, Optional, Iterable, Set
 
+from ai_client.pricing import calculate_cost
+
 from data_loader import read_file, write_file
-from ai_client import create_ai_client, LLMResponse
+from ai_client import create_ai_client, LLMResponse, Usage
 
 
 class Benchmark(ABC):
@@ -18,7 +20,8 @@ class Benchmark(ABC):
 
     multi_image_support = False
     multi_text_support = False
-    use_shared_context = False  # Enable multi-stage requests with shared context
+    use_shared_context = False  # Enable multi-stage requests with shared context (conversation-based)
+    cache_context_per_request = False  # Enable per-request caching of context files/images
 
     def __init__(self, config, api_key, benchmark_directory):
         """ Initialize the benchmark. """
@@ -261,6 +264,21 @@ class Benchmark(ABC):
         text_paths = self.get_text_paths(object_basename)
         self.prompt = self.load_prompt(object_basename)
 
+        # Add per-request cached context if enabled
+        if self.cache_context_per_request:
+            context_images = self.get_shared_context_images()
+            context_files = self.get_shared_context_files()
+
+            # Combine context images with per-object images (context first)
+            if context_images:
+                image_paths = context_images + (image_paths if image_paths else [])
+                kwargs["cache"] = True  # Enable caching for context
+
+            # Combine context files with per-object files (context first)
+            if context_files:
+                text_paths = context_files + (text_paths if text_paths else [])
+                kwargs["cache"] = True  # Enable caching for context
+
         if image_paths:
             kwargs["images"] = image_paths
         if text_paths:
@@ -295,8 +313,6 @@ class Benchmark(ABC):
 
             # Reconstruct Usage object
             usage_data = answer_data.get('usage', {})
-            from ai_client.response import Usage
-            from ai_client.pricing import calculate_cost
 
             input_cost = usage_data.get('input_cost_usd')
             output_cost = usage_data.get('output_cost_usd')
@@ -397,6 +413,23 @@ class Benchmark(ABC):
         """
         return []
 
+    def get_shared_context_images(self) -> List[str]:
+        """
+        Return list of image paths to include in shared context (cached).
+
+        These images will be sent once and cached for all subsequent requests.
+        Perfect for reference images like signature guides or style examples.
+
+        Override this method in your benchmark to specify context images.
+
+        Returns:
+            List of absolute paths to image files
+
+        Example:
+            return [os.path.join(self.benchmark_dir, 'context', 'signature_reference.jpg')]
+        """
+        return []
+
     def get_shared_context_prompt(self) -> str:
         """
         Return the initial prompt to accompany shared context.
@@ -417,7 +450,7 @@ class Benchmark(ABC):
 
     def _establish_shared_context(self):
         """
-        Establish shared context by sending initial request with context files.
+        Establish shared context by sending initial request with context files and/or images.
 
         This is called automatically by run() if use_shared_context=True.
         """
@@ -426,19 +459,25 @@ class Benchmark(ABC):
             return
 
         shared_files = self.get_shared_context_files()
+        shared_images = self.get_shared_context_images()
         shared_prompt = self.get_shared_context_prompt()
 
-        if not shared_files and not shared_prompt:
-            logging.warning("use_shared_context=True but no context files or prompt provided")
+        if not shared_files and not shared_images and not shared_prompt:
+            logging.warning("use_shared_context=True but no context files, images, or prompt provided")
             return
 
-        logging.info(f"Establishing shared context with {len(shared_files)} file(s)")
+        file_count = len(shared_files)
+        image_count = len(shared_images)
+        logging.info(f"Establishing shared context with {file_count} file(s) and {image_count} image(s)")
 
         # Send initial request to establish context
         kwargs = {}
         if shared_files:
             kwargs["files"] = shared_files
-            kwargs["cache_context"] = True  # Signal to AI client to enable caching
+            kwargs["cache"] = True  # Enable caching for files
+        if shared_images:
+            kwargs["images"] = shared_images
+            kwargs["cache"] = True  # Enable caching for images
 
         try:
             # This establishes the conversation/cache
