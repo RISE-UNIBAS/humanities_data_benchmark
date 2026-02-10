@@ -268,6 +268,143 @@ def create_heatmap_benchmarks_models(benchmarks_data):
     }
 
 
+def create_heatmap_models_benchmarks(benchmarks_data):
+    """Create a transposed heatmap showing model × benchmark performance.
+
+    This is a transposed version of create_heatmap_benchmarks_models with:
+    - Models as rows, benchmarks as columns
+    - Blue-to-red colorscale
+    - Numbers displayed in cells
+
+    Args:
+        benchmarks_data: List of all benchmark dicts
+
+    Returns:
+        Plotly figure dictionary
+    """
+    # Collect all models and benchmarks
+    all_models = set()
+    benchmark_names = []
+    benchmark_titles = {}
+
+    for benchmark in benchmarks_data:
+        if benchmark.get("display", True) == False:  # Skip hidden benchmarks
+            continue
+
+        benchmark_name = benchmark.get("name")
+        benchmark_names.append(benchmark_name)
+        benchmark_titles[benchmark_name] = benchmark.get("title_short", benchmark_name)
+
+        for run in benchmark.get("test_runs", []):
+            if run.get("model"):
+                all_models.add(run.get("model"))
+
+    all_models = sorted(all_models, key=str.lower)  # Case-insensitive alphabetical sort
+
+    # Build matrix: all_models × benchmark_names (TRANSPOSED)
+    # Calculate average score for each model-benchmark combination
+    matrix = []
+    hover_text = []
+    text_values = []  # For displaying numbers in cells
+
+    for model in all_models:
+        row = []
+        hover_row = []
+        text_row = []
+
+        for benchmark_name in benchmark_names:
+            benchmark = next((b for b in benchmarks_data if b.get("name") == benchmark_name), None)
+            if not benchmark:
+                row.append(-1)  # Use -1 to represent "no data"
+                hover_row.append(f"<b>{model}</b><br>" +
+                               f"Benchmark: {benchmark_titles[benchmark_name]}<br>No data")
+                text_row.append("N/A")
+                continue
+
+            # Find all runs for this model-benchmark combo
+            runs = [r for r in benchmark.get("test_runs", [])
+                   if r.get("model") == model and r.get("normalized_score") is not None]
+
+            if runs:
+                avg_score = sum(r["normalized_score"] for r in runs) / len(runs)
+                row.append(avg_score)
+                hover_row.append(f"<b>{model}</b><br>" +
+                               f"Benchmark: {benchmark_titles[benchmark_name]}<br>" +
+                               f"Avg Score: {avg_score:.1f}<br>" +
+                               f"Runs: {len(runs)}")
+                text_row.append(f"{avg_score:.0f}")  # Integer display
+            else:
+                row.append(-1)  # Use -1 to represent "no data"
+                hover_row.append(f"<b>{model}</b><br>" +
+                               f"Benchmark: {benchmark_titles[benchmark_name]}<br>No data")
+                text_row.append("N/A")
+
+        matrix.append(row)
+        hover_text.append(hover_row)
+        text_values.append(text_row)
+
+    # Create heatmap trace with custom colorscale
+    # Gray for "no data" (-1), then Turbo gradient for 0-100
+    # With zmin=-1 and zmax=100, score 0 maps to position 1/101 ≈ 0.0099
+    trace = {
+        "type": "heatmap",
+        "z": matrix,
+        "x": [benchmark_titles[name] for name in benchmark_names],  # Benchmarks on x-axis
+        "y": all_models,  # Models on y-axis
+        "colorscale": [
+            [0, "#d3d3d3"],        # Gray for "no data" (value -1)
+            [0.0098, "#d3d3d3"],   # Keep gray until just before score 0
+            [0.0099, "#30123b"],   # Start of Turbo: dark purple (score 0)
+            [0.1089, "#4662d7"],   # Blue (score 10)
+            [0.3069, "#1ac7c2"],   # Cyan (score 30)
+            [0.5049, "#94d840"],   # Green-yellow (score 50)
+            [0.7029, "#fca50a"],   # Orange (score 70)
+            [0.901, "#e7373a"],    # Red (score 90)
+            [1, "#7a0403"]         # Dark red (score 100)
+        ],
+        "zmin": -1,
+        "zmax": 100,
+        "text": text_values,
+        "texttemplate": "%{text}",  # Display the text values
+        "textfont": {
+            "size": 10,
+            "color": "black"
+        },
+        "hovertext": hover_text,
+        "hovertemplate": "%{hovertext}<extra></extra>",
+        "colorbar": {
+            "title": "Score<br><sub>(Gray = No data)</sub><br><br>&nbsp;",
+            "thickness": 15,
+            "len": 0.7
+        }
+    }
+
+    # Layout
+    layout = {
+        "title": {
+            "text": "<b>Model × Benchmark Performance</b>",
+            "font": {"size": 20}
+        },
+        "xaxis": {
+            "title": "Benchmark",
+            "tickangle": -45,
+            "side": "bottom"
+        },
+        "yaxis": {
+            "title": "Model",
+            "autorange": "reversed"  # Reverse so alphabetically first models appear at top
+        },
+        "plot_bgcolor": "white",
+        "paper_bgcolor": "white",
+        "margin": {"l": 250, "r": 80, "t": 80, "b": 150}
+    }
+
+    return {
+        "data": [trace],
+        "layout": layout
+    }
+
+
 def create_box_plot_by_provider(benchmarks_data):
     """Create box plots showing score distribution by provider.
 
@@ -936,6 +1073,12 @@ def generate_visualizations():
             "title": "Benchmark × Model Performance",
             "description": "Average performance of each model on each benchmark",
             "plotly_figure": create_heatmap_benchmarks_models(benchmarks_data)
+        },
+        "heatmap_models_benchmarks": {
+            "viz_type": "heatmap",
+            "title": "Model × Benchmark Performance (Transposed)",
+            "description": "Transposed heatmap with models as rows and benchmarks as columns, blue-to-red colorscale, values displayed",
+            "plotly_figure": create_heatmap_models_benchmarks(benchmarks_data)
         },
         "box_plot_by_provider": {
             "viz_type": "box_plot",
