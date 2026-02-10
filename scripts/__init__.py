@@ -21,4 +21,4 @@ logging.basicConfig(
 
 logger = logging.getLogger(__name__)
 
-set_pricing_file("scripts/data/pricing.json")
+set_pricing_file("data/pricing.json")
