@@ -84,4 +84,11 @@ def main(limit_to: list[str] = None, regenerate_existing_results: bool = False):
 
 
 if __name__ == "__main__":
-    main(limit_to=['T0002'])
+    tests = ["T0533"]
+
+    for test in tests:
+        try:
+            logging.info(f"Running {test}")
+            main(limit_to=[test])
+        except Exception as e:
+            logging.critical(f"{test}: {e}")
