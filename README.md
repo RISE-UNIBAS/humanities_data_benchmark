@@ -1,7 +1,7 @@
 # RISE Humanities Data Benchmark
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.18293269.svg)](https://doi.org/10.5281/zenodo.18293269)
-[![Paper](https://img.shields.io/badge/Paper-Journal%20of%20Open%20Humanities%20Data-blue)](https://openhumanitiesdata.metajnl.com/articles/10.5334/johd.481)
+
 
 This repository contains benchmark datasets (images and text files), prompts, ground truths, and evaluation scripts for
 assessing the performance of large language models (LLMs) on humanities-related tasks. The suite is
@@ -23,6 +23,8 @@ Benchmarking is the process of systematically evaluating and ranking various mod
 This benchmark suite focuses on tasks essential to digital humanities work with visual materials, helping researchers make informed choices about which AI systems best suit their specific research needs.
 
 > **ℹ Looking for more background?**
+> 
+> Hindermann, M., Kasper, L. K., Marti, S., &amp; Bosse, A. (2026). From Experiments to Epistemic Practice: The RISE Humanities Data Benchmark. *Journal of Open Humanities Data*, *12*(1), 38. https://doi.org/10.5334/johd.470
 > 
 > Hindermann, M., Marti, S., Kasper, L. K., & Bosse, A. (2026). The RISE Humanities Data Benchmark: A Framework for Evaluating Large Language Models for Humanities Tasks. *Journal of Open Humanities Data*, *12*(1), 24. https://doi.org/10.5334/johd.481
 >
