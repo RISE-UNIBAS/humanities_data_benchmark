@@ -6,11 +6,16 @@ that have missing or zero cost data, using the current pricing information.
 
 Usage:
     # Bulk mode - scan all tests
-    python scripts/inject_costs.py                     # Interactive mode
+    python scripts/inject_costs.py                     # Interactive mode (both dirs)
     python scripts/inject_costs.py --results           # Scan results/ only
     python scripts/inject_costs.py --test-runs         # Scan test_runs/ only
     python scripts/inject_costs.py --auto-update       # Update without prompting
     python scripts/inject_costs.py --dry-run           # Show what would be updated
+
+    # Date mode - scan all tests for a specific date (results/ only by default)
+    python scripts/inject_costs.py --date 2026-01-25 --dry-run
+    python scripts/inject_costs.py --date 2026-01-25 --auto-update
+    python scripts/inject_costs.py --date 2026-01-25 --test-runs   # Scan test_runs/ instead
 
     # Single test mode - calculate specific test
     python scripts/inject_costs.py --test-id T0614 --date 2026-02-10
