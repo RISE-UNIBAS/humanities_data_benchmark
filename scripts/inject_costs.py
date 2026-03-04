@@ -351,7 +351,7 @@ def main():
     parser.add_argument(
         '--date',
         type=str,
-        help='Date directory for the test (e.g., 2026-02-10). Required when using --test-id'
+        help='Date directory for the test (e.g., 2026-02-10). When used alone, processes all tests for that date.'
     )
     parser.add_argument(
         '--auto-update',
@@ -441,9 +441,18 @@ def main():
     # Determine which directories to scan (bulk mode)
     scan_dirs = []
     if args.results and not args.test_runs:
-        scan_dirs.append(('results', PROJECT_ROOT / 'results'))
+        base = PROJECT_ROOT / 'results'
+        if args.date:
+            base = base / args.date
+        scan_dirs.append(('results', base))
     elif args.test_runs and not args.results:
-        scan_dirs.append(('test_runs', PROJECT_ROOT / 'test_runs'))
+        base = PROJECT_ROOT / 'test_runs'
+        if args.date:
+            base = base / args.date
+        scan_dirs.append(('test_runs', base))
+    elif args.date:
+        # When filtering by date, default to results/ only
+        scan_dirs.append(('results', PROJECT_ROOT / 'results' / args.date))
     else:
         # Default: scan both
         scan_dirs.append(('results', PROJECT_ROOT / 'results'))
