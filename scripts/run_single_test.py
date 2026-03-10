@@ -483,7 +483,7 @@ def collect_adhoc_test_params() -> Optional[Dict]:
     return params
 
 
-def run_adhoc_test(test_config: Dict, regenerate: bool = True):
+def run_adhoc_test(test_config: Dict, regenerate: bool = True, workers: int = 1):
     """Run an ad-hoc test with custom results directory."""
     # Save the test configuration for potential rerun
     save_last_adhoc_test(test_config)
@@ -511,7 +511,7 @@ def run_adhoc_test(test_config: Dict, regenerate: bool = True):
         benchmark.save_benchmark_score = custom_save_benchmark_score
 
         # Run the benchmark
-        benchmark.run(regenerate_existing_results=regenerate)
+        benchmark.run(regenerate_existing_results=regenerate, workers=workers)
 
         print_success(f"\nAd-hoc test {test_config['id']} completed!")
         print_info(f"Results saved to: test_runs/{benchmark.date}/{benchmark.id}/")
@@ -522,7 +522,7 @@ def run_adhoc_test(test_config: Dict, regenerate: bool = True):
         traceback.print_exc()
 
 
-def run_test(test_id: str, regenerate: bool = False):
+def run_test(test_id: str, regenerate: bool = False, workers: int = 1):
     """Run a single test from CSV using the existing run_benchmarks infrastructure."""
     print_header(f"Running Test {test_id}")
 
@@ -537,7 +537,7 @@ def run_test(test_id: str, regenerate: bool = False):
 
         # Load and run benchmark
         benchmark = load_benchmark(test)
-        benchmark.run(regenerate_existing_results=regenerate)
+        benchmark.run(regenerate_existing_results=regenerate, workers=workers)
 
         print_success(f"\nTest {test_id} completed!")
         print_info(f"Results saved to: results/{benchmark.date}/{benchmark.id}/")
@@ -573,6 +573,12 @@ def main():
         action='store_true',
         help='Re-execute the last adhoc test'
     )
+    parser.add_argument(
+        '--workers',
+        type=int,
+        default=1,
+        help='Number of parallel worker threads (default: 1, max recommended: 20)'
+    )
 
     args = parser.parse_args()
 
@@ -602,7 +608,8 @@ def main():
             # Confirm and run
             test_id = last_adhoc.get('id')
             if get_yes_no(f"Run ad-hoc test {test_id}?", default=True):
-                run_adhoc_test(last_adhoc, regenerate=True)
+                workers = args.workers if args.workers > 1 else get_int_input("Number of parallel workers", default=1, min_val=1, max_val=20)
+                run_adhoc_test(last_adhoc, regenerate=True, workers=workers)
             return
 
         # Ad-hoc test mode
@@ -623,7 +630,8 @@ def main():
             # Confirm and run
             test_id = adhoc_params.get('id')
             if get_yes_no(f"Run ad-hoc test {test_id}?", default=True):
-                run_adhoc_test(adhoc_params, regenerate=True)
+                workers = args.workers if args.workers > 1 else get_int_input("Number of parallel workers", default=1, min_val=1, max_val=20)
+                run_adhoc_test(adhoc_params, regenerate=True, workers=workers)
             return
 
         # Load all tests
@@ -648,7 +656,7 @@ def main():
                 return
 
             # Run the test
-            run_test(args.test_id, regenerate=args.regenerate)
+            run_test(args.test_id, regenerate=args.regenerate, workers=args.workers)
             return
 
         # Interactive mode
@@ -687,8 +695,9 @@ def main():
                 if not get_yes_no(f"Run ad-hoc test {test_id}?", default=True):
                     continue
 
+                workers = get_int_input("Number of parallel workers", default=1, min_val=1, max_val=20)
                 # Ad-hoc tests always regenerate
-                run_adhoc_test(last_adhoc, regenerate=True)
+                run_adhoc_test(last_adhoc, regenerate=True, workers=workers)
 
             # Check if ad-hoc test was selected
             elif selected_test.get('_adhoc'):
@@ -711,8 +720,9 @@ def main():
                 if not get_yes_no(f"Run ad-hoc test {test_id}?", default=True):
                     continue
 
+                workers = get_int_input("Number of parallel workers", default=1, min_val=1, max_val=20)
                 # Ad-hoc tests always regenerate
-                run_adhoc_test(adhoc_params, regenerate=True)
+                run_adhoc_test(adhoc_params, regenerate=True, workers=workers)
 
             else:
                 # Regular CSV test
@@ -731,9 +741,10 @@ def main():
 
                 # Ask about regeneration
                 regenerate = get_yes_no("Regenerate existing results?", default=False)
+                workers = get_int_input("Number of parallel workers", default=1, min_val=1, max_val=20)
 
                 # Run the test
-                run_test(test_id, regenerate=regenerate)
+                run_test(test_id, regenerate=regenerate, workers=workers)
 
             # Ask if user wants to run another test
             if not get_yes_no("\nRun another test?", default=True):

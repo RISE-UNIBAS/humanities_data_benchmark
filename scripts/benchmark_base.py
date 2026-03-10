@@ -5,6 +5,7 @@ import logging
 import os
 import re
 from abc import ABC, abstractmethod
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime
 from pathlib import Path
 from typing import Dict, List, Union, Pattern, Optional, Iterable, Set
@@ -262,7 +263,7 @@ class Benchmark(ABC):
         }
         image_paths = self.get_image_paths(object_basename)
         text_paths = self.get_text_paths(object_basename)
-        self.prompt = self.load_prompt(object_basename)
+        prompt = self.load_prompt(object_basename)  # local var avoids race condition in parallel runs
 
         # Add per-request cached context if enabled
         if self.cache_context_per_request:
@@ -291,7 +292,7 @@ class Benchmark(ABC):
         if self.use_shared_context and self.conversation_id:
             kwargs["conversation_id"] = self.conversation_id
 
-        return self.client.prompt(self.model, self.prompt, **kwargs)
+        return self.client.prompt(self.model, prompt, **kwargs)
 
     def get_request_answer_path(self):
         return str(os.path.join('..', 'results', self.date, self.id))
@@ -516,13 +517,45 @@ class Benchmark(ABC):
         """ Hook to run after processing each object. """
         pass
 
-    def run(self, regenerate_existing_results=True):
-        """Run the benchmark."""
+    def _process_object(self, object_basename: str, regenerate_existing_results: bool):
+        """Process a single object (request + score). Safe to run in parallel threads."""
+        prefix = f"[{object_basename}]"
+        answer_file_name = self.get_request_answer_file_name(object_basename)
+        should_process = (regenerate_existing_results and os.path.exists(answer_file_name)) or \
+                         (not os.path.exists(answer_file_name))
+        should_process = should_process and (not self.skip_object(object_basename))
+
+        self.before_object(object_basename)
+        if should_process:
+            logging.info(f"{prefix} Processing {self.id}, {object_basename}...")
+            answer = self.ask_llm(object_basename)
+            ground_truth = self.load_ground_truth(object_basename)
+            score = self.score_request_answer(object_basename, answer, ground_truth)
+            self.save_request_answer(object_basename, answer, score)
+            logging.info(f"{prefix} Finished with score: {score}")
+        else:
+            logging.info(f"{prefix} Skipping {self.id}, {object_basename}...")
+            answer, score = self.load_saved_answer(object_basename)
+        self.after_object(object_basename)
+        return answer, score
+
+    def run(self, regenerate_existing_results=True, workers=1):
+        """Run the benchmark.
+
+        Args:
+            regenerate_existing_results: Re-run requests that already have saved results.
+            workers: Number of parallel worker threads. Values >1 speed up LLM-bound runs
+                     significantly. Requires use_shared_context=False.
+        """
 
         logging.info(f"Running {self.get_title()}...")
         if not self.is_runnable():
             logging.error(f"Skipping {self.get_title()} (not runnable).")
             return
+
+        if workers > 1 and self.use_shared_context:
+            logging.warning("workers > 1 is not supported with use_shared_context=True; falling back to 1 worker.")
+            workers = 1
 
         self.before_run()
 
@@ -534,35 +567,16 @@ class Benchmark(ABC):
         texts_dir = os.path.join(self.benchmark_dir, 'texts')
         object_basenames = self.get_all_basenames([images_dir, texts_dir],
                                                   page_pattern=re.compile(r"_p\d+$")) # TODO
-        logging.info(f"Found {len(object_basenames)} objects to process.")
+        logging.info(f"Found {len(object_basenames)} objects to process (workers={workers}).")
 
-        # Process each object
-        benchmark_scores = []
-        all_answers = []
-        for object_basename in object_basenames:
+        # Process objects — serially or in parallel
+        if workers > 1:
+            results = self._run_parallel(object_basenames, regenerate_existing_results, workers)
+        else:
+            results = [self._process_object(bn, regenerate_existing_results) for bn in object_basenames]
 
-            answer_file_name = self.get_request_answer_file_name(object_basename)
-            should_process = (regenerate_existing_results and os.path.exists(answer_file_name)) or \
-                             (not os.path.exists(answer_file_name))
-            should_process = should_process and (not self.skip_object(object_basename))
-
-            self.before_object(object_basename)
-            if should_process:
-                logging.info(f"Processing {self.id}, {object_basename}...")
-                answer = self.ask_llm(object_basename)
-                ground_truth = self.load_ground_truth(object_basename)
-                score = self.score_request_answer(object_basename, answer, ground_truth)
-                self.save_request_answer(object_basename, answer, score)
-                benchmark_scores.append(score)
-                all_answers.append(answer)
-                logging.info(f"Finished {object_basename} with score: {score}")
-            else:
-                logging.info(f"Skipping {self.id}, {object_basename}...")
-                # Load existing saved results
-                saved_answer, saved_score = self.load_saved_answer(object_basename)
-                benchmark_scores.append(saved_score)
-                all_answers.append(saved_answer)
-            self.after_object(object_basename)
+        all_answers = [r[0] for r in results]
+        benchmark_scores = [r[1] for r in results]
 
         # Score the benchmark
         benchmark_score = self.score_benchmark(benchmark_scores)
@@ -576,6 +590,23 @@ class Benchmark(ABC):
         self.save_benchmark_score(benchmark_score)
 
         self.after_run()
+
+    def _run_parallel(self, object_basenames: List[str], regenerate_existing_results: bool, workers: int):
+        """Run object processing in parallel, returning results in original order."""
+        results = [None] * len(object_basenames)
+        futures = {}
+        with ThreadPoolExecutor(max_workers=workers) as executor:
+            for i, basename in enumerate(object_basenames):
+                future = executor.submit(self._process_object, basename, regenerate_existing_results)
+                futures[future] = i
+            for future in as_completed(futures):
+                i = futures[future]
+                try:
+                    results[i] = future.result()
+                except Exception as e:
+                    logging.error(f"[{object_basenames[i]}] Failed with exception: {e}")
+                    results[i] = (None, None)
+        return results
 
     @staticmethod
     def calculate_cost(all_answers):

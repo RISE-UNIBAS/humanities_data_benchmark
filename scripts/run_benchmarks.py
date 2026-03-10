@@ -56,7 +56,7 @@ def load_benchmark(test_config):
         return DefaultBenchmark(test_config, api_key, benchmark_path)
 
 
-def main(limit_to: list[str] = None, regenerate_existing_results: bool = False):
+def main(limit_to: list[str] = None, regenerate_existing_results: bool = False, workers: int = 1):
     """ Main function to run benchmarks.
 
     This function reads the configuration file, loads the benchmarks,
@@ -64,6 +64,7 @@ def main(limit_to: list[str] = None, regenerate_existing_results: bool = False):
 
     :param limit_to: Optional list of benchmark ids (such as T0001, T0099) to limit the execution to, defaults to None
     :param regenerate_existing_results
+    :param workers: Number of parallel worker threads per benchmark (default 1)
     """
 
     # Read the benchmark configuration file (csv)
@@ -80,7 +81,7 @@ def main(limit_to: list[str] = None, regenerate_existing_results: bool = False):
             # Load benchmark
             benchmark = load_benchmark(test_config)
             # Run benchmark
-            benchmark.run(regenerate_existing_results=regenerate_existing_results)
+            benchmark.run(regenerate_existing_results=regenerate_existing_results, workers=workers)
 
 
 if __name__ == "__main__":
