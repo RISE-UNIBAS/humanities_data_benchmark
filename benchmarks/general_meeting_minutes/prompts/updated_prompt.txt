@@ -1,0 +1,68 @@
+Extract the table content from the page image and return it in the required JSON structure.
+
+The page contains a table of shareholders with the following columns:
+
+1. N° D'ORDRE (row number)
+2. NOM, PRÉNOMS ET DOMICILE DES ACTIONNAIRES (name and address)
+3. ACTIONS O
+4. ACTIONS P
+5. NOMBRE DE VOIX
+6. SIGNATURE DES ACTIONNAIRES OU DES MANDATAIRES
+
+ROW STRUCTURE
+-------------
+Each entry begins with the row number in the first column.
+All lines belonging to that number form one entry.
+
+The second column contains BOTH name and address in the same field.
+Split this content into:
+
+- name
+- address
+
+The name is always the first line.
+All following lines belong to the address.
+
+Preserve the line breaks inside the address exactly as in the source.
+
+Do NOT modify spelling or add accents. Transcribe the text exactly as shown.
+
+Dashes inside addresses must be preserved.
+Only remove a dash if it clearly separates the name from the address on the same line.
+
+NUMERIC COLUMNS
+---------------
+Extract the values from the table columns:
+
+- actions_o
+- actions_p
+- no_de_voix
+
+Leave fields empty if no value is present.
+
+SIGNATURE COLUMN
+----------------
+If the signature column contains handwriting or text:
+
+signature_present = true
+signature = transcription of the visible text
+
+If the column is empty:
+
+signature_present = false
+signature = ""
+
+TOTALS
+------
+Totals may appear below the table near the text "A REPORTER".
+Only extract totals if explicit numbers are present.
+Otherwise return empty strings for:
+
+total_o
+total_p
+total_voix
+
+DOCUMENT METADATA
+-----------------
+document = {filename}
+page_number = {page_number}

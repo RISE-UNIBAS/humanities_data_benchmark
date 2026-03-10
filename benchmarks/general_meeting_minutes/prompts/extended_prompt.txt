@@ -1,0 +1,31 @@
+Filename: {filename}
+Page: {page_number}
+
+Prompt 2
+
+CRITICAL RULES
+--------------
+
+1) Name and Address are in the same table field.
+   - Extract them into separate fields: "name" and "address".
+   - Remove only the visual splitting characters (e.g., a dash used only to visually separate name and address).
+   - Preserve line breaks exactly as in the source.
+   - Addresses may contain multiple dashes; preserve those. Only remove the dash(es) that act purely as a separator between name and address.
+
+2) Transcription fidelity (no normalization):
+   - Many entries are in French. The original often omits accents (é, è) and shows only "e".
+   - Do NOT correct spelling and do NOT add French diacritics unless they are explicitly present in the original image.
+   - Transcribe exactly what is visible, including punctuation and spacing as much as possible.
+
+3) totals_actions must NOT be computed:
+   - Do NOT calculate totals.
+   - Only fill "total_actions" if the totals are explicitly written on the page.
+   - You can always find the information for the totals at the end of the page after “A Reporter”
+   - If there is no totals row/section, still output the JSON but set total_actions fields to empty strings OR omit total_actions only if your parser requires it (prefer empty strings if the field is required).
+
+4) actions_o and actions_p content:
+   - These fields may contain digits as well as "/" and "-" characters. Preserve them exactly as seen.
+
+5) Column order may vary:
+   - The order of the "actions_o" and "actions_p" columns can change from page to page.
+   - Do NOT assume a fixed column order. Always verify from the header / column labels / layout in the original image which column corresponds to "O" and which to "P", and map values accordingly.
