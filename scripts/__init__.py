@@ -1,6 +1,7 @@
 import os
 import time
 import logging
+from pathlib import Path
 
 from ai_client.pricing import PricingManager, set_pricing_file
 
@@ -21,4 +22,4 @@ logging.basicConfig(
 
 logger = logging.getLogger(__name__)
 
-set_pricing_file("data/pricing.json")
+set_pricing_file(str(Path(__file__).parent / "data" / "pricing.json"))
