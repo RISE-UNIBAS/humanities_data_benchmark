@@ -62,8 +62,8 @@ def load_pricing_data():
                 # Only add if not already present (we want most recent)
                 if model_name not in model_pricing:
                     model_pricing[model_name] = {
-                        "input": prices.get("input_price", 0),
-                        "output": prices.get("output_price", 0),
+                        "input": prices.get("input_price") or 0,
+                        "output": prices.get("output_price") or 0,
                         "provider": provider
                     }
 
