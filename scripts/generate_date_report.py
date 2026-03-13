@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """
-Generate a report for all tests run on a specific date.
+Generate a report for all tests run on a specific date or date range.
 Usage: python scripts/generate_date_report.py --date 2025-03-05 --format html
+       python scripts/generate_date_report.py --start-date 2025-03-01 --end-date 2025-03-05 --format both
        python scripts/generate_date_report.py --date 2025-03-05 --format both --no-warnings
 """
 
@@ -9,7 +10,7 @@ import argparse
 import json
 import os
 from pathlib import Path
-from datetime import datetime
+from datetime import datetime, timedelta
 import csv
 
 
@@ -28,6 +29,23 @@ def load_test_metadata():
                 'temperature': row['temperature'],
             }
     return tests
+
+
+def get_date_range(start_date_str, end_date_str):
+    """Generate list of dates between start_date and end_date (inclusive)"""
+    start_date = datetime.strptime(start_date_str, '%Y-%m-%d')
+    end_date = datetime.strptime(end_date_str, '%Y-%m-%d')
+
+    if start_date > end_date:
+        raise ValueError("start_date must be before or equal to end_date")
+
+    dates = []
+    current_date = start_date
+    while current_date <= end_date:
+        dates.append(current_date.strftime('%Y-%m-%d'))
+        current_date += timedelta(days=1)
+
+    return dates
 
 
 def detect_warnings(result):
@@ -91,7 +109,7 @@ def detect_warnings(result):
     return warnings
 
 
-def analyze_test_results(results_dir, test_id):
+def analyze_test_results(results_dir, test_id, date=None):
     """Analyze results for a specific test"""
     test_dir = results_dir / test_id
     if not test_dir.exists():
@@ -133,6 +151,7 @@ def analyze_test_results(results_dir, test_id):
 
     result = {
         'test_id': test_id,
+        'date': date,
         'items_count': items_count,
         'f1_macro': scoring.get('f1_macro', 'N/A'),
         'f1_micro': scoring.get('f1_micro', 'N/A'),
@@ -152,33 +171,47 @@ def analyze_test_results(results_dir, test_id):
     return result
 
 
-def generate_html_report(date, results_dir, test_metadata, output_file):
+def generate_html_report(dates, base_dir, test_metadata, output_file):
     """Generate HTML report"""
 
-    # Collect all test folders
-    test_dirs = sorted([d for d in results_dir.iterdir() if d.is_dir() and d.name.startswith('T')])
-    total_tests = len(test_dirs)
-    print(f"  Found {total_tests} tests to analyze")
-
-    # Analyze each test
+    # Collect all test results from all dates
     test_results = []
-    for idx, test_dir in enumerate(test_dirs, 1):
-        test_id = test_dir.name
-        result = analyze_test_results(results_dir, test_id)
-        if result:
-            # Add metadata
-            if test_id in test_metadata:
-                result.update(test_metadata[test_id])
-            # Detect warnings after metadata is available
-            result['warnings'] = detect_warnings(result)
-            test_results.append(result)
+    total_folders = 0
 
-        # Progress indicator every 50 tests or at the end
-        if idx % 50 == 0 or idx == total_tests:
-            print(f"  Progress: {idx}/{total_tests} tests analyzed ({idx*100//total_tests}%)")
+    for date in dates:
+        results_dir = base_dir / "results" / date
+        if not results_dir.exists():
+            print(f"  ⚠️  Skipping {date} (no results found)")
+            continue
 
-    # Sort by test ID
-    test_results.sort(key=lambda x: x['test_id'])
+        # Collect all test folders for this date
+        test_dirs = sorted([d for d in results_dir.iterdir() if d.is_dir() and d.name.startswith('T')])
+        total_tests = len(test_dirs)
+        total_folders += total_tests
+        print(f"  Found {total_tests} tests for {date}")
+
+        # Analyze each test
+        for idx, test_dir in enumerate(test_dirs, 1):
+            test_id = test_dir.name
+            result = analyze_test_results(results_dir, test_id, date)
+            if result:
+                # Add metadata
+                if test_id in test_metadata:
+                    result.update(test_metadata[test_id])
+                # Detect warnings after metadata is available
+                result['warnings'] = detect_warnings(result)
+                test_results.append(result)
+
+    print(f"  Total: {len(test_results)} tests analyzed across {len(dates)} date(s)")
+
+    # Sort by date, then by test ID
+    test_results.sort(key=lambda x: (x['date'], x['test_id']))
+
+    # Generate title based on single date or date range
+    if len(dates) == 1:
+        title = f"Test Results - {dates[0]}"
+    else:
+        title = f"Test Results - {dates[0]} to {dates[-1]}"
 
     # Generate HTML
     html = f"""<!DOCTYPE html>
@@ -186,7 +219,7 @@ def generate_html_report(date, results_dir, test_metadata, output_file):
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Test Results - {date}</title>
+    <title>{title}</title>
     <style>
         body {{
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
@@ -337,11 +370,15 @@ def generate_html_report(date, results_dir, test_metadata, output_file):
     </style>
 </head>
 <body>
-    <h1>📊 Test Results for {date}</h1>
+    <h1>📊 {title}</h1>
 
     <div class="summary">
         <h2>Summary</h2>
         <div class="summary-stats">
+            <div class="stat-card">
+                <div class="stat-value">{len(dates)}</div>
+                <div class="stat-label">Date(s)</div>
+            </div>
             <div class="stat-card">
                 <div class="stat-value">{len(test_results)}</div>
                 <div class="stat-label">Total Tests</div>
@@ -372,6 +409,7 @@ def generate_html_report(date, results_dir, test_metadata, output_file):
     <table>
         <thead>
             <tr>
+                <th>Date</th>
                 <th>Test ID</th>
                 <th>Benchmark</th>
                 <th>Provider</th>
@@ -448,6 +486,7 @@ def generate_html_report(date, results_dir, test_metadata, output_file):
 
         html += f"""
             <tr>
+                <td>{result.get('date', 'N/A')}</td>
                 <td><strong>{result['test_id']}</strong></td>
                 <td class="benchmark-name">{result.get('name', 'Unknown')}</td>
                 <td><span class="badge badge-provider">{result.get('provider', 'Unknown')}</span></td>
@@ -547,39 +586,52 @@ def generate_html_report(date, results_dir, test_metadata, output_file):
     print(f"  ✓ HTML report generated: {output_file}")
 
 
-def generate_markdown_report(date, results_dir, test_metadata, output_file):
+def generate_markdown_report(dates, base_dir, test_metadata, output_file):
     """Generate Markdown report"""
 
-    # Collect all test folders
-    test_dirs = sorted([d for d in results_dir.iterdir() if d.is_dir() and d.name.startswith('T')])
-    total_tests = len(test_dirs)
-    print(f"  Found {total_tests} tests to analyze")
-
-    # Analyze each test
+    # Collect all test results from all dates
     test_results = []
-    for idx, test_dir in enumerate(test_dirs, 1):
-        test_id = test_dir.name
-        result = analyze_test_results(results_dir, test_id)
-        if result:
-            # Add metadata
-            if test_id in test_metadata:
-                result.update(test_metadata[test_id])
-            # Detect warnings after metadata is available
-            result['warnings'] = detect_warnings(result)
-            test_results.append(result)
 
-        # Progress indicator every 50 tests or at the end
-        if idx % 50 == 0 or idx == total_tests:
-            print(f"  Progress: {idx}/{total_tests} tests analyzed ({idx*100//total_tests}%)")
+    for date in dates:
+        results_dir = base_dir / "results" / date
+        if not results_dir.exists():
+            print(f"  ⚠️  Skipping {date} (no results found)")
+            continue
 
-    # Sort by test ID
-    test_results.sort(key=lambda x: x['test_id'])
+        # Collect all test folders for this date
+        test_dirs = sorted([d for d in results_dir.iterdir() if d.is_dir() and d.name.startswith('T')])
+        total_tests = len(test_dirs)
+        print(f"  Found {total_tests} tests for {date}")
+
+        # Analyze each test
+        for idx, test_dir in enumerate(test_dirs, 1):
+            test_id = test_dir.name
+            result = analyze_test_results(results_dir, test_id, date)
+            if result:
+                # Add metadata
+                if test_id in test_metadata:
+                    result.update(test_metadata[test_id])
+                # Detect warnings after metadata is available
+                result['warnings'] = detect_warnings(result)
+                test_results.append(result)
+
+    print(f"  Total: {len(test_results)} tests analyzed across {len(dates)} date(s)")
+
+    # Sort by date, then by test ID
+    test_results.sort(key=lambda x: (x['date'], x['test_id']))
+
+    # Generate title based on single date or date range
+    if len(dates) == 1:
+        title = f"Test Results for {dates[0]}"
+    else:
+        title = f"Test Results for {dates[0]} to {dates[-1]}"
 
     # Generate Markdown
-    md = f"""# Test Results for {date}
+    md = f"""# {title}
 
 ## Summary
 
+- **Date Range:** {dates[0]} to {dates[-1]} ({len(dates)} date(s))
 - **Total Tests:** {len(test_results)}
 - **Total Items Tested:** {sum(r['items_count'] for r in test_results)}
 - **Unique Benchmarks:** {len(set(r.get('name', 'Unknown') for r in test_results))}
@@ -589,8 +641,8 @@ def generate_markdown_report(date, results_dir, test_metadata, output_file):
 
 ## Results
 
-| Test ID | Benchmark | Provider | Model | Items | F1 Macro | F1 Micro | Fuzzy | CER | Avg Duration | Total Duration | Input Cost ($) | Output Cost ($) | Total Cost ($) | Warnings |
-|---------|-----------|----------|-------|-------|----------|----------|-------|-----|--------------|----------------|----------------|-----------------|----------------|----------|
+| Date | Test ID | Benchmark | Provider | Model | Items | F1 Macro | F1 Micro | Fuzzy | CER | Avg Duration | Total Duration | Input Cost ($) | Output Cost ($) | Total Cost ($) | Warnings |
+|------|---------|-----------|----------|-------|-------|----------|----------|-------|-----|--------------|----------------|----------------|-----------------|----------------|----------|
 """
 
     for result in test_results:
@@ -616,7 +668,7 @@ def generate_markdown_report(date, results_dir, test_metadata, output_file):
         else:
             warnings_md = '✓'
 
-        md += f"| {result['test_id']} | {result.get('name', 'Unknown')} | {result.get('provider', 'Unknown')} | {result.get('model', 'Unknown')} | {result['items_count']} | {f1_macro_display} | {f1_micro_display} | {fuzzy_display} | {cer_display} | {result['avg_duration']:.2f}s | {result['total_duration']:.2f}s | {input_cost_display} | {output_cost_display} | {total_cost_display} | {warnings_md} |\n"
+        md += f"| {result.get('date', 'N/A')} | {result['test_id']} | {result.get('name', 'Unknown')} | {result.get('provider', 'Unknown')} | {result.get('model', 'Unknown')} | {result['items_count']} | {f1_macro_display} | {f1_micro_display} | {fuzzy_display} | {cer_display} | {result['avg_duration']:.2f}s | {result['total_duration']:.2f}s | {input_cost_display} | {output_cost_display} | {total_cost_display} | {warnings_md} |\n"
 
     md += f"\n---\n*Generated on {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}*\n"
 
@@ -627,52 +679,64 @@ def generate_markdown_report(date, results_dir, test_metadata, output_file):
     print(f"  ✓ Markdown report generated: {output_file}")
 
 
-def generate_warnings_report(date, results_dir, test_metadata, output_file):
+def generate_warnings_report(dates, base_dir, test_metadata, output_file):
     """Generate warnings-only report as GitHub issue template"""
 
-    # Collect all test folders
-    test_dirs = sorted([d for d in results_dir.iterdir() if d.is_dir() and d.name.startswith('T')])
-    total_tests = len(test_dirs)
-    print(f"  Found {total_tests} tests to analyze")
-
-    # Analyze each test
+    # Collect all test results from all dates
     test_results = []
-    for idx, test_dir in enumerate(test_dirs, 1):
-        test_id = test_dir.name
-        result = analyze_test_results(results_dir, test_id)
-        if result:
-            # Add metadata
-            if test_id in test_metadata:
-                result.update(test_metadata[test_id])
-            # Detect warnings after metadata is available
-            result['warnings'] = detect_warnings(result)
-            # Only include tests with warnings
-            if result['warnings']:
-                test_results.append(result)
 
-        # Progress indicator every 50 tests or at the end
-        if idx % 50 == 0 or idx == total_tests:
-            warnings_found = len(test_results)
-            print(f"  Progress: {idx}/{total_tests} tests analyzed ({idx*100//total_tests}%) - {warnings_found} warnings found")
+    for date in dates:
+        results_dir = base_dir / "results" / date
+        if not results_dir.exists():
+            print(f"  ⚠️  Skipping {date} (no results found)")
+            continue
 
-    # Sort by test ID
-    test_results.sort(key=lambda x: x['test_id'])
+        # Collect all test folders for this date
+        test_dirs = sorted([d for d in results_dir.iterdir() if d.is_dir() and d.name.startswith('T')])
+        total_tests = len(test_dirs)
+
+        # Analyze each test
+        for idx, test_dir in enumerate(test_dirs, 1):
+            test_id = test_dir.name
+            result = analyze_test_results(results_dir, test_id, date)
+            if result:
+                # Add metadata
+                if test_id in test_metadata:
+                    result.update(test_metadata[test_id])
+                # Detect warnings after metadata is available
+                result['warnings'] = detect_warnings(result)
+                # Only include tests with warnings
+                if result['warnings']:
+                    test_results.append(result)
+
+    print(f"  Total: {len(test_results)} tests with warnings across {len(dates)} date(s)")
+
+    # Sort by date, then by test ID
+    test_results.sort(key=lambda x: (x['date'], x['test_id']))
+
+    # Generate title based on single date or date range
+    if len(dates) == 1:
+        title = f"Test Warnings Report - {dates[0]}"
+        date_display = dates[0]
+    else:
+        title = f"Test Warnings Report - {dates[0]} to {dates[-1]}"
+        date_display = f"{dates[0]} to {dates[-1]}"
 
     # Generate warnings report
-    md = f"""# Test Warnings Report - {date}
+    md = f"""# {title}
 
-**Date:** {date}
+**Date Range:** {date_display}
 **Tests with warnings:** {len(test_results)}
 **Generated:** {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
 
 ---
 
-**Note:** For detailed error messages and stack traces, check the log files in `scripts/logs/` with date prefix `{date.replace('-', '')}`.
+**Note:** For detailed error messages and stack traces, check the log files in `scripts/logs/`.
 
 *Add GitHub issue links in the Ticket column for tracking.*
 
-| Test ID | Benchmark | Provider | Model | Severity | Warning Codes | Ticket | Action | Completed |
-|---------|-----------|----------|-------|----------|---------------|--------|--------|-----------|
+| Date | Test ID | Benchmark | Provider | Model | Severity | Warning Codes | Ticket | Action | Completed |
+|------|---------|-----------|----------|-------|----------|---------------|--------|--------|-----------|
 """
 
     for result in test_results:
@@ -689,7 +753,7 @@ def generate_warnings_report(date, results_dir, test_metadata, output_file):
 
         warning_codes = ', '.join([w['code'] for w in result['warnings']])
 
-        md += f"| {result['test_id']} | {result.get('name', 'Unknown')} | {result.get('provider', 'Unknown')} | {result.get('model', 'Unknown')} | {severity} | {warning_codes} | | | |\n"
+        md += f"| {result.get('date', 'N/A')} | {result['test_id']} | {result.get('name', 'Unknown')} | {result.get('provider', 'Unknown')} | {result.get('model', 'Unknown')} | {severity} | {warning_codes} | | | |\n"
 
     md += "\n---\n\n"
     md += "## Warning Codes Explanation\n\n"
@@ -717,8 +781,27 @@ def generate_warnings_report(date, results_dir, test_metadata, output_file):
 
 
 def main():
-    parser = argparse.ArgumentParser(description='Generate a report for tests run on a specific date')
-    parser.add_argument('--date', required=True, help='Date in YYYY-MM-DD format')
+    parser = argparse.ArgumentParser(
+        description='Generate a report for tests run on a specific date or date range',
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="""
+Examples:
+  Single date:
+    python scripts/generate_date_report.py --date 2025-03-05 --format html
+
+  Date range:
+    python scripts/generate_date_report.py --start-date 2025-03-01 --end-date 2025-03-05 --format both
+
+  With custom output:
+    python scripts/generate_date_report.py --date 2025-03-05 --output custom_report.html
+        """
+    )
+
+    date_group = parser.add_mutually_exclusive_group(required=True)
+    date_group.add_argument('--date', help='Single date in YYYY-MM-DD format')
+    date_group.add_argument('--start-date', help='Start date for range (use with --end-date)')
+
+    parser.add_argument('--end-date', help='End date for range (use with --start-date)')
     parser.add_argument('--format', choices=['html', 'md', 'both'], default='html',
                         help='Output format (html, md, or both)')
     parser.add_argument('--output', help='Output file path (optional)')
@@ -727,18 +810,47 @@ def main():
 
     args = parser.parse_args()
 
+    # Validate date arguments
+    if args.start_date and not args.end_date:
+        parser.error("--start-date requires --end-date")
+    if args.end_date and not args.start_date:
+        parser.error("--end-date requires --start-date")
+
     # Setup paths
     base_dir = Path(__file__).parent.parent
-    results_dir = base_dir / "results" / args.date
+
+    # Determine date range
+    if args.date:
+        dates = [args.date]
+        date_label = args.date
+    else:
+        try:
+            dates = get_date_range(args.start_date, args.end_date)
+            date_label = f"{args.start_date}_to_{args.end_date}"
+        except ValueError as e:
+            print(f"❌ Error: {e}")
+            return
 
     print(f"=" * 70)
-    print(f"Report Generator for {args.date}")
+    print(f"Report Generator")
+    print(f"Date(s): {dates[0]}" + (f" to {dates[-1]} ({len(dates)} dates)" if len(dates) > 1 else ""))
     print(f"=" * 70)
 
-    if not results_dir.exists():
-        print(f"❌ Error: No results found for date {args.date}")
-        print(f"   Looking in: {results_dir}")
+    # Check if any results exist
+    existing_dates = []
+    for date in dates:
+        results_dir = base_dir / "results" / date
+        if results_dir.exists():
+            existing_dates.append(date)
+
+    if not existing_dates:
+        print(f"❌ Error: No results found for any of the specified dates")
+        print(f"   Dates checked: {', '.join(dates)}")
         return
+
+    if len(existing_dates) < len(dates):
+        missing_dates = set(dates) - set(existing_dates)
+        print(f"⚠️  Warning: Results not found for: {', '.join(sorted(missing_dates))}")
 
     # Load test metadata
     print("\n📋 Loading test metadata...")
@@ -752,19 +864,19 @@ def main():
     # Generate reports
     if args.format in ['html', 'both']:
         print(f"\n📊 Generating HTML report...")
-        output_file = args.output or reports_dir / f"{args.date}_report.html"
-        generate_html_report(args.date, results_dir, test_metadata, output_file)
+        output_file = args.output or reports_dir / f"{date_label}_report.html"
+        generate_html_report(existing_dates, base_dir, test_metadata, output_file)
 
     if args.format in ['md', 'both']:
         print(f"\n📝 Generating Markdown report...")
-        output_file = args.output or reports_dir / f"{args.date}_report.md"
-        generate_markdown_report(args.date, results_dir, test_metadata, output_file)
+        output_file = args.output or reports_dir / f"{date_label}_report.md"
+        generate_markdown_report(existing_dates, base_dir, test_metadata, output_file)
 
     # Generate warnings report unless disabled
     if not args.no_warnings:
         print(f"\n⚠️  Generating warnings report...")
-        warnings_file = reports_dir / f"{args.date}_report_warnings.md"
-        generate_warnings_report(args.date, results_dir, test_metadata, warnings_file)
+        warnings_file = reports_dir / f"{date_label}_report_warnings.md"
+        generate_warnings_report(existing_dates, base_dir, test_metadata, warnings_file)
 
     print(f"\n{'=' * 70}")
     print(f"✅ All reports generated successfully!")
