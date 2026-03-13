@@ -5,7 +5,7 @@ import csv
 import json
 import os
 
-from scripts.ndr_export import CONTRIBUTORS_PATH, EXPORT_PATH
+from scripts.ndr_export import CONTRIBUTORS_PATH, EXPORT_PATH, VOCABULARIES_PATH
 from scripts.ndr_export.meta_utils import get_benchmarks, get_meta, load_json
 from scripts.ndr_export.test_utils import get_all_tests
 
@@ -25,14 +25,19 @@ def get_mentioned_contributors():
     return sorted(list(contributors))
 
 def get_mentioned_tags():
-    """Returns a unique list of tags mentioned in the meta.json files."""
+    """Returns unique facet:value pairs from all meta.json files."""
     benchmarks = get_benchmarks()
     tags = set()
 
     for benchmark in benchmarks:
         meta = get_meta(benchmark)
-        benchmark_tags = meta.get("tags", [])
-        tags.update(benchmark_tags)
+        benchmark_tags = meta.get("tags", {})
+        if isinstance(benchmark_tags, dict):
+            for facet, values in benchmark_tags.items():
+                for value in values:
+                    tags.add(f"{facet}:{value}")
+        elif isinstance(benchmark_tags, list):
+            tags.update(benchmark_tags)
 
     return sorted(list(tags))
 
@@ -101,25 +106,40 @@ def get_contributor_ndr_csv():
     return csv_data
 
 def get_tag_ndr_csv():
-    """Generate NDR CSV file for tags.
+    """Generate NDR CSV file for tags from vocabulary files.
+
+    Reads all vocabulary files and produces one entry per facet value.
+    Keys use facet:value format (e.g. document-type:book-page).
+    Internal facet values are excluded from printable/searchable output.
+    Century (integer type) is excluded as it is not a multi-select field.
 
     Returns a list of dicts with: key, value, is_printable, is_searchable, info
     """
-    tags = get_mentioned_tags()
-
     csv_data = []
 
-    for tag in tags:
-        # Convert tag key to display name (replace hyphens with spaces, capitalize)
-        display_name = tag.replace("-", " ").title()
+    for vocab_file in sorted(VOCABULARIES_PATH.glob("*.json")):
+        with open(vocab_file, "r", encoding="utf-8") as f:
+            vocab = json.load(f)
 
-        csv_data.append({
-            "key": tag,
-            "value": display_name,
-            "is_printable": True,
-            "is_searchable": True,
-            "info": ""
-        })
+        facet_name = vocab.get("name", vocab_file.stem)
+        facet_label = vocab.get("label", facet_name.replace("-", " ").title())
+        is_internal = facet_name == "internal"
+
+        # Skip integer-type facets (century) — not suitable for multi-select
+        if vocab.get("type") == "integer":
+            continue
+
+        for value, value_data in vocab.get("values", {}).items():
+            label = value_data.get("label", value.replace("-", " ").title())
+            display_name = f"{label} ({facet_label})"
+
+            csv_data.append({
+                "key": f"{facet_name}:{value}",
+                "value": display_name,
+                "is_printable": not is_internal,
+                "is_searchable": not is_internal,
+                "info": value_data.get("description", "")
+            })
 
     return csv_data
 

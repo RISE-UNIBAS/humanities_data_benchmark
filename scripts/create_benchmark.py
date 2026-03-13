@@ -10,6 +10,8 @@ import re
 from pathlib import Path
 from typing import Dict, List, Optional
 
+VOCABULARIES_PATH = Path(__file__).parent.parent / "vocabularies"
+
 
 # Color codes for terminal output
 class Colors:
@@ -191,6 +193,112 @@ def to_camel_case(snake_str: str) -> str:
     return ''.join(x.title() for x in components)
 
 
+def load_vocabularies() -> List[Dict]:
+    """Load all vocabulary files from the vocabularies directory, sorted by name."""
+    vocabs = []
+    if not VOCABULARIES_PATH.exists():
+        print_warning(f"Vocabularies directory not found: {VOCABULARIES_PATH}")
+        return vocabs
+    for f in sorted(VOCABULARIES_PATH.glob("*.json")):
+        with open(f, "r", encoding="utf-8") as fp:
+            vocabs.append(json.load(fp))
+    return vocabs
+
+
+def select_facet_values(vocab: Dict) -> List:
+    """Prompt the user to select values for one vocabulary facet.
+
+    Returns a list of selected values (strings or integers), or [] if skipped.
+    """
+    facet_label = vocab.get("label", vocab.get("name", "?"))
+    description = vocab.get("description", "")
+    facet_type = vocab.get("type")
+
+    print(f"\n{Colors.BOLD}{facet_label}{Colors.END}")
+    if description:
+        print(f"  {description}")
+
+    if facet_type == "integer":
+        constraints = vocab.get("constraints", {})
+        min_v = constraints.get("min", 1)
+        max_v = constraints.get("max", 21)
+        raw = get_input(
+            f"  Enter values ({min_v}–{max_v}), comma-separated, or leave blank to skip",
+            required=False
+        )
+        if not raw:
+            return []
+        result = []
+        for part in raw.split(","):
+            part = part.strip()
+            if not part:
+                continue
+            try:
+                v = int(part)
+                if min_v <= v <= max_v:
+                    result.append(v)
+                else:
+                    print_warning(f"  Value {v} out of range ({min_v}–{max_v}), skipped.")
+            except ValueError:
+                print_warning(f"  '{part}' is not an integer, skipped.")
+        return result
+
+    values = vocab.get("values", {})
+    if not values:
+        return []
+
+    value_keys = list(values.keys())
+    print(f"  {Colors.CYAN}0.{Colors.END} Skip this facet")
+    for i, key in enumerate(value_keys, 1):
+        val_data = values[key]
+        label = val_data.get("label", key.replace("-", " ").title())
+        desc = val_data.get("description", "")
+        desc_str = f" — {desc}" if desc else ""
+        print(f"  {Colors.CYAN}{i}.{Colors.END} {label}{desc_str}")
+
+    raw = get_input(
+        "  Select numbers (space or comma-separated), or 0 to skip",
+        required=False
+    )
+    if not raw or raw.strip() == "0":
+        return []
+
+    selected = []
+    for part in re.split(r"[\s,]+", raw.strip()):
+        if not part:
+            continue
+        try:
+            idx = int(part)
+            if idx == 0:
+                return []
+            if 1 <= idx <= len(value_keys):
+                selected.append(value_keys[idx - 1])
+            else:
+                print_warning(f"  Number {idx} out of range, skipped.")
+        except ValueError:
+            print_warning(f"  '{part}' is not a number, skipped.")
+    return selected
+
+
+def collect_tags() -> Dict:
+    """Interactively collect tags using the controlled vocabularies."""
+    print_info("\nTags — select values for each vocabulary facet.")
+    print("  (Tags can always be updated manually in meta.json later.)\n")
+
+    vocabs = load_vocabularies()
+    tags = {}
+
+    for vocab in vocabs:
+        facet_name = vocab.get("name")
+        if facet_name == "internal":
+            continue  # Not selectable during benchmark creation
+        selected = select_facet_values(vocab)
+        if selected:
+            tags[facet_name] = selected
+
+    return tags
+
+
 def collect_benchmark_info() -> Dict:
     """Collect all benchmark information from user."""
     print_header("Create New Benchmark")
@@ -237,15 +345,15 @@ def collect_benchmark_info() -> Dict:
     info['description'] = get_multiline_input("Description")
 
     # Tags
-    print_info("\nTags - Select from these categories:")
-    print(f"{Colors.BOLD}Source Type:{Colors.END} index-cards, letter-pages, manuscript-pages, book-pages, registers, lists, ...")
-    print(f"{Colors.BOLD}Structure:{Colors.END} text-like, list-like, table-like, mixed, ...")
-    print(f"{Colors.BOLD}Text Type:{Colors.END} handwritten-source, typed-source, printed-source, ...")
-    print(f"{Colors.BOLD}Century:{Colors.END} century-16th, century-17th, century-18th, century-19th, century-20th, ...")
-    print(f"{Colors.BOLD}Task:{Colors.END} ner-extraction, metadata-extraction, transcription, classification, ...")
+    info['tags'] = collect_tags()
+
     print()
-    print("Enter tags as comma-separated values (e.g., 'letter-pages, handwritten-source, century-19th, ner-extraction')")
-    info['tags'] = get_list_input("Tags")
+    if info['tags']:
+        print(f"{Colors.BOLD}Selected tags:{Colors.END}")
+        for facet, vals in info['tags'].items():
+            print(f"  {Colors.CYAN}{facet}:{Colors.END} {', '.join(str(v) for v in vals)}")
+    else:
+        print_warning("No tags selected.")
 
     # Contributors
     print_info("\nContributors:")
@@ -341,7 +449,11 @@ def display_configuration(info: Dict):
     print(f"{Colors.BOLD}4. Description:{Colors.END}")
     desc_preview = info['description'][:150] + ('...' if len(info['description']) > 150 else '')
     print(f"   {desc_preview}")
-    print(f"{Colors.BOLD}5. Tags:{Colors.END} {', '.join(info['tags']) if info['tags'] else 'None'}")
+    if info['tags']:
+        tag_parts = [f"{facet}: {', '.join(str(v) for v in vals)}" for facet, vals in info['tags'].items()]
+        print(f"{Colors.BOLD}5. Tags:{Colors.END} {' | '.join(tag_parts)}")
+    else:
+        print(f"{Colors.BOLD}5. Tags:{Colors.END} None")
     print(f"{Colors.BOLD}6. Contributors:{Colors.END}")
     if info['contributors']:
         for contrib in info['contributors']:
@@ -399,14 +511,13 @@ def edit_configuration(info: Dict) -> Dict:
                 info['description'] = get_multiline_input("New description")
         elif choice == '5':
             print()
-            print(f"{Colors.BOLD}Current tags:{Colors.END} {', '.join(info['tags'])}")
-            print_info("Tag categories:")
-            print("  Source Type: index-cards, letter-pages, manuscript-pages, ...")
-            print("  Structure: text-like, list-like, table-like, ...")
-            print("  Text Type: handwritten-source, typed-source, printed-source, ...")
-            print("  Century: century-16th, century-17th, century-18th, ...")
-            print("  Task: ner-extraction, metadata-extraction, transcription, ...")
-            info['tags'] = get_list_input("New tags (comma-separated)")
+            print(f"{Colors.BOLD}Current tags:{Colors.END}")
+            if info['tags']:
+                for facet, vals in info['tags'].items():
+                    print(f"  {facet}: {', '.join(str(v) for v in vals)}")
+            else:
+                print("  None")
+            info['tags'] = collect_tags()
         elif choice == '6':
             print()
             print(f"{Colors.BOLD}Current contributors:{Colors.END}")
