@@ -63,7 +63,9 @@ class PricingUpdater:
         'gpt-5-mini':          'https://developers.openai.com/api/docs/models/gpt-5-mini',
         'gpt-5-nano':          'https://developers.openai.com/api/docs/models/gpt-5-nano',
         'gpt-5.1-2025-11-13':  'https://developers.openai.com/api/docs/models/gpt-5.1',
+        'gpt-5.2':             'https://developers.openai.com/api/docs/models/gpt-5.2',
         'gpt-5.2-2025-12-11':  'https://developers.openai.com/api/docs/models/gpt-5.2',
+        'gpt-5.3-codex':       'https://developers.openai.com/api/docs/models/gpt-5.3-codex',
         'gpt-5.4-2026-03-05':  'https://developers.openai.com/api/docs/models/gpt-5.4',
         'o3':                  'https://developers.openai.com/api/docs/models/o3',
     }
