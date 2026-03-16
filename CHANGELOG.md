@@ -8,8 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Unreleased
 
 ### Added
-- 11 new models: gpt-5.2, gpt-5.4-2026-03-05 (OpenAI), gemini-3-flash-preview (GenAI), claude-opus-4-6, claude-sonnet-4-6, claude-opus-4-5-20251101, claude-haiku-4-5-20251001 (Anthropic), mistral-large-2512, ministral-14b-2512, ministral-8b-2512, magistral-small-2509 (Mistral)
-- 129 new benchmark test configurations (T0488-T0668) across all benchmarks for new models
+- 13 new models: gpt-5.2, gpt-5.4-2026-03-05 (OpenAI), gemini-3-flash-preview, gemini-3.1-flash-lite-preview, gemini-3.1-pro-preview (GenAI), claude-opus-4-6, claude-sonnet-4-6, claude-opus-4-5-20251101, claude-haiku-4-5-20251001 (Anthropic), mistral-large-2512, ministral-14b-2512, ministral-8b-2512, magistral-small-2509 (Mistral)
+- 153 new benchmark test configurations (T0488-T0692) across all benchmarks for new models
 - 47 new benchmark test configurations (T0576-T0622) for personnel_cards benchmark across all non-legacy models
 - update_pricing.py: semi-automated pricing updater that scrapes provider websites, extracts prices via LLM, archives source URLs on Wayback Machine in parallel, and updates pricing.json
 - Pricing data for 2026-03-02

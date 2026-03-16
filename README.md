@@ -428,6 +428,8 @@ This benchmark suite currently tests models from the following providers:
 | | ~~gemini-2.5-pro-preview-05-06~~      | ~~Preview 2.5 pro~~ (legacy)                               |
 | | ~~gemini-exp-1206~~                   | ~~Experimental~~ (legacy)                                  |
 | | gemini-3-flash-preview                | Preview of Gemini 3 flash                                  |
+| | gemini-3.1-flash-lite-preview         | Preview of Gemini 3.1 flash lite                           |
+| | gemini-3.1-pro-preview                | Preview of Gemini 3.1 pro                                  |
 | | ~~gemini-3-pro-preview~~              | ~~Preview of Gemini 3 pro~~ (legacy)                       |
 | **Mistral AI** | magistral-medium-2509                 | Mid-tier magistral model                                   |
 | | magistral-small-2509                  | Compact magistral model                                    |
