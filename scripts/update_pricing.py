@@ -53,6 +53,22 @@ except ImportError:
 class PricingUpdater:
     """Handles pricing updates for LLM models"""
 
+    OPENAI_MODEL_URLS = {
+        'gpt-4o':              'https://platform.openai.com/docs/pricing',
+        'gpt-4o-mini':         'https://platform.openai.com/docs/pricing',
+        'gpt-4.5-preview':     'https://platform.openai.com/docs/pricing',
+        'gpt-4.1':             'https://platform.openai.com/docs/pricing',
+        'gpt-4.1-mini':        'https://platform.openai.com/docs/pricing',
+        'gpt-4.1-nano':        'https://platform.openai.com/docs/pricing',
+        'gpt-5':               'https://platform.openai.com/docs/pricing',
+        'gpt-5-mini':          'https://platform.openai.com/docs/pricing',
+        'gpt-5-nano':          'https://platform.openai.com/docs/pricing',
+        'gpt-5.1-2025-11-13':  'https://platform.openai.com/docs/pricing',
+        'gpt-5.2':             'https://platform.openai.com/docs/pricing',
+        'gpt-5.4-2026-03-05':  'https://developers.openai.com/api/docs/models/gpt-5.4',
+        'o3':                  'https://platform.openai.com/docs/pricing',
+    }
+
     COHERE_MODEL_URLS = {
         'command-r-08-2024':        'https://docs.cohere.com/docs/command-r',
         'command-r-plus-08-2024':   'https://docs.cohere.com/docs/command-r-plus',
@@ -534,16 +550,65 @@ Return only JSON:"""
             return {}
 
     def scrape_openai_pricing(self, models: Optional[List[str]] = None) -> Dict[str, Dict]:
-        """Scrape OpenAI pricing page"""
-        return self._scrape_single_page(
-            url="https://platform.openai.com/docs/pricing",
-            provider="openai",
-            models=models,
-            additional_instructions=(
-                "IMPORTANT: Use the 'Standard' rate for input and output prices. "
-                "Ignore Batch API rates, Cached rates, and any other rate types."
-            )
-        )
+        """Scrape OpenAI pricing — per-model, fetching the pricing page once and reusing content"""
+        if not SCRAPING_AVAILABLE:
+            return {}
+
+        expected_models = models
+        if expected_models is None:
+            csv_models = self.load_models_from_csv()
+            expected_models = csv_models.get('openai', [])
+
+        all_pricing: Dict[str, Dict] = {}
+
+        # Fetch the pricing page once and reuse
+        url = "https://platform.openai.com/docs/pricing"
+        print(f"  Fetching {url}...")
+        content = self._fetch_page_content(url)
+        if not content:
+            print(f"  ✗ Could not fetch OpenAI pricing page")
+            return {}
+
+        for model in expected_models:
+            if model not in self.OPENAI_MODEL_URLS:
+                print(f"  ⚠️  No URL known for {model}, skipping")
+                continue
+
+            try:
+                print(f"  Parsing {model}...")
+                pricing = self._parse_with_llm(
+                    html_content=content,
+                    provider="openai",
+                    expected_models=[model],
+                    url=url,
+                    additional_instructions=(
+                        "IMPORTANT: Use the 'Standard' rate for input and output prices. "
+                        "Ignore Batch API rates, Cached rates, and any other rate types."
+                    )
+                )
+
+                if model in pricing:
+                    data = pricing[model]
+                    try:
+                        inp = float(data.get('input_price', -1))
+                        out = float(data.get('output_price', -1))
+                        if inp <= 0 or out <= 0:
+                            print(f"  ✗ Invalid prices for {model}: ${inp}/${out}")
+                            continue
+                        if inp > 1000 or out > 1000:
+                            print(f"  ⚠️  Suspiciously high price for {model}: ${inp}/${out}")
+                    except (ValueError, TypeError):
+                        print(f"  ✗ Non-numeric price for {model}")
+                        continue
+                    all_pricing[model] = data
+                    print(f"  ✓ {model}: ${data['input_price']} / ${data['output_price']}")
+                else:
+                    print(f"  ✗ Could not extract pricing for {model}")
+
+            except Exception as e:
+                print(f"  ✗ Error parsing {model}: {e}")
+
+        return all_pricing
 
     def scrape_anthropic_pricing(self, models: Optional[List[str]] = None) -> Dict[str, Dict]:
         """Scrape Anthropic pricing page"""
@@ -743,14 +808,15 @@ Return only JSON:"""
 
     # Maps provider -> base URL for single-page providers
     PROVIDER_URLS = {
-        'openai':    'https://platform.openai.com/docs/pricing',
         'anthropic': 'https://www.anthropic.com/pricing',
         'genai':     'https://ai.google.dev/gemini-api/docs/pricing',
     }
 
     def get_source_url(self, provider: str, model: str) -> str:
         """Return the raw source URL for a given provider/model."""
-        if provider in self.PROVIDER_URLS:
+        if provider == 'openai':
+            return self.OPENAI_MODEL_URLS.get(model, "")
+        elif provider in self.PROVIDER_URLS:
             return self.PROVIDER_URLS[provider]
         elif provider == 'cohere':
             return self.COHERE_MODEL_URLS.get(model, "")
