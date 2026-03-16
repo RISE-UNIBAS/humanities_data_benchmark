@@ -448,7 +448,9 @@ This benchmark suite currently tests models from the following providers:
 | | gpt-4o-mini                           | Smaller, faster GPT-4o                                     |
 | | gpt-5                                 | Next-generation with advanced reasoning                    |
 | | gpt-5.1-2025-11-13                    | GPT-5.1 (Nov 2025)                                         |
-| | gpt-5.2                               | Latest GPT-5 iteration                                     |
+| | gpt-5.2                               | GPT-5 iteration (Feb 2026)                                 |
+| | gpt-5.3-codex                         | GPT-5.3 Codex                                              |
+| | gpt-5.4-2026-03-05                    | GPT-5.4 (Mar 2026)                                         |
 | | gpt-5-mini                            | Efficient GPT-5                                            |
 | | gpt-5-nano                            | Compact GPT-5                                              |
 | | o3                                    | Reasoning-focused model                                    |
