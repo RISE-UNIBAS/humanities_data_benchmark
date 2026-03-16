@@ -396,7 +396,7 @@ This benchmark suite currently tests models from the following providers:
 
 | Provider | Model | Notes                                                    |
 |----------|-------|----------------------------------------------------------|
-| **Anthropic** | claude-3-5-sonnet-20241022 | Mid-tier Claude model with strong reasoning              |
+| **Anthropic** | ~~claude-3-5-sonnet-20241022~~ | ~~Mid-tier Claude model with strong reasoning~~ (legacy) |
 | | ~~claude-3-7-sonnet-20250219~~ | ~~Advanced Claude with improved capabilities~~ (legacy)  |
 | | ~~claude-3-opus-20240229~~ | ~~Highest capability Claude 3 model~~ (legacy)           |
 | | ~~claude-3-5-haiku-20241022~~ | ~~Fastest/smallest Claude 3.5~~ (legacy)                 |
@@ -437,9 +437,7 @@ This benchmark suite currently tests models from the following providers:
 | | mistral-medium-2508 | Updated Mistral Medium                                   |
 | | mistral-small-2506 | Compact Mistral model                                    |
 | | ~~pixtral-12b~~ | ~~12B parameter multimodal~~ (legacy)                    |
-| | pixtral-12b-2409 | 12B parameter multimodal (Sept 2024)                     |
 | | pixtral-large-2411 | Multimodal large (Nov 2024)                              |
-| | pixtral-large-latest | Multimodal for vision tasks                              |
 | **OpenAI** | gpt-4.1 | Latest GPT-4 iteration                                   |
 | | gpt-4.1-mini | Optimized for efficiency                                 |
 | | gpt-4.1-nano | Ultra-compact for lightweight tasks                      |
@@ -458,6 +456,7 @@ This benchmark suite currently tests models from the following providers:
 | | qwen/qwen3-vl-8b-thinking | Qwen3 VL 8B reasoning                                    |
 | | x-ai/grok-4 | xAI's Grok 4 multimodal                                  |
 | **sciCORE** | GLM-4.5V-FP8 | GLM-4.5V with FP8 quantization (University of Basel HPC) |
+| | qwen3-235b-fp8 | Qwen3 235B with FP8 quantization (University of Basel HPC) |
 
 **Note:** OpenRouter provides access to models from multiple providers through a unified API. sciCORE provides access to models hosted on the University of Basel's high-performance computing infrastructure.
 
