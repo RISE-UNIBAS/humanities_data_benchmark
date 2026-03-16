@@ -807,6 +807,11 @@ Return only JSON:"""
             return {}
 
     # Maps provider -> base URL for single-page providers
+    GENAI_MODEL_URLS = {
+        'gemini-3.1-flash-lite-preview': 'https://ai.google.dev/gemini-api/docs/gemini-3',
+        'gemini-3.1-pro-preview':        'https://ai.google.dev/gemini-api/docs/gemini-3',
+    }
+
     PROVIDER_URLS = {
         'anthropic': 'https://www.anthropic.com/pricing',
         'genai':     'https://ai.google.dev/gemini-api/docs/pricing',
@@ -816,6 +821,8 @@ Return only JSON:"""
         """Return the raw source URL for a given provider/model."""
         if provider == 'openai':
             return self.OPENAI_MODEL_URLS.get(model, "")
+        elif provider == 'genai':
+            return self.GENAI_MODEL_URLS.get(model, self.PROVIDER_URLS['genai'])
         elif provider in self.PROVIDER_URLS:
             return self.PROVIDER_URLS[provider]
         elif provider == 'cohere':
