@@ -54,19 +54,18 @@ class PricingUpdater:
     """Handles pricing updates for LLM models"""
 
     OPENAI_MODEL_URLS = {
-        'gpt-4o':              'https://platform.openai.com/docs/pricing',
-        'gpt-4o-mini':         'https://platform.openai.com/docs/pricing',
-        'gpt-4.5-preview':     'https://platform.openai.com/docs/pricing',
-        'gpt-4.1':             'https://platform.openai.com/docs/pricing',
-        'gpt-4.1-mini':        'https://platform.openai.com/docs/pricing',
-        'gpt-4.1-nano':        'https://platform.openai.com/docs/pricing',
-        'gpt-5':               'https://platform.openai.com/docs/pricing',
-        'gpt-5-mini':          'https://platform.openai.com/docs/pricing',
-        'gpt-5-nano':          'https://platform.openai.com/docs/pricing',
-        'gpt-5.1-2025-11-13':  'https://platform.openai.com/docs/pricing',
-        'gpt-5.2':             'https://platform.openai.com/docs/pricing',
+        'gpt-4o':              'https://developers.openai.com/api/docs/models/gpt-4o',
+        'gpt-4o-mini':         'https://developers.openai.com/api/docs/models/gpt-4o-mini',
+        'gpt-4.1':             'https://developers.openai.com/api/docs/models/gpt-4.1',
+        'gpt-4.1-mini':        'https://developers.openai.com/api/docs/models/gpt-4.1-mini',
+        'gpt-4.1-nano':        'https://developers.openai.com/api/docs/models/gpt-4.1-nano',
+        'gpt-5':               'https://developers.openai.com/api/docs/models/gpt-5',
+        'gpt-5-mini':          'https://developers.openai.com/api/docs/models/gpt-5-mini',
+        'gpt-5-nano':          'https://developers.openai.com/api/docs/models/gpt-5-nano',
+        'gpt-5.1-2025-11-13':  'https://developers.openai.com/api/docs/models/gpt-5.1',
+        'gpt-5.2':             'https://developers.openai.com/api/docs/models/gpt-5.2',
         'gpt-5.4-2026-03-05':  'https://developers.openai.com/api/docs/models/gpt-5.4',
-        'o3':                  'https://platform.openai.com/docs/pricing',
+        'o3':                  'https://developers.openai.com/api/docs/models/o3',
     }
 
     COHERE_MODEL_URLS = {
