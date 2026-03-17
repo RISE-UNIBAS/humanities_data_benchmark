@@ -115,10 +115,15 @@ class Benchmark(ABC):
         prompt_kwargs = self.get_prompt_kwargs(object_basename)
         if prompt_kwargs:
             try:
-                return prompt.format(**prompt_kwargs)
+                prompt = prompt.format(**prompt_kwargs)
             except KeyError as e:
                 logging.error(f"Missing key in prompt formatting: {e}")
-                return prompt
+
+        if self.rules["api_style"] == "responses" and self.dataclass:
+            dc_string = self.dataclass.model_json_schema()
+            prompt += f"\n\nPlease respond with a JSON matching this exact schema: {json.dumps(dc_string)}"
+            logging.debug(f"Extended prompt with dataclass schema for responses API style")
+
         return prompt
 
     def load_dataclass(self) -> None | type:
@@ -292,7 +297,7 @@ class Benchmark(ABC):
         if text_paths:
             kwargs["files"] = text_paths
 
-        if self.dataclass:
+        if self.dataclass and not (self.rules and self.rules.get("api_style") == "responses"):
             kwargs["response_format"] = self.dataclass
 
         # Add conversation continuation if shared context is enabled
