@@ -59,11 +59,18 @@ class Benchmark(ABC):
         if config['rules'] == "":
             self.rules = None
         else:
-            self.rules = json.loads(config['rules'])
+            try:
+                self.rules = json.loads(config['rules'])
+            except json.JSONDecodeError as e:
+                logging.error(f"Invalid JSON in rules for {self.name}: {e}")
+                self.rules = None
 
         kwargs = {}
         if self.dataclass:
             kwargs["dataclass"] = self.dataclass
+
+        if "api_style" in self.rules and self.rules["api_style"]:
+            kwargs["api_style"] = self.rules["api_style"]
 
         self.client = create_ai_client(self.provider,
                                        self.api_key,
