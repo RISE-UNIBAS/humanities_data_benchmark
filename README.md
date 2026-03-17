@@ -32,31 +32,29 @@ This benchmark suite focuses on tasks essential to digital humanities work with 
 
 ## Table of Contents
 
-| | |
-|--------|-------------|
-| **[1. Overview](#1-overview)** | |
-| [1.1. Terminology](#11-terminology) | What terms are used for what?|
-| [1.2. Available Benchmarks](#12-available-benchmarks) | List of currently available datasets |
-| [1.3. How it Works](#13-how-it-works) | Breakdown of the framework's functionality |
-| [1.4. Practical Considerations](#14-practical-considerations) |  |
-| **[2. Use it!](#2-use-it)** |  |
-| [2.1. Fork and prepare](#21-fork-and-prepare) | Start here with your own benchmark project. |
-| [2.2. Run a configured test](#22-run-a-configured-test) | Test the framework and your setup. |
-| [2.3. Create a new Benchmark](#23-create-a-new-benchmark) | Use our CLI tool for easy creation, add context data and implement scoring.|
-| [2.4. Run an adhoc test](#24-run-an-adhoc-test) | Test your created benchmark and inspect the test results. |
-| [2.5. Generate a result render](#25-generate-a-result-render) | Pretty-print your results for better inspection.  |
-| **[3. Share it!](#3-share-it)** | |
-| [3.1. Before Submitting](#31-before-submitting) | Did you complete the checklist? |
-| [3.2. Create a pull request](#32-create-a-pull-request) | Submit your dataset. |
-| [3.3. Review & Publication](#33-review--publication) | We check your submission. Now what? |
-| **[4. Providers & Models](#4-providers-and-models)** | List of implemented providers and models.|
-| **[5. Benchmarking Methodology](#5-benchmarking-methodology)** | |
-| [5.1. Ground Truth](#51-ground-truth) | How to create, what to consider. |
-| [5.2. Metrics](#52-metrics) | How to score, what to consider. |
-| **[6. Project Status](#6-project-status)** | |
-| [6.1. Current Limitations](#61-current-limitations) | |
-| [6.2. Outlook](#62-outlook) |  |
-| **[7. Contributors](#7-contributors)** | |
+- [1. Overview](#1-overview)
+  - [1.1. Terminology](#11-terminology)
+  - [1.2. Available Benchmarks](#12-available-benchmarks)
+  - [1.3. How it Works](#13-how-it-works)
+  - [1.4. Practical Considerations](#14-practical-considerations)
+- [2. Use it!](#2-use-it)
+  - [2.1. Fork and prepare](#21-fork-and-prepare)
+  - [2.2. Run a configured test](#22-run-a-configured-test)
+  - [2.3. Create a new Benchmark](#23-create-a-new-benchmark)
+  - [2.4. Run an adhoc test](#24-run-an-adhoc-test)
+  - [2.5. Generate a result render](#25-generate-a-result-render)
+- [3. Share it!](#3-share-it)
+  - [3.1. Before Submitting](#31-before-submitting)
+  - [3.2. Create a pull request](#32-create-a-pull-request)
+  - [3.3. Review & Publication](#33-review--publication)
+- [4. Providers & Models](#4-providers-and-models)
+- [5. Benchmarking Methodology](#5-benchmarking-methodology)
+  - [5.1. Ground Truth](#51-ground-truth)
+  - [5.2. Metrics](#52-metrics)
+- [6. Project Status](#6-project-status)
+  - [6.1. Current Limitations](#61-current-limitations)
+  - [6.2. Outlook](#62-outlook)
+- [7. Contributors](#7-contributors)
 
 
 ## 1. Overview
