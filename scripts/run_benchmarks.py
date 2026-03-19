@@ -3,12 +3,15 @@ import importlib
 import os
 import sys
 import time
+
+# Add project root to sys.path before any local imports
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
 from benchmark_base import DefaultBenchmark
 from dotenv import load_dotenv
+from local import is_local_provider
 import logging
 
-# Add project root to sys.path
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 load_dotenv()
 
 BENCHMARKS_DIR = '../benchmarks'
@@ -28,7 +31,9 @@ logging.basicConfig(
 
 
 def get_api_key(provider):
-    """Get the API key for the provider."""
+    """Get the API key for the provider. Returns None for local providers."""
+    if is_local_provider(provider):
+        return None
     api_key = os.getenv(f'{provider.upper()}_API_KEY')
     if not api_key:
         raise ValueError(f"No API key found for {provider.upper()}")

@@ -23,14 +23,16 @@ SCRIPT_DIR = Path(__file__).parent.resolve()
 PROJECT_ROOT = SCRIPT_DIR.parent
 LAST_ADHOC_TEST_FILE = SCRIPT_DIR / ".last_adhoc_test.json"
 
-# Add scripts directory to path for imports
+# Add scripts and project root to path for imports
 sys.path.insert(0, str(SCRIPT_DIR))
+sys.path.insert(0, str(PROJECT_ROOT))
 
 # Change to scripts directory for relative path imports to work
 original_cwd = os.getcwd()
 os.chdir(SCRIPT_DIR)
 
 from run_benchmarks import load_benchmark
+from local import is_local_provider, LOCAL_PROVIDERS
 
 
 # Color codes for terminal output
@@ -289,9 +291,11 @@ def display_test_config(test: Dict):
 
 
 def check_api_key(provider: str) -> bool:
-    """Check if API key is available for provider."""
-    key_name = f"{provider.upper()}_API_KEY"
+    """Check if API key is available for provider. Always passes for local providers."""
+    if is_local_provider(provider):
+        return True
 
+    key_name = f"{provider.upper()}_API_KEY"
     if os.environ.get(key_name):
         return True
 
@@ -370,15 +374,17 @@ def list_available_benchmarks() -> List[str]:
 
 
 def get_available_providers() -> List[str]:
-    """Get list of providers with configured API keys."""
-    all_providers = ["openai", "anthropic", "genai", "mistral", "openrouter", "scicore",
-                     "deepseek", "cohere"]
+    """Get list of providers with configured API keys, plus all local providers."""
+    all_api_providers = ["openai", "anthropic", "genai", "mistral", "openrouter", "scicore",
+                         "deepseek", "cohere"]
     available = []
 
-    for provider in all_providers:
+    for provider in all_api_providers:
         key_name = f"{provider.upper()}_API_KEY"
         if os.environ.get(key_name):
             available.append(provider)
+
+    available.extend(sorted(LOCAL_PROVIDERS.keys()))
 
     return available
 
@@ -429,7 +435,9 @@ def collect_adhoc_test_params() -> Optional[Dict]:
         "openrouter": "openai/gpt-4o",
         "scicore": "meta-llama/Meta-Llama-3.1-70B-Instruct",
         "deepseek": "deepseek-3.5-turbo",
-        "cohere": "command-a-03-2025"
+        "cohere": "command-a-03-2025",
+        "sam3_local": "sam3",
+        "grounding_dino_local": "grounding-dino-tiny",
     }
     suggested_model = model_suggestions.get(params['provider'], "")
     params['model'] = get_input("Model name", default=suggested_model)

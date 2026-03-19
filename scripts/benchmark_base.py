@@ -14,6 +14,8 @@ from ai_client.pricing import calculate_cost
 
 from data_loader import read_file, write_file
 from ai_client import create_ai_client, LLMResponse, Usage
+from local import is_local_provider, get_backend
+from local.backends.base import LocalRequest
 
 
 class Benchmark(ABC):
@@ -65,17 +67,20 @@ class Benchmark(ABC):
                 logging.error(f"Invalid JSON in rules for {self.name}: {e}")
                 self.rules = None
 
-        kwargs = {}
-        if self.dataclass:
-            kwargs["dataclass"] = self.dataclass
-
-        if "api_style" in self.rules and self.rules["api_style"]:
-            kwargs["api_style"] = self.rules["api_style"]
-
-        self.client = create_ai_client(self.provider,
-                                       self.api_key,
-                                       system_prompt=self.role_description,
-                                       **kwargs)
+        if is_local_provider(self.provider):
+            self.client = None
+            self.local_backend = get_backend(self.provider)
+        else:
+            self.local_backend = None
+            kwargs = {}
+            if self.dataclass:
+                kwargs["dataclass"] = self.dataclass
+            if self.rules and "api_style" in self.rules and self.rules["api_style"]:
+                kwargs["api_style"] = self.rules["api_style"]
+            self.client = create_ai_client(self.provider,
+                                           self.api_key,
+                                           system_prompt=self.role_description,
+                                           **kwargs)
 
         # Shared context support (for multi-stage requests)
         self.conversation_id = None  # Track conversation for subsequent requests
@@ -98,7 +103,8 @@ class Benchmark(ABC):
         if not os.path.exists(os.path.join(self.benchmark_dir, "ground_truths")):
             logging.error(f"Ground truths directory not found: {self.benchmark_dir}")
             return False
-        if not self.provider in ["openai", "genai", "anthropic", "mistral", "openrouter", "scicore", "cohere", "deepseek"]:
+        if self.provider not in ["openai", "genai", "anthropic", "mistral", "openrouter", "scicore", "cohere", "deepseek"] \
+                and not is_local_provider(self.provider):
             logging.error(f"Invalid provider: {self.provider}")
             return False
         if not self.model:
@@ -119,7 +125,7 @@ class Benchmark(ABC):
             except KeyError as e:
                 logging.error(f"Missing key in prompt formatting: {e}")
 
-        if self.rules["api_style"] == "responses" and self.dataclass:
+        if self.rules and self.rules.get("api_style") == "responses" and self.dataclass:
             dc_string = self.dataclass.model_json_schema()
             prompt += f"\n\nPlease respond with a JSON matching this exact schema: {json.dumps(dc_string)}"
             logging.debug(f"Extended prompt with dataclass schema for responses API style")
@@ -303,6 +309,16 @@ class Benchmark(ABC):
         # Add conversation continuation if shared context is enabled
         if self.use_shared_context and self.conversation_id:
             kwargs["conversation_id"] = self.conversation_id
+
+        # Dispatch to local backend if applicable
+        if self.local_backend is not None:
+            return self.local_backend.run(LocalRequest(
+                prompt=prompt,
+                images=image_paths,
+                files=text_paths,
+                dataclass=self.dataclass,
+                temperature=self.temperature,
+            ))
 
         return self.client.prompt(self.model, prompt, **kwargs)
 
