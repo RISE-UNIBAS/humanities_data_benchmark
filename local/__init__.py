@@ -12,8 +12,10 @@ import importlib
 
 LOCAL_PROVIDERS: dict[str, str] = {
     # "provider_name": "module.path.ClassName"
-    "sam3_local": "local.backends.sam3.Sam3Backend",                          # macOS / Apple Silicon
-    "grounding_dino_local": "local.backends.grounding_dino.GroundingDinoBackend",  # Windows / Linux / NVIDIA
+    "sam3_local":            "local.backends.sam3.Sam3Backend",               # macOS / Apple Silicon
+    "grounding_dino_local":  "local.backends.grounding_dino.GroundingDinoBackend",  # Windows / Linux / NVIDIA
+    "doclayout_yolo_local":  "local.backends.doclayout_yolo.DocLayoutYoloBackend",  # Windows / Linux / NVIDIA
+    "contour_local":         "local.backends.contour.ContourDetectionBackend",      # any OS, no GPU needed
 }
 
 

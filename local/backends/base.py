@@ -37,7 +37,15 @@ class LocalBackend(ABC):
 
     Subclasses must implement run(). They may optionally override
     parse_response() for model-specific JSON extraction logic.
+
+    RETURNS_ORIGINAL_COORDS:
+        True  — the backend's detection boxes are in the *original* input image
+                coordinate space (e.g. YOLO, which undoes its own letterboxing).
+        False — boxes are in the *inference* image space after any internal
+                resize (e.g. the contour backend, which resizes via PIL first).
     """
+
+    RETURNS_ORIGINAL_COORDS: bool = False
 
     # ------------------------------------------------------------------ #
     # Structured output parsing                                            #

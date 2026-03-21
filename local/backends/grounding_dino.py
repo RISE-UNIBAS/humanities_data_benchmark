@@ -107,22 +107,23 @@ class GroundingDinoBackend(LocalBackend):
         with torch.no_grad():
             outputs = self.model(**inputs)
 
-        # post_process returns one result dict per image
+        # post_process returns one result dict per image; filter by threshold manually
+        # (box_threshold / text_threshold kwargs were removed in newer transformers versions)
         results = self.processor.post_process_grounded_object_detection(
             outputs,
             inputs["input_ids"],
-            box_threshold=self.BOX_THRESHOLD,
-            text_threshold=self.TEXT_THRESHOLD,
             target_sizes=[image.size[::-1]],  # (height, width)
         )[0]
 
         detections = []
         for box, score, label in zip(results["boxes"], results["scores"], results["labels"]):
-            detections.append({
-                "label": label,
-                "box": [round(float(v), 2) for v in box.tolist()],  # xyxy, absolute pixels
-                "score": round(float(score), 4),
-            })
+            score_val = float(score)
+            if score_val >= self.BOX_THRESHOLD:
+                detections.append({
+                    "label": label,
+                    "box": [round(float(v), 2) for v in box.tolist()],  # xyxy, absolute pixels
+                    "score": round(score_val, 4),
+                })
 
         return detections
 
