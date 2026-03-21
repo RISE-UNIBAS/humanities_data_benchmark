@@ -118,7 +118,7 @@ class Benchmark(ABC):
         prompt_path = os.path.join(self.benchmark_dir, "prompts", self.prompt_file)
         prompt = read_file(prompt_path)
         logging.debug(f"Loaded prompt from {prompt_path}")
-        prompt_kwargs = self.get_prompt_kwargs(object_basename)
+        prompt_kwargs = self.get_prompt_kwargs(object_basename, self.get_image_paths(object_basename) + self.get_text_paths(object_basename))
         if prompt_kwargs:
             try:
                 prompt = prompt.format(**prompt_kwargs)
@@ -130,6 +130,7 @@ class Benchmark(ABC):
             prompt += f"\n\nPlease respond with a JSON matching this exact schema: {json.dumps(dc_string)}"
             logging.debug(f"Extended prompt with dataclass schema for responses API style")
 
+        logging.info("Final prompt:\n" + prompt)
         return prompt
 
     def load_dataclass(self) -> None | type:
@@ -183,7 +184,7 @@ class Benchmark(ABC):
 
         if page_pattern is None:
             # default pattern: _p001, _p1, _p00042 etc. just before extension
-            page_pattern = re.compile(r"_p\d+$")
+            page_pattern = re.compile(r"____p\d+$")
 
         basenames: Set[str] = set()
 
@@ -529,6 +530,9 @@ class Benchmark(ABC):
             logging.error(f"Failed to establish shared context: {e}")
             raise
 
+    def get_basename_pattern(self) -> Optional[Pattern[str]]:
+        return None
+
     def before_run(self):
         """ Hook to run before the benchmark starts. """
         pass
@@ -594,7 +598,7 @@ class Benchmark(ABC):
         images_dir = os.path.join(self.benchmark_dir, 'images')
         texts_dir = os.path.join(self.benchmark_dir, 'texts')
         object_basenames = self.get_all_basenames([images_dir, texts_dir],
-                                                  page_pattern=re.compile(r"_p\d+$")) # TODO
+                                                  page_pattern=self.get_basename_pattern())
         logging.info(f"Found {len(object_basenames)} objects to process (workers={workers}).")
 
         # Process objects — serially or in parallel
@@ -704,7 +708,8 @@ class Benchmark(ABC):
         return f"{self.name} ({self.provider}/{self.model})"
 
     def get_prompt_kwargs(self,
-                          filename: str) -> Dict:
+                          basename: str,
+                          filenames: List[str]) -> Dict:
         """If the prompt file contains file information."""
         return {}
 

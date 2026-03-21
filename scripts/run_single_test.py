@@ -438,6 +438,8 @@ def collect_adhoc_test_params() -> Optional[Dict]:
         "cohere": "command-a-03-2025",
         "sam3_local": "sam3",
         "grounding_dino_local": "grounding-dino-tiny",
+        "doclayout_yolo_local": "doclayout-yolo-docstructbench",
+        "contour_local": "opencv-contour",
     }
     suggested_model = model_suggestions.get(params['provider'], "")
     params['model'] = get_input("Model name", default=suggested_model)
