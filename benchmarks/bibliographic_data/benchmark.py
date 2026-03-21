@@ -7,9 +7,9 @@ from scripts.scoring_helper import get_all_keys, get_nested_value, calculate_fuz
 
 class BibliographicData(Benchmark):
 
-    def get_prompt_kwargs(self, filename: str) -> Dict:
+    def get_prompt_kwargs(self, basename: str, filenames) -> Dict:
         """If the prompt file contains file information."""
-        page_number = filename.split("_")[-1].split(".")[0]  # Extract page number from filename
+        page_number = basename.split("_")[-1].split(".")[0]  # Extract page number from filename
         return {
             "page_number": page_number
         }

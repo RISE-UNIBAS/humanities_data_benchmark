@@ -1,4 +1,8 @@
 from __future__ import annotations
+
+import re
+from re import Pattern
+
 import pandas as pd
 import csv
 import json
@@ -16,6 +20,9 @@ from benchmarks.business_letters.person import Person
 
 class BusinessLetters(Benchmark):
     multi_image_support = True
+
+    def get_basename_pattern(self) -> Optional[Pattern[str]]:
+        return re.compile(r"_p\d+$")
 
     def before_run(self) -> None:
         self.update_ground_truth()

@@ -15,12 +15,13 @@ class GeneralMeetingMinutes(Benchmark):
     # Shared context configuration
     use_shared_context = True
 
-    def get_prompt_kwargs(self, filename: str) -> Dict:
+    def get_prompt_kwargs(self, basename: str,
+                          filenames: List[str]) -> Dict:
         """If the prompt file contains file information."""
-        page_number = filename.split("page_")[-1].split(".")[0]  # Extract page number from filename
+        page_number = basename.split("page_")[-1].split(".")[0]  # Extract page number from filename
 
         return {
-            "filename": filename,
+            "filename": basename,
             "page_number": page_number
         }
 
