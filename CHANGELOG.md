@@ -8,20 +8,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Unreleased
 
 ### Added
-- 14 new models: gpt-5.2, gpt-5.3-codex, gpt-5.4-2026-03-05 (OpenAI), gemini-3-flash-preview, gemini-3.1-flash-lite-preview, gemini-3.1-pro-preview (GenAI), claude-opus-4-6, claude-sonnet-4-6, claude-opus-4-5-20251101, claude-haiku-4-5-20251001 (Anthropic), mistral-large-2512, ministral-14b-2512, ministral-8b-2512, magistral-small-2509 (Mistral)
+- 15 new models: gpt-5.2, gpt-5.3-codex, gpt-5.4-2026-03-05 (OpenAI), gemini-3-flash-preview, gemini-3.1-flash-lite-preview, gemini-3.1-pro-preview (GenAI), claude-opus-4-6, claude-sonnet-4-6, claude-opus-4-5-20251101, claude-haiku-4-5-20251001 (Anthropic), mistral-large-2512, ministral-14b-2512, ministral-8b-2512, magistral-small-2509 (Mistral), grok-4.20-0309-reasoning (x-ai)
 - 170 new benchmark test configurations (T0488-T0709) across all benchmarks for new models
 - 47 new benchmark test configurations (T0576-T0622) for personnel_cards benchmark across all non-legacy models
+- 32 new benchmark test configurations (T0710-T0741) for magazine_pages benchmark and x-ai/grok-4.20-0309-reasoning across all benchmarks
 - update_pricing.py: semi-automated pricing updater that scrapes provider websites, extracts prices via LLM, archives source URLs on Wayback Machine in parallel, and updates pricing.json
 - Pricing data for 2026-03-02
 - Pricing data for 2026-01-23
 - Tests on 2026-01-24 to 2026-01-26: all 484 non-legacy tests across 7 providers (Anthropic, Cohere, GenAI, Mistral, OpenAI, OpenRouter, sciCORE)
 - personnel_cards benchmark for extracting structured data from 20th century personnel card tables
+- magazine_pages benchmark for extracting structured data from historical magazine pages
+- x-ai provider support with direct API integration
+- Local model support via `contour_local` provider (e.g. opencv-contour); tokens are estimated and all downstream scoring/saving/aggregating remains unchanged
 - Published paper citation in README: Hindermann et al. (2026) in Journal of Open Humanities Data (DOI: 10.5334/johd.481)
 
 ### Changed
 - inject_costs.py: added `--date` mode to process all tests for a specific date (defaults to results/ only, use `--test-runs` to target test_runs/)
 - Marked all gemini-3-pro-preview, claude-3-7-sonnet-20250219, claude-3-opus-20240229, and pixtral-12b benchmark tests as legacy
 - Updated generate_date_report.py: outputs to reports/ folder, filename format {date}_report, added warnings system with 5 checks (ZERO_COST, ALL_NA, ZERO_SCORE, ZERO_ITEMS, ZERO_DURATION), generates {date}_report_warnings.md for manual review, added progress reporting, added --no-warnings flag, added date range support with --start-date and --end-date arguments
+- OpenAI models now support selectable API endpoints
 
 ### Fixed
 - Converted library_cards images from PNG to JPEG format (263 files had .jpg extension but were actually PNG)

@@ -40,7 +40,7 @@ Contributions are categorized by benchmark and type of contribution, and in alph
 | Domain expert | [Lea Kasper] |
 | Data curator | [Sorin Marti] |
 | Annotator | [Lea Kasper], [Sorin Marti] |
-| Analyst | [Lea Kasper] |
+| Analyst | [Lea Kasper], [Sorin Marti] |
 | Engineer | [Sorin Marti] |
 
 ### [Book Advert XML](benchmarks/book_advert_xml/)
@@ -83,6 +83,15 @@ Contributions are categorized by benchmark and type of contribution, and in alph
 | Analyst | [Maximilian Hindermann] |
 | Engineer | [Maximilian Hindermann], [Ina Serif] |
 
+### [General Meeting Minutes](benchmarks/general_meeting_minutes/)
+
+| Role          | Contributors                              |
+|---------------|-------------------------------------------|
+| Domain expert | [Alexandra Binnenkade], [Sven Lienhard]   |
+| Data curator  | [Sven Lienhard]                           |
+| Analyst       | [Sven Lienhard], [Sorin Marti]            |
+| Engineer      | [Sorin Marti]                             |
+
 ### [Library Cards](benchmarks/library_cards/)
 
 | Role | Contributors |
@@ -92,6 +101,16 @@ Contributions are categorized by benchmark and type of contribution, and in alph
 | Annotator | [Maximilian Hindermann], [Gabriel Müller] |
 | Analyst | [Maximilian Hindermann] |
 | Engineer | [Maximilian Hindermann] |
+
+### [Magazine Pages](benchmarks/magazine_pages/)
+
+| Role          | Contributors                    |
+|---------------|---------------------------------|
+| Domain expert | [Lea Kasper]                    |
+| Data curator  | [Lea Kasper], [Sorin Marti]     |
+| Annotator     | [Lea Kasper], [Sorin Marti]     |
+| Analyst       | [Arno Bosse]                    |
+| Engineer      | [Sorin Marti]                   |
 
 ### [Medieval Manuscripts](benchmarks/medieval_manuscripts/)
 
@@ -119,12 +138,15 @@ Contributions are categorized by benchmark and type of contribution, and in alph
 | Name                        | GitHub                                                 | ORCID                                                        |
 |-----------------------------|--------------------------------------------------------|--------------------------------------------------------------|
 | Anthea Alberto              | [@antheajeanne](https://github.com/antheajeanne)       | [0009-0007-0430-0050](https://orcid.org/0009-0007-0430-0050) |
+| Alexandra Binnenkade        | —                                                      | [0000-0002-9518-7212](https://orcid.org/0000-0002-9518-7212) |
+| Arno Bosse                  | [@kintopp](https://github.com/kintopp)                 | [0000-0003-3681-1289](https://orcid.org/0000-0003-3681-1289) |
 | Sven Burkhardt              | [@Sveburk](https://github.com/Sveburk)                 | [0009-0001-4954-4426](https://orcid.org/0009-0001-4954-4426) |
 | Eric Decker                 | [@edecker](https://github.com/edecker)                 | [0000-0003-3035-2413](https://orcid.org/0000-0003-3035-2413) |
 | Pema Frick                  | [@pwmff](https://github.com/pwmff)                     | [0000-0002-8733-7161](https://orcid.org/0000-0002-8733-7161) |
 | Maximilian Hindermann       | [@MHindermann](https://github.com/MHindermann)         | [0000-0002-9337-4655](https://orcid.org/0000-0002-9337-4655) |
 | Lea Kasper                  | [@lekasp](https://github.com/lekasp)                   | [0000-0002-4671-1700](https://orcid.org/0000-0002-4671-1700) |
 | José Luis Losada Palenzuela | [@editio](https://github.com/editio)                   | [0000-0002-6530-1328](https://orcid.org/0000-0002-6530-1328) |
+| Sven Lienhard               | —                                                      | [0009-0005-9981-4286](https://orcid.org/0009-0005-9981-4286) |
 | Sorin Marti                 | [@sorinmarti](https://github.com/sorinmarti)           | [0000-0002-9541-1202](https://orcid.org/0000-0002-9541-1202) |
 | Gabriel Müller              | [@gbmllr1](https://github.com/gbmllr1)                 | [0000-0001-8320-5148](https://orcid.org/0000-0001-8320-5148) |
 | Ina Serif                   | [@wissen-ist-acht](https://github.com/wissen-ist-acht) | [0000-0003-2419-4252](https://orcid.org/0000-0003-2419-4252) |
@@ -146,7 +168,10 @@ For questions about contributions or attributions, please contact:
 *This file is regularly updated to acknowledge new contributions to the project. The "[TO BE COMPLETED]" sections are placeholders for detailed attribution information to be filled in by project contributors.*
 
 [Anthea Alberto]: https://orcid.org/0009-0007-0430-0050
+[Alexandra Binnenkade]: https://orcid.org/0000-0002-9518-7212
+[Arno Bosse]: https://orcid.org/0000-0003-3681-1289
 [Sven Burkhardt]: https://orcid.org/0009-0001-4954-4426
+[Sven Lienhard]: https://orcid.org/0009-0005-9981-4286
 [Eric Decker]: https://orcid.org/0000-0003-3035-2413
 [Pema Frick]: https://orcid.org/0000-0002-8733-7161
 [Maximilian Hindermann]: https://orcid.org/0000-0002-9337-4655
