@@ -411,6 +411,8 @@ This benchmark suite currently tests models from the following providers:
 | | command-r-08-2024                     | Balanced performance model                                |
 | | command-r-plus-08-2024                | Enhanced Command R with extended capabilities             |
 | | command-r7b-12-2024                   | Compact 7B parameter model                                |
+| **DeepSeek** | deepseek-chat                         | DeepSeek-V3 chat model                                    |
+| | deepseek-reasoner                     | DeepSeek-R1 reasoning model                               |
 | **Google/Gemini** | ~~gemini-1.5-flash~~                  | ~~Earlier generation flash~~ (legacy)                     |
 | | ~~gemini-1.5-pro~~                    | ~~Gemini 1.5 series~~ (legacy)                            |
 | | gemini-2.0-flash                      | Fast response multimodal model                            |

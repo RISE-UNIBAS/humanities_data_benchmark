@@ -72,7 +72,8 @@ def detect_warnings(result):
     cer = result['cer']
 
     if (f1_macro == 'N/A' and f1_micro == 'N/A' and
-        fuzzy == 'N/A' and cer == 'N/A'):
+        fuzzy == 'N/A' and cer == 'N/A' and
+        not result.get('has_scoring_data', False)):
         warnings.append({
             'code': 'ALL_NA',
             'severity': 'critical',
@@ -149,6 +150,8 @@ def analyze_test_results(results_dir, test_id, date=None):
     total_output_cost = cost_summary.get('output_cost_usd', 0.0)
     total_cost = cost_summary.get('total_cost_usd', 0.0)
 
+    metric_keys = {k for k in scoring.keys() if k != 'cost_summary'}
+
     result = {
         'test_id': test_id,
         'date': date,
@@ -157,6 +160,9 @@ def analyze_test_results(results_dir, test_id, date=None):
         'f1_micro': scoring.get('f1_micro', 'N/A'),
         'fuzzy': scoring.get('fuzzy', 'N/A'),
         'cer': scoring.get('cer', 'N/A'),
+        'f1': scoring.get('f1', 'N/A'),
+        'score': scoring.get('score', 'N/A'),
+        'has_scoring_data': bool(metric_keys),
         'avg_duration': avg_duration,
         'total_duration': total_duration,
         'input_cost': total_input_cost,
@@ -419,6 +425,8 @@ def generate_html_report(dates, base_dir, test_metadata, output_file):
                 <th>F1 Micro</th>
                 <th>Fuzzy</th>
                 <th>CER</th>
+                <th>F1</th>
+                <th>Score</th>
                 <th>Avg Duration</th>
                 <th>Total Duration</th>
                 <th>Input Cost ($)</th>
@@ -458,15 +466,22 @@ def generate_html_report(dates, base_dir, test_metadata, output_file):
             else:
                 return 'low'  # Bad (high error)
 
+        f1 = result['f1']
+        score = result['score']
+
         f1_macro_class = get_score_class(f1_macro) if f1_macro != 'N/A' else ''
         f1_micro_class = get_score_class(f1_micro) if f1_micro != 'N/A' else ''
         fuzzy_class = get_score_class(fuzzy) if fuzzy != 'N/A' else ''
         cer_class = get_cer_class(cer) if cer != 'N/A' else ''
+        f1_class = get_score_class(f1) if f1 != 'N/A' else ''
+        score_class = get_score_class(score) if score != 'N/A' else ''
 
         f1_macro_display = f"{f1_macro:.4f}" if f1_macro != 'N/A' else 'N/A'
         f1_micro_display = f"{f1_micro:.4f}" if f1_micro != 'N/A' else 'N/A'
         fuzzy_display = f"{fuzzy:.4f}" if fuzzy != 'N/A' else 'N/A'
         cer_display = f"{cer:.4f}" if cer != 'N/A' else 'N/A'
+        f1_display = f"{f1:.4f}" if f1 != 'N/A' else 'N/A'
+        score_display = f"{score:.4f}" if score != 'N/A' else 'N/A'
 
         # Format cost values
         input_cost_display = f"${result['input_cost']:.6f}" if result['input_cost'] > 0 else '$0.00'
@@ -496,6 +511,8 @@ def generate_html_report(dates, base_dir, test_metadata, output_file):
                 <td><span class="score {f1_micro_class}">{f1_micro_display}</span></td>
                 <td><span class="score {fuzzy_class}">{fuzzy_display}</span></td>
                 <td><span class="score {cer_class}">{cer_display}</span></td>
+                <td><span class="score {f1_class}">{f1_display}</span></td>
+                <td><span class="score {score_class}">{score_display}</span></td>
                 <td class="duration">{result['avg_duration']:.2f}s</td>
                 <td class="duration">{result['total_duration']:.2f}s</td>
                 <td>{input_cost_display}</td>
@@ -641,8 +658,8 @@ def generate_markdown_report(dates, base_dir, test_metadata, output_file):
 
 ## Results
 
-| Date | Test ID | Benchmark | Provider | Model | Items | F1 Macro | F1 Micro | Fuzzy | CER | Avg Duration | Total Duration | Input Cost ($) | Output Cost ($) | Total Cost ($) | Warnings |
-|------|---------|-----------|----------|-------|-------|----------|----------|-------|-----|--------------|----------------|----------------|-----------------|----------------|----------|
+| Date | Test ID | Benchmark | Provider | Model | Items | F1 Macro | F1 Micro | Fuzzy | CER | F1 | Score | Avg Duration | Total Duration | Input Cost ($) | Output Cost ($) | Total Cost ($) | Warnings |
+|------|---------|-----------|----------|-------|-------|----------|----------|-------|-----|----|-------|--------------|----------------|----------------|-----------------|----------------|----------|
 """
 
     for result in test_results:
@@ -650,11 +667,15 @@ def generate_markdown_report(dates, base_dir, test_metadata, output_file):
         f1_micro = result['f1_micro']
         fuzzy = result['fuzzy']
         cer = result['cer']
+        f1 = result['f1']
+        score = result['score']
 
         f1_macro_display = f"{f1_macro:.4f}" if f1_macro != 'N/A' else 'N/A'
         f1_micro_display = f"{f1_micro:.4f}" if f1_micro != 'N/A' else 'N/A'
         fuzzy_display = f"{fuzzy:.4f}" if fuzzy != 'N/A' else 'N/A'
         cer_display = f"{cer:.4f}" if cer != 'N/A' else 'N/A'
+        f1_display = f"{f1:.4f}" if f1 != 'N/A' else 'N/A'
+        score_display = f"{score:.4f}" if score != 'N/A' else 'N/A'
 
         # Format cost values
         input_cost_display = f"${result['input_cost']:.6f}" if result['input_cost'] > 0 else '$0.00'
@@ -668,7 +689,7 @@ def generate_markdown_report(dates, base_dir, test_metadata, output_file):
         else:
             warnings_md = '✓'
 
-        md += f"| {result.get('date', 'N/A')} | {result['test_id']} | {result.get('name', 'Unknown')} | {result.get('provider', 'Unknown')} | {result.get('model', 'Unknown')} | {result['items_count']} | {f1_macro_display} | {f1_micro_display} | {fuzzy_display} | {cer_display} | {result['avg_duration']:.2f}s | {result['total_duration']:.2f}s | {input_cost_display} | {output_cost_display} | {total_cost_display} | {warnings_md} |\n"
+        md += f"| {result.get('date', 'N/A')} | {result['test_id']} | {result.get('name', 'Unknown')} | {result.get('provider', 'Unknown')} | {result.get('model', 'Unknown')} | {result['items_count']} | {f1_macro_display} | {f1_micro_display} | {fuzzy_display} | {cer_display} | {f1_display} | {score_display} | {result['avg_duration']:.2f}s | {result['total_duration']:.2f}s | {input_cost_display} | {output_cost_display} | {total_cost_display} | {warnings_md} |\n"
 
     md += f"\n---\n*Generated on {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}*\n"
 

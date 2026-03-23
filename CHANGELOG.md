@@ -8,10 +8,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Unreleased
 
 ### Added
-- 15 new models: gpt-5.2, gpt-5.3-codex, gpt-5.4-2026-03-05 (OpenAI), gemini-3-flash-preview, gemini-3.1-flash-lite-preview, gemini-3.1-pro-preview (GenAI), claude-opus-4-6, claude-sonnet-4-6, claude-opus-4-5-20251101, claude-haiku-4-5-20251001 (Anthropic), mistral-large-2512, ministral-14b-2512, ministral-8b-2512, magistral-small-2509 (Mistral), grok-4.20-0309-reasoning (x-ai)
+- 17 new models: gpt-5.2, gpt-5.3-codex, gpt-5.4-2026-03-05 (OpenAI), gemini-3-flash-preview, gemini-3.1-flash-lite-preview, gemini-3.1-pro-preview (GenAI), claude-opus-4-6, claude-sonnet-4-6, claude-opus-4-5-20251101, claude-haiku-4-5-20251001 (Anthropic), mistral-large-2512, ministral-14b-2512, ministral-8b-2512, magistral-small-2509 (Mistral), grok-4.20-0309-reasoning (x-ai), deepseek-chat, deepseek-reasoner (DeepSeek)
 - 170 new benchmark test configurations (T0488-T0709) across all benchmarks for new models
 - 47 new benchmark test configurations (T0576-T0622) for personnel_cards benchmark across all non-legacy models
 - 32 new benchmark test configurations (T0710-T0741) for magazine_pages benchmark and x-ai/grok-4.20-0309-reasoning across all benchmarks
+- 26 new benchmark test configurations (T0742-T0767) for deepseek-chat and deepseek-reasoner across all benchmarks
 - update_pricing.py: semi-automated pricing updater that scrapes provider websites, extracts prices via LLM, archives source URLs on Wayback Machine in parallel, and updates pricing.json
 - Pricing data for 2026-03-02
 - Pricing data for 2026-01-23
@@ -19,6 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - personnel_cards benchmark for extracting structured data from 20th century personnel card tables
 - magazine_pages benchmark for extracting structured data from historical magazine pages
 - x-ai provider support with direct API integration
+- DeepSeek provider support with direct API integration
 - Local model support via `contour_local` provider (e.g. opencv-contour); tokens are estimated and all downstream scoring/saving/aggregating remains unchanged
 - Published paper citation in README: Hindermann et al. (2026) in Journal of Open Humanities Data (DOI: 10.5334/johd.481)
 

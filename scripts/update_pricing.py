@@ -78,6 +78,11 @@ class PricingUpdater:
         'command-a-vision-07-2025': 'https://docs.cohere.com/docs/command-a-vision',
     }
 
+    DEEPSEEK_MODEL_URLS = {
+        'deepseek-chat':     'https://api-docs.deepseek.com/quick_start/pricing',
+        'deepseek-reasoner': 'https://api-docs.deepseek.com/quick_start/pricing',
+    }
+
     MISTRAL_MODEL_URLS = {
         'mistral-large-2512':    'https://docs.mistral.ai/models/mistral-large-3-25-12',
         'mistral-large-2411':    'https://docs.mistral.ai/models/mistral-large-2-1-24-11',
@@ -611,6 +616,18 @@ Return only JSON:"""
 
         return all_pricing
 
+    def scrape_deepseek_pricing(self, models: Optional[List[str]] = None) -> Dict[str, Dict]:
+        """Scrape DeepSeek pricing page"""
+        return self._scrape_single_page(
+            url="https://api-docs.deepseek.com/quick_start/pricing",
+            provider="deepseek",
+            models=models,
+            additional_instructions=(
+                "IMPORTANT: Use the standard (cache miss) input and output prices. "
+                "Ignore cache hit rates and batch rates."
+            )
+        )
+
     def scrape_anthropic_pricing(self, models: Optional[List[str]] = None) -> Dict[str, Dict]:
         """Scrape Anthropic pricing page"""
         return self._scrape_single_page(
@@ -826,6 +843,8 @@ Return only JSON:"""
             return self.GENAI_MODEL_URLS.get(model, self.PROVIDER_URLS['genai'])
         elif provider in self.PROVIDER_URLS:
             return self.PROVIDER_URLS[provider]
+        elif provider == 'deepseek':
+            return self.DEEPSEEK_MODEL_URLS.get(model, "")
         elif provider == 'cohere':
             return self.COHERE_MODEL_URLS.get(model, "")
         elif provider == 'mistral':
@@ -851,6 +870,7 @@ Return only JSON:"""
         scraper_map = {
             'openai':    self.scrape_openai_pricing,
             'anthropic': self.scrape_anthropic_pricing,
+            'deepseek':  self.scrape_deepseek_pricing,
             'genai':     self.scrape_genai_pricing,
             'mistral':   self.scrape_mistral_pricing,
             'cohere':    self.scrape_cohere_pricing,
