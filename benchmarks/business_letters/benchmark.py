@@ -149,13 +149,13 @@ class BusinessLetters(Benchmark):
         """ Skip the image if the rules say so."""
 
         try:
-            if self.rules["skip_signatures"] is True:
+            if self.rules.get("skip_signatures") is True:
                 ground_truth = self.load_ground_truth(object_basename)
                 ground_truth_letter = self._initialize_letter(raw_letter=ground_truth,
                                                               image_name=object_basename)
                 if ground_truth_letter.has_signatures is True:
                     return True
-            elif self.rules["skip_non_signatures"] is True:
+            elif self.rules.get("skip_non_signatures") is True:
                 ground_truth = self.load_ground_truth(object_basename)
                 ground_truth_letter = self._initialize_letter(raw_letter=ground_truth,
                                                               image_name=object_basename)
