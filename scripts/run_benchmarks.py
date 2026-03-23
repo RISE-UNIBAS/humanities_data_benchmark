@@ -90,11 +90,11 @@ def main(limit_to: list[str] = None, regenerate_existing_results: bool = False, 
 
 
 if __name__ == "__main__":
-    tests = ["T0533"]
+    tests = ["T0793"]
 
     for test in tests:
         try:
             logging.info(f"Running {test}")
-            main(limit_to=[test])
+            main(limit_to=[test], workers=20)
         except Exception as e:
             logging.critical(f"{test}: {e}")

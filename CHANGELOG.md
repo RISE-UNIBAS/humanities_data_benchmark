@@ -13,10 +13,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - 47 new benchmark test configurations (T0576-T0622) for personnel_cards benchmark across all non-legacy models
 - 32 new benchmark test configurations (T0710-T0741) for magazine_pages benchmark and x-ai/grok-4.20-0309-reasoning across all benchmarks
 - 26 new benchmark test configurations (T0742-T0767) for deepseek-chat and deepseek-reasoner across all benchmarks
+- 46 new benchmark test configurations (T0768-T0813) for magazine_pages benchmark across all remaining non-legacy models
 - update_pricing.py: semi-automated pricing updater that scrapes provider websites, extracts prices via LLM, archives source URLs on Wayback Machine in parallel, and updates pricing.json
 - Pricing data for 2026-03-02
 - Pricing data for 2026-01-23
 - Tests on 2026-01-24 to 2026-01-26: all 484 non-legacy tests across 7 providers (Anthropic, Cohere, GenAI, Mistral, OpenAI, OpenRouter, sciCORE)
+- Tests on 2026-02-09: T0576-T0620 (33 tests)
+- Tests on 2026-02-10: T0109-T0615 (17 tests)
+- Tests on 2026-02-17: T0061-T0534 (23 tests)
+- Tests on 2026-02-18: T0535-T0538 (2 tests)
+- Tests on 2026-03-04: T0023-T0245 (3 tests)
+- Tests on 2026-03-12: T0504-T0627 (6 tests)
+- Tests on 2026-03-16: T0628-T0692 (65 tests)
+- Tests on 2026-03-21: T0710-T0717 (8 tests)
+- Tests on 2026-03-23: T0060-T0813 (85 tests)
 - personnel_cards benchmark for extracting structured data from 20th century personnel card tables
 - magazine_pages benchmark for extracting structured data from historical magazine pages
 - x-ai provider support with direct API integration
