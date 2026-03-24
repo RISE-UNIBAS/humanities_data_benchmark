@@ -2,7 +2,14 @@
 
 ## Overview
 
-
+- Data Type: Images (JPG, ca. 2500x1700, ~2 MB each)
+- Amount: 61 images
+- Origin: Schweizerisches Bundesarchiv
+- Signature: E4260D#05 (Das Dienstverhältnis der Bundesbeamten: Personaldossiers (Serie))
+- Language: German, French
+- Content Description: Table containing information on job title, work location, pay grade, salary, date of salary change, and notes regarding any salary supplements.
+- Time Period: 1941-1961
+- License: Public Domain
 
 ## Benchmark Structure
 
