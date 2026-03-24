@@ -77,9 +77,11 @@ class Benchmark(ABC):
                 kwargs["dataclass"] = self.dataclass
             if self.rules and "api_style" in self.rules and self.rules["api_style"]:
                 kwargs["api_style"] = self.rules["api_style"]
+            base_url = self.rules.get("base_url") if self.rules else None
             self.client = create_ai_client(self.provider,
                                            self.api_key,
                                            system_prompt=self.role_description,
+                                           base_url=base_url,
                                            **kwargs)
 
         # Shared context support (for multi-stage requests)
