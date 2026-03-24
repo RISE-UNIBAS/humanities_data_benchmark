@@ -463,6 +463,7 @@ This benchmark suite currently tests models from the following providers:
 | | x-ai/grok-4                           | xAI's Grok 4 multimodal                                   |
 | **sciCORE** | GLM-4.5V-FP8                          | GLM-4.5V with FP8 quantization (University of Basel HPC)  |
 | | qwen3-235b-fp8                        | Qwen3 235B with FP8 quantization (University of Basel HPC) |
+| **xAI** | grok-4.20-0309-reasoning              | Grok 4.20 reasoning model                                 |
 
 **Note:** OpenRouter provides access to models from multiple providers through a unified API. sciCORE provides access to models hosted on the University of Basel's high-performance computing infrastructure.
 

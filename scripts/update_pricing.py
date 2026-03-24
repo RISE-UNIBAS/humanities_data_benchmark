@@ -825,6 +825,10 @@ Return only JSON:"""
             return {}
 
     # Maps provider -> base URL for single-page providers
+    XAI_MODEL_URLS = {
+        'grok-4.20-0309-reasoning': 'https://docs.x.ai/developers/models/grok-4.20-beta-0309-reasoning',
+    }
+
     GENAI_MODEL_URLS = {
         'gemini-3.1-flash-lite-preview': 'https://ai.google.dev/gemini-api/docs/gemini-3',
         'gemini-3.1-pro-preview':        'https://ai.google.dev/gemini-api/docs/gemini-3',
@@ -851,6 +855,8 @@ Return only JSON:"""
             return self.MISTRAL_MODEL_URLS.get(model, "")
         elif provider == 'openrouter':
             return f"https://openrouter.ai/{model}"
+        elif provider == 'x-ai':
+            return self.XAI_MODEL_URLS.get(model, "")
         return ""
 
     def scrape_pricing(self, provider: str, models: List[str]) -> Dict[str, Dict]:
