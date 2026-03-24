@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased
+## [v0.5.0] - 2026-03-24
 
 ### Added
 - 17 new models: gpt-5.2, gpt-5.3-codex, gpt-5.4-2026-03-05 (OpenAI), gemini-3-flash-preview, gemini-3.1-flash-lite-preview, gemini-3.1-pro-preview (GenAI), claude-opus-4-6, claude-sonnet-4-6, claude-opus-4-5-20251101, claude-haiku-4-5-20251001 (Anthropic), mistral-large-2512, ministral-14b-2512, ministral-8b-2512, magistral-small-2509 (Mistral), grok-4.20-0309-reasoning (x-ai), deepseek-chat, deepseek-reasoner (DeepSeek)
@@ -178,3 +178,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [v0.3.1]: https://github.com/RISE-UNIBAS/humanities_data_benchmark/releases/tag/v0.3.1
 [v0.4.0]: https://github.com/RISE-UNIBAS/humanities_data_benchmark/releases/tag/v0.4.0
 [v0.4.1]: https://github.com/RISE-UNIBAS/humanities_data_benchmark/releases/tag/v0.4.1
+[v0.5.0]: https://github.com/RISE-UNIBAS/humanities_data_benchmark/releases/tag/v0.5.0
