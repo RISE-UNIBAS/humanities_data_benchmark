@@ -15,7 +15,7 @@
 
 **Tags:** index-cards, table-like, handwritten-source, typed-source, printed-source, century-20th, transcription, interpretation
 
-**Scoring Metric:** F1 macro (descending), F1 micro (radar chart)
+**Scoring Metric:** F1 micro
 
 ## Data
 
@@ -86,7 +86,7 @@ The benchmark uses **F1 micro scoring** with field-level fuzzy matching:
 
 ### Metrics
 - **F1 Micro**: Aggregate TP/FP/FN across all cards, then calculate F1 (used for ranking)
-- **F1 Macro**: Calculate F1 per card, then average (used for radar chart)
+- **F1 Macro**: Calculate F1 per card, then average
 
 ### Rules Configuration
 
