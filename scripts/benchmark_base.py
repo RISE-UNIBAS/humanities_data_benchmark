@@ -105,7 +105,7 @@ class Benchmark(ABC):
         if not os.path.exists(os.path.join(self.benchmark_dir, "ground_truths")):
             logging.error(f"Ground truths directory not found: {self.benchmark_dir}")
             return False
-        if self.provider not in ["openai", "genai", "anthropic", "mistral", "openrouter", "scicore", "cohere", "deepseek", "x-ai"] \
+        if self.provider not in ["openai", "genai", "anthropic", "mistral", "openrouter", "scicore", "cohere", "deepseek", "x-ai", "alibaba"] \
                 and not is_local_provider(self.provider):
             logging.error(f"Invalid provider: {self.provider}")
             return False

@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+### Added
+- 1 new model: qwen3.5-plus (Alibaba)
+- 13 new benchmark test configurations (T0814-T0826) for qwen3.5-plus across all benchmarks
+- Alibaba provider support with direct API integration
+
+### Changed
+- Deduplicated grok-4.20-0309-reasoning test configurations (removed duplicate T0730-T0741 and corresponding results)
+
 ## [v0.5.0] - 2026-03-24
 
 ### Added

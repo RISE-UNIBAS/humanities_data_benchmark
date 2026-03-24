@@ -376,7 +376,7 @@ def list_available_benchmarks() -> List[str]:
 def get_available_providers() -> List[str]:
     """Get list of providers with configured API keys, plus all local providers."""
     all_api_providers = ["openai", "anthropic", "genai", "mistral", "openrouter", "scicore",
-                         "deepseek", "cohere"]
+                         "deepseek", "cohere", "alibaba"]
     available = []
 
     for provider in all_api_providers:

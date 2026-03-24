@@ -394,6 +394,7 @@ This benchmark suite currently tests models from the following providers:
 
 | Provider | Model                                 | Notes                                                     |
 |----------|---------------------------------------|-----------------------------------------------------------|
+| **Alibaba** | qwen3.5-plus                          | Qwen 3.5 Plus multimodal model                            |
 | **Anthropic** | ~~claude-3-5-sonnet-20241022~~        | ~~Mid-tier Claude model with strong reasoning~~ (legacy)  |
 | | ~~claude-3-7-sonnet-20250219~~        | ~~Advanced Claude with improved capabilities~~ (legacy)   |
 | | ~~claude-3-opus-20240229~~            | ~~Highest capability Claude 3 model~~ (legacy)            |

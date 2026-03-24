@@ -829,6 +829,10 @@ Return only JSON:"""
         'grok-4.20-0309-reasoning': 'https://docs.x.ai/developers/models/grok-4.20-beta-0309-reasoning',
     }
 
+    ALIBABA_MODEL_URLS = {
+        'qwen3.5-plus': 'https://www.alibabacloud.com/help/en/model-studio/getting-started/models',
+    }
+
     GENAI_MODEL_URLS = {
         'gemini-3.1-flash-lite-preview': 'https://ai.google.dev/gemini-api/docs/gemini-3',
         'gemini-3.1-pro-preview':        'https://ai.google.dev/gemini-api/docs/gemini-3',
