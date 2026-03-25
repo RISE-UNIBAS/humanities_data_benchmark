@@ -10,7 +10,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - 6 new models: qwen3.5-plus, qwen3.5-35b-a3b, qwen3.5-27b, qwen3.5-122b-a10b, qwen3.5-397b-a17b, qwen3.5-flash-2026-02-23 (Alibaba)
 - 78 new benchmark test configurations (T0814-T0891) for Alibaba Qwen 3.5 models across all benchmarks
-- Alibaba provider support with direct API integration
+- Alibaba provider support with direct API integration and pricing scraper
+- Test results on 2026-03-25 for all 65 Alibaba Qwen 3.5 tests (T0827-T0891) and 2 DeepSeek book_advert_xml tests (T0752, T0764)
 
 ### Changed
 - Deduplicated grok-4.20-0309-reasoning test configurations (removed duplicate T0730-T0741 and corresponding results)
