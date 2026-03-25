@@ -158,7 +158,12 @@ def get_provider_ndr_csv():
         "cohere": "Cohere",
         "mistral": "Mistral AI",
         "meta": "Meta",
-        "huggingface": "Hugging Face"
+        "huggingface": "Hugging Face",
+        "x-ai": "xAI",
+        "deepseek": "DeepSeek",
+        "alibaba": "Alibaba",
+        "scicore": "sciCORE",
+        "openrouter": "OpenRouter"
     }
 
     csv_data = []
