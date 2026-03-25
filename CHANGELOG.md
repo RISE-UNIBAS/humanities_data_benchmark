@@ -8,8 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Unreleased
 
 ### Added
-- 1 new model: qwen3.5-plus (Alibaba)
-- 13 new benchmark test configurations (T0814-T0826) for qwen3.5-plus across all benchmarks
+- 6 new models: qwen3.5-plus, qwen3.5-35b-a3b, qwen3.5-27b, qwen3.5-122b-a10b, qwen3.5-397b-a17b, qwen3.5-flash-2026-02-23 (Alibaba)
+- 78 new benchmark test configurations (T0814-T0891) for Alibaba Qwen 3.5 models across all benchmarks
 - Alibaba provider support with direct API integration
 
 ### Changed

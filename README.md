@@ -395,6 +395,11 @@ This benchmark suite currently tests models from the following providers:
 | Provider | Model                                 | Notes                                                     |
 |----------|---------------------------------------|-----------------------------------------------------------|
 | **Alibaba** | qwen3.5-plus                          | Qwen 3.5 Plus multimodal model                            |
+| | qwen3.5-35b-a3b                       | Qwen 3.5 35B MoE (3B active)                              |
+| | qwen3.5-27b                           | Qwen 3.5 27B dense model                                  |
+| | qwen3.5-122b-a10b                     | Qwen 3.5 122B MoE (10B active)                            |
+| | qwen3.5-397b-a17b                     | Qwen 3.5 397B MoE (17B active)                            |
+| | qwen3.5-flash-2026-02-23              | Qwen 3.5 Flash                                            |
 | **Anthropic** | ~~claude-3-5-sonnet-20241022~~        | ~~Mid-tier Claude model with strong reasoning~~ (legacy)  |
 | | ~~claude-3-7-sonnet-20250219~~        | ~~Advanced Claude with improved capabilities~~ (legacy)   |
 | | ~~claude-3-opus-20240229~~            | ~~Highest capability Claude 3 model~~ (legacy)            |

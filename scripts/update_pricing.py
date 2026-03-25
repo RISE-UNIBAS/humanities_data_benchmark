@@ -628,6 +628,19 @@ Return only JSON:"""
             )
         )
 
+    def scrape_alibaba_pricing(self, models: Optional[List[str]] = None) -> Dict[str, Dict]:
+        """Scrape Alibaba Model Studio pricing page"""
+        return self._scrape_single_page(
+            url="https://www.alibabacloud.com/help/en/model-studio/getting-started/models",
+            provider="alibaba",
+            models=models,
+            additional_instructions=(
+                "IMPORTANT: Use the standard API input and output prices in USD per million tokens. "
+                "Model names in the pricing table may differ slightly from the requested names "
+                "(e.g. 'qwen3.5-plus' vs 'qwen3.5-plus-2026-02-15'). Match by prefix."
+            )
+        )
+
     def scrape_anthropic_pricing(self, models: Optional[List[str]] = None) -> Dict[str, Dict]:
         """Scrape Anthropic pricing page"""
         return self._scrape_single_page(
@@ -831,6 +844,11 @@ Return only JSON:"""
 
     ALIBABA_MODEL_URLS = {
         'qwen3.5-plus': 'https://www.alibabacloud.com/help/en/model-studio/getting-started/models',
+        'qwen3.5-35b-a3b': 'https://www.alibabacloud.com/help/en/model-studio/getting-started/models',
+        'qwen3.5-27b': 'https://www.alibabacloud.com/help/en/model-studio/getting-started/models',
+        'qwen3.5-122b-a10b': 'https://www.alibabacloud.com/help/en/model-studio/getting-started/models',
+        'qwen3.5-397b-a17b': 'https://www.alibabacloud.com/help/en/model-studio/getting-started/models',
+        'qwen3.5-flash-2026-02-23': 'https://www.alibabacloud.com/help/en/model-studio/getting-started/models',
     }
 
     GENAI_MODEL_URLS = {
@@ -857,6 +875,8 @@ Return only JSON:"""
             return self.COHERE_MODEL_URLS.get(model, "")
         elif provider == 'mistral':
             return self.MISTRAL_MODEL_URLS.get(model, "")
+        elif provider == 'alibaba':
+            return self.ALIBABA_MODEL_URLS.get(model, "")
         elif provider == 'openrouter':
             return f"https://openrouter.ai/{model}"
         elif provider == 'x-ai':
@@ -884,6 +904,7 @@ Return only JSON:"""
             'genai':     self.scrape_genai_pricing,
             'mistral':   self.scrape_mistral_pricing,
             'cohere':    self.scrape_cohere_pricing,
+            'alibaba':   self.scrape_alibaba_pricing,
         }
 
         if provider in scraper_map:
