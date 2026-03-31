@@ -94,13 +94,17 @@ class MedievalManuscripts(Benchmark):
         total_cer = 0
 
         for score in all_scores:
+            if score is None:
+                continue
             total_fuzzy += score['fuzzy']
             total_cer += score['cer']
 
+        valid_scores = [s for s in all_scores if s is not None]
+
         # Ensure we don't divide by zero
-        if len(all_scores) > 0:
-            avg_fuzzy = total_fuzzy / len(all_scores)
-            avg_cer = total_cer / len(all_scores)
+        if len(valid_scores) > 0:
+            avg_fuzzy = total_fuzzy / len(valid_scores)
+            avg_cer = total_cer / len(valid_scores)
         else:
             avg_fuzzy = 0.0
             avg_cer = 1.0
