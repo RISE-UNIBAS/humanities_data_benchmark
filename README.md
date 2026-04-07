@@ -82,14 +82,16 @@ This benchmark suite currently includes the following benchmarks for evaluating 
 | Benchmark | Description |
 |-----------|-------------|
 | **[Bibliographic Data](benchmarks/bibliographic_data/)** | Extract bibliographic information (publication details, authors, dates, metadata) from historical documents |
-| **[Blacklist Cards](benchmarks/blacklist/)** | Extract and structure information from historical blacklist cards |
+| **[Blacklist Cards](benchmarks/blacklist_cards/)** | Extract and structure information from historical blacklist cards |
 | **[Book Advert XML](benchmarks/book_advert_xml/)** | Correct malformed XML from 18th century book advertisements |
-| **[Business Letters](benchmarks/metadata_extraction/)** | Extract structured metadata (names, organizations, dates, locations) from 20th century Swiss historical correspondence |
+| **[Business Letters](benchmarks/business_letters/)** | Extract structured metadata (names, organizations, dates, locations) from 20th century Swiss historical correspondence |
 | **[Company Lists](benchmarks/company_lists/)** | Extract structured company information from historical business listings and directories |
-| **[Fraktur Adverts](benchmarks/fraktur/)** | Recognize and transcribe historical German Fraktur script (16th-20th centuries) |
+| **[Fraktur Adverts](benchmarks/fraktur_adverts/)** | Recognize and transcribe historical German Fraktur script (16th-20th centuries) |
+| **[General Meeting Minutes](benchmarks/general_meeting_minutes/)** | Extract structured data from general meeting minutes of historical companies |
+| **[Library Cards](benchmarks/library_cards/)** | Catalog card analysis and information extraction from historical library catalog systems |
+| **[Magazine Pages](benchmarks/magazine_pages/)** | Detect and locate advertisements on historical magazine pages using bounding boxes |
 | **[Medieval Manuscripts](benchmarks/medieval_manuscripts/)** | Page segmentation and handwritten text extraction from 15th century medieval German manuscripts |
 | **[Personnel Cards](benchmarks/personnel_cards/)** | Extract structured employment data (position, location, salary, dates) from 20th century Swiss personnel card tables |
-| **[Library Cards](benchmarks/zettelkatalog/)** | Catalog card analysis and information extraction from historical library catalog systems |
 | **Test Benchmarks** | System validation and basic functionality testing ([test_benchmark](benchmarks/test_benchmark/), [test_benchmark2](benchmarks/test_benchmark2/)) |
 
 ### 1.3. How it Works
