@@ -1,0 +1,27 @@
+Extract the duty roster data from this image. You are given three images: (1) the roster header, (2) an icon legend, and (3) one roster row for a single person.
+
+HEADER
+------
+From the header image, extract:
+- unit: the ward/unit name in the title (e.g. "1. Stock OST")
+- year: the calendar year
+- month: the month name
+
+PERSON
+------
+- id: the person number (may be handwritten in the margin)
+- profession: the section label printed ABOVE the row (e.g. "WBL", "Tertiär"), not a value from the data columns
+- employment_percent: the number in the employment column (e.g. 80, 50, 0)
+- is_jumper: true if "S" is marked in the S column, false otherwise
+
+SHIFTS
+------
+For each day of the month, extract the shift(s). Use the header to map each cell to its date.
+
+- date: ISO format (YYYY-MM-DD)
+- icon: match the cell's icon against the icon legend. Use the descriptive name, not the number. Only assign an icon if you can clearly identify a matching icon from the legend. If there is no icon in the cell, use null.
+- length: "full" for a normal cell. If the cell is split into two halves, output two entries for the same date — one "half_left" and one "half_right".
+- planned_on_current_unit: false if the icon has a red dashed border or red shading, true otherwise
+- alternate_unit: the small text below the cell (e.g. "LE", "TS", "ASH"). null if absent.
+
+Return the result as JSON matching the Schedule schema.
