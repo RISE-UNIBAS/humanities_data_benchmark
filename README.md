@@ -413,6 +413,7 @@ This benchmark suite currently tests models from the following providers:
 | | claude-sonnet-4-20250514              | Claude 4 Sonnet                                           |
 | | claude-sonnet-4-5-20250929            | Claude 4.5 Sonnet                                         |
 | | claude-opus-4-6                       | Claude 4.6 Opus                                           |
+| | claude-opus-4-7                       | Claude 4.7 Opus                                           |
 | | claude-sonnet-4-6                     | Claude 4.6 Sonnet                                         |
 | **Cohere** | command-a-03-2025                     | Advanced multimodal model                                 |
 | | command-a-vision-07-2025              | Vision-enabled Command A model                            |
@@ -464,7 +465,9 @@ This benchmark suite currently tests models from the following providers:
 | | gpt-5-mini                            | Efficient GPT-5                                           |
 | | gpt-5-nano                            | Compact GPT-5                                             |
 | | o3                                    | Reasoning-focused model                                   |
-| **OpenRouter** | meta-llama/llama-4-maverick           | Meta's Llama 4 via OpenRouter                             |
+| **OpenRouter** | google/gemma-4-26b-a4b-it             | Gemma 4 26B MoE (4B active), instruction-tuned            |
+| | google/gemma-4-31b-it                 | Gemma 4 31B instruction-tuned                             |
+| | meta-llama/llama-4-maverick           | Meta's Llama 4 via OpenRouter                             |
 | | qwen/qwen3-vl-30b-a3b-instruct        | Qwen3 VL 30B instruction                                  |
 | | qwen/qwen3-vl-8b-instruct             | Qwen3 VL 8B instruction                                   |
 | | qwen/qwen3-vl-8b-thinking             | Qwen3 VL 8B reasoning                                     |

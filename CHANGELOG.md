@@ -8,8 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Unreleased
 
 ### Added
-- 6 new models: qwen3.5-plus, qwen3.5-35b-a3b, qwen3.5-27b, qwen3.5-122b-a10b, qwen3.5-397b-a17b, qwen3.5-flash-2026-02-23 (Alibaba); 8 new models: qwen/qwen3.6-plus, qwen/qwen3.5-122b-a10b, qwen/qwen3.5-27b, qwen/qwen3.5-35b-a3b, qwen/qwen3.5-397b-a17b, qwen/qwen3.5-plus-02-15, qwen/qwen3.5-flash-02-23, qwen/qwen3.5-9b (OpenRouter)
-- 78 new benchmark test configurations (T0814-T0891) for Alibaba Qwen 3.5 models across all benchmarks; 104 new benchmark test configurations (T0892-T0995) for OpenRouter Qwen models across all benchmarks
+- 6 new models: qwen3.5-plus, qwen3.5-35b-a3b, qwen3.5-27b, qwen3.5-122b-a10b, qwen3.5-397b-a17b, qwen3.5-flash-2026-02-23 (Alibaba); 10 new models: qwen/qwen3.6-plus, qwen/qwen3.5-122b-a10b, qwen/qwen3.5-27b, qwen/qwen3.5-35b-a3b, qwen/qwen3.5-397b-a17b, qwen/qwen3.5-plus-02-15, qwen/qwen3.5-flash-02-23, qwen/qwen3.5-9b, google/gemma-4-26b-a4b-it, google/gemma-4-31b-it (OpenRouter); 1 new model: claude-opus-4-7 (Anthropic)
+- 78 new benchmark test configurations (T0814-T0891) for Alibaba Qwen 3.5 models across all benchmarks; 130 new benchmark test configurations (T0892-T1021) for OpenRouter Qwen and Gemma models across all benchmarks; 13 new benchmark test configurations (T1022-T1034) for Anthropic claude-opus-4-7 across all benchmarks
 - Alibaba provider support with direct API integration and pricing scraper
 - Test results on 2026-03-25 for all 65 Alibaba Qwen 3.5 tests (T0827-T0891) and 2 DeepSeek book_advert_xml tests (T0752, T0764)
 - Pricing data for 2026-04-21

@@ -857,6 +857,8 @@ Return only JSON:"""
     }
 
     OPENROUTER_MODEL_URLS = {
+        'google/gemma-4-26b-a4b-it':      'https://openrouter.ai/google/gemma-4-26b-a4b-it',
+        'google/gemma-4-31b-it':          'https://openrouter.ai/google/gemma-4-31b-it',
         'meta-llama/llama-4-maverick':    'https://openrouter.ai/meta-llama/llama-4-maverick',
         'qwen/qwen3-vl-30b-a3b-instruct': 'https://openrouter.ai/qwen/qwen3-vl-30b-a3b-instruct',
         'qwen/qwen3-vl-8b-instruct':      'https://openrouter.ai/qwen/qwen3-vl-8b-instruct',
