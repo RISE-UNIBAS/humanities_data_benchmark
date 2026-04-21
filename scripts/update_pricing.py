@@ -856,6 +856,22 @@ Return only JSON:"""
         'gemini-3.1-pro-preview':        'https://ai.google.dev/gemini-api/docs/gemini-3',
     }
 
+    OPENROUTER_MODEL_URLS = {
+        'meta-llama/llama-4-maverick':    'https://openrouter.ai/meta-llama/llama-4-maverick',
+        'qwen/qwen3-vl-30b-a3b-instruct': 'https://openrouter.ai/qwen/qwen3-vl-30b-a3b-instruct',
+        'qwen/qwen3-vl-8b-instruct':      'https://openrouter.ai/qwen/qwen3-vl-8b-instruct',
+        'qwen/qwen3-vl-8b-thinking':      'https://openrouter.ai/qwen/qwen3-vl-8b-thinking',
+        'qwen/qwen3.6-plus':              'https://openrouter.ai/qwen/qwen3.6-plus',
+        'qwen/qwen3.5-122b-a10b':         'https://openrouter.ai/qwen/qwen3.5-122b-a10b',
+        'qwen/qwen3.5-27b':               'https://openrouter.ai/qwen/qwen3.5-27b',
+        'qwen/qwen3.5-35b-a3b':           'https://openrouter.ai/qwen/qwen3.5-35b-a3b',
+        'qwen/qwen3.5-397b-a17b':         'https://openrouter.ai/qwen/qwen3.5-397b-a17b',
+        'qwen/qwen3.5-plus-02-15':        'https://openrouter.ai/qwen/qwen3.5-plus-02-15',
+        'qwen/qwen3.5-flash-02-23':       'https://openrouter.ai/qwen/qwen3.5-flash-02-23',
+        'qwen/qwen3.5-9b':                'https://openrouter.ai/qwen/qwen3.5-9b',
+        'x-ai/grok-4':                    'https://openrouter.ai/x-ai/grok-4',
+    }
+
     PROVIDER_URLS = {
         'anthropic': 'https://www.anthropic.com/pricing',
         'genai':     'https://ai.google.dev/gemini-api/docs/pricing',
@@ -878,7 +894,7 @@ Return only JSON:"""
         elif provider == 'alibaba':
             return self.ALIBABA_MODEL_URLS.get(model, "")
         elif provider == 'openrouter':
-            return f"https://openrouter.ai/{model}"
+            return self.OPENROUTER_MODEL_URLS.get(model, f"https://openrouter.ai/{model}")
         elif provider == 'x-ai':
             return self.XAI_MODEL_URLS.get(model, "")
         return ""
