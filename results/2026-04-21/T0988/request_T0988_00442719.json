@@ -1,0 +1,94 @@
+{
+    "text": "",
+    "model": "qwen/qwen3.5-9b-20260310",
+    "provider": "openrouter",
+    "finish_reason": "error",
+    "usage": {
+        "input_tokens": 2619,
+        "output_tokens": 870,
+        "total_tokens": 3489,
+        "estimated_cost_usd": 0.0003924,
+        "input_cost_usd": 0.00026189999999999997,
+        "output_cost_usd": 0.0001305
+    },
+    "duration": 998.0471897125244,
+    "timestamp": "2026-04-21T17:49:00.892420",
+    "conversation_id": "96ee6647-d559-4245-98a0-b5c8adaf89ce",
+    "score": {
+        "f1_score": 0.0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "true_positives": 0,
+        "false_positives": 0,
+        "false_negatives": 9,
+        "field_scores": {
+            "": {
+                "response": null,
+                "ground_truth": null,
+                "score": 1.0
+            },
+            "publication.year": {
+                "response": null,
+                "ground_truth": 1905,
+                "score": 0.0
+            },
+            "publication.publisher": {
+                "response": null,
+                "ground_truth": "Kastner & Callwey",
+                "score": 0.0
+            },
+            "library_reference.shelfmark": {
+                "response": null,
+                "ground_truth": null,
+                "score": 1.0
+            },
+            "publication.place": {
+                "response": null,
+                "ground_truth": "M\u00fcnchen",
+                "score": 0.0
+            },
+            "publication.editor": {
+                "response": null,
+                "ground_truth": null,
+                "score": 1.0
+            },
+            "library_reference.subjects": {
+                "response": null,
+                "ground_truth": null,
+                "score": 1.0
+            },
+            "publication.pages": {
+                "response": null,
+                "ground_truth": "22",
+                "score": 0.0
+            },
+            "author.last_name": {
+                "response": null,
+                "ground_truth": "Oettinger",
+                "score": 0.0
+            },
+            "publication.format": {
+                "response": null,
+                "ground_truth": "8\u00b0",
+                "score": 0.0
+            },
+            "type.type": {
+                "response": null,
+                "ground_truth": "Dissertation or thesis",
+                "score": 0.0
+            },
+            "author.first_name": {
+                "response": null,
+                "ground_truth": "Martin",
+                "score": 0.0
+            },
+            "publication.title": {
+                "response": null,
+                "ground_truth": "Ueber cartilagin\u00e4re Exostosen unter besonderer Ber\u00fccksichtigung zweier in der kgl. chir. Poliklinik zu M\u00fcnchen beobachteter F\u00e4lle (mit 2 R\u00f6ntgenaufnahmen)",
+                "score": 0.0
+            }
+        },
+        "total_fields": 13
+    },
+    "raw_response": "{\"id\":\"gen-1776786518-hqVQt1x47i7SBcT08Gf8\",\"choices\":[{\"finish_reason\":\"error\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":null,\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"reasoning\":\"The user wants me to extract bibliographic information from a historical index card image and return it as a structured JSON object.\\n\\n1.  **Analyze the Image:**\\n    *   **Card Number:** 114\\n    *   **Author:** \\\"Oettinger, Martin, appr. Arzt a. N\u00fcrnberg\\\"\\n        *   Last Name: Oettinger\\n        *   First Name: Martin\\n    *   **Title:** \\\"Ueber cartilagin\u00e4re Exostosen unter besonderer Ber\u00fccksichtigung zweier in der kgl. chir. Poliklinik zu M\u00fcnchen beobachteter F\u00e4lle (mit 2 R\u00f6ntgenaufnahmen).\\\"\\n    *   **Publication Details:**\\n        *   Year: 1905\\n        *   Place: M\u00fcnchen\\n        *   Publisher: Kastner & Callwey\\n        *   Pages: (22 S.) -> 22\\n        *   Format: 8\u00b0\\n    *   **Library Reference:**\\n        *   \\\"M\u00fcnchen, Med. Fak., Ref. v. Angerer, Diss. v. 21. Juli 1905\\\"\\n        *   This indicates it's a Dissertation (\\\"Diss.\\\").\\n        *   Shelfmark: \\\"M\u00fcnchen, Med. Fak., Ref. v. Angerer, Diss. v. 21. Juli 1905\\\" (This looks like the reference info).\\n        *   Subjects: The text in brackets \\\"[Geb. 28. M\u00e4rz 79 Neumarkt, Oberpfalz; Wohnort: N\u00fcrnberg; Staatsangeh.: Bayern; Vorbildung: Altes Gymn. N\u00fcrnberg Reife Juli 98; Studium: Erlangen 1, M\u00fcnchen 3, Berlin 3, Heidelberg 1, M\u00fcnchen 4 S.; Coll. 21. Juli 05; Approb. 29. Juli 04.]\\\" contains biographical info, not really subjects. However, the prompt asks for \\\"subjects\\\" in the library_reference section. Often in these cards, the text in brackets is biographical data. The prompt says \\\"subjects: Subject classifications or keywords\\\". There aren't explicit subject keywords like \\\"Medicine\\\" or \\\"Anatomy\\\" listed as tags, but the title implies the subject. However, looking at the schema provided in the prompt's `system` instructions (which I must follow), I need to map the card content to the schema.\\n        *   Wait, the prompt instructions say: \\\"Extract the bibliographic information about a historical dissertation from this index card\\\".\\n        *   The prompt instructions also say: \\\"If a card contains the note 's.' on a separate line, it is a 'Reference'. Otherwise, it is a 'Dissertation or thesis'.\\\"\\n        *   Looking at the card, there is no \\\"s.\\\" on a separate line. It says \\\"Diss. v. 21. Juli 1905\\\". So Type is \\\"Dissertation or thesis\\\".\\n        *   The prompt instructions say: \\\"Return ONLY the JSON object, no additional text or explanation.\\\"\\n        *   The prompt instructions also provide a specific JSON schema in the `system` prompt block (the `{\\\"$defs\\\": ...}` part). I need to make sure my output matches that schema structure.\\n        *   Wait, the user prompt says \\\"return it as a structured JSON object with the following exact format: ```json { \\\"type\\\": ... } ... ```\\\".\\n        *   BUT the system prompt says \\\"You MUST respond with valid JSON matching this exact schema: {\\\"$defs\\\": ...}\\\".\\n        *   Usually, the system prompt overrides the user prompt regarding the output format if there's a conflict, or I need to combine them. The user prompt asks for a specific JSON structure. The system prompt asks for a specific JSON schema (which looks like a Pydantic model definition).\\n        *   Let's look closely at the user prompt's requested format:\\n            ```json\\n            {\\n              \\\"type\\\": {\\n                \\\"type\\\": \\\"Dissertation or thesis\\\" OR \\\"Reference\\\"\\n              },\\n              \\\"author\\\": {\\n                \\\"last_name\\\":\",\"reasoning_details\":[{\"type\":\"reasoning.text\",\"text\":\"The user wants me to extract bibliographic information from a historical index card image and return it as a structured JSON object.\\n\\n1.  **Analyze the Image:**\\n    *   **Card Number:** 114\\n    *   **Author:** \\\"Oettinger, Martin, appr. Arzt a. N\u00fcrnberg\\\"\\n        *   Last Name: Oettinger\\n        *   First Name: Martin\\n    *   **Title:** \\\"Ueber cartilagin\u00e4re Exostosen unter besonderer Ber\u00fccksichtigung zweier in der kgl. chir. Poliklinik zu M\u00fcnchen beobachteter F\u00e4lle (mit 2 R\u00f6ntgenaufnahmen).\\\"\\n    *   **Publication Details:**\\n        *   Year: 1905\\n        *   Place: M\u00fcnchen\\n        *   Publisher: Kastner & Callwey\\n        *   Pages: (22 S.) -> 22\\n        *   Format: 8\u00b0\\n    *   **Library Reference:**\\n        *   \\\"M\u00fcnchen, Med. Fak., Ref. v. Angerer, Diss. v. 21. Juli 1905\\\"\\n        *   This indicates it's a Dissertation (\\\"Diss.\\\").\\n        *   Shelfmark: \\\"M\u00fcnchen, Med. Fak., Ref. v. Angerer, Diss. v. 21. Juli 1905\\\" (This looks like the reference info).\\n        *   Subjects: The text in brackets \\\"[Geb. 28. M\u00e4rz 79 Neumarkt, Oberpfalz; Wohnort: N\u00fcrnberg; Staatsangeh.: Bayern; Vorbildung: Altes Gymn. N\u00fcrnberg Reife Juli 98; Studium: Erlangen 1, M\u00fcnchen 3, Berlin 3, Heidelberg 1, M\u00fcnchen 4 S.; Coll. 21. Juli 05; Approb. 29. Juli 04.]\\\" contains biographical info, not really subjects. However, the prompt asks for \\\"subjects\\\" in the library_reference section. Often in these cards, the text in brackets is biographical data. The prompt says \\\"subjects: Subject classifications or keywords\\\". There aren't explicit subject keywords like \\\"Medicine\\\" or \\\"Anatomy\\\" listed as tags, but the title implies the subject. However, looking at the schema provided in the prompt's `system` instructions (which I must follow), I need to map the card content to the schema.\\n        *   Wait, the prompt instructions say: \\\"Extract the bibliographic information about a historical dissertation from this index card\\\".\\n        *   The prompt instructions also say: \\\"If a card contains the note 's.' on a separate line, it is a 'Reference'. Otherwise, it is a 'Dissertation or thesis'.\\\"\\n        *   Looking at the card, there is no \\\"s.\\\" on a separate line. It says \\\"Diss. v. 21. Juli 1905\\\". So Type is \\\"Dissertation or thesis\\\".\\n        *   The prompt instructions say: \\\"Return ONLY the JSON object, no additional text or explanation.\\\"\\n        *   The prompt instructions also provide a specific JSON schema in the `system` prompt block (the `{\\\"$defs\\\": ...}` part). I need to make sure my output matches that schema structure.\\n        *   Wait, the user prompt says \\\"return it as a structured JSON object with the following exact format: ```json { \\\"type\\\": ... } ... ```\\\".\\n        *   BUT the system prompt says \\\"You MUST respond with valid JSON matching this exact schema: {\\\"$defs\\\": ...}\\\".\\n        *   Usually, the system prompt overrides the user prompt regarding the output format if there's a conflict, or I need to combine them. The user prompt asks for a specific JSON structure. The system prompt asks for a specific JSON schema (which looks like a Pydantic model definition).\\n        *   Let's look closely at the user prompt's requested format:\\n            ```json\\n            {\\n              \\\"type\\\": {\\n                \\\"type\\\": \\\"Dissertation or thesis\\\" OR \\\"Reference\\\"\\n              },\\n              \\\"author\\\": {\\n                \\\"last_name\\\":\",\"format\":\"unknown\",\"index\":0}]},\"native_finish_reason\":\"error\"}],\"created\":1776786518,\"model\":\"qwen/qwen3.5-9b-20260310\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":null,\"usage\":{\"completion_tokens\":870,\"prompt_tokens\":2619,\"total_tokens\":3489,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":0,\"reasoning_tokens\":870,\"rejected_prediction_tokens\":null,\"image_tokens\":0},\"prompt_tokens_details\":{\"audio_tokens\":0,\"cached_tokens\":0,\"cache_write_tokens\":0,\"video_tokens\":0},\"cost\":0,\"is_byok\":false,\"cost_details\":{\"upstream_inference_cost\":0.0003924,\"upstream_inference_prompt_cost\":0.0002619,\"upstream_inference_completions_cost\":0.0001305}},\"provider\":\"Together\"}"
+}
