@@ -46,6 +46,8 @@ class Benchmark(ABC):
         # TODO: hotfix, to be fixed in generic-llm-api-client
         if self.model in ["gpt-5", "gpt-5-mini", "gpt-5-nano", "gpt-5.1-2025-11-13", "gpt-5.2", "o3"]:
             self.temperature = 1
+        if self.model in ["claude-opus-4-7"]:
+            self.temperature = None
 
         # Prompt
         if self.prompt_file is None or self.prompt_file == "":
@@ -401,6 +403,10 @@ class Benchmark(ABC):
                             score: dict) -> None:
         """ Save the answer to a file. """
 
+        if answer is None:
+            logging.warning(f"No answer to save for {object_basename}")
+            return
+
         save_path = self.get_request_answer_path()
         os.makedirs(save_path, exist_ok=True)
 
@@ -563,8 +569,12 @@ class Benchmark(ABC):
         if should_process:
             logging.info(f"{prefix} Processing {self.id}, {object_basename}...")
             answer = self.ask_llm(object_basename)
-            ground_truth = self.load_ground_truth(object_basename)
-            score = self.score_request_answer(object_basename, answer, ground_truth)
+            if answer is None:
+                logging.error(f"{prefix} LLM returned None for {self.id}, {object_basename}")
+                score = None
+            else:
+                ground_truth = self.load_ground_truth(object_basename)
+                score = self.score_request_answer(object_basename, answer, ground_truth)
             self.save_request_answer(object_basename, answer, score)
             logging.info(f"{prefix} Finished with score: {score}")
         else:
@@ -610,7 +620,7 @@ class Benchmark(ABC):
             results = [self._process_object(bn, regenerate_existing_results) for bn in object_basenames]
 
         all_answers = [r[0] for r in results]
-        benchmark_scores = [r[1] for r in results]
+        benchmark_scores = [r[1] for r in results if r[1] is not None]
 
         # Score the benchmark
         benchmark_score = self.score_benchmark(benchmark_scores)
