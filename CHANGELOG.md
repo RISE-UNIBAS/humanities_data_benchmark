@@ -8,13 +8,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Unreleased (0.5.1-pre1)
 
 ### Added
-- 6 new models: qwen3.5-plus, qwen3.5-35b-a3b, qwen3.5-27b, qwen3.5-122b-a10b, qwen3.5-397b-a17b, qwen3.5-flash-2026-02-23 (Alibaba); 10 new models: qwen/qwen3.6-plus, qwen/qwen3.5-122b-a10b, qwen/qwen3.5-27b, qwen/qwen3.5-35b-a3b, qwen/qwen3.5-397b-a17b, qwen/qwen3.5-plus-02-15, qwen/qwen3.5-flash-02-23, qwen/qwen3.5-9b, google/gemma-4-26b-a4b-it, google/gemma-4-31b-it (OpenRouter); 1 new model: claude-opus-4-7 (Anthropic)
-- 78 new benchmark test configurations (T0814-T0891) for Alibaba Qwen 3.5 models across all benchmarks; 130 new benchmark test configurations (T0892-T1021) for OpenRouter Qwen and Gemma models across all benchmarks; 13 new benchmark test configurations (T1022-T1034) for Anthropic claude-opus-4-7 across all benchmarks
+- 6 new models: qwen3.5-plus, qwen3.5-35b-a3b, qwen3.5-27b, qwen3.5-122b-a10b, qwen3.5-397b-a17b, qwen3.5-flash-2026-02-23 (Alibaba); 10 new models: qwen/qwen3.6-plus, qwen/qwen3.5-122b-a10b, qwen/qwen3.5-27b, qwen/qwen3.5-35b-a3b, qwen/qwen3.5-397b-a17b, qwen/qwen3.5-plus-02-15, qwen/qwen3.5-flash-02-23, qwen/qwen3.5-9b, google/gemma-4-26b-a4b-it, google/gemma-4-31b-it (OpenRouter); 1 new model: claude-opus-4-7 (Anthropic); 2 new models: deepseek-v4-flash, deepseek-v4-pro (DeepSeek)
+- 78 new benchmark test configurations (T0814-T0891) for Alibaba Qwen 3.5 models across all benchmarks; 130 new benchmark test configurations (T0892-T1021) for OpenRouter Qwen and Gemma models across all benchmarks; 13 new benchmark test configurations (T1022-T1034) for Anthropic claude-opus-4-7 across all benchmarks; 2 new benchmark test configurations (T1035-T1036) for DeepSeek deepseek-v4-flash and deepseek-v4-pro on the book_advert_xml benchmark (text-only, as these models do not support images)
 - Alibaba provider support with direct API integration and pricing scraper
 - Test results on 2026-03-25 for all 65 Alibaba Qwen 3.5 tests (T0827-T0891) and 2 DeepSeek book_advert_xml tests (T0752, T0764)
 - Tests on 2026-04-21: T0892-T1034 (142 tests)
 - Tests on 2026-04-22: T0983-T0994 (12 tests)
-- Pricing data for 2026-04-21
+- Pricing data for 2026-04-21 and 2026-04-24
 
 ### Changed
 - Deduplicated grok-4.20-0309-reasoning test configurations (removed duplicate T0730-T0741 and corresponding results)

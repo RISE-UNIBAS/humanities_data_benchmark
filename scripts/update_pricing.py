@@ -81,6 +81,8 @@ class PricingUpdater:
     DEEPSEEK_MODEL_URLS = {
         'deepseek-chat':     'https://api-docs.deepseek.com/quick_start/pricing',
         'deepseek-reasoner': 'https://api-docs.deepseek.com/quick_start/pricing',
+        'deepseek-v4-flash': 'https://api-docs.deepseek.com/quick_start/pricing',
+        'deepseek-v4-pro':   'https://api-docs.deepseek.com/quick_start/pricing',
     }
 
     MISTRAL_MODEL_URLS = {

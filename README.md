@@ -422,6 +422,8 @@ This benchmark suite currently tests models from the following providers:
 | | command-r7b-12-2024                   | Compact 7B parameter model                                |
 | **DeepSeek** | deepseek-chat                         | DeepSeek-V3 chat model                                    |
 | | deepseek-reasoner                     | DeepSeek-R1 reasoning model                               |
+| | deepseek-v4-flash                     | DeepSeek V4 Flash                                         |
+| | deepseek-v4-pro                       | DeepSeek V4 Pro                                           |
 | **Google/Gemini** | ~~gemini-1.5-flash~~                  | ~~Earlier generation flash~~ (legacy)                     |
 | | ~~gemini-1.5-pro~~                    | ~~Gemini 1.5 series~~ (legacy)                            |
 | | gemini-2.0-flash                      | Fast response multimodal model                            |
