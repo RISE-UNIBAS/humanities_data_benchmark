@@ -67,6 +67,7 @@ class PricingUpdater:
         'gpt-5.2-2025-12-11':  'https://developers.openai.com/api/docs/models/gpt-5.2',
         'gpt-5.3-codex':       'https://developers.openai.com/api/docs/models/gpt-5.3-codex',
         'gpt-5.4-2026-03-05':  'https://developers.openai.com/api/docs/models/gpt-5.4',
+        'gpt-5.5-2026-04-23':  'https://developers.openai.com/api/docs/models/gpt-5.5',
         'o3':                  'https://developers.openai.com/api/docs/models/o3',
     }
 

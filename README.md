@@ -464,6 +464,7 @@ This benchmark suite currently tests models from the following providers:
 | | gpt-5.2-2025-12-11                               | Previous frontier model                               |
 | | gpt-5.3-codex                         | GPT-5.3 Codex                                             |
 | | gpt-5.4-2026-03-05                    | GPT-5.4 (Mar 2026)                                        |
+| | gpt-5.5-2026-04-23                    | GPT-5.5 (Apr 2026)                                        |
 | | gpt-5-mini                            | Efficient GPT-5                                           |
 | | gpt-5-nano                            | Compact GPT-5                                             |
 | | o3                                    | Reasoning-focused model                                   |
