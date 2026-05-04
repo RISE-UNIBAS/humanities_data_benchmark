@@ -10,7 +10,7 @@ Images are paired with two shared context images sent once per benchmark run:
 
 ## Data
 
-- 4 images (100, 103, S414, S420), ~1200x100 pixels each
+- PEP-sheet `04-25_PEP_02-12-01.pdf` manually segmented into rows yielding 21 images, ~1200x100 pixels each
 - Language: German
 - Source: Swiss nursing care facility, April 2025
 
@@ -49,7 +49,23 @@ Key fields:
 - **icon**: Descriptive name from the icon legend (e.g. "F-Dienst 1", "Ferien", "Freier Tag")
 - **length**: `full`, `half_left`, or `half_right` (cells can be split into two half-day shifts)
 - **planned_on_current_unit**: `true` if the icon has no red shading, `false` if the icon has red shading
-- **alternate_unit**: Unit abbreviation shown below the cell (e.g. "LE", "TS") if present, null otherwise
+- **alternate_unit**: Unit abbreviation shown below the cell (e.g. "LE", "TS") if present, null otherwise. Multiple abbreviations for the same date are joined with a comma (e.g. "LE, TS").
+
+## Editor
+
+`editor/editor.html` is a browser-based correction tool for ground truth JSON files. Open it directly in Chrome/Edge/Opera (File System Access API required for in-place saves; other browsers fall back to downloads).
+
+Workflow:
+1. Pick the `images/` folder and the `ground_truths/` folder. Files are paired by basename.
+2. Optionally pick an output folder (defaults to the browser's download directory).
+3. Click a row in the sidebar to load the image + JSON. Edit person metadata, days, and shifts.
+4. Click "JSON Speichern" to write the file.
+
+Behavior worth knowing:
+- Same-date day entries are auto-merged into a single day with a combined `shifts` array on load and before save.
+- Edits are cached in memory per file, so switching files and back preserves unsaved changes.
+- "+ Tag anfügen" appends a day to the end; the calendar-plus button on each day inserts a day directly below.
+- Shifts can be split into `half_left` / `half_right` halves on the same date.
 
 ## Scoring
 
