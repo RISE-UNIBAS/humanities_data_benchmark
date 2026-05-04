@@ -1,0 +1,984 @@
+<!DOCTYPE html>
+<html lang="de" class="h-full bg-gray-100">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Duty Roster Editor: Korrektur-Modus</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2D373C;
+            --accent: #D20537;
+            --highlight: #A5D7D2;
+            --highlight-light: #D2EBE9;
+            --border: #E5E7EB;
+        }
+
+        body { font-family: 'Inter', sans-serif; }
+
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94A3B8; }
+
+        .viewer-container {
+            cursor: grab;
+            overflow: hidden;
+            background-image:
+                linear-gradient(45deg, #f0f0f0 25%, transparent 25%),
+                linear-gradient(-45deg, #f0f0f0 25%, transparent 25%),
+                linear-gradient(45deg, transparent 75%, #f0f0f0 75%),
+                linear-gradient(-45deg, transparent 75%, #f0f0f0 75%);
+            background-size: 20px 20px;
+            background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+        }
+        .viewer-container:active { cursor: grabbing; }
+
+        .transform-layer {
+            transform-origin: 0 0;
+            transition: transform 0.1s ease-out;
+            will-change: transform;
+        }
+
+        .field-group {
+            transition: all 0.2s;
+            border: 1px solid transparent;
+        }
+        .field-group:focus-within {
+            border-color: var(--highlight);
+            background-color: #F8FAFC;
+        }
+
+        .status-dot {
+            height: 8px;
+            width: 8px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+        .status-pending { background-color: #CBD5E1; }
+        .status-edited { background-color: var(--highlight); }
+        .status-error { background-color: var(--accent); }
+
+        .sidebar-item.active {
+            background-color: var(--highlight-light);
+            border-left: 4px solid var(--accent);
+        }
+
+        .row-action-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 24px;
+            height: 24px;
+            border-radius: 4px;
+            color: #64748B;
+            transition: all 0.2s;
+            background: white;
+            border: 1px solid #E2E8F0;
+        }
+        .row-action-btn:hover:not(:disabled) {
+            background-color: #F1F5F9;
+            color: var(--primary);
+            border-color: #CBD5E1;
+        }
+        .row-action-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+            background-color: #F8FAFC;
+        }
+        .row-action-btn.delete:hover {
+            background-color: #FEF2F2;
+            color: var(--accent);
+            border-color: #FECACA;
+        }
+
+        /* Compact form controls for the dense day grid */
+        .input-compact {
+            font-size: 12px;
+            padding: 4px 6px;
+            border: 1px solid #D1D5DB;
+            border-radius: 4px;
+            background: white;
+            outline: none;
+        }
+        .input-compact:focus {
+            border-color: var(--highlight);
+            box-shadow: 0 0 0 1px var(--highlight);
+        }
+
+        .day-block {
+            background: white;
+            border: 1px solid #E5E7EB;
+            border-radius: 6px;
+            padding: 8px 10px;
+            margin-bottom: 6px;
+        }
+        .day-block.split { border-color: var(--highlight); background: #FBFEFD; }
+
+        .shift-row {
+            display: grid;
+            grid-template-columns: 200px 110px 90px 110px auto;
+            gap: 8px;
+            align-items: center;
+            margin-top: 6px;
+        }
+
+        .col-label {
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #6B7280;
+            margin-bottom: 2px;
+            display: block;
+        }
+    </style>
+</head>
+<body class="h-full flex flex-col overflow-hidden">
+
+    <!-- 1. SETUP OVERLAY -->
+    <div id="setup-screen" class="fixed inset-0 z-50 bg-white flex flex-col items-center justify-center p-8">
+        <div class="max-w-2xl w-full text-center space-y-8">
+            <div>
+                <h1 class="text-3xl font-bold text-[var(--primary)] mb-2">Duty Roster Korrektur</h1>
+                <p class="text-gray-500">Wählen Sie die Ordner mit den Roster-Bildern und den JSON-Dateien aus.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="border-2 border-dashed border-gray-300 rounded-xl p-8 hover:border-[var(--accent)] hover:bg-gray-50 transition cursor-pointer relative group">
+                    <input type="file" id="img-folder-input" webkitdirectory directory multiple class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
+                    <div class="pointer-events-none">
+                        <div class="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4 text-[var(--primary)] group-hover:bg-red-100 group-hover:text-[var(--accent)] transition">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                        </div>
+                        <h3 class="font-bold">1. Bilder-Ordner</h3>
+                        <p id="img-status" class="text-sm text-gray-400 mt-1">Kein Ordner gewählt</p>
+                    </div>
+                </div>
+
+                <div class="border-2 border-dashed border-gray-300 rounded-xl p-8 hover:border-[var(--highlight)] hover:bg-gray-50 transition cursor-pointer relative group">
+                    <input type="file" id="json-folder-input" webkitdirectory directory multiple class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
+                    <div class="pointer-events-none">
+                        <div class="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4 text-[var(--primary)] group-hover:bg-teal-100 group-hover:text-teal-600 transition">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path></svg>
+                        </div>
+                        <h3 class="font-bold">2. JSON-Ordner</h3>
+                        <p id="json-status" class="text-sm text-gray-400 mt-1">Kein Ordner gewählt</p>
+                    </div>
+                </div>
+            </div>
+
+            <button id="start-btn" disabled class="bg-[var(--primary)] text-white px-8 py-3 rounded-lg font-bold shadow-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-black transition w-full md:w-auto">
+                Editor starten
+            </button>
+            <p id="match-status" class="text-sm font-medium h-6 text-[var(--accent)]"></p>
+        </div>
+    </div>
+
+    <!-- 2. MAIN EDITOR INTERFACE -->
+    <div id="app-interface" class="hidden flex flex-col h-full">
+
+        <header class="h-14 bg-white border-b flex items-center justify-between px-4 shadow-sm z-10 shrink-0">
+            <div class="flex items-center gap-3">
+                <div class="bg-[var(--accent)] text-white font-bold px-2 py-1 rounded text-xs">DR-EDITOR</div>
+                <span id="current-filename" class="text-sm font-medium text-gray-600">Keine Datei ausgewählt</span>
+            </div>
+            <div class="flex gap-2 items-center">
+                <button id="set-output-dir-btn" class="flex items-center gap-2 bg-gray-100 hover:bg-gray-200 text-gray-600 px-3 py-1.5 rounded text-sm font-medium transition border border-gray-300">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"></path></svg>
+                    <span id="output-dir-label">📂 Zielordner wählen</span>
+                </button>
+
+                <div class="w-px h-6 bg-gray-300 mx-2"></div>
+
+                <button id="save-json-btn" class="flex items-center gap-2 bg-[var(--primary)] hover:bg-gray-800 text-white px-3 py-1.5 rounded text-sm font-medium transition">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                    JSON Speichern
+                </button>
+            </div>
+        </header>
+
+        <div class="flex flex-1 overflow-hidden">
+
+            <!-- Sidebar -->
+            <aside class="w-56 bg-gray-50 border-r border-gray-200 flex flex-col shrink-0">
+                <div class="p-3 border-b text-xs font-bold text-gray-400 uppercase tracking-wider flex justify-between">
+                    <span>Dateien</span>
+                    <span id="file-count">0</span>
+                </div>
+                <ul id="file-list" class="flex-1 overflow-y-auto p-2 space-y-1">
+                </ul>
+            </aside>
+
+            <!-- Main: image on top, form below -->
+            <main class="flex-1 flex flex-col min-w-0">
+                <!-- Image strip -->
+                <div class="relative bg-gray-200 shrink-0" style="height: 360px;">
+                    <div class="absolute top-2 left-2 z-10 bg-white/90 backdrop-blur rounded shadow p-1 flex gap-1">
+                        <button id="zoom-out" class="p-1 hover:bg-gray-100 rounded" title="Zoom Out">-</button>
+                        <span id="zoom-level" class="text-xs self-center w-12 text-center font-mono">100%</span>
+                        <button id="zoom-in" class="p-1 hover:bg-gray-100 rounded" title="Zoom In">+</button>
+                        <div class="w-px bg-gray-300 mx-1"></div>
+                        <button id="reset-view" class="p-1 hover:bg-gray-100 rounded text-xs px-2">Fit</button>
+                    </div>
+
+                    <div id="header-fallback" class="absolute top-2 right-2 z-10 hidden">
+                        <label class="bg-white/90 backdrop-blur rounded shadow p-1.5 text-xs cursor-pointer hover:bg-white border border-gray-300 flex items-center gap-1">
+                            <span>📋 Header laden</span>
+                            <input type="file" id="header-input" accept="image/*" class="hidden">
+                        </label>
+                    </div>
+
+                    <div id="image-container" class="viewer-container w-full h-full relative">
+                        <div id="transform-wrapper" class="transform-layer absolute top-0 left-0">
+                            <img id="header-image" src="" alt="Header" class="block max-w-none shadow-2xl pointer-events-none select-none" style="display: none;">
+                            <img id="main-image" src="" alt="Roster" class="block max-w-none shadow-2xl pointer-events-none select-none">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Form -->
+                <div id="editor-form-container" class="flex-1 overflow-y-auto p-4 bg-gray-50">
+                    <div class="text-center text-gray-400 mt-20">
+                        Bitte wählen Sie eine Datei aus der Liste links.
+                    </div>
+                </div>
+            </main>
+
+        </div>
+    </div>
+
+    <script>
+        // Icon vocabulary (mirrors ICON_MAP values in dataclass.py)
+        const ICONS = [
+            "Auszubildende Lerntandem", "Azu-Gespräche dives", "BESPRECHUNG",
+            "Betriebsausflug", "Bürotag", "F-Dienst 1", "Ferien", "Freier Tag",
+            "HomeOffice", "Interne Einblicke", "kIND kRANK", "Kranktag",
+            "Kurse bezahlte Weiterb.", "L", "M-Dienst 3", "M-Dienst 4",
+            "Mutterschutz", "N 1", "Obl. Fort-Bildung", "Persönliche Absenz",
+            "RAI/RUG", "S-Dienst 1", "Schule", "Schultag", "Schülerbetreuung",
+            "Schwangerschaftsurlaub", "SD", "TV-FAL", "Unbezahlter Urlaub",
+            "Unbekannt", "Unfall", "Wunschfrei", "Zügeltag",
+        ];
+
+        const LENGTHS = ["full", "half_left", "half_right"];
+
+        const state = {
+            pairs: [],
+            currentIdx: -1,
+            jsonData: null,
+            outputDirHandle: null,
+            scale: 1,
+            panning: false,
+            pointX: 0,
+            pointY: 0,
+            startX: 0,
+            startY: 0
+        };
+
+        const els = {
+            setup: document.getElementById('setup-screen'),
+            app: document.getElementById('app-interface'),
+            imgInput: document.getElementById('img-folder-input'),
+            jsonInput: document.getElementById('json-folder-input'),
+            startBtn: document.getElementById('start-btn'),
+            matchStatus: document.getElementById('match-status'),
+            fileList: document.getElementById('file-list'),
+            mainImage: document.getElementById('main-image'),
+            headerImage: document.getElementById('header-image'),
+            headerFallback: document.getElementById('header-fallback'),
+            headerInput: document.getElementById('header-input'),
+            editorContainer: document.getElementById('editor-form-container'),
+            transformWrapper: document.getElementById('transform-wrapper'),
+            imageContainer: document.getElementById('image-container'),
+            zoomLevel: document.getElementById('zoom-level'),
+            currentFilename: document.getElementById('current-filename'),
+            setOutputDirBtn: document.getElementById('set-output-dir-btn'),
+            outputDirLabel: document.getElementById('output-dir-label'),
+            saveBtn: document.getElementById('save-json-btn')
+        };
+
+        // --- Header context image (roster_header.jpg) ---
+        // Try the relative path first (works when served via local server). On file://
+        // it usually fails — fall back to a manual file picker.
+        // Force 1:1 pixel-to-CSS mapping. Chrome honors JPEG DPI metadata when sizing
+        // images, so two equal-pixel images with different DPI tags render at
+        // different CSS widths. Setting an explicit pixel width overrides that.
+        function lockImagePixelSize(img) {
+            if (!img.naturalWidth) return;
+            img.style.width = img.naturalWidth + 'px';
+            img.style.height = 'auto';
+        }
+
+        function tryLoadHeaderRelative() {
+            els.headerFallback.classList.remove('hidden');
+
+            const probe = new Image();
+            probe.onload = () => {
+                if (!probe.naturalWidth) return;
+                els.headerImage.onload = () => {
+                    lockImagePixelSize(els.headerImage);
+                    els.headerImage.style.display = 'block';
+                    els.headerFallback.classList.add('hidden');
+                    fitImageToContainer();
+                };
+                els.headerImage.src = probe.src;
+            };
+            probe.src = '../context/roster_header.jpg';
+        }
+
+        document.getElementById('header-input').addEventListener('change', (e) => {
+            const f = e.target.files[0];
+            if (!f) return;
+            const url = URL.createObjectURL(f);
+            els.headerImage.onload = () => {
+                lockImagePixelSize(els.headerImage);
+                els.headerImage.style.display = 'block';
+                els.headerFallback.classList.add('hidden');
+                fitImageToContainer();
+            };
+            els.headerImage.src = url;
+        });
+
+        // --- 1. INIT & FILE MATCHING ---
+
+        let imageFilesMap = new Map();
+        let jsonFilesMap = new Map();
+
+        function handleFolderSelect(e, type) {
+            const files = Array.from(e.target.files);
+            const statusEl = document.getElementById(type === 'img' ? 'img-status' : 'json-status');
+            const validFiles = files.filter(f => !f.name.startsWith('.'));
+
+            if (type === 'img') {
+                imageFilesMap.clear();
+                validFiles.forEach(f => {
+                    if (f.name.match(/\.(jpg|jpeg|png|tif|tiff)$/i)) {
+                        const baseName = f.name.substring(0, f.name.lastIndexOf('.'));
+                        imageFilesMap.set(baseName, f);
+                    }
+                });
+                statusEl.innerText = `${imageFilesMap.size} Bilder gefunden`;
+            } else {
+                jsonFilesMap.clear();
+                validFiles.forEach(f => {
+                    if (f.name.endsWith('.json')) {
+                        const baseName = f.name.substring(0, f.name.lastIndexOf('.'));
+                        jsonFilesMap.set(baseName, f);
+                    }
+                });
+                statusEl.innerText = `${jsonFilesMap.size} JSON-Dateien gefunden`;
+            }
+
+            checkMatch();
+        }
+
+        function checkMatch() {
+            const pairs = [];
+            for (const [name, imgFile] of imageFilesMap) {
+                if (jsonFilesMap.has(name)) {
+                    pairs.push({
+                        id: name,
+                        imgFile: imgFile,
+                        jsonFile: jsonFilesMap.get(name),
+                        status: 'pending'
+                    });
+                }
+            }
+
+            if (pairs.length > 0) {
+                state.pairs = pairs.sort((a, b) => a.id.localeCompare(b.id));
+                els.matchStatus.innerText = `${pairs.length} Paare erfolgreich verknüpft!`;
+                els.matchStatus.className = "text-sm font-medium h-6 text-green-600";
+                els.startBtn.disabled = false;
+            } else {
+                if (imageFilesMap.size > 0 && jsonFilesMap.size > 0) {
+                    els.matchStatus.innerText = "Keine übereinstimmenden Dateinamen gefunden.";
+                    els.matchStatus.className = "text-sm font-medium h-6 text-[var(--accent)]";
+                }
+                els.startBtn.disabled = true;
+            }
+        }
+
+        els.imgInput.addEventListener('change', (e) => handleFolderSelect(e, 'img'));
+        els.jsonInput.addEventListener('change', (e) => handleFolderSelect(e, 'json'));
+
+        els.startBtn.addEventListener('click', () => {
+            els.setup.classList.add('hidden');
+            els.app.classList.remove('hidden');
+            renderSidebar();
+            tryLoadHeaderRelative();
+            loadFile(0);
+        });
+
+        // --- 2. SIDEBAR ---
+
+        function renderSidebar() {
+            els.fileList.innerHTML = '';
+            document.getElementById('file-count').innerText = state.pairs.length;
+
+            state.pairs.forEach((pair, idx) => {
+                const li = document.createElement('li');
+                li.className = `sidebar-item p-2 rounded cursor-pointer hover:bg-white text-sm flex items-center gap-2 transition ${idx === state.currentIdx ? 'active' : ''}`;
+                li.onclick = () => loadFile(idx);
+
+                const statusClass = pair.status === 'edited' ? 'status-edited' : 'status-pending';
+
+                li.innerHTML = `
+                    <span class="status-dot ${statusClass}"></span>
+                    <span class="truncate text-gray-700 font-medium w-full">${pair.id}</span>
+                `;
+                els.fileList.appendChild(li);
+            });
+        }
+
+        async function loadFile(idx) {
+            const pair = state.pairs[idx];
+
+            // Cache parsed data on the pair so unsaved edits survive switching
+            // files, and so a Save fired during the async parse below cannot
+            // write the previous file's data into the new file.
+            let jsonData = pair.jsonData;
+            if (!jsonData) {
+                try {
+                    const text = await pair.jsonFile.text();
+                    jsonData = JSON.parse(text);
+                } catch (e) {
+                    alert("Fehler beim Laden der JSON Datei: " + e.message);
+                    return;
+                }
+                consolidateDays(jsonData);
+                pair.jsonData = jsonData;
+            }
+
+            state.currentIdx = idx;
+            state.jsonData = jsonData;
+
+            document.querySelectorAll('.sidebar-item').forEach(el => el.classList.remove('active'));
+            if (els.fileList.children[idx]) els.fileList.children[idx].classList.add('active');
+            els.currentFilename.innerText = pair.id;
+
+            const imgUrl = URL.createObjectURL(pair.imgFile);
+            els.mainImage.src = imgUrl;
+            els.mainImage.onload = () => {
+                lockImagePixelSize(els.mainImage);
+                fitImageToContainer();
+            };
+
+            renderEditor();
+        }
+
+        // --- 3. EDITOR ---
+
+        function renderEditor() {
+            const container = els.editorContainer;
+            container.innerHTML = '';
+
+            if (!state.jsonData || !Array.isArray(state.jsonData.persons) || state.jsonData.persons.length === 0) {
+                container.innerHTML = '<div class="text-red-500 p-4">Ungültige JSON Struktur (persons fehlt)</div>';
+                return;
+            }
+
+            const person = state.jsonData.persons[0];
+
+            // --- Schedule metadata ---
+            const meta = document.createElement('div');
+            meta.className = "bg-white border border-gray-200 rounded-lg p-3 mb-3 shadow-sm";
+            meta.innerHTML = `
+                <div class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Schedule</div>
+                <div class="grid grid-cols-3 gap-3">
+                    <div>
+                        <span class="col-label">Unit</span>
+                        <input type="text" class="input-compact w-full" value="${escapeHtml(state.jsonData.unit || '')}"
+                            oninput="updateMeta('unit', this.value)">
+                    </div>
+                    <div>
+                        <span class="col-label">Year</span>
+                        <input type="number" class="input-compact w-full" value="${state.jsonData.year ?? ''}"
+                            oninput="updateMeta('year', parseInt(this.value, 10))">
+                    </div>
+                    <div>
+                        <span class="col-label">Month</span>
+                        <input type="text" class="input-compact w-full" value="${escapeHtml(state.jsonData.month || '')}"
+                            oninput="updateMeta('month', this.value)">
+                    </div>
+                </div>
+            `;
+            container.appendChild(meta);
+
+            // --- Person metadata ---
+            const personEl = document.createElement('div');
+            personEl.className = "bg-white border border-gray-200 rounded-lg p-3 mb-4 shadow-sm";
+            personEl.innerHTML = `
+                <div class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Person</div>
+                <div class="grid grid-cols-4 gap-3 items-end">
+                    <div>
+                        <span class="col-label">ID</span>
+                        <input type="text" class="input-compact w-full" value="${escapeHtml(person.id || '')}"
+                            oninput="updatePerson('id', this.value)">
+                    </div>
+                    <div>
+                        <span class="col-label">Profession</span>
+                        <input type="text" class="input-compact w-full" value="${escapeHtml(person.profession || '')}"
+                            oninput="updatePerson('profession', this.value)">
+                    </div>
+                    <div>
+                        <span class="col-label">Employment %</span>
+                        <input type="number" class="input-compact w-full" value="${person.employment_percent ?? 0}"
+                            oninput="updatePerson('employment_percent', parseInt(this.value, 10))">
+                    </div>
+                    <div class="flex items-center gap-2 pb-1">
+                        <input type="checkbox" id="is-jumper" ${person.is_jumper ? 'checked' : ''}
+                            class="w-4 h-4 text-[var(--accent)] rounded border-gray-300"
+                            onchange="updatePerson('is_jumper', this.checked)">
+                        <label for="is-jumper" class="text-sm">is_jumper</label>
+                    </div>
+                </div>
+            `;
+            container.appendChild(personEl);
+
+            // --- Days ---
+            const daysHeader = document.createElement('div');
+            daysHeader.className = "flex justify-between items-center mb-2 mt-2";
+            daysHeader.innerHTML = `
+                <div class="text-xs font-bold text-gray-500 uppercase tracking-wider">Days (${(person.days || []).length})</div>
+                <button onclick="addDay()" class="text-xs bg-white border border-gray-300 hover:border-[var(--highlight)] px-2 py-1 rounded text-gray-600 hover:text-[var(--primary)] transition shadow-sm">
+                    + Tag anfügen
+                </button>
+            `;
+            container.appendChild(daysHeader);
+
+            const days = person.days || [];
+
+            // Group consecutive entries with the same date so split-day shifts are visible together
+            days.forEach((day, dayIdx) => {
+                container.appendChild(buildDayBlock(day, dayIdx));
+            });
+        }
+
+        function buildDayBlock(day, dayIdx) {
+            const block = document.createElement('div');
+            const isSplit = (day.shifts || []).some(s => s.length === 'half_left' || s.length === 'half_right');
+            block.className = "day-block" + (isSplit ? ' split' : '');
+
+            const header = document.createElement('div');
+            header.className = "flex justify-between items-center";
+            header.innerHTML = `
+                <div class="flex items-center gap-2">
+                    <span class="font-mono text-sm font-bold text-[var(--primary)]">${escapeHtml(day.date || '')}</span>
+                    <input type="text" class="input-compact" style="width: 130px;" value="${escapeHtml(day.date || '')}"
+                        oninput="updateDayDate(${dayIdx}, this.value)" title="Date">
+                </div>
+                <div class="flex gap-1">
+                    <button onclick="addShift(${dayIdx})" class="row-action-btn" title="Schicht hinzufügen">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                    </button>
+                    <button onclick="insertDayAfter(${dayIdx})" class="row-action-btn" title="Tag darunter einfügen">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3M4 11h16M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2zM12 14v4m-2-2h4"></path></svg>
+                    </button>
+                    <button onclick="moveDay(${dayIdx}, -1)" class="row-action-btn" title="Hoch">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path></svg>
+                    </button>
+                    <button onclick="moveDay(${dayIdx}, 1)" class="row-action-btn" title="Runter">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path></svg>
+                    </button>
+                    <button onclick="deleteDay(${dayIdx})" class="row-action-btn delete" title="Tag löschen">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                    </button>
+                </div>
+            `;
+            block.appendChild(header);
+
+            (day.shifts || []).forEach((shift, shiftIdx) => {
+                block.appendChild(buildShiftRow(dayIdx, shiftIdx, shift, (day.shifts || []).length));
+            });
+
+            return block;
+        }
+
+        function buildShiftRow(dayIdx, shiftIdx, shift, totalShifts) {
+            const row = document.createElement('div');
+            row.className = "shift-row";
+
+            const iconOptions = ['<option value="__null__">— null —</option>']
+                .concat(ICONS.map(i => `<option value="${escapeHtml(i)}" ${shift.icon === i ? 'selected' : ''}>${escapeHtml(i)}</option>`))
+                .join('');
+
+            const lengthOptions = LENGTHS.map(l =>
+                `<option value="${l}" ${shift.length === l ? 'selected' : ''}>${l}</option>`
+            ).join('');
+
+            row.innerHTML = `
+                <div>
+                    <span class="col-label">Icon</span>
+                    <select class="input-compact w-full" onchange="updateShift(${dayIdx}, ${shiftIdx}, 'icon', this.value)">
+                        ${iconOptions}
+                    </select>
+                </div>
+                <div>
+                    <span class="col-label">Length</span>
+                    <select class="input-compact w-full" onchange="updateShift(${dayIdx}, ${shiftIdx}, 'length', this.value)">
+                        ${lengthOptions}
+                    </select>
+                </div>
+                <div>
+                    <span class="col-label">On Unit</span>
+                    <div class="flex items-center h-7">
+                        <input type="checkbox" ${shift.planned_on_current_unit ? 'checked' : ''}
+                            class="w-4 h-4 text-[var(--accent)] rounded border-gray-300"
+                            onchange="updateShift(${dayIdx}, ${shiftIdx}, 'planned_on_current_unit', this.checked)">
+                    </div>
+                </div>
+                <div>
+                    <span class="col-label">Alt. Unit</span>
+                    <input type="text" class="input-compact w-full" value="${escapeHtml(shift.alternate_unit ?? '')}"
+                        oninput="updateShift(${dayIdx}, ${shiftIdx}, 'alternate_unit', this.value)" placeholder="null">
+                </div>
+                <div class="flex items-end h-full pb-0.5">
+                    <button onclick="deleteShift(${dayIdx}, ${shiftIdx})" ${totalShifts <= 1 ? 'disabled' : ''}
+                        class="row-action-btn delete" title="Schicht löschen">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                    </button>
+                </div>
+            `;
+
+            return row;
+        }
+
+        // --- DATA UPDATERS ---
+
+        function markEdited() {
+            if (state.currentIdx < 0) return;
+            state.pairs[state.currentIdx].status = 'edited';
+            const currentLi = els.fileList.children[state.currentIdx];
+            if (currentLi) {
+                const dot = currentLi.querySelector('.status-dot');
+                dot.classList.remove('status-pending');
+                dot.classList.add('status-edited');
+            }
+        }
+
+        window.updateMeta = function (key, value) {
+            state.jsonData[key] = value;
+            markEdited();
+        };
+
+        window.updatePerson = function (key, value) {
+            state.jsonData.persons[0][key] = value;
+            markEdited();
+        };
+
+        window.updateDayDate = function (dayIdx, value) {
+            state.jsonData.persons[0].days[dayIdx].date = value;
+            markEdited();
+            // Update visible label without full rerender
+            const blocks = els.editorContainer.querySelectorAll('.day-block');
+            if (blocks[dayIdx]) {
+                const label = blocks[dayIdx].querySelector('.font-mono');
+                if (label) label.innerText = value;
+            }
+        };
+
+        window.updateShift = function (dayIdx, shiftIdx, key, value) {
+            const shift = state.jsonData.persons[0].days[dayIdx].shifts[shiftIdx];
+            if (key === 'icon') {
+                shift.icon = (value === '__null__') ? null : value;
+            } else if (key === 'alternate_unit') {
+                shift.alternate_unit = value.trim() === '' ? null : value;
+            } else {
+                shift[key] = value;
+            }
+            markEdited();
+        };
+
+        window.addShift = function (dayIdx) {
+            const day = state.jsonData.persons[0].days[dayIdx];
+            day.shifts = day.shifts || [];
+            day.shifts.push({
+                icon: null,
+                length: 'full',
+                planned_on_current_unit: true,
+                alternate_unit: null
+            });
+            markEdited();
+            renderEditor();
+        };
+
+        window.deleteShift = function (dayIdx, shiftIdx) {
+            const day = state.jsonData.persons[0].days[dayIdx];
+            if (!day.shifts || day.shifts.length <= 1) return;
+            day.shifts.splice(shiftIdx, 1);
+            markEdited();
+            renderEditor();
+        };
+
+        window.moveDay = function (dayIdx, direction) {
+            const days = state.jsonData.persons[0].days;
+            const newIdx = dayIdx + direction;
+            if (newIdx < 0 || newIdx >= days.length) return;
+            [days[dayIdx], days[newIdx]] = [days[newIdx], days[dayIdx]];
+            markEdited();
+            renderEditor();
+        };
+
+        window.deleteDay = function (dayIdx) {
+            if (!confirm('Tag wirklich löschen?')) return;
+            state.jsonData.persons[0].days.splice(dayIdx, 1);
+            markEdited();
+            renderEditor();
+        };
+
+        window.addDay = function () {
+            const days = state.jsonData.persons[0].days || [];
+            const last = days[days.length - 1];
+            const nextDate = last ? incrementDate(last.date) : '';
+            days.push({
+                date: nextDate,
+                shifts: [{
+                    icon: null,
+                    length: 'full',
+                    planned_on_current_unit: true,
+                    alternate_unit: null
+                }]
+            });
+            state.jsonData.persons[0].days = days;
+            markEdited();
+            renderEditor();
+            els.editorContainer.scrollTop = els.editorContainer.scrollHeight;
+        };
+
+        window.insertDayAfter = function (dayIdx) {
+            const days = state.jsonData.persons[0].days;
+            const current = days[dayIdx];
+            const newDate = incrementDate(current && current.date);
+            days.splice(dayIdx + 1, 0, {
+                date: newDate,
+                shifts: [{
+                    icon: null,
+                    length: 'full',
+                    planned_on_current_unit: true,
+                    alternate_unit: null
+                }]
+            });
+            markEdited();
+            renderEditor();
+        };
+
+        function incrementDate(iso) {
+            if (!iso || !/^\d{4}-\d{2}-\d{2}$/.test(iso)) return '';
+            const d = new Date(iso + 'T00:00:00Z');
+            d.setUTCDate(d.getUTCDate() + 1);
+            return d.toISOString().slice(0, 10);
+        }
+
+        function escapeHtml(text) {
+            if (text === null || text === undefined) return "";
+            return text.toString()
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+
+        // --- 4. SAVE ---
+
+        // Merge day entries that share the same date into a single entry whose
+        // shifts array concatenates the originals. Empty/blank dates are not
+        // merged (a freshly-added day with no date yet shouldn't collapse into
+        // another empty-date day).
+        function consolidateDays(data) {
+            if (!data || !Array.isArray(data.persons)) return false;
+            let changed = false;
+            data.persons.forEach(person => {
+                if (!Array.isArray(person.days)) return;
+                const byDate = new Map();
+                const ordered = [];
+                person.days.forEach(day => {
+                    const key = (day.date || '').trim();
+                    if (key && byDate.has(key)) {
+                        const target = byDate.get(key);
+                        target.shifts = (target.shifts || []).concat(day.shifts || []);
+                        changed = true;
+                    } else {
+                        if (key) byDate.set(key, day);
+                        ordered.push(day);
+                    }
+                });
+                if (ordered.length !== person.days.length) changed = true;
+                person.days = ordered;
+            });
+            return changed;
+        }
+
+        // Pretty-print JSON but keep each shift object on a single line, matching the
+        // ground-truth file format.
+        function formatJson(data) {
+            const placeholders = [];
+            const cloned = JSON.parse(JSON.stringify(data));
+            if (cloned.persons) {
+                cloned.persons.forEach(p => {
+                    if (!Array.isArray(p.days)) return;
+                    p.days.forEach(day => {
+                        if (!Array.isArray(day.shifts)) return;
+                        day.shifts = day.shifts.map(s => {
+                            const inline = JSON.stringify(s);
+                            const token = `__INLINE_${placeholders.length}__`;
+                            placeholders.push(inline);
+                            return token;
+                        });
+                    });
+                });
+            }
+            let out = JSON.stringify(cloned, null, 2);
+            placeholders.forEach((inline, i) => {
+                const token = `"__INLINE_${i}__"`;
+                out = out.replace(token, inline);
+            });
+            return out;
+        }
+
+        els.setOutputDirBtn.onclick = async () => {
+            if (!('showDirectoryPicker' in window)) {
+                alert("Ihr Browser unterstützt diese Funktion nicht (nur Chrome/Edge/Opera). Es wird der Standard-Download verwendet.");
+                return;
+            }
+            try {
+                state.outputDirHandle = await window.showDirectoryPicker();
+                els.setOutputDirBtn.classList.add('bg-green-100', 'text-green-800', 'border-green-300');
+                els.setOutputDirBtn.classList.remove('bg-gray-100', 'text-gray-600', 'border-gray-300');
+                els.outputDirLabel.innerText = "Ordner: " + state.outputDirHandle.name;
+            } catch (e) {
+                console.log("Ordnerwahl abgebrochen:", e);
+            }
+        };
+
+        els.saveBtn.onclick = async () => {
+            if (!state.jsonData) return;
+
+            // Merge any same-date day entries the user produced via editing
+            // before serializing, so the saved file is always normalised.
+            if (consolidateDays(state.jsonData)) {
+                renderEditor();
+            }
+
+            const jsonString = formatJson(state.jsonData);
+            const pair = state.pairs[state.currentIdx];
+            const filename = `${pair.id}.json`;
+
+            if (state.outputDirHandle) {
+                try {
+                    const btn = els.saveBtn;
+                    const oldText = btn.innerHTML;
+                    btn.innerHTML = `<svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> Speichern...`;
+
+                    const fileHandle = await state.outputDirHandle.getFileHandle(filename, { create: true });
+                    const writable = await fileHandle.createWritable();
+                    await writable.write(jsonString);
+                    await writable.close();
+
+                    btn.innerHTML = "Gespeichert ✓";
+                    btn.classList.replace('bg-[var(--primary)]', 'bg-green-600');
+                    setTimeout(() => {
+                        btn.innerHTML = oldText;
+                        btn.classList.replace('bg-green-600', 'bg-[var(--primary)]');
+                    }, 1500);
+
+                } catch (e) {
+                    alert("Fehler beim Speichern in den Ordner: " + e.message + "\n\nBitte prüfen Sie die Schreibrechte.");
+                }
+            } else {
+                const blob = new Blob([jsonString], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = filename;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            }
+        };
+
+        // --- 5. ZOOM & PAN ---
+
+        function updateTransform() {
+            els.transformWrapper.style.transform = `translate(${state.pointX}px, ${state.pointY}px) scale(${state.scale})`;
+            els.zoomLevel.innerText = Math.round(state.scale * 100) + '%';
+        }
+
+        function fitImageToContainer() {
+            const cw = els.imageContainer.clientWidth;
+            const ch = els.imageContainer.clientHeight;
+            const rowW = els.mainImage.naturalWidth;
+            const rowH = els.mainImage.naturalHeight;
+            if (!rowW || !rowH) return;
+            const headerVisible = els.headerImage.style.display !== 'none' && els.headerImage.naturalWidth > 0;
+            const hdrW = headerVisible ? els.headerImage.naturalWidth : 0;
+            const hdrH = headerVisible ? els.headerImage.naturalHeight : 0;
+            const totalW = Math.max(rowW, hdrW);
+            const totalH = rowH + hdrH;
+            const scale = Math.min(cw / totalW, ch / totalH) * 0.98;
+            state.scale = scale;
+            state.pointX = (cw - totalW * scale) / 2;
+            state.pointY = (ch - totalH * scale) / 2;
+            updateTransform();
+        }
+
+        document.getElementById('zoom-in').onclick = () => {
+            state.scale *= 1.2;
+            updateTransform();
+        };
+        document.getElementById('zoom-out').onclick = () => {
+            state.scale /= 1.2;
+            if (state.scale < 0.05) state.scale = 0.05;
+            updateTransform();
+        };
+        document.getElementById('reset-view').onclick = fitImageToContainer;
+
+        els.imageContainer.addEventListener('wheel', (e) => {
+            e.preventDefault();
+            const rect = els.imageContainer.getBoundingClientRect();
+            const cx = e.clientX - rect.left;
+            const cy = e.clientY - rect.top;
+            const xs = (cx - state.pointX) / state.scale;
+            const ys = (cy - state.pointY) / state.scale;
+            const delta = -Math.sign(e.deltaY);
+            (delta > 0) ? (state.scale *= 1.1) : (state.scale /= 1.1);
+            if (state.scale < 0.05) state.scale = 0.05;
+            if (state.scale > 10) state.scale = 10;
+            state.pointX = cx - xs * state.scale;
+            state.pointY = cy - ys * state.scale;
+            updateTransform();
+        });
+
+        els.imageContainer.addEventListener('mousedown', (e) => {
+            e.preventDefault();
+            state.startX = e.clientX - state.pointX;
+            state.startY = e.clientY - state.pointY;
+            state.panning = true;
+            els.imageContainer.style.cursor = 'grabbing';
+        });
+
+        els.imageContainer.addEventListener('mousemove', (e) => {
+            if (!state.panning) return;
+            e.preventDefault();
+            state.pointX = e.clientX - state.startX;
+            state.pointY = e.clientY - state.startY;
+            updateTransform();
+        });
+
+        els.imageContainer.addEventListener('mouseup', () => {
+            state.panning = false;
+            els.imageContainer.style.cursor = 'grab';
+        });
+
+        els.imageContainer.addEventListener('mouseleave', () => {
+            state.panning = false;
+            els.imageContainer.style.cursor = 'grab';
+        });
+
+    </script>
+</body>
+</html>
