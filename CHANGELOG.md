@@ -5,7 +5,9 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased (0.5.1-pre1)
+## [Unreleased] (0.5.2-pre1)
+
+## [v0.5.1] - 2026-05-20
 
 ### Added
 - 6 new models: qwen3.5-plus, qwen3.5-35b-a3b, qwen3.5-27b, qwen3.5-122b-a10b, qwen3.5-397b-a17b, qwen3.5-flash-2026-02-23 (Alibaba); 10 new models: qwen/qwen3.6-plus, qwen/qwen3.5-122b-a10b, qwen/qwen3.5-27b, qwen/qwen3.5-35b-a3b, qwen/qwen3.5-397b-a17b, qwen/qwen3.5-plus-02-15, qwen/qwen3.5-flash-02-23, qwen/qwen3.5-9b, google/gemma-4-26b-a4b-it, google/gemma-4-31b-it (OpenRouter); 1 new model: claude-opus-4-7 (Anthropic); 2 new models: deepseek-v4-flash, deepseek-v4-pro (DeepSeek); 1 new model: gpt-5.5-2026-04-23 (OpenAI)
@@ -183,7 +185,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Changelog
 
-[Unreleased]: https://github.com/RISE-UNIBAS/humanities_data_benchmark/compare/v0.4.0...HEAD
+[Unreleased]: https://github.com/RISE-UNIBAS/humanities_data_benchmark/compare/v0.5.1...HEAD
 [v0.1.0]: https://github.com/RISE-UNIBAS/humanities_data_benchmark/releases/tag/v0.1.0
 [v0.2.0]: https://github.com/RISE-UNIBAS/humanities_data_benchmark/releases/tag/v0.2.0
 [v0.2.1]: https://github.com/RISE-UNIBAS/humanities_data_benchmark/releases/tag/v0.2.1
@@ -193,3 +195,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [v0.4.0]: https://github.com/RISE-UNIBAS/humanities_data_benchmark/releases/tag/v0.4.0
 [v0.4.1]: https://github.com/RISE-UNIBAS/humanities_data_benchmark/releases/tag/v0.4.1
 [v0.5.0]: https://github.com/RISE-UNIBAS/humanities_data_benchmark/releases/tag/v0.5.0
+[v0.5.1]: https://github.com/RISE-UNIBAS/humanities_data_benchmark/releases/tag/v0.5.1
