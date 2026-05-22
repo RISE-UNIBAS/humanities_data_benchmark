@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased] (0.5.2-pre1)
 
+### Added
+- 1 new model: gemini-3.5-flash (GenAI)
+- 13 new benchmark test configurations (T1050-T1062) for GenAI gemini-3.5-flash across all benchmarks
+- Tests on 2026-05-22: T1050-T1062 (13 tests) for gemini-3.5-flash across all benchmarks
+- Pricing data for 2026-05-22
+
 ## [v0.5.1] - 2026-05-20
 
 ### Added
