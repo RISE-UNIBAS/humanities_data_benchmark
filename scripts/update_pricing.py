@@ -867,6 +867,7 @@ Return only JSON:"""
         'qwen/qwen3-vl-30b-a3b-instruct': 'https://openrouter.ai/qwen/qwen3-vl-30b-a3b-instruct',
         'qwen/qwen3-vl-8b-instruct':      'https://openrouter.ai/qwen/qwen3-vl-8b-instruct',
         'qwen/qwen3-vl-8b-thinking':      'https://openrouter.ai/qwen/qwen3-vl-8b-thinking',
+        'qwen/qwen3.7-plus':              'https://openrouter.ai/qwen/qwen3.7-plus',
         'qwen/qwen3.6-plus':              'https://openrouter.ai/qwen/qwen3.6-plus',
         'qwen/qwen3.6-plus-04-02':        'https://openrouter.ai/qwen/qwen3.6-plus',
         'qwen/qwen3.5-122b-a10b':         'https://openrouter.ai/qwen/qwen3.5-122b-a10b',

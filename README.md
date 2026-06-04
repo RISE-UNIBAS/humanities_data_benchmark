@@ -474,6 +474,7 @@ This benchmark suite currently tests models from the following providers:
 | | qwen/qwen3-vl-30b-a3b-instruct        | Qwen3 VL 30B instruction                                  |
 | | qwen/qwen3-vl-8b-instruct             | Qwen3 VL 8B instruction                                   |
 | | qwen/qwen3-vl-8b-thinking             | Qwen3 VL 8B reasoning                                     |
+| | qwen/qwen3.7-plus                     | Qwen 3.7 Plus                                             |
 | | qwen/qwen3.6-plus                     | Qwen 3.6 Plus                                             |
 | | qwen/qwen3.5-122b-a10b                | Qwen 3.5 122B MoE (10B active)                            |
 | | qwen/qwen3.5-27b                      | Qwen 3.5 27B dense                                        |

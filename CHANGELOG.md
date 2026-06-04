@@ -8,10 +8,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased] (0.5.2-pre1)
 
 ### Added
-- 1 new model: gemini-3.5-flash (GenAI)
-- 13 new benchmark test configurations (T1050-T1062) for GenAI gemini-3.5-flash across all benchmarks
+- 2 new models: gemini-3.5-flash (GenAI), qwen/qwen3.7-plus (OpenRouter)
+- 26 new benchmark test configurations (T1050-T1075) for GenAI gemini-3.5-flash (T1050-T1062) and OpenRouter qwen/qwen3.7-plus (T1063-T1075) across all benchmarks
 - Tests on 2026-05-22: T1050-T1062 (13 tests) for gemini-3.5-flash across all benchmarks
-- Pricing data for 2026-05-22
+- Tests on 2026-06-04: T1063-T1075 (13 tests) for qwen/qwen3.7-plus across all benchmarks
+- Pricing data for 2026-05-22 and 2026-06-04
 
 ## [v0.5.1] - 2026-05-20
 
