@@ -414,6 +414,7 @@ This benchmark suite currently tests models from the following providers:
 | | claude-sonnet-4-5-20250929            | Claude 4.5 Sonnet                                         |
 | | claude-opus-4-6                       | Claude 4.6 Opus                                           |
 | | claude-opus-4-7                       | Claude 4.7 Opus                                           |
+| | claude-opus-4-8                       | Claude 4.8 Opus                                           |
 | | claude-sonnet-4-6                     | Claude 4.6 Sonnet                                         |
 | **Cohere** | command-a-03-2025                     | Advanced multimodal model                                 |
 | | command-a-vision-07-2025              | Vision-enabled Command A model                            |
