@@ -8,10 +8,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased] (0.5.2-pre1)
 
 ### Added
-- 3 new models: gemini-3.5-flash (GenAI), qwen/qwen3.7-plus (OpenRouter), claude-opus-4-8 (Anthropic)
-- 39 new benchmark test configurations (T1050-T1088) for GenAI gemini-3.5-flash (T1050-T1062), OpenRouter qwen/qwen3.7-plus (T1063-T1075), and Anthropic claude-opus-4-8 (T1076-T1088) across all benchmarks
+- 4 new models: gemini-3.5-flash (GenAI), qwen/qwen3.7-plus (OpenRouter), claude-opus-4-8 (Anthropic), mistral-medium-3.5 (Mistral)
+- 52 new benchmark test configurations (T1050-T1101) for GenAI gemini-3.5-flash (T1050-T1062), OpenRouter qwen/qwen3.7-plus (T1063-T1075), Anthropic claude-opus-4-8 (T1076-T1088), and Mistral mistral-medium-3.5 (T1089-T1101) across all benchmarks
 - Tests on 2026-05-22: T1050-T1062 (13 tests) for gemini-3.5-flash across all benchmarks
-- Tests on 2026-06-04: T1063-T1088 (26 tests) for qwen/qwen3.7-plus (T1063-T1075) and claude-opus-4-8 (T1076-T1088) across all benchmarks
+- Tests on 2026-06-04: T1063-T1101 (39 tests) for qwen/qwen3.7-plus (T1063-T1075), claude-opus-4-8 (T1076-T1088), and mistral-medium-3.5 (T1089-T1101) across all benchmarks
 - Pricing data for 2026-05-22 and 2026-06-04
 
 ## [v0.5.1] - 2026-05-20

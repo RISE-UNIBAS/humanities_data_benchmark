@@ -451,6 +451,7 @@ This benchmark suite currently tests models from the following providers:
 | | mistral-large-2512                    | Latest Mistral Large (Dec 2025)                           |
 | | mistral-medium-2505                   | Mid-tier balanced performance                             |
 | | mistral-medium-2508                   | Updated Mistral Medium                                    |
+| | mistral-medium-3.5                    | Mistral Medium 3.5 (Apr 2026)                             |
 | | mistral-small-2506                    | Compact Mistral model                                     |
 | | ~~pixtral-12b~~                       | ~~12B parameter multimodal~~ (legacy)                     |
 | | pixtral-large-2411                    | Multimodal large (Nov 2024)                               |

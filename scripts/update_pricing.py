@@ -89,6 +89,7 @@ class PricingUpdater:
     MISTRAL_MODEL_URLS = {
         'mistral-large-2512':    'https://docs.mistral.ai/models/mistral-large-3-25-12',
         'mistral-large-2411':    'https://docs.mistral.ai/models/mistral-large-2-1-24-11',
+        'mistral-medium-3.5':    'https://docs.mistral.ai/models/model-cards/mistral-medium-3-5-26-04',
         'mistral-medium-2508':   'https://docs.mistral.ai/models/mistral-medium-3-1-25-08',
         'mistral-medium-2505':   'https://docs.mistral.ai/models/mistral-medium-3-25-05',
         'mistral-small-2506':    'https://docs.mistral.ai/models/mistral-small-3-2-25-06',
