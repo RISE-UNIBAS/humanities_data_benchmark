@@ -844,6 +844,7 @@ Return only JSON:"""
     # Maps provider -> base URL for single-page providers
     XAI_MODEL_URLS = {
         'grok-4.20-0309-reasoning': 'https://docs.x.ai/developers/models/grok-4.20-beta-0309-reasoning',
+        'grok-4.3':                 'https://docs.x.ai/developers/models/grok-4.3',
     }
 
     ALIBABA_MODEL_URLS = {
