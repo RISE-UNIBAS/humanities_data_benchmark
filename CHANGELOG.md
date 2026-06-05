@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased] (0.5.2-pre1)
 
 ### Added
+- 1 new model: meta-llama/llama-4-scout (openrouter); 13 new benchmark test configurations (T1115-T1127) across all benchmarks; pricing data for 2026-06-05
 - 5 new models: gemini-3.5-flash (GenAI), qwen/qwen3.7-plus (OpenRouter), claude-opus-4-8 (Anthropic), mistral-medium-3.5 (Mistral), grok-4.3 (x-ai)
 - 65 new benchmark test configurations (T1050-T1114) for GenAI gemini-3.5-flash (T1050-T1062), OpenRouter qwen/qwen3.7-plus (T1063-T1075), Anthropic claude-opus-4-8 (T1076-T1088), Mistral mistral-medium-3.5 (T1089-T1101), and x-ai grok-4.3 (T1102-T1114) across all benchmarks
 - Tests on 2026-05-22: T1050-T1062 (13 tests) for gemini-3.5-flash across all benchmarks

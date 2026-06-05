@@ -880,6 +880,7 @@ Return only JSON:"""
         'qwen/qwen3.5-flash-02-23':       'https://openrouter.ai/qwen/qwen3.5-flash-02-23',
         'qwen/qwen3.5-9b':                'https://openrouter.ai/qwen/qwen3.5-9b',
         'x-ai/grok-4':                    'https://openrouter.ai/x-ai/grok-4',
+        'meta-llama/llama-4-scout': 'https://openrouter.ai/meta-llama/llama-4-scout',
     }
 
     PROVIDER_URLS = {

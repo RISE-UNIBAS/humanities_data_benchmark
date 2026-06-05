@@ -486,6 +486,7 @@ This benchmark suite currently tests models from the following providers:
 | | qwen/qwen3.5-flash-02-23              | Qwen 3.5 Flash (Feb 2026)                                 |
 | | qwen/qwen3.5-9b                       | Qwen 3.5 9B                                               |
 | | x-ai/grok-4                           | xAI's Grok 4 multimodal                                   |
+| | meta-llama/llama-4-scout              | Llama 4 Scout                                             |
 | **sciCORE** | GLM-4.5V-FP8                          | GLM-4.5V with FP8 quantization (University of Basel HPC)  |
 | | qwen3-235b-fp8                        | Qwen3 235B with FP8 quantization (University of Basel HPC) |
 | **xAI** | grok-4.20-0309-reasoning              | Grok 4.20 reasoning model                                 |
