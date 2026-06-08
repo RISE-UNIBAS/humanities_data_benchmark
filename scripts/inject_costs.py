@@ -206,13 +206,15 @@ def analyze_test_run(test_dir: Path) -> Dict:
                     })
                 else:
                     # Try to calculate cost to see if pricing exists
-                    cost_result = calculate_cost(provider, model, input_tokens, output_tokens)
+                    pricing_model = resolve_pricing_model(provider, model)
+                    cost_result = calculate_cost(provider, pricing_model, input_tokens, output_tokens)
                     if cost_result:
                         result['needs_update'] = True
                         result['requests_needing_update'].append({
                             'file': request_file.name,
                             'provider': provider,
                             'model': model,
+                            'pricing_model': pricing_model,
                             'input_tokens': input_tokens,
                             'output_tokens': output_tokens,
                             'new_cost': cost_result
@@ -220,7 +222,7 @@ def analyze_test_run(test_dir: Path) -> Dict:
                     else:
                         result['cannot_calculate'].append({
                             'file': request_file.name,
-                            'reason': f"No pricing data for {provider}/{model}"
+                            'reason': f"No pricing data for {provider}/{pricing_model}"
                         })
         except Exception as e:
             print_warning(f"Error reading request file {request_file}: {e}")
@@ -333,6 +335,28 @@ def display_analysis_summary(analyses: List[Dict], directory_name: str):
         print()
 
 
+# Load model aliases (csv-name -> result-file-name) and build the reverse
+# lookup (result-file-name -> csv-name) used to resolve pricing keys.
+_ALIAS_REVERSE: Dict[Tuple[str, str], str] = {}
+
+_alias_file = SCRIPT_DIR / "data" / "model_aliases.json"
+if _alias_file.exists():
+    try:
+        _alias_data = json.loads(read_file(str(_alias_file)))
+        for _provider, _mapping in _alias_data.get("aliases", {}).items():
+            for _csv_name, _result_name in _mapping.items():
+                _ALIAS_REVERSE[(_provider, _result_name)] = _csv_name
+    except Exception as e:
+        print_warning(f"Could not load model aliases from {_alias_file}: {e}")
+else:
+    print_warning(f"Model alias file not found: {_alias_file}")
+
+
+def resolve_pricing_model(provider: str, model: str) -> str:
+    """Map a result-file model name to its pricing.json key via aliases."""
+    return _ALIAS_REVERSE.get((provider, model), model)
+
+
 def main():
     """Main CLI entry point."""
     parser = argparse.ArgumentParser(
@@ -416,7 +440,10 @@ def main():
                 print(f"{Colors.BOLD}Requests that can be updated:{Colors.END}")
                 for req in analysis['requests_needing_update']:
                     cost = req['new_cost'][2]  # estimated_cost_usd
-                    print(f"  • {req['file']}: ${cost:.4f} ({req['provider']}/{req['model']})")
+                    label = req['model']
+                    if req.get('pricing_model') and req['pricing_model'] != req['model']:
+                        label = f"{req['model']} -> {req['pricing_model']}"
+                    print(f"  • {req['file']}: ${cost:.4f} ({req['provider']}/{label})")
                 print()
 
             if analysis['cannot_calculate']:

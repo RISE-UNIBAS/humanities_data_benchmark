@@ -15,6 +15,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Pricing data for 2026-05-22, 2026-06-04, and 2026-06-05
 - `scripts/data/model_aliases.json` for tracking model name aliases between `benchmarks_tests.csv` and result files, organised by provider
 
+### Changed
+- `inject_costs.py` now resolves model names via `scripts/data/model_aliases.json`, so tests whose result files use alias model names get correct cost calculations
+
 ## [v0.5.1] - 2026-05-20
 
 ### Added
