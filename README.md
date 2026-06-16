@@ -28,6 +28,8 @@ This benchmark suite focuses on tasks essential to digital humanities work with 
 > 
 > Hindermann, M., Marti, S., Kasper, L. K., & Bosse, A. (2026). The RISE Humanities Data Benchmark: A Framework for Evaluating Large Language Models for Humanities Tasks. *Journal of Open Humanities Data*, *12*(1), 24. https://doi.org/10.5334/johd.481
 >
+> Hindermann, M., & Marti, S. (2026). The RISE Humanities Data Benchmark: From Anecdote to Evidence. DH Benelux 2026, Maastricht, Netherlands. Zenodo. https://doi.org/10.5281/zenodo.20595263
+> 
 > Hindermann, M., & Marti, S. (2025, March 19). *RISE Crash Course: "AI Benchmarking"*. Zenodo. https://doi.org/10.5281/zenodo.15062831
 
 ## Table of Contents
