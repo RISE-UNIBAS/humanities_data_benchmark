@@ -398,102 +398,102 @@ This benchmark suite currently tests models from the following providers:
 
 | Provider | Model                                 | Notes                                                     |
 |----------|---------------------------------------|-----------------------------------------------------------|
-| **Alibaba** | qwen3.5-plus                          | Qwen 3.5 Plus multimodal model                            |
-| | qwen3.5-35b-a3b                       | Qwen 3.5 35B MoE (3B active)                              |
-| | qwen3.5-27b                           | Qwen 3.5 27B dense model                                  |
-| | qwen3.5-122b-a10b                     | Qwen 3.5 122B MoE (10B active)                            |
-| | qwen3.5-397b-a17b                     | Qwen 3.5 397B MoE (17B active)                            |
-| | qwen3.5-flash-2026-02-23              | Qwen 3.5 Flash                                            |
-| **Anthropic** | ~~claude-3-5-sonnet-20241022~~        | ~~Mid-tier Claude model with strong reasoning~~ (legacy)  |
-| | ~~claude-3-7-sonnet-20250219~~        | ~~Advanced Claude with improved capabilities~~ (legacy)   |
-| | ~~claude-3-opus-20240229~~            | ~~Highest capability Claude 3 model~~ (legacy)            |
-| | ~~claude-3-5-haiku-20241022~~         | ~~Fastest/smallest Claude 3.5~~ (legacy)                  |
-| | claude-haiku-4-5-20251001             | Efficient Claude 4.5 Haiku                                |
-| | claude-opus-4-1-20250805              | Updated Claude 4.1 Opus                                   |
-| | claude-opus-4-20250514                | Next-generation Claude 4 Opus                             |
-| | claude-opus-4-5-20251101              | Latest Claude 4.5 Opus                                    |
-| | claude-sonnet-4-20250514              | Claude 4 Sonnet                                           |
-| | claude-sonnet-4-5-20250929            | Claude 4.5 Sonnet                                         |
-| | claude-opus-4-6                       | Claude 4.6 Opus                                           |
-| | claude-opus-4-7                       | Claude 4.7 Opus                                           |
-| | claude-opus-4-8                       | Claude 4.8 Opus                                           |
-| | claude-sonnet-4-6                     | Claude 4.6 Sonnet                                         |
-| **Cohere** | command-a-03-2025                     | Advanced multimodal model                                 |
-| | command-a-vision-07-2025              | Vision-enabled Command A model                            |
-| | command-r-08-2024                     | Balanced performance model                                |
-| | command-r-plus-08-2024                | Enhanced Command R with extended capabilities             |
-| | command-r7b-12-2024                   | Compact 7B parameter model                                |
-| **DeepSeek** | deepseek-chat                         | DeepSeek-V3 chat model                                    |
-| | deepseek-reasoner                     | DeepSeek-R1 reasoning model                               |
-| | deepseek-v4-flash                     | DeepSeek V4 Flash                                         |
-| | deepseek-v4-pro                       | DeepSeek V4 Pro                                           |
-| **Google/Gemini** | ~~gemini-1.5-flash~~                  | ~~Earlier generation flash~~ (legacy)                     |
-| | ~~gemini-1.5-pro~~                    | ~~Gemini 1.5 series~~ (legacy)                            |
-| | gemini-2.0-flash                      | Fast response multimodal model                            |
-| | gemini-2.0-flash-lite                 | Lighter version of 2.0-flash                              |
-| | ~~gemini-2.0-pro-exp-02-05~~          | ~~Experimental 2.0 pro~~ (legacy)                         |
-| | gemini-2.5-flash                      | Latest generation flash                                   |
-| | gemini-2.5-flash-lite                 | Efficient 2.5 flash                                       |
-| | gemini-2.5-flash-lite-preview-09-2025 | Preview lite flash                                        |
-| | ~~gemini-2.5-flash-preview-04-17~~    | ~~Preview flash~~ (legacy)                                |
-| | ~~gemini-2.5-flash-preview-09-2025~~  | ~~Preview 2.5 flash~~                                     |
-| | gemini-2.5-pro                        | Production 2.5 pro                                        |
-| | ~~gemini-2.5-pro-exp-03-25~~          | ~~Experimental 2.5 pro~~ (legacy)                         |
-| | ~~gemini-2.5-pro-preview-05-06~~      | ~~Preview 2.5 pro~~ (legacy)                              |
-| | ~~gemini-exp-1206~~                   | ~~Experimental~~ (legacy)                                 |
-| | gemini-3-flash-preview                | Preview of Gemini 3 flash                                 |
-| | gemini-3.1-flash-lite-preview         | Preview of Gemini 3.1 flash lite                          |
-| | gemini-3.1-pro-preview                | Preview of Gemini 3.1 pro                                 |
-| | ~~gemini-3-pro-preview~~              | ~~Preview of Gemini 3 pro~~ (legacy)                      |
-| **Mistral AI** | magistral-medium-2509                 | Mid-tier magistral model                                  |
-| | magistral-small-2509                  | Compact magistral model                                   |
-| | ministral-14b-2512                    | 14B parameter efficient model                             |
-| | ministral-8b-2512                     | 8B parameter compact model                                |
-| | mistral-large-2411                    | Mistral Large (Nov 2024)                                  |
-| | mistral-large-2512                    | Latest Mistral Large (Dec 2025)                           |
-| | mistral-medium-2505                   | Mid-tier balanced performance                             |
-| | mistral-medium-2508                   | Updated Mistral Medium                                    |
-| | mistral-medium-3.5                    | Mistral Medium 3.5 (Apr 2026)                             |
-| | mistral-small-2506                    | Compact Mistral model                                     |
-| | ~~pixtral-12b~~                       | ~~12B parameter multimodal~~ (legacy)                     |
-| | pixtral-large-2411                    | Multimodal large (Nov 2024)                               |
-| **OpenAI** | gpt-4.1                               | Latest GPT-4 iteration                                    |
-| | gpt-4.1-mini                          | Optimized for efficiency                                  |
-| | gpt-4.1-nano                          | Ultra-compact for lightweight tasks                       |
-| | ~~gpt-4.5-preview~~                   | ~~Updated GPT-4~~ (legacy)                                |
-| | gpt-4o                                | Multimodal text and images                                |
-| | gpt-4o-mini                           | Smaller, faster GPT-4o                                    |
-| | gpt-5                                 | Next-generation with advanced reasoning                   |
-| | gpt-5.1-2025-11-13                    | GPT-5.1 (Nov 2025)                                        |
-| | gpt-5.2-2025-12-11                               | Previous frontier model                               |
-| | gpt-5.3-codex                         | GPT-5.3 Codex                                             |
-| | gpt-5.4-2026-03-05                    | GPT-5.4 (Mar 2026)                                        |
-| | gpt-5.5-2026-04-23                    | GPT-5.5 (Apr 2026)                                        |
-| | gpt-5-mini                            | Efficient GPT-5                                           |
-| | gpt-5-nano                            | Compact GPT-5                                             |
-| | o3                                    | Reasoning-focused model                                   |
-| **OpenRouter** | google/gemma-4-26b-a4b-it             | Gemma 4 26B MoE (4B active), instruction-tuned            |
-| | google/gemma-4-31b-it                 | Gemma 4 31B instruction-tuned                             |
-| | meta-llama/llama-4-maverick           | Meta's Llama 4 via OpenRouter                             |
-| | qwen/qwen3-vl-30b-a3b-instruct        | Qwen3 VL 30B instruction                                  |
-| | qwen/qwen3-vl-8b-instruct             | Qwen3 VL 8B instruction                                   |
-| | qwen/qwen3-vl-8b-thinking             | Qwen3 VL 8B reasoning                                     |
-| | qwen/qwen3.7-plus                     | Qwen 3.7 Plus                                             |
-| | qwen/qwen3.6-plus                     | Qwen 3.6 Plus                                             |
-| | qwen/qwen3.5-122b-a10b                | Qwen 3.5 122B MoE (10B active)                            |
-| | qwen/qwen3.5-27b                      | Qwen 3.5 27B dense                                        |
-| | qwen/qwen3.5-35b-a3b                  | Qwen 3.5 35B MoE (3B active)                              |
-| | qwen/qwen3.5-397b-a17b                | Qwen 3.5 397B MoE (17B active)                            |
-| | qwen/qwen3.5-plus-02-15               | Qwen 3.5 Plus (Feb 2026)                                  |
-| | qwen/qwen3.5-flash-02-23              | Qwen 3.5 Flash (Feb 2026)                                 |
-| | qwen/qwen3.5-9b                       | Qwen 3.5 9B                                               |
-| | x-ai/grok-4                           | xAI's Grok 4 multimodal                                   |
-| | meta-llama/llama-4-scout              | Llama 4 Scout                                             |
-| | stepfun/step-3.7-flash                | StepFun Step 3.7 Flash                                    |
-| **sciCORE** | GLM-4.5V-FP8                          | GLM-4.5V with FP8 quantization (University of Basel HPC)  |
-| | qwen3-235b-fp8                        | Qwen3 235B with FP8 quantization (University of Basel HPC) |
-| **xAI** | grok-4.20-0309-reasoning              | Grok 4.20 reasoning model                                 |
-| | grok-4.3                              | Grok 4.3 cost-efficient flagship                          |
+| **Alibaba** | qwen3.5-plus                              | Qwen 3.5 Plus; multimodal                                  |
+| | qwen3.5-35b-a3b                           | Qwen 3.5, 35B MoE (3B active)                              |
+| | qwen3.5-27b                               | Qwen 3.5, 27B dense                                        |
+| | qwen3.5-122b-a10b                         | Qwen 3.5, 122B MoE (10B active)                            |
+| | qwen3.5-397b-a17b                         | Qwen 3.5, 397B MoE (17B active)                            |
+| | qwen3.5-flash-2026-02-23                  | Qwen 3.5 Flash (Feb 2026)                                  |
+| **Anthropic** | ~~claude-3-5-sonnet-20241022~~            | ~~Claude 3.5 Sonnet~~ (legacy)                             |
+| | ~~claude-3-7-sonnet-20250219~~            | ~~Claude 3.7 Sonnet~~ (legacy)                             |
+| | ~~claude-3-opus-20240229~~                | ~~Claude 3 Opus~~ (legacy)                                 |
+| | ~~claude-3-5-haiku-20241022~~             | ~~Claude 3.5 Haiku~~ (legacy)                              |
+| | claude-haiku-4-5-20251001                 | Claude Haiku 4.5                                           |
+| | claude-opus-4-1-20250805                  | Claude Opus 4.1                                            |
+| | ~~claude-opus-4-20250514~~                | ~~Claude Opus 4~~ (legacy)                                 |
+| | claude-opus-4-5-20251101                  | Claude Opus 4.5                                            |
+| | ~~claude-sonnet-4-20250514~~              | ~~Claude Sonnet 4~~ (legacy)                               |
+| | claude-sonnet-4-5-20250929                | Claude Sonnet 4.5                                          |
+| | claude-opus-4-6                           | Claude Opus 4.6                                            |
+| | claude-opus-4-7                           | Claude Opus 4.7                                            |
+| | claude-opus-4-8                           | Claude Opus 4.8                                            |
+| | claude-sonnet-4-6                         | Claude Sonnet 4.6                                          |
+| **Cohere** | command-a-03-2025                         | Command A (Mar 2025)                                       |
+| | command-a-vision-07-2025                  | Command A Vision (Jul 2025); multimodal                    |
+| | command-r-08-2024                         | Command R (Aug 2024)                                       |
+| | command-r-plus-08-2024                    | Command R+ (Aug 2024)                                      |
+| | command-r7b-12-2024                       | Command R 7B (Dec 2024)                                    |
+| **DeepSeek** | deepseek-chat                             | DeepSeek V3 (chat)                                         |
+| | deepseek-reasoner                         | DeepSeek R1; reasoning                                     |
+| | deepseek-v4-flash                         | DeepSeek V4 Flash                                          |
+| | deepseek-v4-pro                           | DeepSeek V4 Pro                                            |
+| **Google/Gemini** | ~~gemini-1.5-flash~~                      | ~~Gemini 1.5 Flash~~ (legacy)                              |
+| | ~~gemini-1.5-pro~~                        | ~~Gemini 1.5 Pro~~ (legacy)                                |
+| | ~~gemini-2.0-flash~~                      | ~~Gemini 2.0 Flash~~ (legacy)                              |
+| | ~~gemini-2.0-flash-lite~~                 | ~~Gemini 2.0 Flash-Lite~~ (legacy)                         |
+| | ~~gemini-2.0-pro-exp-02-05~~              | ~~Gemini 2.0 Pro (experimental)~~ (legacy)                 |
+| | gemini-2.5-flash                          | Gemini 2.5 Flash                                           |
+| | gemini-2.5-flash-lite                     | Gemini 2.5 Flash-Lite                                      |
+| | ~~gemini-2.5-flash-lite-preview-09-2025~~ | ~~Gemini 2.5 Flash-Lite (preview, Sep 2025)~~ (legacy)     |
+| | ~~gemini-2.5-flash-preview-04-17~~        | ~~Gemini 2.5 Flash (preview, Apr 2025)~~ (legacy)          |
+| | ~~gemini-2.5-flash-preview-09-2025~~      | ~~Gemini 2.5 Flash (preview, Sep 2025)~~ (legacy)          |
+| | gemini-2.5-pro                            | Gemini 2.5 Pro                                             |
+| | ~~gemini-2.5-pro-exp-03-25~~              | ~~Gemini 2.5 Pro (experimental)~~ (legacy)                 |
+| | ~~gemini-2.5-pro-preview-05-06~~          | ~~Gemini 2.5 Pro (preview, May 2025)~~ (legacy)            |
+| | ~~gemini-exp-1206~~                       | ~~Gemini experimental (Dec 2024)~~ (legacy)                |
+| | gemini-3-flash-preview                    | Gemini 3 Flash (preview)                                   |
+| | ~~gemini-3.1-flash-lite-preview~~         | ~~Gemini 3.1 Flash-Lite (preview)~~ (legacy)               |
+| | gemini-3.1-pro-preview                    | Gemini 3.1 Pro (preview)                                   |
+| | ~~gemini-3-pro-preview~~                  | ~~Gemini 3 Pro (preview)~~ (legacy)                        |
+| **Mistral AI** | magistral-medium-2509                     | Magistral Medium (Sep 2025); reasoning                     |
+| | magistral-small-2509                      | Magistral Small (Sep 2025); reasoning                      |
+| | ministral-14b-2512                        | Ministral 3 14B (Dec 2025)                                 |
+| | ministral-8b-2512                         | Ministral 3 8B (Dec 2025)                                  |
+| | ~~mistral-large-2411~~                    | ~~Mistral Large (Nov 2024)~~ (legacy)                      |
+| | mistral-large-2512                        | Mistral Large (Dec 2025)                                   |
+| | mistral-medium-2505                       | Mistral Medium (May 2025)                                  |
+| | mistral-medium-2508                       | Mistral Medium (Aug 2025)                                  |
+| | mistral-medium-3.5                        | Mistral Medium 3.5 (Apr 2026)                              |
+| | mistral-small-2506                        | Mistral Small (Jun 2025)                                   |
+| | ~~pixtral-12b~~                           | ~~Pixtral 12B; multimodal~~ (legacy)                       |
+| | ~~pixtral-large-2411~~                    | ~~Pixtral Large (Nov 2024); multimodal~~ (legacy)          |
+| **OpenAI** | gpt-4.1                                   | GPT-4.1                                                    |
+| | gpt-4.1-mini                              | GPT-4.1 Mini                                               |
+| | gpt-4.1-nano                              | GPT-4.1 Nano                                               |
+| | ~~gpt-4.5-preview~~                       | ~~GPT-4.5 (preview)~~ (legacy)                             |
+| | gpt-4o                                    | GPT-4o; multimodal                                         |
+| | gpt-4o-mini                               | GPT-4o Mini; multimodal                                    |
+| | gpt-5                                     | GPT-5                                                      |
+| | gpt-5.1-2025-11-13                        | GPT-5.1 (Nov 2025)                                         |
+| | gpt-5.2-2025-12-11                        | GPT-5.2 (Dec 2025)                                         |
+| | gpt-5.3-codex                             | GPT-5.3 Codex; coding                                      |
+| | gpt-5.4-2026-03-05                        | GPT-5.4 (Mar 2026)                                         |
+| | gpt-5.5-2026-04-23                        | GPT-5.5 (Apr 2026)                                         |
+| | gpt-5-mini                                | GPT-5 Mini                                                 |
+| | gpt-5-nano                                | GPT-5 Nano                                                 |
+| | o3                                        | OpenAI o3; reasoning                                       |
+| **OpenRouter** | google/gemma-4-26b-a4b-it                 | Gemma 4, 26B MoE (4B active), instruction-tuned            |
+| | google/gemma-4-31b-it                     | Gemma 4, 31B, instruction-tuned                            |
+| | meta-llama/llama-4-maverick               | Llama 4 Maverick                                           |
+| | qwen/qwen3-vl-30b-a3b-instruct            | Qwen3-VL, 30B MoE (3B active), instruction-tuned; multimodal |
+| | qwen/qwen3-vl-8b-instruct                 | Qwen3-VL 8B, instruction-tuned; multimodal                 |
+| | qwen/qwen3-vl-8b-thinking                 | Qwen3-VL 8B, reasoning; multimodal                         |
+| | qwen/qwen3.7-plus                         | Qwen 3.7 Plus                                              |
+| | qwen/qwen3.6-plus                         | Qwen 3.6 Plus                                              |
+| | qwen/qwen3.5-122b-a10b                    | Qwen 3.5, 122B MoE (10B active)                            |
+| | qwen/qwen3.5-27b                          | Qwen 3.5, 27B dense                                        |
+| | qwen/qwen3.5-35b-a3b                      | Qwen 3.5, 35B MoE (3B active)                              |
+| | qwen/qwen3.5-397b-a17b                    | Qwen 3.5, 397B MoE (17B active)                            |
+| | qwen/qwen3.5-plus-02-15                   | Qwen 3.5 Plus (Feb 2026)                                   |
+| | qwen/qwen3.5-flash-02-23                  | Qwen 3.5 Flash (Feb 2026)                                  |
+| | qwen/qwen3.5-9b                           | Qwen 3.5 9B                                                |
+| | x-ai/grok-4                               | Grok 4; multimodal                                         |
+| | meta-llama/llama-4-scout                  | Llama 4 Scout                                              |
+| | stepfun/step-3.7-flash                    | StepFun Step 3.7 Flash                                     |
+| **sciCORE** | GLM-4.5V-FP8                              | GLM-4.5V, FP8 quantization; multimodal (Univ. of Basel HPC) |
+| | qwen3-235b-fp8                            | Qwen3 235B, FP8 quantization (Univ. of Basel HPC)          |
+| **xAI** | grok-4.20-0309-reasoning                  | Grok 4.20; reasoning                                       |
+| | grok-4.3                                  | Grok 4.3                                                   |
 
 **Note:** OpenRouter provides access to models from multiple providers through a unified API. sciCORE provides access to models hosted on the University of Basel's high-performance computing infrastructure.
 
