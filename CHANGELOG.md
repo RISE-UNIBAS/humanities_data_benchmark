@@ -20,6 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - `inject_costs.py` now resolves model names via `scripts/data/model_aliases.json`, so tests whose result files use alias model names get correct cost calculations
+- Marked 8 provider-retired models as `legacy_test=true`: claude-opus-4-20250514, claude-sonnet-4-20250514 (Anthropic), gemini-2.0-flash, gemini-2.0-flash-lite, gemini-2.5-flash-lite-preview-09-2025, gemini-3.1-flash-lite-preview (GenAI), mistral-large-2411, pixtral-large-2411 (Mistral)
 
 ## [v0.5.1] - 2026-05-20
 
