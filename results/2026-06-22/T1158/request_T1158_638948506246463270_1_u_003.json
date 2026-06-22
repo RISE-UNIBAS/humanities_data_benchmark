@@ -1,0 +1,31 @@
+{
+    "text": "{\"company\":{\"transcription\":\"Abegg & Cie.\"},\"location\":{\"transcription\":\"Z\u00fcrich\"},\"b_id\":{\"transcription\":\"B.51.322.GB.266\"},\"date\":\"\",\"information\":[]}",
+    "model": "qwen35-397b-a17b-fp8",
+    "provider": "scicore",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 2576,
+        "output_tokens": 1038,
+        "total_tokens": 3614
+    },
+    "duration": 17.6452796459198,
+    "timestamp": "2026-06-22T17:42:44.227137",
+    "parsed": {
+        "company": {
+            "transcription": "Abegg & Cie."
+        },
+        "location": {
+            "transcription": "Z\u00fcrich"
+        },
+        "b_id": {
+            "transcription": "B.51.322.GB.266"
+        },
+        "date": "",
+        "information": []
+    },
+    "conversation_id": "9c4b61ca-3f54-4b79-b9d4-3d123a16d659",
+    "score": {
+        "fuzzy": 0.8
+    },
+    "raw_response": "{\"id\":\"chatcmpl-88152c413a380e18\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\n  \\\"location\\\": {\\n    \\\"transcription\\\": \\\"Z\u00fcrich\\\"\\n  },\\n  \\\"b_id\\\": {\\n    \\\"transcription\\\": \\\"B.51.322.GB.266\\\"\\n  },\\n  \\\"information\\\": [],\\n  \\\"company\\\": {\\n    \\\"transcription\\\": \\\"Abegg & Cie.\\\"\\n  },\\n  \\\"date\\\": \\\"\\\"\\n}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"company\":{\"transcription\":\"Abegg & Cie.\"},\"location\":{\"transcription\":\"Z\u00fcrich\"},\"b_id\":{\"transcription\":\"B.51.322.GB.266\"},\"date\":\"\",\"information\":[]},\"reasoning\":\"The user wants me to extract data from the provided image of an index card.\\n\\n**1. Analyze the image:**\\n- **Top Left:** \\\"Abegg & Cie.\\\" - This looks like a company name.\\n- **Middle Top:** \\\"Z\u00fcrich\\\" - This is a city in Switzerland.\\n- **Top Right:** \\\"B.51.322.GB.266\\\" - This looks like an identifier code.\\n- **Main Body:** The rest of the card is blank lined paper. There is no handwritten text or other stamped text in the body.\\n- **Date:** I don't see any specific date stamped on the card.\\n\\n**2. Map to JSON fields:**\\n- `company`: \\\"Abegg & Cie.\\\"\\n- `location`: \\\"Z\u00fcrich\\\"\\n- `b_id`: \\\"B.51.322.GB.266\\\"\\n- `date`: \\\"\\\" (empty string)\\n- `information`: [] (empty list, as the body is blank)\\n\\n**3. Format the output:**\\n- Construct the JSON object according to the specified schema.\\n- Ensure keys match the requirements.\\n- Double-check transcriptions for accuracy. \\\"Abegg & Cie.\\\" matches. \\\"Z\u00fcrich\\\" matches. \\\"B.51.322.GB.266\\\" matches.\\n\\n**4. Final JSON construction:**\\n```json\\n{\\n  \\\"company\\\": {\\\"transcription\\\": \\\"Abegg & Cie.\\\"},\\n  \\\"location\\\": {\\\"transcription\\\": \\\"Z\u00fcrich\\\"},\\n  \\\"b_id\\\": {\\\"transcription\\\": \\\"B.51.322.GB.266\\\"},\\n  \\\"date\\\": \\\"\\\",\\n  \\\"information\\\": []\\n}\\n```\\nWait, the prompt asks for `information` as a list of text blocks. Since there is no text, an empty list is appropriate. Or perhaps a list with an empty string? The example shows `[{\\\"transcription\\\": \\\"\\\"}]`. Let's look at the instructions: \\\"A list of text blocks from the main body of the card. Each block should be a separate string in the list.\\\" If there are no blocks, an empty list `[]` is technically correct, but often these templates expect at least one object if the structure is rigid. However, usually, if there's no info, it's an empty list. Let's look at the example provided in the prompt: `\\\"information\\\": [ {\\\"transcription\\\": \\\"\\\"} ]`. This suggests a list of objects. If there is no text, I will provide an empty list to be safe, or a list with an empty string object if that's safer. Actually, looking at the prompt \\\"If you cannot find a value for a field, leave its transcription value as an empty string.\\\" This applies to fields. For a list, if there's nothing, an empty list is best. But let's re-read carefully: \\\"Each block should be a separate string in the list.\\\" Wait, the example JSON shows:\\n```json\\n  \\\"information\\\": [\\n    {\\\"transcription\\\": \\\"\\\"}\\n  ]\\n```\\nThis implies the list contains objects with a \\\"transcription\\\" key. So if there is no text, I should probably return an empty list `[]` or `[{\\\"transcription\\\": \\\"\\\"}]`. Given the instruction \\\"If you cannot find a value for a field, leave its transcription value as an empty string\\\", this likely applies to the `transcription` key inside the objects. Since there is absolutely no text in the body, I will return an empty list `[]`. Wait, looking at the provided example structure in the prompt:\\n```json\\n  \\\"information\\\": [\\n    {\\\"transcription\\\": \\\"\\\"}\\n  ]\\n```\\nThis is the *format* example. It shows a list containing one object. If I have no information, I should probably just return an empty list `[]`. Let's assume standard behavior: if no data, empty list.\\n\\nLet's refine the transcription.\\nCompany: \\\"Abegg & Cie.\\\"\\nLocation: \\\"Z\u00fcrich\\\"\\nb_id: \\\"B.51.322.GB.266\\\"\\nDate: \\\"\\\"\\nInformation: []\\n\\nLet's double check the `b_id`. It is clearly `B.51.322.GB.266`.\\nLet's double check the company. `Abegg & Cie.`\\nLet's double check location. `Z\u00fcrich`\\n\\nOkay, ready to generate JSON.\\n\"},\"stop_reason\":null,\"token_ids\":null}],\"created\":1782142947,\"model\":\"qwen35-397b-a17b-fp8\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":null,\"usage\":{\"completion_tokens\":1038,\"prompt_tokens\":2576,\"total_tokens\":3614,\"completion_tokens_details\":null,\"prompt_tokens_details\":null},\"prompt_logprobs\":null,\"prompt_token_ids\":null,\"kv_transfer_params\":null}"
+}

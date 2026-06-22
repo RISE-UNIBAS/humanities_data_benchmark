@@ -1,0 +1,35 @@
+{
+    "text": "{\"company\":{\"transcription\":\"Trullas & Cie.S.A.\"},\"location\":{\"transcription\":\"GENEVE.\"},\"b_id\":{\"transcription\":\"\"},\"date\":\"\",\"information\":[{\"transcription\":\"siehe: S.A. Trullas & Cie, Genf. (gestrichen)\"}]}",
+    "model": "qwen35-397b-a17b-fp8",
+    "provider": "scicore",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 2617,
+        "output_tokens": 1341,
+        "total_tokens": 3958
+    },
+    "duration": 22.023512601852417,
+    "timestamp": "2026-06-22T17:44:26.806138",
+    "parsed": {
+        "company": {
+            "transcription": "Trullas & Cie.S.A."
+        },
+        "location": {
+            "transcription": "GENEVE."
+        },
+        "b_id": {
+            "transcription": ""
+        },
+        "date": "",
+        "information": [
+            {
+                "transcription": "siehe: S.A. Trullas & Cie, Genf. (gestrichen)"
+            }
+        ]
+    },
+    "conversation_id": "44490b71-99b0-4946-a6e0-6862665f4626",
+    "score": {
+        "fuzzy": 0.9846153846153847
+    },
+    "raw_response": "{\"id\":\"chatcmpl-ab7cfd2ef65c7f1d\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\n  \\\"location\\\": {\\n    \\\"transcription\\\": \\\"GENEVE.\\\"\\n  },\\n  \\\"company\\\": {\\n    \\\"transcription\\\": \\\"Trullas & Cie.S.A.\\\"\\n  },\\n  \\\"b_id\\\": {\\n    \\\"transcription\\\": \\\"\\\"\\n  },\\n  \\\"information\\\": [\\n    {\\n      \\\"transcription\\\": \\\"siehe: S.A. Trullas & Cie, Genf. (gestrichen)\\\"\\n    }\\n  ],\\n  \\\"date\\\": \\\"\\\"\\n}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"company\":{\"transcription\":\"Trullas & Cie.S.A.\"},\"location\":{\"transcription\":\"GENEVE.\"},\"b_id\":{\"transcription\":\"\"},\"date\":\"\",\"information\":[{\"transcription\":\"siehe: S.A. Trullas & Cie, Genf. (gestrichen)\"}]},\"reasoning\":\"The user wants me to extract data from an image of an index card.\\n\\n**1. Analyze the image:**\\n- The image shows a green index card with typewritten text.\\n- Top section: \\\"Trullas & Cie.S.A. GENEVE.\\\"\\n- Middle section: \\\"siehe: S.A. Trullas & Cie, Genf. (gestrichen)\\\"\\n- Bottom left corner: \\\"57905\\\"\\n- There is a vertical line separating the main area from a right-hand column.\\n- The right-hand column is empty.\\n\\n**2. Map to JSON fields:**\\n- **company**: \\\"Trullas & Cie.S.A.\\\" (Top left). The prompt says \\\"Exclude the location\\\". So \\\"Trullas & Cie.S.A.\\\" is the company.\\n- **location**: \\\"GENEVE.\\\" (Top right, following the company).\\n- **b_id**: The prompt says \\\"usually in the top-right, starting with 'B.'\\\". Looking at the top right, there is no text starting with \\\"B.\\\". The number \\\"57905\\\" is in the bottom left. Wait, let me look closer. Is there a faint \\\"B.\\\" somewhere? No. The prompt instructions say \\\"If you cannot find a value for a field, leave its transcription value as an empty string.\\\" So `b_id` will be empty.\\n- **date**: \\\"Any stamped dates on the card in YYYY-MM-DD format.\\\" I don't see any dates. So empty string.\\n- **information**: This is the main body text.\\n    - \\\"siehe: S.A. Trullas & Cie, Genf. (gestrichen)\\\"\\n    - The text \\\"S.A. Trullas & Cie\\\" is underlined.\\n    - \\\"siehe:\\\" means \\\"see\\\".\\n    - \\\"(gestrichen)\\\" means \\\"deleted\\\" or \\\"struck through\\\" in German.\\n    - So the main block is: \\\"siehe: S.A. Trullas & Cie, Genf. (gestrichen)\\\"\\n\\n**3. Refine extractions:**\\n- **company**: \\\"Trullas & Cie.S.A.\\\"\\n- **location**: \\\"GENEVE.\\\"\\n- **b_id**: \\\"\\\" (Empty)\\n- **date**: \\\"\\\" (Empty)\\n- **information**: [\\\"siehe: S.A. Trullas & Cie, Genf. (gestrichen)\\\"]\\n\\nLet's double check the \\\"b_id\\\". The prompt says \\\"usually in the top-right\\\". There is nothing there. The number \\\"57905\\\" is in the bottom left. This looks like a serial number or card ID, but the specific field requested is \\\"b_id\\\" starting with \\\"B.\\\". Since it's not there, I will leave it empty.\\n\\nLet's re-read the company name. \\\"Trullas & Cie.S.A.\\\"\\nLet's re-read the location. \\\"GENEVE.\\\"\\n\\nLet's look at the \\\"information\\\" field again.\\nThe text is: \\\"siehe: S.A. Trullas & Cie, Genf. (gestrichen)\\\"\\nThe prompt asks for a list of text blocks. It's essentially one line of text in the main body.\\n\\nWait, looking at the very bottom left, there is \\\"57905\\\". This isn't requested in the specific fields (company, location, b_id, date, information). So I will ignore it unless it fits into \\\"information\\\" but it's usually metadata. The prompt asks for \\\"text blocks from the main body\\\". \\\"57905\\\" is likely an archival number. I will stick to the main text.\\n\\nLet's construct the JSON.\\n\\n```json\\n{\\n  \\\"company\\\": {\\\"transcription\\\": \\\"Trullas & Cie.S.A.\\\"},\\n  \\\"location\\\": {\\\"transcription\\\": \\\"GENEVE.\\\"},\\n  \\\"b_id\\\": {\\\"transcription\\\": \\\"\\\"},\\n  \\\"date\\\": \\\"\\\",\\n  \\\"information\\\": [\\n    {\\\"transcription\\\": \\\"siehe: S.A. Trullas & Cie, Genf. (gestrichen)\\\"}\\n  ]\\n}\\n```\\n\\nWait, looking closer at the top line: \\\"Trullas & Cie.S.A. GENEVE.\\\"\\nThe company part is \\\"Trullas & Cie.S.A.\\\"\\nThe location part is \\\"GENEVE.\\\"\\n\\nThe middle line: \\\"siehe: S.A. Trullas & Cie, Genf. (gestrichen)\\\"\\n\\\"Genf\\\" is German for Geneva. \\\"gestrichen\\\" is German for deleted/struck out. This suggests the card is a cross-reference card pointing to another entry which has been deleted.\\n\\nFinal check of fields:\\n- company: \\\"Trullas & Cie.S.A.\\\"\\n- location: \\\"GENEVE.\\\"\\n- b_id: \\\"\\\" (None found starting with B)\\n- date: \\\"\\\" (None found)\\n- information: [\\\"siehe: S.A. Trullas & Cie, Genf. (gestrichen)\\\"]\\n\\nOne detail: The prompt asks for \\\"b_id\\\" usually starting with \\\"B.\\\". There is no such ID.\\nThe number \\\"57905\\\" is present. Should I include it? The prompt doesn't have a field for \\\"card_number\\\" or similar. It just asks for specific fields. I will leave it out of the JSON structure as there is no slot for it, or perhaps include it in information? No, \\\"main body of the card\\\" usually implies the content, not the footer metadata. I'll stick to the main text.\\n\\nActually, looking really closely at the top right corner... is there anything faint? No.\\nIs \\\"57905\\\" the b_id? No, it doesn't start with B.\\n\\nOkay, ready to generate JSON.\\n\"},\"stop_reason\":null,\"token_ids\":null}],\"created\":1782143045,\"model\":\"qwen35-397b-a17b-fp8\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":null,\"usage\":{\"completion_tokens\":1341,\"prompt_tokens\":2617,\"total_tokens\":3958,\"completion_tokens_details\":null,\"prompt_tokens_details\":null},\"prompt_logprobs\":null,\"prompt_token_ids\":null,\"kv_transfer_params\":null}"
+}

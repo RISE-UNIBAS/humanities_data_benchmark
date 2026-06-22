@@ -1,0 +1,38 @@
+{
+    "text": "{\"company\":{\"transcription\":\"Hochstrasser & Cie.\"},\"location\":{\"transcription\":\"K\u00fcsnacht-Zch\"},\"b_id\":{\"transcription\":\"B.51.322.GB.178.\"},\"date\":\"1940-10-29\",\"information\":[{\"transcription\":\"Britische schwarze Liste,\\n12. Nachtrag vom 29. Oktober 1940.\"},{\"transcription\":\"gestrichen:\\nAmendment 2, Februar 1944.\"}]}",
+    "model": "qwen35-397b-a17b-fp8",
+    "provider": "scicore",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 2576,
+        "output_tokens": 1518,
+        "total_tokens": 4094
+    },
+    "duration": 25.19564652442932,
+    "timestamp": "2026-06-22T17:43:09.427551",
+    "parsed": {
+        "company": {
+            "transcription": "Hochstrasser & Cie."
+        },
+        "location": {
+            "transcription": "K\u00fcsnacht-Zch"
+        },
+        "b_id": {
+            "transcription": "B.51.322.GB.178."
+        },
+        "date": "1940-10-29",
+        "information": [
+            {
+                "transcription": "Britische schwarze Liste,\n12. Nachtrag vom 29. Oktober 1940."
+            },
+            {
+                "transcription": "gestrichen:\nAmendment 2, Februar 1944."
+            }
+        ]
+    },
+    "conversation_id": "0774cf12-2e9d-46c2-ba0b-f8911eb188ab",
+    "score": {
+        "fuzzy": 0.8333333333333334
+    },
+    "raw_response": "{\"id\":\"chatcmpl-beb4d94d2b0f332d\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\n  \\\"location\\\": {\\n    \\\"transcription\\\": \\\"K\u00fcsnacht-Zch\\\"\\n  },\\n  \\\"b_id\\\": {\\n    \\\"transcription\\\": \\\"B.51.322.GB.178.\\\"\\n  },\\n  \\\"information\\\": [\\n    {\\n      \\\"transcription\\\": \\\"Britische schwarze Liste,\\\\n12. Nachtrag vom 29. Oktober 1940.\\\"\\n    },\\n    {\\n      \\\"transcription\\\": \\\"gestrichen:\\\\nAmendment 2, Februar 1944.\\\"\\n    }\\n  ],\\n  \\\"company\\\": {\\n    \\\"transcription\\\": \\\"Hochstrasser & Cie.\\\"\\n  },\\n  \\\"date\\\": \\\"1940-10-29\\\"\\n}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"company\":{\"transcription\":\"Hochstrasser & Cie.\"},\"location\":{\"transcription\":\"K\u00fcsnacht-Zch\"},\"b_id\":{\"transcription\":\"B.51.322.GB.178.\"},\"date\":\"1940-10-29\",\"information\":[{\"transcription\":\"Britische schwarze Liste,\\n12. Nachtrag vom 29. Oktober 1940.\"},{\"transcription\":\"gestrichen:\\nAmendment 2, Februar 1944.\"}]},\"reasoning\":\"The user wants me to extract data from an index card image and return it as a JSON object.\\n\\n**1. Analyze the image:**\\n*   **Top Left:** \\\"Hochstrasser & Cie.\\\" - This looks like the company name.\\n*   **Top Right:**\\n    *   \\\"B.51.322.GB.178.\\\" - This is the B-ID.\\n    *   \\\"K\u00fcsnacht-Zch\\\" - This is the location.\\n*   **Main Body:**\\n    *   \\\"Britische schwarze Liste,\\\"\\n    *   \\\"12. Nachtrag vom 29. Oktober 1940.\\\" -> Date: 1940-10-29.\\n    *   \\\"gestrichen:\\\" (underlined)\\n    *   \\\"Amendment 2, Februar 1944.\\\"\\n*   **Handwritten notes:** There are some handwritten notes on the right (\\\"vgl.\\\", \\\"B.54.32...\\\"). The prompt asks for \\\"information\\\" as text blocks from the main body. I should probably include the main typed text blocks. The prompt asks for \\\"Any stamped dates\\\". The date \\\"29. Oktober 1940\\\" is typed. \\\"Februar 1944\\\" is also typed. I will extract the full date \\\"1940-10-29\\\" as the primary date field, as it's the most specific one associated with the \\\"Nachtrag\\\". Wait, looking at the instructions: \\\"date: Any stamped dates on the card in YYYY-MM-DD format.\\\" The text is typewritten, which counts as stamped/printed in this context. I see \\\"29. Oktober 1940\\\". I will format this as 1940-10-29.\\n*   **Bottom Left:** \\\"35272\\\" - likely an internal ID, not requested.\\n*   **Bottom Right:** \\\"P.\\\" - likely an initial.\\n\\n**2. Map to JSON fields:**\\n*   `company`: \\\"Hochstrasser & Cie.\\\"\\n*   `location`: \\\"K\u00fcsnacht-Zch\\\"\\n*   `b_id`: \\\"B.51.322.GB.178.\\\"\\n*   `date`: \\\"1940-10-29\\\" (from \\\"29. Oktober 1940\\\")\\n*   `information`:\\n    *   Block 1: \\\"Britische schwarze Liste,\\\\n12. Nachtrag vom 29. Oktober 1940.\\\"\\n    *   Block 2: \\\"gestrichen:\\\\nAmendment 2, Februar 1944.\\\"\\n\\nLet's refine the `information` field. The prompt says \\\"A list of text blocks from the main body of the card. Each block should be a separate string in the list. Maintain line breaks with \\\\\\\\n.\\\"\\nThe text is grouped visually.\\nGroup 1:\\n\\\"Britische schwarze Liste,\\n12. Nachtrag vom 29. Oktober 1940.\\\"\\n\\nGroup 2:\\n\\\"gestrichen:\\nAmendment 2, Februar 1944.\\\"\\n\\nI will combine these into the list.\\n\\n**3. Construct JSON:**\\n```json\\n{\\n  \\\"company\\\": {\\\"transcription\\\": \\\"Hochstrasser & Cie.\\\"},\\n  \\\"location\\\": {\\\"transcription\\\": \\\"K\u00fcsnacht-Zch\\\"},\\n  \\\"b_id\\\": {\\\"transcription\\\": \\\"B.51.322.GB.178.\\\"},\\n  \\\"date\\\": \\\"1940-10-29\\\",\\n  \\\"information\\\": [\\n    {\\\"transcription\\\": \\\"Britische schwarze Liste,\\\\n12. Nachtrag vom 29. Oktober 1940.\\\"},\\n    {\\\"transcription\\\": \\\"gestrichen:\\\\nAmendment 2, Februar 1944.\\\"}\\n  ]\\n}\\n```\\nWait, looking closer at the prompt requirements for `date`: \\\"Any stamped dates on the card in YYYY-MM-DD format. If no date is present, use an empty string.\\\" It implies a single string, not a list. I will pick the primary date found, which is 1940-10-29. There is another date \\\"Februar 1944\\\", but usually, the specific day is preferred if available, or the earliest/latest. The prompt says \\\"Any stamped dates\\\", singular or plural ambiguity, but the format is a single string `date`: \\\"\\\". So I will put the most prominent specific date. \\\"29. Oktober 1940\\\" is very specific.\\n\\nLet's re-read the `information` part. \\\"A list of text blocks...\\\".\\nThe text \\\"gestrichen:\\\" is underlined.\\nThe text \\\"Amendment 2, Februar 1944.\\\" follows it.\\n\\nLet's assemble the final JSON.\\n\\nOne detail: `b_id` is \\\"B.51.322.GB.178.\\\".\\nLocation is \\\"K\u00fcsnacht-Zch\\\".\\nCompany is \\\"Hochstrasser & Cie.\\\".\\n\\nThe handwritten text \\\"B.54.32...\\\" is separate. I will ignore it for the main fields unless it fits into `information`. The prompt says \\\"text blocks from the main body\\\". Usually, this means the typed content. I will stick to the typed content for `information`.\\n\\nFinal check on date format: YYYY-MM-DD.\\n29. Oktober 1940 -> 1940-10-29.\\n\\nLet's verify the `information` splitting.\\nThe card has a horizontal line separating the header (Company/Location/ID) from the body.\\nThe body contains:\\n\\\"Britische schwarze Liste,\\n12. Nachtrag vom 29. Oktober 1940.\\\"\\n\\nThen a gap.\\nThen \\\"gestrichen:\\\" (underlined)\\n\\\"Amendment 2, Februar 1944.\\\"\\n\\nSo two blocks seems appropriate.\\n\\nOne small correction: The prompt asks for `date` as a string. \\\"Any stamped dates\\\". I'll provide the specific one found.\\n\\nLet's write the JSON.\\n\"},\"stop_reason\":null,\"token_ids\":null}],\"created\":1782142964,\"model\":\"qwen35-397b-a17b-fp8\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":null,\"usage\":{\"completion_tokens\":1518,\"prompt_tokens\":2576,\"total_tokens\":4094,\"completion_tokens_details\":null,\"prompt_tokens_details\":null},\"prompt_logprobs\":null,\"prompt_token_ids\":null,\"kv_transfer_params\":null}"
+}

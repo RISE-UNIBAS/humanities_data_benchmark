@@ -490,8 +490,9 @@ This benchmark suite currently tests models from the following providers:
 | | x-ai/grok-4                               | Grok 4; multimodal                                         |
 | | meta-llama/llama-4-scout                  | Llama 4 Scout                                              |
 | | stepfun/step-3.7-flash                    | StepFun Step 3.7 Flash                                     |
-| **sciCORE** | GLM-4.5V-FP8                              | GLM-4.5V, FP8 quantization; multimodal (Univ. of Basel HPC) |
-| | qwen3-235b-fp8                            | Qwen3 235B, FP8 quantization (Univ. of Basel HPC)          |
+| **sciCORE** | ~~GLM-4.5V-FP8~~                              | ~~GLM-4.5V, FP8 quantization; multimodal (Univ. of Basel HPC)~~ (legacy) |
+| | ~~qwen3-235b-fp8~~                            | ~~Qwen3 235B, FP8 quantization (Univ. of Basel HPC)~~ (legacy)          |
+| | qwen35-397b-a17b-fp8                      | Qwen3.5 397B-A17B, FP8 quantization (Univ. of Basel HPC)   |
 | **xAI** | grok-4.20-0309-reasoning                  | Grok 4.20; reasoning                                       |
 | | grok-4.3                                  | Grok 4.3                                                   |
 
