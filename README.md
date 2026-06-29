@@ -398,7 +398,7 @@ This benchmark suite currently tests models from the following providers:
 
 | Provider | Model                                 | Notes                                                     |
 |----------|---------------------------------------|-----------------------------------------------------------|
-| **Alibaba** | qwen3.5-plus                              | Qwen 3.5 Plus; multimodal                                  |
+| **Alibaba** | qwen3.5-plus-2026-02-15                   | Qwen 3.5 Plus (Feb 2026); multimodal                       |
 | | qwen3.5-35b-a3b                           | Qwen 3.5, 35B MoE (3B active)                              |
 | | qwen3.5-27b                               | Qwen 3.5, 27B dense                                        |
 | | qwen3.5-122b-a10b                         | Qwen 3.5, 122B MoE (10B active)                            |
@@ -443,8 +443,10 @@ This benchmark suite currently tests models from the following providers:
 | | ~~gemini-exp-1206~~                       | ~~Gemini experimental (Dec 2024)~~ (legacy)                |
 | | gemini-3-flash-preview                    | Gemini 3 Flash (preview)                                   |
 | | ~~gemini-3.1-flash-lite-preview~~         | ~~Gemini 3.1 Flash-Lite (preview)~~ (legacy)               |
+| | gemini-3.1-flash-lite                     | Gemini 3.1 Flash-Lite                                     |
 | | gemini-3.1-pro-preview                    | Gemini 3.1 Pro (preview)                                   |
 | | ~~gemini-3-pro-preview~~                  | ~~Gemini 3 Pro (preview)~~ (legacy)                        |
+| | gemini-3.5-flash                          | Gemini 3.5 Flash                                          |
 | **Mistral AI** | magistral-medium-2509                     | Magistral Medium (Sep 2025); reasoning                     |
 | | magistral-small-2509                      | Magistral Small (Sep 2025); reasoning                      |
 | | ministral-14b-2512                        | Ministral 3 14B (Dec 2025)                                 |

@@ -858,6 +858,7 @@ Return only JSON:"""
 
     GENAI_MODEL_URLS = {
         'gemini-3.1-flash-lite-preview': 'https://ai.google.dev/gemini-api/docs/gemini-3',
+        'gemini-3.1-flash-lite':         'https://ai.google.dev/gemini-api/docs/pricing#gemini-3.1-flash-lite',
         'gemini-3.1-pro-preview':        'https://ai.google.dev/gemini-api/docs/gemini-3',
         'gemini-3.5-flash':              'https://ai.google.dev/gemini-api/docs/pricing',
     }

@@ -8,16 +8,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased] (0.5.2-pre1)
 
 ### Added
-- 8 new models: gemini-3.5-flash (GenAI), qwen/qwen3.7-plus, meta-llama/llama-4-scout, stepfun/step-3.7-flash (OpenRouter), claude-opus-4-8 (Anthropic), mistral-medium-3.5 (Mistral), grok-4.3 (x-ai), qwen35-397b-a17b-fp8 (sciCORE)
+- 9 new models: gemini-3.5-flash, gemini-3.1-flash-lite (GenAI), qwen/qwen3.7-plus, meta-llama/llama-4-scout, stepfun/step-3.7-flash (OpenRouter), claude-opus-4-8 (Anthropic), mistral-medium-3.5 (Mistral), grok-4.3 (x-ai), qwen35-397b-a17b-fp8 (sciCORE)
 - 91 new benchmark test configurations (T1050-T1140) for GenAI gemini-3.5-flash (T1050-T1062), OpenRouter qwen/qwen3.7-plus (T1063-T1075), Anthropic claude-opus-4-8 (T1076-T1088), Mistral mistral-medium-3.5 (T1089-T1101), x-ai grok-4.3 (T1102-T1114), OpenRouter meta-llama/llama-4-scout (T1115-T1127), and OpenRouter stepfun/step-3.7-flash (T1128-T1140) across all benchmarks
 - 10 new benchmark test configurations (T1141-T1150) for Cohere command-a-vision-07-2025, completing its coverage of all benchmarks (bibliographic_data, business_letters, fraktur_adverts, library_cards, medieval_manuscripts, blacklist_cards, company_lists)
 - 13 new benchmark test configurations (T1151-T1163) for sciCORE qwen35-397b-a17b-fp8 across all benchmarks
+- 13 new benchmark test configurations (T1164-T1176) for GenAI gemini-3.1-flash-lite across all benchmarks
 - Tests on 2026-05-22: T1050-T1062 (13 tests) for gemini-3.5-flash across all benchmarks
 - Tests on 2026-06-04: T1063-T1101 (39 tests) for qwen/qwen3.7-plus (T1063-T1075), claude-opus-4-8 (T1076-T1088), and mistral-medium-3.5 (T1089-T1101) across all benchmarks; 117 re-run tests for pixtral-large-2411 (T0023, T0035, T0060-T0061, T0095, T0159, T0294, T0326, T0381-T0382, T0469, T0604, T0771), mistral-medium-2508 (T0169, T0171, T0173, T0175, T0177, T0179, T0295, T0327, T0383-T0384, T0470, T0602, T0781), mistral-medium-2505 (T0170, T0172, T0174, T0176, T0178, T0180, T0296, T0328, T0385-T0386, T0471, T0601, T0782), magistral-medium-2509 (T0425-T0434, T0474, T0595, T0795), mistral-small-2506 (T0435-T0444, T0475, T0603, T0796), mistral-large-2512 (T0532-T0542, T0600, T0807), ministral-14b-2512 (T0543-T0553, T0597, T0808), ministral-8b-2512 (T0554-T0564, T0598, T0809), and magistral-small-2509 (T0565-T0575, T0596, T0810) across all benchmarks
 - Tests on 2026-06-05: T1115-T1127 (13 tests) for meta-llama/llama-4-scout and T1128-T1140 (13 tests) for stepfun/step-3.7-flash across all benchmarks
 - Tests on 2026-06-08: T1102-T1114 (13 tests) for grok-4.3 across all benchmarks
 - Tests on 2026-06-22: T1151-T1163 (13 tests) for sciCORE qwen35-397b-a17b-fp8 across all benchmarks
-- Pricing data for 2026-05-22, 2026-06-04, and 2026-06-05
+- Tests on 2026-06-29: T1164-T1176 (13 tests) for GenAI gemini-3.1-flash-lite across all benchmarks
+- Pricing data for 2026-05-22, 2026-06-04, 2026-06-05, and 2026-06-29 (gemini-3.1-flash-lite)
 - `scripts/data/model_aliases.json` for tracking model name aliases between `benchmarks_tests.csv` and result files, organised by provider
 
 ### Changed
