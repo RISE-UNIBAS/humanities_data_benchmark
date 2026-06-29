@@ -1,6 +1,6 @@
 # RISE Humanities Data Benchmark
 
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.20309852.svg)](https://doi.org/10.5281/zenodo.20309852)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.21043220.svg)](https://doi.org/10.5281/zenodo.21043220)
 
 
 This repository contains benchmark datasets (images and text files), prompts, ground truths, and evaluation scripts for
