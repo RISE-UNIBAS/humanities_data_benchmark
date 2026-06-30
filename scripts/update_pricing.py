@@ -849,6 +849,7 @@ Return only JSON:"""
 
     ALIBABA_MODEL_URLS = {
         'qwen3.5-plus': 'https://www.alibabacloud.com/help/en/model-studio/getting-started/models',
+        'qwen3.5-plus-2026-02-15': 'https://www.alibabacloud.com/help/en/model-studio/getting-started/models',
         'qwen3.5-35b-a3b': 'https://www.alibabacloud.com/help/en/model-studio/getting-started/models',
         'qwen3.5-27b': 'https://www.alibabacloud.com/help/en/model-studio/getting-started/models',
         'qwen3.5-122b-a10b': 'https://www.alibabacloud.com/help/en/model-studio/getting-started/models',
