@@ -5,6 +5,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+- Unit test suite under `tests/`: `test_scoring_helper.py` and `test_benchmark_base_helpers.py` cover pure scoring/helper logic; `tests/integrity/` adds data-integrity guards (`integrity` marker) over `benchmarks_tests.csv` and `pricing.json`. Run logic-only with `pytest -m "not integrity"`.
+- Pricing-coverage guard: every non-legacy model in `benchmarks_tests.csv` must have an explicit exact-name entry in `pricing.json` with a usable numeric price (local providers, which have no per-token price, are exempt from the numeric requirement but still require an entry).
+- Model-addition guards: every non-legacy row's `prompt_file` must exist under `benchmarks/<name>/prompts/`; every non-legacy model must resolve to a source URL in `update_pricing.py` (scicore/local exempt) and appear in the README models table (local exempt).
+- Ground-truth guards: every `ground_truths/*.json` is valid JSON, and every logical object (image/text basename, collapsed with the benchmark's own basename pattern) has a matching ground-truth file (harness scaffold benchmarks excluded).
+- Per-benchmark scoring tests (run offline via `__new__`-bypassed instances, no AI client): field-level F1 (`company_lists`, `library_cards`, `personnel_cards` incl. rules-gated field selection), CER (`medieval_manuscripts`, `fraktur_adverts`), the simple averagers (`bibliographic_data`, `blacklist_cards`, `book_advert_xml`), and `business_letters` macro/micro F1 aggregation. The two complex scorers also have end-to-end tests with hand-verified expected scores: `business_letters` `score_request_answer` (person matching, inferred-person exclusion) and `skip_object` signature rules; `fraktur_adverts` `compare_ads` (section/number matching incl. the image_4 default-section path).
+- Pricing entries for `scicore/qwen35-397b-a17b-fp8` (0.0/0.0, internal cluster) and `alibaba/qwen3.5-plus-2026-02-15` (0.4/2.4); `pricing.json` metadata bumped to version 1.25 (last_updated 2026-06-30)
+- "Running the Tests" section in `CONTRIBUTING.md` documenting the pytest suite, the `integrity` marker, and CI enforcement
+
+### Fixed
+- `blacklist_cards` and `bibliographic_data` `score_benchmark` raised `ZeroDivisionError` on an empty score list (an all-failed run), crashing the run; both now return `{"fuzzy": 0.0}` like `book_advert_xml`.
+- `pytest.ini` section header corrected from `[tool:pytest]` to `[pytest]`, so `addopts`, `testpaths`, and custom markers are actually applied (the `[tool:pytest]` form is only valid in `setup.cfg`/`tox.ini`).
+- Replaced 7 bare provider `source_url`s in `pricing.json` with Wayback Machine archive URLs (5 Mistral `docs.mistral.ai` pages, 2 Alibaba ModelStudio console pages)
+
 ## [v0.5.2] - 2026-06-29
 
 ### Added
