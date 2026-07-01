@@ -418,6 +418,7 @@ This benchmark suite currently tests models from the following providers:
 | | claude-opus-4-7                           | Claude Opus 4.7                                            |
 | | claude-opus-4-8                           | Claude Opus 4.8                                            |
 | | claude-sonnet-4-6                         | Claude Sonnet 4.6                                          |
+| | claude-sonnet-5                           | Claude Sonnet 5                                            |
 | **Cohere** | command-a-03-2025                         | Command A (Mar 2025)                                       |
 | | command-a-vision-07-2025                  | Command A Vision (Jul 2025); multimodal                    |
 | | command-r-08-2024                         | Command R (Aug 2024)                                       |

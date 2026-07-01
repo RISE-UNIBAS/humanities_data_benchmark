@@ -5,15 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [Unreleased] (v0.5.3-pre1)
 
 ### Added
+- 1 new model: claude-sonnet-5 (Anthropic); added to the `benchmark_base.py` hotfix list that sends no `temperature` (the model rejects the deprecated parameter)
+- 13 new benchmark test configurations (T1177-T1189) for Anthropic claude-sonnet-5 across all benchmarks
+- Pricing data for 2026-07-01 (claude-sonnet-5)
+- Tests on 2026-07-01: T1177-T1189 (13 tests) for Anthropic claude-sonnet-5 across all benchmarks
 - Unit test suite under `tests/`: `test_scoring_helper.py` and `test_benchmark_base_helpers.py` cover pure scoring/helper logic; `tests/integrity/` adds data-integrity guards (`integrity` marker) over `benchmarks_tests.csv` and `pricing.json`. Run logic-only with `pytest -m "not integrity"`.
 - Pricing-coverage guard: every non-legacy model in `benchmarks_tests.csv` must have an explicit exact-name entry in `pricing.json` with a usable numeric price (local providers, which have no per-token price, are exempt from the numeric requirement but still require an entry).
 - Model-addition guards: every non-legacy row's `prompt_file` must exist under `benchmarks/<name>/prompts/`; every non-legacy model must resolve to a source URL in `update_pricing.py` (scicore/local exempt) and appear in the README models table (local exempt).
 - Ground-truth guards: every `ground_truths/*.json` is valid JSON, and every logical object (image/text basename, collapsed with the benchmark's own basename pattern) has a matching ground-truth file (harness scaffold benchmarks excluded).
 - Per-benchmark scoring tests (run offline via `__new__`-bypassed instances, no AI client): field-level F1 (`company_lists`, `library_cards`, `personnel_cards` incl. rules-gated field selection), CER (`medieval_manuscripts`, `fraktur_adverts`), the simple averagers (`bibliographic_data`, `blacklist_cards`, `book_advert_xml`), and `business_letters` macro/micro F1 aggregation. The two complex scorers also have end-to-end tests with hand-verified expected scores: `business_letters` `score_request_answer` (person matching, inferred-person exclusion) and `skip_object` signature rules; `fraktur_adverts` `compare_ads` (section/number matching incl. the image_4 default-section path).
-- Pricing entries for `scicore/qwen35-397b-a17b-fp8` (0.0/0.0, internal cluster) and `alibaba/qwen3.5-plus-2026-02-15` (0.4/2.4); `pricing.json` metadata bumped to version 1.25 (last_updated 2026-06-30)
+- Pricing entries for `scicore/qwen35-397b-a17b-fp8` (0.0/0.0, internal cluster) and `alibaba/qwen3.5-plus-2026-02-15` (0.4/2.4); `pricing.json` metadata bumped to version 1.26 (last_updated 2026-07-01)
 - "Running the Tests" section in `CONTRIBUTING.md` documenting the pytest suite, the `integrity` marker, and CI enforcement
 
 ### Fixed
