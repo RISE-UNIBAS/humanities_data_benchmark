@@ -8,10 +8,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased] (v0.5.3-pre1)
 
 ### Added
-- 1 new model: claude-sonnet-5 (Anthropic); added to the `benchmark_base.py` hotfix list that sends no `temperature` (the model rejects the deprecated parameter)
-- 13 new benchmark test configurations (T1177-T1189) for Anthropic claude-sonnet-5 across all benchmarks
-- Pricing data for 2026-07-01 (claude-sonnet-5)
+- 2 new models: claude-sonnet-5, claude-fable-5 (Anthropic); both added to the `benchmark_base.py` hotfix list that sends no `temperature` (the models reject the deprecated parameter)
+- 26 new benchmark test configurations (T1177-T1202) for Anthropic claude-sonnet-5 (T1177-T1189) and claude-fable-5 (T1190-T1202) across all benchmarks
+- Pricing data for 2026-07-01 (claude-sonnet-5) and 2026-07-02 (claude-fable-5)
 - Tests on 2026-07-01: T1177-T1189 (13 tests) for Anthropic claude-sonnet-5 across all benchmarks
+- Tests on 2026-07-02: T1190-T1202 (13 tests) for Anthropic claude-fable-5 across all benchmarks
 - Unit test suite under `tests/`: `test_scoring_helper.py` and `test_benchmark_base_helpers.py` cover pure scoring/helper logic; `tests/integrity/` adds data-integrity guards (`integrity` marker) over `benchmarks_tests.csv` and `pricing.json`. Run logic-only with `pytest -m "not integrity"`.
 - Pricing-coverage guard: every non-legacy model in `benchmarks_tests.csv` must have an explicit exact-name entry in `pricing.json` with a usable numeric price (local providers, which have no per-token price, are exempt from the numeric requirement but still require an entry).
 - Model-addition guards: every non-legacy row's `prompt_file` must exist under `benchmarks/<name>/prompts/`; every non-legacy model must resolve to a source URL in `update_pricing.py` (scicore/local exempt) and appear in the README models table (local exempt).
