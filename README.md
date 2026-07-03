@@ -491,7 +491,7 @@ This benchmark suite currently tests models from the following providers:
 | | qwen/qwen3.5-plus-02-15                   | Qwen 3.5 Plus (Feb 2026)                                   |
 | | qwen/qwen3.5-flash-02-23                  | Qwen 3.5 Flash (Feb 2026)                                  |
 | | qwen/qwen3.5-9b                           | Qwen 3.5 9B                                                |
-| | x-ai/grok-4                               | Grok 4; multimodal                                         |
+| | ~~x-ai/grok-4~~                           | ~~Grok 4; multimodal~~ (legacy)                            |
 | | meta-llama/llama-4-scout                  | Llama 4 Scout                                              |
 | | stepfun/step-3.7-flash                    | StepFun Step 3.7 Flash                                     |
 | **sciCORE** | ~~GLM-4.5V-FP8~~                              | ~~GLM-4.5V, FP8 quantization; multimodal (Univ. of Basel HPC)~~ (legacy) |
