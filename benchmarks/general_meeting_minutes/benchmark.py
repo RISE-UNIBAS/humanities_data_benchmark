@@ -2,18 +2,13 @@
 
 Extract names, locations, signatures from table-like metting minutes of Mines de Costano S.A., 1930s - 1960s
 """
-import os
 from typing import Dict, List
 from scripts.benchmark_base import Benchmark
-from scripts.data_loader import read_file
 from scripts.scoring_helper import get_all_keys, get_nested_value, calculate_fuzzy_score
 
 
 class GeneralMeetingMinutes(Benchmark):
     """Benchmark for General Meeting Minutes."""
-
-    # Shared context configuration
-    use_shared_context = True
 
     def get_prompt_kwargs(self, basename: str,
                           filenames: List[str]) -> Dict:
@@ -24,27 +19,6 @@ class GeneralMeetingMinutes(Benchmark):
             "filename": basename,
             "page_number": page_number
         }
-
-    def get_shared_context_files(self) -> List[str]:
-        """Return paths to shared context files.
-
-        Returns:
-            List of file paths to send as shared context
-        """
-        import os
-        # TODO: Add your context files
-        # Example:
-        # return [os.path.join(self.benchmark_dir, 'context', 'reference_essay.txt')]
-        return []
-
-    def get_shared_context_prompt(self) -> str:
-        """Return initial prompt for establishing shared context.
-
-        Returns:
-            Prompt text explaining the shared context
-        """
-        prompt_path = os.path.join(self.benchmark_dir, 'context', 'shared_context_prompt.txt')
-        return read_file(prompt_path)
 
     def score_request_answer(self, image_name: str, response: dict, ground_truth: dict) -> dict:
         """Score a single request against ground truth.
@@ -78,8 +52,6 @@ class GeneralMeetingMinutes(Benchmark):
             avg_score = 0
 
         return {"fuzzy": avg_score}
-
-        return scores
 
     def score_benchmark(self, all_scores: list) -> dict:
         """Aggregate scores from all requests.

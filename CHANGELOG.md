@@ -10,9 +10,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - 2 new models: claude-sonnet-5, claude-fable-5 (Anthropic); both added to the `benchmark_base.py` hotfix list that sends no `temperature` (the models reject the deprecated parameter)
 - 26 new benchmark test configurations (T1177-T1202) for Anthropic claude-sonnet-5 (T1177-T1189) and claude-fable-5 (T1190-T1202) across all benchmarks
-- Pricing data for 2026-07-01 (claude-sonnet-5) and 2026-07-02 (claude-fable-5)
+- Pricing data for 2026-07-01 (claude-sonnet-5), 2026-07-02 (claude-fable-5), and 2026-07-03 (meta-llama/llama-4-maverick)
+- `scripts/data/model_aliases.json` (v1.1): added openrouter alias `meta-llama/llama-4-maverick` → `meta-llama/llama-4-maverick-17b-128e-instruct`
 - Tests on 2026-07-01: T1177-T1189 (13 tests) for Anthropic claude-sonnet-5 across all benchmarks
 - Tests on 2026-07-02: T1190-T1202 (13 tests) for Anthropic claude-fable-5 across all benchmarks
+- Tests on 2026-07-03: 57 `general_meeting_minutes` tests — T1209-T1218 (Anthropic), T1228-T1234 (GenAI), T1235-T1243 (Mistral), T1244-T1254 (OpenAI), T1255-T1271 (OpenRouter), T1273 (sciCORE), and T1274-T1275 (x-ai)
+- 65 new benchmark test configurations (T1203-T1275, excluding T1219 and T1221-T1227) extending `general_meeting_minutes` to all non-legacy multimodal models that lacked it, each using the standard `prompt.txt` (empirically the best-scoring of the five prompt variants) with the `MinutesPage` dataclass; OpenAI at temperature 1.0, all other providers at 0.0.
 - Unit test suite under `tests/`: `test_scoring_helper.py` and `test_benchmark_base_helpers.py` cover pure scoring/helper logic; `tests/integrity/` adds data-integrity guards (`integrity` marker) over `benchmarks_tests.csv` and `pricing.json`. Run logic-only with `pytest -m "not integrity"`.
 - Pricing-coverage guard: every non-legacy model in `benchmarks_tests.csv` must have an explicit exact-name entry in `pricing.json` with a usable numeric price (local providers, which have no per-token price, are exempt from the numeric requirement but still require an entry).
 - Model-addition guards: every non-legacy row's `prompt_file` must exist under `benchmarks/<name>/prompts/`; every non-legacy model must resolve to a source URL in `update_pricing.py` (scicore/local exempt) and appear in the README models table (local exempt).
@@ -25,6 +28,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `blacklist_cards` and `bibliographic_data` `score_benchmark` raised `ZeroDivisionError` on an empty score list (an all-failed run), crashing the run; both now return `{"fuzzy": 0.0}` like `book_advert_xml`.
 - `pytest.ini` section header corrected from `[tool:pytest]` to `[pytest]`, so `addopts`, `testpaths`, and custom markers are actually applied (the `[tool:pytest]` form is only valid in `setup.cfg`/`tox.ini`).
 - Replaced 7 bare provider `source_url`s in `pricing.json` with Wayback Machine archive URLs (5 Mistral `docs.mistral.ai` pages, 2 Alibaba ModelStudio console pages)
+- `general_meeting_minutes`: `Entry.signature_present` had a trailing comma (`bool = False,`) making its default the tuple `(False,)` instead of the boolean `False`; removed unreachable `return scores` dead code in `score_request_answer`.
+
+### Changed
+- Marked `openrouter/x-ai/grok-4` as `legacy_test=true` (14 tests: T0265-T0270, T0304, T0336, T0401-T0402, T0481, T0620, T0793, T1272).
+- `general_meeting_minutes`: disabled shared context (`use_shared_context` was `True` but no context files were configured, so the harness forced single-threaded runs and sent a context prompt with nothing attached); removed the empty `get_shared_context_files`/`get_shared_context_prompt` overrides and updated the benchmark README to match. Signatures are still scored as ordinary fields.
 
 ## [v0.5.2] - 2026-06-29
 

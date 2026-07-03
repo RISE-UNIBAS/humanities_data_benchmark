@@ -13,7 +13,7 @@ class Entry(BaseModel):
     actions_o: str
     actions_p: str
     no_de_voix: str
-    signature_present: bool = False,
+    signature_present: bool = False
     signature: str
 
 class TotalActions(BaseModel):
