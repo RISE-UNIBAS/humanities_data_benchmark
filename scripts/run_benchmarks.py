@@ -90,4 +90,4 @@ def main(limit_to: list[str] = None, regenerate_existing_results: bool = False, 
 
 
 if __name__ == "__main__":
-    main()
+    main(limit_to=["T0892"], workers=20)
