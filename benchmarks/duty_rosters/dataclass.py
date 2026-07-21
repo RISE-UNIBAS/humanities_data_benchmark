@@ -83,7 +83,6 @@ class Person(BaseModel):
 
 
 class Schedule(BaseModel):
-    unit: str
     year: int
     month: str
     persons: list[Person]

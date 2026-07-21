@@ -18,7 +18,6 @@ Images are paired with two shared context images sent once per benchmark run:
 
 ```json
 {
-  "unit": "1. Stock OST",
   "year": 2025,
   "month": "April",
   "persons": [
@@ -71,7 +70,7 @@ Behavior worth knowing:
 
 **F1 Micro** with field-level fuzzy matching (threshold: 0.92, rapidfuzz).
 
-All leaf fields are scored (unit, year, month, person metadata, and per-day shift fields). TP/FP/FN are calculated per field across the full nested structure. F1 Macro (per-image F1 averaged) is also reported.
+All leaf fields are scored (year, month, person metadata, and per-day shift fields). TP/FP/FN are calculated per field across the full nested structure. F1 Macro (per-image F1 averaged) is also reported.
 
 ## Ideas for Improvement
 
