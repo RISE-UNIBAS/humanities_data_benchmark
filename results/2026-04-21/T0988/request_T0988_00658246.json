@@ -1,0 +1,89 @@
+{
+    "text": "",
+    "model": "qwen/qwen3.5-9b-20260310",
+    "provider": "openrouter",
+    "finish_reason": "unknown",
+    "usage": {
+        "input_tokens": 2619,
+        "output_tokens": 1495,
+        "total_tokens": 4114,
+        "estimated_cost_usd": 0.00048614999999999997,
+        "input_cost_usd": 0.00026189999999999997,
+        "output_cost_usd": 0.00022425
+    },
+    "duration": 1181.2508194446564,
+    "timestamp": "2026-04-21T20:23:05.661217",
+    "conversation_id": "45dc0a00-2d42-4146-9006-0d920a128827",
+    "score": {
+        "f1_score": 0.0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "true_positives": 0,
+        "false_positives": 0,
+        "false_negatives": 8,
+        "field_scores": {
+            "": {
+                "response": null,
+                "ground_truth": null,
+                "score": 1.0
+            },
+            "publication.year": {
+                "response": null,
+                "ground_truth": "1924",
+                "score": 0.0
+            },
+            "publication.publisher": {
+                "response": null,
+                "ground_truth": null,
+                "score": 1.0
+            },
+            "library_reference.shelfmark": {
+                "response": null,
+                "ground_truth": "U 27. 3118",
+                "score": 0.0
+            },
+            "publication.place": {
+                "response": null,
+                "ground_truth": null,
+                "score": 1.0
+            },
+            "library_reference.subjects": {
+                "response": null,
+                "ground_truth": null,
+                "score": 1.0
+            },
+            "publication.pages": {
+                "response": null,
+                "ground_truth": "24",
+                "score": 0.0
+            },
+            "author.last_name": {
+                "response": null,
+                "ground_truth": "Wiggers",
+                "score": 0.0
+            },
+            "publication.format": {
+                "response": null,
+                "ground_truth": "4\u00b0",
+                "score": 0.0
+            },
+            "type.type": {
+                "response": null,
+                "ground_truth": "Dissertation or thesis",
+                "score": 0.0
+            },
+            "author.first_name": {
+                "response": null,
+                "ground_truth": "Wilhelm",
+                "score": 0.0
+            },
+            "publication.title": {
+                "response": null,
+                "ground_truth": "Beitrag zu den epileptischen Seelenst\u00f6rungen",
+                "score": 0.0
+            }
+        },
+        "total_fields": 12
+    },
+    "raw_response": "{\"id\":\"gen-1776795763-gCO3vH5pTGB2zPXzg8cC\",\"choices\":[{\"finish_reason\":null,\"index\":0,\"logprobs\":null,\"message\":{\"content\":null,\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"reasoning\":\"The user wants me to extract bibliographic information from an image of a library index card and return it as a structured JSON object.\\n\\n1.  **Analyze the Image:**\\n    *   **Text:**\\n        *   \\\"Wiggers, Wilhelm: Beitrag zu den epileptischen Seelenst\u00f6rungen.\\\"\\n        *   \\\"[Maschinenschrift.] 24 S. 4\u00b0.\\\"\\n        *   \\\"\u2014 Auszug: o. O. (1924). 1 Bl. 8\u00b0\\\"\\n        *   \\\"Kiel, Med. Diss. v. 24. Febr. 1927\\\"\\n        *   \\\"[U 27.3118\\\" (This looks like a shelfmark)\\n\\n2.  **Determine Card Type:**\\n    *   The text says \\\"Med. Diss.\\\" (Medical Dissertation).\\n    *   There is no \\\"s.\\\" on a separate line indicating a reference.\\n    *   Therefore, `type` is \\\"Dissertation or thesis\\\".\\n\\n3.  **Extract Author:**\\n    *   \\\"Wiggers, Wilhelm\\\"\\n    *   `last_name`: \\\"Wiggers\\\"\\n    *   `first_name`: \\\"Wilhelm\\\"\\n\\n4.  **Extract Publication:**\\n    *   **Title:** \\\"Beitrag zu den epileptischen Seelenst\u00f6rungen.\\\"\\n    *   **Year:** The card mentions \\\"Med. Diss. v. 24. Febr. 1927\\\". This is the dissertation date. There is also an \\\"Auszug: o. O. (1924)\\\". Usually, for a dissertation card, the main date is the dissertation date. Let's look at the rules. \\\"year: Publication year as integer\\\". The main work is the dissertation. The year is 1927.\\n    *   **Place:** \\\"Kiel\\\" (from \\\"Kiel, Med. Diss.\\\").\\n    *   **Pages:** \\\"24 S.\\\" (24 pages). The \\\"S.\\\" suffix should be removed. So \\\"24\\\".\\n    *   **Publisher:** \\\"Med. Diss.\\\" implies it's a medical dissertation, often published by the university. The text says \\\"Kiel, Med. Diss.\\\". It doesn't explicitly name a publisher like \\\"Verlag\\\". However, \\\"Med. Diss.\\\" is the type. Let's look closer. \\\"Kiel\\\" is the place. \\\"Med. Diss.\\\" is the type. Is there a publisher? Usually, dissertations are published by the university. But the text doesn't explicitly say \\\"Kiel University\\\". I will leave publisher empty or infer \\\"Med. Diss.\\\" isn't a publisher. Wait, looking at the schema, `publisher` is a string or empty string. I will leave it empty as \\\"Med. Diss.\\\" describes the type, not the publisher.\\n    *   **Format:** \\\"4\u00b0\\\" is mentioned after the page count. There is also \\\"8\u00b0\\\" for the Auszug. The main work is the dissertation. So format is \\\"4\u00b0\\\".\\n\\n5.  **Extract Library Reference:**\\n    *   **Shelfmark:** The text at the end is \\\"[U 27.3118\\\". This looks like a shelfmark.\\n    *   **Subjects:** There are no explicit subject headings like \\\"Psychology\\\" or \\\"Medicine\\\" listed in a standard subject field. The title itself contains the subject. The rules say \\\"subjects: Subject classifications or keywords\\\". I will leave this empty as there are no specific classification codes visible other than the shelfmark.\\n\\n6.  **Refining the JSON:**\\n    *   `type`: \\\"Dissertation or thesis\\\"\\n    *   `author`: {\\\"last_name\\\": \\\"Wiggers\\\", \\\"first_name\\\": \\\"Wilhelm\\\"}\\n    *   `publication`:\\n        *   `title`: \\\"Beitrag zu den epileptischen Seelenst\u00f6rungen.\\\"\\n        *   `year`: 1927\\n        *   `place`: \\\"Kiel\\\"\\n        *   `pages`: \\\"24\\\"\\n        *   `publisher`: \\\"\\\"\\n        *   `format`: \\\"4\u00b0\\\"\\n    *   `library_reference`:\\n        *   `shelfmark`: \\\"U 27.3118\\\" (Removing the brackets if they are just delimiters, but keeping the content). The text is \\\"[U 27.3118\\\". I'll extract \\\"U 27.3118\\\".\\n        *   `subjects`: \\\"\\\"\\n\\n7.  **Final Check against Rules:**\\n    *   Card Type: No \\\"s.\\\" on separate line -> \\\"Dissertation or thesis\\\". Correct.\\n    *   Author: Wiggers, Wilhelm -> last: Wiggers, first: Wilhelm. Correct.\\n    *   Publication:\\n        *   title: \\\"Beitrag zu den epileptischen Seelenst\u00f6rungen.\\\"\\n        *   year: 1927 (from \\\"v. 24. Febr. 1927\\\").\\n        *   place: \\\"Kiel\\\".\\n        *   pages: \\\"24\\\" (from \\\"24 S.\\\").\\n        *   publisher: \\\"\\\" (Not explicitly stated).\\n        *   format: \\\"4\u00b0\\\" (from \\\"4\u00b0\\\").\\n    *   Library Reference:\\n        *   shelfmark: \\\"U 27.3118\\\".\\n        *   subjects: \\\"\\\".\\n\\n    Wait, I need to check the schema provided in the prompt.\\n    The prompt asks for a specific JSON structure.\\n    The prompt also provides a schema definition in the `system` prompt section (the `$defs` part).\\n    I need to make sure I follow the schema provided in the prompt's `system` message, specifically the `Document` structure.\\n    Wait, the user prompt says \\\"return it as a structured JSON object with the following exact format:\\\" and shows a specific JSON structure.\\n    BUT, the system prompt says \\\"You MUST respond with valid JSON matching this exact schema: ...\\\".\\n    The system prompt schema is more detailed (includes `$defs`).\\n    I should follow the system prompt's schema structure for the output, as that is the constraint for the model's response format.\\n    Actually, looking closely at the user prompt, it asks for a specific JSON format.\\n    User Prompt Format:\\n    ```json\\n    {\\n      \\\"type\\\": { \\\"type\\\": \\\"...\\\" },\\n      \\\"author\\\": { \\\"last_name\\\": \\\"...\\\", \\\"first_name\\\": \\\"...\\\" },\\n      \\\"publication\\\": { \\\"title\\\": \\\"...\\\", \\\"year\\\": integer, ... },\\n      \\\"library_reference\\\": { \\\"shelfmark\\\": \\\"...\\\", \\\"subjects\\\": \\\"...\\\" }\\n    }\\n    ```\\n    System Prompt Schema:\\n    ```json\\n    {\\n      \\\"$defs\\\": { ... },\\n      \\\"description\\\": \\\"...\\\",\\n      \\\"properties\\\": { ... }\\n    }\\n    ```\\n    Wait, the system prompt says \\\"You MUST respond with valid JSON matching this exact schema\\\". This usually implies the output should be the JSON object described in the `properties` of the root, not the schema definition itself.\\n    However, the user prompt explicitly defines the format to return.\\n    Let's look at the instruction: \\\"Return ONLY the JSON object, no additional text or explanation.\\\"\\n    The system prompt defines the schema for the JSON object I should generate.\\n    The schema defines:\\n    - `type`: WorkType object\\n    - `author`: Author object\\n    - `publication`: Publication object\\n    -\",\"reasoning_details\":[{\"type\":\"reasoning.text\",\"text\":\"The user wants me to extract bibliographic information from an image of a library index card and return it as a structured JSON object.\\n\\n1.  **Analyze the Image:**\\n    *   **Text:**\\n        *   \\\"Wiggers, Wilhelm: Beitrag zu den epileptischen Seelenst\u00f6rungen.\\\"\\n        *   \\\"[Maschinenschrift.] 24 S. 4\u00b0.\\\"\\n        *   \\\"\u2014 Auszug: o. O. (1924). 1 Bl. 8\u00b0\\\"\\n        *   \\\"Kiel, Med. Diss. v. 24. Febr. 1927\\\"\\n        *   \\\"[U 27.3118\\\" (This looks like a shelfmark)\\n\\n2.  **Determine Card Type:**\\n    *   The text says \\\"Med. Diss.\\\" (Medical Dissertation).\\n    *   There is no \\\"s.\\\" on a separate line indicating a reference.\\n    *   Therefore, `type` is \\\"Dissertation or thesis\\\".\\n\\n3.  **Extract Author:**\\n    *   \\\"Wiggers, Wilhelm\\\"\\n    *   `last_name`: \\\"Wiggers\\\"\\n    *   `first_name`: \\\"Wilhelm\\\"\\n\\n4.  **Extract Publication:**\\n    *   **Title:** \\\"Beitrag zu den epileptischen Seelenst\u00f6rungen.\\\"\\n    *   **Year:** The card mentions \\\"Med. Diss. v. 24. Febr. 1927\\\". This is the dissertation date. There is also an \\\"Auszug: o. O. (1924)\\\". Usually, for a dissertation card, the main date is the dissertation date. Let's look at the rules. \\\"year: Publication year as integer\\\". The main work is the dissertation. The year is 1927.\\n    *   **Place:** \\\"Kiel\\\" (from \\\"Kiel, Med. Diss.\\\").\\n    *   **Pages:** \\\"24 S.\\\" (24 pages). The \\\"S.\\\" suffix should be removed. So \\\"24\\\".\\n    *   **Publisher:** \\\"Med. Diss.\\\" implies it's a medical dissertation, often published by the university. The text says \\\"Kiel, Med. Diss.\\\". It doesn't explicitly name a publisher like \\\"Verlag\\\". However, \\\"Med. Diss.\\\" is the type. Let's look closer. \\\"Kiel\\\" is the place. \\\"Med. Diss.\\\" is the type. Is there a publisher? Usually, dissertations are published by the university. But the text doesn't explicitly say \\\"Kiel University\\\". I will leave publisher empty or infer \\\"Med. Diss.\\\" isn't a publisher. Wait, looking at the schema, `publisher` is a string or empty string. I will leave it empty as \\\"Med. Diss.\\\" describes the type, not the publisher.\\n    *   **Format:** \\\"4\u00b0\\\" is mentioned after the page count. There is also \\\"8\u00b0\\\" for the Auszug. The main work is the dissertation. So format is \\\"4\u00b0\\\".\\n\\n5.  **Extract Library Reference:**\\n    *   **Shelfmark:** The text at the end is \\\"[U 27.3118\\\". This looks like a shelfmark.\\n    *   **Subjects:** There are no explicit subject headings like \\\"Psychology\\\" or \\\"Medicine\\\" listed in a standard subject field. The title itself contains the subject. The rules say \\\"subjects: Subject classifications or keywords\\\". I will leave this empty as there are no specific classification codes visible other than the shelfmark.\\n\\n6.  **Refining the JSON:**\\n    *   `type`: \\\"Dissertation or thesis\\\"\\n    *   `author`: {\\\"last_name\\\": \\\"Wiggers\\\", \\\"first_name\\\": \\\"Wilhelm\\\"}\\n    *   `publication`:\\n        *   `title`: \\\"Beitrag zu den epileptischen Seelenst\u00f6rungen.\\\"\\n        *   `year`: 1927\\n        *   `place`: \\\"Kiel\\\"\\n        *   `pages`: \\\"24\\\"\\n        *   `publisher`: \\\"\\\"\\n        *   `format`: \\\"4\u00b0\\\"\\n    *   `library_reference`:\\n        *   `shelfmark`: \\\"U 27.3118\\\" (Removing the brackets if they are just delimiters, but keeping the content). The text is \\\"[U 27.3118\\\". I'll extract \\\"U 27.3118\\\".\\n        *   `subjects`: \\\"\\\"\\n\\n7.  **Final Check against Rules:**\\n    *   Card Type: No \\\"s.\\\" on separate line -> \\\"Dissertation or thesis\\\". Correct.\\n    *   Author: Wiggers, Wilhelm -> last: Wiggers, first: Wilhelm. Correct.\\n    *   Publication:\\n        *   title: \\\"Beitrag zu den epileptischen Seelenst\u00f6rungen.\\\"\\n        *   year: 1927 (from \\\"v. 24. Febr. 1927\\\").\\n        *   place: \\\"Kiel\\\".\\n        *   pages: \\\"24\\\" (from \\\"24 S.\\\").\\n        *   publisher: \\\"\\\" (Not explicitly stated).\\n        *   format: \\\"4\u00b0\\\" (from \\\"4\u00b0\\\").\\n    *   Library Reference:\\n        *   shelfmark: \\\"U 27.3118\\\".\\n        *   subjects: \\\"\\\".\\n\\n    Wait, I need to check the schema provided in the prompt.\\n    The prompt asks for a specific JSON structure.\\n    The prompt also provides a schema definition in the `system` prompt section (the `$defs` part).\\n    I need to make sure I follow the schema provided in the prompt's `system` message, specifically the `Document` structure.\\n    Wait, the user prompt says \\\"return it as a structured JSON object with the following exact format:\\\" and shows a specific JSON structure.\\n    BUT, the system prompt says \\\"You MUST respond with valid JSON matching this exact schema: ...\\\".\\n    The system prompt schema is more detailed (includes `$defs`).\\n    I should follow the system prompt's schema structure for the output, as that is the constraint for the model's response format.\\n    Actually, looking closely at the user prompt, it asks for a specific JSON format.\\n    User Prompt Format:\\n    ```json\\n    {\\n      \\\"type\\\": { \\\"type\\\": \\\"...\\\" },\\n      \\\"author\\\": { \\\"last_name\\\": \\\"...\\\", \\\"first_name\\\": \\\"...\\\" },\\n      \\\"publication\\\": { \\\"title\\\": \\\"...\\\", \\\"year\\\": integer, ... },\\n      \\\"library_reference\\\": { \\\"shelfmark\\\": \\\"...\\\", \\\"subjects\\\": \\\"...\\\" }\\n    }\\n    ```\\n    System Prompt Schema:\\n    ```json\\n    {\\n      \\\"$defs\\\": { ... },\\n      \\\"description\\\": \\\"...\\\",\\n      \\\"properties\\\": { ... }\\n    }\\n    ```\\n    Wait, the system prompt says \\\"You MUST respond with valid JSON matching this exact schema\\\". This usually implies the output should be the JSON object described in the `properties` of the root, not the schema definition itself.\\n    However, the user prompt explicitly defines the format to return.\\n    Let's look at the instruction: \\\"Return ONLY the JSON object, no additional text or explanation.\\\"\\n    The system prompt defines the schema for the JSON object I should generate.\\n    The schema defines:\\n    - `type`: WorkType object\\n    - `author`: Author object\\n    - `publication`: Publication object\\n    -\",\"format\":\"unknown\",\"index\":0}]},\"native_finish_reason\":null,\"error\":{\"code\":502,\"message\":\"Network connection lost.\",\"metadata\":{\"error_type\":\"provider_unavailable\"}}}],\"created\":1776795763,\"model\":\"qwen/qwen3.5-9b-20260310\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":null,\"usage\":{\"completion_tokens\":1495,\"prompt_tokens\":2619,\"total_tokens\":4114,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":0,\"reasoning_tokens\":1495,\"rejected_prediction_tokens\":null,\"image_tokens\":0},\"prompt_tokens_details\":{\"audio_tokens\":0,\"cached_tokens\":0,\"cache_write_tokens\":0,\"video_tokens\":0},\"cost\":0.00048615,\"is_byok\":false,\"cost_details\":{\"upstream_inference_cost\":0.00048615,\"upstream_inference_prompt_cost\":0.0002619,\"upstream_inference_completions_cost\":0.00022425}},\"provider\":\"Together\"}"
+}

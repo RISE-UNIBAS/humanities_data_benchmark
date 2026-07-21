@@ -6,6 +6,8 @@ from scripts.scoring_helper import get_all_keys, get_nested_value, calculate_fuz
 class BlacklistCards(Benchmark):
 
     def score_benchmark(self, all_scores):
+        if not all_scores:
+            return {"fuzzy": 0.0}
         total_score = 0
         for score in all_scores:
             logging.debug(f"Fuzzy score: {score['fuzzy']}")

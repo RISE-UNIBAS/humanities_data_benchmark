@@ -80,6 +80,24 @@ If you want to create a new benchmark:
    # Edit .env file with your API keys
    ```
 
+### Running the Tests
+
+The test suite lives in `tests/` and runs with pytest:
+
+```bash
+pip install pytest
+pytest                      # everything
+pytest -m "not integrity"   # logic & scoring tests only (fast, offline, no API keys)
+pytest -m integrity         # data-integrity guards only
+```
+
+There are two kinds of tests:
+
+- **Logic & scoring tests** exercise the scoring helpers and each benchmark's scoring logic offline — no API keys or network needed.
+- **Integrity guards** (the `integrity` marker) validate the repository's data so an incomplete model or benchmark addition fails fast: every non-legacy model in `benchmarks_tests.csv` has a `pricing.json` entry with an archived source URL, an entry in `update_pricing.py`, and a README listing; every test row's prompt file exists; and every benchmark object has a matching ground truth.
+
+These run automatically on every push and pull request via GitHub Actions (`.github/workflows/tests.yml`), so a model or benchmark added without its pricing, prompt, or ground-truth pieces will fail CI.
+
 ### Benchmark Structure
 
 Each benchmark must include:
@@ -96,6 +114,7 @@ Each benchmark must include:
 - Follow existing code style and conventions
 - Include clear documentation for any new functions or classes
 - Test your benchmark with at least one model before submitting
+- Run the test suite (`pytest`) and keep it green before submitting (see [Running the Tests](#running-the-tests))
 - Use meaningful variable and function names
 
 ### Data Standards

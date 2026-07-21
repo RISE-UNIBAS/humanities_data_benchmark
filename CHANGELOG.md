@@ -5,13 +5,67 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased
+## [Unreleased] (v0.5.3-pre1)
 
 ### Added
-- 6 new models: qwen3.5-plus, qwen3.5-35b-a3b, qwen3.5-27b, qwen3.5-122b-a10b, qwen3.5-397b-a17b, qwen3.5-flash-2026-02-23 (Alibaba)
-- 78 new benchmark test configurations (T0814-T0891) for Alibaba Qwen 3.5 models across all benchmarks
+- 2 new models: claude-sonnet-5, claude-fable-5 (Anthropic); both added to the `benchmark_base.py` hotfix list that sends no `temperature` (the models reject the deprecated parameter)
+- 26 new benchmark test configurations (T1177-T1202) for Anthropic claude-sonnet-5 (T1177-T1189) and claude-fable-5 (T1190-T1202) across all benchmarks
+- Pricing data for 2026-07-01 (claude-sonnet-5), 2026-07-02 (claude-fable-5), and 2026-07-03 (meta-llama/llama-4-maverick)
+- `scripts/data/model_aliases.json` (v1.1): added openrouter alias `meta-llama/llama-4-maverick` → `meta-llama/llama-4-maverick-17b-128e-instruct`
+- Tests on 2026-07-01: T1177-T1189 (13 tests) for Anthropic claude-sonnet-5 across all benchmarks
+- Tests on 2026-07-02: T1190-T1202 (13 tests) for Anthropic claude-fable-5 across all benchmarks
+- Tests on 2026-07-03: 57 `general_meeting_minutes` tests — T1209-T1218 (Anthropic), T1228-T1234 (GenAI), T1235-T1243 (Mistral), T1244-T1254 (OpenAI), T1255-T1271 (OpenRouter), T1273 (sciCORE), and T1274-T1275 (x-ai)
+- 65 new benchmark test configurations (T1203-T1275, excluding T1219 and T1221-T1227) extending `general_meeting_minutes` to all non-legacy multimodal models that lacked it, each using the standard `prompt.txt` (empirically the best-scoring of the five prompt variants) with the `MinutesPage` dataclass; OpenAI at temperature 1.0, all other providers at 0.0.
+- Unit test suite under `tests/`: `test_scoring_helper.py` and `test_benchmark_base_helpers.py` cover pure scoring/helper logic; `tests/integrity/` adds data-integrity guards (`integrity` marker) over `benchmarks_tests.csv` and `pricing.json`. Run logic-only with `pytest -m "not integrity"`.
+- Pricing-coverage guard: every non-legacy model in `benchmarks_tests.csv` must have an explicit exact-name entry in `pricing.json` with a usable numeric price (local providers, which have no per-token price, are exempt from the numeric requirement but still require an entry).
+- Model-addition guards: every non-legacy row's `prompt_file` must exist under `benchmarks/<name>/prompts/`; every non-legacy model must resolve to a source URL in `update_pricing.py` (scicore/local exempt) and appear in the README models table (local exempt).
+- Ground-truth guards: every `ground_truths/*.json` is valid JSON, and every logical object (image/text basename, collapsed with the benchmark's own basename pattern) has a matching ground-truth file (harness scaffold benchmarks excluded).
+- Per-benchmark scoring tests (run offline via `__new__`-bypassed instances, no AI client): field-level F1 (`company_lists`, `library_cards`, `personnel_cards` incl. rules-gated field selection), CER (`medieval_manuscripts`, `fraktur_adverts`), the simple averagers (`bibliographic_data`, `blacklist_cards`, `book_advert_xml`), and `business_letters` macro/micro F1 aggregation. The two complex scorers also have end-to-end tests with hand-verified expected scores: `business_letters` `score_request_answer` (person matching, inferred-person exclusion) and `skip_object` signature rules; `fraktur_adverts` `compare_ads` (section/number matching incl. the image_4 default-section path).
+- Pricing entries for `scicore/qwen35-397b-a17b-fp8` (0.0/0.0, internal cluster) and `alibaba/qwen3.5-plus-2026-02-15` (0.4/2.4); `pricing.json` metadata bumped to version 1.26 (last_updated 2026-07-01)
+- "Running the Tests" section in `CONTRIBUTING.md` documenting the pytest suite, the `integrity` marker, and CI enforcement
+
+### Fixed
+- `blacklist_cards` and `bibliographic_data` `score_benchmark` raised `ZeroDivisionError` on an empty score list (an all-failed run), crashing the run; both now return `{"fuzzy": 0.0}` like `book_advert_xml`.
+- `pytest.ini` section header corrected from `[tool:pytest]` to `[pytest]`, so `addopts`, `testpaths`, and custom markers are actually applied (the `[tool:pytest]` form is only valid in `setup.cfg`/`tox.ini`).
+- Replaced 7 bare provider `source_url`s in `pricing.json` with Wayback Machine archive URLs (5 Mistral `docs.mistral.ai` pages, 2 Alibaba ModelStudio console pages)
+- `general_meeting_minutes`: `Entry.signature_present` had a trailing comma (`bool = False,`) making its default the tuple `(False,)` instead of the boolean `False`; removed unreachable `return scores` dead code in `score_request_answer`.
+
+### Changed
+- Marked `openrouter/x-ai/grok-4` as `legacy_test=true` (14 tests: T0265-T0270, T0304, T0336, T0401-T0402, T0481, T0620, T0793, T1272).
+- `general_meeting_minutes`: disabled shared context (`use_shared_context` was `True` but no context files were configured, so the harness forced single-threaded runs and sent a context prompt with nothing attached); removed the empty `get_shared_context_files`/`get_shared_context_prompt` overrides and updated the benchmark README to match. Signatures are still scored as ordinary fields.
+
+## [v0.5.2] - 2026-06-29
+
+### Added
+- 9 new models: gemini-3.5-flash, gemini-3.1-flash-lite (GenAI), qwen/qwen3.7-plus, meta-llama/llama-4-scout, stepfun/step-3.7-flash (OpenRouter), claude-opus-4-8 (Anthropic), mistral-medium-3.5 (Mistral), grok-4.3 (x-ai), qwen35-397b-a17b-fp8 (sciCORE)
+- 91 new benchmark test configurations (T1050-T1140) for GenAI gemini-3.5-flash (T1050-T1062), OpenRouter qwen/qwen3.7-plus (T1063-T1075), Anthropic claude-opus-4-8 (T1076-T1088), Mistral mistral-medium-3.5 (T1089-T1101), x-ai grok-4.3 (T1102-T1114), OpenRouter meta-llama/llama-4-scout (T1115-T1127), and OpenRouter stepfun/step-3.7-flash (T1128-T1140) across all benchmarks
+- 10 new benchmark test configurations (T1141-T1150) for Cohere command-a-vision-07-2025, completing its coverage of all benchmarks (bibliographic_data, business_letters, fraktur_adverts, library_cards, medieval_manuscripts, blacklist_cards, company_lists)
+- 13 new benchmark test configurations (T1151-T1163) for sciCORE qwen35-397b-a17b-fp8 across all benchmarks
+- 13 new benchmark test configurations (T1164-T1176) for GenAI gemini-3.1-flash-lite across all benchmarks
+- Tests on 2026-05-22: T1050-T1062 (13 tests) for gemini-3.5-flash across all benchmarks
+- Tests on 2026-06-04: T1063-T1101 (39 tests) for qwen/qwen3.7-plus (T1063-T1075), claude-opus-4-8 (T1076-T1088), and mistral-medium-3.5 (T1089-T1101) across all benchmarks; 117 re-run tests for pixtral-large-2411 (T0023, T0035, T0060-T0061, T0095, T0159, T0294, T0326, T0381-T0382, T0469, T0604, T0771), mistral-medium-2508 (T0169, T0171, T0173, T0175, T0177, T0179, T0295, T0327, T0383-T0384, T0470, T0602, T0781), mistral-medium-2505 (T0170, T0172, T0174, T0176, T0178, T0180, T0296, T0328, T0385-T0386, T0471, T0601, T0782), magistral-medium-2509 (T0425-T0434, T0474, T0595, T0795), mistral-small-2506 (T0435-T0444, T0475, T0603, T0796), mistral-large-2512 (T0532-T0542, T0600, T0807), ministral-14b-2512 (T0543-T0553, T0597, T0808), ministral-8b-2512 (T0554-T0564, T0598, T0809), and magistral-small-2509 (T0565-T0575, T0596, T0810) across all benchmarks
+- Tests on 2026-06-05: T1115-T1127 (13 tests) for meta-llama/llama-4-scout and T1128-T1140 (13 tests) for stepfun/step-3.7-flash across all benchmarks
+- Tests on 2026-06-08: T1102-T1114 (13 tests) for grok-4.3 across all benchmarks
+- Tests on 2026-06-22: T1151-T1163 (13 tests) for sciCORE qwen35-397b-a17b-fp8 across all benchmarks
+- Tests on 2026-06-29: T1164-T1176 (13 tests) for GenAI gemini-3.1-flash-lite across all benchmarks
+- Pricing data for 2026-05-22, 2026-06-04, 2026-06-05, and 2026-06-29 (gemini-3.1-flash-lite)
+- `scripts/data/model_aliases.json` for tracking model name aliases between `benchmarks_tests.csv` and result files, organised by provider
+
+### Changed
+- `inject_costs.py` now resolves model names via `scripts/data/model_aliases.json`, so tests whose result files use alias model names get correct cost calculations
+- Marked 8 provider-retired models as `legacy_test=true`: claude-opus-4-20250514, claude-sonnet-4-20250514 (Anthropic), gemini-2.0-flash, gemini-2.0-flash-lite, gemini-2.5-flash-lite-preview-09-2025, gemini-3.1-flash-lite-preview (GenAI), mistral-large-2411, pixtral-large-2411 (Mistral)
+- Marked all 16 sciCORE tests as `legacy_test=true` (GLM-4.5V-FP8 and qwen3-235b-fp8): T0237-T0242, T0299, T0331, T0391-T0392, T0476, T0482, T0621-T0622, T0790, T0797
+
+## [v0.5.1] - 2026-05-20
+
+### Added
+- 6 new models: qwen3.5-plus, qwen3.5-35b-a3b, qwen3.5-27b, qwen3.5-122b-a10b, qwen3.5-397b-a17b, qwen3.5-flash-2026-02-23 (Alibaba); 10 new models: qwen/qwen3.6-plus, qwen/qwen3.5-122b-a10b, qwen/qwen3.5-27b, qwen/qwen3.5-35b-a3b, qwen/qwen3.5-397b-a17b, qwen/qwen3.5-plus-02-15, qwen/qwen3.5-flash-02-23, qwen/qwen3.5-9b, google/gemma-4-26b-a4b-it, google/gemma-4-31b-it (OpenRouter); 1 new model: claude-opus-4-7 (Anthropic); 2 new models: deepseek-v4-flash, deepseek-v4-pro (DeepSeek); 1 new model: gpt-5.5-2026-04-23 (OpenAI)
+- 78 new benchmark test configurations (T0814-T0891) for Alibaba Qwen 3.5 models across all benchmarks; 130 new benchmark test configurations (T0892-T1021) for OpenRouter Qwen and Gemma models across all benchmarks; 13 new benchmark test configurations (T1022-T1034) for Anthropic claude-opus-4-7 across all benchmarks; 2 new benchmark test configurations (T1035-T1036) for DeepSeek deepseek-v4-flash and deepseek-v4-pro on the book_advert_xml benchmark (text-only, as these models do not support images); 13 new benchmark test configurations (T1037-T1048, T1054) for OpenAI gpt-5.5-2026-04-23 across all benchmarks
 - Alibaba provider support with direct API integration and pricing scraper
 - Test results on 2026-03-25 for all 65 Alibaba Qwen 3.5 tests (T0827-T0891) and 2 DeepSeek book_advert_xml tests (T0752, T0764)
+- Tests on 2026-04-21: T0892-T1034 (142 tests)
+- Tests on 2026-04-22: T0983-T0994 (12 tests)
+- Pricing data for 2026-04-21, 2026-04-24, and 2026-04-27
 
 ### Changed
 - Deduplicated grok-4.20-0309-reasoning test configurations (removed duplicate T0730-T0741 and corresponding results)
@@ -180,7 +234,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Changelog
 
-[Unreleased]: https://github.com/RISE-UNIBAS/humanities_data_benchmark/compare/v0.4.0...HEAD
+[Unreleased]: https://github.com/RISE-UNIBAS/humanities_data_benchmark/compare/v0.5.2...HEAD
 [v0.1.0]: https://github.com/RISE-UNIBAS/humanities_data_benchmark/releases/tag/v0.1.0
 [v0.2.0]: https://github.com/RISE-UNIBAS/humanities_data_benchmark/releases/tag/v0.2.0
 [v0.2.1]: https://github.com/RISE-UNIBAS/humanities_data_benchmark/releases/tag/v0.2.1
@@ -190,3 +244,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [v0.4.0]: https://github.com/RISE-UNIBAS/humanities_data_benchmark/releases/tag/v0.4.0
 [v0.4.1]: https://github.com/RISE-UNIBAS/humanities_data_benchmark/releases/tag/v0.4.1
 [v0.5.0]: https://github.com/RISE-UNIBAS/humanities_data_benchmark/releases/tag/v0.5.0
+[v0.5.1]: https://github.com/RISE-UNIBAS/humanities_data_benchmark/releases/tag/v0.5.1
+[v0.5.2]: https://github.com/RISE-UNIBAS/humanities_data_benchmark/releases/tag/v0.5.2

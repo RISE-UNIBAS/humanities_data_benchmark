@@ -1,0 +1,89 @@
+{
+    "text": "",
+    "model": "qwen/qwen3.5-9b-20260310",
+    "provider": "openrouter",
+    "finish_reason": "unknown",
+    "usage": {
+        "input_tokens": 2619,
+        "output_tokens": 666,
+        "total_tokens": 3285,
+        "estimated_cost_usd": 0.00036179999999999996,
+        "input_cost_usd": 0.00026189999999999997,
+        "output_cost_usd": 9.99e-05
+    },
+    "duration": 222.58868026733398,
+    "timestamp": "2026-04-22T02:55:22.286895",
+    "conversation_id": "c60ba456-0a08-4f23-827c-21afb69845c4",
+    "score": {
+        "f1_score": 0.0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "true_positives": 0,
+        "false_positives": 0,
+        "false_negatives": 10,
+        "field_scores": {
+            "": {
+                "response": null,
+                "ground_truth": null,
+                "score": 1.0
+            },
+            "publication.pages": {
+                "response": null,
+                "ground_truth": "XI, 559",
+                "score": 0.0
+            },
+            "publication.publisher": {
+                "response": null,
+                "ground_truth": "Kooyker",
+                "score": 0.0
+            },
+            "publication.title": {
+                "response": null,
+                "ground_truth": "Studies over het ministerie van Van de Spiegel",
+                "score": 0.0
+            },
+            "library_reference.shelfmark": {
+                "response": null,
+                "ground_truth": "Diss.Groningen 1905",
+                "score": 0.0
+            },
+            "author.last_name": {
+                "response": null,
+                "ground_truth": "Van der Meulen",
+                "score": 0.0
+            },
+            "author.first_name": {
+                "response": null,
+                "ground_truth": "Ageus Jacobus",
+                "score": 0.0
+            },
+            "type.type": {
+                "response": null,
+                "ground_truth": "Dissertation or thesis",
+                "score": 0.0
+            },
+            "library_reference.subjects": {
+                "response": null,
+                "ground_truth": null,
+                "score": 1.0
+            },
+            "publication.year": {
+                "response": null,
+                "ground_truth": 1905,
+                "score": 0.0
+            },
+            "publication.place": {
+                "response": null,
+                "ground_truth": "Leiden",
+                "score": 0.0
+            },
+            "publication.format": {
+                "response": null,
+                "ground_truth": "8",
+                "score": 0.0
+            }
+        },
+        "total_fields": 12
+    },
+    "raw_response": "{\"id\":\"gen-1776819303-zejAgpgssqdbkACTi8CZ\",\"choices\":[{\"finish_reason\":null,\"index\":0,\"logprobs\":null,\"message\":{\"content\":null,\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"reasoning\":\"The user wants me to extract bibliographic information from an image of a library card and return it as a structured JSON object.\\n\\n**1. Analyze the Image:**\\nThe image shows a typewritten library card.\\n- **Author Line:** \\\"Van der Meulen, Ageus Jacobus\\\"\\n- **Title Line:** \\\"Studies over het ministerie van Van de Spiegel.\\\"\\n- **Publication Info:** \\\"Leiden: Kooyker 1905. XI, 559 W. (incl. Stellingen). 8.\\\"\\n- **Library Reference Line:** \\\"AT 27 Diss. Groningen 1905\\\"\\n\\n**2. Apply Extraction Rules:**\\n\\n*   **Card Type:**\\n    *   Rule 1: If a card contains the note \\\"s.\\\" on a separate line, it is a \\\"Reference\\\". Otherwise, it is a \\\"Dissertation or thesis\\\".\\n    *   Observation: The card mentions \\\"Diss. Groningen 1905\\\". It does not have a separate line with just \\\"s.\\\". It looks like a dissertation card.\\n    *   Decision: \\\"Dissertation or thesis\\\"\\n\\n*   **Author:**\\n    *   Rule 2: Extract last_name and first_name. If only one name is given, put it in last_name and leave first_name empty.\\n    *   Observation: \\\"Van der Meulen, Ageus Jacobus\\\"\\n    *   Last Name: \\\"Van der Meulen\\\"\\n    *   First Name: \\\"Ageus Jacobus\\\"\\n\\n*   **Publication:**\\n    *   Rule 3:\\n        *   title: \\\"Studies over het ministerie van Van de Spiegel.\\\"\\n        *   year: 1905\\n        *   place: \\\"Leiden\\\"\\n        *   pages: \\\"XI, 559 W.\\\" -> Remove \\\" S.\\\" suffix if present. Here it is \\\"W.\\\" (likely for \\\"Werk\\\" or similar, but the rule says remove \\\" S.\\\" suffix). I will keep \\\"XI, 559 W.\\\" or just \\\"XI, 559\\\". The rule says \\\"remove ' S.' suffix if present\\\". It doesn't say remove 'W.'. I will keep the text as is but clean up spaces. \\\"XI, 559 W.\\\"\\n        *   publisher: \\\"Kooyker\\\"\\n        *   format: \\\"8.\\\" -> \\\"8\u00b0\\\" or \\\"8\\\". The text says \\\"8.\\\". I will use \\\"8\u00b0\\\" as per standard notation or just \\\"8\\\". The rule says \\\"Usually '8\u00b0', '8'\\\", or '4\u00b0'\\\". I'll use \\\"8\u00b0\\\" to match the rule's expectation, or just \\\"8\\\". Let's look at the text: \\\"8.\\\". I will normalize to \\\"8\u00b0\\\".\\n\\n*   **Library Reference:**\\n    *   Rule 4:\\n        *   shelfmark: \\\"AT 27\\\" (Often begins with \\\"Diss.\\\" or \\\"AT\\\", may be marked with \\\"Standort:\\\")\\n        *   subjects: \\\"Diss. Groningen 1905\\\" -> This looks like the dissertation info, not necessarily a subject classification. However, looking at the structure, \\\"AT 27\\\" is the shelfmark. \\\"Diss. Groningen 1905\\\" describes the work. Is there a subject? No specific subject keywords like \\\"History\\\" or \\\"Politics\\\".\\n        *   Wait, let's re-read the shelfmark rule. \\\"Often begins with 'Diss.' or 'AT'\\\". Here we have \\\"AT 27\\\". So shelfmark is \\\"AT 27\\\".\\n        *   What about \\\"Diss. Groningen \",\"reasoning_details\":[{\"type\":\"reasoning.text\",\"text\":\"The user wants me to extract bibliographic information from an image of a library card and return it as a structured JSON object.\\n\\n**1. Analyze the Image:**\\nThe image shows a typewritten library card.\\n- **Author Line:** \\\"Van der Meulen, Ageus Jacobus\\\"\\n- **Title Line:** \\\"Studies over het ministerie van Van de Spiegel.\\\"\\n- **Publication Info:** \\\"Leiden: Kooyker 1905. XI, 559 W. (incl. Stellingen). 8.\\\"\\n- **Library Reference Line:** \\\"AT 27 Diss. Groningen 1905\\\"\\n\\n**2. Apply Extraction Rules:**\\n\\n*   **Card Type:**\\n    *   Rule 1: If a card contains the note \\\"s.\\\" on a separate line, it is a \\\"Reference\\\". Otherwise, it is a \\\"Dissertation or thesis\\\".\\n    *   Observation: The card mentions \\\"Diss. Groningen 1905\\\". It does not have a separate line with just \\\"s.\\\". It looks like a dissertation card.\\n    *   Decision: \\\"Dissertation or thesis\\\"\\n\\n*   **Author:**\\n    *   Rule 2: Extract last_name and first_name. If only one name is given, put it in last_name and leave first_name empty.\\n    *   Observation: \\\"Van der Meulen, Ageus Jacobus\\\"\\n    *   Last Name: \\\"Van der Meulen\\\"\\n    *   First Name: \\\"Ageus Jacobus\\\"\\n\\n*   **Publication:**\\n    *   Rule 3:\\n        *   title: \\\"Studies over het ministerie van Van de Spiegel.\\\"\\n        *   year: 1905\\n        *   place: \\\"Leiden\\\"\\n        *   pages: \\\"XI, 559 W.\\\" -> Remove \\\" S.\\\" suffix if present. Here it is \\\"W.\\\" (likely for \\\"Werk\\\" or similar, but the rule says remove \\\" S.\\\" suffix). I will keep \\\"XI, 559 W.\\\" or just \\\"XI, 559\\\". The rule says \\\"remove ' S.' suffix if present\\\". It doesn't say remove 'W.'. I will keep the text as is but clean up spaces. \\\"XI, 559 W.\\\"\\n        *   publisher: \\\"Kooyker\\\"\\n        *   format: \\\"8.\\\" -> \\\"8\u00b0\\\" or \\\"8\\\". The text says \\\"8.\\\". I will use \\\"8\u00b0\\\" as per standard notation or just \\\"8\\\". The rule says \\\"Usually '8\u00b0', '8'\\\", or '4\u00b0'\\\". I'll use \\\"8\u00b0\\\" to match the rule's expectation, or just \\\"8\\\". Let's look at the text: \\\"8.\\\". I will normalize to \\\"8\u00b0\\\".\\n\\n*   **Library Reference:**\\n    *   Rule 4:\\n        *   shelfmark: \\\"AT 27\\\" (Often begins with \\\"Diss.\\\" or \\\"AT\\\", may be marked with \\\"Standort:\\\")\\n        *   subjects: \\\"Diss. Groningen 1905\\\" -> This looks like the dissertation info, not necessarily a subject classification. However, looking at the structure, \\\"AT 27\\\" is the shelfmark. \\\"Diss. Groningen 1905\\\" describes the work. Is there a subject? No specific subject keywords like \\\"History\\\" or \\\"Politics\\\".\\n        *   Wait, let's re-read the shelfmark rule. \\\"Often begins with 'Diss.' or 'AT'\\\". Here we have \\\"AT 27\\\". So shelfmark is \\\"AT 27\\\".\\n        *   What about \\\"Diss. Groningen \",\"format\":\"unknown\",\"index\":0}]},\"native_finish_reason\":null,\"error\":{\"code\":502,\"message\":\"Network connection lost.\",\"metadata\":{\"error_type\":\"provider_unavailable\"}}}],\"created\":1776819303,\"model\":\"qwen/qwen3.5-9b-20260310\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":null,\"usage\":{\"completion_tokens\":666,\"prompt_tokens\":2619,\"total_tokens\":3285,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":0,\"reasoning_tokens\":666,\"rejected_prediction_tokens\":null,\"image_tokens\":0},\"prompt_tokens_details\":{\"audio_tokens\":0,\"cached_tokens\":0,\"cache_write_tokens\":0,\"video_tokens\":0},\"cost\":0.0003618,\"is_byok\":false,\"cost_details\":{\"upstream_inference_cost\":0.0003618,\"upstream_inference_prompt_cost\":0.0002619,\"upstream_inference_completions_cost\":0.0000999}},\"provider\":\"Together\"}"
+}

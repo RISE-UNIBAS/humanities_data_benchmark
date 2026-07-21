@@ -67,6 +67,7 @@ class PricingUpdater:
         'gpt-5.2-2025-12-11':  'https://developers.openai.com/api/docs/models/gpt-5.2',
         'gpt-5.3-codex':       'https://developers.openai.com/api/docs/models/gpt-5.3-codex',
         'gpt-5.4-2026-03-05':  'https://developers.openai.com/api/docs/models/gpt-5.4',
+        'gpt-5.5-2026-04-23':  'https://developers.openai.com/api/docs/models/gpt-5.5',
         'o3':                  'https://developers.openai.com/api/docs/models/o3',
     }
 
@@ -81,11 +82,14 @@ class PricingUpdater:
     DEEPSEEK_MODEL_URLS = {
         'deepseek-chat':     'https://api-docs.deepseek.com/quick_start/pricing',
         'deepseek-reasoner': 'https://api-docs.deepseek.com/quick_start/pricing',
+        'deepseek-v4-flash': 'https://api-docs.deepseek.com/quick_start/pricing',
+        'deepseek-v4-pro':   'https://api-docs.deepseek.com/quick_start/pricing',
     }
 
     MISTRAL_MODEL_URLS = {
         'mistral-large-2512':    'https://docs.mistral.ai/models/mistral-large-3-25-12',
         'mistral-large-2411':    'https://docs.mistral.ai/models/mistral-large-2-1-24-11',
+        'mistral-medium-3.5':    'https://docs.mistral.ai/models/model-cards/mistral-medium-3-5-26-04',
         'mistral-medium-2508':   'https://docs.mistral.ai/models/mistral-medium-3-1-25-08',
         'mistral-medium-2505':   'https://docs.mistral.ai/models/mistral-medium-3-25-05',
         'mistral-small-2506':    'https://docs.mistral.ai/models/mistral-small-3-2-25-06',
@@ -840,10 +844,12 @@ Return only JSON:"""
     # Maps provider -> base URL for single-page providers
     XAI_MODEL_URLS = {
         'grok-4.20-0309-reasoning': 'https://docs.x.ai/developers/models/grok-4.20-beta-0309-reasoning',
+        'grok-4.3':                 'https://docs.x.ai/developers/models/grok-4.3',
     }
 
     ALIBABA_MODEL_URLS = {
         'qwen3.5-plus': 'https://www.alibabacloud.com/help/en/model-studio/getting-started/models',
+        'qwen3.5-plus-2026-02-15': 'https://www.alibabacloud.com/help/en/model-studio/getting-started/models',
         'qwen3.5-35b-a3b': 'https://www.alibabacloud.com/help/en/model-studio/getting-started/models',
         'qwen3.5-27b': 'https://www.alibabacloud.com/help/en/model-studio/getting-started/models',
         'qwen3.5-122b-a10b': 'https://www.alibabacloud.com/help/en/model-studio/getting-started/models',
@@ -853,7 +859,31 @@ Return only JSON:"""
 
     GENAI_MODEL_URLS = {
         'gemini-3.1-flash-lite-preview': 'https://ai.google.dev/gemini-api/docs/gemini-3',
+        'gemini-3.1-flash-lite':         'https://ai.google.dev/gemini-api/docs/pricing#gemini-3.1-flash-lite',
         'gemini-3.1-pro-preview':        'https://ai.google.dev/gemini-api/docs/gemini-3',
+        'gemini-3.5-flash':              'https://ai.google.dev/gemini-api/docs/pricing',
+    }
+
+    OPENROUTER_MODEL_URLS = {
+        'google/gemma-4-26b-a4b-it':      'https://openrouter.ai/google/gemma-4-26b-a4b-it',
+        'google/gemma-4-31b-it':          'https://openrouter.ai/google/gemma-4-31b-it',
+        'meta-llama/llama-4-maverick':    'https://openrouter.ai/meta-llama/llama-4-maverick',
+        'qwen/qwen3-vl-30b-a3b-instruct': 'https://openrouter.ai/qwen/qwen3-vl-30b-a3b-instruct',
+        'qwen/qwen3-vl-8b-instruct':      'https://openrouter.ai/qwen/qwen3-vl-8b-instruct',
+        'qwen/qwen3-vl-8b-thinking':      'https://openrouter.ai/qwen/qwen3-vl-8b-thinking',
+        'qwen/qwen3.7-plus':              'https://openrouter.ai/qwen/qwen3.7-plus',
+        'qwen/qwen3.6-plus':              'https://openrouter.ai/qwen/qwen3.6-plus',
+        'qwen/qwen3.6-plus-04-02':        'https://openrouter.ai/qwen/qwen3.6-plus',
+        'qwen/qwen3.5-122b-a10b':         'https://openrouter.ai/qwen/qwen3.5-122b-a10b',
+        'qwen/qwen3.5-27b':               'https://openrouter.ai/qwen/qwen3.5-27b',
+        'qwen/qwen3.5-35b-a3b':           'https://openrouter.ai/qwen/qwen3.5-35b-a3b',
+        'qwen/qwen3.5-397b-a17b':         'https://openrouter.ai/qwen/qwen3.5-397b-a17b',
+        'qwen/qwen3.5-plus-02-15':        'https://openrouter.ai/qwen/qwen3.5-plus-02-15',
+        'qwen/qwen3.5-flash-02-23':       'https://openrouter.ai/qwen/qwen3.5-flash-02-23',
+        'qwen/qwen3.5-9b':                'https://openrouter.ai/qwen/qwen3.5-9b',
+        'x-ai/grok-4':                    'https://openrouter.ai/x-ai/grok-4',
+        'meta-llama/llama-4-scout': 'https://openrouter.ai/meta-llama/llama-4-scout',
+        'stepfun/step-3.7-flash': 'https://openrouter.ai/stepfun/step-3.7-flash',
     }
 
     PROVIDER_URLS = {
@@ -878,7 +908,7 @@ Return only JSON:"""
         elif provider == 'alibaba':
             return self.ALIBABA_MODEL_URLS.get(model, "")
         elif provider == 'openrouter':
-            return f"https://openrouter.ai/{model}"
+            return self.OPENROUTER_MODEL_URLS.get(model, f"https://openrouter.ai/{model}")
         elif provider == 'x-ai':
             return self.XAI_MODEL_URLS.get(model, "")
         return ""

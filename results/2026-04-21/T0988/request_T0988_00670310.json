@@ -1,0 +1,89 @@
+{
+    "text": "",
+    "model": "qwen/qwen3.5-9b-20260310",
+    "provider": "openrouter",
+    "finish_reason": "unknown",
+    "usage": {
+        "input_tokens": 1912,
+        "output_tokens": 1223,
+        "total_tokens": 3135,
+        "input_cost_usd": 0.0001912,
+        "output_cost_usd": 0.00018345,
+        "estimated_cost_usd": 0.00037465
+    },
+    "duration": 39.45653510093689,
+    "timestamp": "2026-04-21T20:10:35.038931",
+    "conversation_id": "e2ad8576-1817-4b7c-8a85-2e7ee128b19e",
+    "score": {
+        "f1_score": 0.0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "true_positives": 0,
+        "false_positives": 0,
+        "false_negatives": 8,
+        "field_scores": {
+            "": {
+                "response": null,
+                "ground_truth": null,
+                "score": 1.0
+            },
+            "publication.year": {
+                "response": null,
+                "ground_truth": 1819,
+                "score": 0.0
+            },
+            "publication.publisher": {
+                "response": null,
+                "ground_truth": null,
+                "score": 1.0
+            },
+            "library_reference.shelfmark": {
+                "response": null,
+                "ground_truth": null,
+                "score": 1.0
+            },
+            "publication.place": {
+                "response": null,
+                "ground_truth": "Berolini",
+                "score": 0.0
+            },
+            "library_reference.subjects": {
+                "response": null,
+                "ground_truth": null,
+                "score": 1.0
+            },
+            "publication.pages": {
+                "response": null,
+                "ground_truth": "32",
+                "score": 0.0
+            },
+            "author.last_name": {
+                "response": null,
+                "ground_truth": "Wunsch",
+                "score": 0.0
+            },
+            "publication.format": {
+                "response": null,
+                "ground_truth": "8\u00b0",
+                "score": 0.0
+            },
+            "type.type": {
+                "response": null,
+                "ground_truth": "Dissertation or thesis",
+                "score": 0.0
+            },
+            "author.first_name": {
+                "response": null,
+                "ground_truth": "Car. Anton",
+                "score": 0.0
+            },
+            "publication.title": {
+                "response": null,
+                "ground_truth": "De capitis laesionibus quae trepanationem exigunt addita pueri trepanationis ope feliciter sanati historia",
+                "score": 0.0
+            }
+        },
+        "total_fields": 12
+    },
+    "raw_response": "{\"id\":\"gen-1776794995-yn25GGtSUiWQFHKIZJFB\",\"choices\":[{\"finish_reason\":null,\"index\":0,\"logprobs\":null,\"message\":{\"content\":null,\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":null,\"reasoning\":\"The user wants me to extract bibliographic information from an image of an index card.\\nThe output must be a specific JSON structure.\\n\\n**1. Analyze the Image:**\\nThe image shows a handwritten or typed index card.\\nText visible:\\n- \\\"Wunsch, Car. Anton. (geb. Heiligenstadt 17. 4. 1790): De capitis laesionibus quae trepanationem exigunt addita pueri trepanationis ope feliciter sanati historia. Berolini (1819). (32 S.) 8\u00b0\\\"\\n- \\\"Berlin, Med. Diss. v. 8. Juni 1819\\\"\\n\\n**2. Apply Extraction Rules:**\\n\\n*   **Card Type**:\\n    *   Rule: If \\\"s.\\\" is on a separate line, it's a \\\"Reference\\\". Otherwise, \\\"Dissertation or thesis\\\".\\n    *   Observation: The text \\\"(32 S.)\\\" is part of the main line, not on a separate line as a standalone note indicating a reference card type in the specific sense of the rule (which usually implies a bibliography entry vs a full citation). Wait, let's look closer. The rule says \\\"If a card contains the note 's.' on a separate line\\\". Here, \\\"S.\\\" is part of \\\"(32 S.)\\\" which indicates pages. It is not a standalone note like \\\"s.\\\" meaning \\\"see\\\". The text \\\"Med. Diss.\\\" clearly indicates a Medical Dissertation. So, Type is \\\"Dissertation or thesis\\\".\\n\\n*   **Author**:\\n    *   Text: \\\"Wunsch, Car. Anton.\\\"\\n    *   Last name: Wunsch\\n    *   First name: Car. Anton. (I will clean this up to \\\"Car. Anton.\\\" or \\\"Anton Car.\\\"? The prompt asks for \\\"first_name\\\". Usually, \\\"Car. Anton.\\\" is the first name part. Let's put \\\"Car. Anton.\\\" as the first name).\\n\\n*   **Publication**:\\n    *   **title**: \\\"De capitis laesionibus quae trepanationem exigunt addita pueri trepanationis ope feliciter sanati historia.\\\"\\n    *   **year**: \\\"1819\\\" (from \\\"Berolini (1819)\\\" and \\\"v. 8. Juni 1819\\\").\\n    *   **place**: \\\"Berolini\\\" (Berlin).\\n    *   **pages**: \\\"(32 S.)\\\" -> \\\"32\\\". The rule says \\\"remove 'S.' suffix if present\\\". So \\\"32\\\".\\n    *   **publisher**: \\\"Med. Diss.\\\" implies it's a dissertation, but usually, the publisher is the university press or just the city. The text says \\\"Berlin, Med. Diss.\\\". Let's look for a specific publisher. It says \\\"Berlin, Med. Diss. v. 8. Juni 1819\\\". This is the location and type. The publisher field might be empty or \\\"Med. Diss.\\\" if interpreted loosely, but usually, dissertations are published by the university. Let's look at the structure. \\\"Berolini (1819)\\\" is the main citation. \\\"Berlin, Med. Diss. v. 8. Juni 1819\\\" is the specific detail.\\n    *   Let's refine the fields based on standard bibliographic parsing.\\n        *   Title: De capitis laesionibus quae trepanationem exigunt addita pueri trepanationis ope feliciter sanati historia.\\n        *   Year: 1819\\n        *   Place: Berolini\\n        *   Pages: 32\\n        *   Publisher: The text \\\"Med. Diss.\\\" is the type. The actual publisher isn't explicitly named like \\\"G. Reimer\\\", but \\\"Med. Diss.\\\" acts as the descriptor. However, looking at the second line \\\"Berlin, Med. Diss.\\\", it confirms the place and type. I will leave publisher empty or put \\\"Med. Diss.\\\" if it fits. The rule says \\\"Publishing house/institution\\\". \\\"Med. Diss.\\\" isn't a house. I'll leave it empty or check if \\\"Berlin\\\" covers it. Wait, the rule says \\\"place: Publication place\\\". \\\"Berolini\\\" is the place. \\\"Med. Diss.\\\" is the type. I will leave publisher empty as no specific printer is named.\\n        *   Format: \\\"8\u00b0\\\"\\n\\n*   **Library Reference**:\\n    *   **shelfmark**: The text \\\"Berlin, Med. Diss. v. 8. Juni 1819\\\" looks like a library catalog entry or a specific reference note. It's not a standard shelfmark like \\\"AT 123\\\". However, the rule says \\\"Often begins with 'Diss.' or 'AT'\\\". This text starts with \\\"Berlin\\\". It might be the location of the dissertation. Let's look at the structure again.\\n    *   The card seems to be a bibliographic card.\\n    *   The text \\\"Berlin, Med. Diss. v. 8. Juni 1819\\\" is likely the specific reference to the dissertation held in Berlin.\\n    *   Let's check the \\\"shelfmark\\\" rule: \\\"Often begins with 'Diss.' or 'AT'\\\". This text doesn't.\\n    *   Let's check \\\"subjects\\\": None visible.\\n    *   Maybe the whole second line is the library reference? \\\"Berlin, Med. Diss. v. 8. Juni 1819\\\".\\n    *   Let's re-read the card.\\n    *   Line 1: Wunsch, Car. Anton. ... Berolini (1819). (32 S.) 8\u00b0\\n    *   Line 2: Berlin, Med. Diss. v. 8. Juni 1819\\n    *   This looks like a card from a library catalog (like the Berlin State Library). The second line is the specific holding info.\\n    *   Shelfmark: It's not a standard shelfmark. But \\\"Berlin, Med. Diss.\\\" acts as the identifier. I will put \\\"Berlin, Med. Diss. v. 8. Juni 1819\\\" in shelfmark or just \\\"Berlin\\\". Let's look at the prompt's example logic. \\\"Often begins with 'Diss.' or 'AT'\\\". This doesn't fit perfectly.\\n    *   Actually, looking closely at the image, there is a black dot at the bottom.\\n    *   Let's reconsider the \\\"Library\",\"reasoning_details\":[{\"type\":\"reasoning.text\",\"text\":\"The user wants me to extract bibliographic information from an image of an index card.\\nThe output must be a specific JSON structure.\\n\\n**1. Analyze the Image:**\\nThe image shows a handwritten or typed index card.\\nText visible:\\n- \\\"Wunsch, Car. Anton. (geb. Heiligenstadt 17. 4. 1790): De capitis laesionibus quae trepanationem exigunt addita pueri trepanationis ope feliciter sanati historia. Berolini (1819). (32 S.) 8\u00b0\\\"\\n- \\\"Berlin, Med. Diss. v. 8. Juni 1819\\\"\\n\\n**2. Apply Extraction Rules:**\\n\\n*   **Card Type**:\\n    *   Rule: If \\\"s.\\\" is on a separate line, it's a \\\"Reference\\\". Otherwise, \\\"Dissertation or thesis\\\".\\n    *   Observation: The text \\\"(32 S.)\\\" is part of the main line, not on a separate line as a standalone note indicating a reference card type in the specific sense of the rule (which usually implies a bibliography entry vs a full citation). Wait, let's look closer. The rule says \\\"If a card contains the note 's.' on a separate line\\\". Here, \\\"S.\\\" is part of \\\"(32 S.)\\\" which indicates pages. It is not a standalone note like \\\"s.\\\" meaning \\\"see\\\". The text \\\"Med. Diss.\\\" clearly indicates a Medical Dissertation. So, Type is \\\"Dissertation or thesis\\\".\\n\\n*   **Author**:\\n    *   Text: \\\"Wunsch, Car. Anton.\\\"\\n    *   Last name: Wunsch\\n    *   First name: Car. Anton. (I will clean this up to \\\"Car. Anton.\\\" or \\\"Anton Car.\\\"? The prompt asks for \\\"first_name\\\". Usually, \\\"Car. Anton.\\\" is the first name part. Let's put \\\"Car. Anton.\\\" as the first name).\\n\\n*   **Publication**:\\n    *   **title**: \\\"De capitis laesionibus quae trepanationem exigunt addita pueri trepanationis ope feliciter sanati historia.\\\"\\n    *   **year**: \\\"1819\\\" (from \\\"Berolini (1819)\\\" and \\\"v. 8. Juni 1819\\\").\\n    *   **place**: \\\"Berolini\\\" (Berlin).\\n    *   **pages**: \\\"(32 S.)\\\" -> \\\"32\\\". The rule says \\\"remove 'S.' suffix if present\\\". So \\\"32\\\".\\n    *   **publisher**: \\\"Med. Diss.\\\" implies it's a dissertation, but usually, the publisher is the university press or just the city. The text says \\\"Berlin, Med. Diss.\\\". Let's look for a specific publisher. It says \\\"Berlin, Med. Diss. v. 8. Juni 1819\\\". This is the location and type. The publisher field might be empty or \\\"Med. Diss.\\\" if interpreted loosely, but usually, dissertations are published by the university. Let's look at the structure. \\\"Berolini (1819)\\\" is the main citation. \\\"Berlin, Med. Diss. v. 8. Juni 1819\\\" is the specific detail.\\n    *   Let's refine the fields based on standard bibliographic parsing.\\n        *   Title: De capitis laesionibus quae trepanationem exigunt addita pueri trepanationis ope feliciter sanati historia.\\n        *   Year: 1819\\n        *   Place: Berolini\\n        *   Pages: 32\\n        *   Publisher: The text \\\"Med. Diss.\\\" is the type. The actual publisher isn't explicitly named like \\\"G. Reimer\\\", but \\\"Med. Diss.\\\" acts as the descriptor. However, looking at the second line \\\"Berlin, Med. Diss.\\\", it confirms the place and type. I will leave publisher empty or put \\\"Med. Diss.\\\" if it fits. The rule says \\\"Publishing house/institution\\\". \\\"Med. Diss.\\\" isn't a house. I'll leave it empty or check if \\\"Berlin\\\" covers it. Wait, the rule says \\\"place: Publication place\\\". \\\"Berolini\\\" is the place. \\\"Med. Diss.\\\" is the type. I will leave publisher empty as no specific printer is named.\\n        *   Format: \\\"8\u00b0\\\"\\n\\n*   **Library Reference**:\\n    *   **shelfmark**: The text \\\"Berlin, Med. Diss. v. 8. Juni 1819\\\" looks like a library catalog entry or a specific reference note. It's not a standard shelfmark like \\\"AT 123\\\". However, the rule says \\\"Often begins with 'Diss.' or 'AT'\\\". This text starts with \\\"Berlin\\\". It might be the location of the dissertation. Let's look at the structure again.\\n    *   The card seems to be a bibliographic card.\\n    *   The text \\\"Berlin, Med. Diss. v. 8. Juni 1819\\\" is likely the specific reference to the dissertation held in Berlin.\\n    *   Let's check the \\\"shelfmark\\\" rule: \\\"Often begins with 'Diss.' or 'AT'\\\". This text doesn't.\\n    *   Let's check \\\"subjects\\\": None visible.\\n    *   Maybe the whole second line is the library reference? \\\"Berlin, Med. Diss. v. 8. Juni 1819\\\".\\n    *   Let's re-read the card.\\n    *   Line 1: Wunsch, Car. Anton. ... Berolini (1819). (32 S.) 8\u00b0\\n    *   Line 2: Berlin, Med. Diss. v. 8. Juni 1819\\n    *   This looks like a card from a library catalog (like the Berlin State Library). The second line is the specific holding info.\\n    *   Shelfmark: It's not a standard shelfmark. But \\\"Berlin, Med. Diss.\\\" acts as the identifier. I will put \\\"Berlin, Med. Diss. v. 8. Juni 1819\\\" in shelfmark or just \\\"Berlin\\\". Let's look at the prompt's example logic. \\\"Often begins with 'Diss.' or 'AT'\\\". This doesn't fit perfectly.\\n    *   Actually, looking closely at the image, there is a black dot at the bottom.\\n    *   Let's reconsider the \\\"Library\",\"format\":\"unknown\",\"index\":0}]},\"native_finish_reason\":null}],\"created\":1776794995,\"model\":\"qwen/qwen3.5-9b-20260310\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":null,\"usage\":{\"completion_tokens\":1223,\"prompt_tokens\":1912,\"total_tokens\":3135,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":0,\"reasoning_tokens\":1223,\"rejected_prediction_tokens\":null,\"image_tokens\":0},\"prompt_tokens_details\":{\"audio_tokens\":0,\"cached_tokens\":0,\"cache_write_tokens\":0,\"video_tokens\":0},\"cost\":0.00037465,\"is_byok\":false,\"cost_details\":{\"upstream_inference_cost\":0.00037465,\"upstream_inference_prompt_cost\":0.0001912,\"upstream_inference_completions_cost\":0.00018345}},\"provider\":\"Together\"}"
+}
