@@ -50,22 +50,6 @@ Key fields:
 - **planned_on_current_unit**: `true` if the icon has no red shading, `false` if the icon has red shading
 - **alternate_unit**: Unit abbreviation shown below the cell (e.g. "LE", "TS") if present, null otherwise. Multiple abbreviations for the same date are joined with a comma (e.g. "LE, TS").
 
-## Editor
-
-`editor/editor.html` is a browser-based correction tool for ground truth JSON files. Open it directly in Chrome/Edge/Opera (File System Access API required for in-place saves; other browsers fall back to downloads).
-
-Workflow:
-1. Pick the `images/` folder and the `ground_truths/` folder. Files are paired by basename.
-2. Optionally pick an output folder (defaults to the browser's download directory).
-3. Click a row in the sidebar to load the image + JSON. Edit person metadata, days, and shifts.
-4. Click "JSON Speichern" to write the file.
-
-Behavior worth knowing:
-- Same-date day entries are auto-merged into a single day with a combined `shifts` array on load and before save.
-- Edits are cached in memory per file, so switching files and back preserves unsaved changes.
-- "+ Tag anfügen" appends a day to the end; the calendar-plus button on each day inserts a day directly below.
-- Shifts can be split into `half_left` / `half_right` halves on the same date.
-
 ## Scoring
 
 **F1 Micro** with field-level fuzzy matching (threshold: 0.92, rapidfuzz).
