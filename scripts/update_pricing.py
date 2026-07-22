@@ -122,7 +122,9 @@ class PricingUpdater:
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
             'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
             'Accept-Language': 'en-US,en;q=0.5',
-            'Accept-Encoding': 'gzip, deflate, br',
+            # No 'br': requests only decodes gzip/deflate unless a brotli decoder is
+            # installed, and an undecoded brotli body garbles into replacement chars.
+            'Accept-Encoding': 'gzip, deflate',
             'Connection': 'keep-alive',
             'Upgrade-Insecure-Requests': '1',
             'Sec-Fetch-Dest': 'document',
@@ -387,6 +389,22 @@ Return only JSON:"""
                 content = content.split("\n", 1)[-1]
                 content = content.rsplit("```", 1)[0].strip()
 
+            # Isolate the first balanced {...} object so leading/trailing prose (or
+            # JSON followed by an explanatory paragraph) doesn't break json.loads.
+            # Note: does not special-case braces inside string values — safe here because
+            # pricing keys/values are model names and numbers, never braces.
+            start = content.find("{")
+            if start != -1:
+                depth = 0
+                for i in range(start, len(content)):
+                    if content[i] == "{":
+                        depth += 1
+                    elif content[i] == "}":
+                        depth -= 1
+                        if depth == 0:
+                            content = content[start:i + 1]
+                            break
+
             pricing = json.loads(content)
 
             # Validate structure
@@ -470,7 +488,9 @@ Return only JSON:"""
         return True
 
     # Domains that require a full browser (JS-rendered pricing tables)
-    BROWSER_REQUIRED_DOMAINS = {'docs.mistral.ai'}  # Domains that require JS rendering
+    # Domains whose pricing is rendered client-side (JS) — the server HTML has no prices,
+    # so they must go through the headless browser. Match is on the www-stripped netloc.
+    BROWSER_REQUIRED_DOMAINS = {'docs.mistral.ai', 'alibabacloud.com'}
 
     def _fetch_page_content(self, url: str) -> Optional[str]:
         """Fetch a URL as plain text, using headless browser for JS-heavy sites"""
@@ -646,14 +666,20 @@ Return only JSON:"""
         )
 
     def scrape_anthropic_pricing(self, models: Optional[List[str]] = None) -> Dict[str, Dict]:
-        """Scrape Anthropic pricing page"""
+        """Scrape Anthropic pricing page.
+
+        Uses the API pricing docs page (per-MTok table), not www.anthropic.com/pricing
+        which is the consumer/subscription page and carries no per-token API rates.
+        """
         return self._scrape_single_page(
-            url="https://www.anthropic.com/pricing",
+            url="https://docs.claude.com/en/docs/about-claude/pricing",
             provider="anthropic",
             models=models,
             additional_instructions=(
-                "IMPORTANT: Use the standard API input and output prices. "
-                "Ignore Batch API rates, Prompt Caching rates, and any other rate types."
+                "IMPORTANT: Prices are listed per model as '$N / MTok'. Use the base "
+                "Input and Output per-MTok rates; ignore cache-write, cache-read/hit, "
+                "Batch API, and priority rates. Match display names like 'Claude Opus 4.5' "
+                "to the requested model ids."
             )
         )
 
@@ -887,7 +913,7 @@ Return only JSON:"""
     }
 
     PROVIDER_URLS = {
-        'anthropic': 'https://www.anthropic.com/pricing',
+        'anthropic': 'https://docs.claude.com/en/docs/about-claude/pricing',
         'genai':     'https://ai.google.dev/gemini-api/docs/pricing',
     }
 
@@ -1065,14 +1091,25 @@ Return only JSON:"""
         print(f"Archived {len(archived_map)}/{len(urls)} URLs")
         return archived_map
 
-    def generate_pricing_update(self, target_date: str, force: bool = False) -> Dict:
+    def generate_pricing_update(self, target_date: str, force: bool = False,
+                                exclude_providers: Optional[List[str]] = None) -> Dict:
         """Generate pricing updates for the target date
 
         Args:
             target_date: Target date in YYYY-MM-DD format
             force: If True, update all models regardless of recent pricing
+            exclude_providers: Provider names to skip entirely (case-insensitive)
         """
+        excluded = {p.lower() for p in (exclude_providers or [])}
         models_needing_pricing = self.get_models_needing_pricing(target_date, force=force)
+
+        if excluded:
+            skipped = sorted(p for p in models_needing_pricing if p.lower() in excluded)
+            models_needing_pricing = {
+                p: m for p, m in models_needing_pricing.items() if p.lower() not in excluded
+            }
+            if skipped:
+                print(f"Excluding providers: {', '.join(skipped)}")
 
         if not models_needing_pricing:
             print("✓ All non-legacy models have pricing for this date!")
@@ -1095,18 +1132,18 @@ Return only JSON:"""
             print(f"\n{provider}:")
             scraped = self.scrape_pricing(provider, models)
 
-            if scraped:
-                # Only keep models that actually needed pricing
-                needed = set(models)
-                new_pricing[provider] = {
-                    m: v for m, v in scraped.items() if m in needed
-                }
-            else:
-                # Create manual entry templates
-                print(f"  Creating manual entry templates for {len(models)} models")
-                new_pricing[provider] = {}
-                for model in models:
-                    new_pricing[provider][model] = self.create_manual_entry_template()
+            # Keep only scraped models that were actually needed, then fall back to a
+            # manual entry template for every needed model the scrape did not return.
+            # A partial scrape must not silently drop the models it missed.
+            needed = set(models)
+            scraped = {m: v for m, v in (scraped or {}).items() if m in needed}
+            new_pricing[provider] = {
+                model: (scraped[model] if model in scraped else self.create_manual_entry_template())
+                for model in models
+            }
+            n_templates = len(models) - len(scraped)
+            if n_templates:
+                print(f"  Created manual entry templates for {n_templates}/{len(models)} models")
 
         return new_pricing
 
@@ -1195,12 +1232,17 @@ Examples:
 
   Force update all models (ignore 30-day rule):
     python scripts/update_pricing.py --date 2026-02-10 --force
+
+  Exclude one or more providers:
+    python scripts/update_pricing.py --date 2026-02-10 --exclude-providers mistral cohere
         """
     )
     parser.add_argument('--date', required=True, help='Target date (YYYY-MM-DD)')
     parser.add_argument('--dry-run', action='store_true', help='Show changes without applying')
     parser.add_argument('--force', action='store_true',
                         help='Update all models, ignoring 30-day pricing cache')
+    parser.add_argument('--exclude-providers', nargs='*', default=[], metavar='PROVIDER',
+                        help='Provider name(s) to skip entirely (e.g. --exclude-providers mistral cohere)')
     parser.add_argument('--debug-browser', action='store_true',
                         help='Run browser in visible mode for debugging')
 
@@ -1216,22 +1258,45 @@ Examples:
     base_dir = Path(__file__).parent.parent
     updater = PricingUpdater(base_dir, debug_browser=args.debug_browser)
 
+    # Warn on unknown provider names (likely a typo) — compare against providers in the CSV
+    if args.exclude_providers:
+        known = set(updater.load_models_from_csv().keys())
+        unknown = [p for p in args.exclude_providers if p.lower() not in known]
+        if unknown:
+            print(f"⚠️  Unknown provider(s) in --exclude-providers: {', '.join(unknown)}")
+            print(f"    Known providers: {', '.join(sorted(known))}")
+
     print("=" * 70)
     print(f"Pricing Updater for {args.date}")
     if args.force:
         print("Mode: FORCE (updating all models)")
+    if args.exclude_providers:
+        print(f"Excluding: {', '.join(args.exclude_providers)}")
     print("=" * 70)
 
     # Generate pricing updates
-    new_pricing = updater.generate_pricing_update(args.date, force=args.force)
+    new_pricing = updater.generate_pricing_update(
+        args.date, force=args.force, exclude_providers=args.exclude_providers)
 
     if not new_pricing:
         return
 
-    # Collect unique raw URLs that need archiving
+    # Any source_url already stored for this date that is a Wayback archive is kept as-is:
+    # re-runs (including --force) must not re-archive or clobber a good archived link
+    # (e.g. overwrite it with a bare URL when archiving happens to fail this time).
+    existing_for_date = updater.load_pricing_json().get('pricing', {}).get(args.date, {})
+
+    def existing_archived_source(provider, model):
+        entry = existing_for_date.get(provider, {}).get(model)
+        url = (entry or {}).get('source_url') or ''
+        return url if 'web.archive.org' in url else None
+
+    # Collect unique raw URLs that need archiving (skip models that already have an archive)
     raw_urls = set()
     for provider, models in new_pricing.items():
         for model in models:
+            if existing_archived_source(provider, model):
+                continue
             url = updater.get_source_url(provider, model)
             if url:
                 raw_urls.add(url)
@@ -1242,8 +1307,12 @@ Examples:
     # Set source_url and added on each model entry (once)
     for provider, models in new_pricing.items():
         for model, entry in models.items():
-            raw_url = updater.get_source_url(provider, model)
-            entry['source_url'] = archived_map.get(raw_url, raw_url)
+            kept = existing_archived_source(provider, model)
+            if kept:
+                entry['source_url'] = kept
+            else:
+                raw_url = updater.get_source_url(provider, model)
+                entry['source_url'] = archived_map.get(raw_url, raw_url)
             entry['added'] = args.date
 
     # Alert on price changes vs previous data
