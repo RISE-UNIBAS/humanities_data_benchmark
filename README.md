@@ -570,7 +570,7 @@ This project is developed by a multidisciplinary team at the University of Basel
 | Pema Frick                  | [@pwmff](https://github.com/pwmff)                     | [0000-0002-8733-7161](https://orcid.org/0000-0002-8733-7161) |
 | Maximilian Hindermann       | [@MHindermann](https://github.com/MHindermann)         | [0000-0002-9337-4655](https://orcid.org/0000-0002-9337-4655) |
 | Lea Kasper                  | [@lekasp](https://github.com/lekasp)                   | [0000-0002-4671-1700](https://orcid.org/0000-0002-4671-1700) |
-| Ana-Maria Leonte            | —                                                      | —                                                            |
+| Ana-Maria Leonte            | —                                                      | [0009-0005-4678-2807](https://orcid.org/0009-0005-4678-2807) |
 | José Luis Losada Palenzuela | [@editio](https://github.com/editio)                   | [0000-0002-6530-1328](https://orcid.org/0000-0002-6530-1328) |
 | Sven Lienhard               | —                                                      | [0009-0005-9981-4286](https://orcid.org/0009-0005-9981-4286) |
 | Sorin Marti                 | [@sorinmarti](https://github.com/sorinmarti)           | [0000-0002-9541-1202](https://orcid.org/0000-0002-9541-1202) |
@@ -578,7 +578,7 @@ This project is developed by a multidisciplinary team at the University of Basel
 | Ina Serif                   | [@wissen-ist-acht](https://github.com/wissen-ist-acht) | [0000-0003-2419-4252](https://orcid.org/0000-0003-2419-4252) |
 | Elena Spadini               | [@elespdn](https://github.com/elespdn)                 | [0000-0002-4522-2833](https://orcid.org/0000-0002-4522-2833) |
 | Tabea Wullschleger          | [@tabea-w](https://github.com/tabea-w) | [0000-0001-9841-0005](https://orcid.org/0000-0001-9841-0005) |
-| Franziska Zúñiga            | —                                                      | —                                                            |
+| Franziska Zúñiga            | —                                                      | [0000-0002-8844-4903](https://orcid.org/0000-0002-8844-4903) |
 
 For detailed attribution by benchmark and contribution type, see our [CONTRIBUTORS.md](CONTRIBUTORS.md) file.
 
