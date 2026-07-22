@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>pricing.json editor</title>
+<style>
+  :root {
+    --bg: #f6f7f9; --panel: #fff; --border: #d9dce1; --text: #1c2024;
+    --muted: #6b7280; --accent: #2563eb; --miss-bg: #fff1f0; --miss-border: #f3b0ac;
+    --warn-bg: #fff8e6; --warn-border: #f0d488; --ok: #16794c;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; font: 14px/1.45 -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+         color: var(--text); background: var(--bg); }
+  header { position: sticky; top: 0; z-index: 5; background: var(--panel);
+           border-bottom: 1px solid var(--border); padding: 10px 16px; }
+  h1 { font-size: 16px; margin: 0 0 8px; }
+  .row { display: flex; flex-wrap: wrap; gap: 10px 16px; align-items: center; }
+  .row + .row { margin-top: 8px; }
+  button { font: inherit; padding: 6px 12px; border: 1px solid var(--border);
+           background: #fff; border-radius: 6px; cursor: pointer; }
+  button.primary { background: var(--accent); color: #fff; border-color: var(--accent); }
+  button:disabled { opacity: .5; cursor: not-allowed; }
+  label.chk { display: inline-flex; align-items: center; gap: 6px; cursor: pointer; }
+  input[type="search"], input.txt { font: inherit; padding: 5px 8px; border: 1px solid var(--border); border-radius: 6px; }
+  input[type="search"] { min-width: 220px; }
+  .muted { color: var(--muted); }
+  .meta { font-size: 13px; }
+  .meta b { font-variant-numeric: tabular-nums; }
+  .counts { font-weight: 600; }
+  .counts .n { color: var(--accent); font-variant-numeric: tabular-nums; }
+  main { padding: 12px 16px 60px; }
+  table { border-collapse: collapse; width: 100%; background: var(--panel);
+          border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+  th, td { padding: 6px 8px; border-bottom: 1px solid var(--border); text-align: left; vertical-align: middle; }
+  th { position: sticky; top: 92px; background: #eef0f3; font-size: 12px; text-transform: uppercase;
+       letter-spacing: .03em; color: var(--muted); z-index: 3; }
+  td.mono, th.mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+  tr.incomplete { background: var(--miss-bg); }
+  input.price { width: 90px; text-align: right; font-variant-numeric: tabular-nums; }
+  input.url { width: 100%; min-width: 260px; }
+  input.added { width: 110px; }
+  input.miss { background: var(--miss-bg); border-color: var(--miss-border); }
+  input.warn { background: var(--warn-bg); border-color: var(--warn-border); }
+  .pill { display: inline-block; padding: 1px 7px; border-radius: 10px; font-size: 11px; font-weight: 600; }
+  .pill.ok { color: var(--ok); background: #e6f4ec; }
+  .pill.miss { color: #b42318; background: #fde3e0; }
+  .empty { padding: 40px; text-align: center; color: var(--muted); }
+  .toast { position: fixed; bottom: 16px; left: 50%; transform: translateX(-50%);
+           background: #1c2024; color: #fff; padding: 8px 16px; border-radius: 8px;
+           opacity: 0; transition: opacity .2s; pointer-events: none; z-index: 10; }
+  .toast.show { opacity: 1; }
+</style>
+</head>
+<body>
+<header>
+  <h1>pricing.json editor <span class="muted" style="font-weight:400">— fill in missing prices &amp; source URLs (complements <code>update_pricing.py</code>)</span></h1>
+  <div class="row">
+    <button id="openBtn" class="primary">Open pricing.json…</button>
+    <button id="saveBtn" disabled>Save</button>
+    <span id="fileName" class="muted">no file loaded</span>
+    <span class="meta muted" id="metaInfo"></span>
+  </div>
+  <div class="row">
+    <input type="search" id="search" placeholder="filter by date / provider / model…" disabled>
+    <label class="chk"><input type="checkbox" id="onlyIncomplete" checked> only incomplete</label>
+    <label class="chk"><input type="checkbox" id="bump" checked> on save: bump version &amp; set last_updated to today</label>
+    <span class="counts"><span class="n" id="cIncomplete">0</span> incomplete&nbsp;/&nbsp;<span id="cTotal">0</span> entries</span>
+  </div>
+</header>
+<main>
+  <div id="tableWrap"><div class="empty">Open <code>pricing.json</code> to begin. In-place saving needs Chrome, Edge, or Opera; other browsers download the edited file.</div></div>
+</main>
+<div class="toast" id="toast"></div>
+
+<script>
+"use strict";
+const state = { handle: null, data: null, priceTokens: [], nl: "\n" };
+
+// ---- number formatting: mirror Python json.dumps float repr ----
+function jsnum(v) {
+  return Number.isInteger(v) ? v.toFixed(1) : String(v);
+}
+
+// ---- serializer: byte-identical to json.dumps(indent=2), preserving
+//      original price literals for prices the user did not change ----
+function serialize(data) {
+  const tokens = state.priceTokens;
+  let idx = 0;
+  function ser(v, ind, key) {
+    const pad = "  ".repeat(ind), pad1 = "  ".repeat(ind + 1);
+    if (key === "input_price" || key === "output_price") {
+      const tok = tokens[idx++];
+      if (v === null) return "null";
+      if (tok !== undefined && tok !== "null" && Number(tok) === v) return tok; // unchanged
+      return jsnum(v);                                                          // changed / filled
+    }
+    if (v === null) return "null";
+    if (typeof v === "boolean") return v ? "true" : "false";
+    if (typeof v === "number") return jsnum(v);
+    if (typeof v === "string") return JSON.stringify(v);
+    if (Array.isArray(v)) {
+      if (v.length === 0) return "[]";
+      return "[\n" + v.map(x => pad1 + ser(x, ind + 1)).join(",\n") + "\n" + pad + "]";
+    }
+    const keys = Object.keys(v);
+    if (keys.length === 0) return "{}";
+    return "{\n" + keys.map(k => pad1 + JSON.stringify(k) + ": " + ser(v[k], ind + 1, k)).join(",\n") + "\n" + pad + "}";
+  }
+  return ser(data, 0, null);
+}
+
+function todayISO() {
+  const d = new Date(), p = n => String(n).padStart(2, "0");
+  return `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())}`;
+}
+function nextVersion(v) {
+  const parts = String(v).split(".");
+  const minor = parseInt(parts[parts.length - 1], 10);
+  parts[parts.length - 1] = String((isNaN(minor) ? 0 : minor) + 1);
+  return parts.join(".");
+}
+
+// ---- entry model ----
+function entries() {
+  const out = [];
+  const pricing = state.data.pricing || {};
+  for (const date of Object.keys(pricing))
+    for (const prov of Object.keys(pricing[date]))
+      for (const model of Object.keys(pricing[date][prov]))
+        out.push({ date, prov, model, e: pricing[date][prov][model] });
+  return out;
+}
+const priceMissing = e => e.input_price === null || e.input_price === undefined
+                       || e.output_price === null || e.output_price === undefined;
+const urlMissing   = e => !e.source_url;
+const isIncomplete = e => priceMissing(e) || urlMissing(e);
+const isArchive    = u => typeof u === "string" && u.includes("web.archive.org");
+
+// ---- rendering ----
+function render() {
+  const all = entries();
+  const onlyInc = document.getElementById("onlyIncomplete").checked;
+  const q = document.getElementById("search").value.trim().toLowerCase();
+  const rows = all.filter(r => {
+    if (onlyInc && !isIncomplete(r.e)) return false;
+    if (q && !(`${r.date} ${r.prov} ${r.model}`.toLowerCase().includes(q))) return false;
+    return true;
+  });
+
+  const incCount = all.filter(r => isIncomplete(r.e)).length;
+  document.getElementById("cIncomplete").textContent = incCount;
+  document.getElementById("cTotal").textContent = all.length;
+
+  const wrap = document.getElementById("tableWrap");
+  if (rows.length === 0) {
+    wrap.innerHTML = `<div class="empty">${all.length ? "Nothing matches the current filter." : "No entries."}</div>`;
+    return;
+  }
+  const th = `<tr><th>Date</th><th>Provider</th><th>Model</th><th class="mono">input $/M</th>
+    <th class="mono">output $/M</th><th>source_url</th><th>added</th><th>status</th></tr>`;
+  const body = rows.map(r => {
+    const e = r.e;
+    const k = `${r.date}|${r.prov}|${r.model}`;
+    const inMiss = (e.input_price === null || e.input_price === undefined) ? "miss" : "";
+    const outMiss = (e.output_price === null || e.output_price === undefined) ? "miss" : "";
+    const urlCls = urlMissing(e) ? "miss" : (isArchive(e.source_url) ? "" : "warn");
+    const status = isIncomplete(e)
+      ? `<span class="pill miss">incomplete</span>`
+      : `<span class="pill ok">complete</span>`;
+    const ip = (e.input_price ?? "");
+    const op = (e.output_price ?? "");
+    return `<tr class="${isIncomplete(e) ? "incomplete" : ""}">
+      <td class="mono">${r.date}</td><td>${r.prov}</td><td class="mono">${escapeHtml(r.model)}</td>
+      <td><input class="txt price ${inMiss}" type="number" step="any" min="0" value="${ip}" data-k="${escapeAttr(k)}" data-f="input_price"></td>
+      <td><input class="txt price ${outMiss}" type="number" step="any" min="0" value="${op}" data-k="${escapeAttr(k)}" data-f="output_price"></td>
+      <td><input class="txt url ${urlCls}" type="text" value="${escapeAttr(e.source_url ?? "")}" data-k="${escapeAttr(k)}" data-f="source_url" placeholder="https://web.archive.org/web/…"></td>
+      <td><input class="txt added" type="text" value="${escapeAttr(e.added ?? "")}" data-k="${escapeAttr(k)}" data-f="added"></td>
+      <td>${status}</td></tr>`;
+  }).join("");
+  wrap.innerHTML = `<table><thead>${th}</thead><tbody>${body}</tbody></table>`;
+}
+
+function escapeHtml(s) { return String(s).replace(/[&<>]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" }[c])); }
+function escapeAttr(s) { return String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c])); }
+
+// ---- edits ----
+document.getElementById("tableWrap").addEventListener("input", ev => {
+  const el = ev.target;
+  if (!el.dataset || !el.dataset.k) return;
+  const [date, prov, model] = el.dataset.k.split("|");
+  const f = el.dataset.f;
+  const e = state.data.pricing[date][prov][model];
+  if (f === "input_price" || f === "output_price") {
+    e[f] = el.value.trim() === "" ? null : Number(el.value);
+  } else {
+    e[f] = el.value;
+  }
+  // live restyle of this input + its row without a full re-render (keeps focus)
+  if (f === "input_price" || f === "output_price")
+    el.classList.toggle("miss", e[f] === null);
+  if (f === "source_url")
+    el.className = "txt url " + (!e.source_url ? "miss" : (isArchive(e.source_url) ? "" : "warn"));
+  const tr = el.closest("tr");
+  if (tr) tr.classList.toggle("incomplete", isIncomplete(e));
+  document.getElementById("cIncomplete").textContent = entries().filter(r => isIncomplete(r.e)).length;
+});
+
+// ---- open ----
+async function openFile() {
+  if (window.showOpenFilePicker) {
+    try {
+      const [h] = await window.showOpenFilePicker({
+        types: [{ description: "JSON", accept: { "application/json": [".json"] } }]
+      });
+      state.handle = h;
+      const file = await h.getFile();
+      loadText(await file.text(), h.name);
+    } catch (err) { if (err.name !== "AbortError") toast("Open failed: " + err.message); }
+  } else {
+    const inp = document.createElement("input");
+    inp.type = "file"; inp.accept = ".json,application/json";
+    inp.onchange = async () => { if (inp.files[0]) loadText(await inp.files[0].text(), inp.files[0].name); };
+    inp.click();
+  }
+}
+
+function loadText(text, name) {
+  try {
+    state.data = JSON.parse(text);
+  } catch (err) { toast("Invalid JSON: " + err.message); return; }
+  state.nl = text.includes("\r\n") ? "\r\n" : "\n";
+  state.priceTokens = (text.match(/"(?:input_price|output_price)":\s*(?:null|-?\d+(?:\.\d+)?)/g) || [])
+    .map(m => m.replace(/^.*:\s*/, ""));
+  document.getElementById("fileName").textContent = name;
+  document.getElementById("saveBtn").disabled = false;
+  document.getElementById("search").disabled = false;
+  updateMetaInfo();
+  render();
+  toast(`Loaded ${entries().length} entries`);
+}
+
+function updateMetaInfo() {
+  const m = state.data.metadata || {};
+  const bump = document.getElementById("bump").checked;
+  const verTxt = bump ? `${m.version} → <b>${nextVersion(m.version)}</b>` : `<b>${m.version}</b>`;
+  const dateTxt = bump ? `${m.last_updated} → <b>${todayISO()}</b>` : `<b>${m.last_updated}</b>`;
+  document.getElementById("metaInfo").innerHTML = `version ${verTxt} · last_updated ${dateTxt}`;
+}
+
+// ---- save ----
+async function save() {
+  if (!state.data) return;
+  if (document.getElementById("bump").checked) {
+    state.data.metadata.version = nextVersion(state.data.metadata.version);
+    state.data.metadata.last_updated = todayISO();
+  }
+  const text = serialize(state.data).replace(/\n/g, state.nl);
+  // refresh token list from the just-serialized text so a second save stays byte-stable
+  state.priceTokens = (text.match(/"(?:input_price|output_price)":\s*(?:null|-?\d+(?:\.\d+)?)/g) || [])
+    .map(m => m.replace(/^.*:\s*/, ""));
+  if (state.handle) {
+    try {
+      const w = await state.handle.createWritable();
+      await w.write(text); await w.close();
+      toast("Saved to " + state.handle.name);
+    } catch (err) { toast("Save failed: " + err.message); return; }
+  } else {
+    const blob = new Blob([text], { type: "application/json" });
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob); a.download = "pricing.json"; a.click();
+    URL.revokeObjectURL(a.href);
+    toast("Downloaded pricing.json");
+  }
+  updateMetaInfo();
+}
+
+// ---- toast ----
+let toastTimer = null;
+function toast(msg) {
+  const t = document.getElementById("toast");
+  t.textContent = msg; t.classList.add("show");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove("show"), 2200);
+}
+
+document.getElementById("openBtn").onclick = openFile;
+document.getElementById("saveBtn").onclick = save;
+document.getElementById("onlyIncomplete").onchange = render;
+document.getElementById("search").oninput = render;
+document.getElementById("bump").onchange = () => { if (state.data) updateMetaInfo(); };
+window.addEventListener("keydown", e => {
+  if ((e.ctrlKey || e.metaKey) && e.key === "s") { e.preventDefault(); if (!document.getElementById("saveBtn").disabled) save(); }
+});
+</script>
+</body>
+</html>
