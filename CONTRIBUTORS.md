@@ -73,6 +73,16 @@ Contributions are categorized by benchmark and type of contribution, and in alph
 | Analyst | [Lea Kasper] |
 | Engineer | [Sorin Marti] |
 
+### [Duty Rosters](benchmarks/duty_rosters/)
+
+| Role          | Contributors                                                    |
+|---------------|-----------------------------------------------------------------|
+| Domain expert | [Ana-Maria Leonte], [Franziska Zúñiga]                          |
+| Data curator  | [Ana-Maria Leonte], [Franziska Zúñiga]                          |
+| Annotator     | [Maximilian Hindermann], [Ana-Maria Leonte], [Franziska Zúñiga] |
+| Analyst       | [Maximilian Hindermann]                                         |
+| Engineer      | [Maximilian Hindermann]                                         |
+
 ### [Fraktur Adverts](benchmarks/fraktur_adverts/)
 
 | Role | Contributors |
@@ -145,6 +155,7 @@ Contributions are categorized by benchmark and type of contribution, and in alph
 | Pema Frick                  | [@pwmff](https://github.com/pwmff)                     | [0000-0002-8733-7161](https://orcid.org/0000-0002-8733-7161) |
 | Maximilian Hindermann       | [@MHindermann](https://github.com/MHindermann)         | [0000-0002-9337-4655](https://orcid.org/0000-0002-9337-4655) |
 | Lea Kasper                  | [@lekasp](https://github.com/lekasp)                   | [0000-0002-4671-1700](https://orcid.org/0000-0002-4671-1700) |
+| Ana-Maria Leonte            | —                                                      | [0009-0005-4678-2807](https://orcid.org/0009-0005-4678-2807) |
 | José Luis Losada Palenzuela | [@editio](https://github.com/editio)                   | [0000-0002-6530-1328](https://orcid.org/0000-0002-6530-1328) |
 | Sven Lienhard               | —                                                      | [0009-0005-9981-4286](https://orcid.org/0009-0005-9981-4286) |
 | Sorin Marti                 | [@sorinmarti](https://github.com/sorinmarti)           | [0000-0002-9541-1202](https://orcid.org/0000-0002-9541-1202) |
@@ -152,6 +163,7 @@ Contributions are categorized by benchmark and type of contribution, and in alph
 | Ina Serif                   | [@wissen-ist-acht](https://github.com/wissen-ist-acht) | [0000-0003-2419-4252](https://orcid.org/0000-0003-2419-4252) |
 | Elena Spadini               | [@elespdn](https://github.com/elespdn)                 | [0000-0002-4522-2833](https://orcid.org/0000-0002-4522-2833) |
 | Tabea Wullschleger          | [@tabea-w](https://github.com/tabea-w) | [0000-0001-9841-0005](https://orcid.org/0000-0001-9841-0005) |
+| Franziska Zúñiga            | —                                                      | [0000-0002-8844-4903](https://orcid.org/0000-0002-8844-4903) |
 
 ## Contributing
 
@@ -176,9 +188,11 @@ For questions about contributions or attributions, please contact:
 [Pema Frick]: https://orcid.org/0000-0002-8733-7161
 [Maximilian Hindermann]: https://orcid.org/0000-0002-9337-4655
 [Lea Kasper]: https://orcid.org/0000-0002-4671-1700
+[Ana-Maria Leonte]: https://orcid.org/0009-0005-4678-2807
 [José Luis Losada Palenzuela]: https://orcid.org/0000-0002-6530-1328
 [Gabriel Müller]: https://orcid.org/0000-0001-8320-5148
 [Sorin Marti]: https://orcid.org/0000-0002-9541-1202
 [Ina Serif]: https://orcid.org/0000-0003-2419-4252
 [Elena Spadini]: https://orcid.org/0000-0002-4522-2833
-[Tabea Wullschleger]: #
+[Tabea Wullschleger]: https://orcid.org/0000-0001-9841-0005
+[Franziska Zúñiga]: https://orcid.org/0000-0002-8844-4903
