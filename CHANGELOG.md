@@ -35,6 +35,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - Marked `openrouter/x-ai/grok-4` as `legacy_test=true` (14 tests: T0265-T0270, T0304, T0336, T0401-T0402, T0481, T0620, T0793, T1272).
+- Marked 5 provider-deprecated Mistral models as `legacy_test=true` (75 tests): `magistral-medium-2509`, `magistral-small-2509`, `mistral-medium-2505`, `mistral-medium-2508`, `mistral-small-2506`.
 - `general_meeting_minutes`: disabled shared context (`use_shared_context` was `True` but no context files were configured, so the harness forced single-threaded runs and sent a context prompt with nothing attached); removed the empty `get_shared_context_files`/`get_shared_context_prompt` overrides and updated the benchmark README to match. Signatures are still scored as ordinary fields.
 
 ## [v0.5.2] - 2026-06-29

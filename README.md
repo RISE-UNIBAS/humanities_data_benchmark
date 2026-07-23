@@ -449,16 +449,16 @@ This benchmark suite currently tests models from the following providers:
 | | gemini-3.1-pro-preview                    | Gemini 3.1 Pro (preview)                                   |
 | | ~~gemini-3-pro-preview~~                  | ~~Gemini 3 Pro (preview)~~ (legacy)                        |
 | | gemini-3.5-flash                          | Gemini 3.5 Flash                                          |
-| **Mistral AI** | magistral-medium-2509                     | Magistral Medium (Sep 2025); reasoning                     |
-| | magistral-small-2509                      | Magistral Small (Sep 2025); reasoning                      |
+| **Mistral AI** | ~~magistral-medium-2509~~                 | ~~Magistral Medium (Sep 2025); reasoning~~ (legacy)        |
+| | ~~magistral-small-2509~~                  | ~~Magistral Small (Sep 2025); reasoning~~ (legacy)         |
 | | ministral-14b-2512                        | Ministral 3 14B (Dec 2025)                                 |
 | | ministral-8b-2512                         | Ministral 3 8B (Dec 2025)                                  |
 | | ~~mistral-large-2411~~                    | ~~Mistral Large (Nov 2024)~~ (legacy)                      |
 | | mistral-large-2512                        | Mistral Large (Dec 2025)                                   |
-| | mistral-medium-2505                       | Mistral Medium (May 2025)                                  |
-| | mistral-medium-2508                       | Mistral Medium (Aug 2025)                                  |
+| | ~~mistral-medium-2505~~                   | ~~Mistral Medium (May 2025)~~ (legacy)                     |
+| | ~~mistral-medium-2508~~                   | ~~Mistral Medium (Aug 2025)~~ (legacy)                     |
 | | mistral-medium-3.5                        | Mistral Medium 3.5 (Apr 2026)                              |
-| | mistral-small-2506                        | Mistral Small (Jun 2025)                                   |
+| | ~~mistral-small-2506~~                    | ~~Mistral Small (Jun 2025)~~ (legacy)                      |
 | | ~~pixtral-12b~~                           | ~~Pixtral 12B; multimodal~~ (legacy)                       |
 | | ~~pixtral-large-2411~~                    | ~~Pixtral Large (Nov 2024); multimodal~~ (legacy)          |
 | **OpenAI** | gpt-4.1                                   | GPT-4.1                                                    |
