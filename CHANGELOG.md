@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Tests on 2026-07-01: T1177-T1189 (13 tests) for Anthropic claude-sonnet-5 across all benchmarks
 - Tests on 2026-07-02: T1190-T1202 (13 tests) for Anthropic claude-fable-5 across all benchmarks
 - Tests on 2026-07-03: 57 `general_meeting_minutes` tests — T1209-T1218 (Anthropic), T1228-T1234 (GenAI), T1235-T1243 (Mistral), T1244-T1254 (OpenAI), T1255-T1271 (OpenRouter), T1273 (sciCORE), and T1274-T1275 (x-ai)
+- Tests on 2026-07-24: 37 `duty_rosters` tests — T1276-T1279, T1308-T1309, T1332, T1336, T1343-T1344 (Anthropic), T1281-T1284, T1311, T1334, T1342 (GenAI), T1287-T1289, T1337 (Mistral), T1293-T1303, T1310, T1312, T1333 (OpenAI), and T1313, T1338 (x-ai)
 - 65 new benchmark test configurations (T1203-T1275, excluding T1219 and T1221-T1227) extending `general_meeting_minutes` to all non-legacy multimodal models that lacked it, each using the standard `prompt.txt` (empirically the best-scoring of the five prompt variants) with the `MinutesPage` dataclass; OpenAI at temperature 1.0, all other providers at 0.0.
 - Unit test suite under `tests/`: `test_scoring_helper.py` and `test_benchmark_base_helpers.py` cover pure scoring/helper logic; `tests/integrity/` adds data-integrity guards (`integrity` marker) over `benchmarks_tests.csv` and `pricing.json`. Run logic-only with `pytest -m "not integrity"`.
 - Pricing-coverage guard: every non-legacy model in `benchmarks_tests.csv` must have an explicit exact-name entry in `pricing.json` with a usable numeric price (local providers, which have no per-token price, are exempt from the numeric requirement but still require an entry).
@@ -30,7 +31,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `update_pricing.py` scraping: dropped `br` from `Accept-Encoding` (undecoded brotli garbled OpenAI/Cohere pages), routed Alibaba through the headless browser, tolerate prose around the LLM's JSON, switched Anthropic to its API docs pricing page, stopped partial scrapes from silently dropping models (null template instead), and preserved existing archived `source_url`s on `--force` re-runs.
 - `blacklist_cards` and `bibliographic_data` `score_benchmark` raised `ZeroDivisionError` on an empty score list (an all-failed run), crashing the run; both now return `{"fuzzy": 0.0}` like `book_advert_xml`.
 - `pytest.ini` section header corrected from `[tool:pytest]` to `[pytest]`, so `addopts`, `testpaths`, and custom markers are actually applied (the `[tool:pytest]` form is only valid in `setup.cfg`/`tox.ini`).
-- Replaced 7 bare provider `source_url`s in `pricing.json` with Wayback Machine archive URLs (5 Mistral `docs.mistral.ai` pages, 2 Alibaba ModelStudio console pages)
 - `general_meeting_minutes`: `Entry.signature_present` had a trailing comma (`bool = False,`) making its default the tuple `(False,)` instead of the boolean `False`; removed unreachable `return scores` dead code in `score_request_answer`.
 
 ### Changed
