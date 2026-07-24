@@ -46,6 +46,9 @@
   .pill { display: inline-block; padding: 1px 7px; border-radius: 10px; font-size: 11px; font-weight: 600; }
   .pill.ok { color: var(--ok); background: #e6f4ec; }
   .pill.miss { color: #b42318; background: #fde3e0; }
+  button.del { border: 1px solid var(--miss-border); background: var(--miss-bg); color: #b42318;
+               border-radius: 6px; padding: 2px 8px; line-height: 1.2; cursor: pointer; font-size: 13px; }
+  button.del:hover { background: #fde3e0; }
   .empty { padding: 40px; text-align: center; color: var(--muted); }
   .toast { position: fixed; bottom: 16px; left: 50%; transform: translateX(-50%);
            background: #1c2024; color: #fff; padding: 8px 16px; border-radius: 8px;
@@ -76,7 +79,31 @@
 
 <script>
 "use strict";
-const state = { handle: null, data: null, priceTokens: [], nl: "\n" };
+const state = { handle: null, fileName: "pricing.json", data: null, priceLiterals: {}, nl: "\n" };
+
+// Ensure we can write back to the opened file (the picker grants read-only by default).
+async function ensureWritable(handle) {
+  const opts = { mode: "readwrite" };
+  if ((await handle.queryPermission(opts)) === "granted") return true;
+  return (await handle.requestPermission(opts)) === "granted";
+}
+
+// Map each price field to its original literal, keyed by date|provider|model|field
+// (path-keyed, not positional — so deleting/reordering entries can't misalign it).
+function buildPriceLiterals(text, data) {
+  const toks = (text.match(/"(?:input_price|output_price)":\s*(?:null|-?\d+(?:\.\d+)?)/g) || [])
+    .map(m => m.replace(/^.*:\s*/, ""));
+  const lit = {};
+  let i = 0;
+  const pricing = (data && data.pricing) || {};
+  for (const date of Object.keys(pricing))
+    for (const prov of Object.keys(pricing[date]))
+      for (const model of Object.keys(pricing[date][prov])) {
+        lit[`${date}|${prov}|${model}|input_price`] = toks[i++];
+        lit[`${date}|${prov}|${model}|output_price`] = toks[i++];
+      }
+  return lit;
+}
 
 // ---- number formatting: mirror Python json.dumps float repr ----
 function jsnum(v) {
@@ -86,14 +113,14 @@ function jsnum(v) {
 // ---- serializer: byte-identical to json.dumps(indent=2), preserving
 //      original price literals for prices the user did not change ----
 function serialize(data) {
-  const tokens = state.priceTokens;
-  let idx = 0;
-  function ser(v, ind, key) {
+  const lit = state.priceLiterals || {};
+  function ser(v, ind, key, path) {
     const pad = "  ".repeat(ind), pad1 = "  ".repeat(ind + 1);
     if (key === "input_price" || key === "output_price") {
-      const tok = tokens[idx++];
       if (v === null) return "null";
-      if (tok !== undefined && tok !== "null" && Number(tok) === v) return tok; // unchanged
+      // path = [...,"pricing",date,provider,model,field]; look up by that entry
+      const tok = lit[`${path[path.length - 4]}|${path[path.length - 3]}|${path[path.length - 2]}|${key}`];
+      if (tok !== undefined && tok !== "null" && Number(tok) === v) return tok; // unchanged -> verbatim
       return jsnum(v);                                                          // changed / filled
     }
     if (v === null) return "null";
@@ -102,13 +129,13 @@ function serialize(data) {
     if (typeof v === "string") return JSON.stringify(v);
     if (Array.isArray(v)) {
       if (v.length === 0) return "[]";
-      return "[\n" + v.map(x => pad1 + ser(x, ind + 1)).join(",\n") + "\n" + pad + "]";
+      return "[\n" + v.map((x, i) => pad1 + ser(x, ind + 1, null, path.concat(i))).join(",\n") + "\n" + pad + "]";
     }
     const keys = Object.keys(v);
     if (keys.length === 0) return "{}";
-    return "{\n" + keys.map(k => pad1 + JSON.stringify(k) + ": " + ser(v[k], ind + 1, k)).join(",\n") + "\n" + pad + "}";
+    return "{\n" + keys.map(k => pad1 + JSON.stringify(k) + ": " + ser(v[k], ind + 1, k, path.concat(k))).join(",\n") + "\n" + pad + "}";
   }
-  return ser(data, 0, null);
+  return ser(data, 0, null, []);
 }
 
 function todayISO() {
@@ -159,7 +186,7 @@ function render() {
     return;
   }
   const th = `<tr><th>Date</th><th>Provider</th><th>Model</th><th class="mono">input $/M</th>
-    <th class="mono">output $/M</th><th>source_url</th><th>added</th><th>status</th></tr>`;
+    <th class="mono">output $/M</th><th>source_url</th><th>added</th><th>status</th><th></th></tr>`;
   const body = rows.map(r => {
     const e = r.e;
     const k = `${r.date}|${r.prov}|${r.model}`;
@@ -177,7 +204,8 @@ function render() {
       <td><input class="txt price ${outMiss}" type="number" step="any" min="0" value="${op}" data-k="${escapeAttr(k)}" data-f="output_price"></td>
       <td><input class="txt url ${urlCls}" type="text" value="${escapeAttr(e.source_url ?? "")}" data-k="${escapeAttr(k)}" data-f="source_url" placeholder="https://web.archive.org/web/…"></td>
       <td><input class="txt added" type="text" value="${escapeAttr(e.added ?? "")}" data-k="${escapeAttr(k)}" data-f="added"></td>
-      <td>${status}</td></tr>`;
+      <td>${status}</td>
+      <td><button class="del" data-del="${escapeAttr(k)}" title="Delete this entry">✕</button></td></tr>`;
   }).join("");
   wrap.innerHTML = `<table><thead>${th}</thead><tbody>${body}</tbody></table>`;
 }
@@ -207,6 +235,21 @@ document.getElementById("tableWrap").addEventListener("input", ev => {
   document.getElementById("cIncomplete").textContent = entries().filter(r => isIncomplete(r.e)).length;
 });
 
+// ---- delete entry ----
+document.getElementById("tableWrap").addEventListener("click", ev => {
+  const btn = ev.target.closest("button.del");
+  if (!btn) return;
+  const [date, prov, model] = btn.dataset.del.split("|");
+  const p = state.data.pricing;
+  if (!p[date] || !p[date][prov] || !(model in p[date][prov])) return;
+  if (!confirm(`Delete ${date} · ${prov} · ${model}?`)) return;
+  delete p[date][prov][model];
+  if (Object.keys(p[date][prov]).length === 0) delete p[date][prov];   // drop empty provider
+  if (Object.keys(p[date]).length === 0) delete p[date];               // drop empty date
+  render();
+  toast(`Deleted ${prov}/${model} (${date}) — save to persist`);
+});
+
 // ---- open ----
 async function openFile() {
   if (window.showOpenFilePicker) {
@@ -231,8 +274,8 @@ function loadText(text, name) {
     state.data = JSON.parse(text);
   } catch (err) { toast("Invalid JSON: " + err.message); return; }
   state.nl = text.includes("\r\n") ? "\r\n" : "\n";
-  state.priceTokens = (text.match(/"(?:input_price|output_price)":\s*(?:null|-?\d+(?:\.\d+)?)/g) || [])
-    .map(m => m.replace(/^.*:\s*/, ""));
+  state.fileName = name || "pricing.json";
+  state.priceLiterals = buildPriceLiterals(text, state.data);
   document.getElementById("fileName").textContent = name;
   document.getElementById("saveBtn").disabled = false;
   document.getElementById("search").disabled = false;
@@ -257,21 +300,25 @@ async function save() {
     state.data.metadata.last_updated = todayISO();
   }
   const text = serialize(state.data).replace(/\n/g, state.nl);
-  // refresh token list from the just-serialized text so a second save stays byte-stable
-  state.priceTokens = (text.match(/"(?:input_price|output_price)":\s*(?:null|-?\d+(?:\.\d+)?)/g) || [])
-    .map(m => m.replace(/^.*:\s*/, ""));
+  // refresh literals from the just-serialized text so a second save stays byte-stable
+  state.priceLiterals = buildPriceLiterals(text, state.data);
   if (state.handle) {
     try {
+      if (!(await ensureWritable(state.handle))) {
+        toast("Write permission denied — cannot save to the opened file");
+        return;
+      }
       const w = await state.handle.createWritable();
       await w.write(text); await w.close();
       toast("Saved to " + state.handle.name);
     } catch (err) { toast("Save failed: " + err.message); return; }
   } else {
+    // No File System Access API: fall back to a download named after the opened file.
     const blob = new Blob([text], { type: "application/json" });
     const a = document.createElement("a");
-    a.href = URL.createObjectURL(blob); a.download = "pricing.json"; a.click();
+    a.href = URL.createObjectURL(blob); a.download = state.fileName || "pricing.json"; a.click();
     URL.revokeObjectURL(a.href);
-    toast("Downloaded pricing.json");
+    toast("Downloaded " + (state.fileName || "pricing.json"));
   }
   updateMetaInfo();
 }
