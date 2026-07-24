@@ -24,7 +24,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Pricing entries for `scicore/qwen35-397b-a17b-fp8` (0.0/0.0, internal cluster) and `alibaba/qwen3.5-plus-2026-02-15` (0.4/2.4); `pricing.json` metadata bumped to version 1.26 (last_updated 2026-07-01)
 - "Running the Tests" section in `CONTRIBUTING.md` documenting the pytest suite, the `integrity` marker, and CI enforcement
 - `duty_rosters` benchmark for extracting structured schedule data (shift icons, half-day splits, alternate-unit assignments, and staff metadata) from Swiss nursing staff duty rosters, scored with field-level F1 (micro/macro): 69 test configurations (T1276-T1344) covering all non-legacy multimodal models across all providers using the `Schedule` dataclass.
-- `scripts/data/pricing_editor.html`: browser-based editor for filling in missing `pricing.json` fields; and `update_pricing.py --exclude-providers` to skip providers in a run.
+- `scripts/data/pricing_editor.html`: browser-based editor for filling in missing `pricing.json` fields and deleting entries; and `update_pricing.py --exclude-providers` to skip providers in a run.
 
 ### Fixed
 - `update_pricing.py` scraping: dropped `br` from `Accept-Encoding` (undecoded brotli garbled OpenAI/Cohere pages), routed Alibaba through the headless browser, tolerate prose around the LLM's JSON, switched Anthropic to its API docs pricing page, stopped partial scrapes from silently dropping models (null template instead), and preserved existing archived `source_url`s on `--force` re-runs.
