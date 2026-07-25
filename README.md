@@ -420,6 +420,7 @@ This benchmark suite currently tests models from the following providers:
 | | claude-sonnet-4-6                         | Claude Sonnet 4.6                                          |
 | | claude-sonnet-5                           | Claude Sonnet 5                                            |
 | | claude-fable-5                            | Claude Fable 5                                             |
+| | claude-opus-5                             | Claude Opus 5                                             |
 | **Cohere** | command-a-03-2025                         | Command A (Mar 2025)                                       |
 | | command-a-vision-07-2025                  | Command A Vision (Jul 2025); multimodal                    |
 | | command-r-08-2024                         | Command R (Aug 2024)                                       |
@@ -449,6 +450,8 @@ This benchmark suite currently tests models from the following providers:
 | | gemini-3.1-pro-preview                    | Gemini 3.1 Pro (preview)                                   |
 | | ~~gemini-3-pro-preview~~                  | ~~Gemini 3 Pro (preview)~~ (legacy)                        |
 | | gemini-3.5-flash                          | Gemini 3.5 Flash                                          |
+| | gemini-3.6-flash                          | Gemini 3.6 Flash                                          |
+| | gemini-3.5-flash-lite                     | Gemini 3.5 Flash-Lite                                     |
 | **Mistral AI** | ~~magistral-medium-2509~~                 | ~~Magistral Medium (Sep 2025); reasoning~~ (legacy)        |
 | | ~~magistral-small-2509~~                  | ~~Magistral Small (Sep 2025); reasoning~~ (legacy)         |
 | | ministral-14b-2512                        | Ministral 3 14B (Dec 2025)                                 |
@@ -473,6 +476,9 @@ This benchmark suite currently tests models from the following providers:
 | | gpt-5.3-codex                             | GPT-5.3 Codex; coding                                      |
 | | gpt-5.4-2026-03-05                        | GPT-5.4 (Mar 2026)                                         |
 | | gpt-5.5-2026-04-23                        | GPT-5.5 (Apr 2026)                                         |
+| | gpt-5.6-sol                               | GPT-5.6 Sol                                                |
+| | gpt-5.6-terra                             | GPT-5.6 Terra                                              |
+| | gpt-5.6-luna                              | GPT-5.6 Luna                                               |
 | | gpt-5-mini                                | GPT-5 Mini                                                 |
 | | gpt-5-nano                                | GPT-5 Nano                                                 |
 | | o3                                        | OpenAI o3; reasoning                                       |
@@ -494,6 +500,7 @@ This benchmark suite currently tests models from the following providers:
 | | ~~x-ai/grok-4~~                           | ~~Grok 4; multimodal~~ (legacy)                            |
 | | meta-llama/llama-4-scout                  | Llama 4 Scout                                              |
 | | stepfun/step-3.7-flash                    | StepFun Step 3.7 Flash                                     |
+| | moonshotai/kimi-k3                        | Kimi K3                                                   |
 | **sciCORE** | ~~GLM-4.5V-FP8~~                              | ~~GLM-4.5V, FP8 quantization; multimodal (Univ. of Basel HPC)~~ (legacy) |
 | | ~~qwen3-235b-fp8~~                            | ~~Qwen3 235B, FP8 quantization (Univ. of Basel HPC)~~ (legacy)          |
 | | qwen35-397b-a17b-fp8                      | Qwen3.5 397B-A17B, FP8 quantization (Univ. of Basel HPC)   |

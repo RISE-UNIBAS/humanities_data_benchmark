@@ -68,6 +68,9 @@ class PricingUpdater:
         'gpt-5.3-codex':       'https://developers.openai.com/api/docs/models/gpt-5.3-codex',
         'gpt-5.4-2026-03-05':  'https://developers.openai.com/api/docs/models/gpt-5.4',
         'gpt-5.5-2026-04-23':  'https://developers.openai.com/api/docs/models/gpt-5.5',
+        'gpt-5.6-sol':         'https://developers.openai.com/api/docs/models/gpt-5.6-sol',
+        'gpt-5.6-terra':       'https://developers.openai.com/api/docs/models/gpt-5.6-terra',
+        'gpt-5.6-luna':        'https://developers.openai.com/api/docs/models/gpt-5.6-luna',
         'o3':                  'https://developers.openai.com/api/docs/models/o3',
     }
 
@@ -888,6 +891,8 @@ Return only JSON:"""
         'gemini-3.1-flash-lite':         'https://ai.google.dev/gemini-api/docs/pricing#gemini-3.1-flash-lite',
         'gemini-3.1-pro-preview':        'https://ai.google.dev/gemini-api/docs/gemini-3',
         'gemini-3.5-flash':              'https://ai.google.dev/gemini-api/docs/pricing',
+        'gemini-3.6-flash':              'https://ai.google.dev/gemini-api/docs/pricing',
+        'gemini-3.5-flash-lite':         'https://ai.google.dev/gemini-api/docs/pricing',
     }
 
     OPENROUTER_MODEL_URLS = {
@@ -910,6 +915,7 @@ Return only JSON:"""
         'x-ai/grok-4':                    'https://openrouter.ai/x-ai/grok-4',
         'meta-llama/llama-4-scout': 'https://openrouter.ai/meta-llama/llama-4-scout',
         'stepfun/step-3.7-flash': 'https://openrouter.ai/stepfun/step-3.7-flash',
+        'moonshotai/kimi-k3':             'https://openrouter.ai/moonshotai/kimi-k3',
     }
 
     PROVIDER_URLS = {

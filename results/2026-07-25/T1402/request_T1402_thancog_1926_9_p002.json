@@ -1,0 +1,48 @@
+{
+    "text": "{\"advertisements\":[{\"box\":[352.0,341.0,2315.0,1738.0]},{\"box\":[350.0,1790.0,2321.0,3183.0]}]}",
+    "model": "moonshotai/kimi-k3",
+    "provider": "openrouter",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 4217,
+        "output_tokens": 905,
+        "total_tokens": 5122,
+        "input_cost_usd": 0.012651,
+        "output_cost_usd": 0.013575,
+        "estimated_cost_usd": 0.026226
+    },
+    "duration": 32.36527395248413,
+    "timestamp": "2026-07-25T22:05:46.705675",
+    "parsed": {
+        "advertisements": [
+            {
+                "box": [
+                    352.0,
+                    341.0,
+                    2315.0,
+                    1738.0
+                ]
+            },
+            {
+                "box": [
+                    350.0,
+                    1790.0,
+                    2321.0,
+                    3183.0
+                ]
+            }
+        ]
+    },
+    "conversation_id": "2e748cb9-a2b1-4d89-b475-c62d8c6112fb",
+    "score": {
+        "f1": 1.0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "mean_iou": 0.98,
+        "true_positives": 2,
+        "false_positives": 0,
+        "false_negatives": 0,
+        "iou_threshold": 0.5
+    },
+    "raw_response": "{\"id\":\"gen-1785009915-2jrUptaX6KPWMHWpxGfp\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\\"advertisements\\\":[{\\\"box\\\":[352,341,2315,1738]},{\\\"box\\\":[350,1790,2321,3183]}]}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"advertisements\":[{\"box\":[352.0,341.0,2315.0,1738.0]},{\"box\":[350.0,1790.0,2321.0,3183.0]}]},\"reasoning\":\"The user wants me to extract all advertisements and return their bounding boxes. The page is 2479 x 3508 pixels.\\n\\nLooking at the image, there are two clear advertisements:\\n1. Cunard Line advertisement - top portion\\n2. Imperial Airways Ltd advertisement - bottom portion\\n\\nI need to estimate bounding boxes in pixel coordinates based on the original size 2479 x 3508.\\n\\nThe displayed image appears to be scaled. Let me estimate proportions.\\n\\nThe Cunard Line ad box:\\n- Left border around x=0.142 of width\\n- Right border around x=0.933 of width\\n- Top border around y=0.096 of height\\n- Bottom border around y=0.495 of height\\n\\nLet me compute for 2479 x 3508:\\n- Cunard: x0 \u2248 0.142 * 2479 \u2248 352, y0 \u2248 0.097 * 3508 \u2248 340, x1 \u2248 0.933 * 2479 \u2248 2313, y1 \u2248 0.496 * 3508 \u2248 1740\\n\\nLooking more carefully at the image:\\n- The Cunard ad outer border: left edge ~205/1447 = 0.1417, right edge ~1350/1447 = 0.933, top ~200/2048 = 0.0977, bottom ~1013/2048 = 0.4946\\n\\nWait, the image shown is 1447 x 2048 perhaps? The user says original is 2479 x 3508. Let me use proportions.\\n\\nLet me estimate from the image proportions directly.\\n\\nCunard Line advertisement bounding box (the framed box):\\n- Left: ~352 px (2479 * 0.142)\\n- Top: ~343 px (3508 * 0.0978)\\n- Right: ~2313 px (2479 * 0.933)\\n- Bottom: ~1738 px (3508 * 0.4955)\\n\\nImperial Airways advertisement bounding box (the framed box):\\n- Left: ~352 px (2479 * 0.142)\\n- Top: ~1790 px (3508 * 0.5103) \u2014 the second frame starts just below first\\n- Right: ~2318 px (2479 * 0.935)\\n- Bottom: ~3185 px (3508 * 0.908)\\n\\nLet me refine. Looking at the image:\\n- First ad frame top edge: around y=200 in displayed (2048 height) -> 200/2048*3508 = 342.6\\n- First ad frame bottom edge: around y=1010/2048*3508 = 1730\\n- Second ad frame top edge: around y=1045/2048*3508 = 1790\\n- Second ad frame bottom edge: around y=1855/2048*3508 = 3177\\n\\nLeft edge of frames: around x=207/1447*2479 = 354.7\\nRight edge of frames: around x=1350/1447*2479 = 2313\\n\\nLet me provide reasonable bounding boxes.\\n\\nActually, the image dimensions in the prompt: the image is shown, and original size is 2479 x 3508. I should give coordinates in that space.\\n\\nLet me set:\\nCunard: [352, 342, 2314, 1738]\\nImperial Airways: [350, 1790, 2320, 3183]\\n\\nLet me double check the bottom of imperial ad. The frame bottom is at about y=1855 in a 2048-tall displayed image. 1855/2048 = 0.9058. 0.9058*3508 = 3177. The ad frame bottom border looks like it's around 90.7% down. Let's say 3180.\\n\\nThe page itself extends further down to about y=1945/2048 (the page bottom), but the ad frame ends around 1855.\\n\\nI'll provide two advertisements.\\n\",\"reasoning_details\":[{\"type\":\"reasoning.text\",\"text\":\"The user wants me to extract all advertisements and return their bounding boxes. The page is 2479 x 3508 pixels.\\n\\nLooking at the image, there are two clear advertisements:\\n1. Cunard Line advertisement - top portion\\n2. Imperial Airways Ltd advertisement - bottom portion\\n\\nI need to estimate bounding boxes in pixel coordinates based on the original size 2479 x 3508.\\n\\nThe displayed image appears to be scaled. Let me estimate proportions.\\n\\nThe Cunard Line ad box:\\n- Left border around x=0.142 of width\\n- Right border around x=0.933 of width\\n- Top border around y=0.096 of height\\n- Bottom border around y=0.495 of height\\n\\nLet me compute for 2479 x 3508:\\n- Cunard: x0 \u2248 0.142 * 2479 \u2248 352, y0 \u2248 0.097 * 3508 \u2248 340, x1 \u2248 0.933 * 2479 \u2248 2313, y1 \u2248 0.496 * 3508 \u2248 1740\\n\\nLooking more carefully at the image:\\n- The Cunard ad outer border: left edge ~205/1447 = 0.1417, right edge ~1350/1447 = 0.933, top ~200/2048 = 0.0977, bottom ~1013/2048 = 0.4946\\n\\nWait, the image shown is 1447 x 2048 perhaps? The user says original is 2479 x 3508. Let me use proportions.\\n\\nLet me estimate from the image proportions directly.\\n\\nCunard Line advertisement bounding box (the framed box):\\n- Left: ~352 px (2479 * 0.142)\\n- Top: ~343 px (3508 * 0.0978)\\n- Right: ~2313 px (2479 * 0.933)\\n- Bottom: ~1738 px (3508 * 0.4955)\\n\\nImperial Airways advertisement bounding box (the framed box):\\n- Left: ~352 px (2479 * 0.142)\\n- Top: ~1790 px (3508 * 0.5103) \u2014 the second frame starts just below first\\n- Right: ~2318 px (2479 * 0.935)\\n- Bottom: ~3185 px (3508 * 0.908)\\n\\nLet me refine. Looking at the image:\\n- First ad frame top edge: around y=200 in displayed (2048 height) -> 200/2048*3508 = 342.6\\n- First ad frame bottom edge: around y=1010/2048*3508 = 1730\\n- Second ad frame top edge: around y=1045/2048*3508 = 1790\\n- Second ad frame bottom edge: around y=1855/2048*3508 = 3177\\n\\nLeft edge of frames: around x=207/1447*2479 = 354.7\\nRight edge of frames: around x=1350/1447*2479 = 2313\\n\\nLet me provide reasonable bounding boxes.\\n\\nActually, the image dimensions in the prompt: the image is shown, and original size is 2479 x 3508. I should give coordinates in that space.\\n\\nLet me set:\\nCunard: [352, 342, 2314, 1738]\\nImperial Airways: [350, 1790, 2320, 3183]\\n\\nLet me double check the bottom of imperial ad. The frame bottom is at about y=1855 in a 2048-tall displayed image. 1855/2048 = 0.9058. 0.9058*3508 = 3177. The ad frame bottom border looks like it's around 90.7% down. Let's say 3180.\\n\\nThe page itself extends further down to about y=1945/2048 (the page bottom), but the ad frame ends around 1855.\\n\\nI'll provide two advertisements.\\n\",\"format\":\"unknown\",\"index\":0}]},\"native_finish_reason\":\"stop\"}],\"created\":1785009915,\"model\":\"moonshotai/kimi-k3\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":\"fpv0_0d4e787e\",\"usage\":{\"completion_tokens\":905,\"prompt_tokens\":4217,\"total_tokens\":5122,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":0,\"reasoning_tokens\":858,\"rejected_prediction_tokens\":null,\"image_tokens\":0},\"prompt_tokens_details\":{\"audio_tokens\":0,\"cached_tokens\":0,\"cache_write_tokens\":0,\"video_tokens\":0},\"cost\":0.026226,\"is_byok\":false,\"cost_details\":{\"upstream_inference_cost\":0.026226,\"upstream_inference_prompt_cost\":0.012651,\"upstream_inference_completions_cost\":0.013575}},\"provider\":\"Moonshot AI\"}"
+}

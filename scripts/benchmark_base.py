@@ -44,9 +44,9 @@ class Benchmark(ABC):
             self.temperature = 0.5
 
         # TODO: hotfix, to be fixed in generic-llm-api-client
-        if self.model in ["gpt-5", "gpt-5-mini", "gpt-5-nano", "gpt-5.1-2025-11-13", "gpt-5.2", "o3", "gpt-5.5-2026-04-23", "gpt-5.3-codex"]:
+        if self.model in ["gpt-5", "gpt-5-mini", "gpt-5-nano", "gpt-5.1-2025-11-13", "gpt-5.2", "o3", "gpt-5.5-2026-04-23", "gpt-5.3-codex", "gpt-5.6-sol", "gpt-5.6-terra", "gpt-5.6-luna"]:
             self.temperature = 1
-        if self.model in ["claude-opus-4-7", "claude-opus-4-8", "claude-sonnet-5", "claude-fable-5"]:
+        if self.model in ["claude-opus-4-7", "claude-opus-4-8", "claude-sonnet-5", "claude-fable-5", "claude-opus-5"]:
             self.temperature = None
 
         # Prompt
