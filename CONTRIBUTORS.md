@@ -75,13 +75,13 @@ Contributions are categorized by benchmark and type of contribution, and in alph
 
 ### [Duty Rosters](benchmarks/duty_rosters/)
 
-| Role          | Contributors                                                    |
-|---------------|-----------------------------------------------------------------|
-| Domain expert | [Ana-Maria Leonte], [Franziska Zúñiga]                          |
-| Data curator  | [Ana-Maria Leonte], [Franziska Zúñiga]                          |
-| Annotator     | [Maximilian Hindermann], [Ana-Maria Leonte], [Franziska Zúñiga] |
-| Analyst       | [Maximilian Hindermann]                                         |
-| Engineer      | [Maximilian Hindermann]                                         |
+| Role          | Contributors                           |
+|---------------|----------------------------------------|
+| Domain expert | [Ana-Maria Leonte], [Franziska Zúñiga] |
+| Data curator  | [Ana-Maria Leonte], [Franziska Zúñiga] |
+| Annotator     | [Maximilian Hindermann]                |
+| Analyst       | [Maximilian Hindermann]                |
+| Engineer      | [Maximilian Hindermann]                |
 
 ### [Fraktur Adverts](benchmarks/fraktur_adverts/)
 
