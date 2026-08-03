@@ -154,11 +154,10 @@ def get_provider_ndr_csv():
     provider_names = {
         "openai": "OpenAI",
         "anthropic": "Anthropic",
-        "google": "Google",
+        "genai": "Google/Gemini",
         "cohere": "Cohere",
         "mistral": "Mistral AI",
-        "meta": "Meta",
-        "huggingface": "Hugging Face",
+        "contour_local": "OpenCV (local)",
         "x-ai": "xAI",
         "deepseek": "DeepSeek",
         "alibaba": "Alibaba",

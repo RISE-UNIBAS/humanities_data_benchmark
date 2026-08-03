@@ -12,20 +12,44 @@ from collections import defaultdict
 from scripts.ndr_export import EXPORT_PATH, PRICING_PATH, RESULTS_PATH
 
 # Color palettes
+# CVD-validated categorical palette (contour_local is a reserved neutral for
+# the non-LLM baseline and is deliberately gray)
 PROVIDER_COLORS = {
+    "alibaba": "#D6336C",
+    "anthropic": "#D19A55",
+    "cohere": "#2F7D3B",
+    "contour_local": "#888888",
+    "deepseek": "#00B8D9",
+    "genai": "#4285F4",
+    "mistral": "#E36414",
     "openai": "#10A37F",
-    "anthropic": "#D4A373",
-    "google": "#4285F4",
-    "cohere": "#39594D",
-    "mistral": "#FF7000",
-    "meta": "#0668E1",
-    "huggingface": "#FFD21E"
+    "openrouter": "#8B5CF6",
+    "scicore": "#A4343A",
+    "x-ai": "#2B4C9B"
+}
+
+PROVIDER_DISPLAY_NAMES = {
+    "alibaba": "Alibaba",
+    "anthropic": "Anthropic",
+    "cohere": "Cohere",
+    "contour_local": "OpenCV (local)",
+    "deepseek": "DeepSeek",
+    "genai": "Google/Gemini",
+    "mistral": "Mistral AI",
+    "openai": "OpenAI",
+    "openrouter": "OpenRouter",
+    "scicore": "sciCORE",
+    "x-ai": "xAI"
 }
 
 DEFAULT_COLORS = [
     "#1f77b4", "#ff7f0e", "#2ca02c", "#d62728", "#9467bd",
     "#8c564b", "#e377c2", "#7f7f7f", "#bcbd22", "#17becf"
 ]
+
+
+def provider_display_name(provider):
+    return PROVIDER_DISPLAY_NAMES.get(provider, provider.capitalize())
 
 
 def load_benchmark_export():
@@ -435,7 +459,7 @@ def create_box_plot_by_provider(benchmarks_data):
         traces.append({
             "type": "box",
             "y": provider_scores[provider],
-            "name": provider.capitalize(),
+            "name": provider_display_name(provider),
             "marker": {
                 "color": color
             },
@@ -614,15 +638,7 @@ def create_radar_chart_providers(benchmarks_data):
 
         color = PROVIDER_COLORS.get(provider, DEFAULT_COLORS[idx % len(DEFAULT_COLORS)])
 
-        # Capitalize provider name for display
-        provider_display = provider.capitalize()
-        if provider in ["openai", "anthropic", "google", "meta"]:
-            provider_display = {
-                "openai": "OpenAI",
-                "anthropic": "Anthropic",
-                "google": "Google",
-                "meta": "Meta"
-            }[provider]
+        provider_display = provider_display_name(provider)
 
         traces.append({
             "type": "scatterpolar",
@@ -792,15 +808,7 @@ def create_cost_effectiveness_scatter(benchmarks_data, pricing_data):
 
         color = PROVIDER_COLORS.get(provider, "#888888")
 
-        # Capitalize provider name
-        provider_display = provider.capitalize()
-        if provider in ["openai", "anthropic", "google", "meta"]:
-            provider_display = {
-                "openai": "OpenAI",
-                "anthropic": "Anthropic",
-                "google": "Google",
-                "meta": "Meta"
-            }[provider]
+        provider_display = provider_display_name(provider)
 
         traces.append({
             "type": "scatter",
@@ -975,15 +983,7 @@ def create_speed_performance_scatter(benchmarks_data):
 
         color = PROVIDER_COLORS.get(provider, "#888888")
 
-        # Capitalize provider name
-        provider_display = provider.capitalize()
-        if provider in ["openai", "anthropic", "google", "meta"]:
-            provider_display = {
-                "openai": "OpenAI",
-                "anthropic": "Anthropic",
-                "google": "Google",
-                "meta": "Meta"
-            }[provider]
+        provider_display = provider_display_name(provider)
 
         traces.append({
             "type": "scatter",

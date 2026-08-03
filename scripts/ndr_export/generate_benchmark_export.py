@@ -2,7 +2,7 @@ import json
 import os
 
 from scripts.ndr_export import BENCHMARKS_PATH, EXPORT_PATH, RESULTS_PATH
-from scripts.ndr_export.meta_utils import get_benchmarks, get_meta, load_json
+from scripts.ndr_export.meta_utils import calculate_normalized_score, get_benchmarks, get_meta, load_json
 from scripts.ndr_export.test_utils import get_all_tests
 
 
@@ -100,68 +100,6 @@ def generate_benchmark_export():
     with open(export_path, "w", encoding="utf-8") as f:
         json.dump(benchmark_export, f, indent=2, ensure_ascii=False)
 
-
-def calculate_normalized_score(scoring_data, benchmark_name):
-    """Calculate a normalized score (0-100) based on benchmark ranking configuration.
-
-    Args:
-        scoring_data: Dictionary with scoring metrics
-        benchmark_name: Name of the benchmark
-
-    Returns:
-        Normalized score (0-100) or None if not calculable
-    """
-    if not scoring_data:
-        return None
-
-    # Check for "niy" (not implemented yet)
-    if scoring_data.get("score") == "niy":
-        return None
-
-    # Get the benchmark's ranking configuration
-    meta = get_meta(benchmark_name)
-    ranking_config = meta.get("ranking")
-
-    if not ranking_config:
-        # No ranking config - try to use any available metric
-        for metric in ["fuzzy", "f1_macro", "accuracy", "precision", "recall"]:
-            if metric in scoring_data and scoring_data[metric] not in [None, "niy"]:
-                return min(100, max(0, scoring_data[metric] * 100))
-        return None
-
-    metric = ranking_config.get("metric")
-    order = ranking_config.get("order", "desc")
-
-    if not metric or metric not in scoring_data:
-        return None
-
-    score_value = scoring_data.get(metric)
-
-    if score_value is None or score_value == "niy":
-        return None
-
-    try:
-        score_value = float(score_value)
-    except (ValueError, TypeError):
-        return None
-
-    # Normalize based on metric type and order
-    # Check if score is already in 0-100 range (e.g., from fuzz.ratio)
-    # vs 0-1 range (e.g., from calculate_fuzzy_score)
-    if score_value > 1.0:
-        # Score is already in 0-100 range, no need to multiply
-        if order == "desc":
-            normalized = score_value
-        else:  # order == "asc"
-            normalized = max(0, 100 - score_value)
-    else:
-        # Score is in 0-1 range, multiply by 100
-        if order == "desc":
-            normalized = score_value * 100
-        else:  # order == "asc"
-            normalized = max(0, 100 - (score_value * 100))
-
-    return min(100, max(0, normalized))
 
 def get_benchmark_test_runs(benchmark_name, all_tests):
     """Get all actual test runs (with dates) for a given benchmark.

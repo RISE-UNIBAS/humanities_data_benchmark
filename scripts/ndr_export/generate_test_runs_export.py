@@ -2,7 +2,7 @@ import json
 import os
 
 from scripts.ndr_export import BENCHMARKS_PATH, RESULTS_PATH, EXPORT_PATH
-from scripts.ndr_export.meta_utils import get_meta, load_json
+from scripts.ndr_export.meta_utils import calculate_normalized_score, get_meta, load_json
 from scripts.ndr_export.test_utils import get_all_tests
 
 def load_prompt(benchmark_name, prompt_file):
@@ -30,68 +30,6 @@ def load_prompt(benchmark_name, prompt_file):
     except Exception as e:
         print(f"Error reading prompt file {prompt_path}: {e}")
         return None
-
-def calculate_normalized_score(scoring_data, benchmark_name):
-    """Calculate a normalized score (0-100) based on benchmark ranking configuration.
-
-    Args:
-        scoring_data: Dictionary with scoring metrics
-        benchmark_name: Name of the benchmark
-
-    Returns:
-        Normalized score (0-100) or None if not calculable
-    """
-    if not scoring_data:
-        return None
-
-    # Check for "niy" (not implemented yet)
-    if scoring_data.get("score") == "niy":
-        return None
-
-    # Get the benchmark's ranking configuration
-    meta = get_meta(benchmark_name)
-    ranking_config = meta.get("ranking")
-
-    if not ranking_config:
-        # No ranking config - try to use any available metric
-        # Prefer common metrics in order
-        for metric in ["fuzzy", "f1_macro", "accuracy", "precision", "recall"]:
-            if metric in scoring_data and scoring_data[metric] not in [None, "niy"]:
-                # Assume these are 0-1 metrics where higher is better
-                return min(100, max(0, scoring_data[metric] * 100))
-        return None
-
-    metric = ranking_config.get("metric")
-    order = ranking_config.get("order", "desc")
-
-    if not metric or metric not in scoring_data:
-        return None
-
-    score_value = scoring_data.get(metric)
-
-    if score_value is None or score_value == "niy":
-        return None
-
-    try:
-        score_value = float(score_value)
-    except (ValueError, TypeError):
-        return None
-
-    # Normalize based on metric type and order
-    if order == "desc":
-        # Higher is better (fuzzy, f1_macro, etc.)
-        # Assume 0-1 range, multiply by 100
-        normalized = score_value * 100
-    else:  # order == "asc"
-        # Lower is better (cer, error rates, etc.)
-        # For CER: 0 is perfect (100), 1 is bad (0)
-        # Use formula: max(0, 100 - score*100)
-        # This handles CER values > 1 by capping at 0
-        normalized = max(0, 100 - (score_value * 100))
-
-    # Ensure score is in 0-100 range
-    return min(100, max(0, normalized))
-
 
 def generate_test_runs_export():
     """Generate export data for all test runs.
