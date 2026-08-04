@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+- 2 new models: grok-4.5 (xAI), qwen/qwen3.8-max (OpenRouter)
+- 30 new benchmark test configurations (T1450-T1479) for the 2 new models across all benchmarks (15 tests each): grok-4.5 (T1450-T1464), qwen/qwen3.8-max (T1465-T1479)
+- Pricing data for 2026-08-04 (grok-4.5, qwen/qwen3.8-max; `pricing.json` metadata bumped to version 1.40)
+
+### Fixed
+- Added the missing `duty_rosters` entry to the Available Benchmarks table in `README.md`
+
 ## [v0.5.3] - 2026-08-04
 
 ### Added

@@ -874,6 +874,7 @@ Return only JSON:"""
     XAI_MODEL_URLS = {
         'grok-4.20-0309-reasoning': 'https://docs.x.ai/developers/models/grok-4.20-beta-0309-reasoning',
         'grok-4.3':                 'https://docs.x.ai/developers/models/grok-4.3',
+        'grok-4.5':                 'https://docs.x.ai/developers/models/grok-4.5',
     }
 
     ALIBABA_MODEL_URLS = {
@@ -902,6 +903,7 @@ Return only JSON:"""
         'qwen/qwen3-vl-30b-a3b-instruct': 'https://openrouter.ai/qwen/qwen3-vl-30b-a3b-instruct',
         'qwen/qwen3-vl-8b-instruct':      'https://openrouter.ai/qwen/qwen3-vl-8b-instruct',
         'qwen/qwen3-vl-8b-thinking':      'https://openrouter.ai/qwen/qwen3-vl-8b-thinking',
+        'qwen/qwen3.8-max':               'https://openrouter.ai/qwen/qwen3.8-max',
         'qwen/qwen3.7-plus':              'https://openrouter.ai/qwen/qwen3.7-plus',
         'qwen/qwen3.6-plus':              'https://openrouter.ai/qwen/qwen3.6-plus',
         'qwen/qwen3.6-plus-04-02':        'https://openrouter.ai/qwen/qwen3.6-plus',

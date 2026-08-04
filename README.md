@@ -88,6 +88,7 @@ This benchmark suite currently includes the following benchmarks for evaluating 
 | **[Book Advert XML](benchmarks/book_advert_xml/)** | Correct malformed XML from 18th century book advertisements |
 | **[Business Letters](benchmarks/business_letters/)** | Extract structured metadata (names, organizations, dates, locations) from 20th century Swiss historical correspondence |
 | **[Company Lists](benchmarks/company_lists/)** | Extract structured company information from historical business listings and directories |
+| **[Duty Rosters](benchmarks/duty_rosters/)** | Extract structured schedule data (shift types, half-day splits, unit assignments, staff metadata) from Swiss nursing staff duty rosters |
 | **[Fraktur Adverts](benchmarks/fraktur_adverts/)** | Recognize and transcribe historical German Fraktur script (16th-20th centuries) |
 | **[General Meeting Minutes](benchmarks/general_meeting_minutes/)** | Extract structured data from general meeting minutes of historical companies |
 | **[Library Cards](benchmarks/library_cards/)** | Catalog card analysis and information extraction from historical library catalog systems |
@@ -488,6 +489,7 @@ This benchmark suite currently tests models from the following providers:
 | | qwen/qwen3-vl-30b-a3b-instruct            | Qwen3-VL, 30B MoE (3B active), instruction-tuned; multimodal |
 | | qwen/qwen3-vl-8b-instruct                 | Qwen3-VL 8B, instruction-tuned; multimodal                 |
 | | qwen/qwen3-vl-8b-thinking                 | Qwen3-VL 8B, reasoning; multimodal                         |
+| | qwen/qwen3.8-max                          | Qwen 3.8 Max; multimodal                                   |
 | | qwen/qwen3.7-plus                         | Qwen 3.7 Plus                                              |
 | | qwen/qwen3.6-plus                         | Qwen 3.6 Plus                                              |
 | | qwen/qwen3.5-122b-a10b                    | Qwen 3.5, 122B MoE (10B active)                            |
@@ -506,6 +508,7 @@ This benchmark suite currently tests models from the following providers:
 | | qwen35-397b-a17b-fp8                      | Qwen3.5 397B-A17B, FP8 quantization (Univ. of Basel HPC)   |
 | **xAI** | grok-4.20-0309-reasoning                  | Grok 4.20; reasoning                                       |
 | | grok-4.3                                  | Grok 4.3                                                   |
+| | grok-4.5                                  | Grok 4.5; multimodal                                       |
 
 **Note:** OpenRouter provides access to models from multiple providers through a unified API. sciCORE provides access to models hosted on the University of Basel's high-performance computing infrastructure.
 
