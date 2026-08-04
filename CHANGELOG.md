@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - 2 new models: grok-4.5 (xAI), qwen/qwen3.8-max (OpenRouter)
 - 30 new benchmark test configurations (T1450-T1479) for the 2 new models across all benchmarks (15 tests each): grok-4.5 (T1450-T1464), qwen/qwen3.8-max (T1465-T1479)
+- Tests on 2026-08-04: T1450-T1479 (30 tests) for the 2 new models across all benchmarks — grok-4.5 (T1450-T1464) (x-ai) and qwen/qwen3.8-max (T1465-T1479) (OpenRouter)
 - Pricing data for 2026-08-04 (grok-4.5, qwen/qwen3.8-max; `pricing.json` metadata bumped to version 1.40)
 
 ### Fixed
