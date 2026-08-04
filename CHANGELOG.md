@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased] (v0.5.3-pre1)
+## [v0.5.3] - 2026-08-04
 
 ### Added
 - 2 new models: claude-sonnet-5, claude-fable-5 (Anthropic); both added to the `benchmark_base.py` hotfix list that sends no `temperature` (the models reject the deprecated parameter)
@@ -38,7 +38,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - NDR export: benchmark folders without a `meta.json` are no longer exported or counted (`get_benchmarks()` skips them), fixing inflated dataset counts in `vars.json` and empty entries in `benchmark_export.json`, `benchmarks.csv`, and the heatmap/radar charts.
 
 ### Changed
-- Reorganised dissemination materials into a new top-level `dissemination/` folder with one subfolder per output (`dhbenelux_2026`, `ethz_ai_literacy_2026`, `tuc_2026`, `daschcon_2026`, `duty_rosters_stakeholders_2026`, `lib4ri_2026`), each with a `README.md` and `meta.json`; absorbs the former `poster/` folder and `benchmarks/duty_rosters/slides/`, and adds the slide plan and HTML slide deck (10 slides, English, with a 62-model accuracy-vs-cost scatter computed from the latest `duty_rosters` runs) for the planned Lib4RI exchange talk.
+- Moved dissemination materials (posters, talks, submissions; absorbing the former `poster/` folder and `benchmarks/duty_rosters/slides/`) into a separate private repository, `benchmark-dissemnination`, with one subfolder per output, each with a `README.md` and `meta.json`.
 - Marked `openrouter/x-ai/grok-4` as `legacy_test=true` (14 tests: T0265-T0270, T0304, T0336, T0401-T0402, T0481, T0620, T0793, T1272).
 - Marked 5 provider-deprecated Mistral models as `legacy_test=true` (75 tests): `magistral-medium-2509`, `magistral-small-2509`, `mistral-medium-2505`, `mistral-medium-2508`, `mistral-small-2506`.
 - `general_meeting_minutes`: disabled shared context (`use_shared_context` was `True` but no context files were configured, so the harness forced single-threaded runs and sent a context prompt with nothing attached); removed the empty `get_shared_context_files`/`get_shared_context_prompt` overrides and updated the benchmark README to match. Signatures are still scored as ordinary fields.
@@ -243,7 +243,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Changelog
 
-[Unreleased]: https://github.com/RISE-UNIBAS/humanities_data_benchmark/compare/v0.5.2...HEAD
+[Unreleased]: https://github.com/RISE-UNIBAS/humanities_data_benchmark/compare/v0.5.3...HEAD
 [v0.1.0]: https://github.com/RISE-UNIBAS/humanities_data_benchmark/releases/tag/v0.1.0
 [v0.2.0]: https://github.com/RISE-UNIBAS/humanities_data_benchmark/releases/tag/v0.2.0
 [v0.2.1]: https://github.com/RISE-UNIBAS/humanities_data_benchmark/releases/tag/v0.2.1
@@ -255,3 +255,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [v0.5.0]: https://github.com/RISE-UNIBAS/humanities_data_benchmark/releases/tag/v0.5.0
 [v0.5.1]: https://github.com/RISE-UNIBAS/humanities_data_benchmark/releases/tag/v0.5.1
 [v0.5.2]: https://github.com/RISE-UNIBAS/humanities_data_benchmark/releases/tag/v0.5.2
+[v0.5.3]: https://github.com/RISE-UNIBAS/humanities_data_benchmark/releases/tag/v0.5.3
