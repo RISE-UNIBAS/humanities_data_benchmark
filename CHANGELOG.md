@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - Added the missing `duty_rosters` entry to the Available Benchmarks table in `README.md`
+- `README.md` consistency pass.
 
 ## [v0.5.3] - 2026-08-04
 

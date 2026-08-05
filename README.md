@@ -45,6 +45,7 @@ This benchmark suite focuses on tasks essential to digital humanities work with 
   - [2.3. Create a new Benchmark](#23-create-a-new-benchmark)
   - [2.4. Run an adhoc test](#24-run-an-adhoc-test)
   - [2.5. Generate a result render](#25-generate-a-result-render)
+  - [2.6. Run a local model](#26-run-a-local-model)
 - [3. Share it!](#3-share-it)
   - [3.1. Before Submitting](#31-before-submitting)
   - [3.2. Create a pull request](#32-create-a-pull-request)
@@ -70,11 +71,12 @@ This benchmark suite focuses on tasks essential to digital humanities work with 
 - **Image**: Visual input for the task. Images are paired with ground truth files.
 - **Model**: Specific model used to perform the task.
 - **Prompt**: Text given to the model to guide its response. 
-- **Provider**: Company or service providing model access (`openai`, `genai`, `anthropic`, `cohere`, `mistral`, `openrouter`, or `scicore`).
+- **Local Provider**: Provider handled by a local backend instead of an API (`contour_local`, `sam3_local`, `grounding_dino_local`, `doclayout_yolo_local`). Registered in `local/__init__.py`; no API key required.
+- **Provider**: Company or service providing model access (`openai`, `genai`, `anthropic`, `cohere`, `mistral`, `openrouter`, `scicore`, `deepseek`, `x-ai`, or `alibaba`).
 - **Request**: API call(s) made during a test, consisting of images and prompts.
 - **Response**: Model's answer containing metadata and output.
 - **Score**: Evaluation result indicating model performance.
-- **Scoring Function**: Function that evaluates the model's response, implemented via the `score_answer` method.
+- **Scoring Function**: Function that evaluates the model's response, implemented via the `score_request_answer` and `score_benchmark` methods.
 - **Test Configuration**: Parameters for running a test, stored in `benchmarks_tests.csv`.
 - **Text file**: Textual input for the task. Text files are paired with ground truth files.
 
@@ -103,7 +105,7 @@ The whole framework, the datasets and the results are part of this repository.
 
 <img width="2279" height="1206" alt="how-it-works" src="https://github.com/user-attachments/assets/ae3197f1-2ea8-4d5f-bb47-94f0cb0e3a69" />
 
-Refer to the [next chapter](#use-it) in order to learn about usage in your own research.
+Refer to the [next chapter](#2-use-it) in order to learn about usage in your own research.
 
 ### 1.4. Practical Considerations
 When using this benchmark suite for your own research, consider the following:
@@ -131,10 +133,15 @@ When using this benchmark suite for your own research, consider the following:
 ### 2.1. Fork and prepare
 In order to start, the following steps are in order:
 - Fork this repository and clone your fork
+- Install the dependencies (Python 3.12 or newer is recommended)
 - Obtain API keys to the providers you want to test
 - Create a `.env` file in the root directory of the repository.
 
-Add the following lines as needed with the obtained API key.
+```bash
+pip install -r requirements.txt
+```
+
+Add the following lines to the `.env` file as needed with the obtained API keys.
 ```bash
 OPENAI_API_KEY=<your_openai_api_key>
 GENAI_API_KEY=<your_genai_api_key>
@@ -143,11 +150,16 @@ COHERE_API_KEY=<your_cohere_api_key>
 MISTRAL_API_KEY=<your_mistral_api_key>
 OPENROUTER_API_KEY=<your_openrouter_api_key>
 SCICORE_API_KEY=<your_scicore_api_key>
+DEEPSEEK_API_KEY=<your_deepseek_api_key>
+ALIBABA_API_KEY=<your_alibaba_api_key>
+X-AI_API_KEY=<your_xai_api_key>
 ```
 
+The key name is derived from the provider name in `benchmarks_tests.csv` as `<PROVIDER>_API_KEY` (uppercased). Note the hyphen in `X-AI_API_KEY`, which follows from the provider name `x-ai`. Local providers (see [2.6.](#26-run-a-local-model)) need no key.
+
 ### 2.2. Run a configured test
-To test if your installation works, it's easiest to run one of the configured tests. Define one of `OPENAI_API_KEY` (= `T0001`),  `GENAI_API_KEY` (= `T0002`) or `ANTHROPIC_API_KEY`  (= `T0003`) to get started.
-Start the script from tha root of your project, like so:
+To test if your installation works, it's easiest to run one of the configured tests. Define either `OPENAI_API_KEY` (= `T0001`) or `GENAI_API_KEY` (= `T0193`) to get started.
+Start the script from the root of your project, like so:
 
 ```
 python scripts/run_single_test.py --test_id T0001
@@ -160,6 +172,8 @@ python scripts/run_single_test.py --test_id T0001 --regenerate
 ```
 
 You also can run the script without any parameters for the interactive interface. It lets you search for and select the test you might be looking for.
+
+Tests marked `legacy_test=true` in `benchmarks_tests.csv` are deprecated and are skipped by both `run_single_test.py` and `run_benchmarks.py`; they are kept only for historical results and cannot be run by ID.
 
 ### 2.3. Create a new Benchmark
 Start with the CLI tool to create the basic structure:
@@ -292,7 +306,7 @@ def score_request_answer(self, object_name, response, ground_truth):
 ```
 
 _Implement the scoring of the whole test run:_
-Take the average or the mean or use any other functionality to score accross all requests for the test run.
+Take the average or the mean or use any other functionality to score across all requests for the test run.
 
 ```python
 def score_benchmark(self, all_scores):
@@ -305,26 +319,43 @@ def score_benchmark(self, all_scores):
 Return at least one metric. Commonly used metrics are fuzzy, f1_score, cer
 
 #### Define Schema
-If you want to implement a custom dataclass.
+If you want the model to return structured output, define a Pydantic model in `benchmarks/[name]/dataclass.py` and
+reference its class name in the `dataclass` column of `benchmarks_tests.csv`. Nested models are supported, and field
+descriptions are passed on to the provider, so use them to disambiguate fields.
 
 ```python
-dataclass exnmple
+from typing import List, Optional
+from pydantic import BaseModel, Field
+
+
+class Entry(BaseModel):
+    """A single entry on the page."""
+
+    name: str = Field(description="Name as written in the source")
+    year: Optional[str] = Field(default=None, description="Year, if given")
+
+
+class Page(BaseModel):
+    """Main output structure; its name goes into the `dataclass` column."""
+
+    entries: List[Entry] = Field(default_factory=list, description="All entries on the page")
 ```
 
-The `score_answer` method is used to score the answer from the model. The method receives the image name, the response
-from the model, and the ground truth. The method should return a dictionary with the scores. The keys of the dictionary
-should be the names of the evaluation criteria, and the values should be the scores.
+Beyond the two mandatory scoring methods, the benchmark class inherits a number of methods from `Benchmark`
+(`scripts/benchmark_base.py`) that you can override to configure its behaviour:
 
-The rest of the methods are properties that can be used to configure the behavior of the benchmark. 
-The `convert_result_to_json` property indicates whether the results should be converted to JSON format.
-The `resize_images` property indicates whether the images should be resized before being sent to the model.
-The `get_page_part_regex` property is a regular expression that is used to extract the page part from the image name.
-The `get_output_format` property indicates the output format of the model response.
-The `title` property is used to generate the title of the benchmark.
+| Method | Purpose |
+|--------|---------|
+| `remove_none_values()` | Whether `None` values are stripped from the response before scoring (default `True`) |
+| `convert_truth_to_json()` | Whether a ground truth stored as a JSON string is parsed into an object (default `True`) |
+| `resize_images()` | Whether oversized images are resized before being sent to the model (default `False`) |
+| `get_title()` | Title of the benchmark as shown in the result table |
+| `get_prompt_kwargs(basename, filenames)` | Values interpolated into the prompt file, e.g. file information |
+| `skip_object(object_basename)` | Whether a given object is excluded from the run |
 
 
 ### 2.4. Run an adhoc test
-When you have created a benchmark you should test it first and ensure that verything works. That's what adhoc-tests are for.
+When you have created a benchmark you should test it first and ensure that everything works. That's what adhoc-tests are for.
 Run the following command and select from the options to create an on-the-fly configuration to test.
 
 ```
@@ -336,10 +367,34 @@ Perfect for experimentation and quick testing, ID format: `ADHOC_YYYYMMDD_HHMMSS
 
 
 ### 2.5. Generate a result render
+To render a single test run as a standalone HTML report:
 
 ```
-python scripts/create_report.py path/to/result
+python scripts/generate_test_report.py results/YYYY-MM-DD/T0001
 ```
+
+The report is written to `reports/<test_id>_report.html` by default; use `-o` to choose another path, `--include-raw`
+to embed the raw API responses, `--no-images` to omit the input images, and `--open` to open the result in a browser.
+
+To render all test runs of a given day into one overview report:
+
+```
+python scripts/generate_date_report.py results/YYYY-MM-DD
+```
+
+### 2.6. Run a local model
+Not every model needs an API. Local backends are registered in `local/__init__.py` and are used by putting their
+provider name into the `provider` column of `benchmarks_tests.csv`; no API key is required.
+
+| Provider | Backend | Requirements |
+|----------|---------|--------------|
+| `contour_local` | OpenCV contour detection | any OS, no GPU needed |
+| `doclayout_yolo_local` | DocLayout-YOLO | Windows / Linux, NVIDIA GPU |
+| `grounding_dino_local` | Grounding DINO | Windows / Linux, NVIDIA GPU |
+| `sam3_local` | SAM 3 | macOS / Apple Silicon |
+
+To add a new backend, create `local/backends/<name>.py` with a class extending `LocalBackend`, register it in
+`LOCAL_PROVIDERS`, and add a test row with the new provider name.
 
 
 ## 3. Share it!
@@ -389,7 +444,7 @@ The maintainers will:
 - check the metric
 - confirm licensing
 - validate folder structure
- -potentially request revisions
+- potentially request revisions
 
 Once everything is green, your benchmark will be merged into the main repository.
 
@@ -421,7 +476,7 @@ This benchmark suite currently tests models from the following providers:
 | | claude-sonnet-4-6                         | Claude Sonnet 4.6                                          |
 | | claude-sonnet-5                           | Claude Sonnet 5                                            |
 | | claude-fable-5                            | Claude Fable 5                                             |
-| | claude-opus-5                             | Claude Opus 5                                             |
+| | claude-opus-5                             | Claude Opus 5                                              |
 | **Cohere** | command-a-03-2025                         | Command A (Mar 2025)                                       |
 | | command-a-vision-07-2025                  | Command A Vision (Jul 2025); multimodal                    |
 | | command-r-08-2024                         | Command R (Aug 2024)                                       |
@@ -447,12 +502,12 @@ This benchmark suite currently tests models from the following providers:
 | | ~~gemini-exp-1206~~                       | ~~Gemini experimental (Dec 2024)~~ (legacy)                |
 | | gemini-3-flash-preview                    | Gemini 3 Flash (preview)                                   |
 | | ~~gemini-3.1-flash-lite-preview~~         | ~~Gemini 3.1 Flash-Lite (preview)~~ (legacy)               |
-| | gemini-3.1-flash-lite                     | Gemini 3.1 Flash-Lite                                     |
+| | gemini-3.1-flash-lite                     | Gemini 3.1 Flash-Lite                                      |
 | | gemini-3.1-pro-preview                    | Gemini 3.1 Pro (preview)                                   |
 | | ~~gemini-3-pro-preview~~                  | ~~Gemini 3 Pro (preview)~~ (legacy)                        |
-| | gemini-3.5-flash                          | Gemini 3.5 Flash                                          |
-| | gemini-3.6-flash                          | Gemini 3.6 Flash                                          |
-| | gemini-3.5-flash-lite                     | Gemini 3.5 Flash-Lite                                     |
+| | gemini-3.5-flash                          | Gemini 3.5 Flash                                           |
+| | gemini-3.6-flash                          | Gemini 3.6 Flash                                           |
+| | gemini-3.5-flash-lite                     | Gemini 3.5 Flash-Lite                                      |
 | **Mistral AI** | ~~magistral-medium-2509~~                 | ~~Magistral Medium (Sep 2025); reasoning~~ (legacy)        |
 | | ~~magistral-small-2509~~                  | ~~Magistral Small (Sep 2025); reasoning~~ (legacy)         |
 | | ministral-14b-2512                        | Ministral 3 14B (Dec 2025)                                 |
@@ -502,7 +557,7 @@ This benchmark suite currently tests models from the following providers:
 | | ~~x-ai/grok-4~~                           | ~~Grok 4; multimodal~~ (legacy)                            |
 | | meta-llama/llama-4-scout                  | Llama 4 Scout                                              |
 | | stepfun/step-3.7-flash                    | StepFun Step 3.7 Flash                                     |
-| | moonshotai/kimi-k3                        | Kimi K3                                                   |
+| | moonshotai/kimi-k3                        | Kimi K3                                                    |
 | **sciCORE** | ~~GLM-4.5V-FP8~~                              | ~~GLM-4.5V, FP8 quantization; multimodal (Univ. of Basel HPC)~~ (legacy) |
 | | ~~qwen3-235b-fp8~~                            | ~~Qwen3 235B, FP8 quantization (Univ. of Basel HPC)~~ (legacy)          |
 | | qwen35-397b-a17b-fp8                      | Qwen3.5 397B-A17B, FP8 quantization (Univ. of Basel HPC)   |
@@ -547,13 +602,13 @@ These metrics evaluate factors beyond task performance that impact usability:
 
 ## 6. Project Status
 
-## 6.1. Current Limitations
+### 6.1. Current Limitations
 
 The benchmark suite currently has several limitations that could be addressed in future iterations:
 
 | Category | Limitation | Description |
 |----------|------------|-------------|
-| **Models** | Local/self-hosted models | Limited support for models that can be run locally |
+| **Models** | Local/self-hosted models | Local backends exist for vision tasks (see [2.6.](#26-run-a-local-model)), but no locally run generative LLMs are covered yet |
 | **Capabilities** | Domain-specific fine-tuned models | Models specifically optimized for historical research not included |
 | | OCR-specialized models | Models with particular strength in document processing/OCR not included |
 | | Multilingual capabilities | Systematic testing across different languages not covered |
@@ -563,7 +618,7 @@ The benchmark suite currently has several limitations that could be addressed in
 | **Evaluation** | Context window testing | Evaluation across different context window sizes and document lengths not implemented |
 | | Standardized error analysis | More granular error categorization and failure mode analysis needed |
 
-## 6.2. Outlook
+### 6.2. Outlook
 TODO
 
 ## 7. Contributors
