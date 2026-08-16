@@ -1,0 +1,855 @@
+{
+    "text": "We need parse images. Need extract header: year 2025, month April (April 2025). Need icon legend image and one roster row for single person. Need identify row image? Only three images given: header, icon legend, and one roster row? Actually image 3 seems to be bottom part of legend? Let's inspect carefully.\n\nWe have image 1: header with \"BG S April 2025\" and days 01-30 with weekdays Di Mi Do Fr Sa So Mo etc. So year=2025 month=\"April\" (probably \"April\").\n\nImage 2: icon legend with many entries and codes. Need match icons.\n\nImage 3: looks like bottom strip with \"111\" and \"80 M F F F F 0 0 F...\" maybe this is the roster row? Actually image 3 is very narrow horizontal strip showing numbers and letters in cells, likely the row data for one person across days. Need decode.\n\nBut also need person info: id handwritten in margin, profession section label printed above row, employment percent, is_jumper (S column). However we don't have the full row image with left margin? Maybe image 3 includes left part? Let's examine image 3: left side has \"111\" in blue? Then \"80 M\" then boxes with F, F, F, F, 0,0,F,Q,Q,Q,F,Q,Q,F,F,F,F,Q,Q,Q, then \"MD4 MD4\" etc, then \"0 0 FD1 MD2\" etc, \"MD4 FD1\" and \"15\" at right. This looks like a row with employment 80, gender M, and then shift codes for each day? But we need map to icons using legend. However the prompt says \"You are given three images: (1) the roster header, (2) an icon legend, and (3) one roster row for a single person.\" So image 3 is indeed the row. But we need also the left margin with id and profession? Maybe it's in the row image but cropped? Actually image 3 might be just the data cells, but we need extract id and profession from the row image if present. Let's examine image 3 more precisely.\n\nImage 3 shows:\n- Far left: \"111\" in blue italic? Then \"80\" then \"M\" then a box \"F\" then \"F\" \"F\" \"F\" \"F\" \"0\" \"0\" \"F\" \"Q\" \"Q\" \"Q\" \"F\" \"Q\" \"Q\" \"F\" \"F\" \"F\" \"F\" \"Q\" \"Q\" \"Q\" then \"MD4 MD4\" then \"0\" \"0\" \"FD1\" \"MD2\" then \"MD\" with small \"TS\" then \"MD4\" \"FD1\" then \"15\" at far right.\n\nBut wait, the row should align with days 01-30. Let's count cells. From left after \"M\" there might be 30 cells? Let's count precisely.\n\nWe need understand the layout: The header image shows columns: BG S | then for each day: Di Mi Do Fr Sa So Mo Di Mi Do Fr Sa So Mo Di Mi Do Fr Sa So Mo Di Mi ... with dates 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31? Actually April has 30 days, so 30 columns. Plus left columns: BG, S, maybe employment, gender? Let's understand typical roster layout: Left columns might include BG (Bereichsgruppe?), S (Springer?), then maybe employment percent, then gender? But in image 3 we see \"111\" then \"80\" then \"M\" then cells.\n\nBut the prompt says: \"PERSON - id: the person number (may be handwritten in the margin) - profession: the section label printed ABOVE the row (e.g. \"WBL\", \"Terti\u00e4r\"), not a value from the data columns - employment_percent: the number in the employment column (e.g. 80, 50, 0) - is_jumper: true if \"S\" is marked in the S column, false otherwise\"\n\nSo we need identify these from the row image. The row image might include left margin with handwritten id? But image 3 doesn't show margin clearly. However maybe \"111\" is the id? Or \"80\" is employment percent, \"M\" is gender not needed. The \"S\" column might be present but not visible? Actually in header there's \"BG S\" columns. So there should be an S column near left. In image 3, after \"111\" maybe there's \"80\" then \"M\" then \"F\"... Wait need align correctly.\n\nLet's think: The header image shows \"BG S\" then \"April 2025\" then days. So the leftmost columns are BG and S. Then maybe other columns like name, employment, etc. But in image 3, we see \"111\" then \"80 M\" then cells. Could \"111\" be in BG column? Or id handwritten?\n\nBut also need profession: section label printed ABOVE the row. That might be in the row image but not visible in crop? Actually image 3 might be just the bottom part of the legend? Wait no, image 3 is a narrow strip with letters and numbers, likely the row.\n\nHowever, we need produce JSON with one person and days array for each date in April 2025 (1-30). For each day, extract shift(s) based on cell content mapped to legend.\n\nWe need decode the row cells for each day. The cells contain letters like F, 0, Q, MD4, etc. But the legend lists icons with descriptive names and codes like \"L 932 L\", \"M 817 (NDP) N1 (NDP)\", \"RAI 228 RAI/RUG\", \"F1 300 F-Dienst 1\", \"BES 219 BESPRECHUNG\", \"HO 200 HomeOffice\", \"SCH 922 Sch\u00fclerbetreuung\", \"SD 340 S-Dienst 1\", \"BT 232 B\u00fcrotag\", \"M3 322 (4SO) M-Dienst 3 (4SO)\", \"M4 323 M-Dienst 4\", \"TV 905 TV-FAL\", \"SD 919 SD\", \"AZU 8897 Azu-Gespr\u00e4che dives (PZG)\", \"UK 206 (3SO) Unfall\", \"K 203 Kranktag\", \"F 202 Ferien\", \"Zt 211 Z\u00fcgeltag\", \"MS 214 Mutterschutz\", \"W 222 (ASH) Wunschfrei (ASH)\", \"D 224 (2SO) Freier Tag (2SO)\", \"OB 238 Obl.Fort-Bildung\", \"S 216 Schultag\", \"KW 207 Kurse bezahlte Weiterb.\", \"PA\" \"SU\" \"SCH\" \"UU\" \"BA\" etc.\n\nBut the row cells contain \"F\", \"0\", \"Q\", \"MD4\", \"FD1\". These might correspond to codes in the legend? Actually \"F\" could be \"F-Dienst 1\" (F1) or \"Ferien\" (F) or \"Freier Tag\" (D?). \"Q\" might be \"Q\" for something? \"MD4\" might be \"M-Dienst 4\". \"FD1\" might be \"F-Dienst 1\". \"0\" might be \"0\" meaning no shift? Or \"0\" could be part of \"0 0\"? Let's examine the row more carefully.\n\nWe need match cell's icon against legend. But the row image shows text inside cells, not icons? Wait the legend image shows icons with text descriptions. The row might have icons that are represented by letters in the image due to low resolution? Actually image 3 is very low resolution horizontal strip; maybe the cells contain small icons that are rendered as letters? Or maybe the row is printed with abbreviations inside cells, and we need map those abbreviations to the legend descriptions? The prompt says \"icon: match the cell's icon against the icon legend. Use the descriptive name, not the number. Only assign an icon if you can clearly identify a matching icon from the legend. If there is no icon in the cell, use null.\" So the cells should contain icons (like symbols). But in image 3 we see letters like F, Q, 0, MD4, FD1. These might actually be the icons? No, they look like text codes.\n\nWait, maybe image 3 is not the row but part of the legend? Let's re-examine image 2: It's a large legend with many entries arranged in columns. At the bottom right there are entries: \"Pers\u00f6nliche Absenz PA PA\", \"Schwangerschaftsurlaub Su Su Su Su\", \"Schule S\", \"Unbezahlter Urlaub UU\", \"Betriebsausflug BA\". So image 2 includes these bottom right entries. Image 3 might be the bottom left of the legend? Actually image 3 shows \"111\" and \"80 M F F F...\" That doesn't match legend.\n\nLet's consider that the user said \"You are given three images: (1) the roster header, (2) an icon legend, and (3) one roster row for a single person.\" So image 3 must be the row. The row likely has left columns with person info, then cells for each day. The cells might contain abbreviations that correspond to shift types. We need map them using the legend? But the legend lists icons with descriptions, not abbreviations",
+    "model": "thinkingmachines/Inkling",
+    "provider": "huggingface",
+    "finish_reason": "length",
+    "usage": {
+        "input_tokens": 3342,
+        "output_tokens": 2048,
+        "total_tokens": 5390,
+        "cached_tokens": 2432,
+        "input_cost_usd": 0.003342,
+        "output_cost_usd": 0.008294399999999999,
+        "estimated_cost_usd": 0.011636399999999998
+    },
+    "duration": 49.0184326171875,
+    "timestamp": "2026-08-15T17:52:41.207447",
+    "conversation_id": "a0be948b-8ce4-488b-912f-96a0be2a39a0",
+    "score": {
+        "f1_score": 0.0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "true_positives": 0,
+        "false_positives": 0,
+        "false_negatives": 133,
+        "field_scores": {
+            "": {
+                "response": null,
+                "ground_truth": null,
+                "score": 1.0
+            },
+            "persons[0].days[27].shifts[1].icon": {
+                "response": null,
+                "ground_truth": null,
+                "score": 1.0
+            },
+            "persons[0].days[1].shifts[0].icon": {
+                "response": null,
+                "ground_truth": "Ferien",
+                "score": 0.0
+            },
+            "persons[0].days[0].shifts[0].length": {
+                "response": null,
+                "ground_truth": "full",
+                "score": 0.0
+            },
+            "persons[0].days[2].shifts[0].icon": {
+                "response": null,
+                "ground_truth": "Ferien",
+                "score": 0.0
+            },
+            "persons[0].days[8].shifts[0].alternate_unit": {
+                "response": null,
+                "ground_truth": null,
+                "score": 1.0
+            },
+            "persons[0].days[22].shifts[0].alternate_unit": {
+                "response": null,
+                "ground_truth": null,
+                "score": 1.0
+            },
+            "persons[0].days[13].shifts[0].alternate_unit": {
+                "response": null,
+                "ground_truth": null,
+                "score": 1.0
+            },
+            "persons[0].days[9].shifts[0].alternate_unit": {
+                "response": null,
+                "ground_truth": null,
+                "score": 1.0
+            },
+            "persons[0].days[24].date": {
+                "response": null,
+                "ground_truth": "2025-04-25",
+                "score": 0.0
+            },
+            "persons[0].days[10].shifts[0].icon": {
+                "response": null,
+                "ground_truth": "Ferien",
+                "score": 0.0
+            },
+            "persons[0].days[14].shifts[0].planned_on_current_unit": {
+                "response": null,
+                "ground_truth": true,
+                "score": 0.0
+            },
+            "persons[0].days[20].shifts[0].planned_on_current_unit": {
+                "response": null,
+                "ground_truth": true,
+                "score": 0.0
+            },
+            "persons[0].days[18].shifts[0].length": {
+                "response": null,
+                "ground_truth": "full",
+                "score": 0.0
+            },
+            "persons[0].days[1].shifts[0].alternate_unit": {
+                "response": null,
+                "ground_truth": null,
+                "score": 1.0
+            },
+            "persons[0].days[13].date": {
+                "response": null,
+                "ground_truth": "2025-04-14",
+                "score": 0.0
+            },
+            "persons[0].days[18].date": {
+                "response": null,
+                "ground_truth": "2025-04-19",
+                "score": 0.0
+            },
+            "persons[0].days[17].date": {
+                "response": null,
+                "ground_truth": "2025-04-18",
+                "score": 0.0
+            },
+            "persons[0].days[21].shifts[0].icon": {
+                "response": null,
+                "ground_truth": "M-Dienst 4",
+                "score": 0.0
+            },
+            "persons[0].days[22].shifts[0].icon": {
+                "response": null,
+                "ground_truth": "M-Dienst 4",
+                "score": 0.0
+            },
+            "persons[0].days[28].date": {
+                "response": null,
+                "ground_truth": "2025-04-29",
+                "score": 0.0
+            },
+            "persons[0].days[16].date": {
+                "response": null,
+                "ground_truth": "2025-04-17",
+                "score": 0.0
+            },
+            "persons[0].days[26].date": {
+                "response": null,
+                "ground_truth": "2025-04-27",
+                "score": 0.0
+            },
+            "persons[0].days[11].shifts[0].icon": {
+                "response": null,
+                "ground_truth": "Freier Tag",
+                "score": 0.0
+            },
+            "persons[0].days[19].shifts[0].planned_on_current_unit": {
+                "response": null,
+                "ground_truth": true,
+                "score": 0.0
+            },
+            "persons[0].days[24].shifts[0].alternate_unit": {
+                "response": null,
+                "ground_truth": null,
+                "score": 1.0
+            },
+            "persons[0].days[4].shifts[0].length": {
+                "response": null,
+                "ground_truth": "full",
+                "score": 0.0
+            },
+            "persons[0].days[3].shifts[0].planned_on_current_unit": {
+                "response": null,
+                "ground_truth": true,
+                "score": 0.0
+            },
+            "persons[0].days[20].shifts[0].alternate_unit": {
+                "response": null,
+                "ground_truth": null,
+                "score": 1.0
+            },
+            "persons[0].days[21].shifts[0].length": {
+                "response": null,
+                "ground_truth": "full",
+                "score": 0.0
+            },
+            "persons[0].days[27].date": {
+                "response": null,
+                "ground_truth": "2025-04-28",
+                "score": 0.0
+            },
+            "persons[0].days[23].shifts[0].alternate_unit": {
+                "response": null,
+                "ground_truth": null,
+                "score": 1.0
+            },
+            "persons[0].days[6].shifts[0].icon": {
+                "response": null,
+                "ground_truth": "Ferien",
+                "score": 0.0
+            },
+            "persons[0].days[29].shifts[0].alternate_unit": {
+                "response": null,
+                "ground_truth": null,
+                "score": 1.0
+            },
+            "persons[0].days[4].shifts[0].alternate_unit": {
+                "response": null,
+                "ground_truth": null,
+                "score": 1.0
+            },
+            "persons[0].days[12].shifts[0].alternate_unit": {
+                "response": null,
+                "ground_truth": null,
+                "score": 1.0
+            },
+            "persons[0].days[4].date": {
+                "response": null,
+                "ground_truth": "2025-04-05",
+                "score": 0.0
+            },
+            "persons[0].days[0].date": {
+                "response": null,
+                "ground_truth": "2025-04-01",
+                "score": 0.0
+            },
+            "persons[0].days[19].shifts[0].length": {
+                "response": null,
+                "ground_truth": "full",
+                "score": 0.0
+            },
+            "persons[0].days[25].shifts[0].planned_on_current_unit": {
+                "response": null,
+                "ground_truth": true,
+                "score": 0.0
+            },
+            "persons[0].days[10].shifts[0].alternate_unit": {
+                "response": null,
+                "ground_truth": null,
+                "score": 1.0
+            },
+            "persons[0].days[11].date": {
+                "response": null,
+                "ground_truth": "2025-04-12",
+                "score": 0.0
+            },
+            "persons[0].days[22].date": {
+                "response": null,
+                "ground_truth": "2025-04-23",
+                "score": 0.0
+            },
+            "persons[0].days[24].shifts[0].length": {
+                "response": null,
+                "ground_truth": "full",
+                "score": 0.0
+            },
+            "persons[0].days[25].shifts[0].length": {
+                "response": null,
+                "ground_truth": "full",
+                "score": 0.0
+            },
+            "persons[0].days[26].shifts[0].planned_on_current_unit": {
+                "response": null,
+                "ground_truth": true,
+                "score": 0.0
+            },
+            "persons[0].days[27].shifts[0].alternate_unit": {
+                "response": null,
+                "ground_truth": "TS",
+                "score": 0.0
+            },
+            "persons[0].days[18].shifts[0].icon": {
+                "response": null,
+                "ground_truth": "Freier Tag",
+                "score": 0.0
+            },
+            "persons[0].days[23].shifts[0].length": {
+                "response": null,
+                "ground_truth": "full",
+                "score": 0.0
+            },
+            "persons[0].days[3].date": {
+                "response": null,
+                "ground_truth": "2025-04-04",
+                "score": 0.0
+            },
+            "persons[0].days[12].shifts[0].planned_on_current_unit": {
+                "response": null,
+                "ground_truth": true,
+                "score": 0.0
+            },
+            "persons[0].days[19].shifts[0].icon": {
+                "response": null,
+                "ground_truth": "Freier Tag",
+                "score": 0.0
+            },
+            "persons[0].days[2].shifts[0].planned_on_current_unit": {
+                "response": null,
+                "ground_truth": true,
+                "score": 0.0
+            },
+            "persons[0].days[19].date": {
+                "response": null,
+                "ground_truth": "2025-04-20",
+                "score": 0.0
+            },
+            "persons[0].days[8].shifts[0].length": {
+                "response": null,
+                "ground_truth": "full",
+                "score": 0.0
+            },
+            "persons[0].days[8].shifts[0].planned_on_current_unit": {
+                "response": null,
+                "ground_truth": true,
+                "score": 0.0
+            },
+            "persons[0].days[15].shifts[0].icon": {
+                "response": null,
+                "ground_truth": "Ferien",
+                "score": 0.0
+            },
+            "persons[0].days[16].shifts[1].icon": {
+                "response": null,
+                "ground_truth": "Freier Tag",
+                "score": 0.0
+            },
+            "persons[0].days[29].shifts[0].planned_on_current_unit": {
+                "response": null,
+                "ground_truth": true,
+                "score": 0.0
+            },
+            "persons[0].days[11].shifts[0].alternate_unit": {
+                "response": null,
+                "ground_truth": null,
+                "score": 1.0
+            },
+            "persons[0].days[10].shifts[0].length": {
+                "response": null,
+                "ground_truth": "full",
+                "score": 0.0
+            },
+            "persons[0].days[17].shifts[0].planned_on_current_unit": {
+                "response": null,
+                "ground_truth": true,
+                "score": 0.0
+            },
+            "persons[0].days[29].shifts[0].icon": {
+                "response": null,
+                "ground_truth": "F-Dienst 1",
+                "score": 0.0
+            },
+            "persons[0].days[17].shifts[0].length": {
+                "response": null,
+                "ground_truth": "full",
+                "score": 0.0
+            },
+            "persons[0].days[21].shifts[0].alternate_unit": {
+                "response": null,
+                "ground_truth": null,
+                "score": 1.0
+            },
+            "persons[0].days[29].date": {
+                "response": null,
+                "ground_truth": "2025-04-30",
+                "score": 0.0
+            },
+            "persons[0].days[16].shifts[0].length": {
+                "response": null,
+                "ground_truth": "half_left",
+                "score": 0.0
+            },
+            "persons[0].days[10].date": {
+                "response": null,
+                "ground_truth": "2025-04-11",
+                "score": 0.0
+            },
+            "persons[0].days[7].shifts[0].icon": {
+                "response": null,
+                "ground_truth": "Freier Tag",
+                "score": 0.0
+            },
+            "persons[0].days[15].date": {
+                "response": null,
+                "ground_truth": "2025-04-16",
+                "score": 0.0
+            },
+            "persons[0].days[5].shifts[0].icon": {
+                "response": null,
+                "ground_truth": "Freier Tag",
+                "score": 0.0
+            },
+            "persons[0].days[20].date": {
+                "response": null,
+                "ground_truth": "2025-04-21",
+                "score": 0.0
+            },
+            "persons[0].employment_percent": {
+                "response": null,
+                "ground_truth": 80,
+                "score": 0.0
+            },
+            "persons[0].days[2].shifts[0].alternate_unit": {
+                "response": null,
+                "ground_truth": null,
+                "score": 1.0
+            },
+            "persons[0].days[3].shifts[0].icon": {
+                "response": null,
+                "ground_truth": "Ferien",
+                "score": 0.0
+            },
+            "persons[0].days[9].shifts[0].planned_on_current_unit": {
+                "response": null,
+                "ground_truth": true,
+                "score": 0.0
+            },
+            "persons[0].days[27].shifts[0].length": {
+                "response": null,
+                "ground_truth": "half_left",
+                "score": 0.0
+            },
+            "persons[0].days[9].shifts[0].length": {
+                "response": null,
+                "ground_truth": "full",
+                "score": 0.0
+            },
+            "persons[0].days[25].shifts[0].icon": {
+                "response": null,
+                "ground_truth": "F-Dienst 1",
+                "score": 0.0
+            },
+            "persons[0].days[6].shifts[0].length": {
+                "response": null,
+                "ground_truth": "full",
+                "score": 0.0
+            },
+            "persons[0].days[4].shifts[0].icon": {
+                "response": null,
+                "ground_truth": "Freier Tag",
+                "score": 0.0
+            },
+            "persons[0].days[7].date": {
+                "response": null,
+                "ground_truth": "2025-04-08",
+                "score": 0.0
+            },
+            "persons[0].days[20].shifts[0].icon": {
+                "response": null,
+                "ground_truth": "Freier Tag",
+                "score": 0.0
+            },
+            "persons[0].days[16].shifts[1].alternate_unit": {
+                "response": null,
+                "ground_truth": null,
+                "score": 1.0
+            },
+            "persons[0].days[16].shifts[0].icon": {
+                "response": null,
+                "ground_truth": "Ferien",
+                "score": 0.0
+            },
+            "persons[0].days[13].shifts[0].planned_on_current_unit": {
+                "response": null,
+                "ground_truth": true,
+                "score": 0.0
+            },
+            "persons[0].days[14].date": {
+                "response": null,
+                "ground_truth": "2025-04-15",
+                "score": 0.0
+            },
+            "persons[0].days[28].shifts[0].length": {
+                "response": null,
+                "ground_truth": "full",
+                "score": 0.0
+            },
+            "persons[0].days[1].shifts[0].length": {
+                "response": null,
+                "ground_truth": "full",
+                "score": 0.0
+            },
+            "persons[0].days[27].shifts[1].length": {
+                "response": null,
+                "ground_truth": "half_right",
+                "score": 0.0
+            },
+            "persons[0].days[22].shifts[0].length": {
+                "response": null,
+                "ground_truth": "full",
+                "score": 0.0
+            },
+            "persons[0].days[16].shifts[0].planned_on_current_unit": {
+                "response": null,
+                "ground_truth": true,
+                "score": 0.0
+            },
+            "persons[0].days[23].shifts[0].planned_on_current_unit": {
+                "response": null,
+                "ground_truth": true,
+                "score": 0.0
+            },
+            "persons[0].days[29].shifts[0].length": {
+                "response": null,
+                "ground_truth": "full",
+                "score": 0.0
+            },
+            "persons[0].days[1].date": {
+                "response": null,
+                "ground_truth": "2025-04-02",
+                "score": 0.0
+            },
+            "persons[0].days[3].shifts[0].alternate_unit": {
+                "response": null,
+                "ground_truth": null,
+                "score": 1.0
+            },
+            "persons[0].days[24].shifts[0].icon": {
+                "response": null,
+                "ground_truth": "Freier Tag",
+                "score": 0.0
+            },
+            "persons[0].days[7].shifts[0].planned_on_current_unit": {
+                "response": null,
+                "ground_truth": true,
+                "score": 0.0
+            },
+            "persons[0].days[13].shifts[0].length": {
+                "response": null,
+                "ground_truth": "full",
+                "score": 0.0
+            },
+            "persons[0].days[6].date": {
+                "response": null,
+                "ground_truth": "2025-04-07",
+                "score": 0.0
+            },
+            "persons[0].days[4].shifts[0].planned_on_current_unit": {
+                "response": null,
+                "ground_truth": true,
+                "score": 0.0
+            },
+            "persons[0].days[27].shifts[1].alternate_unit": {
+                "response": null,
+                "ground_truth": "TS",
+                "score": 0.0
+            },
+            "persons[0].days[2].shifts[0].length": {
+                "response": null,
+                "ground_truth": "full",
+                "score": 0.0
+            },
+            "persons[0].days[16].shifts[0].alternate_unit": {
+                "response": null,
+                "ground_truth": null,
+                "score": 1.0
+            },
+            "persons[0].days[16].shifts[1].length": {
+                "response": null,
+                "ground_truth": "half_right",
+                "score": 0.0
+            },
+            "persons[0].days[25].date": {
+                "response": null,
+                "ground_truth": "2025-04-26",
+                "score": 0.0
+            },
+            "persons[0].days[23].date": {
+                "response": null,
+                "ground_truth": "2025-04-24",
+                "score": 0.0
+            },
+            "persons[0].days[18].shifts[0].alternate_unit": {
+                "response": null,
+                "ground_truth": null,
+                "score": 1.0
+            },
+            "persons[0].days[8].shifts[0].icon": {
+                "response": null,
+                "ground_truth": "Freier Tag",
+                "score": 0.0
+            },
+            "persons[0].is_jumper": {
+                "response": null,
+                "ground_truth": false,
+                "score": 0.0
+            },
+            "persons[0].days[27].shifts[1].planned_on_current_unit": {
+                "response": null,
+                "ground_truth": true,
+                "score": 0.0
+            },
+            "persons[0].days[6].shifts[0].alternate_unit": {
+                "response": null,
+                "ground_truth": null,
+                "score": 1.0
+            },
+            "year": {
+                "response": null,
+                "ground_truth": 2025,
+                "score": 0.0
+            },
+            "persons[0].days[17].shifts[0].alternate_unit": {
+                "response": null,
+                "ground_truth": null,
+                "score": 1.0
+            },
+            "persons[0].days[1].shifts[0].planned_on_current_unit": {
+                "response": null,
+                "ground_truth": true,
+                "score": 0.0
+            },
+            "persons[0].days[0].shifts[0].icon": {
+                "response": null,
+                "ground_truth": "Ferien",
+                "score": 0.0
+            },
+            "persons[0].days[3].shifts[0].length": {
+                "response": null,
+                "ground_truth": "full",
+                "score": 0.0
+            },
+            "persons[0].days[0].shifts[0].planned_on_current_unit": {
+                "response": null,
+                "ground_truth": true,
+                "score": 0.0
+            },
+            "persons[0].days[12].shifts[0].icon": {
+                "response": null,
+                "ground_truth": "Freier Tag",
+                "score": 0.0
+            },
+            "persons[0].days[21].shifts[0].planned_on_current_unit": {
+                "response": null,
+                "ground_truth": true,
+                "score": 0.0
+            },
+            "persons[0].days[22].shifts[0].planned_on_current_unit": {
+                "response": null,
+                "ground_truth": true,
+                "score": 0.0
+            },
+            "persons[0].days[25].shifts[0].alternate_unit": {
+                "response": null,
+                "ground_truth": null,
+                "score": 1.0
+            },
+            "persons[0].days[5].shifts[0].planned_on_current_unit": {
+                "response": null,
+                "ground_truth": true,
+                "score": 0.0
+            },
+            "persons[0].days[21].date": {
+                "response": null,
+                "ground_truth": "2025-04-22",
+                "score": 0.0
+            },
+            "persons[0].days[0].shifts[0].alternate_unit": {
+                "response": null,
+                "ground_truth": null,
+                "score": 1.0
+            },
+            "persons[0].days[11].shifts[0].length": {
+                "response": null,
+                "ground_truth": "full",
+                "score": 0.0
+            },
+            "persons[0].days[15].shifts[0].planned_on_current_unit": {
+                "response": null,
+                "ground_truth": true,
+                "score": 0.0
+            },
+            "persons[0].days[5].shifts[0].length": {
+                "response": null,
+                "ground_truth": "full",
+                "score": 0.0
+            },
+            "persons[0].days[20].shifts[0].length": {
+                "response": null,
+                "ground_truth": "full",
+                "score": 0.0
+            },
+            "persons[0].days[9].shifts[0].icon": {
+                "response": null,
+                "ground_truth": "Freier Tag",
+                "score": 0.0
+            },
+            "persons[0].days[8].date": {
+                "response": null,
+                "ground_truth": "2025-04-09",
+                "score": 0.0
+            },
+            "persons[0].days[7].shifts[0].alternate_unit": {
+                "response": null,
+                "ground_truth": null,
+                "score": 1.0
+            },
+            "persons[0].days[27].shifts[0].icon": {
+                "response": null,
+                "ground_truth": "F-Dienst 1",
+                "score": 0.0
+            },
+            "persons[0].days[6].shifts[0].planned_on_current_unit": {
+                "response": null,
+                "ground_truth": true,
+                "score": 0.0
+            },
+            "persons[0].days[10].shifts[0].planned_on_current_unit": {
+                "response": null,
+                "ground_truth": true,
+                "score": 0.0
+            },
+            "persons[0].days[28].shifts[0].alternate_unit": {
+                "response": null,
+                "ground_truth": null,
+                "score": 1.0
+            },
+            "persons[0].days[24].shifts[0].planned_on_current_unit": {
+                "response": null,
+                "ground_truth": true,
+                "score": 0.0
+            },
+            "persons[0].days[5].shifts[0].alternate_unit": {
+                "response": null,
+                "ground_truth": null,
+                "score": 1.0
+            },
+            "persons[0].days[28].shifts[0].planned_on_current_unit": {
+                "response": null,
+                "ground_truth": true,
+                "score": 0.0
+            },
+            "persons[0].days[16].shifts[1].planned_on_current_unit": {
+                "response": null,
+                "ground_truth": true,
+                "score": 0.0
+            },
+            "persons[0].days[5].date": {
+                "response": null,
+                "ground_truth": "2025-04-06",
+                "score": 0.0
+            },
+            "persons[0].days[15].shifts[0].length": {
+                "response": null,
+                "ground_truth": "full",
+                "score": 0.0
+            },
+            "persons[0].days[19].shifts[0].alternate_unit": {
+                "response": null,
+                "ground_truth": null,
+                "score": 1.0
+            },
+            "persons[0].days[18].shifts[0].planned_on_current_unit": {
+                "response": null,
+                "ground_truth": true,
+                "score": 0.0
+            },
+            "persons[0].profession": {
+                "response": null,
+                "ground_truth": "SRK",
+                "score": 0.0
+            },
+            "persons[0].days[13].shifts[0].icon": {
+                "response": null,
+                "ground_truth": "Ferien",
+                "score": 0.0
+            },
+            "persons[0].days[11].shifts[0].planned_on_current_unit": {
+                "response": null,
+                "ground_truth": true,
+                "score": 0.0
+            },
+            "persons[0].id": {
+                "response": null,
+                "ground_truth": "111",
+                "score": 0.0
+            },
+            "persons[0].days[12].shifts[0].length": {
+                "response": null,
+                "ground_truth": "full",
+                "score": 0.0
+            },
+            "persons[0].days[9].date": {
+                "response": null,
+                "ground_truth": "2025-04-10",
+                "score": 0.0
+            },
+            "persons[0].days[26].shifts[0].length": {
+                "response": null,
+                "ground_truth": "full",
+                "score": 0.0
+            },
+            "persons[0].days[27].shifts[0].planned_on_current_unit": {
+                "response": null,
+                "ground_truth": true,
+                "score": 0.0
+            },
+            "persons[0].days[17].shifts[0].icon": {
+                "response": null,
+                "ground_truth": "Freier Tag",
+                "score": 0.0
+            },
+            "persons[0].days[26].shifts[0].icon": {
+                "response": null,
+                "ground_truth": "M-Dienst 3",
+                "score": 0.0
+            },
+            "persons[0].days[12].date": {
+                "response": null,
+                "ground_truth": "2025-04-13",
+                "score": 0.0
+            },
+            "persons[0].days[14].shifts[0].icon": {
+                "response": null,
+                "ground_truth": "Ferien",
+                "score": 0.0
+            },
+            "persons[0].days[15].shifts[0].alternate_unit": {
+                "response": null,
+                "ground_truth": null,
+                "score": 1.0
+            },
+            "persons[0].days[7].shifts[0].length": {
+                "response": null,
+                "ground_truth": "full",
+                "score": 0.0
+            },
+            "persons[0].days[23].shifts[0].icon": {
+                "response": null,
+                "ground_truth": "Freier Tag",
+                "score": 0.0
+            },
+            "persons[0].days[14].shifts[0].length": {
+                "response": null,
+                "ground_truth": "full",
+                "score": 0.0
+            },
+            "persons[0].days[2].date": {
+                "response": null,
+                "ground_truth": "2025-04-03",
+                "score": 0.0
+            },
+            "persons[0].days[26].shifts[0].alternate_unit": {
+                "response": null,
+                "ground_truth": null,
+                "score": 1.0
+            },
+            "persons[0].days[28].shifts[0].icon": {
+                "response": null,
+                "ground_truth": "M-Dienst 4",
+                "score": 0.0
+            },
+            "month": {
+                "response": null,
+                "ground_truth": "April",
+                "score": 0.0
+            },
+            "persons[0].days[14].shifts[0].alternate_unit": {
+                "response": null,
+                "ground_truth": null,
+                "score": 1.0
+            }
+        },
+        "total_fields": 165
+    },
+    "raw_response": "{\"id\":\"owKD9ZT-31r7CA-a2b95d9a3832a5f8\",\"choices\":[{\"finish_reason\":\"length\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"We need parse images. Need extract header: year 2025, month April (April 2025). Need icon legend image and one roster row for single person. Need identify row image? Only three images given: header, icon legend, and one roster row? Actually image 3 seems to be bottom part of legend? Let's inspect carefully.\\n\\nWe have image 1: header with \\\"BG S April 2025\\\" and days 01-30 with weekdays Di Mi Do Fr Sa So Mo etc. So year=2025 month=\\\"April\\\" (probably \\\"April\\\").\\n\\nImage 2: icon legend with many entries and codes. Need match icons.\\n\\nImage 3: looks like bottom strip with \\\"111\\\" and \\\"80 M F F F F 0 0 F...\\\" maybe this is the roster row? Actually image 3 is very narrow horizontal strip showing numbers and letters in cells, likely the row data for one person across days. Need decode.\\n\\nBut also need person info: id handwritten in margin, profession section label printed above row, employment percent, is_jumper (S column). However we don't have the full row image with left margin? Maybe image 3 includes left part? Let's examine image 3: left side has \\\"111\\\" in blue? Then \\\"80 M\\\" then boxes with F, F, F, F, 0,0,F,Q,Q,Q,F,Q,Q,F,F,F,F,Q,Q,Q, then \\\"MD4 MD4\\\" etc, then \\\"0 0 FD1 MD2\\\" etc, \\\"MD4 FD1\\\" and \\\"15\\\" at right. This looks like a row with employment 80, gender M, and then shift codes for each day? But we need map to icons using legend. However the prompt says \\\"You are given three images: (1) the roster header, (2) an icon legend, and (3) one roster row for a single person.\\\" So image 3 is indeed the row. But we need also the left margin with id and profession? Maybe it's in the row image but cropped? Actually image 3 might be just the data cells, but we need extract id and profession from the row image if present. Let's examine image 3 more precisely.\\n\\nImage 3 shows:\\n- Far left: \\\"111\\\" in blue italic? Then \\\"80\\\" then \\\"M\\\" then a box \\\"F\\\" then \\\"F\\\" \\\"F\\\" \\\"F\\\" \\\"F\\\" \\\"0\\\" \\\"0\\\" \\\"F\\\" \\\"Q\\\" \\\"Q\\\" \\\"Q\\\" \\\"F\\\" \\\"Q\\\" \\\"Q\\\" \\\"F\\\" \\\"F\\\" \\\"F\\\" \\\"F\\\" \\\"Q\\\" \\\"Q\\\" \\\"Q\\\" then \\\"MD4 MD4\\\" then \\\"0\\\" \\\"0\\\" \\\"FD1\\\" \\\"MD2\\\" then \\\"MD\\\" with small \\\"TS\\\" then \\\"MD4\\\" \\\"FD1\\\" then \\\"15\\\" at far right.\\n\\nBut wait, the row should align with days 01-30. Let's count cells. From left after \\\"M\\\" there might be 30 cells? Let's count precisely.\\n\\nWe need understand the layout: The header image shows columns: BG S | then for each day: Di Mi Do Fr Sa So Mo Di Mi Do Fr Sa So Mo Di Mi Do Fr Sa So Mo Di Mi ... with dates 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31? Actually April has 30 days, so 30 columns. Plus left columns: BG, S, maybe employment, gender? Let's understand typical roster layout: Left columns might include BG (Bereichsgruppe?), S (Springer?), then maybe employment percent, then gender? But in image 3 we see \\\"111\\\" then \\\"80\\\" then \\\"M\\\" then cells.\\n\\nBut the prompt says: \\\"PERSON - id: the person number (may be handwritten in the margin) - profession: the section label printed ABOVE the row (e.g. \\\"WBL\\\", \\\"Terti\u00e4r\\\"), not a value from the data columns - employment_percent: the number in the employment column (e.g. 80, 50, 0) - is_jumper: true if \\\"S\\\" is marked in the S column, false otherwise\\\"\\n\\nSo we need identify these from the row image. The row image might include left margin with handwritten id? But image 3 doesn't show margin clearly. However maybe \\\"111\\\" is the id? Or \\\"80\\\" is employment percent, \\\"M\\\" is gender not needed. The \\\"S\\\" column might be present but not visible? Actually in header there's \\\"BG S\\\" columns. So there should be an S column near left. In image 3, after \\\"111\\\" maybe there's \\\"80\\\" then \\\"M\\\" then \\\"F\\\"... Wait need align correctly.\\n\\nLet's think: The header image shows \\\"BG S\\\" then \\\"April 2025\\\" then days. So the leftmost columns are BG and S. Then maybe other columns like name, employment, etc. But in image 3, we see \\\"111\\\" then \\\"80 M\\\" then cells. Could \\\"111\\\" be in BG column? Or id handwritten?\\n\\nBut also need profession: section label printed ABOVE the row. That might be in the row image but not visible in crop? Actually image 3 might be just the bottom part of the legend? Wait no, image 3 is a narrow strip with letters and numbers, likely the row.\\n\\nHowever, we need produce JSON with one person and days array for each date in April 2025 (1-30). For each day, extract shift(s) based on cell content mapped to legend.\\n\\nWe need decode the row cells for each day. The cells contain letters like F, 0, Q, MD4, etc. But the legend lists icons with descriptive names and codes like \\\"L 932 L\\\", \\\"M 817 (NDP) N1 (NDP)\\\", \\\"RAI 228 RAI/RUG\\\", \\\"F1 300 F-Dienst 1\\\", \\\"BES 219 BESPRECHUNG\\\", \\\"HO 200 HomeOffice\\\", \\\"SCH 922 Sch\u00fclerbetreuung\\\", \\\"SD 340 S-Dienst 1\\\", \\\"BT 232 B\u00fcrotag\\\", \\\"M3 322 (4SO) M-Dienst 3 (4SO)\\\", \\\"M4 323 M-Dienst 4\\\", \\\"TV 905 TV-FAL\\\", \\\"SD 919 SD\\\", \\\"AZU 8897 Azu-Gespr\u00e4che dives (PZG)\\\", \\\"UK 206 (3SO) Unfall\\\", \\\"K 203 Kranktag\\\", \\\"F 202 Ferien\\\", \\\"Zt 211 Z\u00fcgeltag\\\", \\\"MS 214 Mutterschutz\\\", \\\"W 222 (ASH) Wunschfrei (ASH)\\\", \\\"D 224 (2SO) Freier Tag (2SO)\\\", \\\"OB 238 Obl.Fort-Bildung\\\", \\\"S 216 Schultag\\\", \\\"KW 207 Kurse bezahlte Weiterb.\\\", \\\"PA\\\" \\\"SU\\\" \\\"SCH\\\" \\\"UU\\\" \\\"BA\\\" etc.\\n\\nBut the row cells contain \\\"F\\\", \\\"0\\\", \\\"Q\\\", \\\"MD4\\\", \\\"FD1\\\". These might correspond to codes in the legend? Actually \\\"F\\\" could be \\\"F-Dienst 1\\\" (F1) or \\\"Ferien\\\" (F) or \\\"Freier Tag\\\" (D?). \\\"Q\\\" might be \\\"Q\\\" for something? \\\"MD4\\\" might be \\\"M-Dienst 4\\\". \\\"FD1\\\" might be \\\"F-Dienst 1\\\". \\\"0\\\" might be \\\"0\\\" meaning no shift? Or \\\"0\\\" could be part of \\\"0 0\\\"? Let's examine the row more carefully.\\n\\nWe need match cell's icon against legend. But the row image shows text inside cells, not icons? Wait the legend image shows icons with text descriptions. The row might have icons that are represented by letters in the image due to low resolution? Actually image 3 is very low resolution horizontal strip; maybe the cells contain small icons that are rendered as letters? Or maybe the row is printed with abbreviations inside cells, and we need map those abbreviations to the legend descriptions? The prompt says \\\"icon: match the cell's icon against the icon legend. Use the descriptive name, not the number. Only assign an icon if you can clearly identify a matching icon from the legend. If there is no icon in the cell, use null.\\\" So the cells should contain icons (like symbols). But in image 3 we see letters like F, Q, 0, MD4, FD1. These might actually be the icons? No, they look like text codes.\\n\\nWait, maybe image 3 is not the row but part of the legend? Let's re-examine image 2: It's a large legend with many entries arranged in columns. At the bottom right there are entries: \\\"Pers\u00f6nliche Absenz PA PA\\\", \\\"Schwangerschaftsurlaub Su Su Su Su\\\", \\\"Schule S\\\", \\\"Unbezahlter Urlaub UU\\\", \\\"Betriebsausflug BA\\\". So image 2 includes these bottom right entries. Image 3 might be the bottom left of the legend? Actually image 3 shows \\\"111\\\" and \\\"80 M F F F...\\\" That doesn't match legend.\\n\\nLet's consider that the user said \\\"You are given three images: (1) the roster header, (2) an icon legend, and (3) one roster row for a single person.\\\" So image 3 must be the row. The row likely has left columns with person info, then cells for each day. The cells might contain abbreviations that correspond to shift types. We need map them using the legend? But the legend lists icons with descriptions, not abbreviations\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":[]},\"seed\":null}],\"created\":1786809292,\"model\":\"thinkingmachines/Inkling\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":\"default\",\"usage\":{\"completion_tokens\":2048,\"prompt_tokens\":3342,\"total_tokens\":5390,\"completion_tokens_details\":null,\"prompt_tokens_details\":{\"audio_tokens\":null,\"cached_tokens\":2432}},\"prompt\":[]}"
+}

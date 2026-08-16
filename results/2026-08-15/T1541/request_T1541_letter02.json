@@ -1,0 +1,46 @@
+{
+    "text": "{\"metadata\":{\"send_date\":[\"1926-03-04\"],\"letter_title\":[\"\"],\"sender_persons\":[\"Basler Rheinschiffahrt-Aktiengesellschaft\"],\"receiver_persons\":[\"P. Christ - Wackernagel\"]}}",
+    "model": "thinkingmachines/Inkling-Small",
+    "provider": "huggingface",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 9962,
+        "output_tokens": 1000,
+        "total_tokens": 10962,
+        "input_cost_usd": 0.004482900000000001,
+        "output_cost_usd": 0.0012,
+        "estimated_cost_usd": 0.0056829
+    },
+    "duration": 23.90706729888916,
+    "timestamp": "2026-08-15T16:31:15.119860",
+    "parsed": {
+        "metadata": {
+            "send_date": [
+                "1926-03-04"
+            ],
+            "letter_title": [
+                ""
+            ],
+            "sender_persons": [
+                "Basler Rheinschiffahrt-Aktiengesellschaft"
+            ],
+            "receiver_persons": [
+                "P. Christ - Wackernagel"
+            ],
+            "document_number": "letter02"
+        }
+    },
+    "conversation_id": "cb3a03e0-88aa-4e51-8b14-dd623dc1d89e",
+    "score": {
+        "send_date_tp": 1,
+        "send_date_fp": 0,
+        "send_date_fn": 0,
+        "sender_persons_tp": 0,
+        "sender_persons_fp": 1,
+        "sender_persons_fn": 1,
+        "receiver_persons_tp": 1,
+        "receiver_persons_fp": 0,
+        "receiver_persons_fn": 0
+    },
+    "raw_response": "{\"id\":\"chatcmpl-R35PbUHsPEKS8HsykbV5qmRt\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\n\\n\\n\\\"metadata\\\": {\\n\\\"send_date\\\": [\\\"1926-03-04\\\"],\\n\\\"letter_title\\\": [\\\"\\\"],\\n\\\"sender_persons\\\": [\\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"],\\n\\\"receiver_persons\\\": [\\\"P. Christ - Wackernagel\\\"]\\n}\\n}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"metadata\":{\"send_date\":[\"1926-03-04\"],\"letter_title\":[\"\"],\"sender_persons\":[\"Basler Rheinschiffahrt-Aktiengesellschaft\"],\"receiver_persons\":[\"P. Christ - Wackernagel\"]}},\"reasoning_content\":\"We need parse letter. First image: letterhead \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\". Date at top right: \\\"Basel, den 4. M\u00e4rz 1926.\\\" So send_date likely 1926-03-04. Receiver: \\\"Herrn P. Christ - Wackernagel, 1/Fa. Paravicini, Christ & Co., Basel, Kaufhausgasse 7.\\\" So receiver_persons: [\\\"P. Christ - Wackernagel\\\"]? Maybe \\\"P. Christ\\\" and company? The key asks name(s) of person(s) who received. So [\\\"P. Christ\\\"] or [\\\"P. Christ - Wackernagel\\\"]. Let's use [\\\"P. Christ - Wackernagel\\\"]. Sender: The letter is from Basler Rheinschiffahrt-Aktiengesellschaft, signed by \\\"Der Pr\u00e4sident\\\" with signature. But sender_persons likely the company or individual? The letter says \\\"Wir gestatten uns...\\\" from company. At end: \\\"Hochachtungsvoll BASLER RHEINSCHIFFAHRT-AKTIENGESELLSCHAFT Der Pr\u00e4sident [signature]\\\". So sender is the company, but person is president unnamed? Could list company as sender? The instruction: Name(s) of person(s) who wrote the letter. Since signed by president, maybe unknown. But letterhead indicates organization. Could put [\\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"] as sender_persons? However they ask for persons. But if not specified, maybe null. Let's inspect: First page no signature of individual name; just company. Second page header \\\"Herrn Christ, Basel. 4.3.26.\\\" So it's a multi-page letter, likely same sender. At end page 5 signature \\\"Der Pr\u00e4sident\\\" without name. So sender_persons could be null because individual not named, but organization is sender. However key says sender_persons: Name(s) of person(s) who wrote the letter. Could include company name as entity? Usually in these tasks, they extract named individuals. Since no individual named, set to null? But letterhead is sender. Let's see example: \\\"Lisa Simpson\\\". So persons. Here the writer is the company, represented by president. Might be acceptable to put [\\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"]. But let's decide: Provide sender_persons as [\\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"] because that's who wrote it. Or maybe [\\\"Der Pr\u00e4sident\\\"]? No.\\n\\nLetter title: Not explicitly titled. Could be null. But maybe \\\"Betriebsgemeinschaft\\\" proposal? Since no title, null.\\n\\nLet's compile:\\n- letter_title: null (or maybe \\\"Vorschlag f\u00fcr Betriebsgemeinschaft\\\"? Not a title). Set null.\\n- sender_persons: [\\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"]? Let's think: The first page letterhead is the sender. The text is written by them. So list company.\\n- send_date: [\\\"1926-03-04\\\"] (from \\\"den 4. M\u00e4rz 1926\\\" and pages say 4.3.26).\\n- receiver_persons: [\\\"P. Christ - Wackernagel\\\"].\\n\\nBut also on second page it says \\\"Herrn Christ,\\\" so receiver is Christ. Could be [\\\"P. Christ\\\"].\\n\\nLet's provide:\\n{\\n\\\"letter_title\\\": [null],\\n\\\"sender_persons\\\": [\\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"],\\n\\\"send_date\\\": [\\\"1926-03-04\\\"],\\n\\\"receiver_persons\\\": [\\\"P. Christ - Wackernagel\\\"]\\n}\\n\\nWait values should be stored as a list, even if single. For null, should it be [\\\"null\\\"]? The instruction: \\\"If a piece of information is not included in the letter, set the value for the corresponding key to 'null'.\\\" Since values are lists, maybe [null]. Example shows lists of strings. For missing, likely null inside list? Or just null? It says set value to \\\"null\\\". But also says values corresponding to each key should be stored as a list. So probably [null]. Let's do that.\\n\\nLet's refine sender: Could also be [\\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\", \\\"Der Pr\u00e4sident\\\"] but not named. I think company is fine.\\n\\nActually looking at signature: \\\"Der Pr\u00e4sident\\\" is a role, not name. So sender_persons: [\\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"].\\n\\nLet's craft final JSON.\",\"name\":null}}],\"created\":1786804275,\"model\":\"thinkingmachines/Inkling-Small\",\"object\":\"chat.completion\",\"service_tier\":\"default\",\"system_fingerprint\":null,\"usage\":{\"completion_tokens\":1000,\"prompt_tokens\":9962,\"total_tokens\":10962,\"completion_tokens_details\":null,\"prompt_tokens_details\":{\"audio_tokens\":null,\"cached_tokens\":0,\"cache_write_tokens\":null},\"estimated_cost\":0.005682900000000001,\"reasoning_tokens\":937}}"
+}

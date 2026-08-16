@@ -1,0 +1,65 @@
+{
+    "text": "{\"advertisements\":[{\"box\":[210.0,460.0,1120.0,1920.0]},{\"box\":[1200.0,460.0,2100.0,1920.0]},{\"box\":[200.0,1950.0,2100.0,2800.0]},{\"box\":[200.0,2850.0,2100.0,3600.0]}]}",
+    "model": "meta-models/Muse-Glimmer-30B",
+    "provider": "huggingface",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 3916,
+        "output_tokens": 1379,
+        "total_tokens": 5295,
+        "cached_tokens": 48,
+        "input_cost_usd": 0.0013706,
+        "output_cost_usd": 0.0020685,
+        "estimated_cost_usd": 0.0034391
+    },
+    "duration": 16.0042986869812,
+    "timestamp": "2026-08-16T03:38:52.503884",
+    "parsed": {
+        "advertisements": [
+            {
+                "box": [
+                    210.0,
+                    460.0,
+                    1120.0,
+                    1920.0
+                ]
+            },
+            {
+                "box": [
+                    1200.0,
+                    460.0,
+                    2100.0,
+                    1920.0
+                ]
+            },
+            {
+                "box": [
+                    200.0,
+                    1950.0,
+                    2100.0,
+                    2800.0
+                ]
+            },
+            {
+                "box": [
+                    200.0,
+                    2850.0,
+                    2100.0,
+                    3600.0
+                ]
+            }
+        ]
+    },
+    "conversation_id": "13bfa524-4584-473f-af12-95433d2177eb",
+    "score": {
+        "f1": 0.5,
+        "precision": 0.5,
+        "recall": 0.5,
+        "mean_iou": 0.819,
+        "true_positives": 2,
+        "false_positives": 2,
+        "false_negatives": 2,
+        "iou_threshold": 0.5
+    },
+    "raw_response": "{\"id\":\"owNKBiM-fdNmn-a2bcb8748a612419\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{ \\\"advertisements\\\": [\\n  {\\n    \\\"box\\\": [210, 460, 1120, 1920]\\n  },\\n  {\\n    \\\"box\\\": [1200, 460, 2100, 1920]\\n  },\\n  {\\n    \\\"box\\\": [200, 1950, 2100, 2800]\\n  },\\n  {\\n    \\\"box\\\": [200, 2850, 2100, 3600]\\n  }\\n] }\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"advertisements\":[{\"box\":[210.0,460.0,1120.0,1920.0]},{\"box\":[1200.0,460.0,2100.0,1920.0]},{\"box\":[200.0,1950.0,2100.0,2800.0]},{\"box\":[200.0,2850.0,2100.0,3600.0]}]},\"reasoning\":\"Extract all advertisements and return their bounding boxes.\\nThe original size of the page is 2479 x 3508 pixels.\\n\\nWe need bounding boxes for each advertisement. There are four ads:\\n\\nTop left: RONEO St. Annahof ZURICH...\\nTop right: Lloyds and National Provincial Foreign Bank Limited.\\nMiddle: The DEMOS...\\nBottom: SACCHARIN HERMES Ltd.\\n\\nNeed coordinates. Probably normalized? Usually bounding boxes as [x_min, y_min, x_max, y_max] in pixels. Original size 2479 x 3508. Need estimate.\\n\\nLet's approximate. Image shows page. Let's assume coordinates relative to image. The page is centered. Might need to give approximate pixel values.\\n\\nWe can estimate percentages.\\n\\nTop left ad: left ~ 100? Let's approximate. The page width 2479. The left margin maybe ~ 100 px. The ad box starts around x ~ 100? Actually the page is scanned with black border. The content starts maybe at x ~ 100. Let's estimate.\\n\\nBetter to give relative coordinates as [x_min, y_min, x_max, y_max] in pixels.\\n\\nLet's assume the page content area is roughly from x=100 to x=2400? Hmm.\\n\\nMaybe we can give approximate bounding boxes:\\n\\nRONEO ad: x_min ~ 100, y_min ~ 125, x_max ~ 470, y_max ~ 495? Wait y is vertical. Top of page ~ 100. The ad top border ~ 125? Let's approximate.\\n\\nAlternative: Use normalized 0-1000? Might be expected as pixel coordinates.\\n\\nGiven uncertainty, provide approximate boxes.\\n\\nLet's estimate:\\n\\nImage height 3508. Top header at ~ 300 px. Ad top ~ 450? Hmm.\\n\\nLet's try to get rough percentages:\\n\\nRONEO ad occupies left top quadrant. Approx x 10% to 45% of width, y 12% to 50% of height.\\n\\n10% of 2479 = 248. 45% = 1116. y 12% of 3508 = 421. 50% = 1754.\\n\\nSo box ~ [250, 420, 1120, 1750].\\n\\nLloyds ad top right: x 50% to 85%, y 12% to 50%. 50% = 1240. 85% = 2107. y same 420-1750.\\n\\nSo [1240, 420, 2100, 1750].\\n\\nDEMOS ad middle spanning full width: x ~ 10% to 85%, y ~ 50% to 70%. y 50% = 1754. 70% = 2456. So [250, 1750, 2100, 2450].\\n\\nSACCHARIN ad bottom: x ~ 10% to 85%, y ~ 70% to 88%. 70% = 2456. 88% = 3087. So [250, 2450, 2100, 3100].\\n\\nMaybe refine.\\n\\nLet's give four boxes.\\n\\nI'll output as list.\\n\\nProbably need JSON format? Just list.\\n\\nI'll provide approximate pixel coordinates.\\n\\nLet's assume more precise:\\n\\nRONEO: [108, 125, 470, 495]? Wait that's too small.\\n\\nBetter to use image coordinates. Let's assume the scanned page occupies most of image. The black border at top/bottom. The page content starts at about y=300. The RONEO box top border at y ~ 450. Bottom at y ~ 1900. Left at x ~ 200. Right at x ~ 1100.\\n\\nLet's pick:\\n\\nRONEO: x_min=210, y_min=460, x_max=1120, y_max=1920\\n\\nLloyds: x_min=500, y_min=460, x_max=2100, y_max=1920? Wait Lloyds is to right of RONEO, maybe x_min=500? Actually gap. Let's say x_min=1200, y_min=460, x_max=2100, y_max=1920\\n\\nDEMOS: x_min=200, y_min=1950, x_max=2100, y_max=2800\\n\\nSACCHARIN: x_min=200, y_min=2850, x_max=2100, y_max=3700? But max y is 3508. So maybe 2850-3650.\\n\\nLet's adjust to fit within 3508.\\n\\nMaybe y_max for SACCHARIN ~ 3600.\\n\\nLet's propose:\\n\\n1. RONEO: [210, 460, 1120, 1920]\\n2. Lloyds and National Provincial Foreign Bank Limited: [1200, 460, 2100, 1920]\\n3. The DEMOS: [200, 1950, 2100, 2800]\\n4. SACCHARIN: [200, 2850, 2100, 3650] but 3650 > 3508. So 3500.\\n\\nLet's set 2850-3600.\\n\\nI'll give approximate.\\n\\nMaybe better to give normalized coordinates 0-1.\\n\\nCould give as [x_min, y_min, x_max, y_max] in pixels.\\n\\nI'll output four boxes.\\n\\nLet's refine estimates using visual proportion.\\n\\nWidth 2479. Left margin ~ 100 px. Right margin ~ 100 px. So content width ~ 2279. RONEO width ~ 900 px. So x_min ~ 200, x_max ~ 1100. Lloyds width ~ 900 px, x_min ~ 1200, x_max ~ 2100.\\n\\nHeight 3508. Top margin ~ 300. RONEO top ~ 500, bottom ~ 1900. So y_min ~ 500, y_max ~ 1900.\\n\\nDEMOS top ~ 1950, bottom ~ 2800.\\n\\nSACCHARIN top ~ 2850, bottom ~ 3600.\\n\\nLet's output.\\n\\nI'll provide bounding boxes as approximate.\\n\\nFinal answer: list.\\n\\n\"},\"token_ids\":null,\"routed_experts\":null,\"seed\":null}],\"created\":1786844317,\"model\":\"meta-models/Muse-Glimmer-30B\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":\"vllm-0.1.dev19059+g66826a22d-tp2-46311a71\",\"usage\":{\"completion_tokens\":1379,\"prompt_tokens\":3916,\"total_tokens\":5295,\"completion_tokens_details\":null,\"prompt_tokens_details\":{\"audio_tokens\":null,\"cached_tokens\":48,\"created_cache_tokens\":3856,\"multimodal_tokens\":{\"image\":3850}}},\"prompt_token_ids\":null,\"prompt_text\":null,\"kv_transfer_params\":null,\"ec_transfer_params\":null,\"metrics\":null,\"prompt\":[]}"
+}

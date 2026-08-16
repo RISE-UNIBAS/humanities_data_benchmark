@@ -1,0 +1,47 @@
+{
+    "text": "{\"metadata\":{\"send_date\":[\"1932-10-04\"],\"letter_title\":[\"\"],\"sender_persons\":[\"Basler Rheinschiffahrt Aktiengesellschaft\"],\"receiver_persons\":[\"Dr. Max Vischer\"]}}",
+    "model": "thinkingmachines/Inkling",
+    "provider": "huggingface",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 6106,
+        "output_tokens": 1214,
+        "total_tokens": 7320,
+        "cached_tokens": 256,
+        "input_cost_usd": 0.006106,
+        "output_cost_usd": 0.0049166999999999995,
+        "estimated_cost_usd": 0.0110227
+    },
+    "duration": 14.004438161849976,
+    "timestamp": "2026-08-15T16:43:05.470763",
+    "parsed": {
+        "metadata": {
+            "send_date": [
+                "1932-10-04"
+            ],
+            "letter_title": [
+                ""
+            ],
+            "sender_persons": [
+                "Basler Rheinschiffahrt Aktiengesellschaft"
+            ],
+            "receiver_persons": [
+                "Dr. Max Vischer"
+            ],
+            "document_number": "letter52"
+        }
+    },
+    "conversation_id": "5ab465ac-15e8-4bf2-8aad-0841174e79f6",
+    "score": {
+        "send_date_tp": 1,
+        "send_date_fp": 0,
+        "send_date_fn": 0,
+        "sender_persons_tp": 0,
+        "sender_persons_fp": 1,
+        "sender_persons_fn": 2,
+        "receiver_persons_tp": 1,
+        "receiver_persons_fp": 0,
+        "receiver_persons_fn": 0
+    },
+    "raw_response": "{\"id\":\"owJtQ3a-31r7CA-a2b8f7ea4b4a9cc0\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\n  \\\"metadata\\\": {\\n    \\\"send_date\\\": [\\\"1932-10-04\\\"],\\n    \\\"letter_title\\\": [\\\"\\\"],\\n    \\\"sender_persons\\\": [\\\"Basler Rheinschiffahrt Aktiengesellschaft\\\"],\\n    \\\"receiver_persons\\\": [\\\"Dr. Max Vischer\\\"]\\n  }\\n}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"metadata\":{\"send_date\":[\"1932-10-04\"],\"letter_title\":[\"\"],\"sender_persons\":[\"Basler Rheinschiffahrt Aktiengesellschaft\"],\"receiver_persons\":[\"Dr. Max Vischer\"]}},\"reasoning\":\"We need extract values from images of historical letter. Need identify letter_title, sender_persons, send_date, receiver_persons. Let's analyze images.\\n\\nImage 1: Header \\\"BASLER RHEINSCHIFFFAHRT AKTIENGESELLSCHAFT BASEL * MARKTGASSE 5\\\". Date \\\"Basel, den 4.Oktober 1932\\\". Addressed to \\\"Herrn Dr. Max Vischer, Advokat und Notar, Basel. St. Albengraben 8.\\\" So receiver is Dr. Max Vischer. Sender? At bottom of page 3 there is signature and printed \\\"BASLER RHEINSCHIFFFAHRT-AKTIENGESELLSCHAFT\\\" with signatures. So sender is Basler Rheinschiffahrt Aktiengesellschaft? Or specific persons? The letter is written by the company, likely sender_persons should be the company or signatories? Need determine from context. The prompt asks \\\"Name(s) of the person(s) who wrote the letter.\\\" In business letters, often the organization is sender, but they ask persons. However in example they used \\\"Lisa Simpson\\\". Here signatures are present but not clearly readable names except company name printed. Let's inspect image 3 bottom: printed \\\"Mit vorz\u00fcglicher Hochachtung BASEL RHEINSCHIFFFAHRT-AKTIENGESELLSCHAFT\\\" and two signatures, one maybe \\\"M\u00fcller\\\"? Not clear. But the letterhead indicates the company. Usually for extraction, sender_persons might be [\\\"Basler Rheinschiffahrt Aktiengesellschaft\\\"]? But that's not a person. Let's examine if any individual named in body? No. So likely sender is the company represented, but since key is sender_persons, maybe list the company? Or null? Let's think.\\n\\nWe need letter_title: Title of the letter. There might not be explicit title. Could be null. But sometimes the subject is implied. Let's check if there's a title like \\\"B/M\\\" in first image? There's \\\"B/M\\\" near date. Not a title. So letter_title likely null.\\n\\nSend date: \\\"1932-10-04\\\" (4 October 1932).\\n\\nReceiver persons: [\\\"Dr. Max Vischer\\\"].\\n\\nSender persons: The letter is from Basler Rheinschiffahrt Aktiengesellschaft. The signatures might be of representatives, but unreadable. Given instructions \\\"Name(s) of the person(s) who wrote the letter.\\\" In absence of clear individual names, but the letterhead identifies the organization as author. However they said \\\"persons\\\". Might still accept organization? Let's check consistency: In example receiver includes \\\"Mayor Joe Quimby, Seymour Skinner\\\" - persons. For sender \\\"Lisa Simpson\\\" - person. So they want personal names. If not present, maybe null? But we have company name printed at bottom as signatory entity. Actually in formal letters, the signatory is the company, but individuals sign. The signatures are illegible in image. So we might not be able to extract specific person names. But we can extract the company name from letterhead and closing. Is that a person? No.\\n\\nLet's examine image 1 top left: \\\"BASLER RHEINSCHIFFFAHRT AKTIENGESELLSCHAFT\\\" - that's the sender organization. The address block is recipient. So likely sender_persons should be null? Or include company? Let's decide based on typical extraction tasks for letters: They often want the author, which can be an organization. The key is named \\\"sender_persons\\\" but might be used loosely. However they said \\\"person(s)\\\" specifically. But if only organization is visible, we should put that? Let's hold that thought.\\n\\nAlso need check page 2 and 3 for any other names. Page 2 header \\\"Herrn Dr. Max Vischer, Basel. 4.10.32.\\\" Page 3 same. So receiver consistently Dr. Max Vischer.\\n\\nThus JSON:\\n{\\n\\\"letter_title\\\": [null? or maybe \\\"B/M\\\"? No, that's reference. Let's set null],\\n\\\"send_date\\\": [\\\"1932-10-04\\\"],\\n\\\"sender_persons\\\": [\\\"Basler Rheinschiffahrt Aktiengesellschaft\\\"], maybe?\\n\\\"receiver_persons\\\": [\\\"Dr. Max Vischer\\\"]\\n}\\n\\nBut need values stored as list, even if single. Yes.\\n\\nLet's verify date format: 1932-10-04.\\n\\nCould there be a title in the letter? The first line after salutation: \\\"Wir best\u00e4tigen den Empfang Ihres Schreibens vom 23. September...\\\" No title.\\n\\nThus I will return with sender as the company, since it's the identifiable sender. But wait, they said \\\"Do not use OCR. Use the ISO format...\\\" Not relevant.\\n\\nLet's refine: Maybe sender_persons are the signatories visible at bottom right of page 3. One signature looks like \\\"M\u00fcller\\\" or \\\"Meyer\\\"? Actually there are two signatures. One might be readable: The first signature looks like \\\"Rudolf\\\"?? Let's examine mental image: At bottom right, printed name \\\"BASEL RHEINSCHIFFFAHRT-AKTIENGESELLSCHAFT\\\" then two handwritten signatures. The left one might be \\\"M. M\u00fcller\\\"? The right one maybe \\\"J. ???\\\". It's too unclear. So best not to guess. Use organization.\\n\\nBut the key is \\\"sender_persons\\\" plural. Could list [\\\"Basler Rheinschiffahrt Aktiengesellschaft\\\"]. Let's do that.\\n\\nWait, there might be an explicit sender in the address block? No, that's recipient.\\n\\nThus final JSON.\"},\"seed\":null}],\"created\":1786805127,\"model\":\"thinkingmachines/Inkling\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":\"default\",\"usage\":{\"completion_tokens\":1214,\"prompt_tokens\":6106,\"total_tokens\":7320,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":null,\"reasoning_tokens\":1147,\"rejected_prediction_tokens\":null},\"prompt_tokens_details\":{\"audio_tokens\":null,\"cached_tokens\":256}},\"prompt\":[]}"
+}

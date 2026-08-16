@@ -1,0 +1,42 @@
+{
+    "text": "{\"metadata\":{\"send_date\":[\"1926-03-20\"],\"letter_title\":null,\"sender_persons\":null,\"receiver_persons\":[\"Dr. W. Kresting\"]}}",
+    "model": "thinkingmachines/Inkling",
+    "provider": "huggingface",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 2254,
+        "output_tokens": 1177,
+        "total_tokens": 3431,
+        "input_cost_usd": 0.002254,
+        "output_cost_usd": 0.00476685,
+        "estimated_cost_usd": 0.00702085
+    },
+    "duration": 13.810996532440186,
+    "timestamp": "2026-08-15T16:27:33.015910",
+    "parsed": {
+        "metadata": {
+            "send_date": [
+                "1926-03-20"
+            ],
+            "letter_title": null,
+            "sender_persons": null,
+            "receiver_persons": [
+                "Dr. W. Kresting"
+            ],
+            "document_number": "letter05"
+        }
+    },
+    "conversation_id": "452d98f5-6c7f-4bb6-94ff-8ae8938e7ba9",
+    "score": {
+        "send_date_tp": 0,
+        "send_date_fp": 1,
+        "send_date_fn": 1,
+        "sender_persons_tp": 0,
+        "sender_persons_fp": 0,
+        "sender_persons_fn": 0,
+        "receiver_persons_tp": 0,
+        "receiver_persons_fp": 1,
+        "receiver_persons_fn": 1
+    },
+    "raw_response": "{\"id\":\"owJkksY-31r7CA-a2b8e123a880da36\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\n  \\\"metadata\\\": {\\n    \\\"send_date\\\": [\\\"1926-03-20\\\"],\\n    \\\"letter_title\\\": null,\\n    \\\"sender_persons\\\": null,\\n    \\\"receiver_persons\\\": [\\\"Dr. W. Kresting\\\"]\\n  }\\n}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"metadata\":{\"send_date\":[\"1926-03-20\"],\"letter_title\":null,\"sender_persons\":null,\"receiver_persons\":[\"Dr. W. Kresting\"]}},\"reasoning\":\"We need parse image of historical letter. Need extract letter_title, sender_persons, send_date, receiver_persons. Let's analyze visible text.\\n\\nImage shows typed letter in German. Top right: \\\"5\\\" maybe page. Then \\\"Basel, den 20.M\u00e4rz 1926.\\\" So send_date 1926-03-20.\\n\\nThen \\\"T\\\" maybe? Then \\\"Herrn Dr.W.Kresting,\\\" with underline? Actually \\\"Herrn\\\" is dative of Herr. So receiver is Dr. W. Kresting? Let's read precisely: \\\"Herrn Dr.W.Kresting,\\\" Yes receiver_persons [\\\"Dr. W. Kresting\\\"].\\n\\nThen organization line: \\\"Internationale Ausstellung f\u00fcr Binnenschiffahrt und Wasserkraftnutzung Basel 1926\\\" maybe that's letter title? Or context. Then \\\"Basel.\\\" with underline.\\n\\nThen body: \\\"Ich best\u00e4tige Ihnen dankend den Erhalt Ihres Schreibens vom 26. dies und teile Ihnen mit,dass die Besprechungen mit verschiedenen unserer Vorstandsmitglieder wegen einer Betriebsgemeinschaft weiter gef\u00fchrt werden. Ich glaube,dass wir n\u00e4chstens mit einem Vorschlage werden an Sie herantreten k\u00f6nnen.\\\"\\n\\nThen \\\"Hochachtungsvoll\\\"\\n\\nNo explicit sender name visible? Maybe the letterhead or signature missing? Let's check if there's sender at bottom right? Not visible in image, maybe cut off? Actually bottom is blank. So sender_persons might be null? But maybe the organization is sender? The prompt asks \\\"Name(s) of the person(s) who wrote the letter.\\\" Not visible, so null.\\n\\nWhat about letter_title? Could be none, but there might be implied title from organization line? The letter doesn't have a title like \\\"Betreff\\\". But there is the event name \\\"Internationale Ausstellung f\u00fcr Binnenschiffahrt und Wasserkraftnutzung Basel 1926\\\". Is that the title? Usually in extraction tasks they want \\\"letter_title\\\" if present. Here maybe not present, but the line centered might serve as letterhead/title. Let's think.\\n\\nWe need return JSON only.\\n\\nLet's determine values:\\nletter_title: Maybe null? Or [\\\"Internationale Ausstellung f\u00fcr Binnenschiffahrt und Wasserkraftnutzung Basel 1926\\\"]? Let's examine layout: After recipient, there is centered text:\\n\\\"Internationale Ausstellung f\u00fcr Binnenschiffahrt und\\nWasserkraftnutzung Basel 1926\\\"\\nThen \\\"Basel.\\\"\\nThis looks like the letterhead of the organization sending the letter, not necessarily the title of the letter. But the key \\\"letter_title\\\" might correspond to this heading? In example they had \\\"Petition for Environmental Protection\\\" which sounds like subject/title. Here there is no explicit subject line (Betreff). So likely letter_title is null.\\n\\nBut wait there is \\\"T\\\" at top left? Maybe \\\"T\\\" stands for something? No.\\n\\nThus:\\n{\\n\\\"letter_title\\\": [null? No, values should be stored as list, even if single. If not included, set value for corresponding key to \\\"null\\\". The instruction: \\\"If a piece of information is not included in the letter, set the value for the corresponding key to 'null'.\\\" That likely means the key's value is null, not a list containing null? But example shows lists with strings. For missing, probably \\\"null\\\" directly, not in list? Let's check wording: \\\"return them in a JSON file where the values corresponding to each key should be stored as a list, even if there is only a single value for a key\\\" Then \\\"If a piece of information is not included in the letter, set the value for the corresponding key to 'null'.\\\" This is ambiguous: should it be [\\\"null\\\"] or null? Usually they want null (not in list). But they said values corresponding to each key should be stored as a list. However exception for missing might be null bare. Let's follow typical pattern: if missing, value is null (not list). But to be safe? Let's examine example: all present are lists. They didn't show missing case. I think use null bare.\\n\\nSo:\\nletter_title: null? Or list with the heading? Let's decide.\\n\\nsender_persons: null (no name/signature visible).\\nsend_date: [\\\"1926-03-20\\\"]\\nreceiver_persons: [\\\"Dr. W. Kresting\\\"]\\nletter_title: null? Or maybe [\\\"Internationale Ausstellung f\u00fcr Binnenschiffahrt und Wasserkraftnutzung Basel 1926\\\"]?\\n\\nWe need be accurate based on visible content. The centered lines are likely the sender organization's name/letterhead, not title. But since sender person is missing, maybe the organization is the sender? The key asks \\\"Name(s) of the person(s) who wrote the letter.\\\" So not organization.\\n\\nThus I will set letter_title to null, sender_persons to null.\\n\\nBut wait, could the sender be implied by \\\"Ich\\\" but no name. So null.\\n\\nCheck date format: 1926-03-20.\\n\\nThus output:\\n{\\n\\\"letter_title\\\": null,\\n\\\"sender_persons\\\": null,\\n\\\"send_date\\\": [\\\"1926-03-20\\\"],\\n\\\"receiver_persons\\\": [\\\"Dr. W. Kresting\\\"]\\n}\\n\\nBut need list for values present. Yes.\\n\\nDouble-check receiver spelling: \\\"Dr.W.Kresting\\\" maybe \\\"Kresting\\\" with capital K. We'll use \\\"Dr. W. Kresting\\\".\\n\\nThus final.\"},\"seed\":null}],\"created\":1786804194,\"model\":\"thinkingmachines/Inkling\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":\"default\",\"usage\":{\"completion_tokens\":1177,\"prompt_tokens\":2254,\"total_tokens\":3431,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":null,\"reasoning_tokens\":1118,\"rejected_prediction_tokens\":null},\"prompt_tokens_details\":{\"audio_tokens\":null,\"cached_tokens\":0}},\"prompt\":[]}"
+}

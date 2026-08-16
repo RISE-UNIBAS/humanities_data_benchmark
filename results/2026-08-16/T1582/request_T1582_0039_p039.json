@@ -1,0 +1,57 @@
+{
+    "text": "{\"advertisements\":[{\"box\":[55.0,80.0,940.0,270.0]},{\"box\":[500.0,270.0,900.0,470.0]},{\"box\":[500.0,500.0,900.0,900.0]}]}",
+    "model": "meta-models/Muse-Glimmer-30B",
+    "provider": "huggingface",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 3916,
+        "output_tokens": 1076,
+        "total_tokens": 4992,
+        "cached_tokens": 48,
+        "input_cost_usd": 0.0013706,
+        "output_cost_usd": 0.001614,
+        "estimated_cost_usd": 0.0029846
+    },
+    "duration": 11.483622074127197,
+    "timestamp": "2026-08-16T03:35:02.590043",
+    "parsed": {
+        "advertisements": [
+            {
+                "box": [
+                    55.0,
+                    80.0,
+                    940.0,
+                    270.0
+                ]
+            },
+            {
+                "box": [
+                    500.0,
+                    270.0,
+                    900.0,
+                    470.0
+                ]
+            },
+            {
+                "box": [
+                    500.0,
+                    500.0,
+                    900.0,
+                    900.0
+                ]
+            }
+        ]
+    },
+    "conversation_id": "8f6c31ee-879c-4aa5-aeb6-4a9ceff4e5ec",
+    "score": {
+        "f1": 0.0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "mean_iou": 0.0,
+        "true_positives": 0,
+        "false_positives": 3,
+        "false_negatives": 4,
+        "iou_threshold": 0.5
+    },
+    "raw_response": "{\"id\":\"owNJ2jP-7ArivV-a2bcb2f46e7b215a\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\\"advertisements\\\": [\\n  {\\n    \\\"box\\\": [55, 80, 940, 270]\\n  },\\n  {\\n    \\\"box\\\": [500, 270, 900, 470]\\n  },\\n  {\\n    \\\"box\\\": [500, 500, 900, 900]\\n  }\\n]}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"advertisements\":[{\"box\":[55.0,80.0,940.0,270.0]},{\"box\":[500.0,270.0,900.0,470.0]},{\"box\":[500.0,500.0,900.0,900.0]}]},\"reasoning\":\"Extract all advertisements and return their bounding boxes.\\nThe original size of the page is 2479 x 3508 pixels.\\n\\nI see page with several ads. Top: LA MONDIALE EXPRESS TRANSPORTS S.A. GENEVE. That's an ad. Bounding box around top banner.\\n\\nRight side: Banque Cantonale Neuch\u00e2teloise (Guaranteed by the State of Neuch\u00e2tel). That's an ad.\\n\\nBelow that: CHOCOLATS PETER, CAILLER, KOHLER. That's an ad.\\n\\nPossibly also the top one is one ad. So three ads.\\n\\nNeed bounding boxes. Coordinates likely normalized? Usually return as [x_min, y_min, x_max, y_max] in pixels. Original size 2479 x 3508. Need estimate.\\n\\nLet's approximate.\\n\\nTop ad: starts near top with decorative border. x about 55 to 895? Wait page width 2479. The page content is maybe centered. The left margin about 50 px. Right margin about 960? Actually the page image shows left edge of page at ~50 px, right edge at ~960? Wait 2479 is width. The image shows a book page with left edge maybe 50. The content width maybe ~ 1900? Hmm.\\n\\nBetter estimate relative. Could give approximate coordinates.\\n\\nLet's assume image coordinates: x from left of image. The page occupies maybe from x=50 to x=2400? Hard.\\n\\nMaybe use relative percentages. Might be okay to give approximate pixel boxes.\\n\\nLet's estimate:\\n\\nTop ad: top border y ~ 80? The header \\\"September, 1921.\\\" at y ~ 70. Ad starts at y ~ 80 to y ~ 270. x from ~ 55 to ~ 895? Wait the ad spans full width of column. The page width is 2479. The ad is across the page. So x_min ~ 55, x_max ~ 940? Actually the page in image is about 95% of width. Let's assume x_min=55, x_max=940? Hmm.\\n\\nAlternative: maybe the coordinates are normalized 0-1000. But problem says original size 2479 x 3508 pixels. So return pixel coordinates.\\n\\nI'll estimate:\\n\\nTop ad: x_min ~ 55, y_min ~ 80, x_max ~ 940, y_max ~ 270.\\n\\nBanque Cantonale: right column top. x_min ~ 500? Wait right column starts about middle. Let's see: left column text occupies left half. Right column starts around x ~ 500? Actually page width ~ 2479. The left text column ends around ~ 480. Right column starts ~ 500. So Banque ad x_min ~ 500, y_min ~ 270, x_max ~ 900, y_max ~ 470.\\n\\nChocolats ad: below that. x_min ~ 500, y_min ~ 500, x_max ~ 900, y_max ~ 900.\\n\\nLet's refine.\\n\\nBetter to give approximate bounding boxes:\\n\\n1. LA MONDIALE EXPRESS TRANSPORTS S.A. : {x_min=55, y_min=80, x_max=940, y_max=270}\\n2. Banque Cantonale Neuch\u00e2teloise : {x_min=500, y_min=270, x_max=900, y_max=470}\\n3. CHOCOLATS PETER, CAILLER, KOHLER : {x_min=500, y_min=500, x_max=900, y_max=900}\\n\\nMaybe the top ad extends to ~ 940? Could be 950.\\n\\nLet's assume page content width ~ 900 px? Wait 2479 is wide. Maybe the image is scanned with black border. The page itself is about 2000 px wide. Hmm.\\n\\nAlternative approach: use relative coordinates 0-1 then multiply. Might be okay.\\n\\nI'll give approximate boxes with reasonable values.\\n\\nMaybe the top ad spans from x=60 to x=940, y=80 to y=270.\\n\\nBanque ad: x=500 to x=900, y=270 to y=470.\\n\\nChocolats ad: x=500 to x=900, y=500 to y=900.\\n\\nLet's output.\\n\\nProbably need JSON list.\\n\\nI'll output three boxes.\\n\\nLet's give:\\n\\n- La Mondiale Express Transports S.A.: [60, 80, 940, 270]\\n- Banque Cantonale Neuch\u00e2teloise: [500, 270, 900, 470]\\n- Chocolats Peter, Cailler, Kohler: [500, 500, 900, 900]\\n\\nIf need more precise, maybe y_max for chocolates ~ 900? The text \\\"PETER, CAILLER, KOHLER.\\\" at bottom ~ 880.\\n\\nI'll give y_max ~ 900.\\n\\nReturn.\\n\\n\"},\"token_ids\":null,\"routed_experts\":null,\"seed\":null}],\"created\":1786844091,\"model\":\"meta-models/Muse-Glimmer-30B\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":\"vllm-0.1.dev19059+g66826a22d-tp2-46311a71\",\"usage\":{\"completion_tokens\":1076,\"prompt_tokens\":3916,\"total_tokens\":4992,\"completion_tokens_details\":null,\"prompt_tokens_details\":{\"audio_tokens\":null,\"cached_tokens\":48,\"created_cache_tokens\":3856,\"multimodal_tokens\":{\"image\":3850}}},\"prompt_token_ids\":null,\"prompt_text\":null,\"kv_transfer_params\":null,\"ec_transfer_params\":null,\"metrics\":null,\"prompt\":[]}"
+}

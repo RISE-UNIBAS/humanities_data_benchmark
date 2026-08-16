@@ -1,0 +1,47 @@
+{
+    "text": "{\"metadata\":{\"send_date\":[\"1928-05-10\"],\"letter_title\":[\"Abrechnung\"],\"sender_persons\":[\"Basler Rheinschiffahrt-Aktiengesellschaft\"],\"receiver_persons\":[\"Basler Personenschiffahrtsgesellschaft\"]}}",
+    "model": "thinkingmachines/Inkling",
+    "provider": "huggingface",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 2254,
+        "output_tokens": 1162,
+        "total_tokens": 3416,
+        "cached_tokens": 256,
+        "input_cost_usd": 0.002254,
+        "output_cost_usd": 0.0047061,
+        "estimated_cost_usd": 0.0069601
+    },
+    "duration": 14.97749638557434,
+    "timestamp": "2026-08-15T16:42:18.208629",
+    "parsed": {
+        "metadata": {
+            "send_date": [
+                "1928-05-10"
+            ],
+            "letter_title": [
+                "Abrechnung"
+            ],
+            "sender_persons": [
+                "Basler Rheinschiffahrt-Aktiengesellschaft"
+            ],
+            "receiver_persons": [
+                "Basler Personenschiffahrtsgesellschaft"
+            ],
+            "document_number": "letter34"
+        }
+    },
+    "conversation_id": "d76a857f-f70b-425e-a356-f2bdd1dbe3b6",
+    "score": {
+        "send_date_tp": 1,
+        "send_date_fp": 0,
+        "send_date_fn": 0,
+        "sender_persons_tp": 0,
+        "sender_persons_fp": 1,
+        "sender_persons_fn": 2,
+        "receiver_persons_tp": 0,
+        "receiver_persons_fp": 1,
+        "receiver_persons_fn": 0
+    },
+    "raw_response": "{\"id\":\"owJqHbt-6z2FuN-a2b8f6b7cf825414\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\n  \\\"metadata\\\": {\\n    \\\"send_date\\\": [\\\"1928-05-10\\\"],\\n    \\\"letter_title\\\": [\\\"Abrechnung\\\"],\\n    \\\"sender_persons\\\": [\\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"],\\n    \\\"receiver_persons\\\": [\\\"Basler Personenschiffahrtsgesellschaft\\\"]\\n  }\\n}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"metadata\":{\"send_date\":[\"1928-05-10\"],\"letter_title\":[\"Abrechnung\"],\"sender_persons\":[\"Basler Rheinschiffahrt-Aktiengesellschaft\"],\"receiver_persons\":[\"Basler Personenschiffahrtsgesellschaft\"]}},\"reasoning\":\"We need parse image: historical letter. Need extract letter_title, sender_persons, send_date, receiver_persons. Let's analyze visible text.\\n\\nImage shows letterhead \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\" with address. Top right: \\\"Basel, den 10. Mai /28\\\" with red \\\"34\\\". So send_date likely 1928-05-10? The \\\"/28\\\" likely year 1928. So date 1928-05-10.\\n\\nAddressee: \\\"Basler Personenschiffahrtsgesellschaft Basel\\\" maybe with dashes. So receiver_persons: [\\\"Basler Personenschiffahrtsgesellschaft\\\"].\\n\\nSubject/title? There's \\\"Buchhaltung\\\" and \\\"Betr. Abrechnung\\\". Maybe letter_title is \\\"Buchhaltung\\\" or \\\"Abrechnung\\\"? Need determine title of letter. The prompt asks \\\"letter_title: Title of the letter.\\\" In letter there is heading \\\"Buchhaltung\\\" centered with dashes, then \\\"Betr. Abrechnung\\\". Could be title \\\"Buchhaltung\\\" or \\\"Abrechnung\\\". Let's think. Often in these extraction tasks, they want the subject line/title. Here \\\"Betr. Abrechnung\\\" means \\\"Re: Settlement/Accounting\\\". But there is also \\\"Buchhaltung\\\" as section? Let's examine layout: Left top letterhead. Then centered \\\"Buchhaltung\\\" with line dashes. Then right address block. Then \\\"Betr. Abrechnung\\\" centered with dashes. Then body about \\\"Aufstellung Ihres Guthabens bei uns...\\\" So the letter is about accounting/statement of credit. The title might be \\\"Buchhaltung\\\" but that's more department. However they ask \\\"letter_title\\\" maybe the prominent heading at top center? Actually \\\"Buchhaltung\\\" is on left-center? Let's parse precisely.\\n\\nWe need sender_persons: The letter is signed at bottom right \\\"Hochachtend\\\" then \\\"Basler Rheinschiffahrt - Aktiengesellschaft\\\" with signature. So sender is Basler Rheinschiffahrt-Aktiengesellschaft. Maybe also signatory name? There's a signature that looks like \\\"W. Ellenberger\\\"? Or \\\"Dr. Ellenberger\\\"? Let's inspect mental image: signature is handwritten, maybe \\\"W. Ellenberger\\\" or \\\"Otto Ellenberger\\\"? But the printed name below? Actually printed line is \\\"Basler Rheinschiffahrt - Aktiengesellschaft\\\" and above that handwritten signature and maybe handwritten name? Let's not overinterpret. The sender organization is clear. Should we include individual? The key \\\"sender_persons\\\" expects name(s) of person(s) who wrote the letter. Could be the organization? Usually person, but can be organization? The example uses \\\"Lisa Simpson\\\". Here likely the company is sender, but also there might be a person signing. The signature is illegible but there might be a typed name? I don't see typed name other than company. So sender_persons: [\\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"].\\n\\nNeed return JSON only.\\n\\nCheck if letter_title present? Maybe \\\"Buchhaltung\\\" is not title but department. The actual title might be absent? But there is \\\"Betr. Abrechnung\\\" which serves as subject/title. Let's include \\\"Abrechnung\\\" or \\\"Betr. Abrechnung\\\". Let's decide on [\\\"Buchhaltung\\\"]? Hmm.\\n\\nLet's recall similar extraction prompts for historical letters: They ask for letter_title, often it's the heading like \\\"Petition for Environmental Protection\\\". In this letter, there is no explicit title except \\\"Buchhaltung\\\" and \\\"Betr. Abrechnung\\\". Which one is the title? \\\"Buchhaltung\\\" is centered with dashes like a title. \\\"Betr. Abrechnung\\\" is also centered with dashes, like subject line. In German business letters, \\\"Betr.: Abrechnung\\\" is the subject (Betreff). So letter_title might be \\\"Abrechnung\\\". But they said \\\"Title of the letter\\\" not \\\"Subject\\\". However could be \\\"Buchhaltung\\\". Let's examine position: \\\"Buchhaltung\\\" is placed left of center? Actually in image, \\\"Buchhaltung\\\" is somewhat left-center, with dashes. Then on right is address. Then lower center \\\"Betr. Abrechnung\\\". So \\\"Buchhaltung\\\" might indicate the department sending (Buchhaltung = accounting department). So it's not the letter title but the sending department. The subject is \\\"Abrechnung\\\". So I think letter_title should be [\\\"Abrechnung\\\"] or [\\\"Betr. Abrechnung\\\"]. Let's go with [\\\"Betr. Abrechnung\\\"]? Or just [\\\"Abrechnung\\\"]. Let's include \\\"Abrechnung\\\" since that's the core.\\n\\nBut wait, there might be a title at very top? No.\\n\\nThus JSON:\\n{\\n\\\"letter_title\\\": [\\\"Abrechnung\\\"],\\n\\\"send_date\\\": [\\\"1928-05-10\\\"],\\n\\\"sender_persons\\\": [\\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"],\\n\\\"receiver_persons\\\": [\\\"Basler Personenschiffahrtsgesellschaft\\\"]\\n}\\n\\nNeed values as lists. Yes.\\n\\nDouble-check date format: 1928-05-10. The letter says \\\"den 10. Mai /28\\\". Yes.\\n\\nCheck receiver: \\\"Basler Personenschiffahrtsgesellschaft\\\" with \\\"Basel\\\" below. So correct.\\n\\nThus output.\"},\"seed\":null}],\"created\":1786804925,\"model\":\"thinkingmachines/Inkling\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":\"default\",\"usage\":{\"completion_tokens\":1162,\"prompt_tokens\":2254,\"total_tokens\":3416,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":null,\"reasoning_tokens\":1089,\"rejected_prediction_tokens\":null},\"prompt_tokens_details\":{\"audio_tokens\":null,\"cached_tokens\":256}},\"prompt\":[]}"
+}

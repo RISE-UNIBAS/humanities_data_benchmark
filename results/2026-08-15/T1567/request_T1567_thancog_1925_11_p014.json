@@ -1,0 +1,80 @@
+{
+    "text": "{\"advertisements\":[{\"box\":[190.0,220.0,2330.0,1000.0]},{\"box\":[190.0,1030.0,1330.0,1230.0]},{\"box\":[1340.0,1030.0,2330.0,1230.0]},{\"box\":[190.0,1250.0,1330.0,1450.0]},{\"box\":[1340.0,1250.0,2330.0,1450.0]},{\"box\":[190.0,1470.0,2330.0,1880.0]}]}",
+    "model": "thinkingmachines/Inkling",
+    "provider": "huggingface",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 2176,
+        "output_tokens": 1070,
+        "total_tokens": 3246,
+        "input_cost_usd": 0.002176,
+        "output_cost_usd": 0.0043335,
+        "estimated_cost_usd": 0.0065095
+    },
+    "duration": 35.08628606796265,
+    "timestamp": "2026-08-15T17:45:30.810087",
+    "parsed": {
+        "advertisements": [
+            {
+                "box": [
+                    190,
+                    220,
+                    2330,
+                    1000
+                ]
+            },
+            {
+                "box": [
+                    190,
+                    1030,
+                    1330,
+                    1230
+                ]
+            },
+            {
+                "box": [
+                    1340,
+                    1030,
+                    2330,
+                    1230
+                ]
+            },
+            {
+                "box": [
+                    190,
+                    1250,
+                    1330,
+                    1450
+                ]
+            },
+            {
+                "box": [
+                    1340,
+                    1250,
+                    2330,
+                    1450
+                ]
+            },
+            {
+                "box": [
+                    190,
+                    1470,
+                    2330,
+                    1880
+                ]
+            }
+        ]
+    },
+    "conversation_id": "b8f46800-7f0a-4730-99d1-f1517b0bfd62",
+    "score": {
+        "f1": 0.0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "mean_iou": 0.0,
+        "true_positives": 0,
+        "false_positives": 6,
+        "false_negatives": 5,
+        "iou_threshold": 0.5
+    },
+    "raw_response": "{\"id\":\"owKAkke-6z2FuN-a2b9535eefad15b7\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\\"advertisements\\\": [{\\\"box\\\": [190, 220, 2330, 1000]}, {\\\"box\\\": [190, 1030, 1330, 1230]}, {\\\"box\\\": [1340, 1030, 2330, 1230]}, {\\\"box\\\": [190, 1250, 1330, 1450]}, {\\\"box\\\": [1340, 1250, 2330, 1450]}, {\\\"box\\\": [190, 1470, 2330, 1880]}]}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":[],\"reasoning\":\"We need extract all advertisements and bounding boxes. Let's identify ads on page.\\n\\nPage is magazine \\\"The Anglo-Swiss Commercial Gazette\\\" Nov 1925. There are several ad blocks:\\n\\n1. Large top ad for J.R. GEIGY, Soc. An. with branches, established 1764, manufacturers of aniline colours, etc. Box roughly from near top left to right, maybe y around 210 to 1000? Let's determine precisely based on image dimensions 2479x3508.\\n\\nWe need bounding boxes in pixel coordinates. Let's estimate using layout.\\n\\nThe page has header \\\"THE ANGLO-SWISS COMMERCIAL GAZETTE\\\" at top y ~100-150. Then large ad block starts around y=210 and ends around y=1010? Let's inspect mental: The large ad occupies top half, with big \\\"J.R. GEIGY, Soc. An.\\\" then text, then \\\"ANILINE COLOURS FOR ALL TRADES\\\" etc. Then below that there is a horizontal line and then \\\"BUSINESS MENU\\\" and other ads.\\n\\nSpecifically:\\n- Ad 1: J.R. GEIGY, Soc. An. Box: x from about 180 to 2330? y from about 210 to 1010.\\n- Ad 2: \\\"BUSINESS MENU\\\" left block? Actually there are two ads side by side in middle: left \\\"BUSINESS MENU The Premier Rendez-vous of businessmen\\\" and right \\\"WHEN IN BASEL LUNCH AT THE TERRASSE-RESTAURANT KUNSTHALLE\\\". These are in boxes. Let's box them together? They are separate advertisements. Need each bounding box.\\n\\nLeft middle ad: \\\"BUSINESS MENU\\\" box maybe x ~180 to 1330? y ~1040 to 1230.\\nRight middle ad: \\\"WHEN IN BASEL LUNCH...\\\" box x ~1330 to 2330? y ~1040 to 1230.\\n\\nThen bottom row has two ads side by side:\\nLeft: \\\"Emil Birkh\u00e4user & Co., Basle All kinds of High-class Printing...\\\" Box x ~180 to 1330? y ~1260 to 1450.\\nRight: \\\"ASK FOR THE 1925/1926 EDITION OF THE TRADE INDEX OF THE BRITISH CHAMBER OF COMMERCE FOR SWITZERLAND\\\" Box x ~1330 to 2330? y ~1260 to 1450.\\n\\nThen bottom large block: \\\"THE BRITISH CHAMBER OF COMMERCE FOR SWITZERLAND offers the following services...\\\" This might be an advertisement or organizational notice? It looks like an ad/promotional block for the chamber. Given context of magazine page with ads, likely an advertisement. Box y ~1480 to 1880? x ~180 to 2330.\\n\\nWe need be precise with boxes. Let's approximate using image proportions.\\n\\nLet's determine page margins: left margin around x=180, right margin around x=2330. Top of content around y=210. Bottom around y=1880? Actually page height 3508, but image shown only top portion? Wait the image shows page with bottom at around y=1900? No, the image includes the full page? Let's check: The bottom of visible content is near y~1900? But page size is 3508, so maybe the image is only top half? Actually the image dimensions might be 2479x3508 but displayed scaled. The visible content ends near bottom with decorative border. So yes, bottom of page content is around y=1900? Wait that'd be about half of 3508. Hmm maybe the image is full page but the bottom half is blank? Let's not overanalyze. We'll provide boxes covering visible ad regions.\\n\\nLet's refine coordinates:\\n- Top large ad: x0=190, y0=220, x1=2330, y1=1000.\\n- Middle left: x0=190, y0=1030, x1=1330, y1=1230.\\n- Middle right: x0=1340, y0=1030, x1=2330, y1=1230.\\n- Bottom left: x0=190, y0=1250, x1=1330, y1=1450.\\n- Bottom right: x0=1340, y0=1250, x1=2330, y1=1450.\\n- Bottom large: x0=190, y0=1470, x1=2330, y1=1880.\\n\\nNeed valid JSON.\"},\"seed\":null}],\"created\":1786808723,\"model\":\"thinkingmachines/Inkling\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":\"default\",\"usage\":{\"completion_tokens\":1070,\"prompt_tokens\":2176,\"total_tokens\":3246,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":null,\"reasoning_tokens\":951,\"rejected_prediction_tokens\":null},\"prompt_tokens_details\":{\"audio_tokens\":null,\"cached_tokens\":0}},\"prompt\":[]}"
+}

@@ -1,0 +1,47 @@
+{
+    "text": "{\"metadata\":{\"send_date\":[\"1928-05-05\"],\"letter_title\":[\"Abschrift\"],\"sender_persons\":[\"null\"],\"receiver_persons\":[\"Basler Rheinschiffahrts-A.G.\"]}}",
+    "model": "thinkingmachines/Inkling",
+    "provider": "huggingface",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 2254,
+        "output_tokens": 1550,
+        "total_tokens": 3804,
+        "cached_tokens": 256,
+        "input_cost_usd": 0.002254,
+        "output_cost_usd": 0.006277499999999999,
+        "estimated_cost_usd": 0.0085315
+    },
+    "duration": 17.268861770629883,
+    "timestamp": "2026-08-15T16:37:13.710913",
+    "parsed": {
+        "metadata": {
+            "send_date": [
+                "1928-05-05"
+            ],
+            "letter_title": [
+                "Abschrift"
+            ],
+            "sender_persons": [
+                "null"
+            ],
+            "receiver_persons": [
+                "Basler Rheinschiffahrts-A.G."
+            ],
+            "document_number": "letter33"
+        }
+    },
+    "conversation_id": "53d0eb0e-5680-4738-bcd0-f6a6f266df4e",
+    "score": {
+        "send_date_tp": 1,
+        "send_date_fp": 0,
+        "send_date_fn": 0,
+        "sender_persons_tp": 0,
+        "sender_persons_fp": 0,
+        "sender_persons_fn": 0,
+        "receiver_persons_tp": 0,
+        "receiver_persons_fp": 1,
+        "receiver_persons_fn": 0
+    },
+    "raw_response": "{\"id\":\"owJpW33-31r7CA-a2b8ef3b884220cf\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\n  \\\"metadata\\\": {\\n    \\\"send_date\\\": [\\\"1928-05-05\\\"],\\n    \\\"letter_title\\\": [\\\"Abschrift\\\"],\\n    \\\"sender_persons\\\": [\\\"null\\\"],\\n    \\\"receiver_persons\\\": [\\\"Basler Rheinschiffahrts-A.G.\\\"]\\n  }\\n}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"metadata\":{\"send_date\":[\"1928-05-05\"],\"letter_title\":[\"Abschrift\"],\"sender_persons\":[\"null\"],\"receiver_persons\":[\"Basler Rheinschiffahrts-A.G.\"]}},\"reasoning\":\"We need parse image of historical letter in German. Need extract letter_title, sender_persons, send_date, receiver_persons. Need not use OCR but can read image. Let's analyze visible text.\\n\\nTop right: \\\"Abschrift.\\\" maybe title? There's number 33 in red. Date: \\\"5. Mai 1928.\\\" Addressee: \\\"An die Basler Rheinschiffahrts-A.G., BASEL.\\\" Then salutation: \\\"Herr Direktor W. Stauffacher, Pr\u00e4sident unseres Vereins, \u00fcbermittelt mir als Schriftleiter der Zeitschrift \\\"Die Rheinquellen\\\" Ihr an ihn gerichtetes Schreiben vom 3.d.M. zur Kenntnisnahme und Erledigung.\\\"\\n\\nSo receiver is Basler Rheinschiffahrts-A.G., and also Herr Direktor W. Stauffacher? Need determine receiver_persons: likely \\\"Basler Rheinschiffahrts-A.G.\\\" and maybe \\\"W. Stauffacher\\\". But letter is addressed \\\"An die Basler Rheinschiffahrts-A.G., BASEL.\\\" Then mentions Herr Direktor W. Stauffacher, Pr\u00e4sident unseres Vereins... This sounds like the sender is writing to the company, referencing Stauffacher as president of their association who forwarded a letter. Actually need understand roles.\\n\\nLet's parse full context: The letter seems from an editor (\\\"Schriftleiter\\\") of magazine \\\"Die Rheinquellen\\\". He writes that Herr Direktor W. Stauffacher, President of our association, forwarded to him as editor of the journal \\\"Die Rheinquellen\\\" your letter addressed to him dated 3rd of this month for information and handling.\\n\\nThus the sender is the Schriftleiter (editor) of \\\"Die Rheinquellen\\\", but name not given? At bottom \\\"Hochachtend\\\" with no signature visible? Maybe signature missing or not visible. So sender_persons might be null? Or could be inferred as the editor of Die Rheinquellen but no name. The prompt asks Name(s) of person(s) who wrote the letter. If not included, set null.\\n\\nBut wait there might be a signature below \\\"Hochachtend\\\" not visible in image? The image cuts off bottom? Actually bottom is blank with \\\"Hochachtend\\\" centered near bottom of text block, then large blank space. No visible signature. So sender unknown -> null.\\n\\nLetter title? \\\"Abschrift.\\\" means copy/transcript. Might be title \\\"Abschrift\\\". Or maybe no explicit title. Could set [\\\"Abschrift\\\"].\\n\\nSend date: \\\"5. Mai 1928\\\" -> 1928-05-05.\\n\\nReceiver persons: The letter is addressed to Basler Rheinschiffahrts-A.G., and mentions Herr Direktor W. Stauffacher? Actually Stauffacher is president of sender's association and received original letter, then forwarded to sender. So the current letter's recipient is likely Basler Rheinschiffahrts-A.G. Maybe also W. Stauffacher? Let's examine wording: \\\"Herr Direktor W. Stauffacher, Pr\u00e4sident unseres Vereins, \u00fcbermittelt mir als Schriftleiter... Ihr an ihn gerichtetes Schreiben...\\\" So \\\"Ihr\\\" refers to the recipient (Basler Rheinschiffahrts-A.G.). Thus the letter is addressed to them, with reference to Stauffacher. So receiver_persons: [\\\"Basler Rheinschiffahrts-A.G.\\\"] maybe also \\\"W. Stauffacher\\\"? But he is not the receiver of this letter; he is mentioned in third person? Actually \\\"Herr Direktor W. Stauffacher... \u00fcbermittelt mir...\\\" This is part of the salutation/address? Let's understand German formal letter structure: Often start with address of recipient on left, then date, then salutation. Here we have:\\n\\nAn die Basler Rheinschiffahrts-A.G.,\\nBASEL.\\n\\nHerr Direktor W. Stauffacher, Pr\u00e4sident unseres Vereins,\\n\u00fcbermittelt mir als Schriftleiter der Zeitschrift \\\"Die Rheinquellen\\\"\\nIhr an ihn gerichtetes Schreiben vom 3.d.M. zur Kenntnisnahme und\\nErledigung.\\n\\nThis is somewhat like: To Basler Rheinschiffahrts-A.G., Basel. Mr. Director W. Stauffacher, President of our association, forwards to me as editor... your letter addressed to him...\\n\\nThus the direct addressee is the company. Stauffacher is mentioned as intermediary. So receiver_persons should include \\\"Basler Rheinschiffahrts-A.G.\\\".\\n\\nBut also could include \\\"W. Stauffacher\\\" if he is also addressed? The phrase \\\"Herr Direktor W. Stauffacher, Pr\u00e4sident unseres Vereins,\\\" might be part of address line? Actually it's on separate lines after the company address. Could be that the letter is addressed to Herr Direktor W. Stauffacher at the company? Let's think: In old letters, you might write:\\n\\nAn die\\nBasler Rheinschiffahrts-A.G.\\nBASEL\\n\\nHerr Direktor W. Stauffacher...\\n\\nBut then \\\"\u00fcbermittelt mir...\\\" Hmm grammar: If Stauffacher is the subject of \\\"\u00fcbermittelt\\\", then he is not the addressee but the one who forwards. The sentence reads: \\\"Herr Direktor W. Stauffacher, Pr\u00e4sident unseres Vereins, \u00fcbermittelt mir als Schriftleiter... Ihr an ihn gerichtetes Schreiben...\\\" Yes, Stauffacher is subject (he forwards). So he is not the recipient.\\n\\nThus receiver: Basler Rheinschiffahrts-A.G.\\n\\nNow letter_title: \\\"Abschrift\\\" is at top right, meaning this is a copy. Might be considered title. We'll include [\\\"Abschrift\\\"].\\n\\nSend_date: [\\\"1928-05-05\\\"].\\n\\nSender_persons: Not visible, but maybe implied \\\"Schriftleiter der Zeitschrift 'Die Rheinquellen'\\\" but no name. So [\\\"null\\\"]? Actually key should have value stored as list, even if null? The instructions: \\\"If a piece of information is not included in the letter, set the value for the corresponding key to 'null'.\\\" So we should put null not in list? Wait example shows lists of strings. For missing, probably [\\\"null\\\"]? Or null? The instruction says \\\"set the value for the corresponding key to 'null'\\\". Since values should be stored as a list, likely [\\\"null\\\"]. But need check consistency. In example all are lists. So for missing sender, do [\\\"null\\\"].\\n\\nBut wait maybe sender name is present in signature area outside visible? The image shows bottom blank, but maybe there is a signature just below visible crop? However we only have this image. So null.\\n\\nLet's also consider if there is a title like \\\"Abschrift\\\" with number 33. We'll include \\\"Abschrift\\\".\\n\\nThus JSON:\\n{\\n\\\"letter_title\\\": [\\\"Abschrift\\\"],\\n\\\"send_date\\\": [\\\"1928-05-05\\\"],\\n\\\"sender_persons\\\": [\\\"null\\\"],\\n\\\"receiver_persons\\\": [\\\"Basler Rheinschiffahrts-A.G.\\\"]\\n}\\n\\nBut should receiver include location? No just name.\\n\\nDouble-check date format: 1928-05-05 correct.\\n\\nOne more check: Could send_date be approximate? It's exact \\\"5. Mai 1928\\\". Yes.\\n\\nThus output.\"},\"seed\":null}],\"created\":1786804771,\"model\":\"thinkingmachines/Inkling\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":\"default\",\"usage\":{\"completion_tokens\":1550,\"prompt_tokens\":2254,\"total_tokens\":3804,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":null,\"reasoning_tokens\":1484,\"rejected_prediction_tokens\":null},\"prompt_tokens_details\":{\"audio_tokens\":null,\"cached_tokens\":256}},\"prompt\":[]}"
+}

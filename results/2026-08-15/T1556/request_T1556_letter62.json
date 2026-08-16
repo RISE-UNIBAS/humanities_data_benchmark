@@ -1,0 +1,46 @@
+{
+    "text": "{\"metadata\":{\"send_date\":[\"1933-07-04\"],\"letter_title\":null,\"sender_persons\":[\"Dr. A. Fischer\",\"Arthur Oettinger-Mielli\"],\"receiver_persons\":[\"Basler Rheinschiffahrts A.-G.\"]}}",
+    "model": "thinkingmachines/Inkling",
+    "provider": "huggingface",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 4425,
+        "output_tokens": 1092,
+        "total_tokens": 5517,
+        "cached_tokens": 256,
+        "input_cost_usd": 0.004425,
+        "output_cost_usd": 0.0044226000000000005,
+        "estimated_cost_usd": 0.0088476
+    },
+    "duration": 41.51412630081177,
+    "timestamp": "2026-08-15T16:35:05.172367",
+    "parsed": {
+        "metadata": {
+            "letter_title": null,
+            "send_date": [
+                "1933-07-04"
+            ],
+            "sender_persons": [
+                "Dr. A. Fischer",
+                "Arthur Oettinger-Mielli"
+            ],
+            "receiver_persons": [
+                "Basler Rheinschiffahrts A.-G."
+            ],
+            "document_number": "letter62"
+        }
+    },
+    "conversation_id": "37d8da6d-acff-4804-8729-d05876d570dd",
+    "score": {
+        "send_date_tp": 1,
+        "send_date_fp": 0,
+        "send_date_fn": 0,
+        "sender_persons_tp": 0,
+        "sender_persons_fp": 2,
+        "sender_persons_fn": 2,
+        "receiver_persons_tp": 0,
+        "receiver_persons_fp": 1,
+        "receiver_persons_fn": 0
+    },
+    "raw_response": "{\"id\":\"owJo3ZB-6z2FuN-a2b8ec05bb764cad\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\n  \\\"metadata\\\": {\\n    \\\"letter_title\\\": null,\\n    \\\"send_date\\\": [\\\"1933-07-04\\\"],\\n    \\\"sender_persons\\\": [\\\"Dr. A. Fischer\\\", \\\"Arthur Oettinger-Mielli\\\"],\\n    \\\"receiver_persons\\\": [\\\"Basler Rheinschiffahrts A.-G.\\\"]\\n  }\\n}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":[],\"reasoning\":\"We need parse image of historical letter. Need extract letter_title, sender_persons, send_date, receiver_persons. Let's analyze image content.\\n\\nWe have two pages. First page header \\\"Copie.\\\" then \\\"BASLER PERSONENSCHIFFAHRTSGESELLSCHAFT\\\" then \\\"Basel, den 4. Juli 1933.\\\" Addressed \\\"An die Basler Rheinschiffahrts A.-G. Marktstrasse 5 Basel.\\\" Salutation \\\"Sehr geehrte Herren,\\\" Then text about Generalversammlung vom 24. Juni 1933, complaints about missing printed Fahrplan, halt in Kaiseraugst, halt in Basel-Breite, representation at Generalversammlungen through delegierte.\\n\\nSecond page continues points 3 and 4, then closing \\\"mit vorz\u00fcglicher Hochachtung\\\" and signatures: \\\"Basler Personenschiffahrtsgesellschaft\\\" maybe? Actually signature line: \\\"sig. Dr. A. Fischer sig. Arthur Oettinger-Mi...\\\" Hmm need identify sender persons. The letter is from Basler Personenschiffahrtsgesellschaft? Wait header on first page is \\\"BASLER PERSONENSCHIFFAHRTSGESELLSCHAFT\\\" which is the sender organization. The signatures at bottom right: \\\"Basler Personenschiffahrtsgesellschaft\\\" printed? Then handwritten signatures: \\\"sig. Dr. A. Fischer\\\" and \\\"sig. Arthur Oettinger-Mi...\\\". So sender persons likely Dr. A. Fischer and Arthur Oettinger-M... maybe Oettinger-Mielli? Need extract names.\\n\\nReceiver persons: \\\"An die Basler Rheinschiffahrts A.-G.\\\" So receiver is Basler Rheinschiffahrts A.-G., maybe addressed to them, not specific persons. So receiver_persons [\\\"Basler Rheinschiffahrts A.-G.\\\"].\\n\\nSend date: \\\"Basel, den 4. Juli 1933\\\" => 1933-07-04.\\n\\nLetter title: There might not be explicit title. The document is a copy (\\\"Copie.\\\") of a letter. Maybe title is \\\"Copie\\\" or null? The prompt asks \\\"Title of the letter.\\\" In the letter, there is no explicit title like \\\"Petition...\\\". Could be null. But sometimes the header \\\"BASLER PERSONENSCHIFFAHRTSGESELLSCHAFT\\\" is not title. There's \\\"Copie.\\\" at top center. That might be considered title? Let's think. The example had \\\"Petition for Environmental Protection\\\" which was likely the subject/title of the document. Here the document is a copy of a letter with complaints/requests (Beschwerden). There is no explicit title line. So letter_title should be null? Or [\\\"Copie\\\"]? The instruction: \\\"letter_title: Title of the letter.\\\" If not included, set null. \\\"Copie\\\" means copy, not really title. But it's at top center like a document label. However likely they want null if no title. Let's examine if there's any other title: maybe \\\"Beschwerden\\\" but not present. So I'll set null.\\n\\nBut need check schema: values stored as list, even if single. So:\\nletter_title: null? Wait schema allows null or array of strings. Yes.\\nsender_persons: [\\\"Dr. A. Fischer\\\", \\\"Arthur Oettinger-Mielli\\\"? Let's inspect signature more precisely. In image bottom right, handwritten: \\\"sig. Dr. A. Fischer sig. Arthur Oettinger-Mielli\\\" maybe \\\"Oettinger-Miell\\\"? Let's zoom mental: The second signature looks like \\\"Arthur Oettinger-Mielli\\\" indeed common name? Actually there is Arthur Oettingen? Hmm but we'll approximate \\\"Arthur Oettinger-Mielli\\\". But need be accurate based on visible text. Let's parse: \\\"sig. Dr. A. Fischer sig. Arthur Oettinger-Mielli\\\" Yes.\\n\\nBut also the printed organization \\\"Basler Personenschiffahrtsgesellschaft\\\" might be considered sender, but they ask \\\"Name(s) of the person(s) who wrote the letter.\\\" So individuals who signed.\\n\\nThus:\\n{\\n\\\"metadata\\\": {\\n\\\"letter_title\\\": [null? Wait need list? Actually schema allows null directly, not inside list? Let's check schema: \\\"letter_title\\\": {\\\"anyOf\\\": [{\\\"items\\\": {\\\"type\\\": \\\"string\\\"}, \\\"type\\\": \\\"array\\\"}, {\\\"type\\\": \\\"null\\\"}], ...}. So it can be null or array of strings. The example shows [\\\"Petition...\\\"]. If null, should be null, not [null]. So \\\"letter_title\\\": null.\\n\\\"send_date\\\": [\\\"1933-07-04\\\"]\\n\\\"sender_persons\\\": [\\\"Dr. A. Fischer\\\", \\\"Arthur Oettinger-Mielli\\\"]\\n\\\"receiver_persons\\\": [\\\"Basler Rheinschiffahrts A.-G.\\\"]\\n}\\n}\\n\\nNeed ensure JSON exactly with metadata wrapper. Let's do that.\"},\"seed\":null}],\"created\":1786804487,\"model\":\"thinkingmachines/Inkling\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":\"default\",\"usage\":{\"completion_tokens\":1092,\"prompt_tokens\":4425,\"total_tokens\":5517,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":null,\"reasoning_tokens\":1017,\"rejected_prediction_tokens\":null},\"prompt_tokens_details\":{\"audio_tokens\":null,\"cached_tokens\":256}},\"prompt\":[]}"
+}

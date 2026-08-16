@@ -1,0 +1,215 @@
+{
+    "text": "We need extract table rows from image. Let's analyze image content.\n\nWe have a personnel card table with columns:\nDienstliche Stellung | Dienstort | Gehalts-klasse | Jahresgehalt Monatsgehalt Taglohn | Zeitpunkt der Gehalts\u00e4nderung (Tag, Monat, Jahr) | Bemerkungen, Akten etc.\n\nVisible rows with content:\nRow 1: \"Hilfsleiterin\" in first column. Second column empty? Third empty? Fourth \"2'000.-\"? Wait need parse exactly.\n\nLet's read visible text:\nTop row (header).\n\nThen first data row:\n- dienstliche_stellung: \"Hilfsleiterin\" (maybe with underline? but transcript exact)\n- dienstort: empty? Actually there might be dots but empty.\n- gehaltsklasse: empty?\n- jahresgehalt...: \"2'000.-\" maybe? Let's inspect: In column 4 there is \"2'000.-\" or \"2000.-\"? The image shows \"2'000.-\" with maybe \"2'000.-\" and then \"17.Febr.\" in date column? Wait need align columns correctly.\n\nLet's parse columns precisely based on layout.\n\nThe table has vertical lines separating columns. Let's identify column boundaries:\n1. Dienstliche Stellung (leftmost wide)\n2. Dienstort (narrower)\n3. Gehaltsklasse (narrow)\n4. Jahresgehalt... (medium)\n5. Zeitpunkt... split into Tag, Monat, Jahr? Actually header says \"Zeitpunkt der Gehalts\u00e4nderung\" with subcolumns Tag, Monat, Jahr.\n6. Bemerkungen...\n\nLooking at first data row:\nIn col1: \"Hilfsleiterin\"\nIn col2: maybe empty or dots\nIn col3: empty?\nIn col4: \"2'000.-\" (salary)\nIn col5 (Tag): \"17\" ? Wait there is \"17.Febr.\" maybe in Monat? Let's examine.\n\nActually in the row, there is text \"17.Febr.\" positioned in the date area, and \"44\" in Jahr? And \"1. Januar 1945\" in another row? Let's parse row by row.\n\nSecond data row:\n- col1: \" \" (ditto mark?) Actually there is a quotation mark \" \" indicating same as above? The image shows \" \" under Hilfsleiterin? Let's check: There is a row with \" \" in col1, then empty col2, then \"3.315.-\" in col4? And \"1. Januar\" in Monat? \"1945\" in Jahr? And \"+ Zulagen\" in remarks.\n\nWait need be precise.\n\nLet's examine image layout:\nRow 1 (first data line):\nCol1: Hilfsleiterin\nCol2: (empty/dots)\nCol3: (empty)\nCol4: 2'000.-? Or maybe 2'000.- is in row 1 col4.\nCol5: \"17.Febr.\" maybe spanning? Actually \"17.Febr.\" could be in Tag/Monat? The header has Tag | Monat | Jahr. So \"17\" might be Tag, \"Febr.\" Monat, \"44\" Jahr. Yes! So row 1 date: Tag=17, Monat=Febr., Jahr=44. So \"17.Febr. 44\" but in cells separated? The transcript should capture what's in each cell? But the field \"datum_gehalts\u00e4nderung\" is one field per row, not split. The instructions say copy exact format (e.g., \"1. Jan. 1946\"). So we need combine? Actually the column is \"Zeitpunkt der Gehalts\u00e4nderung\" with subcolumns Tag, Monat, Jahr. But in JSON we have one field \"datum_gehalts\u00e4nderung\". So we should transcribe the date as it appears across those subcolumns? The instructions say \"For dates, copy the exact format (e.g., '1. Jan. 1946', '1.April 1945')\". So likely the card writes date across the three subcolumns but we should combine into one string representing the date as shown, maybe \"17.Febr. 44\" or \"17. Febr. 44\". Let's see.\n\nIn row 1, the Jahr column has \"44\". So date is 17. Febr. 44. The transcript might be \"17.Febr. 44\" if that's how it's arranged. But need exact text from card in that field. Since there are three sub-columns, but we have one field, we should probably concatenate with spaces? However the instructions don't specify splitting. Let's look at row 2: There is \"1. Januar\" in Monat? And \"1945\" in Jahr. So date might be \"1. Januar 1945\". That matches example \"1. Jan. 1946\". So yes, combine Tag/Monat/Jahr into one string with spaces as they appear horizontally.\n\nThus row 1 date transcript: \"17.Febr. 44\" (maybe \"17. Febr. 44\"? Let's check image: It looks like \"17.Febr.\" with no space? Actually there might be \"17.Febr.\" in one cell spanning? But we'll use \"17.Febr. 44\").\n\nRow 1 remarks: \"+ Zulagen\"\n\nRow 2:\nCol1: \" \" (ditto mark, meaning Hilfsleiterin)\nCol2: empty\nCol3: empty?\nCol4: \"3.315.-\" (salary)\nCol5 date: \"1. Januar 1945\" (Tag maybe empty? Actually \"1.\" is Tag, \"Januar\" Monat, \"1945\" Jahr)\nCol6 remarks: \"+ Zulagen\"\n\nWait but in image, the second row has \"3.315.-\" and then \"1. Januar\" and \"1945\" and \"+ Zulagen\". Yes.\n\nBut need check if there is any other row? The rest of table is empty. So only two rows with content.\n\nHowever need check if row 1 col4 is \"2'000.-\" or \"2000.-\"? The image shows \"2'000.-\" with an apostrophe? Actually in the image, the salary column for first row looks like \"2'000.-\" with a dot? Let's examine: The number is \"2'000.-\" maybe \"2.000.-\"? In German, thousands separator is dot or apostrophe? The image might show \"2'000.-\" but it's hard to tell. Let's assume \"2'000.-\" as transcript. But wait there might be \"2.000.-\" with a dot. Actually in the image, I see \"2'000.-\" with a small tick? Let's keep \"2'000.-\" if that's visible. But need be exact. Let's zoom mental: The text is \"2'000.-\" yes likely with apostrophe.\n\nAlso need check gehaltsklasse column: Is there any value? In both rows, gehaltsklasse seems empty. So transcript \"\".\n\nDienstort: empty for both? Yes.\n\nNow need determine is_crossed_out. The text \"Hilfsleiterin\" might be crossed out? In the image, \"Hilfsleiterin\" appears with a line through? Actually there might be a strike-through? Let's examine: The word \"Hilfsleiterin\" looks like it has a line through it? The image quality makes it hard. But the instructions say set true if crossed out. Looking at the card, \"Hilfsleiterin\" might be struck through? Actually in many personnel cards, old entries are crossed out. The first row might be crossed out? Let's check: The word \"Hilfsleiterin\" appears with a horizontal line? I think yes, it's crossed out. But need be careful. The second row has ditto marks, maybe also crossed? Actually the salary values might be crossed? Let's examine image: The first row salary \"2'000.-\" might have a line? Not sure.\n\nGiven typical extraction, if text is struck through, we should mark true. Let's assess each field:\n- Row 1 dienstliche_stellung \"Hilfsleiterin\": There seems to be a line through the word? Actually in the image, the word is underlined? Wait there is a dotted line under? No, that's the row separator. The text itself might not be crossed out. Let's assume false unless clearly struck. But I need be accurate.\n\nLooking closely at the image: The word \"Hilfsleiterin\" is written in typewriter, and there might be a strike-through line across it? I can't tell definitively. However, the second row has quotation marks \" \" in col1, which might indicate repetition. Those marks are not crossed out.\n\nThe salary \"3.315.-\" might be crossed out? Actually there is a line through \"3.315.-\"? Let's check: In the image, \"3.315.-\" appears with a line? Maybe not.\n\nGiven ambiguity, I will set is_crossed_out false for all unless clearly visible. But wait the instructions say \"Set to true if text in this field is crossed out, struck through, or deleted\". In the image, I don't see obvious cross-outs except maybe none. So false.\n\nBut need check if there is a cross-out on \"Hilfsleiterin\"? Actually the first row might be an old entry that is replaced? But there is no replacement visible except second row with same position. So maybe not crossed.\n\nThus rows:\nRow 1:\n- row_number: 1\n- dienstliche_stellung: transcript \"Hilfsleiterin\", interpretation null, is_crossed_out false\n- dienstort: transcript \"\", interpretation null, false\n- gehaltsklasse: transcript \"\", interpretation null, false\n- jahresgehalt...: transcript \"2'000.-\", interpretation \"2000\", false\n- datum_gehalts\u00e4nderung: transcript \"17.F",
+    "model": "thinkingmachines/Inkling",
+    "provider": "huggingface",
+    "finish_reason": "length",
+    "usage": {
+        "input_tokens": 3684,
+        "output_tokens": 2048,
+        "total_tokens": 5732,
+        "cached_tokens": 3072,
+        "input_cost_usd": 0.003684,
+        "output_cost_usd": 0.008294399999999999,
+        "estimated_cost_usd": 0.011978399999999998
+    },
+    "duration": 44.21836447715759,
+    "timestamp": "2026-08-15T17:42:47.728320",
+    "conversation_id": "138a6532-64b6-4d10-aa48-e275a496e57f",
+    "score": {
+        "f1_score": 0.0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "true_positives": 0,
+        "false_positives": 0,
+        "false_negatives": 25,
+        "field_scores": {
+            "": {
+                "response": null,
+                "ground_truth": null,
+                "score": 1.0
+            },
+            "rows[0].jahresgehalt_monatsgehalt_taglohn.diplomatic_transcript": {
+                "response": null,
+                "ground_truth": "2000.--",
+                "score": 0.0
+            },
+            "rows[0].bemerkungen.is_crossed_out": {
+                "response": null,
+                "ground_truth": false,
+                "score": 0.0
+            },
+            "rows[0].dienstort.diplomatic_transcript": {
+                "response": null,
+                "ground_truth": null,
+                "score": 1.0
+            },
+            "rows[1].bemerkungen.is_crossed_out": {
+                "response": null,
+                "ground_truth": false,
+                "score": 0.0
+            },
+            "rows[1].datum_gehalts\u00e4nderung.is_crossed_out": {
+                "response": null,
+                "ground_truth": false,
+                "score": 0.0
+            },
+            "rows[0].dienstort.is_crossed_out": {
+                "response": null,
+                "ground_truth": false,
+                "score": 0.0
+            },
+            "rows[1].jahresgehalt_monatsgehalt_taglohn.interpretation": {
+                "response": null,
+                "ground_truth": "3315",
+                "score": 0.0
+            },
+            "rows[0].bemerkungen.diplomatic_transcript": {
+                "response": null,
+                "ground_truth": "+ Zulagen",
+                "score": 0.0
+            },
+            "rows[0].dienstliche_stellung.is_crossed_out": {
+                "response": null,
+                "ground_truth": false,
+                "score": 0.0
+            },
+            "rows[0].datum_gehalts\u00e4nderung.diplomatic_transcript": {
+                "response": null,
+                "ground_truth": "17. Febr. 44",
+                "score": 0.0
+            },
+            "rows[0].jahresgehalt_monatsgehalt_taglohn.interpretation": {
+                "response": null,
+                "ground_truth": "2000",
+                "score": 0.0
+            },
+            "rows[1].jahresgehalt_monatsgehalt_taglohn.diplomatic_transcript": {
+                "response": null,
+                "ground_truth": "3.315.-",
+                "score": 0.0
+            },
+            "rows[0].gehaltsklasse.diplomatic_transcript": {
+                "response": null,
+                "ground_truth": null,
+                "score": 1.0
+            },
+            "rows[0].gehaltsklasse.is_crossed_out": {
+                "response": null,
+                "ground_truth": false,
+                "score": 0.0
+            },
+            "rows[1].dienstliche_stellung.interpretation": {
+                "response": null,
+                "ground_truth": "Hilfsleiterin",
+                "score": 0.0
+            },
+            "rows[1].datum_gehalts\u00e4nderung.interpretation": {
+                "response": null,
+                "ground_truth": "1945-01-01",
+                "score": 0.0
+            },
+            "rows[1].dienstliche_stellung.diplomatic_transcript": {
+                "response": null,
+                "ground_truth": "\"",
+                "score": 0.0
+            },
+            "rows[0].dienstliche_stellung.interpretation": {
+                "response": null,
+                "ground_truth": null,
+                "score": 1.0
+            },
+            "rows[1].dienstliche_stellung.is_crossed_out": {
+                "response": null,
+                "ground_truth": false,
+                "score": 0.0
+            },
+            "rows[0].datum_gehalts\u00e4nderung.interpretation": {
+                "response": null,
+                "ground_truth": "1944-02-17",
+                "score": 0.0
+            },
+            "rows[1].dienstort.is_crossed_out": {
+                "response": null,
+                "ground_truth": false,
+                "score": 0.0
+            },
+            "rows[0].bemerkungen.interpretation": {
+                "response": null,
+                "ground_truth": null,
+                "score": 1.0
+            },
+            "rows[1].gehaltsklasse.interpretation": {
+                "response": null,
+                "ground_truth": null,
+                "score": 1.0
+            },
+            "rows[1].jahresgehalt_monatsgehalt_taglohn.is_crossed_out": {
+                "response": null,
+                "ground_truth": false,
+                "score": 0.0
+            },
+            "rows[0].datum_gehalts\u00e4nderung.is_crossed_out": {
+                "response": null,
+                "ground_truth": false,
+                "score": 0.0
+            },
+            "rows[1].dienstort.diplomatic_transcript": {
+                "response": null,
+                "ground_truth": null,
+                "score": 1.0
+            },
+            "rows[1].gehaltsklasse.is_crossed_out": {
+                "response": null,
+                "ground_truth": false,
+                "score": 0.0
+            },
+            "rows[0].gehaltsklasse.interpretation": {
+                "response": null,
+                "ground_truth": null,
+                "score": 1.0
+            },
+            "rows[1].gehaltsklasse.diplomatic_transcript": {
+                "response": null,
+                "ground_truth": null,
+                "score": 1.0
+            },
+            "rows[1].datum_gehalts\u00e4nderung.diplomatic_transcript": {
+                "response": null,
+                "ground_truth": "1. Januar 1945",
+                "score": 0.0
+            },
+            "rows[0].jahresgehalt_monatsgehalt_taglohn.is_crossed_out": {
+                "response": null,
+                "ground_truth": false,
+                "score": 0.0
+            },
+            "rows[1].bemerkungen.diplomatic_transcript": {
+                "response": null,
+                "ground_truth": "+ Zulagen",
+                "score": 0.0
+            },
+            "rows[1].dienstort.interpretation": {
+                "response": null,
+                "ground_truth": null,
+                "score": 1.0
+            },
+            "rows[0].dienstort.interpretation": {
+                "response": null,
+                "ground_truth": null,
+                "score": 1.0
+            },
+            "rows[1].bemerkungen.interpretation": {
+                "response": null,
+                "ground_truth": null,
+                "score": 1.0
+            },
+            "rows[0].dienstliche_stellung.diplomatic_transcript": {
+                "response": null,
+                "ground_truth": "Hilfsleiterin",
+                "score": 0.0
+            }
+        },
+        "total_fields": 39
+    },
+    "raw_response": "{\"id\":\"owKAgCz-31r7CA-a2b94f282db22c79\",\"choices\":[{\"finish_reason\":\"length\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"We need extract table rows from image. Let's analyze image content.\\n\\nWe have a personnel card table with columns:\\nDienstliche Stellung | Dienstort | Gehalts-klasse | Jahresgehalt Monatsgehalt Taglohn | Zeitpunkt der Gehalts\u00e4nderung (Tag, Monat, Jahr) | Bemerkungen, Akten etc.\\n\\nVisible rows with content:\\nRow 1: \\\"Hilfsleiterin\\\" in first column. Second column empty? Third empty? Fourth \\\"2'000.-\\\"? Wait need parse exactly.\\n\\nLet's read visible text:\\nTop row (header).\\n\\nThen first data row:\\n- dienstliche_stellung: \\\"Hilfsleiterin\\\" (maybe with underline? but transcript exact)\\n- dienstort: empty? Actually there might be dots but empty.\\n- gehaltsklasse: empty?\\n- jahresgehalt...: \\\"2'000.-\\\" maybe? Let's inspect: In column 4 there is \\\"2'000.-\\\" or \\\"2000.-\\\"? The image shows \\\"2'000.-\\\" with maybe \\\"2'000.-\\\" and then \\\"17.Febr.\\\" in date column? Wait need align columns correctly.\\n\\nLet's parse columns precisely based on layout.\\n\\nThe table has vertical lines separating columns. Let's identify column boundaries:\\n1. Dienstliche Stellung (leftmost wide)\\n2. Dienstort (narrower)\\n3. Gehaltsklasse (narrow)\\n4. Jahresgehalt... (medium)\\n5. Zeitpunkt... split into Tag, Monat, Jahr? Actually header says \\\"Zeitpunkt der Gehalts\u00e4nderung\\\" with subcolumns Tag, Monat, Jahr.\\n6. Bemerkungen...\\n\\nLooking at first data row:\\nIn col1: \\\"Hilfsleiterin\\\"\\nIn col2: maybe empty or dots\\nIn col3: empty?\\nIn col4: \\\"2'000.-\\\" (salary)\\nIn col5 (Tag): \\\"17\\\" ? Wait there is \\\"17.Febr.\\\" maybe in Monat? Let's examine.\\n\\nActually in the row, there is text \\\"17.Febr.\\\" positioned in the date area, and \\\"44\\\" in Jahr? And \\\"1. Januar 1945\\\" in another row? Let's parse row by row.\\n\\nSecond data row:\\n- col1: \\\" \\\" (ditto mark?) Actually there is a quotation mark \\\" \\\" indicating same as above? The image shows \\\" \\\" under Hilfsleiterin? Let's check: There is a row with \\\" \\\" in col1, then empty col2, then \\\"3.315.-\\\" in col4? And \\\"1. Januar\\\" in Monat? \\\"1945\\\" in Jahr? And \\\"+ Zulagen\\\" in remarks.\\n\\nWait need be precise.\\n\\nLet's examine image layout:\\nRow 1 (first data line):\\nCol1: Hilfsleiterin\\nCol2: (empty/dots)\\nCol3: (empty)\\nCol4: 2'000.-? Or maybe 2'000.- is in row 1 col4.\\nCol5: \\\"17.Febr.\\\" maybe spanning? Actually \\\"17.Febr.\\\" could be in Tag/Monat? The header has Tag | Monat | Jahr. So \\\"17\\\" might be Tag, \\\"Febr.\\\" Monat, \\\"44\\\" Jahr. Yes! So row 1 date: Tag=17, Monat=Febr., Jahr=44. So \\\"17.Febr. 44\\\" but in cells separated? The transcript should capture what's in each cell? But the field \\\"datum_gehalts\u00e4nderung\\\" is one field per row, not split. The instructions say copy exact format (e.g., \\\"1. Jan. 1946\\\"). So we need combine? Actually the column is \\\"Zeitpunkt der Gehalts\u00e4nderung\\\" with subcolumns Tag, Monat, Jahr. But in JSON we have one field \\\"datum_gehalts\u00e4nderung\\\". So we should transcribe the date as it appears across those subcolumns? The instructions say \\\"For dates, copy the exact format (e.g., '1. Jan. 1946', '1.April 1945')\\\". So likely the card writes date across the three subcolumns but we should combine into one string representing the date as shown, maybe \\\"17.Febr. 44\\\" or \\\"17. Febr. 44\\\". Let's see.\\n\\nIn row 1, the Jahr column has \\\"44\\\". So date is 17. Febr. 44. The transcript might be \\\"17.Febr. 44\\\" if that's how it's arranged. But need exact text from card in that field. Since there are three sub-columns, but we have one field, we should probably concatenate with spaces? However the instructions don't specify splitting. Let's look at row 2: There is \\\"1. Januar\\\" in Monat? And \\\"1945\\\" in Jahr. So date might be \\\"1. Januar 1945\\\". That matches example \\\"1. Jan. 1946\\\". So yes, combine Tag/Monat/Jahr into one string with spaces as they appear horizontally.\\n\\nThus row 1 date transcript: \\\"17.Febr. 44\\\" (maybe \\\"17. Febr. 44\\\"? Let's check image: It looks like \\\"17.Febr.\\\" with no space? Actually there might be \\\"17.Febr.\\\" in one cell spanning? But we'll use \\\"17.Febr. 44\\\").\\n\\nRow 1 remarks: \\\"+ Zulagen\\\"\\n\\nRow 2:\\nCol1: \\\" \\\" (ditto mark, meaning Hilfsleiterin)\\nCol2: empty\\nCol3: empty?\\nCol4: \\\"3.315.-\\\" (salary)\\nCol5 date: \\\"1. Januar 1945\\\" (Tag maybe empty? Actually \\\"1.\\\" is Tag, \\\"Januar\\\" Monat, \\\"1945\\\" Jahr)\\nCol6 remarks: \\\"+ Zulagen\\\"\\n\\nWait but in image, the second row has \\\"3.315.-\\\" and then \\\"1. Januar\\\" and \\\"1945\\\" and \\\"+ Zulagen\\\". Yes.\\n\\nBut need check if there is any other row? The rest of table is empty. So only two rows with content.\\n\\nHowever need check if row 1 col4 is \\\"2'000.-\\\" or \\\"2000.-\\\"? The image shows \\\"2'000.-\\\" with an apostrophe? Actually in the image, the salary column for first row looks like \\\"2'000.-\\\" with a dot? Let's examine: The number is \\\"2'000.-\\\" maybe \\\"2.000.-\\\"? In German, thousands separator is dot or apostrophe? The image might show \\\"2'000.-\\\" but it's hard to tell. Let's assume \\\"2'000.-\\\" as transcript. But wait there might be \\\"2.000.-\\\" with a dot. Actually in the image, I see \\\"2'000.-\\\" with a small tick? Let's keep \\\"2'000.-\\\" if that's visible. But need be exact. Let's zoom mental: The text is \\\"2'000.-\\\" yes likely with apostrophe.\\n\\nAlso need check gehaltsklasse column: Is there any value? In both rows, gehaltsklasse seems empty. So transcript \\\"\\\".\\n\\nDienstort: empty for both? Yes.\\n\\nNow need determine is_crossed_out. The text \\\"Hilfsleiterin\\\" might be crossed out? In the image, \\\"Hilfsleiterin\\\" appears with a line through? Actually there might be a strike-through? Let's examine: The word \\\"Hilfsleiterin\\\" looks like it has a line through it? The image quality makes it hard. But the instructions say set true if crossed out. Looking at the card, \\\"Hilfsleiterin\\\" might be struck through? Actually in many personnel cards, old entries are crossed out. The first row might be crossed out? Let's check: The word \\\"Hilfsleiterin\\\" appears with a horizontal line? I think yes, it's crossed out. But need be careful. The second row has ditto marks, maybe also crossed? Actually the salary values might be crossed? Let's examine image: The first row salary \\\"2'000.-\\\" might have a line? Not sure.\\n\\nGiven typical extraction, if text is struck through, we should mark true. Let's assess each field:\\n- Row 1 dienstliche_stellung \\\"Hilfsleiterin\\\": There seems to be a line through the word? Actually in the image, the word is underlined? Wait there is a dotted line under? No, that's the row separator. The text itself might not be crossed out. Let's assume false unless clearly struck. But I need be accurate.\\n\\nLooking closely at the image: The word \\\"Hilfsleiterin\\\" is written in typewriter, and there might be a strike-through line across it? I can't tell definitively. However, the second row has quotation marks \\\" \\\" in col1, which might indicate repetition. Those marks are not crossed out.\\n\\nThe salary \\\"3.315.-\\\" might be crossed out? Actually there is a line through \\\"3.315.-\\\"? Let's check: In the image, \\\"3.315.-\\\" appears with a line? Maybe not.\\n\\nGiven ambiguity, I will set is_crossed_out false for all unless clearly visible. But wait the instructions say \\\"Set to true if text in this field is crossed out, struck through, or deleted\\\". In the image, I don't see obvious cross-outs except maybe none. So false.\\n\\nBut need check if there is a cross-out on \\\"Hilfsleiterin\\\"? Actually the first row might be an old entry that is replaced? But there is no replacement visible except second row with same position. So maybe not crossed.\\n\\nThus rows:\\nRow 1:\\n- row_number: 1\\n- dienstliche_stellung: transcript \\\"Hilfsleiterin\\\", interpretation null, is_crossed_out false\\n- dienstort: transcript \\\"\\\", interpretation null, false\\n- gehaltsklasse: transcript \\\"\\\", interpretation null, false\\n- jahresgehalt...: transcript \\\"2'000.-\\\", interpretation \\\"2000\\\", false\\n- datum_gehalts\u00e4nderung: transcript \\\"17.F\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":[]},\"seed\":null}],\"created\":1786808700,\"model\":\"thinkingmachines/Inkling\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":\"default\",\"usage\":{\"completion_tokens\":2048,\"prompt_tokens\":3684,\"total_tokens\":5732,\"completion_tokens_details\":null,\"prompt_tokens_details\":{\"audio_tokens\":null,\"cached_tokens\":3072}},\"prompt\":[]}"
+}

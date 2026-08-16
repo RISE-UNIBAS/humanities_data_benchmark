@@ -1,0 +1,57 @@
+{
+    "text": "{\"advertisements\":[{\"box\":[95.0,68.0,2365.0,492.0]},{\"box\":[95.0,505.0,1220.0,930.0]},{\"box\":[1255.0,505.0,2365.0,930.0]}]}",
+    "model": "meta-models/Muse-Glimmer-30B",
+    "provider": "huggingface",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 3916,
+        "output_tokens": 1373,
+        "total_tokens": 5289,
+        "cached_tokens": 48,
+        "input_cost_usd": 0.0013706,
+        "output_cost_usd": 0.0020595,
+        "estimated_cost_usd": 0.0034301
+    },
+    "duration": 14.950282096862793,
+    "timestamp": "2026-08-16T03:35:17.545955",
+    "parsed": {
+        "advertisements": [
+            {
+                "box": [
+                    95.0,
+                    68.0,
+                    2365.0,
+                    492.0
+                ]
+            },
+            {
+                "box": [
+                    95.0,
+                    505.0,
+                    1220.0,
+                    930.0
+                ]
+            },
+            {
+                "box": [
+                    1255.0,
+                    505.0,
+                    2365.0,
+                    930.0
+                ]
+            }
+        ]
+    },
+    "conversation_id": "e0c0af48-86e0-471d-8650-f176147617f9",
+    "score": {
+        "f1": 0.0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "mean_iou": 0.0,
+        "true_positives": 0,
+        "false_positives": 3,
+        "false_negatives": 3,
+        "iou_threshold": 0.5
+    },
+    "raw_response": "{\"id\":\"owNJ6Ek-fdNmn-a2bcb33df918883b\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{ \\\"advertisements\\\": [\\n  {\\n    \\\"box\\\": [ 95, 68, 2365, 492 ] \\n    },\\n  {\\n    \\\"box\\\": [ 95, 505,  1220, 930 ] \\n    },\\n  {\\n    \\\"box\\\": [ 1255, 505, 2365, 930 ] \\n    }\\n] }\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"advertisements\":[{\"box\":[95.0,68.0,2365.0,492.0]},{\"box\":[95.0,505.0,1220.0,930.0]},{\"box\":[1255.0,505.0,2365.0,930.0]}]},\"reasoning\":\"Extract all advertisements and return their bounding boxes.\\nThe original size of the page is 2479 x 3508 pixels.\\n\\nWe need bounding boxes for each advertisement. There are three ads: top one Goth & Co. Ltd., Basle; bottom left E. Borel Co; bottom right Standard Marine Insurance Co. Limited.\\n\\nNeed coordinates. Probably normalized? Usually bounding boxes as [x_min, y_min, x_max, y_max] in pixels. Original size 2479 x 3508. Need estimate.\\n\\nLet's approximate. Page image. Top ad spans full width. Border around. Approx x from ~100 to ~2350? Let's estimate. The page has margin. The top ad box: left ~100, top ~70? Actually top border maybe ~100 px from top. Let's approximate.\\n\\nBetter to give relative coordinates? Might be expected as [x1, y1, x2, y2]. Could give approximate.\\n\\nLet's assume image width 2479, height 3508.\\n\\nTop ad: left ~100, top ~70? Wait top of page is maybe 70. The border starts around 100 px from left edge, 70 from top. Right border ~ 2350? Let's estimate 100 to 2350. Top ~ 70 to ~ 490? The bottom of top ad is about 490? Actually top ad ends around 490? Let's see. The top ad occupies about top third. Maybe y_max ~ 490? Hmm.\\n\\nAlternative: use normalized 0-1000. Might be common. But instruction says original size 2479 x 3508 pixels. So give pixel coordinates.\\n\\nWe need approximate. Could give:\\n\\nTop ad: {x_min=100, y_min=70, x_max=2350, y_max=490}\\n\\nBottom left ad: x_min=100, y_min=500, x_max=  500? Wait bottom left box is left half. Approx x_min=100, y_min=500, x_max=  500? Actually width about half. Maybe x_max ~ 1200. y_max ~ 930? Let's estimate.\\n\\nBottom left ad border: left ~100, top ~500, right ~ 500? No.\\n\\nLet's look at image: top ad occupies full width. Below it two ads side by side. Left ad occupies left half, right ad right half.\\n\\nSo left ad x_min ~ 100, x_max ~ 1200? Actually center ~ 1230. Right ad x_min ~ 1250, x_max ~ 2350.\\n\\ny for both bottom ads: top ~ 500, bottom ~ 930? Wait bottom of page is ~ 3500. The ads end around ~ 930? Actually the bottom ads go down to about 930? The page number 20 at bottom left. The ads end maybe around 930? Hmm maybe 930 is too high. Let's think: top ad ends at about 490. Then gap. Bottom ads start at ~ 500 and end at ~ 930? That seems too short. Maybe the image is taller. Let's assume page height 3508. The top ad is about 1/3 of page. So y_max ~ 1200. Bottom ads start ~ 1300 and end ~ 3000? Hmm.\\n\\nBetter to estimate proportionally. Visual: top ad occupies about top 40% of visible content. The bottom two ads occupy about 50% of visible. So top ad y from ~ 70 to ~ 1400? Let's approximate.\\n\\nMaybe easier to give relative coordinates as percentages. Could give bounding boxes in [x_min, y_min, x_max, y_max] with values 0-1000.\\n\\nAlternative approach: Provide approximate pixel values based on typical layout.\\n\\nLet's assume margin left 100 px, right margin 100 px. So content width = 2479 -200 = 2279. So left ~100, right ~2379.\\n\\nTop ad top ~ 70, bottom ~  1500? Wait 3508 height. Top ad maybe 40% of height ~ 1400. So y_max ~ 1500.\\n\\nBottom ads: start ~ 1600, end ~ 3300.\\n\\nLet's refine: top ad border top ~ 70, bottom ~  1500? Actually the image shows top ad about 1/3 of page height. Let's say top ad height ~ 1400 px. So y_max ~ 1470.\\n\\nBottom ads: top ~ 1600, bottom ~ 3300.\\n\\nLeft ad: x_min ~ 100, x_max ~ 1230 (mid). Right ad: x_min ~ 1250, x_max ~ 2379.\\n\\nLet's give approximate.\\n\\nMaybe the expected answer is three boxes:\\n\\n1. Goth & Co. Ltd., Basle: [~95, ~70, ~2360, ~490]? Hmm.\\n\\nCould be using normalized coordinates 0-1. Might be safer to give relative.\\n\\nGiven uncertainty, provide approximate bounding boxes with note.\\n\\nI'll output three boxes with estimated pixel coordinates:\\n\\n- Top advertisement (Goth & Co. Ltd.): x_min=100, y_min=70, x_max=2350, y_max=490? Wait 490 seems too small.\\n\\nLet's search memory: typical magazine page 2479x3508. The top ad border is about 100px from top. The image of building is about 500px tall. So y_max maybe ~ 1500? Hmm.\\n\\nLet's assume the page image is cropped with white border. The actual content starts ~ 100px from top. The top ad height maybe ~ 1200px. So y_max ~ 1300.\\n\\nLet's pick:\\n\\nTop ad: [100, 70, 2350, 1500]\\n\\nBottom left (E. Borel Co): [100, 1600, 1200, 3300]\\n\\nBottom right (Standard Marine Insurance): [1250, 1600, 2350, 3300]\\n\\nProvide as list.\\n\\nMaybe better to give coordinates in [x1, y1, x2, y2].\\n\\nI'll give approximate.\\n\\nFinal answer: three bounding boxes.\\n\\nLet's output.\\n\\n\"},\"token_ids\":null,\"routed_experts\":null,\"seed\":null}],\"created\":1786844103,\"model\":\"meta-models/Muse-Glimmer-30B\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":\"vllm-0.1.dev19059+g66826a22d-tp2-46311a71\",\"usage\":{\"completion_tokens\":1373,\"prompt_tokens\":3916,\"total_tokens\":5289,\"completion_tokens_details\":null,\"prompt_tokens_details\":{\"audio_tokens\":null,\"cached_tokens\":48,\"created_cache_tokens\":3856,\"multimodal_tokens\":{\"image\":3850}}},\"prompt_token_ids\":null,\"prompt_text\":null,\"kv_transfer_params\":null,\"ec_transfer_params\":null,\"metrics\":null,\"prompt\":[]}"
+}

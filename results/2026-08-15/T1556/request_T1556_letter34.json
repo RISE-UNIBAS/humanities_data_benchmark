@@ -1,0 +1,47 @@
+{
+    "text": "{\"metadata\":{\"send_date\":[\"1928-05-10\"],\"letter_title\":[\"Betr. Abrechnung\"],\"sender_persons\":[\"Basler Rheinschiffahrt-Aktiengesellschaft\"],\"receiver_persons\":[\"Basler Personenschiffahrtsgesellschaft\"]}}",
+    "model": "thinkingmachines/Inkling",
+    "provider": "huggingface",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 2254,
+        "output_tokens": 1028,
+        "total_tokens": 3282,
+        "cached_tokens": 256,
+        "input_cost_usd": 0.002254,
+        "output_cost_usd": 0.0041634,
+        "estimated_cost_usd": 0.0064174
+    },
+    "duration": 9.893752813339233,
+    "timestamp": "2026-08-15T16:31:55.224273",
+    "parsed": {
+        "metadata": {
+            "send_date": [
+                "1928-05-10"
+            ],
+            "letter_title": [
+                "Betr. Abrechnung"
+            ],
+            "sender_persons": [
+                "Basler Rheinschiffahrt-Aktiengesellschaft"
+            ],
+            "receiver_persons": [
+                "Basler Personenschiffahrtsgesellschaft"
+            ],
+            "document_number": "letter34"
+        }
+    },
+    "conversation_id": "9e9618f7-0639-4e3a-b160-3e232d578ad1",
+    "score": {
+        "send_date_tp": 1,
+        "send_date_fp": 0,
+        "send_date_fn": 0,
+        "sender_persons_tp": 0,
+        "sender_persons_fp": 1,
+        "sender_persons_fn": 2,
+        "receiver_persons_tp": 0,
+        "receiver_persons_fp": 1,
+        "receiver_persons_fn": 0
+    },
+    "raw_response": "{\"id\":\"owJpyrU-31r7CA-a2b8e7a2ef1c05b7\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\n  \\\"metadata\\\": {\\n    \\\"send_date\\\": [\\\"1928-05-10\\\"],\\n    \\\"letter_title\\\": [\\\"Betr. Abrechnung\\\"],\\n    \\\"sender_persons\\\": [\\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"],\\n    \\\"receiver_persons\\\": [\\\"Basler Personenschiffahrtsgesellschaft\\\"]\\n  }\\n}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"metadata\":{\"send_date\":[\"1928-05-10\"],\"letter_title\":[\"Betr. Abrechnung\"],\"sender_persons\":[\"Basler Rheinschiffahrt-Aktiengesellschaft\"],\"receiver_persons\":[\"Basler Personenschiffahrtsgesellschaft\"]}},\"reasoning\":\"We need parse image: historical letter. Need extract letter_title, sender_persons, send_date, receiver_persons. Let's analyze visible text.\\n\\nImage shows letterhead \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\" with address. Top right date \\\"Basel, den 10. Mai /28\\\" with red \\\"34\\\" maybe? So send_date likely 1928-05-10.\\n\\nAddressee on right: \\\"Basler Personenschiffahrtsgesellschaft Basel\\\" with dashes. So receiver_persons: [\\\"Basler Personenschiffahrtsgesellschaft\\\"] maybe \\\"Basel\\\" not person. We'll include organization.\\n\\nSubject lines: \\\"Buchhaltung\\\" and \\\"Betr. Abrechnung\\\". Not title? \\\"letter_title\\\" might be null or maybe \\\"Buchhaltung\\\"? Usually title of letter could be subject. But example used \\\"Petition for Environmental Protection\\\". Here there is no explicit title except maybe \\\"Buchhaltung\\\" or \\\"Betr. Abrechnung\\\". Let's think. The prompt asks \\\"Title of the letter.\\\" In formal letters, sometimes \\\"Betreff\\\" is subject/title. Here \\\"Betr. Abrechnung\\\" means Re: Settlement/Accounting. Could be title. But also there is \\\"Buchhaltung\\\" as heading. Let's examine layout: Left top letterhead, then \\\"Er.\\\" maybe \\\"Eingang\\\"? Then \\\"Buchhaltung\\\" centered with dashes, then \\\"Betr. Abrechnung\\\" centered with dashes. So the letter might be titled \\\"Buchhaltung\\\" or subject \\\"Abrechnung\\\". However need be accurate based on visible claims.\\n\\nSender: At bottom signed \\\"Basler Rheinschiffahrt - Aktiengesellschaft\\\" with signatures. So sender_persons likely organization, not individual names? The signatures are illegible, but the printed name is the company. The prompt asks \\\"Name(s) of the person(s) who wrote the letter.\\\" Could be the company as sender entity, but \\\"persons\\\" implies people. However signatures are present but unreadable. Given letterhead and closing printed company name, likely sender is \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\". We'll put that.\\n\\nNeed JSON only.\\n\\nCheck date format: 1928-05-10.\\n\\nReceiver: \\\"Basler Personenschiffahrtsgesellschaft\\\" in Basel.\\n\\nLetter title: Maybe null if not clear? But there is \\\"Buchhaltung\\\" prominent. Let's decide. The letter includes \\\"Buchhaltung\\\" as a section heading? Actually it's centered like a title. And \\\"Betr. Abrechnung\\\" is subject line. In many extraction tasks, they want \\\"letter_title\\\" from top. Here no explicit title like \\\"Letter\\\". But \\\"Buchhaltung\\\" could be department, not title. Let's provide \\\"Betr. Abrechnung\\\" as title? Or \\\"Buchhaltung\\\"? Let's examine context: The body talks about \\\"Aufstellung Ihres Guthabens bei uns...\\\" So it's an accounting statement. The subject is \\\"Abrechnung\\\". So letter_title might be [\\\"Abrechnung\\\"] or [\\\"Betr. Abrechnung\\\"]. Let's include [\\\"Betr. Abrechnung\\\"]? But need value list.\\n\\nHowever, to be safe, maybe set letter_title to null since no explicit title? But the prompt says if not included set null. Is there a title? The document has \\\"Buchhaltung\\\" printed prominently, which could serve as title/heading. Let's include [\\\"Buchhaltung\\\"]? Hmm.\\n\\nLet's recall similar extraction tasks for historical letters: They often ask for title which might be in the header like \\\"Petition...\\\". Here there is no such. So null might be correct. But there is \\\"Betreff: Abrechnung\\\" which is subject. Depending on interpretation, that's the title. Let's provide [\\\"Abrechnung\\\"]? Actually \\\"Betr.\\\" abbreviation for \\\"Betreff\\\" (subject). So the subject/title is Abrechnung.\\n\\nGiven ambiguity, but need choose one. Let's go with null? No, I think there is a subject line that functions as title. Let's put [\\\"Betr. Abrechnung\\\"].\\n\\nWait also there is \\\"Beilage\\\" at bottom left, not title.\\n\\nThus JSON:\\n{\\n\\\"letter_title\\\": [\\\"Betr. Abrechnung\\\"],\\n\\\"send_date\\\": [\\\"1928-05-10\\\"],\\n\\\"sender_persons\\\": [\\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"],\\n\\\"receiver_persons\\\": [\\\"Basler Personenschiffahrtsgesellschaft\\\"]\\n}\\n\\nBut need check if sender persons should include signatures? Unreadable, so organization is okay.\\n\\nLet's refine date: \\\"den 10. Mai /28\\\" -> 1928-05-10. Yes.\\n\\nOutput only JSON.\"},\"seed\":null}],\"created\":1786804460,\"model\":\"thinkingmachines/Inkling\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":\"default\",\"usage\":{\"completion_tokens\":1028,\"prompt_tokens\":2254,\"total_tokens\":3282,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":null,\"reasoning_tokens\":953,\"rejected_prediction_tokens\":null},\"prompt_tokens_details\":{\"audio_tokens\":null,\"cached_tokens\":256}},\"prompt\":[]}"
+}

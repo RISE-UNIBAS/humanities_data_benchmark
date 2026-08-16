@@ -1,0 +1,47 @@
+{
+    "text": "{\"metadata\":{\"send_date\":[\"1928-04-23\"],\"letter_title\":[\"\"],\"sender_persons\":[\"Basler Rheinschiffahrt-Aktiengesellschaft\"],\"receiver_persons\":[\"Herr Oettinger\"]}}",
+    "model": "thinkingmachines/Inkling",
+    "provider": "huggingface",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 2254,
+        "output_tokens": 945,
+        "total_tokens": 3199,
+        "cached_tokens": 256,
+        "input_cost_usd": 0.002254,
+        "output_cost_usd": 0.00382725,
+        "estimated_cost_usd": 0.00608125
+    },
+    "duration": 14.64837908744812,
+    "timestamp": "2026-08-15T16:31:07.763967",
+    "parsed": {
+        "metadata": {
+            "send_date": [
+                "1928-04-23"
+            ],
+            "letter_title": [
+                ""
+            ],
+            "sender_persons": [
+                "Basler Rheinschiffahrt-Aktiengesellschaft"
+            ],
+            "receiver_persons": [
+                "Herr Oettinger"
+            ],
+            "document_number": "letter27"
+        }
+    },
+    "conversation_id": "96356da1-0888-44e4-902d-f26ba4262cf6",
+    "score": {
+        "send_date_tp": 1,
+        "send_date_fp": 0,
+        "send_date_fn": 0,
+        "sender_persons_tp": 0,
+        "sender_persons_fp": 1,
+        "sender_persons_fn": 2,
+        "receiver_persons_tp": 1,
+        "receiver_persons_fp": 0,
+        "receiver_persons_fn": 0
+    },
+    "raw_response": "{\"id\":\"owJmrTn-6z2FuN-a2b8e65cad4edda5\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\n  \\\"metadata\\\": {\\n    \\\"send_date\\\": [\\\"1928-04-23\\\"],\\n    \\\"letter_title\\\": [\\\"\\\"],\\n    \\\"sender_persons\\\": [\\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"],\\n    \\\"receiver_persons\\\": [\\\"Herr Oettinger\\\"]\\n  }\\n}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"metadata\":{\"send_date\":[\"1928-04-23\"],\"letter_title\":[\"\"],\"sender_persons\":[\"Basler Rheinschiffahrt-Aktiengesellschaft\"],\"receiver_persons\":[\"Herr Oettinger\"]}},\"reasoning\":\"We need parse image: letter from Basler Rheinschiffahrt-Aktiengesellschaft? Need extract title, sender persons, send date, receiver persons.\\n\\nImage shows letterhead \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\" address Marktgasse 5 etc. Date \\\"Basel, den 23. April 1928.\\\" Addressee: \\\"Herrn Oettinger, Verkehrsbureau, Basel.\\\" So receiver Oettinger? Maybe \\\"Herr Oettinger\\\". Need list values.\\n\\nLetter title? Not explicit. Maybe null? But could be inferred? The prompt asks \\\"letter_title: Title of the letter.\\\" In letter there might not be a title. So null.\\n\\nSender persons: The letter is signed \\\"Hochachtend BASLER RHEINSCHIFFAHRT-AKTIENGESELLSCHAFT\\\" with signatures. So sender organization/person? The key \\\"sender_persons\\\" expects name(s) of person(s) who wrote. Might be the company? But \\\"persons\\\" plural. However example uses individual names. Here signatories are not clearly readable except maybe signatures. But the letterhead indicates Basler Rheinschiffahrt-Aktiengesellschaft. Could list that? But it's an organization, not person. Still might be sender. Let's think.\\n\\nWe need return JSON only.\\n\\nSend date: 1928-04-23.\\n\\nReceiver persons: [\\\"Oettinger\\\"]? Or \\\"Herr Oettinger\\\". Let's include \\\"Oettinger\\\". Maybe also \\\"Verkehrsbureau, Basel\\\" but that's address/office. So receiver person Oettinger.\\n\\nLetter title: null? Or maybe there is none. Let's set null.\\n\\nBut wait there is \\\"R/M\\\" maybe reference. Not title.\\n\\nThus:\\n{\\n\\\"letter_title\\\": [null]? No, instructions: \\\"If a piece of information is not included in the letter, set the value for the corresponding key to 'null'.\\\" But they said values should be stored as a list, even if single value. So \\\"letter_title\\\": [\\\"null\\\"]? Or \\\"letter_title\\\": null? The example shows lists for all. They said \\\"where the values corresponding to each key should be stored as a list, even if there is only a single value for a key\\\". So if missing, probably [\\\"null\\\"]? Or maybe null inside list? Usually they'd want [\\\"null\\\"]? Let's check wording: \\\"set the value for the corresponding key to 'null'.\\\" Since values must be list, likely [\\\"null\\\"]. But need be consistent. Let's do [\\\"null\\\"]? Hmm but they said \\\"the values corresponding to each key should be stored as a list\\\" so the value is a list. If information missing, set value to \\\"null\\\" - that conflicts with list requirement. But likely they mean the list contains null? Or the value is null despite list instruction? Let's examine example: all values are lists of strings. For missing, probably [null] not correct JSON? Actually JSON can have null inside list: [null]. But they said set the value ... to \\\"null\\\" (string?). Hmm.\\n\\nGiven ambiguity, but I think best is \\\"letter_title\\\": null? No, that violates list. Let's do \\\"letter_title\\\": [null]. But in JSON null is not quoted. So [null]. Let's decide later.\\n\\nSender persons: The signatures are unreadable, but the organization sends. Maybe list organization? But key says persons. Still we can put [\\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"]? Or leave null if no specific person named? The letter is signed by company with signatures, but names not legible. So sender persons might be unknown. But letterhead gives company name. Usually in these extraction tasks they want the named sender. Here no individual name except signatures illegible. So maybe [\\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"].\\n\\nLet's provide:\\nletter_title: [null]\\nsend_date: [\\\"1928-04-23\\\"]\\nsender_persons: [\\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"]\\nreceiver_persons: [\\\"Oettinger\\\"]\\n\\nBut need be precise with receiver: \\\"Herrn Oettinger\\\" -> \\\"Herr Oettinger\\\" or \\\"Oettinger\\\". We'll use [\\\"Oettinger\\\"].\\n\\nLet's output.\"},\"seed\":null}],\"created\":1786804254,\"model\":\"thinkingmachines/Inkling\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":\"default\",\"usage\":{\"completion_tokens\":945,\"prompt_tokens\":2254,\"total_tokens\":3199,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":null,\"reasoning_tokens\":876,\"rejected_prediction_tokens\":null},\"prompt_tokens_details\":{\"audio_tokens\":null,\"cached_tokens\":256}},\"prompt\":[]}"
+}

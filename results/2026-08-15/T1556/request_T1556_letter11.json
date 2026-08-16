@@ -1,0 +1,45 @@
+{
+    "text": "{\"metadata\":{\"send_date\":[\"1936-07-14\"],\"letter_title\":null,\"sender_persons\":[\"Basler Personenschiffahrtsgesellschaft\"],\"receiver_persons\":[\"Redaktion der Basler Nachrichten\"]}}",
+    "model": "thinkingmachines/Inkling",
+    "provider": "huggingface",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 2254,
+        "output_tokens": 1020,
+        "total_tokens": 3274,
+        "cached_tokens": 256,
+        "input_cost_usd": 0.002254,
+        "output_cost_usd": 0.004131,
+        "estimated_cost_usd": 0.006385
+    },
+    "duration": 17.37232804298401,
+    "timestamp": "2026-08-15T16:28:17.496803",
+    "parsed": {
+        "metadata": {
+            "send_date": [
+                "1936-07-14"
+            ],
+            "letter_title": null,
+            "sender_persons": [
+                "Basler Personenschiffahrtsgesellschaft"
+            ],
+            "receiver_persons": [
+                "Redaktion der Basler Nachrichten"
+            ],
+            "document_number": "letter11"
+        }
+    },
+    "conversation_id": "5a70d180-b442-429d-b17c-0ee60310d336",
+    "score": {
+        "send_date_tp": 0,
+        "send_date_fp": 1,
+        "send_date_fn": 1,
+        "sender_persons_tp": 0,
+        "sender_persons_fp": 1,
+        "sender_persons_fn": 0,
+        "receiver_persons_tp": 0,
+        "receiver_persons_fp": 1,
+        "receiver_persons_fn": 0
+    },
+    "raw_response": "{\"id\":\"owJky1Q-6z2FuN-a2b8e22208c0fbc5\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\n  \\\"metadata\\\": {\\n    \\\"send_date\\\": [\\\"1936-07-14\\\"],\\n    \\\"letter_title\\\": null,\\n    \\\"sender_persons\\\": [\\\"Basler Personenschiffahrtsgesellschaft\\\"],\\n    \\\"receiver_persons\\\": [\\\"Redaktion der Basler Nachrichten\\\"]\\n  }\\n}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"metadata\":{\"send_date\":[\"1936-07-14\"],\"letter_title\":null,\"sender_persons\":[\"Basler Personenschiffahrtsgesellschaft\"],\"receiver_persons\":[\"Redaktion der Basler Nachrichten\"]}},\"reasoning\":\"We need parse image of historical letter. Need extract letter_title, sender_persons, send_date, receiver_persons. Let's analyze visible text.\\n\\nImage shows typed letter in German, dated \\\"14. Juli 1936\\\" at top right. Addressee: \\\"An die Redaktion der 'Basler Nachrichten', Basel.\\\" So receiver persons? Maybe \\\"Basler Nachrichten\\\" editorial office, but key asks name(s) of person(s) who received. Could be \\\"Redaktion der Basler Nachrichten\\\" but not specific person. We'll include as organization? The example uses persons, but can include entity? We'll list \\\"Redaktion der Basler Nachrichten\\\" maybe.\\n\\nSender: At bottom right \\\"Hochachtungsvoll, Basler Personenschiffahrtsgesellschaft Der Gesch\u00e4ftsf\u00fchrer\\\" So sender is Basler Personenschiffahrtsgesellschaft, represented by Gesch\u00e4ftsf\u00fchrer (manager). Need name? Not given specifically except organization and title. So sender_persons might be [\\\"Basler Personenschiffahrtsgesellschaft\\\"] or [\\\"Der Gesch\u00e4ftsf\u00fchrer\\\"]. Let's think. The letter is from the company, signed by the manager without name. So sender_persons: [\\\"Basler Personenschiffahrtsgesellschaft\\\"] perhaps.\\n\\nLetter title? There's \\\"o/z.\\\" at left? Not title. Maybe no explicit title. Could be null. But sometimes \\\"Brief\\\" no. We'll set null.\\n\\nSend date: \\\"14. Juli 1936\\\" -> 1936-07-14.\\n\\nNeed JSON only.\\n\\nCheck if any other names: In text mentions \\\"Rheinfelden\\\" etc. Not relevant.\\n\\nThus:\\n{\\n\\\"letter_title\\\": [null]? Wait values should be stored as list, even if single value. If not included, set value for corresponding key to \\\"null\\\". That likely means the list contains null? Or the value is null? The instruction: \\\"If a piece of information is not included in the letter, set the value for the corresponding key to 'null'.\\\" In example all are lists with strings. For missing, probably [\\\"null\\\"]? Or null? Usually they want \\\"null\\\" inside list? Let's examine wording: \\\"return them in a JSON file where the values corresponding to each key should be stored as a list, even if there is only a single value for a key\\\" Then \\\"If a piece of information is not included in the letter, set the value for the corresponding key to 'null'.\\\" This is ambiguous but likely means the list should be [\\\"null\\\"]? Actually \\\"value for the corresponding key to 'null'\\\" could mean the JSON value is null, not a list. But they said values should be stored as a list. Hmm conflict. In many similar prompts, they want list of values, and if missing then [\\\"null\\\"]. But they said set value to \\\"null\\\" (string?). Let's decide: Use list containing null? Or list with string \\\"null\\\"? Let's check consistency: They said values corresponding to each key should be stored as a list. So value is a list. If missing, set the value (the list?) to \\\"null\\\"? That breaks list rule. But maybe they allow null instead of list. However to be safe, maybe use [null] but JSON null is not quoted. Or [\\\"null\\\"]. Let's think about typical extraction tasks: They ask \\\"set the value for the corresponding key to 'null'\\\" meaning JSON null. But they also said store as list. Often in these prompts they still want [\\\"null\\\"]? Let's recall similar prompts I've seen: \\\"If a piece of information is not included in the letter, set the value for the corresponding key to null.\\\" And they still have lists for others. So likely they want:\\n\\\"letter_title\\\": null\\nBut that violates \\\"stored as a list\\\". However they said \\\"values corresponding to each key should be stored as a list, even if there is only a single value for a key\\\" - this applies when there is a value. If there is no value, then null.\\n\\nThus I will do:\\n\\\"letter_title\\\": null,\\n\\\"send_date\\\": [\\\"1936-07-14\\\"],\\n\\\"sender_persons\\\": [\\\"Basler Personenschiffahrtsgesellschaft\\\"],\\n\\\"receiver_persons\\\": [\\\"Redaktion der Basler Nachrichten\\\"]\\n\\nBut wait sender might include \\\"Der Gesch\u00e4ftsf\u00fchrer\\\". Let's include both? The signature block lists organization then \\\"Der Gesch\u00e4ftsf\u00fchrer\\\". So sender persons could be [\\\"Basler Personenschiffahrtsgesellschaft\\\", \\\"Der Gesch\u00e4ftsf\u00fchrer\\\"]. But \\\"Der Gesch\u00e4ftsf\u00fchrer\\\" is not a name. Still it's the sender role. I think organization is enough.\\n\\nLet's refine receiver: The letter is addressed \\\"An die Redaktion der 'Basler Nachrichten', Basel.\\\" So receiver persons: [\\\"Redaktion der Basler Nachrichten\\\"].\\n\\nThus output.\"},\"seed\":null}],\"created\":1786804082,\"model\":\"thinkingmachines/Inkling\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":\"default\",\"usage\":{\"completion_tokens\":1020,\"prompt_tokens\":2254,\"total_tokens\":3274,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":null,\"reasoning_tokens\":954,\"rejected_prediction_tokens\":null},\"prompt_tokens_details\":{\"audio_tokens\":null,\"cached_tokens\":256}},\"prompt\":[]}"
+}

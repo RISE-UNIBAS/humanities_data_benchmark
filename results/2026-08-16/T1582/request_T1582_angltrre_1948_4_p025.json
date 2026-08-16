@@ -1,0 +1,65 @@
+{
+    "text": "{\"advertisements\":[{\"box\":[40.0,60.0,2400.0,880.0]},{\"box\":[40.0,880.0,1080.0,2500.0]},{\"box\":[1100.0,880.0,2400.0,2500.0]},{\"box\":[40.0,2600.0,2400.0,3200.0]}]}",
+    "model": "meta-models/Muse-Glimmer-30B",
+    "provider": "huggingface",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 3916,
+        "output_tokens": 1506,
+        "total_tokens": 5422,
+        "cached_tokens": 48,
+        "input_cost_usd": 0.0013706,
+        "output_cost_usd": 0.0022589999999999997,
+        "estimated_cost_usd": 0.0036295999999999998
+    },
+    "duration": 16.328227281570435,
+    "timestamp": "2026-08-16T03:37:15.226718",
+    "parsed": {
+        "advertisements": [
+            {
+                "box": [
+                    40.0,
+                    60.0,
+                    2400.0,
+                    880.0
+                ]
+            },
+            {
+                "box": [
+                    40.0,
+                    880.0,
+                    1080.0,
+                    2500.0
+                ]
+            },
+            {
+                "box": [
+                    1100.0,
+                    880.0,
+                    2400.0,
+                    2500.0
+                ]
+            },
+            {
+                "box": [
+                    40.0,
+                    2600.0,
+                    2400.0,
+                    3200.0
+                ]
+            }
+        ]
+    },
+    "conversation_id": "96a3ddb2-a8a2-49d7-845e-0f24fb9ba947",
+    "score": {
+        "f1": 1.0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "mean_iou": 0.734,
+        "true_positives": 4,
+        "false_positives": 0,
+        "false_negatives": 0,
+        "iou_threshold": 0.5
+    },
+    "raw_response": "{\"id\":\"owNJgoE-7ArivV-a2bcb614bb5f87a9\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\\"advertisements\\\": [\\n  {\\n    \\\"box\\\": [40, 60, 2400, 880]\\n  },\\n  {\\n    \\\"box\\\": [40, 880, 1080, 2500]\\n  },\\n  {\\n    \\\"box\\\": [1100, 880, 2400, 2500]\\n  },\\n  {\\n    \\\"box\\\": [40, 2600, 2400, 3200]\\n  }\\n]}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"advertisements\":[{\"box\":[40.0,60.0,2400.0,880.0]},{\"box\":[40.0,880.0,1080.0,2500.0]},{\"box\":[1100.0,880.0,2400.0,2500.0]},{\"box\":[40.0,2600.0,2400.0,3200.0]}]},\"reasoning\":\"Extract all advertisements and return their bounding boxes. The original size of the page is 2479 x 3508 pixels.\\n\\nWe need bounding boxes for each advertisement. There are four ads? Let's see: top one South Wales Anthracite CICA. That's one ad. Then left middle Speditions A.-G., Basle 13. That's second. Right middle Sindarco S.A. Locarno. That's third. Bottom JACKY, MAEDER & Co. That's fourth.\\n\\nReturn bounding boxes. Probably coordinates in pixels. Need estimate. Original size 2479 x 3508. Need x_min, y_min, x_max, y_max.\\n\\nWe need approximate. Let's estimate.\\n\\nTop ad: border from about x ~ 40 to ~ 860? Wait page width 2479. The page is centered. The ad spans almost full width. Let's approximate.\\n\\nTop ad box: left ~ 40? Actually margin. Let's assume x_min ~ 40, y_min ~ 60, x_max ~ 860? Wait 2479 is width. The page is maybe 2000 wide. Let's approximate relative.\\n\\nBetter to give normalized? Probably pixel coordinates.\\n\\nWe can estimate percentages.\\n\\nTop ad: top border y ~ 60 (maybe 60). Bottom y ~ 270? Actually top ad height maybe ~ 200. Let's assume y_min ~ 60, y_max ~ 270? Wait page height 3508. Top ad is near top. Maybe y_min ~ 60, y_max ~ 270? Hmm.\\n\\nLet's look at image: top ad occupies top ~ 20% of page. So y_max ~ 0.25*3508 \u2248 877. Hmm.\\n\\nLet's approximate more carefully.\\n\\nVisual: top ad box from top margin ~ 60px down to ~ 270? No.\\n\\nMaybe better to give approximate bounding boxes with reasonable values.\\n\\nI think typical extraction expects coordinates like [x_min, y_min, x_max, y_max].\\n\\nLet's estimate:\\n\\nPage width 2479. Left margin ~ 40. Right margin ~ 40. So content width ~ 2399.\\n\\nTop ad: x_min ~ 40, x_max ~ 2400? Actually top ad spans full width. So x_min ~ 40, x_max ~ 2400. y_min ~ 60, y_max ~ 270? Wait 270 is too small. Let's assume top ad height ~ 200px? Might be ~ 200? Hmm.\\n\\nAlternative: use relative coordinates 0-1 then convert.\\n\\nLet's assume top ad occupies y from 0.06 to 0.27 of height. 0.06*3508=210. 0.27*3508=947. So y_min ~210, y_max ~947.\\n\\nMiddle left ad: x from 0.04 to 0.43, y from 0.28 to 0.70. So x_min ~ 99, x_max ~ 1067, y_min ~ 982, y_max ~ 2456.\\n\\nMiddle right ad: x from 0.45 to 0.86, y from 0.28 to 0.68. So x_min ~1116, x_max ~2135, y_min ~982, y_max ~2385.\\n\\nBottom ad: x from 0.04 to 0.86, y from 0.71 to 0.91. So x_min ~99, x_max ~2135, y_min ~2491, y_max ~3192.\\n\\nLet's refine.\\n\\nMaybe better to give integer.\\n\\nI'll output four boxes.\\n\\nLet's propose:\\n\\n1. South Wales Anthracite / CICA: {x_min=38, y_min=62, x_max=859? Wait width? Actually top ad spans to right edge. Let's say x_max= 2400. Hmm.\\n\\nMaybe the page image includes left edge of book. The visible page is about 2000 wide. Let's assume x_min= 40, x_max= 2400.\\n\\nI'll give approximate.\\n\\nI'll output as list.\\n\\nProbably acceptable with approximate.\\n\\nLet's give:\\n\\n- CICA ad: [40, 60, 2400, 270?]. Hmm.\\n\\nAlternative approach: use normalized coordinates 0-1000.\\n\\nMight be okay.\\n\\nI'll give bounding boxes in pixels approximate:\\n\\nTop ad: x_min= 45, y_min= 62, x_max= 2395, y_max= 270? Wait.\\n\\nLet's search memory: typical magazine page 2479x3508. Top ad maybe y_max ~ 900.\\n\\nLet's assume:\\n\\nTop ad: [40, 60, 2400, 270? No.\\n\\nLet's pick y_max= 270? That seems too small.\\n\\nLet's estimate height: top ad about 1/5 of page height ~ 700px. So y_max ~ 760.\\n\\nLet's set y_min= 60, y_max= 760.\\n\\nMiddle left: y_min= 780, y_max= 2400.\\n\\nMiddle right: y_min= 780, y_max= 2400.\\n\\nBottom: y_min= 2500, y_max= 3200.\\n\\nLet's produce final answer with four boxes.\\n\\nI'll give coordinates:\\n\\n1. South Wales Anthracite CICA: x_min= 38, y_min= 60, x_max= 2405, y_max= 270? Hmm.\\n\\nMaybe better to give relative.\\n\\nI'll give approximate values:\\n\\n- Ad 1 (CICA): [40, 60, 2400, 270?]. Hmm.\\n\\nLet's decide:\\n\\nTop ad: [40, 60, 2400, 270?]. Actually 270 is too low.\\n\\nLet's use 60 to 270? No.\\n\\nLet's assume top ad bottom at ~ 270? Wait 3508 height, 270 is 7.7% down. Might be plausible.\\n\\nLet's look at image: top ad is about 1/4 of page height. So 0.25*3508=877. So y_max ~ 877.\\n\\nOk.\\n\\nI'll output:\\n\\nCICA: {x_min= 40, y_min= 60, x_max= 2400, y_max= 880}\\n\\nSpeditions: {x_min= 40, y_min= 880, x_max= 1080, y_max= 2500}\\n\\nSindarco: {x_min= 1100, y_min= 880, x_max= 2400, y_max= 2500}\\n\\nJacky Maeder: {x_min= 40, y_min= 2600, x_max= 2400, y_max= 3200}\\n\\nLet's give those.\\n\\nI'll present as list.\\n\\n\"},\"token_ids\":null,\"routed_experts\":null,\"seed\":null}],\"created\":1786844220,\"model\":\"meta-models/Muse-Glimmer-30B\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":\"vllm-0.1.dev19059+g66826a22d-tp2-46311a71\",\"usage\":{\"completion_tokens\":1506,\"prompt_tokens\":3916,\"total_tokens\":5422,\"completion_tokens_details\":null,\"prompt_tokens_details\":{\"audio_tokens\":null,\"cached_tokens\":48,\"created_cache_tokens\":3856,\"multimodal_tokens\":{\"image\":3850}}},\"prompt_token_ids\":null,\"prompt_text\":null,\"kv_transfer_params\":null,\"ec_transfer_params\":null,\"metrics\":null,\"prompt\":[]}"
+}

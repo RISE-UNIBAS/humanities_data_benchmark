@@ -1,0 +1,47 @@
+{
+    "text": "{\"metadata\":{\"send_date\":[\"1928-04-04\"],\"letter_title\":[\"Betrifft Kauf \\\"Rheinfelden\\\"\"],\"sender_persons\":[\"Basler Rheinschiffahrt-Aktiengesellschaft\"],\"receiver_persons\":[\"Basler Personenschiffahrtsgesellschaft\"]}}",
+    "model": "thinkingmachines/Inkling",
+    "provider": "huggingface",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 4425,
+        "output_tokens": 876,
+        "total_tokens": 5301,
+        "cached_tokens": 4096,
+        "input_cost_usd": 0.004425,
+        "output_cost_usd": 0.0035478,
+        "estimated_cost_usd": 0.0079728
+    },
+    "duration": 30.468103408813477,
+    "timestamp": "2026-08-15T16:42:03.224392",
+    "parsed": {
+        "metadata": {
+            "letter_title": [
+                "Betrifft Kauf \"Rheinfelden\""
+            ],
+            "send_date": [
+                "1928-04-04"
+            ],
+            "sender_persons": [
+                "Basler Rheinschiffahrt-Aktiengesellschaft"
+            ],
+            "receiver_persons": [
+                "Basler Personenschiffahrtsgesellschaft"
+            ],
+            "document_number": "letter25"
+        }
+    },
+    "conversation_id": "884fca9d-e564-49f0-b1c4-8a6e7fadea6e",
+    "score": {
+        "send_date_tp": 1,
+        "send_date_fp": 0,
+        "send_date_fn": 0,
+        "sender_persons_tp": 0,
+        "sender_persons_fp": 1,
+        "sender_persons_fn": 2,
+        "receiver_persons_tp": 0,
+        "receiver_persons_fp": 1,
+        "receiver_persons_fn": 0
+    },
+    "raw_response": "{\"id\":\"owJqVhA-31r7CA-a2b8f67628957af0\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\\"metadata\\\": {\\\"letter_title\\\": [\\\"Betrifft Kauf \\\\\\\"Rheinfelden\\\\\\\"\\\"], \\\"send_date\\\": [\\\"1928-04-04\\\"], \\\"sender_persons\\\": [\\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"], \\\"receiver_persons\\\": [\\\"Basler Personenschiffahrtsgesellschaft\\\"]}}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":[],\"reasoning\":\"We need parse image letter. Need extract letter_title, sender_persons, send_date, receiver_persons.\\n\\nWe have two images of same letter? First image page 1, second page 2.\\n\\nLetterhead: Basler Rheinschiffahrt-Aktiengesellschaft, Marktgasse 5, etc. Date at top right: Basel, den 4. April 1928. So send_date 1928-04-04.\\n\\nSubject line: Betrifft Kauf \\\"Rheinfelden\\\" Ihr Schreiben vom 4. April. Not title? Maybe letter_title null? Or could be \\\"Betrifft Kauf 'Rheinfelden'\\\"? The prompt asks \\\"Title of the letter.\\\" Might be absent, but there is subject line. Let's see example had \\\"Petition for Environmental Protection\\\". Here maybe no explicit title except subject. Could set letter_title to null? Or include subject? Let's determine.\\n\\nSender: Basler Rheinschiffahrtsgesellschaft? Actually letter is from Basler Personenschiffahrtsgesellschaft, Basel. At bottom signed \\\"Hochachtend BASLER RHEINSCHIFFAHRT-AKTIENGESELLSCHAFT\\\" with signatures. So sender_persons likely organization, but key asks Name(s) of person(s) who wrote the letter. Might be the organization or signatories? The signatures appear \\\"G. ...\\\"? Let's inspect image 2 bottom right: signatures, one maybe \\\"G. Wanner\\\"? Actually hard to read. But letterhead on page 1 is \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\". However the body mentions \\\"Basler Personenschiffahrtsgesellschaft\\\" and sign-off \\\"BASLER RHEINSCHIFFAHRT-AKTIENGESELLSCHAFT\\\". So sender is that company. Since they ask persons, maybe list organization? But \\\"persons\\\" implies people. However signatures are present but illegible. Might list null? Let's think.\\n\\nReceiver: Addressed to \\\"Basler Personenschiffahrtsgesellschaft, Basel.\\\" So receiver_persons [\\\"Basler Personenschiffahrtsgesellschaft\\\"]? Or maybe specific person not named. So receiver is that organization.\\n\\nBut wait, the letter is written by Basler Rheinschiffahrt-Aktiengesellschaft to Basler Personenschiffahrtsgesellschaft. Yes.\\n\\nNeed return JSON with lists.\\n\\nLet's determine letter_title: Maybe none. But there is \\\"Betrifft Kauf 'Rheinfelden'\\\" which functions as subject/title. Could include that. Let's include [\\\"Betrifft Kauf \\\\\\\"Rheinfelden\\\\\\\"\\\"]? Or null? The prompt says \\\"Title of the letter.\\\" In formal letters, the subject line can be considered title. Let's include it.\\n\\nSend date: 1928-04-04.\\n\\nSender persons: The signing entity is \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\". Even though it's an organization, it's the sender. Could also include signatures if readable. The signatures seem one \\\"G. ...\\\"? Actually image shows two signatures? One looks like \\\"G. Wanner\\\" and another \\\"A. ...\\\"? Not clear. Given instructions to extract values from letter, likely they want the organization name from letterhead/sign-off. So sender_persons: [\\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"].\\n\\nReceiver persons: [\\\"Basler Personenschiffahrtsgesellschaft\\\"].\\n\\nCheck consistency: In image 1, address block on right: \\\"Basler Personenschiffahrtsgesellschaft, Basel.\\\" Yes.\\n\\nThus JSON:\\n{\\n  \\\"metadata\\\": {\\n    \\\"letter_title\\\": [\\\"Betrifft Kauf \\\\\\\"Rheinfelden\\\\\\\"\\\"],\\n    \\\"send_date\\\": [\\\"1928-04-04\\\"],\\n    \\\"sender_persons\\\": [\\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"],\\n    \\\"receiver_persons\\\": [\\\"Basler Personenschiffahrtsgesellschaft\\\"]\\n  }\\n}\\n\\nNeed match schema exactly with metadata object. Let's do that.\"},\"seed\":null}],\"created\":1786805067,\"model\":\"thinkingmachines/Inkling\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":\"default\",\"usage\":{\"completion_tokens\":876,\"prompt_tokens\":4425,\"total_tokens\":5301,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":null,\"reasoning_tokens\":806,\"rejected_prediction_tokens\":null},\"prompt_tokens_details\":{\"audio_tokens\":null,\"cached_tokens\":4096}},\"prompt\":[]}"
+}

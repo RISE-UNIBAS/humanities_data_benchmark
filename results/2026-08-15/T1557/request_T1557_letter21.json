@@ -1,0 +1,47 @@
+{
+    "text": "{\"metadata\":{\"send_date\":[\"1928-03-26\"],\"letter_title\":[\"\"],\"sender_persons\":[\"Basler Personenschiffahrts-Gesellschaft\"],\"receiver_persons\":[\"Basler Rheinschiffahrt A.-G.\"]}}",
+    "model": "thinkingmachines/Inkling",
+    "provider": "huggingface",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 2254,
+        "output_tokens": 1452,
+        "total_tokens": 3706,
+        "cached_tokens": 256,
+        "input_cost_usd": 0.002254,
+        "output_cost_usd": 0.0058806,
+        "estimated_cost_usd": 0.008134599999999999
+    },
+    "duration": 13.643470525741577,
+    "timestamp": "2026-08-15T16:36:30.618652",
+    "parsed": {
+        "metadata": {
+            "send_date": [
+                "1928-03-26"
+            ],
+            "letter_title": [
+                ""
+            ],
+            "sender_persons": [
+                "Basler Personenschiffahrts-Gesellschaft"
+            ],
+            "receiver_persons": [
+                "Basler Rheinschiffahrt A.-G."
+            ],
+            "document_number": "letter21"
+        }
+    },
+    "conversation_id": "172b6cd6-2e98-4532-ad08-96db5554f9e3",
+    "score": {
+        "send_date_tp": 1,
+        "send_date_fp": 0,
+        "send_date_fn": 0,
+        "sender_persons_tp": 0,
+        "sender_persons_fp": 1,
+        "sender_persons_fn": 0,
+        "receiver_persons_tp": 0,
+        "receiver_persons_fp": 1,
+        "receiver_persons_fn": 0
+    },
+    "raw_response": "{\"id\":\"owJqSDK-31r7CA-a2b8ee42ff137fa4\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\n  \\\"metadata\\\": {\\n    \\\"send_date\\\": [\\\"1928-03-26\\\"],\\n    \\\"letter_title\\\": [\\\"\\\"],\\n    \\\"sender_persons\\\": [\\\"Basler Personenschiffahrts-Gesellschaft\\\"],\\n    \\\"receiver_persons\\\": [\\\"Basler Rheinschiffahrt A.-G.\\\"]\\n  }\\n}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"metadata\":{\"send_date\":[\"1928-03-26\"],\"letter_title\":[\"\"],\"sender_persons\":[\"Basler Personenschiffahrts-Gesellschaft\"],\"receiver_persons\":[\"Basler Rheinschiffahrt A.-G.\"]}},\"reasoning\":\"We need parse image of historical letter in German. Need extract letter_title, sender_persons, send_date, receiver_persons. Need analyze image content visually (no OCR but can read). Let's understand letter.\\n\\nImage shows typed letter on yellowish paper, date \\\"Basel, den 26.M\u00e4rz 1928.\\\" Addressee: \\\"An die Basler Rheinschiffahrt A.-G. B a s e l.\\\" Then \\\"o/v\\\" maybe? Body mentions \\\"Im Anschluss an unser Schreiben vom 24.M\u00e4rz...\\\" Then request about contract for maintaining navigation Basel-Rheinfelden, Kur- und Verkehrsverein Rheinfelden bezeichnet wurde. Then \\\"Wir bitten Sie h\u00f6flich um gefl. Kenntnis - nahme und zeichnen mit vorz\u00fcglicher Hochachtung\\\" Then signature block: \\\"Basler Personenschiffahrts-Gesellschaft. Der Pr\u00e4sident:\\\" maybe? Need identify sender persons.\\n\\nWe need letter title? Not explicit. Might be null if not included. But sometimes there is subject line? The letter might have no title. So letter_title: null? Or maybe \\\"o/v\\\" is not title. Let's check.\\n\\nSender: \\\"Basler Personenschiffahrts-Gesellschaft\\\" and maybe president name? The signature block seems \\\"Basler Personenschiffahrts-Gesellschaft.\\\" Then \\\"Der Pr\u00e4sident:\\\" but name might be below, not clearly visible? Let's inspect mental image: At bottom right, there is printed/signature? Actually image shows \\\"Basler Personenschiffahrts-Gesellschaft.\\\" then \\\"Der Pr\u00e4sident:\\\" then maybe a handwritten signature? It's hard to read name. Might be \\\"Dr. ...\\\"? But we need name(s) of person(s) who wrote the letter. If only organization and no specific person readable, maybe list organization? The prompt says \\\"Name(s) of the person(s) who wrote the letter.\\\" Could include organization if that's the sender entity? But likely they want the signatory name if present. Let's examine closer mental: The bottom right has text:\\n\\\"Basler Personenschiffahrts-Gesellschaft.\\nDer Pr\u00e4sident:\\\"\\n\\nThen maybe handwritten signature that is illegible? Given image resolution, maybe name is present but not readable. However we should extract what's readable. The organization is Basler Personenschiffahrts-Gesellschaft, and the role is Der Pr\u00e4sident. But no specific personal name visible. So sender_persons might be [\\\"Basler Personenschiffahrts-Gesellschaft\\\"]? Or null? Let's think.\\n\\nThe receiver is \\\"Basler Rheinschiffahrt A.-G.\\\" Maybe also \\\"Basel\\\". So receiver_persons: [\\\"Basler Rheinschiffahrt A.-G.\\\"].\\n\\nSend date: 1928-03-26.\\n\\nLetter title: There might be none. But there is \\\"o/v\\\" on left? Not title. So null.\\n\\nBut need be precise with lists.\\n\\nLet's provide:\\n{\\n\\\"letter_title\\\": [null]? Wait instructions: values corresponding to each key should be stored as a list, even if single value. If information not included, set value for corresponding key to \\\"null\\\". Does that mean the list contains null? Or the value is null not in list? The example shows lists of strings. For missing, likely [\\\"null\\\"]? Actually they said \\\"set the value for the corresponding key to 'null'\\\". But also said \\\"stored as a list, even if there is only a single value for a key\\\". So probably [\\\"null\\\"]? Or null? Let's check consistency: If missing, value should be \\\"null\\\" but within list? The example doesn't show missing case. Usually in these extraction tasks, they want list with null inside if missing? Let's parse instruction precisely: \\\"return them in a JSON file where the values corresponding to each key should be stored as a list, even if there is only a single value for a key\\\" Then \\\"If a piece of information is not included in the letter, set the value for the corresponding key to 'null'.\\\" This could be interpreted as the list should be [null] but they said value ... to \\\"null\\\". However since values must be lists, I think they want [null]. But sometimes they want null (not in list) despite list instruction? Let's examine typical prompts: They often say \\\"store as list\\\" and \\\"if not included set value to null\\\". In many outputs, they do \\\"letter_title\\\": null (without list) if missing? But they said values corresponding to each key should be stored as a list. So I think [\\\"null\\\"] is wrong because that's a string \\\"null\\\". Better to put null inside list? Actually JSON can have null element: [null]. That represents a list containing null. That satisfies both: it's a list, and the value is null. Yes, I think [null] is correct. But need check other keys: if present, list of strings.\\n\\nBut wait they said \\\"set the value for the corresponding key to 'null'\\\" with quotes around null indicating string? Hmm they wrote \\\"null\\\" in quotes in instruction? They said set the value ... to \\\"null\\\". In JSON, null is without quotes. But they put quotes around null in text? Actually in prompt: set the value for the corresponding key to \\\"null\\\". That might mean the JSON null value. But then \\\"values ... stored as a list\\\" conflicts. Let's decide: For missing title, use [null]. Or maybe null (not list). Let's see example: all present are lists. If one missing, likely they still want list format? I think yes, [null].\\n\\nBut also need consider sender_persons: maybe [\\\"Basler Personenschiffahrts-Gesellschaft\\\"]. Let's include that. Or if there's a president name unreadable, maybe not include.\\n\\nLet's also check date format: 1928-03-26.\\n\\nThus output:\\n{\\n\\\"letter_title\\\": [null],\\n\\\"sender_persons\\\": [\\\"Basler Personenschiffahrts-Gesellschaft\\\"],\\n\\\"send_date\\\": [\\\"1928-03-26\\\"],\\n\\\"receiver_persons\\\": [\\\"Basler Rheinschiffahrt A.-G.\\\"]\\n}\\n\\nBut wait there might be specific person name in signature: Let's try to read bottom right more precisely. The image shows:\\n\\\"Basler Personenschiffahrts-Gesellschaft.\\nDer Pr\u00e4sident:\\\"\\n\\nThen there might be a handwritten signature over printed name? Actually in old letters, they often have printed company and then handwritten signature of president with name printed below? Here maybe printed name is \\\"Dr. R. ...\\\"? Let's not overinterpret. We'll use organization.\\n\\nHowever, there is also \\\"o/v\\\" on left side near top, maybe meaning \\\"ohne Vermerk\\\"? Not relevant.\\n\\nThus I will return JSON.\"},\"seed\":null}],\"created\":1786804731,\"model\":\"thinkingmachines/Inkling\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":\"default\",\"usage\":{\"completion_tokens\":1452,\"prompt_tokens\":2254,\"total_tokens\":3706,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":null,\"reasoning_tokens\":1378,\"rejected_prediction_tokens\":null},\"prompt_tokens_details\":{\"audio_tokens\":null,\"cached_tokens\":256}},\"prompt\":[]}"
+}

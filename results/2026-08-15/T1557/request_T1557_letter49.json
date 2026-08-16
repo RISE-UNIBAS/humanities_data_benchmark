@@ -1,0 +1,43 @@
+{
+    "text": "{\"metadata\":{\"send_date\":[\"1939-09-09\"],\"letter_title\":null,\"sender_persons\":null,\"receiver_persons\":[\"Basler Rheinschiffahrtsaktiengesellschaft\"]}}",
+    "model": "thinkingmachines/Inkling",
+    "provider": "huggingface",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 2499,
+        "output_tokens": 1138,
+        "total_tokens": 3637,
+        "cached_tokens": 2176,
+        "input_cost_usd": 0.002499,
+        "output_cost_usd": 0.004608899999999999,
+        "estimated_cost_usd": 0.007107899999999999
+    },
+    "duration": 37.14418411254883,
+    "timestamp": "2026-08-15T16:38:11.913294",
+    "parsed": {
+        "metadata": {
+            "letter_title": null,
+            "send_date": [
+                "1939-09-09"
+            ],
+            "sender_persons": null,
+            "receiver_persons": [
+                "Basler Rheinschiffahrtsaktiengesellschaft"
+            ],
+            "document_number": "letter49"
+        }
+    },
+    "conversation_id": "bf3a0c38-c07d-4b7d-a7fe-d883eb99e1db",
+    "score": {
+        "send_date_tp": 0,
+        "send_date_fp": 1,
+        "send_date_fn": 1,
+        "sender_persons_tp": 0,
+        "sender_persons_fp": 0,
+        "sender_persons_fn": 0,
+        "receiver_persons_tp": 0,
+        "receiver_persons_fp": 1,
+        "receiver_persons_fn": 0
+    },
+    "raw_response": "{\"id\":\"owJp3BM-6z2FuN-a2b8f0c51e1ae5f7\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\\"metadata\\\":{\\\"letter_title\\\":null,\\\"send_date\\\":[\\\"1939-09-09\\\"],\\\"sender_persons\\\":null,\\\"receiver_persons\\\":[\\\"Basler Rheinschiffahrtsaktiengesellschaft\\\"]}}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":[],\"reasoning\":\"We need parse image: letter in German, dated Basel, den 9. September 1939. Addressee: \\\"Basler Rheinschiffahrts-Aktiengesellschaft\\\" maybe \\\"Direktion\\\" \\\"Basel\\\" \\\"Marktgasse 5\\\". Sender? Not clearly visible? Need identify sender persons. The letter mentions \\\"Mit bestem Danke best\u00e4tige ich Ihnen den Empfang Ihres Geehrten vom 7.ds.\\\" Then \\\"Ich werde nicht verfehlen Ihren Vorschlag betr. Darlehen von Fr. 33'000.- dem Vorstand der Basler Personenschiffahrtsgesellschaft mit Bef\u00f6rderung zu unterbreiten und Ihnen alsdann wieder zu berichten. In Hochachtung\\\" No explicit signature visible? Maybe there is a signature at bottom right? The image is somewhat blurry but likely signed by someone. Need determine letter title? Maybe none. Need extract values exactly.\\n\\nWe need return JSON with keys: letter_title, sender_persons, send_date, receiver_persons.\\n\\nLet's analyze image text precisely.\\n\\nTop right: \\\"49\\\" in red.\\nThen centered/top: \\\"Basel, den 9. September 1939.\\\"\\nThen \\\"AE\\\" on left? Maybe reference.\\nThen address block:\\n\\\"Basler Rheinschiffahrtsaktiengesellschaft\\nDirektion\\nBasel\\n----------------\\nMarktgasse 5\\\"\\n\\nThen salutation: \\\"Mit bestem Danke best\u00e4tige ich Ihnen\\\"\\nThen body: \\\"den Empfang Ihres Geehrten vom 7.ds.\\\"\\nThen \\\"Ich werde nicht verfehlen Ihren Vor-\\\"\\n\\\"schlag betr. Darlehen von Fr. 33'000.- dem Vorstand der\\\"\\n\\\"Basler Personenschiffahrtsgesellschaft mit Bef\u00f6rderung zu\\\"\\n\\\"unterbreiten und Ihnen alsdann wieder zu berichten.\\\"\\nThen closing: \\\"In Hochachtung\\\"\\n\\nNo visible signature name? Maybe at bottom right there is faint signature? But not readable. So sender_persons might be null? Or maybe the letter is from a director? But we can't determine name. So null.\\n\\nLetter title? Not present, maybe null.\\n\\nSend date: 1939-09-09.\\n\\nReceiver persons: The letter is addressed to Basler Rheinschiffahrtsaktiengesellschaft Direktion? Or maybe to a specific person within? The address block lists company and direction, but no individual name. So receiver_persons could be [\\\"Basler Rheinschiffahrtsaktiengesellschaft\\\"]? Or null if not person? The key says \\\"Name(s) of the person(s) who received the letter.\\\" Since it's addressed to company/direction, maybe list the company? But \\\"persons\\\" implies individuals. However example includes \\\"Mayor Joe Quimby, Seymour Skinner\\\" as persons. If not included, set null. But the address is present, though not a person. The prompt says \\\"If a piece of information is not included in the letter, set the value for the corresponding key to 'null'.\\\" The receiver is included as an organization. Should we include? Probably yes, as receiver entity. But need be careful.\\n\\nLet's check if there's hidden signature at bottom right? The image bottom right is blank/white. So no sender name.\\n\\nThus:\\nletter_title: null? Or maybe \\\"AE\\\"? No that's not title.\\nsender_persons: null\\nsend_date: [\\\"1939-09-09\\\"]\\nreceiver_persons: [\\\"Basler Rheinschiffahrtsaktiengesellschaft\\\"]? Or include \\\"Direktion\\\"? Let's provide the company name.\\n\\nBut wait, the body mentions \\\"Basler Personenschiffahrtsgesellschaft\\\" - that's the sender's organization? Actually \\\"dem Vorstand der Basler Personenschiffahrtsgesellschaft\\\" - so the sender might be part of that society? Hmm let's parse context: The recipient is Basler Rheinschiffahrtsaktiengesellschaft (Basel Rhine Shipping Stock Company). The sender writes they will present the proposal regarding loan of 33,000 francs to the board of Basler Personenschiffahrtsgesellschaft (Basel Passenger Shipping Company) and then report back. So sender might be a board member or director of the passenger shipping company writing to the Rhine shipping company? Actually \\\"Ich werde nicht verfehlen Ihren Vorschlag ... dem Vorstand der Basler Personenschiffahrtsgesellschaft ... zu unterbreiten\\\" - \\\"I will not fail to present your proposal ... to the board of Basler Personenschiffahrtsgesellschaft...\\\" So the sender is likely an individual who is in contact with both? But still no name.\\n\\nThus answer should be JSON.\\n\\nNeed match exact schema with metadata object.\\n\\nLet's produce:\\n{\\n  \\\"metadata\\\": {\\n    \\\"letter_title\\\": [null]? Wait schema requires array or null? Actually \\\"anyOf\\\": [{\\\"items\\\": {\\\"type\\\": \\\"string\\\"}, \\\"type\\\": \\\"array\\\"}, {\\\"type\\\": \\\"null\\\"}]. So value can be null directly, not list containing null? The example shows lists of strings. For null, probably just null, not [\\\"null\\\"]. Yes.\\n\\nBut need values stored as a list, even if single value, except if not included then null. So for send_date: [\\\"1939-09-09\\\"]. For receiver_persons: maybe [\\\"Basler Rheinschiffahrtsaktiengesellschaft\\\"]. For sender_persons: null. For letter_title: null.\\n\\nLet's do that.\"},\"seed\":null}],\"created\":1786804681,\"model\":\"thinkingmachines/Inkling\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":\"default\",\"usage\":{\"completion_tokens\":1138,\"prompt_tokens\":2499,\"total_tokens\":3637,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":null,\"reasoning_tokens\":1091,\"rejected_prediction_tokens\":null},\"prompt_tokens_details\":{\"audio_tokens\":null,\"cached_tokens\":2176}},\"prompt\":[]}"
+}

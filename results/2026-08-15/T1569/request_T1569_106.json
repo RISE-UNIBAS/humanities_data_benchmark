@@ -1,0 +1,815 @@
+{
+    "text": "We need parse images. Need extract header: year 2025, month April (April 2025). Need icon legend image to match icons. Need roster row image: one row for single person. Need identify person id, profession, employment percent, is_jumper, and shifts for each day of month using header mapping.\n\nWe have three images:\n1. Header image showing \"BG S April 2025\" and days 01-30 with weekdays Di Mi Do Fr Sa So Mo etc. Need map each column to date.\nLet's list columns precisely from header:\nDay columns:\n01 Di\n02 Mi\n03 Do\n04 Fr\n05 Sa\n06 So\n07 Mo\n08 Di\n09 Mi\n10 Do\n11 Fr\n12 Sa\n13 So\n14 Mo\n15 Di\n16 Mi\n17 Do\n18 Fr\n19 Sa\n20 So\n21 Mo\n22 Di\n23 Mi\n24 Do\n25 Fr\n26 Sa\n27 So\n28 Mo\n29 Di\n30 Mi\nWait check image: The header shows blocks for 15, 16, 17, 18 with sub-columns. Let's parse exactly.\n\nLooking at header image:\nLeft part: BG S | April 2025\nThen row with numbers 15, 16, 17, 18 centered over groups.\nUnderneath:\nFor 15:\nDi 08\nMi 09\nDo 10\nFr 11\nSa 12\nSo 13\nMo 14\nWait need correct alignment.\n\nLet's examine header layout carefully. The image shows:\nTop row: \"BG S\" left, \"April 2025\" center, then \"15\" centered, \"16\" centered, \"17\" centered, \"18\" centered.\nSecond row (weekdays and dates):\nUnder 15 group:\nDi 01? No wait need understand full month display maybe split across pages? Actually the row shown might be just part? Let's read visible text:\nWe see:\n\"Di Mi Do Fr Sa So Mo Di Mi Do Fr Sa So Mo Di Mi Do Fr Sa So Mo Di Mi\"\nThen below:\n\"01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31\"\nBut in image, visible numbers:\nStarting left: \"01\" under Di? Let's parse visible sequence in image:\nLooking at image text:\n\"Di Mi Do Fr Sa So Mo Di Mi Do Fr Sa So Mo Di Mi Do Fr Sa So Mo Di Mi\"\nThen numbers row:\n\"01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30\" maybe 31 cut off.\nBut there are also large numbers 15,16,17,18 printed above certain columns, likely indicating week numbers? Actually in German rosters, they sometimes put calendar week numbers (KW) above. Yes \"15\" is calendar week 15, \"16\" KW16, etc. So the columns are continuous days 01-30 (April has 30 days). The large numbers are week numbers centered over the corresponding days.\n\nThus we need map each cell in the row to date 2025-04-01 through 2025-04-30.\n\nNow need the row image. Let's analyze row image.\nThe row has left margin with handwritten \"106\" maybe? Then \"80 | M\" then row of icons across days, then right side \"TS\" maybe? Let's parse precisely.\n\nImage shows a horizontal row with boxes for each day? Actually it's a single row with cells for each day containing icons. Let's decode.\n\nLeft part:\nHandwritten \"106\" in blue? Then \"80 | M\" printed? Then there is a cell with icon? Let's understand layout: Usually roster has columns: Name/ID, employment, S (jumper), then day cells 1-31, then maybe notes.\n\nIn the row image, we see:\n- Far left: handwritten \"106\"\n- Then \"80 | M\" (employment 80, maybe gender M?)\n- Then a series of square cells with icons, spanning across.\n- At far right: \"TS\" in yellow? Actually \"TS\" printed in black on yellow? Let's examine.\n\nWe need profession: section label printed ABOVE the row. But we only have one row image; we need infer profession from context? Wait the prompt says \"profession: the section label printed ABOVE the row (e.g. 'WBL', 'Terti\u00e4r'), not a value from the data columns\". But in the image provided, is there a section label visible? The row image might include the label at top? Actually the image shows just the row, but maybe the section label is visible at top left? Let's check: The image starts with handwritten 106, then 80 M, then icons. There's no visible section label in this crop. However maybe the profession is \"M\"?? No, \"M\" might be part of employment column? Wait need be careful.\n\nBut also need is_jumper: true if \"S\" marked in S column. In the row, is there an S column? Not visible in crop? Actually there might be columns before the day cells: BG, S, etc. The header image shows \"BG S\" at top left. So there is a column \"S\" for jumper. In the row image, after \"80 | M\" there might be an \"S\" column? Let's inspect: The row image shows \"80 | M\" then immediately the first cell with icon? Or maybe \"M\" is in the profession column? Hmm.\n\nWe need extract all shifts for each day. The row has icons in cells corresponding to days. Let's identify icons using legend.\n\nLegend image lists icons with descriptions:\nLet's list all legend entries visible:\n- L 932 L (red L in box?) -> maybe \"L\"?\n- 817 (NDP) N1 (NDP) -> \"N 1\"\n- RAI 228 RAI/RUG -> \"RAI/RUG\"\n- F1 300 F-Dienst 1 -> \"F-Dienst 1\"\n- 219 BESPRECHUNG -> \"BESPRECHUNG\"\n- HO 200 HomeOffice -> \"HomeOffice\"\n- 922 Sch\u00fclerbetreuung -> \"Sch\u00fclerbetreuung\"\n- ED 340 S-Dienst 1 -> \"S-Dienst 1\"\n- 232 B\u00fcrotag -> \"B\u00fcrotag\"\n- M03 322 (4SO) M-Dienst 3 (4SO) -> \"M-Dienst 3\"\n- M01 323 M-Dienst 4 -> \"M-Dienst 4\"\n- TV 905 TV-FAL -> \"TV-FAL\"\n- SD 919 SD -> \"SD\"\n- 8897 Azu-Gespr\u00e4che dives (PZG ...) -> \"Azu-Gespr\u00e4che dives\"\n- Interne Einblicke (with I icon) -> \"Interne Einblicke\"\n- Auszubildende Lerntandem (with icon) -> \"Auszubildende Lerntandem\"\n- UK 206 (3SO) Unfall -> \"Unfall\"\n- K 203 Kranktag -> \"Kranktag\"\n- KK 204 (3SO) KIND KRANK (3SO) -> \"kIND kRANK\"\n- F 202 Ferien -> \"Ferien\"\n- ZT 211 Z\u00fcgeltag -> \"Z\u00fcgeltag\"\n- 214 Mutterschutz -> \"Mutterschutz\"\n- D 222 (ASH) Wunschfrei (ASH) -> \"Wunschfrei\"\n- D 224 (2SO) Freier Tag (2SO) -> \"Freier Tag\"\n- OPO 238 Obl.Fort-Bildung -> \"Obl.Fort-Bildung\"\n- S 216 Schultag -> \"Schultag\"\n- KURS 207 Kurse bezahlte Weiterb. -> \"Kurse bezahlte Weiterb.\"\n- Pers\u00f6nliche Absenz PA PA -> \"Pers\u00f6nliche Absenz\"\n- Schwangerschaftsurlaub Su Su Su Su -> \"Schwangerschaftsurlaub\"\n- Schule S -> \"Schule\"\n- Unbezahlter Urlaub UU -> \"Unbezahlter Urlaub\"\n- Betriebsausflug -> \"Betriebsausflug\"\n\nAlso we need match icons in row cells.\n\nNow parse the row image precisely.\n\nThe row image shows cells with icons. Let's list them left to right corresponding to days 01-30? Need determine which days have icons.\n\nLooking at image:\nThere is a sequence of square boxes with icons inside. Many have same icon: a blue/purple square with a white symbol? Actually they look like small icons with maybe a person? Let's examine.\n\nThe row starts after \"80 | M\". Then there is a cell with an icon that looks like a blue square with white figure? Then another, then another, etc. There are about 30 cells? Let's count.\n\nBut also there are some cells with different icons: one with red border? One with yellow? One with \"TS\" at right?\n\nWait the image might be compressed. Let's analyze the visible parts:\n- Left: handwritten \"106\"\n- Then \"80 | M\"\n- Then a cell containing an icon (maybe blue with white cross?) for day 01?\n- Then cell with same icon for day 02?\n- Then cell with same icon for day 03?\n- Then cell with same icon for day 04?\n- Then cell with same icon for day 05?\n- Then cell with same icon for day 06?\n- Then cell with same icon for",
+    "model": "thinkingmachines/Inkling",
+    "provider": "huggingface",
+    "finish_reason": "length",
+    "usage": {
+        "input_tokens": 3342,
+        "output_tokens": 2048,
+        "total_tokens": 5390,
+        "cached_tokens": 2432,
+        "input_cost_usd": 0.003342,
+        "output_cost_usd": 0.008294399999999999,
+        "estimated_cost_usd": 0.011636399999999998
+    },
+    "duration": 49.74298095703125,
+    "timestamp": "2026-08-15T17:51:41.436860",
+    "conversation_id": "79c8845a-e478-4e2f-84d3-15314aaacba7",
+    "score": {
+        "f1_score": 0.0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "true_positives": 0,
+        "false_positives": 0,
+        "false_negatives": 129,
+        "field_scores": {
+            "": {
+                "response": null,
+                "ground_truth": null,
+                "score": 1.0
+            },
+            "persons[0].days[1].shifts[0].icon": {
+                "response": null,
+                "ground_truth": "Mutterschutz",
+                "score": 0.0
+            },
+            "persons[0].days[0].shifts[0].length": {
+                "response": null,
+                "ground_truth": "full",
+                "score": 0.0
+            },
+            "persons[0].days[2].shifts[0].icon": {
+                "response": null,
+                "ground_truth": "Mutterschutz",
+                "score": 0.0
+            },
+            "persons[0].days[8].shifts[0].alternate_unit": {
+                "response": null,
+                "ground_truth": null,
+                "score": 1.0
+            },
+            "persons[0].days[22].shifts[0].alternate_unit": {
+                "response": null,
+                "ground_truth": null,
+                "score": 1.0
+            },
+            "persons[0].days[13].shifts[0].alternate_unit": {
+                "response": null,
+                "ground_truth": null,
+                "score": 1.0
+            },
+            "persons[0].days[9].shifts[0].alternate_unit": {
+                "response": null,
+                "ground_truth": null,
+                "score": 1.0
+            },
+            "persons[0].days[24].date": {
+                "response": null,
+                "ground_truth": "2025-04-25",
+                "score": 0.0
+            },
+            "persons[0].days[10].shifts[0].icon": {
+                "response": null,
+                "ground_truth": "Mutterschutz",
+                "score": 0.0
+            },
+            "persons[0].days[14].shifts[0].planned_on_current_unit": {
+                "response": null,
+                "ground_truth": true,
+                "score": 0.0
+            },
+            "persons[0].days[20].shifts[0].planned_on_current_unit": {
+                "response": null,
+                "ground_truth": true,
+                "score": 0.0
+            },
+            "persons[0].days[18].shifts[0].length": {
+                "response": null,
+                "ground_truth": "full",
+                "score": 0.0
+            },
+            "persons[0].days[1].shifts[0].alternate_unit": {
+                "response": null,
+                "ground_truth": null,
+                "score": 1.0
+            },
+            "persons[0].days[13].date": {
+                "response": null,
+                "ground_truth": "2025-04-14",
+                "score": 0.0
+            },
+            "persons[0].days[18].date": {
+                "response": null,
+                "ground_truth": "2025-04-19",
+                "score": 0.0
+            },
+            "persons[0].days[17].date": {
+                "response": null,
+                "ground_truth": "2025-04-18",
+                "score": 0.0
+            },
+            "persons[0].days[21].shifts[0].icon": {
+                "response": null,
+                "ground_truth": "Mutterschutz",
+                "score": 0.0
+            },
+            "persons[0].days[22].shifts[0].icon": {
+                "response": null,
+                "ground_truth": "Mutterschutz",
+                "score": 0.0
+            },
+            "persons[0].days[28].date": {
+                "response": null,
+                "ground_truth": "2025-04-29",
+                "score": 0.0
+            },
+            "persons[0].days[16].date": {
+                "response": null,
+                "ground_truth": "2025-04-17",
+                "score": 0.0
+            },
+            "persons[0].days[26].date": {
+                "response": null,
+                "ground_truth": "2025-04-27",
+                "score": 0.0
+            },
+            "persons[0].days[11].shifts[0].icon": {
+                "response": null,
+                "ground_truth": "Mutterschutz",
+                "score": 0.0
+            },
+            "persons[0].days[19].shifts[0].planned_on_current_unit": {
+                "response": null,
+                "ground_truth": true,
+                "score": 0.0
+            },
+            "persons[0].days[24].shifts[0].alternate_unit": {
+                "response": null,
+                "ground_truth": null,
+                "score": 1.0
+            },
+            "persons[0].days[4].shifts[0].length": {
+                "response": null,
+                "ground_truth": "full",
+                "score": 0.0
+            },
+            "persons[0].days[3].shifts[0].planned_on_current_unit": {
+                "response": null,
+                "ground_truth": true,
+                "score": 0.0
+            },
+            "persons[0].days[20].shifts[0].alternate_unit": {
+                "response": null,
+                "ground_truth": null,
+                "score": 1.0
+            },
+            "persons[0].days[21].shifts[0].length": {
+                "response": null,
+                "ground_truth": "full",
+                "score": 0.0
+            },
+            "persons[0].days[27].date": {
+                "response": null,
+                "ground_truth": "2025-04-28",
+                "score": 0.0
+            },
+            "persons[0].days[23].shifts[0].alternate_unit": {
+                "response": null,
+                "ground_truth": "T",
+                "score": 0.0
+            },
+            "persons[0].days[6].shifts[0].icon": {
+                "response": null,
+                "ground_truth": "Mutterschutz",
+                "score": 0.0
+            },
+            "persons[0].days[29].shifts[0].alternate_unit": {
+                "response": null,
+                "ground_truth": null,
+                "score": 1.0
+            },
+            "persons[0].days[4].shifts[0].alternate_unit": {
+                "response": null,
+                "ground_truth": null,
+                "score": 1.0
+            },
+            "persons[0].days[12].shifts[0].alternate_unit": {
+                "response": null,
+                "ground_truth": null,
+                "score": 1.0
+            },
+            "persons[0].days[4].date": {
+                "response": null,
+                "ground_truth": "2025-04-05",
+                "score": 0.0
+            },
+            "persons[0].days[0].date": {
+                "response": null,
+                "ground_truth": "2025-04-01",
+                "score": 0.0
+            },
+            "persons[0].days[19].shifts[0].length": {
+                "response": null,
+                "ground_truth": "full",
+                "score": 0.0
+            },
+            "persons[0].days[25].shifts[0].planned_on_current_unit": {
+                "response": null,
+                "ground_truth": true,
+                "score": 0.0
+            },
+            "persons[0].days[10].shifts[0].alternate_unit": {
+                "response": null,
+                "ground_truth": null,
+                "score": 1.0
+            },
+            "persons[0].days[11].date": {
+                "response": null,
+                "ground_truth": "2025-04-12",
+                "score": 0.0
+            },
+            "persons[0].days[22].date": {
+                "response": null,
+                "ground_truth": "2025-04-23",
+                "score": 0.0
+            },
+            "persons[0].days[24].shifts[0].length": {
+                "response": null,
+                "ground_truth": "full",
+                "score": 0.0
+            },
+            "persons[0].days[25].shifts[0].length": {
+                "response": null,
+                "ground_truth": "full",
+                "score": 0.0
+            },
+            "persons[0].days[26].shifts[0].planned_on_current_unit": {
+                "response": null,
+                "ground_truth": true,
+                "score": 0.0
+            },
+            "persons[0].days[27].shifts[0].alternate_unit": {
+                "response": null,
+                "ground_truth": null,
+                "score": 1.0
+            },
+            "persons[0].days[18].shifts[0].icon": {
+                "response": null,
+                "ground_truth": "Mutterschutz",
+                "score": 0.0
+            },
+            "persons[0].days[23].shifts[0].length": {
+                "response": null,
+                "ground_truth": "full",
+                "score": 0.0
+            },
+            "persons[0].days[3].date": {
+                "response": null,
+                "ground_truth": "2025-04-04",
+                "score": 0.0
+            },
+            "persons[0].days[12].shifts[0].planned_on_current_unit": {
+                "response": null,
+                "ground_truth": true,
+                "score": 0.0
+            },
+            "persons[0].days[19].shifts[0].icon": {
+                "response": null,
+                "ground_truth": "Mutterschutz",
+                "score": 0.0
+            },
+            "persons[0].days[2].shifts[0].planned_on_current_unit": {
+                "response": null,
+                "ground_truth": true,
+                "score": 0.0
+            },
+            "persons[0].days[19].date": {
+                "response": null,
+                "ground_truth": "2025-04-20",
+                "score": 0.0
+            },
+            "persons[0].days[8].shifts[0].length": {
+                "response": null,
+                "ground_truth": "full",
+                "score": 0.0
+            },
+            "persons[0].days[8].shifts[0].planned_on_current_unit": {
+                "response": null,
+                "ground_truth": true,
+                "score": 0.0
+            },
+            "persons[0].days[15].shifts[0].icon": {
+                "response": null,
+                "ground_truth": "Mutterschutz",
+                "score": 0.0
+            },
+            "persons[0].days[29].shifts[0].planned_on_current_unit": {
+                "response": null,
+                "ground_truth": true,
+                "score": 0.0
+            },
+            "persons[0].days[11].shifts[0].alternate_unit": {
+                "response": null,
+                "ground_truth": null,
+                "score": 1.0
+            },
+            "persons[0].days[10].shifts[0].length": {
+                "response": null,
+                "ground_truth": "full",
+                "score": 0.0
+            },
+            "persons[0].days[17].shifts[0].planned_on_current_unit": {
+                "response": null,
+                "ground_truth": true,
+                "score": 0.0
+            },
+            "persons[0].days[29].shifts[0].icon": {
+                "response": null,
+                "ground_truth": "Mutterschutz",
+                "score": 0.0
+            },
+            "persons[0].days[17].shifts[0].length": {
+                "response": null,
+                "ground_truth": "full",
+                "score": 0.0
+            },
+            "persons[0].days[21].shifts[0].alternate_unit": {
+                "response": null,
+                "ground_truth": null,
+                "score": 1.0
+            },
+            "persons[0].days[29].date": {
+                "response": null,
+                "ground_truth": "2025-04-30",
+                "score": 0.0
+            },
+            "persons[0].days[16].shifts[0].length": {
+                "response": null,
+                "ground_truth": "full",
+                "score": 0.0
+            },
+            "persons[0].days[10].date": {
+                "response": null,
+                "ground_truth": "2025-04-11",
+                "score": 0.0
+            },
+            "persons[0].days[7].shifts[0].icon": {
+                "response": null,
+                "ground_truth": "Mutterschutz",
+                "score": 0.0
+            },
+            "persons[0].days[15].date": {
+                "response": null,
+                "ground_truth": "2025-04-16",
+                "score": 0.0
+            },
+            "persons[0].days[5].shifts[0].icon": {
+                "response": null,
+                "ground_truth": "Mutterschutz",
+                "score": 0.0
+            },
+            "persons[0].days[20].date": {
+                "response": null,
+                "ground_truth": "2025-04-21",
+                "score": 0.0
+            },
+            "persons[0].employment_percent": {
+                "response": null,
+                "ground_truth": 80,
+                "score": 0.0
+            },
+            "persons[0].days[2].shifts[0].alternate_unit": {
+                "response": null,
+                "ground_truth": null,
+                "score": 1.0
+            },
+            "persons[0].days[3].shifts[0].icon": {
+                "response": null,
+                "ground_truth": "Mutterschutz",
+                "score": 0.0
+            },
+            "persons[0].days[9].shifts[0].planned_on_current_unit": {
+                "response": null,
+                "ground_truth": true,
+                "score": 0.0
+            },
+            "persons[0].days[27].shifts[0].length": {
+                "response": null,
+                "ground_truth": "full",
+                "score": 0.0
+            },
+            "persons[0].days[9].shifts[0].length": {
+                "response": null,
+                "ground_truth": "full",
+                "score": 0.0
+            },
+            "persons[0].days[25].shifts[0].icon": {
+                "response": null,
+                "ground_truth": "Mutterschutz",
+                "score": 0.0
+            },
+            "persons[0].days[6].shifts[0].length": {
+                "response": null,
+                "ground_truth": "full",
+                "score": 0.0
+            },
+            "persons[0].days[4].shifts[0].icon": {
+                "response": null,
+                "ground_truth": "Mutterschutz",
+                "score": 0.0
+            },
+            "persons[0].days[7].date": {
+                "response": null,
+                "ground_truth": "2025-04-08",
+                "score": 0.0
+            },
+            "persons[0].days[20].shifts[0].icon": {
+                "response": null,
+                "ground_truth": "Mutterschutz",
+                "score": 0.0
+            },
+            "persons[0].days[16].shifts[0].icon": {
+                "response": null,
+                "ground_truth": "Mutterschutz",
+                "score": 0.0
+            },
+            "persons[0].days[13].shifts[0].planned_on_current_unit": {
+                "response": null,
+                "ground_truth": true,
+                "score": 0.0
+            },
+            "persons[0].days[14].date": {
+                "response": null,
+                "ground_truth": "2025-04-15",
+                "score": 0.0
+            },
+            "persons[0].days[28].shifts[0].length": {
+                "response": null,
+                "ground_truth": "full",
+                "score": 0.0
+            },
+            "persons[0].days[1].shifts[0].length": {
+                "response": null,
+                "ground_truth": "full",
+                "score": 0.0
+            },
+            "persons[0].days[22].shifts[0].length": {
+                "response": null,
+                "ground_truth": "full",
+                "score": 0.0
+            },
+            "persons[0].days[16].shifts[0].planned_on_current_unit": {
+                "response": null,
+                "ground_truth": true,
+                "score": 0.0
+            },
+            "persons[0].days[23].shifts[0].planned_on_current_unit": {
+                "response": null,
+                "ground_truth": false,
+                "score": 0.0
+            },
+            "persons[0].days[29].shifts[0].length": {
+                "response": null,
+                "ground_truth": "full",
+                "score": 0.0
+            },
+            "persons[0].days[1].date": {
+                "response": null,
+                "ground_truth": "2025-04-02",
+                "score": 0.0
+            },
+            "persons[0].days[3].shifts[0].alternate_unit": {
+                "response": null,
+                "ground_truth": null,
+                "score": 1.0
+            },
+            "persons[0].days[24].shifts[0].icon": {
+                "response": null,
+                "ground_truth": "Mutterschutz",
+                "score": 0.0
+            },
+            "persons[0].days[7].shifts[0].planned_on_current_unit": {
+                "response": null,
+                "ground_truth": true,
+                "score": 0.0
+            },
+            "persons[0].days[13].shifts[0].length": {
+                "response": null,
+                "ground_truth": "full",
+                "score": 0.0
+            },
+            "persons[0].days[6].date": {
+                "response": null,
+                "ground_truth": "2025-04-07",
+                "score": 0.0
+            },
+            "persons[0].days[4].shifts[0].planned_on_current_unit": {
+                "response": null,
+                "ground_truth": true,
+                "score": 0.0
+            },
+            "persons[0].days[2].shifts[0].length": {
+                "response": null,
+                "ground_truth": "full",
+                "score": 0.0
+            },
+            "persons[0].days[16].shifts[0].alternate_unit": {
+                "response": null,
+                "ground_truth": null,
+                "score": 1.0
+            },
+            "persons[0].days[25].date": {
+                "response": null,
+                "ground_truth": "2025-04-26",
+                "score": 0.0
+            },
+            "persons[0].days[23].date": {
+                "response": null,
+                "ground_truth": "2025-04-24",
+                "score": 0.0
+            },
+            "persons[0].days[18].shifts[0].alternate_unit": {
+                "response": null,
+                "ground_truth": null,
+                "score": 1.0
+            },
+            "persons[0].days[8].shifts[0].icon": {
+                "response": null,
+                "ground_truth": "Mutterschutz",
+                "score": 0.0
+            },
+            "persons[0].is_jumper": {
+                "response": null,
+                "ground_truth": false,
+                "score": 0.0
+            },
+            "persons[0].days[6].shifts[0].alternate_unit": {
+                "response": null,
+                "ground_truth": null,
+                "score": 1.0
+            },
+            "year": {
+                "response": null,
+                "ground_truth": 2025,
+                "score": 0.0
+            },
+            "persons[0].days[17].shifts[0].alternate_unit": {
+                "response": null,
+                "ground_truth": "TS",
+                "score": 0.0
+            },
+            "persons[0].days[1].shifts[0].planned_on_current_unit": {
+                "response": null,
+                "ground_truth": true,
+                "score": 0.0
+            },
+            "persons[0].days[0].shifts[0].icon": {
+                "response": null,
+                "ground_truth": "Mutterschutz",
+                "score": 0.0
+            },
+            "persons[0].days[3].shifts[0].length": {
+                "response": null,
+                "ground_truth": "full",
+                "score": 0.0
+            },
+            "persons[0].days[0].shifts[0].planned_on_current_unit": {
+                "response": null,
+                "ground_truth": true,
+                "score": 0.0
+            },
+            "persons[0].days[12].shifts[0].icon": {
+                "response": null,
+                "ground_truth": "Mutterschutz",
+                "score": 0.0
+            },
+            "persons[0].days[21].shifts[0].planned_on_current_unit": {
+                "response": null,
+                "ground_truth": true,
+                "score": 0.0
+            },
+            "persons[0].days[22].shifts[0].planned_on_current_unit": {
+                "response": null,
+                "ground_truth": true,
+                "score": 0.0
+            },
+            "persons[0].days[25].shifts[0].alternate_unit": {
+                "response": null,
+                "ground_truth": null,
+                "score": 1.0
+            },
+            "persons[0].days[5].shifts[0].planned_on_current_unit": {
+                "response": null,
+                "ground_truth": true,
+                "score": 0.0
+            },
+            "persons[0].days[21].date": {
+                "response": null,
+                "ground_truth": "2025-04-22",
+                "score": 0.0
+            },
+            "persons[0].days[0].shifts[0].alternate_unit": {
+                "response": null,
+                "ground_truth": null,
+                "score": 1.0
+            },
+            "persons[0].days[11].shifts[0].length": {
+                "response": null,
+                "ground_truth": "full",
+                "score": 0.0
+            },
+            "persons[0].days[15].shifts[0].planned_on_current_unit": {
+                "response": null,
+                "ground_truth": true,
+                "score": 0.0
+            },
+            "persons[0].days[5].shifts[0].length": {
+                "response": null,
+                "ground_truth": "full",
+                "score": 0.0
+            },
+            "persons[0].days[20].shifts[0].length": {
+                "response": null,
+                "ground_truth": "full",
+                "score": 0.0
+            },
+            "persons[0].days[9].shifts[0].icon": {
+                "response": null,
+                "ground_truth": "Mutterschutz",
+                "score": 0.0
+            },
+            "persons[0].days[8].date": {
+                "response": null,
+                "ground_truth": "2025-04-09",
+                "score": 0.0
+            },
+            "persons[0].days[7].shifts[0].alternate_unit": {
+                "response": null,
+                "ground_truth": "T",
+                "score": 0.0
+            },
+            "persons[0].days[27].shifts[0].icon": {
+                "response": null,
+                "ground_truth": "Mutterschutz",
+                "score": 0.0
+            },
+            "persons[0].days[6].shifts[0].planned_on_current_unit": {
+                "response": null,
+                "ground_truth": true,
+                "score": 0.0
+            },
+            "persons[0].days[10].shifts[0].planned_on_current_unit": {
+                "response": null,
+                "ground_truth": true,
+                "score": 0.0
+            },
+            "persons[0].days[28].shifts[0].alternate_unit": {
+                "response": null,
+                "ground_truth": null,
+                "score": 1.0
+            },
+            "persons[0].days[24].shifts[0].planned_on_current_unit": {
+                "response": null,
+                "ground_truth": true,
+                "score": 0.0
+            },
+            "persons[0].days[5].shifts[0].alternate_unit": {
+                "response": null,
+                "ground_truth": null,
+                "score": 1.0
+            },
+            "persons[0].days[28].shifts[0].planned_on_current_unit": {
+                "response": null,
+                "ground_truth": true,
+                "score": 0.0
+            },
+            "persons[0].days[5].date": {
+                "response": null,
+                "ground_truth": "2025-04-06",
+                "score": 0.0
+            },
+            "persons[0].days[15].shifts[0].length": {
+                "response": null,
+                "ground_truth": "full",
+                "score": 0.0
+            },
+            "persons[0].days[19].shifts[0].alternate_unit": {
+                "response": null,
+                "ground_truth": null,
+                "score": 1.0
+            },
+            "persons[0].days[18].shifts[0].planned_on_current_unit": {
+                "response": null,
+                "ground_truth": true,
+                "score": 0.0
+            },
+            "persons[0].profession": {
+                "response": null,
+                "ground_truth": "Sek",
+                "score": 0.0
+            },
+            "persons[0].days[13].shifts[0].icon": {
+                "response": null,
+                "ground_truth": "Mutterschutz",
+                "score": 0.0
+            },
+            "persons[0].days[11].shifts[0].planned_on_current_unit": {
+                "response": null,
+                "ground_truth": true,
+                "score": 0.0
+            },
+            "persons[0].id": {
+                "response": null,
+                "ground_truth": "106",
+                "score": 0.0
+            },
+            "persons[0].days[12].shifts[0].length": {
+                "response": null,
+                "ground_truth": "full",
+                "score": 0.0
+            },
+            "persons[0].days[9].date": {
+                "response": null,
+                "ground_truth": "2025-04-10",
+                "score": 0.0
+            },
+            "persons[0].days[26].shifts[0].length": {
+                "response": null,
+                "ground_truth": "full",
+                "score": 0.0
+            },
+            "persons[0].days[27].shifts[0].planned_on_current_unit": {
+                "response": null,
+                "ground_truth": true,
+                "score": 0.0
+            },
+            "persons[0].days[17].shifts[0].icon": {
+                "response": null,
+                "ground_truth": "Mutterschutz",
+                "score": 0.0
+            },
+            "persons[0].days[26].shifts[0].icon": {
+                "response": null,
+                "ground_truth": "Mutterschutz",
+                "score": 0.0
+            },
+            "persons[0].days[12].date": {
+                "response": null,
+                "ground_truth": "2025-04-13",
+                "score": 0.0
+            },
+            "persons[0].days[14].shifts[0].icon": {
+                "response": null,
+                "ground_truth": "Mutterschutz",
+                "score": 0.0
+            },
+            "persons[0].days[15].shifts[0].alternate_unit": {
+                "response": null,
+                "ground_truth": null,
+                "score": 1.0
+            },
+            "persons[0].days[7].shifts[0].length": {
+                "response": null,
+                "ground_truth": "full",
+                "score": 0.0
+            },
+            "persons[0].days[23].shifts[0].icon": {
+                "response": null,
+                "ground_truth": "Mutterschutz",
+                "score": 0.0
+            },
+            "persons[0].days[14].shifts[0].length": {
+                "response": null,
+                "ground_truth": "full",
+                "score": 0.0
+            },
+            "persons[0].days[2].date": {
+                "response": null,
+                "ground_truth": "2025-04-03",
+                "score": 0.0
+            },
+            "persons[0].days[26].shifts[0].alternate_unit": {
+                "response": null,
+                "ground_truth": null,
+                "score": 1.0
+            },
+            "persons[0].days[28].shifts[0].icon": {
+                "response": null,
+                "ground_truth": "Mutterschutz",
+                "score": 0.0
+            },
+            "month": {
+                "response": null,
+                "ground_truth": "April",
+                "score": 0.0
+            },
+            "persons[0].days[14].shifts[0].alternate_unit": {
+                "response": null,
+                "ground_truth": null,
+                "score": 1.0
+            }
+        },
+        "total_fields": 157
+    },
+    "raw_response": "{\"id\":\"owKCZ8H-6z2FuN-a2b95c01497fd91c\",\"choices\":[{\"finish_reason\":\"length\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"We need parse images. Need extract header: year 2025, month April (April 2025). Need icon legend image to match icons. Need roster row image: one row for single person. Need identify person id, profession, employment percent, is_jumper, and shifts for each day of month using header mapping.\\n\\nWe have three images:\\n1. Header image showing \\\"BG S April 2025\\\" and days 01-30 with weekdays Di Mi Do Fr Sa So Mo etc. Need map each column to date.\\nLet's list columns precisely from header:\\nDay columns:\\n01 Di\\n02 Mi\\n03 Do\\n04 Fr\\n05 Sa\\n06 So\\n07 Mo\\n08 Di\\n09 Mi\\n10 Do\\n11 Fr\\n12 Sa\\n13 So\\n14 Mo\\n15 Di\\n16 Mi\\n17 Do\\n18 Fr\\n19 Sa\\n20 So\\n21 Mo\\n22 Di\\n23 Mi\\n24 Do\\n25 Fr\\n26 Sa\\n27 So\\n28 Mo\\n29 Di\\n30 Mi\\nWait check image: The header shows blocks for 15, 16, 17, 18 with sub-columns. Let's parse exactly.\\n\\nLooking at header image:\\nLeft part: BG S | April 2025\\nThen row with numbers 15, 16, 17, 18 centered over groups.\\nUnderneath:\\nFor 15:\\nDi 08\\nMi 09\\nDo 10\\nFr 11\\nSa 12\\nSo 13\\nMo 14\\nWait need correct alignment.\\n\\nLet's examine header layout carefully. The image shows:\\nTop row: \\\"BG S\\\" left, \\\"April 2025\\\" center, then \\\"15\\\" centered, \\\"16\\\" centered, \\\"17\\\" centered, \\\"18\\\" centered.\\nSecond row (weekdays and dates):\\nUnder 15 group:\\nDi 01? No wait need understand full month display maybe split across pages? Actually the row shown might be just part? Let's read visible text:\\nWe see:\\n\\\"Di Mi Do Fr Sa So Mo Di Mi Do Fr Sa So Mo Di Mi Do Fr Sa So Mo Di Mi\\\"\\nThen below:\\n\\\"01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31\\\"\\nBut in image, visible numbers:\\nStarting left: \\\"01\\\" under Di? Let's parse visible sequence in image:\\nLooking at image text:\\n\\\"Di Mi Do Fr Sa So Mo Di Mi Do Fr Sa So Mo Di Mi Do Fr Sa So Mo Di Mi\\\"\\nThen numbers row:\\n\\\"01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30\\\" maybe 31 cut off.\\nBut there are also large numbers 15,16,17,18 printed above certain columns, likely indicating week numbers? Actually in German rosters, they sometimes put calendar week numbers (KW) above. Yes \\\"15\\\" is calendar week 15, \\\"16\\\" KW16, etc. So the columns are continuous days 01-30 (April has 30 days). The large numbers are week numbers centered over the corresponding days.\\n\\nThus we need map each cell in the row to date 2025-04-01 through 2025-04-30.\\n\\nNow need the row image. Let's analyze row image.\\nThe row has left margin with handwritten \\\"106\\\" maybe? Then \\\"80 | M\\\" then row of icons across days, then right side \\\"TS\\\" maybe? Let's parse precisely.\\n\\nImage shows a horizontal row with boxes for each day? Actually it's a single row with cells for each day containing icons. Let's decode.\\n\\nLeft part:\\nHandwritten \\\"106\\\" in blue? Then \\\"80 | M\\\" printed? Then there is a cell with icon? Let's understand layout: Usually roster has columns: Name/ID, employment, S (jumper), then day cells 1-31, then maybe notes.\\n\\nIn the row image, we see:\\n- Far left: handwritten \\\"106\\\"\\n- Then \\\"80 | M\\\" (employment 80, maybe gender M?)\\n- Then a series of square cells with icons, spanning across.\\n- At far right: \\\"TS\\\" in yellow? Actually \\\"TS\\\" printed in black on yellow? Let's examine.\\n\\nWe need profession: section label printed ABOVE the row. But we only have one row image; we need infer profession from context? Wait the prompt says \\\"profession: the section label printed ABOVE the row (e.g. 'WBL', 'Terti\u00e4r'), not a value from the data columns\\\". But in the image provided, is there a section label visible? The row image might include the label at top? Actually the image shows just the row, but maybe the section label is visible at top left? Let's check: The image starts with handwritten 106, then 80 M, then icons. There's no visible section label in this crop. However maybe the profession is \\\"M\\\"?? No, \\\"M\\\" might be part of employment column? Wait need be careful.\\n\\nBut also need is_jumper: true if \\\"S\\\" marked in S column. In the row, is there an S column? Not visible in crop? Actually there might be columns before the day cells: BG, S, etc. The header image shows \\\"BG S\\\" at top left. So there is a column \\\"S\\\" for jumper. In the row image, after \\\"80 | M\\\" there might be an \\\"S\\\" column? Let's inspect: The row image shows \\\"80 | M\\\" then immediately the first cell with icon? Or maybe \\\"M\\\" is in the profession column? Hmm.\\n\\nWe need extract all shifts for each day. The row has icons in cells corresponding to days. Let's identify icons using legend.\\n\\nLegend image lists icons with descriptions:\\nLet's list all legend entries visible:\\n- L 932 L (red L in box?) -> maybe \\\"L\\\"?\\n- 817 (NDP) N1 (NDP) -> \\\"N 1\\\"\\n- RAI 228 RAI/RUG -> \\\"RAI/RUG\\\"\\n- F1 300 F-Dienst 1 -> \\\"F-Dienst 1\\\"\\n- 219 BESPRECHUNG -> \\\"BESPRECHUNG\\\"\\n- HO 200 HomeOffice -> \\\"HomeOffice\\\"\\n- 922 Sch\u00fclerbetreuung -> \\\"Sch\u00fclerbetreuung\\\"\\n- ED 340 S-Dienst 1 -> \\\"S-Dienst 1\\\"\\n- 232 B\u00fcrotag -> \\\"B\u00fcrotag\\\"\\n- M03 322 (4SO) M-Dienst 3 (4SO) -> \\\"M-Dienst 3\\\"\\n- M01 323 M-Dienst 4 -> \\\"M-Dienst 4\\\"\\n- TV 905 TV-FAL -> \\\"TV-FAL\\\"\\n- SD 919 SD -> \\\"SD\\\"\\n- 8897 Azu-Gespr\u00e4che dives (PZG ...) -> \\\"Azu-Gespr\u00e4che dives\\\"\\n- Interne Einblicke (with I icon) -> \\\"Interne Einblicke\\\"\\n- Auszubildende Lerntandem (with icon) -> \\\"Auszubildende Lerntandem\\\"\\n- UK 206 (3SO) Unfall -> \\\"Unfall\\\"\\n- K 203 Kranktag -> \\\"Kranktag\\\"\\n- KK 204 (3SO) KIND KRANK (3SO) -> \\\"kIND kRANK\\\"\\n- F 202 Ferien -> \\\"Ferien\\\"\\n- ZT 211 Z\u00fcgeltag -> \\\"Z\u00fcgeltag\\\"\\n- 214 Mutterschutz -> \\\"Mutterschutz\\\"\\n- D 222 (ASH) Wunschfrei (ASH) -> \\\"Wunschfrei\\\"\\n- D 224 (2SO) Freier Tag (2SO) -> \\\"Freier Tag\\\"\\n- OPO 238 Obl.Fort-Bildung -> \\\"Obl.Fort-Bildung\\\"\\n- S 216 Schultag -> \\\"Schultag\\\"\\n- KURS 207 Kurse bezahlte Weiterb. -> \\\"Kurse bezahlte Weiterb.\\\"\\n- Pers\u00f6nliche Absenz PA PA -> \\\"Pers\u00f6nliche Absenz\\\"\\n- Schwangerschaftsurlaub Su Su Su Su -> \\\"Schwangerschaftsurlaub\\\"\\n- Schule S -> \\\"Schule\\\"\\n- Unbezahlter Urlaub UU -> \\\"Unbezahlter Urlaub\\\"\\n- Betriebsausflug -> \\\"Betriebsausflug\\\"\\n\\nAlso we need match icons in row cells.\\n\\nNow parse the row image precisely.\\n\\nThe row image shows cells with icons. Let's list them left to right corresponding to days 01-30? Need determine which days have icons.\\n\\nLooking at image:\\nThere is a sequence of square boxes with icons inside. Many have same icon: a blue/purple square with a white symbol? Actually they look like small icons with maybe a person? Let's examine.\\n\\nThe row starts after \\\"80 | M\\\". Then there is a cell with an icon that looks like a blue square with white figure? Then another, then another, etc. There are about 30 cells? Let's count.\\n\\nBut also there are some cells with different icons: one with red border? One with yellow? One with \\\"TS\\\" at right?\\n\\nWait the image might be compressed. Let's analyze the visible parts:\\n- Left: handwritten \\\"106\\\"\\n- Then \\\"80 | M\\\"\\n- Then a cell containing an icon (maybe blue with white cross?) for day 01?\\n- Then cell with same icon for day 02?\\n- Then cell with same icon for day 03?\\n- Then cell with same icon for day 04?\\n- Then cell with same icon for day 05?\\n- Then cell with same icon for day 06?\\n- Then cell with same icon for\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":[]},\"seed\":null}],\"created\":1786809075,\"model\":\"thinkingmachines/Inkling\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":\"default\",\"usage\":{\"completion_tokens\":2048,\"prompt_tokens\":3342,\"total_tokens\":5390,\"completion_tokens_details\":null,\"prompt_tokens_details\":{\"audio_tokens\":null,\"cached_tokens\":2432}},\"prompt\":[]}"
+}

@@ -1,0 +1,43 @@
+{
+    "text": "{\"metadata\":{\"send_date\":[\"1926-03-23\"],\"letter_title\":null,\"sender_persons\":null,\"receiver_persons\":[\"Basler Rheinschiffahrt-Aktiengesellschaft\"]}}",
+    "model": "thinkingmachines/Inkling",
+    "provider": "huggingface",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 2254,
+        "output_tokens": 1037,
+        "total_tokens": 3291,
+        "cached_tokens": 256,
+        "input_cost_usd": 0.002254,
+        "output_cost_usd": 0.00419985,
+        "estimated_cost_usd": 0.00645385
+    },
+    "duration": 15.030399799346924,
+    "timestamp": "2026-08-15T16:35:35.187922",
+    "parsed": {
+        "metadata": {
+            "send_date": [
+                "1926-03-23"
+            ],
+            "letter_title": null,
+            "sender_persons": null,
+            "receiver_persons": [
+                "Basler Rheinschiffahrt-Aktiengesellschaft"
+            ],
+            "document_number": "letter06"
+        }
+    },
+    "conversation_id": "b6c919a3-8d6f-433e-91ef-a5d0f9c5100b",
+    "score": {
+        "send_date_tp": 0,
+        "send_date_fp": 1,
+        "send_date_fn": 1,
+        "sender_persons_tp": 0,
+        "sender_persons_fp": 0,
+        "sender_persons_fn": 0,
+        "receiver_persons_tp": 0,
+        "receiver_persons_fp": 1,
+        "receiver_persons_fn": 0
+    },
+    "raw_response": "{\"id\":\"owJoDnt-6z2FuN-a2b8ece0caba1b05\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\n  \\\"metadata\\\": {\\n    \\\"send_date\\\": [\\\"1926-03-23\\\"],\\n    \\\"letter_title\\\": null,\\n    \\\"sender_persons\\\": null,\\n    \\\"receiver_persons\\\": [\\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"]\\n  }\\n}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"metadata\":{\"send_date\":[\"1926-03-23\"],\"letter_title\":null,\"sender_persons\":null,\"receiver_persons\":[\"Basler Rheinschiffahrt-Aktiengesellschaft\"]}},\"reasoning\":\"We need parse image of historical letter in German. Need extract letter_title, sender_persons, send_date, receiver_persons. Need analyze image content visually (no OCR but can read). Let's understand letter.\\n\\nTop right: \\\"6\\\" maybe page number. Then \\\"Basel, den 23.M\u00e4rz 1926.\\\" So send date 1926-03-23.\\n\\nThen \\\"T\\\" maybe salutation? Actually letter addressed to \\\"Basler Rheinschiffahrt-Aktiengesellschaft Marktgasse 5,III B a s e l .\\\" So receiver is Basler Rheinschiffahrt-Aktiengesellschaft? Or maybe \\\"Basel\\\" location. Need receiver_persons: likely \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\". Could also include address but person/organization.\\n\\nThen body starts \\\"Zur\u00fcckkommend auf Ihre beiden Schreiben vom 16.Februar und 4.M\u00e4rz...\\\" So sender not named explicitly? At end \\\"Hochachtungsvoll\\\" but no signature visible? Maybe sender is implied by letterhead? But image shows only this page, maybe signature missing or on another page. Need determine sender_persons from context? Let's inspect: The letter mentions \\\"ich teile Ihnen mit, dass ich meine Bem\u00fchungen f\u00fcr den Abschluss einer Betriebsgemeinschaft fortsetze...\\\" So sender is \\\"ich\\\" but name not present in visible part. Could be on letterhead not visible? The image shows plain paper with typewritten text, no letterhead visible except address of receiver centered near top. So sender name might be absent. Thus sender_persons should be null? But need check if there's hidden signature at bottom? The bottom ends with \\\"Hochachtungsvoll\\\" then blank space, no name. So likely unknown.\\n\\nLetter title? Maybe not present. Could be null. But sometimes letters have subject line? Here there's \\\"B a s e l .\\\" with dashes, not title. So letter_title null.\\n\\nBut wait, there might be a title like \\\"T\\\" at top left? No, that's probably a filing mark. So letter_title null.\\n\\nThus JSON:\\n{\\n\\\"letter_title\\\": [null?] Wait instructions: values corresponding to each key should be stored as a list, even if single value. If information not included, set value for corresponding key to \\\"null\\\". Does that mean the list contains null? Or the key's value is null? The example shows lists of strings. The instruction: \\\"return them in a JSON file where the values corresponding to each key should be stored as a list, even if there is only a single value for a key\\\" and \\\"If a piece of information is not included in the letter, set the value for the corresponding key to 'null'.\\\" This is ambiguous: likely they want [\\\"null\\\"]? Or null? Usually in these extraction tasks, they want list, and if missing, list with null? Let's examine example: all present. But instruction \\\"set the value for the corresponding key to 'null'\\\" might mean the JSON value is null, not a list. However they also said values should be stored as a list. Hmm conflict. Let's think: They want each key mapped to a list. If missing, maybe [\\\"null\\\"]? But they said set value to \\\"null\\\" (without list). But consistency suggests list containing null? Actually in many similar prompts, they say \\\"stored as a list, even if there is only a single value\\\" and \\\"If not included... set the value... to null\\\". Often they mean the list should be [null]? No, they say \\\"the value for the corresponding key\\\" which is the list? Let's check typical pattern from other prompts: Usually they ask \\\"return them in a JSON file where the values corresponding to each key should be stored as a list...\\\" Then \\\"If a piece of information is not included... set the value for the corresponding key to null.\\\" This usually results in e.g., \\\"sender_persons\\\": null. But that violates list rule. However they prioritize missing info rule. Let's decide: For missing, use null (not in list). But for present, use list.\\n\\nBut we have receiver present, date present, sender missing, title missing.\\n\\nNeed receiver_persons: [\\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"] maybe also address? No, just name.\\n\\nSend date: [\\\"1926-03-23\\\"].\\n\\nLetter title: null.\\n\\nSender persons: null.\\n\\nBut wait, could sender be implied from context of \\\"Internationale Ausstellung f\u00fcr Binnenschiffahrt und Wasserkraftnutzung Basel 1926\\\"? No that's event.\\n\\nLet's provide exactly.\\n\\nOne more check: The date at top is \\\"Basel, den 23.M\u00e4rz 1926.\\\" Yes.\\n\\nThus output JSON.\"},\"seed\":null}],\"created\":1786804523,\"model\":\"thinkingmachines/Inkling\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":\"default\",\"usage\":{\"completion_tokens\":1037,\"prompt_tokens\":2254,\"total_tokens\":3291,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":null,\"reasoning_tokens\":975,\"rejected_prediction_tokens\":null},\"prompt_tokens_details\":{\"audio_tokens\":null,\"cached_tokens\":256}},\"prompt\":[]}"
+}

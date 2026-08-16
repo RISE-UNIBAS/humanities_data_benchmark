@@ -1,0 +1,49 @@
+{
+    "text": "{\"advertisements\":[{\"box\":[540.0,500.0,920.0,710.0]},{\"box\":[120.0,710.0,920.0,900.0]}]}",
+    "model": "meta-models/Muse-Glimmer-30B",
+    "provider": "huggingface",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 3916,
+        "output_tokens": 1008,
+        "total_tokens": 4924,
+        "cached_tokens": 48,
+        "input_cost_usd": 0.0013706,
+        "output_cost_usd": 0.0015119999999999999,
+        "estimated_cost_usd": 0.0028826
+    },
+    "duration": 12.466309309005737,
+    "timestamp": "2026-08-16T03:39:29.299721",
+    "parsed": {
+        "advertisements": [
+            {
+                "box": [
+                    540.0,
+                    500.0,
+                    920.0,
+                    710.0
+                ]
+            },
+            {
+                "box": [
+                    120.0,
+                    710.0,
+                    920.0,
+                    900.0
+                ]
+            }
+        ]
+    },
+    "conversation_id": "2c97b442-3910-4354-9172-a4aa77c7421b",
+    "score": {
+        "f1": 0.0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "mean_iou": 0.0,
+        "true_positives": 0,
+        "false_positives": 2,
+        "false_negatives": 2,
+        "iou_threshold": 0.5
+    },
+    "raw_response": "{\"id\":\"owNKPna-fdNmn-a2bcb97268afcec0\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\\"advertisements\\\": [\\n  {\\n    \\\"box\\\": [540, 500, 920, 710]\\n  },\\n  {\\n    \\\"box\\\": [120, 710, 920, 900]\\n  }\\n]}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"advertisements\":[{\"box\":[540.0,500.0,920.0,710.0]},{\"box\":[120.0,710.0,920.0,900.0]}]},\"reasoning\":\"Extract all advertisements and return their bounding boxes.\\nThe original size of the page is 2479 x 3508 pixels.\\n\\nI see two advertisements: Fr. Klingelfuss & Co. BASLE (Switzerland) X-RAYS APPARATUS etc. And Banque F\u00e9d\u00e9rale S. A. Eidgen\u00f6ssische Bank A. G.\\n\\nNeed bounding boxes. Probably coordinates normalized? Usually return as [x_min, y_min, x_max, y_max] in pixels. Might need relative? The instruction says original size 2479 x 3508 pixels. So give pixel coordinates.\\n\\nEstimate. The page image. The Fr. Klingelfuss ad is on right side, boxed. Approx x from ~540 to ~920? Wait page width 2479. The right column starts about ~530. The ad box is from about 540 to 920? Actually the box spans right column. Let's approximate.\\n\\nBetter estimate: The ad box for Klingelfuss: top around 500? Let's see page. Top margin ~ 50. Trade openings title ~ 80. The ad starts around ~ 500 pixels down? The page height 3508. The ad is middle right. Approx y_min ~ 500? Wait the text above goes down to ~ 500. The ad box top maybe ~ 500? Let's approximate: The page has header at top ~ 50-80. Trade openings ~ 100. Text goes down to about 700. The Klingelfuss box starts around 500? Actually the text column ends around 500. The box starts around 500. Let's assume y_min ~ 500? Hmm.\\n\\nMaybe better to give relative coordinates 0-1000. Might be expected as normalized. Common format is [x_min, y_min, x_max, y_max] with 0-1000. Could be pixel.\\n\\nI'll give approximate pixel values.\\n\\nFirst ad: Fr. Klingelfuss & Co.\\n\\nx_min ~ 540? Let's estimate left edge of box ~ 540? The page left margin ~ 120. Right column starts ~ 530. Box left ~ 540. Right ~ 920? Actually right margin ~ 950. So x_max ~ 920.\\n\\ny_min ~ 500? The box top ~ 500? Let's say 500? The text above ends around 500. Maybe y_min ~ 500. y_max ~ 710? The box ends around 710. So y_max ~ 710.\\n\\nSecond ad: Banque F\u00e9d\u00e9rale S. A. Eidgen\u00f6ssische Bank A. G.\\n\\nBox spans full width bottom left. x_min ~ 120, x_max ~ 920? Actually spans both columns. Left ~ 120, right ~ 920. y_min ~ 710? Wait the decorative border starts around 710. y_max ~ 900? Actually bottom of box ~ 900. Let's say y_min ~ 710, y_max ~ 900.\\n\\nLet's refine: The Banque ad is at bottom left, with decorative border. Top of border ~ 710? Maybe 710. Bottom ~ 900.\\n\\nI'll provide approximate bounding boxes.\\n\\nMaybe use normalized 0-1000. Could be easier. Let's assume coordinates in pixels.\\n\\nI'll give:\\n\\nFr. Klingelfuss & Co. ad: [540, 500, 920, 710]\\n\\nBanque F\u00e9d\u00e9rale S. A. ad: [120, 710, 920, 900]\\n\\nIf need more precise: maybe x_min 545, y_min 505, x_max 915, y_max 708.\\n\\nI'll output both.\\n\\nProbably need JSON.\\n\\nI'll give list.\\n\\nLet's output:\\n\\nAdvertisement 1: Fr. Klingelfuss & Co. BASLE (Switzerland) ... bounding box ~ [540, 500, 920, 710]\\n\\nAdvertisement 2: Banque F\u00e9d\u00e9rale S. A. Eidgen\u00f6ssische Bank A. G. ... bounding box ~ [120, 710, 920, 900]\\n\\nIf using 0-1000 normalized: convert.\\n\\nPixel to normalized: x_norm = x/2479*1000, y_norm = y/3508*1000.\\n\\nCompute approx:\\n\\nFr. Klingelfuss:\\nx_min 540 => 218\\nx_max 920 => 371\\ny_min 500 => 143\\ny_max 710 => 203\\n\\nBanque:\\nx_min 120 => 48\\nx_max 920 => 371\\ny_min 710 => 203\\ny_max 900 => 257\\n\\nMight be okay.\\n\\nI'll present pixel coordinates.\\n\\nFinal answer with two boxes.\"},\"token_ids\":null,\"routed_experts\":null,\"seed\":null}],\"created\":1786844358,\"model\":\"meta-models/Muse-Glimmer-30B\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":\"vllm-0.1.dev19059+g66826a22d-tp2-46311a71\",\"usage\":{\"completion_tokens\":1008,\"prompt_tokens\":3916,\"total_tokens\":4924,\"completion_tokens_details\":null,\"prompt_tokens_details\":{\"audio_tokens\":null,\"cached_tokens\":48,\"created_cache_tokens\":3856,\"multimodal_tokens\":{\"image\":3850}}},\"prompt_token_ids\":null,\"prompt_text\":null,\"kv_transfer_params\":null,\"ec_transfer_params\":null,\"metrics\":null,\"prompt\":[]}"
+}

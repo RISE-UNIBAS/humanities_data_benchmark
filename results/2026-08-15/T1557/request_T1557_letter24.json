@@ -1,0 +1,47 @@
+{
+    "text": "{\"metadata\":{\"send_date\":[\"1928-04-04\"],\"letter_title\":[\"EINSCHREIBEN\"],\"sender_persons\":[\"Basler Rheinschiffahrt-Aktiengesellschaft\"],\"receiver_persons\":[\"\"]}}",
+    "model": "thinkingmachines/Inkling",
+    "provider": "huggingface",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 4180,
+        "output_tokens": 1500,
+        "total_tokens": 5680,
+        "cached_tokens": 256,
+        "input_cost_usd": 0.00418,
+        "output_cost_usd": 0.006075,
+        "estimated_cost_usd": 0.010255
+    },
+    "duration": 17.93679118156433,
+    "timestamp": "2026-08-15T16:36:48.561266",
+    "parsed": {
+        "metadata": {
+            "send_date": [
+                "1928-04-04"
+            ],
+            "letter_title": [
+                "EINSCHREIBEN"
+            ],
+            "sender_persons": [
+                "Basler Rheinschiffahrt-Aktiengesellschaft"
+            ],
+            "receiver_persons": [
+                ""
+            ],
+            "document_number": "letter24"
+        }
+    },
+    "conversation_id": "a3272319-77b9-49b3-98c0-c0833d12ed55",
+    "score": {
+        "send_date_tp": 1,
+        "send_date_fp": 0,
+        "send_date_fn": 0,
+        "sender_persons_tp": 0,
+        "sender_persons_fp": 1,
+        "sender_persons_fn": 0,
+        "receiver_persons_tp": 0,
+        "receiver_persons_fp": 0,
+        "receiver_persons_fn": 0
+    },
+    "raw_response": "{\"id\":\"owJpNsv-31r7CA-a2b8ee9b7a7235b0\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\n  \\\"metadata\\\": {\\n    \\\"send_date\\\": [\\\"1928-04-04\\\"],\\n    \\\"letter_title\\\": [\\\"EINSCHREIBEN\\\"],\\n    \\\"sender_persons\\\": [\\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"],\\n    \\\"receiver_persons\\\": [\\\"\\\"]\\n  }\\n}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"metadata\":{\"send_date\":[\"1928-04-04\"],\"letter_title\":[\"EINSCHREIBEN\"],\"sender_persons\":[\"Basler Rheinschiffahrt-Aktiengesellschaft\"],\"receiver_persons\":[\"\"]}},\"reasoning\":\"We need parse image of historical letter, extract title, sender, date, receiver. Need inspect both pages.\\n\\nPage 1: Top right \\\"24\\\" in red. Then \\\"Basel, den 4. April 1928.\\\" Underlined \\\"EINSCHREIBEN\\\". Then \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\" \\\"BASEL\\\" \\\"----------------\\\" \\\"Marktstrasse 5\\\". Then body text addressed \\\"Wir sind im Besitze Ihres Geehrten vom 3. ds. ...\\\" So sender is Basler Rheinschiffahrt-Aktiengesellschaft? Or maybe signed at bottom page 2 \\\"BASLER PERSONENSCHIFFFAHRTSGESELLSCHAFT\\\" Wait need determine correct sender and receiver.\\n\\nWe need letter_title: maybe \\\"EINSCHREIBEN\\\" is title? Or maybe no explicit title besides \\\"EINSCHREIBEN\\\" (registered letter). Let's list.\\n\\nSend date: \\\"Basel, den 4. April 1928\\\" => 1928-04-04.\\n\\nSender persons: The letterhead is \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\" but signature at end page 2 is \\\"BASLER PERSONENSCHIFFFAHRTSGESELLSCHAFT\\\". Hmm discrepancy. Let's examine context: The letter mentions \\\"Basler Personenschiffahrtsgesellschaft bestehen bleibt...\\\" and \\\"Wenn die Basler Personenschiffahrtsgesellschaft bestehen bleibt...\\\" So they might be writing on behalf? Actually the letterhead says Basler Rheinschiffahrt-Aktiengesellschaft, Marktstrasse 5. The closing signature says \\\"BASLER PERSONENSCHIFFFAHRTSGESELLSCHAFT\\\". Maybe the company name changed? But for extraction, likely sender is \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\" or \\\"Basler Personenschiffahrtsgesellschaft\\\". Need determine correct based on letterhead/signature. Usually sender is the entity writing, indicated by letterhead and signature. Here letterhead at top: Basler Rheinschiffahrt-Aktiengesellschaft BASEL Marktstrasse 5. At bottom signed \\\"In Hochachtung BASLER PERSONENSCHIFFFAHRTSGESELLSCHAFT\\\". So there might be two entities? Let's read body: \\\"Wir sind im Besitze Ihres Geehrten vom 3. ds. und haben davon Kenntnis genommen, dass Sie bereit sind, den Kaufpreis f\u00fcr das Schiff \\\"Rheinfelden\\\" auf Fr. 105 864.65 zu erh\u00f6hen, uns das Boot, sofern unsere Gesellschaft weiter bestehen bleibt, j\u00e4hrlich f\u00fcr eine Freifahrt in Anschluss an die Generalversammlung von Basel nach Rheinfelden und zur\u00fcck zur Verf\u00fcgung zu stellen...\\\" So \\\"unsere Gesellschaft\\\" refers to the sender's company. Then \\\"Wenn die Basler Personenschiffahrtsgesellschaft bestehen bleibt...\\\" So they call themselves Basler Personenschiffahrtsgesellschaft. But letterhead says Rheinschiffahrt-Aktiengesellschaft. Maybe they are same? Actually \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\" might be the formal name, and \\\"Basler Personenschiffahrtsgesellschaft\\\" is another form? Let's not overanalyze. For sender_persons, likely [\\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"] or [\\\"Basler Personenschiffahrtsgesellschaft\\\"]. Which one to choose? The prompt asks \\\"Name(s) of the person(s) who wrote the letter.\\\" This is an organization, not person. But we extract as given.\\n\\nReceiver persons: The letter is addressed? Not explicit salutation like \\\"Sehr geehrte Herren\\\". But they refer to \\\"Ihres Geehrten vom 3. ds.\\\" and \\\"Sie bereit sind...\\\". The recipient might be mentioned in address? Not visible on page. Maybe on envelope? But we only have letter pages. Could be \\\"Generalversammlung\\\"? No that's event. Let's check if there's an address block on page 1? Only sender address. So receiver might be unknown, but maybe implied by context: They are writing to someone who offered to buy ship \\\"Rheinfelden\\\". But name not present. So receiver_persons should be null? Wait but example includes names. However if not included, set null.\\n\\nBut wait there might be recipient name in the salutation hidden? The body starts \\\"Wir sind im Besitze Ihres Geehrten vom 3. ds...\\\" No name.\\n\\nThus:\\nletter_title: [\\\"EINSCHREIBEN\\\"]? Or null? The letter has \\\"EINSCHREIBEN\\\" prominently as type. Might be title.\\nsender_persons: [\\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"] maybe also include signature? Let's provide the letterhead one.\\nsend_date: [\\\"1928-04-04\\\"]\\nreceiver_persons: [null]? Actually need list with null? The instructions: \\\"If a piece of information is not included in the letter, set the value for the corresponding key to 'null'.\\\" And values should be stored as a list, even if single value. So [\\\"null\\\"]? Or null? The example shows lists of strings. For missing, likely [null] but they said set value to \\\"null\\\". Usually in JSON, null without quotes? But they said \\\"null\\\" in quotes? Let's check example: they don't show missing case. The instruction: \\\"set the value for the corresponding key to 'null'.\\\" That suggests the JSON value should be null (not list?). But they also said \\\"values corresponding to each key should be stored as a list, even if there is only a single value for a key\\\". So for missing, probably [null]. But need be consistent. Let's do [null] if missing? Or \\\"null\\\" inside list? Let's think: They want list for each key. So receiver_persons: [null]. But JSON null is not quoted. We'll use null inside list.\\n\\nBut maybe receiver is present in page 2? Let's inspect page 2 text: \\\"nahmen ger\u00fcstet zu sein. Wir sind indessen nicht in der Lage, die von Ihnen nunmehr geforderte Bedingung anzunehmen...\\\" Still no name. At bottom \\\"In Hochachtung BASLER PERSONENSCHIFFFAHRTSGESELLSCHAFT\\\". So indeed no recipient name visible.\\n\\nThus output:\\n{\\n\\\"letter_title\\\": [\\\"EINSCHREIBEN\\\"],\\n\\\"send_date\\\": [\\\"1928-04-04\\\"],\\n\\\"sender_persons\\\": [\\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"],\\n\\\"receiver_persons\\\": [null]\\n}\\n\\nBut wait sender might be \\\"Basler Personenschiffahrtsgesellschaft\\\". Let's examine letterhead precisely: \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\" then \\\"B A S E L\\\" then \\\"----------------\\\" \\\"Marktstrasse 5\\\". Yes.\\n\\nCould there be a person name in signature? No, just company.\\n\\nThus I will return that.\"},\"seed\":null}],\"created\":1786804746,\"model\":\"thinkingmachines/Inkling\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":\"default\",\"usage\":{\"completion_tokens\":1500,\"prompt_tokens\":4180,\"total_tokens\":5680,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":null,\"reasoning_tokens\":1431,\"rejected_prediction_tokens\":null},\"prompt_tokens_details\":{\"audio_tokens\":null,\"cached_tokens\":256}},\"prompt\":[]}"
+}

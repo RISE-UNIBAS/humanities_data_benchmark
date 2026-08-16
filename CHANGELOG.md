@@ -8,10 +8,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased] (v0.5.4-pre1)
 
 ### Added
-- 2 new models: grok-4.5 (xAI), qwen/qwen3.8-max (OpenRouter)
-- 30 new benchmark test configurations (T1450-T1479) for the 2 new models across all benchmarks (15 tests each): grok-4.5 (T1450-T1464), qwen/qwen3.8-max (T1465-T1479)
-- Tests on 2026-08-04: T1450-T1479 (30 tests) for the 2 new models across all benchmarks — grok-4.5 (T1450-T1464) (x-ai) and qwen/qwen3.8-max (T1465-T1479) (OpenRouter)
-- Pricing data for 2026-08-04 (grok-4.5, qwen/qwen3.8-max; `pricing.json` metadata bumped to version 1.40)
+- 9 new models: grok-4.5 (xAI), qwen/qwen3.8-max (OpenRouter), and seven on Hugging Face, namely swiss-ai/Apertus-v1.5-70B, swiss-ai/Apertus-v1.5-8B, Qwen/Qwen3-VL-235B-A22B-Instruct, MiniMaxAI/MiniMax-M3, thinkingmachines/Inkling, thinkingmachines/Inkling-Small and meta-models/Muse-Glimmer-30B
+- New `huggingface` provider: routes to third-party inference providers over the OpenAI-compatible Hugging Face router API.
+- Hugging Face models are recorded with their downstream inference provider pinned in the model name (`<repo_id>:<provider>`, e.g. `MiniMaxAI/MiniMax-M3:deepinfra`), which the router honors per request.
+- 135 new benchmark test configurations (T1450-T1584) for the 9 new models across all benchmarks (15 tests each): grok-4.5 (T1450-T1464), qwen/qwen3.8-max (T1465-T1479), swiss-ai/Apertus-v1.5-70B:publicai (T1480-T1494), swiss-ai/Apertus-v1.5-8B:publicai (T1495-T1509), Qwen/Qwen3-VL-235B-A22B-Instruct:deepinfra (T1510-T1524), MiniMaxAI/MiniMax-M3:deepinfra (T1525-T1539), thinkingmachines/Inkling-Small:deepinfra (T1540-T1554), thinkingmachines/Inkling:together (T1555-T1569), meta-models/Muse-Glimmer-30B:together (T1570-T1584)
+- Tests on 2026-08-04: T1450-T1479 (30 tests) — grok-4.5 (T1450-T1464) (x-ai) and qwen/qwen3.8-max (T1465-T1479) (OpenRouter)
+- Tests on 2026-08-14: 21 tests (Hugging Face) with swiss-ai/Apertus-v1.5-70B:publicai (T1480-T1486) and swiss-ai/Apertus-v1.5-8B:publicai (T1495-T1508).
+- Tests on 2026-08-15: 66 tests (Hugging Face) with Qwen/Qwen3-VL-235B-A22B-Instruct:deepinfra (T1510-T1524), MiniMaxAI/MiniMax-M3:deepinfra (T1525-T1539), thinkingmachines/Inkling-Small:deepinfra (T1540-T1545), thinkingmachines/Inkling:together (T1555-T1560, T1562-T1569), meta-models/Muse-Glimmer-30B:together (T1570-T1575), swiss-ai/Apertus-v1.5-70B:publicai (T1485-T1494) and swiss-ai/Apertus-v1.5-8B:publicai (T1509).
+- Tests on 2026-08-16: 19 tests (Hugging Face) with thinkingmachines/Inkling-Small:deepinfra (T1546-T1554), thinkingmachines/Inkling:together (T1561) and meta-models/Muse-Glimmer-30B:together (T1576-T1584).
+- Pricing data for 2026-08-04 (grok-4.5, qwen/qwen3.8-max), 2026-08-10 (the two `swiss-ai/Apertus-*` models on Hugging Face) and 2026-08-15 (five new Hugging Face models, each priced from its pinned route).
+- `scripts/data/model_aliases.json` (v1.3): `huggingface` aliases for all seven pinned model names, mapping each to the model id its route writes into result files.
 
 ### Fixed
 - Added the missing `duty_rosters` entry to the Available Benchmarks table in `README.md`

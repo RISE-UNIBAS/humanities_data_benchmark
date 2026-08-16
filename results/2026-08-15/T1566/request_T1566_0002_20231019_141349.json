@@ -1,0 +1,215 @@
+{
+    "text": "We need extract table from image. Let's analyze image content.\n\nWe have a personnel card table with columns:\nDienstliche Stellung | Dienstort | Gehalts-klasse | Jahresgehalt Monatsgehalt Taglohn | Zeitpunkt der Gehalts\u00e4nderung Tag | Monat | Jahr | Bemerkungen, Akten etc.\n\nWe see rows with data:\nRow 1: Hilfsleiter | (empty?) | (maybe empty?) | 4200.- | 3. | April | 1946 | + Zulagen\nThen row 2: (empty?) | (empty?) | (empty?) | 4300.- | 1. | Jan. | 1947 | + Zulagen\n\nWait need examine layout precisely.\n\nLooking at image:\nTop header row.\nThen first data row:\n- Dienstliche Stellung: \"Hilfsleiter\"\n- Dienstort: empty? Actually there might be dots extending but no text.\n- Gehaltsklasse: empty? Or maybe there is a checkmark? Let's inspect.\n- Jahresgehalt... column split? Actually column \"Jahresgehalt Monatsgehalt Taglohn\" has values:\n  - First row: \"4200.-\"\n  - Second row: \"4300.-\"\nThen \"Zeitpunkt der Gehalts\u00e4nderung\" split into Tag, Monat, Jahr:\n  - First row: \"3.\" under Tag, \"April\" under Monat, \"1946\" under Jahr\n  - Second row: \"1.\" under Tag, \"Jan.\" under Monat, \"1947\" under Jahr\nThen Bemerkungen:\n  - First row: \"+ Zulagen\"\n  - Second row: \"+ Zulagen\"\n\nBut wait there might be more rows? The image shows only these two rows with content near top, rest empty dotted lines. So only rows 1 and 2 have content.\n\nNeed determine if there are ditto marks? No.\n\nNeed determine crossed out? The \"Hilfsleiter\" might have line through? Looking at image, \"Hilfsleiter\" appears with a line through? Actually in image, \"Hilfsleiter\" seems struck through? Let's check: The text \"Hilfsleiter\" has a horizontal line through it? It looks like there might be a strike-through line across the word. Yes, likely crossed out. Need set is_crossed_out true for that field? The instruction: Set to true if text in this field is crossed out, struck through, or deleted. The word \"Hilfsleiter\" appears with a line through it in the image. So diplomatic_transcript \"Hilfsleiter\", is_crossed_out true.\n\nWhat about other fields? The values 4200.-, 4300.-, dates, remarks don't appear crossed out.\n\nNeed check dienstort: empty? The cell under Dienstort for row 1 is empty (dots only). So diplomatic_transcript \"\", interpretation null, is_crossed_out false.\n\nGehaltsklasse: empty? There might be nothing. So empty string.\n\nBut wait there might be a checkmark in Gehaltsklasse? The image shows in the Gehaltsklasse column maybe a checkmark or slash? Let's examine: In the column \"Gehalts-klasse\" there is a symbol that looks like a checkmark or \"V\" with line? Actually in row 1, there might be a handwritten check or \"\u2713\"? But instructions say \"Do not transcribe checkmarks\". So if there's a checkmark, we should not include it? The field diplomatic_transcript should be empty string if only checkmark? Or should we include? The instruction: \"Do not transcribe checkmarks\" - so omit them, leaving empty string if that's all. But need be careful: There might be roman numeral \"III\" or something? Looking closely at image, in Gehaltsklasse column there is a symbol that looks like \"V\" or check? Actually it's hard to tell. Let's assume empty or checkmark ignored => empty string.\n\nBut wait there might be values in dienstort column? No visible text.\n\nLet's parse row 1 exactly:\ndienstliche_stellung: \"Hilfsleiter\" (crossed out)\ndienstort: \"\"\ngehaltsklasse: \"\" (maybe checkmark ignored)\njahresgehalt_monatsgehalt_taglohn: \"4200.-\"\ndatum_gehalts\u00e4nderung: Need combine Tag, Monat, Jahr? Actually the field is \"datum_gehalts\u00e4nderung\" representing date of salary change. In table it's split across three sub-columns: Tag, Monat, Jahr. So for row 1: Tag \"3.\", Monat \"April\", Jahr \"1946\". The diplomatic_transcript should be the exact text? But it's split across columns. How to represent? The schema has a single field datum_gehalts\u00e4nderung. We need to combine? The instructions say \"For dates, copy the exact format (e.g., '1. Jan. 1946', '1.April 1945')\" but here they are in separate columns. We should probably combine them into one transcript representing the date as it appears across columns? Or maybe put the combined form? Let's think.\n\nThe column definition: \"datum_gehalts\u00e4nderung: Date of salary change or effective date\". The table splits into Tag, Monat, Jahr. So we need to extract the date. For diplomatic_transcript, we should probably represent it as \"3. April 1946\" matching the layout? Or \"3. April 1946\" is standard. Let's check examples: They say copy exact format \"1. Jan. 1946\", \"1.April 1945\". So combining with space is appropriate. So for row 1: \"3. April 1946\". For row 2: \"1. Jan. 1947\". Interpretation: \"1946-04-03\" and \"1947-01-01\". Wait need correct day-month: 3 April 1946 => 1946-04-03. 1 Jan 1947 => 1947-01-01.\n\nBut need check if there is a period after 3? Yes \"3.\". So transcript \"3. April 1946\". Or should we preserve column separation? The schema expects one string. So combine.\n\nNow jahresgehalt_monatsgehalt_taglohn: \"4200.-\" and \"4300.-\". Interpretation: \"4200\" and \"4300\". No currency symbol? Actually there is no \"Fr.\" visible, just \"4200.-\". So interpretation \"4200\".\n\nBemerkungen: \"+ Zulagen\" for both rows. Interpretation null? Or maybe \"+ Zulagen\" doesn't need expansion. So null.\n\nNow need check if there are more rows? The image shows only top part with two rows. The rest is blank dotted lines. So only 2 rows.\n\nBut wait there might be a row with empty dienstliche_stellung but other values? No, the second row has empty position? Actually the second row might be continuation? Let's examine layout: The first row has Hilfsleiter, then values. The second row is directly below with values 4300.-, 1. Jan. 1947, + Zulagen, but no position listed. So row 2 has empty dienstliche_stellung, empty dienstort, empty gehaltsklasse, salary 4300.-, date 1. Jan. 1947, remark + Zulagen.\n\nBut is there a ditto mark in dienstliche_stellung for row 2? No, it's just empty. So diplomatic_transcript \"\".\n\nWait, but could there be a repetition mark \" in row 2 for position? The image shows blank space. So no.\n\nThus JSON should have rows array with row 1 and row 2.\n\nNeed check is_crossed_out for Hilfsleiter: true. For others false.\n\nLet's construct precisely.\n\nRow 1:\nrow_number: 1\ndienstliche_stellung: {diplomatic_transcript: \"Hilfsleiter\", interpretation: null, is_crossed_out: true}\ndienstort: {diplomatic_transcript: \"\", interpretation: null, is_crossed_out: false}\ngehaltsklasse: {diplomatic_transcript: \"\", interpretation: null, is_crossed_out: false}\njahresgehalt_monatsgehalt_taglohn: {diplomatic_transcript: \"4200.-\", interpretation: \"4200\", is_crossed_out: false}\ndatum_gehalts\u00e4nderung: {diplomatic_transcript: \"3. April 1946\", interpretation: \"1946-04-03\", is_crossed_out: false}\nbemerkungen: {diplomatic_transcript: \"+ Zulagen\", interpretation: null, is_crossed_out: false}\n\nRow 2:\nrow_number: 2\ndienstliche_stellung: {diplomatic_transcript: \"\", interpretation: null, is_crossed_out: false}\ndienstort: {diplomatic_transcript: \"\", interpretation: null, is_crossed_out: false}\ngehaltsklasse: {diplomatic_transcript: \"\", interpretation: null, is_crossed_out: false}\njahresgehalt_monatsgehalt_taglohn: {diplomatic_transcript: \"4300.-\", interpretation: \"4300\", is_crossed_out: false}\ndatum_gehalts\u00e4nderung: {diplomatic_transcript: \"1. Jan. 1947\", interpretation: \"1947-01-01\", is_crossed_out: false}\nbemerkungen: {diplomatic_transcript: \"+ Zulagen\", interpretation: null, is_crossed_out: false}\n\nBut wait, need check if there is any text in dienstort column for row 1? The image shows dots extending but no text. So empty.\n\nOne more check: The column \"Gehalts-klasse\" might have \"III\" or \"IV\"? Actually in the image, in that column there is a handwritten symbol that might be \"V\" or \"IV\"? Let's",
+    "model": "thinkingmachines/Inkling",
+    "provider": "huggingface",
+    "finish_reason": "length",
+    "usage": {
+        "input_tokens": 3684,
+        "output_tokens": 2048,
+        "total_tokens": 5732,
+        "cached_tokens": 3072,
+        "input_cost_usd": 0.003684,
+        "output_cost_usd": 0.008294399999999999,
+        "estimated_cost_usd": 0.011978399999999998
+    },
+    "duration": 44.80612397193909,
+    "timestamp": "2026-08-15T17:38:43.845477",
+    "conversation_id": "924c5a4b-f0d0-4de3-b03c-671d16c5f429",
+    "score": {
+        "f1_score": 0.0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "true_positives": 0,
+        "false_positives": 0,
+        "false_negatives": 23,
+        "field_scores": {
+            "": {
+                "response": null,
+                "ground_truth": null,
+                "score": 1.0
+            },
+            "rows[0].jahresgehalt_monatsgehalt_taglohn.diplomatic_transcript": {
+                "response": null,
+                "ground_truth": "4200.-",
+                "score": 0.0
+            },
+            "rows[0].bemerkungen.is_crossed_out": {
+                "response": null,
+                "ground_truth": false,
+                "score": 0.0
+            },
+            "rows[0].dienstort.diplomatic_transcript": {
+                "response": null,
+                "ground_truth": null,
+                "score": 1.0
+            },
+            "rows[1].bemerkungen.is_crossed_out": {
+                "response": null,
+                "ground_truth": false,
+                "score": 0.0
+            },
+            "rows[1].datum_gehalts\u00e4nderung.is_crossed_out": {
+                "response": null,
+                "ground_truth": false,
+                "score": 0.0
+            },
+            "rows[0].dienstort.is_crossed_out": {
+                "response": null,
+                "ground_truth": false,
+                "score": 0.0
+            },
+            "rows[1].jahresgehalt_monatsgehalt_taglohn.interpretation": {
+                "response": null,
+                "ground_truth": "4300",
+                "score": 0.0
+            },
+            "rows[0].bemerkungen.diplomatic_transcript": {
+                "response": null,
+                "ground_truth": "+ Zulagen",
+                "score": 0.0
+            },
+            "rows[0].dienstliche_stellung.is_crossed_out": {
+                "response": null,
+                "ground_truth": false,
+                "score": 0.0
+            },
+            "rows[0].datum_gehalts\u00e4nderung.diplomatic_transcript": {
+                "response": null,
+                "ground_truth": "3. April 1946",
+                "score": 0.0
+            },
+            "rows[0].jahresgehalt_monatsgehalt_taglohn.interpretation": {
+                "response": null,
+                "ground_truth": "4200",
+                "score": 0.0
+            },
+            "rows[1].jahresgehalt_monatsgehalt_taglohn.diplomatic_transcript": {
+                "response": null,
+                "ground_truth": "4300.-",
+                "score": 0.0
+            },
+            "rows[0].gehaltsklasse.diplomatic_transcript": {
+                "response": null,
+                "ground_truth": null,
+                "score": 1.0
+            },
+            "rows[0].gehaltsklasse.is_crossed_out": {
+                "response": null,
+                "ground_truth": false,
+                "score": 0.0
+            },
+            "rows[1].dienstliche_stellung.interpretation": {
+                "response": null,
+                "ground_truth": null,
+                "score": 1.0
+            },
+            "rows[1].datum_gehalts\u00e4nderung.interpretation": {
+                "response": null,
+                "ground_truth": "1947-01-01",
+                "score": 0.0
+            },
+            "rows[1].dienstliche_stellung.diplomatic_transcript": {
+                "response": null,
+                "ground_truth": null,
+                "score": 1.0
+            },
+            "rows[0].dienstliche_stellung.interpretation": {
+                "response": null,
+                "ground_truth": null,
+                "score": 1.0
+            },
+            "rows[1].dienstliche_stellung.is_crossed_out": {
+                "response": null,
+                "ground_truth": false,
+                "score": 0.0
+            },
+            "rows[0].datum_gehalts\u00e4nderung.interpretation": {
+                "response": null,
+                "ground_truth": "1946-04-03",
+                "score": 0.0
+            },
+            "rows[1].dienstort.is_crossed_out": {
+                "response": null,
+                "ground_truth": false,
+                "score": 0.0
+            },
+            "rows[0].bemerkungen.interpretation": {
+                "response": null,
+                "ground_truth": null,
+                "score": 1.0
+            },
+            "rows[1].gehaltsklasse.interpretation": {
+                "response": null,
+                "ground_truth": null,
+                "score": 1.0
+            },
+            "rows[1].jahresgehalt_monatsgehalt_taglohn.is_crossed_out": {
+                "response": null,
+                "ground_truth": false,
+                "score": 0.0
+            },
+            "rows[0].datum_gehalts\u00e4nderung.is_crossed_out": {
+                "response": null,
+                "ground_truth": false,
+                "score": 0.0
+            },
+            "rows[1].dienstort.diplomatic_transcript": {
+                "response": null,
+                "ground_truth": null,
+                "score": 1.0
+            },
+            "rows[1].gehaltsklasse.is_crossed_out": {
+                "response": null,
+                "ground_truth": false,
+                "score": 0.0
+            },
+            "rows[0].gehaltsklasse.interpretation": {
+                "response": null,
+                "ground_truth": null,
+                "score": 1.0
+            },
+            "rows[1].gehaltsklasse.diplomatic_transcript": {
+                "response": null,
+                "ground_truth": null,
+                "score": 1.0
+            },
+            "rows[1].datum_gehalts\u00e4nderung.diplomatic_transcript": {
+                "response": null,
+                "ground_truth": "1. Jan. 1947",
+                "score": 0.0
+            },
+            "rows[0].jahresgehalt_monatsgehalt_taglohn.is_crossed_out": {
+                "response": null,
+                "ground_truth": false,
+                "score": 0.0
+            },
+            "rows[1].bemerkungen.diplomatic_transcript": {
+                "response": null,
+                "ground_truth": "+ Zulagen",
+                "score": 0.0
+            },
+            "rows[1].dienstort.interpretation": {
+                "response": null,
+                "ground_truth": null,
+                "score": 1.0
+            },
+            "rows[0].dienstort.interpretation": {
+                "response": null,
+                "ground_truth": null,
+                "score": 1.0
+            },
+            "rows[1].bemerkungen.interpretation": {
+                "response": null,
+                "ground_truth": null,
+                "score": 1.0
+            },
+            "rows[0].dienstliche_stellung.diplomatic_transcript": {
+                "response": null,
+                "ground_truth": "Hilfsleiter",
+                "score": 0.0
+            }
+        },
+        "total_fields": 39
+    },
+    "raw_response": "{\"id\":\"owK9Q3Q-31r7CA-a2b949364f23d65d\",\"choices\":[{\"finish_reason\":\"length\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"We need extract table from image. Let's analyze image content.\\n\\nWe have a personnel card table with columns:\\nDienstliche Stellung | Dienstort | Gehalts-klasse | Jahresgehalt Monatsgehalt Taglohn | Zeitpunkt der Gehalts\u00e4nderung Tag | Monat | Jahr | Bemerkungen, Akten etc.\\n\\nWe see rows with data:\\nRow 1: Hilfsleiter | (empty?) | (maybe empty?) | 4200.- | 3. | April | 1946 | + Zulagen\\nThen row 2: (empty?) | (empty?) | (empty?) | 4300.- | 1. | Jan. | 1947 | + Zulagen\\n\\nWait need examine layout precisely.\\n\\nLooking at image:\\nTop header row.\\nThen first data row:\\n- Dienstliche Stellung: \\\"Hilfsleiter\\\"\\n- Dienstort: empty? Actually there might be dots extending but no text.\\n- Gehaltsklasse: empty? Or maybe there is a checkmark? Let's inspect.\\n- Jahresgehalt... column split? Actually column \\\"Jahresgehalt Monatsgehalt Taglohn\\\" has values:\\n  - First row: \\\"4200.-\\\"\\n  - Second row: \\\"4300.-\\\"\\nThen \\\"Zeitpunkt der Gehalts\u00e4nderung\\\" split into Tag, Monat, Jahr:\\n  - First row: \\\"3.\\\" under Tag, \\\"April\\\" under Monat, \\\"1946\\\" under Jahr\\n  - Second row: \\\"1.\\\" under Tag, \\\"Jan.\\\" under Monat, \\\"1947\\\" under Jahr\\nThen Bemerkungen:\\n  - First row: \\\"+ Zulagen\\\"\\n  - Second row: \\\"+ Zulagen\\\"\\n\\nBut wait there might be more rows? The image shows only these two rows with content near top, rest empty dotted lines. So only rows 1 and 2 have content.\\n\\nNeed determine if there are ditto marks? No.\\n\\nNeed determine crossed out? The \\\"Hilfsleiter\\\" might have line through? Looking at image, \\\"Hilfsleiter\\\" appears with a line through? Actually in image, \\\"Hilfsleiter\\\" seems struck through? Let's check: The text \\\"Hilfsleiter\\\" has a horizontal line through it? It looks like there might be a strike-through line across the word. Yes, likely crossed out. Need set is_crossed_out true for that field? The instruction: Set to true if text in this field is crossed out, struck through, or deleted. The word \\\"Hilfsleiter\\\" appears with a line through it in the image. So diplomatic_transcript \\\"Hilfsleiter\\\", is_crossed_out true.\\n\\nWhat about other fields? The values 4200.-, 4300.-, dates, remarks don't appear crossed out.\\n\\nNeed check dienstort: empty? The cell under Dienstort for row 1 is empty (dots only). So diplomatic_transcript \\\"\\\", interpretation null, is_crossed_out false.\\n\\nGehaltsklasse: empty? There might be nothing. So empty string.\\n\\nBut wait there might be a checkmark in Gehaltsklasse? The image shows in the Gehaltsklasse column maybe a checkmark or slash? Let's examine: In the column \\\"Gehalts-klasse\\\" there is a symbol that looks like a checkmark or \\\"V\\\" with line? Actually in row 1, there might be a handwritten check or \\\"\u2713\\\"? But instructions say \\\"Do not transcribe checkmarks\\\". So if there's a checkmark, we should not include it? The field diplomatic_transcript should be empty string if only checkmark? Or should we include? The instruction: \\\"Do not transcribe checkmarks\\\" - so omit them, leaving empty string if that's all. But need be careful: There might be roman numeral \\\"III\\\" or something? Looking closely at image, in Gehaltsklasse column there is a symbol that looks like \\\"V\\\" or check? Actually it's hard to tell. Let's assume empty or checkmark ignored => empty string.\\n\\nBut wait there might be values in dienstort column? No visible text.\\n\\nLet's parse row 1 exactly:\\ndienstliche_stellung: \\\"Hilfsleiter\\\" (crossed out)\\ndienstort: \\\"\\\"\\ngehaltsklasse: \\\"\\\" (maybe checkmark ignored)\\njahresgehalt_monatsgehalt_taglohn: \\\"4200.-\\\"\\ndatum_gehalts\u00e4nderung: Need combine Tag, Monat, Jahr? Actually the field is \\\"datum_gehalts\u00e4nderung\\\" representing date of salary change. In table it's split across three sub-columns: Tag, Monat, Jahr. So for row 1: Tag \\\"3.\\\", Monat \\\"April\\\", Jahr \\\"1946\\\". The diplomatic_transcript should be the exact text? But it's split across columns. How to represent? The schema has a single field datum_gehalts\u00e4nderung. We need to combine? The instructions say \\\"For dates, copy the exact format (e.g., '1. Jan. 1946', '1.April 1945')\\\" but here they are in separate columns. We should probably combine them into one transcript representing the date as it appears across columns? Or maybe put the combined form? Let's think.\\n\\nThe column definition: \\\"datum_gehalts\u00e4nderung: Date of salary change or effective date\\\". The table splits into Tag, Monat, Jahr. So we need to extract the date. For diplomatic_transcript, we should probably represent it as \\\"3. April 1946\\\" matching the layout? Or \\\"3. April 1946\\\" is standard. Let's check examples: They say copy exact format \\\"1. Jan. 1946\\\", \\\"1.April 1945\\\". So combining with space is appropriate. So for row 1: \\\"3. April 1946\\\". For row 2: \\\"1. Jan. 1947\\\". Interpretation: \\\"1946-04-03\\\" and \\\"1947-01-01\\\". Wait need correct day-month: 3 April 1946 => 1946-04-03. 1 Jan 1947 => 1947-01-01.\\n\\nBut need check if there is a period after 3? Yes \\\"3.\\\". So transcript \\\"3. April 1946\\\". Or should we preserve column separation? The schema expects one string. So combine.\\n\\nNow jahresgehalt_monatsgehalt_taglohn: \\\"4200.-\\\" and \\\"4300.-\\\". Interpretation: \\\"4200\\\" and \\\"4300\\\". No currency symbol? Actually there is no \\\"Fr.\\\" visible, just \\\"4200.-\\\". So interpretation \\\"4200\\\".\\n\\nBemerkungen: \\\"+ Zulagen\\\" for both rows. Interpretation null? Or maybe \\\"+ Zulagen\\\" doesn't need expansion. So null.\\n\\nNow need check if there are more rows? The image shows only top part with two rows. The rest is blank dotted lines. So only 2 rows.\\n\\nBut wait there might be a row with empty dienstliche_stellung but other values? No, the second row has empty position? Actually the second row might be continuation? Let's examine layout: The first row has Hilfsleiter, then values. The second row is directly below with values 4300.-, 1. Jan. 1947, + Zulagen, but no position listed. So row 2 has empty dienstliche_stellung, empty dienstort, empty gehaltsklasse, salary 4300.-, date 1. Jan. 1947, remark + Zulagen.\\n\\nBut is there a ditto mark in dienstliche_stellung for row 2? No, it's just empty. So diplomatic_transcript \\\"\\\".\\n\\nWait, but could there be a repetition mark \\\" in row 2 for position? The image shows blank space. So no.\\n\\nThus JSON should have rows array with row 1 and row 2.\\n\\nNeed check is_crossed_out for Hilfsleiter: true. For others false.\\n\\nLet's construct precisely.\\n\\nRow 1:\\nrow_number: 1\\ndienstliche_stellung: {diplomatic_transcript: \\\"Hilfsleiter\\\", interpretation: null, is_crossed_out: true}\\ndienstort: {diplomatic_transcript: \\\"\\\", interpretation: null, is_crossed_out: false}\\ngehaltsklasse: {diplomatic_transcript: \\\"\\\", interpretation: null, is_crossed_out: false}\\njahresgehalt_monatsgehalt_taglohn: {diplomatic_transcript: \\\"4200.-\\\", interpretation: \\\"4200\\\", is_crossed_out: false}\\ndatum_gehalts\u00e4nderung: {diplomatic_transcript: \\\"3. April 1946\\\", interpretation: \\\"1946-04-03\\\", is_crossed_out: false}\\nbemerkungen: {diplomatic_transcript: \\\"+ Zulagen\\\", interpretation: null, is_crossed_out: false}\\n\\nRow 2:\\nrow_number: 2\\ndienstliche_stellung: {diplomatic_transcript: \\\"\\\", interpretation: null, is_crossed_out: false}\\ndienstort: {diplomatic_transcript: \\\"\\\", interpretation: null, is_crossed_out: false}\\ngehaltsklasse: {diplomatic_transcript: \\\"\\\", interpretation: null, is_crossed_out: false}\\njahresgehalt_monatsgehalt_taglohn: {diplomatic_transcript: \\\"4300.-\\\", interpretation: \\\"4300\\\", is_crossed_out: false}\\ndatum_gehalts\u00e4nderung: {diplomatic_transcript: \\\"1. Jan. 1947\\\", interpretation: \\\"1947-01-01\\\", is_crossed_out: false}\\nbemerkungen: {diplomatic_transcript: \\\"+ Zulagen\\\", interpretation: null, is_crossed_out: false}\\n\\nBut wait, need check if there is any text in dienstort column for row 1? The image shows dots extending but no text. So empty.\\n\\nOne more check: The column \\\"Gehalts-klasse\\\" might have \\\"III\\\" or \\\"IV\\\"? Actually in the image, in that column there is a handwritten symbol that might be \\\"V\\\" or \\\"IV\\\"? Let's\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":[]},\"seed\":null}],\"created\":1786808456,\"model\":\"thinkingmachines/Inkling\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":\"default\",\"usage\":{\"completion_tokens\":2048,\"prompt_tokens\":3684,\"total_tokens\":5732,\"completion_tokens_details\":null,\"prompt_tokens_details\":{\"audio_tokens\":null,\"cached_tokens\":3072}},\"prompt\":[]}"
+}

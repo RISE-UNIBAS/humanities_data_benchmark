@@ -27,7 +27,7 @@ EXPECTED_COLUMNS = [
 # API providers accepted by Benchmark.is_runnable (local providers checked separately).
 API_PROVIDERS = {
     "openai", "genai", "anthropic", "mistral", "openrouter",
-    "scicore", "cohere", "deepseek", "x-ai", "alibaba",
+    "scicore", "cohere", "deepseek", "x-ai", "alibaba", "huggingface",
 }
 
 ID_RE = re.compile(r"^T(\d+)$")

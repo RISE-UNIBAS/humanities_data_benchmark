@@ -1,0 +1,56 @@
+{
+    "text": "{\"advertisements\":[{\"box\":[90.0,190.0,2390.0,540.0]},{\"box\":[1440.0,570.0,2380.0,1010.0]},{\"box\":[1440.0,1070.0,2380.0,2130.0]}]}",
+    "model": "thinkingmachines/Inkling",
+    "provider": "huggingface",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 2176,
+        "output_tokens": 1816,
+        "total_tokens": 3992,
+        "input_cost_usd": 0.002176,
+        "output_cost_usd": 0.007354799999999999,
+        "estimated_cost_usd": 0.009530799999999999
+    },
+    "duration": 46.352956771850586,
+    "timestamp": "2026-08-15T17:44:02.895067",
+    "parsed": {
+        "advertisements": [
+            {
+                "box": [
+                    90,
+                    190,
+                    2390,
+                    540
+                ]
+            },
+            {
+                "box": [
+                    1440,
+                    570,
+                    2380,
+                    1010
+                ]
+            },
+            {
+                "box": [
+                    1440,
+                    1070,
+                    2380,
+                    2130
+                ]
+            }
+        ]
+    },
+    "conversation_id": "456120ce-bb3a-4610-bf75-2e47d5a7b3dc",
+    "score": {
+        "f1": 0.0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "mean_iou": 0.0,
+        "true_positives": 0,
+        "false_positives": 3,
+        "false_negatives": 4,
+        "iou_threshold": 0.5
+    },
+    "raw_response": "{\"id\":\"owKAEpt-6z2FuN-a2b950f27c6de635\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\\"advertisements\\\": [{\\\"box\\\": [90, 190, 2390, 540]}, {\\\"box\\\": [1440, 570, 2380, 1010]}, {\\\"box\\\": [1440, 1070, 2380, 2130]}]}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":[],\"reasoning\":\"We need extract advertisements and bounding boxes from image. Need identify ad regions.\\n\\nPage is magazine \\\"THE ANGLO-SWISS REVIEW\\\" September 1921 page 37. Contains several ads/blocks.\\n\\nLet's parse visible advertisements:\\n1. Top large ad: \\\"LA MONDIALE EXPRESS TRANSPORTS S. A.\\\" with address etc. Box likely from near top left to right, maybe y around 210 to 540? Let's determine precisely based on image dimensions 2479x3508.\\n\\nWe need bounding boxes in pixel coordinates.\\n\\nLet's visualize layout:\\n- Header with date and title at top.\\n- Then large banner ad spanning width with decorative border. Contains \\\"LA MONDIALE EXPRESS TRANSPORTS S. A.\\\" left and right \\\"GENEVE\\\" etc. This is an advertisement. Box approximately [80, 180, 1290, 560]? Wait need correct x range. The page width is 2479, but image shows page centered? Actually image includes black borders on sides? Let's check: The page is shown with some black background on left and right edges? The page itself is white rectangle centered. Need bounding boxes relative to original size 2479x3508.\\n\\nWe need identify all ads:\\n- Top banner ad: \\\"LA MONDIALE EXPRESS TRANSPORTS S. A.\\\" Box maybe [80, 180, 1290? No, page width maybe around 1400? Wait need be precise based on actual image. Let's estimate using proportions.\\n\\nBut since I need provide valid JSON with boxes. Let's determine approximate boxes by examining image layout.\\n\\nThe page has left column text and right column ads? Actually there are two columns? Let's analyze content layout:\\nLeft column:\\n- \\\"Tool Steel in Switzerland.\\\" article.\\n- \\\"Adelaide wool sales.\\\" article.\\n- \\\"International Monument to the Telegraph.\\\" article.\\n\\nRight column:\\n- Top right? Actually the large banner ad spans across top of both columns? Let's see: The banner is near top, spanning full width of text area. Then below on right side there is an ad box for \\\"Banque Cantonale Neuch\u00e2teloise\\\" with border. Then below that is large ad for \\\"CHOCOLATS\\\" with image of woman and \\\"PETER, CAILLER, KOHLER\\\" at bottom. So there are three advertisements: the top banner, the bank box on right middle, and the chocolate ad on bottom right.\\n\\nNeed bounding boxes for each.\\n\\nLet's approximate coordinates:\\nImage dimensions: width 2479, height 3508.\\n\\nThe page content starts near y ~150? Actually top black border then page starts around y=70? Let's approximate.\\n\\nBanner ad:\\nTop border decorative line starts around y=180. The ad content inside from y~220 to y~540. Left x maybe 80? Right x maybe 1290? Wait no, the page is about 1400 wide? But image width is 2479, likely page occupies center with large margins? Actually the page shown fills most of width except black bars on left/right maybe about 200 each? Let's check mental: The page is vertical, likely occupies x from about 100 to 1400? No that'd be narrow. But image resolution is high 2479x3508, typical scanned page at 300 dpi for A4? A4 is 2480x3508 at 300 dpi! Yes! So the page fills almost entire image, with minimal black borders. So x ranges roughly 0 to 2479, y 0 to 3508. Good.\\n\\nThus need boxes within full image.\\n\\nLet's determine banner ad box:\\nThe decorative border starts near x~80? Actually page has margins. Let's approximate left margin x~100, right margin x~2380? But the banner might span from x~100 to x~2380. Let's check: The banner has left text \\\"LA MONDIALE...\\\" and right \\\"S. A.\\\" and center \\\"GENEVE\\\". So yes, spans most of page width. Top of banner maybe y~180 (below header \\\"September, 1921...\\\" and title). Bottom of banner maybe y~560 (above the two-column text). So box: [100, 180, 2380, 560].\\n\\nBut need be somewhat accurate. Let's refine: The header \\\"September, 1921.\\\" is at top left around y=130. Title \\\"THE ANGLO-SWISS REVIEW\\\" centered near y=130 right. Then decorative border line starts just below, maybe y=170. The banner content ends around y=540 where \\\"Transports Internationaux...\\\" line is near bottom. So box [80, 170, 2400, 550].\\n\\nNext ad: \\\"Banque Cantonale Neuch\u00e2teloise\\\" box on right column, middle. Let's locate: It's a rectangular bordered box. Top maybe around y=570? Actually below banner, the page splits into two columns. Left column starts with \\\"Tool Steel...\\\" around y=580. Right column has the bank ad at top of right column, maybe y=570 to y=1010? Let's approximate. The box has title \\\"Banque Cantonale Neuch\u00e2teloise\\\" at top inside, then text, ending with \\\"Every information obtainable on request.\\\" The bottom border is around y=1000? So box maybe [1450, 560, 2380, 1020].\\n\\nThen bottom right ad: \\\"CHOCOLATS\\\" with image and \\\"PETER, CAILLER, KOHLER\\\". This occupies bottom right quadrant. Top maybe around y=1080? Bottom near y=2050? Actually the left column continues with articles down to bottom around y=2050? Let's check: Left column has \\\"Adelaide wool sales\\\" then \\\"International Monument...\\\" ending near bottom y~2050. Meanwhile right column has chocolate ad from about y=1080 to y=2050, then below that the brand name \\\"PETER, CAILLER, KOHLER\\\" at bottom right around y=2080 to y=2150? Wait the image shows the chocolate ad box with image inside, and below the box is the text \\\"PETER, CAILLER, KOHLER\\\" centered? Actually in the image, the chocolate illustration is inside a box? Let's examine: There's a rectangular frame around the chocolate image? The image shows a woman with chocolates, and at the bottom outside or inside? The text \\\"PETER, CAILLER, KOHLER\\\" is below the image, likely part of the ad. So the ad box might include both image and bottom text. Let's approximate box [1450, 1080, 2380, 2150].\\n\\nBut need check if there are any other small ads, like the small illustration in the banner (card with \\\"CARTE-MEUBLES...\\\")? That's part of the banner ad, not separate.\\n\\nThus advertisements list:\\n1. Box for La Mondiale Express Transports.\\n2. Box for Banque Cantonale Neuch\u00e2teloise.\\n3. Box for Peter Cailler Kohler Chocolats.\\n\\nNeed provide JSON exactly.\\n\\nLet's refine boxes using more precise mental coordinates:\\n- Banner: x0 ~ 90, y0 ~ 190, x1 ~ 2390, y1 ~ 540.\\n- Bank: x0 ~ 1460, y0 ~ 570, x1 ~ 2370, y1 ~ 1000.\\n- Chocolate: x0 ~ 1460, y0 ~ 1070, x1 ~ 2370, y1 ~ 2120.\\n\\nBut I want somewhat closer. Let's think about column split: The left column text width ends around x~1280? Actually page width ~2479, center split maybe around x=1240. So right column starts around x=1280. The bank box is within right column, with some margin. So x0 maybe 1440? Wait if center is 1240, right column starts at 1280 with margin, then box might start at 1460 and end at 2380 (right margin ~100). Yes.\\n\\nThe chocolate ad also in right column, same x range.\\n\\nThus I will provide:\\n[\\n {\\\"box\\\": [90, 190, 2390, 540]},\\n {\\\"box\\\": [1440, 570, 2380, 1010]},\\n {\\\"box\\\": [1440, 1070, 2380, 2130]}\\n]\\n\\nNeed ensure valid JSON.\"},\"seed\":null}],\"created\":1786808622,\"model\":\"thinkingmachines/Inkling\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":\"default\",\"usage\":{\"completion_tokens\":1816,\"prompt_tokens\":2176,\"total_tokens\":3992,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":null,\"reasoning_tokens\":1753,\"rejected_prediction_tokens\":null},\"prompt_tokens_details\":{\"audio_tokens\":null,\"cached_tokens\":0}},\"prompt\":[]}"
+}

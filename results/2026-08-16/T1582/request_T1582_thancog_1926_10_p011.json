@@ -1,0 +1,49 @@
+{
+    "text": "{\"advertisements\":[{\"box\":[72.0,628.0,2415.0,742.0]},{\"box\":[72.0,747.0,2415.0,855.0]}]}",
+    "model": "meta-models/Muse-Glimmer-30B",
+    "provider": "huggingface",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 3916,
+        "output_tokens": 832,
+        "total_tokens": 4748,
+        "cached_tokens": 48,
+        "input_cost_usd": 0.0013706,
+        "output_cost_usd": 0.001248,
+        "estimated_cost_usd": 0.0026186
+    },
+    "duration": 11.992006301879883,
+    "timestamp": "2026-08-16T03:39:23.804571",
+    "parsed": {
+        "advertisements": [
+            {
+                "box": [
+                    72.0,
+                    628.0,
+                    2415.0,
+                    742.0
+                ]
+            },
+            {
+                "box": [
+                    72.0,
+                    747.0,
+                    2415.0,
+                    855.0
+                ]
+            }
+        ]
+    },
+    "conversation_id": "b05560f9-6017-487a-a3aa-fc58ff294557",
+    "score": {
+        "f1": 0.0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "mean_iou": 0.0,
+        "true_positives": 0,
+        "false_positives": 2,
+        "false_negatives": 2,
+        "iou_threshold": 0.5
+    },
+    "raw_response": "{\"id\":\"owNKNKL-fdNmn-a2bcb9538f225f67\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\\"advertisements\\\": [\\n  {\\n    \\\"box\\\": [72, 628, 2415, 742]\\n  },\\n  {\\n    \\\"box\\\": [72, 747, 2415, 855]\\n  }\\n]}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"advertisements\":[{\"box\":[72.0,628.0,2415.0,742.0]},{\"box\":[72.0,747.0,2415.0,855.0]}]},\"reasoning\":\"Extract all advertisements and return their bounding boxes.\\nThe original size of the page is 2479 x 3508 pixels.\\n\\nWe need find advertisements. The page has \\\"HOTELS SPECIALLY RECOMMENDED\\\" list, then two boxed ads: Hotel-Pension Florhof Z\u00fcrich, and Basle / Parkhotel Bernerhof. Possibly the hotels list is not advertisement? Might be a listing. The ads are the two boxed ones at bottom.\\n\\nAlso maybe the header? No.\\n\\nSo extract bounding boxes. Need coordinates. Probably normalized? Usually bounding box as [x_min, y_min, x_max, y_max] in pixels. Original size 2479 x 3508.\\n\\nWe need estimate. Let's approximate.\\n\\nPage image: top margin. The first ad box: Hotel-Pension Florhof Z\u00fcrich. Box starts around y ~ 630? Let's estimate. The page top is 0. The header \\\"October, 1926...\\\" at top ~ 70px. HOTELS SPECIALLY RECOMMENDED box ~ 100-150. The list goes down to about ~ 630. Then the ad box starts. Let's approximate.\\n\\nBetter to give relative coordinates. Might be okay approximate.\\n\\nWe can estimate bounding boxes:\\n\\nFirst ad: Hotel-Pension Florhof Z\u00fcrich\\nx_min ~ 70? The page left margin ~ 70. Right margin ~ 2400? Let's assume box spans from ~ 70 to ~ 2400. y_min ~ 630? Actually the box top border around 630? Let's see: the list ends at about 630. The box starts maybe 630. Let's say y_min = 630, y_max = 740? Wait the box height maybe ~ 120? Actually text inside. Let's estimate y_min ~ 630, y_max ~ 740? Hmm maybe 630 to 740 is 110. Might be larger. Let's assume y_min ~ 630, y_max ~ 740? Could be 630-740.\\n\\nSecond ad: Basle / Parkhotel Bernerhof\\nBelow that. y_min ~ 750, y_max ~ 850? Actually maybe 750-850.\\n\\nLet's try more precise. The page height 3508. The bottom text starts around 850. So second ad ends around 850.\\n\\nLet's propose:\\n\\nAd 1: [70, 630, 2400, 740] (approx)\\nAd 2: [70, 750, 2400, 850]\\n\\nMaybe also the \\\"HOTELS SPECIALLY RECOMMENDED\\\" is not an ad but a listing. Might be considered advertisement? Probably not.\\n\\nCould also be the whole page is a list of hotels recommended, which is like an ad section. But the two boxed are clear ads.\\n\\nReturn bounding boxes. Might need in format like {\\\"x_min\\\":..., \\\"y_min\\\":..., \\\"x_max\\\":..., \\\"y_max\\\":...}.\\n\\nI'll give approximate.\\n\\nLet's refine: The first boxed ad top border is about 630 pixels from top (maybe 625). Bottom border about 740. X from about 75 to 2410.\\n\\nSecond ad top about 750, bottom about 850. X same.\\n\\nI'll output two boxes.\\n\\nIf need normalized 0-1, could convert. But says original size 2479 x 3508 pixels. So give pixel coords.\\n\\nI'll give approximate values.\\n\\nMaybe better to give relative percentages: x_min ~ 0.03, y_min ~ 0.18 etc.\\n\\nI'll give pixel estimates:\\n\\nHotel-Pension Florhof Z\u00fcrich: x_min=72, y_min=628, x_max=2415, y_max=742\\n\\nBasle / Parkhotel Bernerhof: x_min=72, y_min=747, x_max=2415, y_max=855\\n\\nLet's output.\\n\\n\"},\"token_ids\":null,\"routed_experts\":null,\"seed\":null}],\"created\":1786844353,\"model\":\"meta-models/Muse-Glimmer-30B\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":\"vllm-0.1.dev19059+g66826a22d-tp2-46311a71\",\"usage\":{\"completion_tokens\":832,\"prompt_tokens\":3916,\"total_tokens\":4748,\"completion_tokens_details\":null,\"prompt_tokens_details\":{\"audio_tokens\":null,\"cached_tokens\":48,\"created_cache_tokens\":3856,\"multimodal_tokens\":{\"image\":3850}}},\"prompt_token_ids\":null,\"prompt_text\":null,\"kv_transfer_params\":null,\"ec_transfer_params\":null,\"metrics\":null,\"prompt\":[]}"
+}

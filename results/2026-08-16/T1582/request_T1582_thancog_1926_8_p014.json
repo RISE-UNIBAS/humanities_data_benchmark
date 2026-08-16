@@ -1,0 +1,65 @@
+{
+    "text": "{\"advertisements\":[{\"box\":[135.0,152.0,935.0,255.0]},{\"box\":[135.0,265.0,935.0,490.0]},{\"box\":[135.0,500.0,935.0,710.0]},{\"box\":[135.0,720.0,935.0,895.0]}]}",
+    "model": "meta-models/Muse-Glimmer-30B",
+    "provider": "huggingface",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 3916,
+        "output_tokens": 1237,
+        "total_tokens": 5153,
+        "cached_tokens": 48,
+        "input_cost_usd": 0.0013706,
+        "output_cost_usd": 0.0018555,
+        "estimated_cost_usd": 0.0032261
+    },
+    "duration": 13.508370161056519,
+    "timestamp": "2026-08-16T03:39:37.317945",
+    "parsed": {
+        "advertisements": [
+            {
+                "box": [
+                    135.0,
+                    152.0,
+                    935.0,
+                    255.0
+                ]
+            },
+            {
+                "box": [
+                    135.0,
+                    265.0,
+                    935.0,
+                    490.0
+                ]
+            },
+            {
+                "box": [
+                    135.0,
+                    500.0,
+                    935.0,
+                    710.0
+                ]
+            },
+            {
+                "box": [
+                    135.0,
+                    720.0,
+                    935.0,
+                    895.0
+                ]
+            }
+        ]
+    },
+    "conversation_id": "d784dafd-bde5-4692-9da1-bcac4c41a2c7",
+    "score": {
+        "f1": 0.0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "mean_iou": 0.0,
+        "true_positives": 0,
+        "false_positives": 4,
+        "false_negatives": 6,
+        "iou_threshold": 0.5
+    },
+    "raw_response": "{\"id\":\"owNKRtV-fdNmn-a2bcb99e9acdcbf8\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\\"advertisements\\\":[\\n  {\\\"box\\\": [135, 152, 935, 255]  },\\n  {\\\"box\\\": [135, 265, 935, 490]  },\\n  {\\\"box\\\": [135, 500, 935, 710]  },\\n  {\\\"box\\\": [135, 720, 935, 895]  }\\n] }\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"advertisements\":[{\"box\":[135.0,152.0,935.0,255.0]},{\"box\":[135.0,265.0,935.0,490.0]},{\"box\":[135.0,500.0,935.0,710.0]},{\"box\":[135.0,720.0,935.0,895.0]}]},\"reasoning\":\"Extract all advertisements and return their bounding boxes.\\nThe original size of the page is 2479 x 3508 pixels.\\n\\nI see page with \\\"HOTELS SPECIALLY RECOMMENDED\\\" header. Then ads:\\n\\n1. BUSINESS MEN! / WHEN IN BASLE LUNCH AT THE TERRASSE-RESTAURANT KUNSTHALLE. That's one ad? Might be two ads side by side? The box is one rectangle spanning top. Might be two separate ads: left \\\"BUSINESS MEN!\\\" and right \\\"WHEN IN BASLE LUNCH...\\\". But the border encloses both. Could be one combined ad. Might be considered two ads. Hmm.\\n\\nNext: Hotel Schweizerhof BERNE with image. That's an ad.\\n\\nNext: Savoy Hotel Univers Basel. That's an ad.\\n\\nNext: ESPLANADE GRAND CAF\u00c9... ZURICH. That's an ad.\\n\\nAlso the header \\\"HOTELS SPECIALLY RECOMMENDED\\\" maybe not an ad.\\n\\nThe instruction: Extract all advertisements and return their bounding boxes.\\n\\nProbably need coordinates normalized? Usually bounding boxes as [x_min, y_min, x_max, y_max] in pixels. Original size 2479 x 3508.\\n\\nWe need estimate. Let's approximate.\\n\\nImage width 2479, height 3508.\\n\\nTop header area: HOTELS SPECIALLY RECOMMENDED oval from about x ~ 140 to 930? Wait page is maybe 2479 width. The page content is centered. Let's estimate relative.\\n\\nBetter to give approximate coordinates.\\n\\nLet's assume page content starts at ~ 140 px left margin, ~ 70 px top. The first ad block \\\"BUSINESS MEN!\\\" and \\\"WHEN IN BASLE...\\\" is a rectangle from y ~ 150 to ~ 260? Actually header oval is above. Let's estimate:\\n\\nHeader oval y ~ 80 to 140.\\n\\nFirst ad box: y ~ 150 to 255. x ~ 140 to 930? Wait the box spans full width. So x ~ 140 to 930? Actually page width maybe 930? No.\\n\\nMaybe the image is cropped with black border. The page is about 2479 wide, but the paper is maybe ~ 2200 wide. Let's approximate percentages.\\n\\nSimpler: give relative coordinates 0-1000.\\n\\nBut request says original size 2479 x 3508 pixels. So give pixel coordinates.\\n\\nI'll estimate:\\n\\nFirst combined ad (Business Men / Kunsthalle): x_min ~ 135, y_min ~ 150, x_max ~ 935, y_max ~ 255.\\n\\nBut maybe split into two:\\n\\nLeft: BUSINESS MEN! x ~ 135 to 620, y ~ 150 to 255\\n\\nRight: WHEN IN BASLE... x ~ 620 to 935, y ~ 150 to 255\\n\\nNext Hotel Schweizerhof: x ~ 135 to 935, y ~ 265 to 490\\n\\nNext Savoy Hotel Univers Basel: x ~ 135 to 935, y ~ 500 to 710\\n\\nNext Esplanade: x ~ 135 to 935, y ~ 720 to 900\\n\\nLet's refine.\\n\\nBetter to give approximate bounding boxes.\\n\\nI'll output list:\\n\\n1. BUSINESS MEN! / KUNSTHALLE ad: [~140, ~150, ~930, ~255]\\n2. Hotel Schweizerhof BERNE: [~135, ~265, ~935, ~490]\\n3. Savoy Hotel Univers Basel: [~135, ~500, ~935, ~710]\\n4. ESPLANADE GRAND CAF\u00c9... ZURICH: [~135, ~720, ~935, ~895]\\n\\nIf split first ad:\\n\\nBusiness Men left: [140,150,620,255]\\nKunsthalle right: [620,150,930,255]\\n\\nMight be acceptable.\\n\\nI'll provide both interpretations.\\n\\nProbably the main ads are the three hotel ads plus Esplanade. The top BUSINESS MEN! might be considered an ad too.\\n\\nI'll give four ads.\\n\\nLet's output JSON with labels and boxes.\\n\\nI'll give approximate pixel values.\\n\\nLet's assume page content width ~ 800 px? Wait 2479 is full image including black border. The paper is maybe ~ 2200 wide. Let's estimate paper left ~ 140, right ~ 970? Actually 2479 width, paper maybe 2200. So left margin ~ 140, right ~ 2350? Hmm.\\n\\nMaybe better to use relative coordinates normalized to 0-1000.\\n\\nAlternative: give coordinates as [x_min, y_min, x_max, y_max] in pixels with estimates.\\n\\nI'll give:\\n\\n- \\\"BUSINESS MEN! / WHEN IN BASLE LUNCH AT THE TERRASSE-RESTAURANT KUNSTHALLE\\\": {x_min=135, y_min=152, x_max=935, y_max=255}\\n- \\\"Hotel Schweizerhof BERNE\\\": {x_min=135, y_min=265, x_max=935, y_max=490}\\n- \\\"Savoy Hotel Univers Basel\\\": {x_min=135, y_min=500, x_max=935, y_max=710}\\n- \\\"ESPLANADE GRAND CAF\u00c9 - RESTAURANT - TEAROOM - BAR ZURICH\\\": {x_min=135, y_min=720, x_max=935, y_max=895}\\n\\nIf need split first:\\n\\nLeft part: x_min=135 y_min=152 x_max=620 y_max=255\\nRight part: x_min=620 y_min=152 x_max=935 y_max=255\\n\\nI'll present.\\n\\nLet's output.\"},\"token_ids\":null,\"routed_experts\":null,\"seed\":null}],\"created\":1786844364,\"model\":\"meta-models/Muse-Glimmer-30B\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":\"vllm-0.1.dev19059+g66826a22d-tp2-46311a71\",\"usage\":{\"completion_tokens\":1237,\"prompt_tokens\":3916,\"total_tokens\":5153,\"completion_tokens_details\":null,\"prompt_tokens_details\":{\"audio_tokens\":null,\"cached_tokens\":48,\"created_cache_tokens\":3856,\"multimodal_tokens\":{\"image\":3850}}},\"prompt_token_ids\":null,\"prompt_text\":null,\"kv_transfer_params\":null,\"ec_transfer_params\":null,\"metrics\":null,\"prompt\":[]}"
+}

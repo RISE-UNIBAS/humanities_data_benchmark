@@ -1,0 +1,48 @@
+{
+    "text": "{\"metadata\":{\"send_date\":[\"1926-03-26\"],\"letter_title\":[\"\"],\"sender_persons\":[\"Die Basler Rheinschiffahrts-Aktiengesellschaft\"],\"receiver_persons\":[\"Christ & Co.\",\"Paravicini\"]}}",
+    "model": "thinkingmachines/Inkling",
+    "provider": "huggingface",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 2254,
+        "output_tokens": 1426,
+        "total_tokens": 3680,
+        "cached_tokens": 256,
+        "input_cost_usd": 0.002254,
+        "output_cost_usd": 0.0057753,
+        "estimated_cost_usd": 0.0080293
+    },
+    "duration": 19.539721488952637,
+    "timestamp": "2026-08-15T16:27:19.200363",
+    "parsed": {
+        "metadata": {
+            "send_date": [
+                "1926-03-26"
+            ],
+            "letter_title": [
+                ""
+            ],
+            "sender_persons": [
+                "Die Basler Rheinschiffahrts-Aktiengesellschaft"
+            ],
+            "receiver_persons": [
+                "Christ & Co.",
+                "Paravicini"
+            ],
+            "document_number": "letter04"
+        }
+    },
+    "conversation_id": "f6cade66-16b2-460b-bef8-e802a50639fc",
+    "score": {
+        "send_date_tp": 1,
+        "send_date_fp": 0,
+        "send_date_fn": 0,
+        "sender_persons_tp": 0,
+        "sender_persons_fp": 1,
+        "sender_persons_fn": 1,
+        "receiver_persons_tp": 0,
+        "receiver_persons_fp": 2,
+        "receiver_persons_fn": 1
+    },
+    "raw_response": "{\"id\":\"owJkf3T-6z2FuN-a2b8e0a8f98fcc24\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\n  \\\"metadata\\\": {\\n    \\\"send_date\\\": [\\\"1926-03-26\\\"],\\n    \\\"letter_title\\\": [\\\"\\\"],\\n    \\\"sender_persons\\\": [\\\"Die Basler Rheinschiffahrts-Aktiengesellschaft\\\"],\\n    \\\"receiver_persons\\\": [\\\"Christ & Co.\\\", \\\"Paravicini\\\"]\\n  }\\n}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"metadata\":{\"send_date\":[\"1926-03-26\"],\"letter_title\":[\"\"],\"sender_persons\":[\"Die Basler Rheinschiffahrts-Aktiengesellschaft\"],\"receiver_persons\":[\"Christ & Co.\",\"Paravicini\"]}},\"reasoning\":\"We need parse image: letterhead \\\"BASEL INTERNATIONALE AUSSTELLUNG F\u00dcR BINNENSCHIFFFAHRT UND WASSERKRAFTNUTZUNG...\\\" date \\\"Basel, den 26. M\u00e4rz 1926.\\\" Addressee \\\"Herrn Christ & Co. c/o. Paravicini, Christ & Co. Kaufhausgasse 7, Basel\\\" Sender \\\"Die Basler Rheinschiffahrts-Aktiengesellschaft\\\" with signature. Need keys: letter_title, sender_persons, send_date, receiver_persons. No explicit title, maybe null. Let's determine values.\\n\\nletter_title: Not present? Could be inferred? The prompt says if not included set null. There's no title like \\\"Betreff\\\". So [\\\"null\\\"? Actually value should be \\\"null\\\" in JSON? The example shows lists with strings. For missing, set value for corresponding key to \\\"null\\\". Probably \\\"letter_title\\\": [\\\"null\\\"]? Wait they said \\\"set the value for the corresponding key to 'null'\\\". But also said values should be stored as a list, even if single value. So likely \\\"letter_title\\\": [null]? Or [\\\"null\\\"]? Need check consistency. In example all values are lists of strings. For missing information, probably list containing null? Or the string \\\"null\\\"? The instruction: \\\"If a piece of information is not included in the letter, set the value for the corresponding key to 'null'.\\\" Given they want JSON file where values corresponding to each key should be stored as a list, I think they want [\\\"null\\\"]? But \\\"value ... to 'null'\\\" might mean the JSON null inside list? Let's examine typical extraction prompts: they often say set value to null (JSON null). But they also said store as list. So likely \\\"letter_title\\\": [null]. However to be safe maybe [\\\"null\\\"]. But I think [null] is correct JSON null in list. Let's decide later.\\n\\nsender_persons: \\\"Die Basler Rheinschiffahrts-Aktiengesellschaft\\\" is organization, but they ask name(s) of person(s) who wrote. The signature is illegible, maybe \\\"W. Wanner\\\"? Actually signature looks like \\\"W. W. ???\\\" Not clear. But the letter is from the company, signed by someone. The prompt asks \\\"Name(s) of the person(s) who wrote the letter.\\\" Could be the company? Usually person. The signature is present but unreadable. However we can extract the printed sender? The text says \\\"Die Basler Rheinschiffahrts-Aktiengesellschaft\\\" then signature. Since we can't read signature precisely, but maybe it's \\\"E. W. Mann\\\"? Let's inspect mental image: signature is cursive, maybe \\\"E. W. Mann\\\"? Actually not necessary if not readable? But we should try. Let's think: The letterhead is Basler Rheinschiffahrts-Aktiengesellschaft. The signatory might be a director. But without clear name, maybe list the organization? The key is sender_persons, plural persons. Given ambiguity, maybe include the organization? But \\\"persons\\\" implies human. However in many extraction tasks they accept organization as sender if signed on behalf. But there is also signature. Let's examine image details: At bottom right, \\\"Mit vorz\u00fcglicher Hochachtung,\\\" then a signature that looks like \\\"Willi Wanner\\\"? Hmm.\\n\\nActually I should not overanalyze. Let's provide sender as the company? Or null? Let's see other keys.\\n\\nsend_date: \\\"1926-03-26\\\"\\n\\nreceiver_persons: \\\"Christ & Co.\\\"? Specifically \\\"Herrn Christ & Co. c/o. Paravicini, Christ & Co.\\\" So receiver persons: [\\\"Christ & Co.\\\", \\\"Paravicini\\\"]? Or [\\\"Christ & Co. c/o. Paravicini, Christ & Co.\\\"]? Let's parse: \\\"Herrn Christ & Co. c/o. Paravicini, Christ & Co. Kaufhausgasse 7, Basel\\\". So the recipient is Christ & Co., care of Paravicini, Christ & Co. So names: \\\"Christ & Co.\\\" and \\\"Paravicini\\\". But \\\"Christ & Co.\\\" appears twice. We'll list [\\\"Christ & Co.\\\", \\\"Paravicini\\\"].\\n\\nletter_title: There is no title. So [null].\\n\\nBut wait there might be implicit title in letterhead? No, that's organization. So null.\\n\\nNow sender_persons: The letter is written by \\\"Die Basler Rheinschiffahrts-Aktiengesellschaft\\\". Even though it's an organization, it's the sender entity named in the letter. The signature is unreadable, but we can include the organization? The prompt says \\\"Name(s) of the person(s) who wrote the letter.\\\" If unreadable, maybe null? But we have the company name printed as sender. Let's include [\\\"Die Basler Rheinschiffahrts-Aktiengesellschaft\\\"]. Or maybe also the signatory if readable. Let's try to decipher signature: Looks like \\\"E. W. Mann\\\"? Actually the first letter is capital, then lowercase? Let's not guess blindly. We'll use the printed entity.\\n\\nBut wait there is \\\"K/L.\\\" at top left? That might be reference. Not title.\\n\\nThus JSON:\\n{\\n\\\"letter_title\\\": [null],\\n\\\"send_date\\\": [\\\"1926-03-26\\\"],\\n\\\"sender_persons\\\": [\\\"Die Basler Rheinschiffahrts-Aktiengesellschaft\\\"],\\n\\\"receiver_persons\\\": [\\\"Christ & Co.\\\", \\\"Paravicini\\\"]\\n}\\n\\nNeed ensure lists. Yes.\\n\\nBut should letter_title be [\\\"null\\\"]? Let's check instruction precisely: \\\"If a piece of information is not included in the letter, set the value for the corresponding key to \\\"null\\\".\\\" In JSON, if value is list, then list should contain null? Or should the value be null instead of list? They said \\\"where the values corresponding to each key should be stored as a list, even if there is only a single value for a key\\\". So the value is always a list. Then \\\"set the value for the corresponding key to 'null'\\\" conflicts. Usually in these prompts they want [null]. But sometimes they want null breaking the list rule for missing. However they said \\\"even if there is only a single value for a key\\\" implying always list. So for missing, probably [null]. Let's do [null].\\n\\nLet's refine receiver: \\\"Herrn Christ & Co.\\\" So person/firm Christ & Co. And \\\"Paravicini\\\" is a person at Christ & Co. So list both.\\n\\nThus output.\"},\"seed\":null}],\"created\":1786804021,\"model\":\"thinkingmachines/Inkling\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":\"default\",\"usage\":{\"completion_tokens\":1426,\"prompt_tokens\":2254,\"total_tokens\":3680,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":null,\"reasoning_tokens\":1353,\"rejected_prediction_tokens\":null},\"prompt_tokens_details\":{\"audio_tokens\":null,\"cached_tokens\":256}},\"prompt\":[]}"
+}

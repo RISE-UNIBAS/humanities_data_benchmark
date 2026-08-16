@@ -1,0 +1,47 @@
+{
+    "text": "{\"metadata\":{\"send_date\":[\"1932-11-24\"],\"letter_title\":[\"\"],\"sender_persons\":[\"Dr. Max Vischer\"],\"receiver_persons\":[\"A. Oettinger\"]}}",
+    "model": "thinkingmachines/Inkling",
+    "provider": "huggingface",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 2254,
+        "output_tokens": 895,
+        "total_tokens": 3149,
+        "cached_tokens": 256,
+        "input_cost_usd": 0.002254,
+        "output_cost_usd": 0.0036247499999999995,
+        "estimated_cost_usd": 0.005878749999999999
+    },
+    "duration": 9.967365980148315,
+    "timestamp": "2026-08-15T16:34:16.326475",
+    "parsed": {
+        "metadata": {
+            "send_date": [
+                "1932-11-24"
+            ],
+            "letter_title": [
+                ""
+            ],
+            "sender_persons": [
+                "Dr. Max Vischer"
+            ],
+            "receiver_persons": [
+                "A. Oettinger"
+            ],
+            "document_number": "letter58"
+        }
+    },
+    "conversation_id": "2791286a-703f-4237-beca-d87b7e0c87a4",
+    "score": {
+        "send_date_tp": 1,
+        "send_date_fp": 0,
+        "send_date_fn": 0,
+        "sender_persons_tp": 1,
+        "sender_persons_fp": 0,
+        "sender_persons_fn": 0,
+        "receiver_persons_tp": 1,
+        "receiver_persons_fp": 0,
+        "receiver_persons_fn": 0
+    },
+    "raw_response": "{\"id\":\"owJo768-31r7CA-a2b8eb1319cfd6ad\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\n  \\\"metadata\\\": {\\n    \\\"send_date\\\": [\\\"1932-11-24\\\"],\\n    \\\"letter_title\\\": [\\\"\\\"],\\n    \\\"sender_persons\\\": [\\\"Dr. Max Vischer\\\"],\\n    \\\"receiver_persons\\\": [\\\"A. Oettinger\\\"]\\n  }\\n}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"metadata\":{\"send_date\":[\"1932-11-24\"],\"letter_title\":[\"\"],\"sender_persons\":[\"Dr. Max Vischer\"],\"receiver_persons\":[\"A. Oettinger\"]}},\"reasoning\":\"We need parse image of historical letter. Need extract letter_title, sender_persons, send_date, receiver_persons. Let's analyze image content.\\n\\nWe have letterhead: \\\"Dr MAX VISCHER\\\", \\\"Dr P. C. VON PLANTA\\\", \\\"DVOKATEN UND NOTARE\\\" maybe law firm. Location \\\"BASEL, DEN 24. November 1932.\\\" Addressed to \\\"Herrn A. Oettinger\\\" at \\\"Aschenvorstadt 34 BASEL\\\". There's telephone and post check numbers.\\n\\nBody: \\\"Die Besprechung mit den Herren Direktor Ritter und Ing. Ryniker betr. Darlehen der Basler Personenschiffahrtsgesellschaft findet n\u00e4chsten Montag, den 28. ds., 14\u00bd Uhr auf meinem Bureau statt. Ich w\u00e4re Ihnen dankbar, wenn Sie dieser Besprechung beiwohnen wollten. In Hochachtung\\\" Signed \\\"Max Vischer\\\"? Actually signature looks like \\\"Max Vischer\\\" maybe. Then P.S.: \\\"Mitfolgend eine Karte des Schweiz. Wirtschaftsarchiv Basel. Ich bitte Sie, die Abrechnungen f\u00fcr die Jahre 1930 und 1931 Herrn Prof. F. Mangold zuzustellen. D.O.\\\"\\n\\nThus sender is likely Dr. Max Vischer (or law firm?). The letter is from law office? The signature is Max Vischer? Need determine sender_persons: probably [\\\"Max Vischer\\\"] or [\\\"Dr. Max Vischer\\\"]. Could include firm? But likely sender is Max Vischer.\\n\\nReceiver: \\\"Herrn A. Oettinger\\\" => [\\\"A. Oettinger\\\"].\\n\\nSend date: \\\"24. November 1932\\\" => 1932-11-24.\\n\\nLetter title: Not explicit. Maybe null? The prompt says if not included set null. There's no title like \\\"Re: ...\\\" Maybe we can derive? But likely null. However sometimes letters have subject in body? Not a title. So letter_title: [\\\"null\\\"? Wait they said set value for corresponding key to \\\"null\\\". But in JSON should be null? The example uses lists with strings. The instruction: \\\"If a piece of information is not included in the letter, set the value for the corresponding key to 'null'.\\\" But they want values stored as a list, even if single value. So probably [\\\"null\\\"]? Or null inside list? Let's check example: they have lists of strings. For missing, likely [null] or [\\\"null\\\"]? The instruction says set the value ... to \\\"null\\\". Given JSON, probably the list contains null: [null]. But they said \\\"where the values corresponding to each key should be stored as a list, even if there is only a single value for a key\\\". So key's value is a list. If missing, the list should contain null? Or the value should be null (not in list)? They said \\\"set the value for the corresponding key to 'null'\\\". That conflicts with list requirement. Usually in these extraction tasks, they want e.g., \\\"letter_title\\\": [null]. But they said value to \\\"null\\\" (string?). Let's think. In prior prompts, they often want [\\\"null\\\"]? Actually they said \\\"set the value for the corresponding key to 'null'\\\". If value must be list, then value is [null]. But they wrote \\\"null\\\" in quotes meaning the JSON null value inside the list? Hmm.\\n\\nLet's provide letter_title: [null]. Or maybe there is an implicit title? The letterhead includes names but not title. So yes null.\\n\\nCheck sender: The letter is signed by Max Vischer? The signature is indeed \\\"Max Vischer\\\" with a flourish. So sender_persons: [\\\"Max Vischer\\\"] or [\\\"Dr. Max Vischer\\\"]. Given letterhead lists Dr Max Vischer, likely \\\"Dr. Max Vischer\\\". We'll use [\\\"Dr. Max Vischer\\\"].\\n\\nReceiver: \\\"Herrn A. Oettinger\\\" => [\\\"A. Oettinger\\\"].\\n\\nSend date: [\\\"1932-11-24\\\"].\\n\\nNeed return only JSON.\"},\"seed\":null}],\"created\":1786804601,\"model\":\"thinkingmachines/Inkling\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":\"default\",\"usage\":{\"completion_tokens\":895,\"prompt_tokens\":2254,\"total_tokens\":3149,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":null,\"reasoning_tokens\":832,\"rejected_prediction_tokens\":null},\"prompt_tokens_details\":{\"audio_tokens\":null,\"cached_tokens\":256}},\"prompt\":[]}"
+}

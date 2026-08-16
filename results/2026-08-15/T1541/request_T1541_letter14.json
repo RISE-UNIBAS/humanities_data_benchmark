@@ -1,0 +1,47 @@
+{
+    "text": "{\"metadata\":{\"send_date\":[\"1928-02-18\"],\"letter_title\":[\"\"],\"sender_persons\":[\"Basler Rheinschiffahrt-Aktiengesellschaft\"],\"receiver_persons\":[\"Basler Personenschiffahrts-Gesellschaft\"]}}",
+    "model": "thinkingmachines/Inkling-Small",
+    "provider": "huggingface",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 11889,
+        "output_tokens": 1006,
+        "total_tokens": 12895,
+        "cached_tokens": 256,
+        "input_cost_usd": 0.00535005,
+        "output_cost_usd": 0.0012071999999999999,
+        "estimated_cost_usd": 0.006557250000000001
+    },
+    "duration": 24.213138818740845,
+    "timestamp": "2026-08-15T16:32:43.997568",
+    "parsed": {
+        "metadata": {
+            "send_date": [
+                "1928-02-18"
+            ],
+            "letter_title": [
+                ""
+            ],
+            "sender_persons": [
+                "Basler Rheinschiffahrt-Aktiengesellschaft"
+            ],
+            "receiver_persons": [
+                "Basler Personenschiffahrts-Gesellschaft"
+            ],
+            "document_number": "letter14"
+        }
+    },
+    "conversation_id": "6392f436-d880-48bf-90e8-f8888695ebb9",
+    "score": {
+        "send_date_tp": 1,
+        "send_date_fp": 0,
+        "send_date_fn": 0,
+        "sender_persons_tp": 0,
+        "sender_persons_fp": 1,
+        "sender_persons_fn": 2,
+        "receiver_persons_tp": 0,
+        "receiver_persons_fp": 1,
+        "receiver_persons_fn": 0
+    },
+    "raw_response": "{\"id\":\"chatcmpl-R6bTlgKF5RUNMRonjnalVvew\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\n\\n\\n\\\"metadata\\\": {\\n\\\"send_date\\\": [\\\"1928-02-18\\\"],\\n\\\"letter_title\\\": [\\\"\\\"],\\n\\\"sender_persons\\\": [\\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"],\\n\\\"receiver_persons\\\": [\\\"Basler Personenschiffahrts-Gesellschaft\\\"]\\n}\\n}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"metadata\":{\"send_date\":[\"1928-02-18\"],\"letter_title\":[\"\"],\"sender_persons\":[\"Basler Rheinschiffahrt-Aktiengesellschaft\"],\"receiver_persons\":[\"Basler Personenschiffahrts-Gesellschaft\"]}},\"reasoning_content\":\"We need parse letter. First image: header \\\"Basler Rheinschiffahrt-Aktiengesellschaft Marktgasse 5\\\". Date at top right: \\\"Basel, den 18. Februar 1928.\\\" So send_date is 1928-02-18. Letter title? Not explicitly titled, but could be proposal/letter about unification of operation. We need extract letter_title: maybe none, set null? But maybe title is implied by subject: \\\"Vorschl\u00e4ge f\u00fcr eine Vereinheitlichung des Betriebes...\\\" Could use that as title? The instruction: Title of the letter. If not present, null. There is no explicit title like \\\"Re: ...\\\". So letter_title: null.\\n\\nSender persons: The letter is from Basler Rheinschiffahrt-Aktiengesellschaft? The signature at end: \\\"Hochachtungsvoll BASLER RHEINSCHIFFAHRT-AKTIENGESELLSCHAFT\\\" with signatures. So sender is the company, but also individuals? The text says \\\"In der Besprechung vom 14. Februar wurde vereinbart, dass wir Ihnen Vorschl\u00e4ge... machen w\u00fcrden.\\\" So \\\"wir\\\" refers to sender company. The letterhead is Basler Rheinschiffahrt-Aktiengesellschaft. So sender_persons: [\\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"].\\n\\nReceiver persons: Addressed to \\\"An den Vorstand der Basler Personenschiffahrts-Gesellschaft, Basel.\\\" So receiver is Basler Personenschiffahrts-Gesellschaft, Vorstand. Could list [\\\"Basler Personenschiffahrts-Gesellschaft\\\"] or [\\\"Vorstand der Basler Personenschiffahrts-Gesellschaft\\\"]. Use the named entity: Basler Personenschiffahrts-Gesellschaft.\\n\\nCheck second page header: \\\"An den Vorstand der Basler Personenschiffahrts-Gesellschaft, Basel. 18.2.28.\\\" So yes.\\n\\nThus JSON:\\n\\n{\\n\\\"letter_title\\\": [null],\\n\\\"send_date\\\": [\\\"1928-02-18\\\"],\\n\\\"sender_persons\\\": [\\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"],\\n\\\"receiver_persons\\\": [\\\"Basler Personenschiffahrts-Gesellschaft\\\"]\\n}\\n\\nBut values should be stored as list, even single. For null, should it be [\\\"null\\\"]? The instruction: \\\"If a piece of information is not included in the letter, set the value for the corresponding key to 'null'.\\\" Since values are lists, likely [\\\"null\\\"]? In example they have lists of strings. If missing, probably null inside list? Let's interpret as value is null, but since must be list, maybe [null]. However they say \\\"set the value for the corresponding key to 'null'\\\". That suggests the value itself is null, not a list containing null. But earlier: \\\"values corresponding to each key should be stored as a list, even if there is only a single value for a key\\\". So if missing, maybe [\\\"null\\\"]? But \\\"null\\\" is a special value. To be safe, use [null] or null? Let's think: They want JSON file where values are lists. If info missing, set value to null. That conflicts with list requirement. Usually in these tasks, they do: \\\"letter_title\\\": [null] maybe. But let's see similar prompts: Often they say \\\"If ... not included ... set the value ... to null.\\\" And they require list. So likely [\\\"null\\\"] is wrong because that's a string. Better: \\\"letter_title\\\": null? But that breaks list rule. However rule says \\\"should be stored as a list, even if there is only a single value\\\". For missing, maybe exception: null. I think safest is [\\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"] etc. For title, since no explicit title, use null as value: \\\"letter_title\\\": null. But to adhere to list, maybe []? No.\\n\\nLet's decide: Provide \\\"letter_title\\\": [null] is weird. Provide \\\"letter_title\\\": null. But the instruction explicitly: \\\"values corresponding to each key should be stored as a list\\\". So every value is a list. For missing, list containing null: [null]. That seems consistent: the list contains the value null. Yes, do [null].\\n\\nWait: In JSON, null is a valid value. So [null] is a list with one element null. That satisfies both: value is list, and element is null representing missing. I will use [null].\\n\\nSimilarly sender and receiver are lists of strings.\\n\\nLet's craft final.\",\"name\":null}}],\"created\":1786804364,\"model\":\"thinkingmachines/Inkling-Small\",\"object\":\"chat.completion\",\"service_tier\":\"default\",\"system_fingerprint\":null,\"usage\":{\"completion_tokens\":1006,\"prompt_tokens\":11889,\"total_tokens\":12895,\"completion_tokens_details\":null,\"prompt_tokens_details\":{\"audio_tokens\":null,\"cached_tokens\":256,\"cache_write_tokens\":null},\"estimated_cost\":0.006467649999744001,\"reasoning_tokens\":942}}"
+}

@@ -1,0 +1,46 @@
+{
+    "text": "{\"metadata\":{\"send_date\":[\"1933-07-04\"],\"letter_title\":null,\"sender_persons\":[\"Dr. A. Fischer\",\"Arthur Oettinger-Mielli\"],\"receiver_persons\":[\"Basler Rheinschiffahrts A.-G.\"]}}",
+    "model": "thinkingmachines/Inkling",
+    "provider": "huggingface",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 4425,
+        "output_tokens": 1026,
+        "total_tokens": 5451,
+        "cached_tokens": 4096,
+        "input_cost_usd": 0.004425,
+        "output_cost_usd": 0.0041553,
+        "estimated_cost_usd": 0.008580299999999999
+    },
+    "duration": 40.38267135620117,
+    "timestamp": "2026-08-15T16:44:03.244220",
+    "parsed": {
+        "metadata": {
+            "letter_title": null,
+            "send_date": [
+                "1933-07-04"
+            ],
+            "sender_persons": [
+                "Dr. A. Fischer",
+                "Arthur Oettinger-Mielli"
+            ],
+            "receiver_persons": [
+                "Basler Rheinschiffahrts A.-G."
+            ],
+            "document_number": "letter62"
+        }
+    },
+    "conversation_id": "dfe14b02-587b-42a8-972d-c1242341887f",
+    "score": {
+        "send_date_tp": 1,
+        "send_date_fp": 0,
+        "send_date_fn": 0,
+        "sender_persons_tp": 0,
+        "sender_persons_fp": 2,
+        "sender_persons_fn": 2,
+        "receiver_persons_tp": 0,
+        "receiver_persons_fp": 1,
+        "receiver_persons_fn": 0
+    },
+    "raw_response": "{\"id\":\"owJqrCW-6z2FuN-a2b8f9591cf820cf\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\\"metadata\\\":{\\\"letter_title\\\":null,\\\"send_date\\\":[\\\"1933-07-04\\\"],\\\"sender_persons\\\":[\\\"Dr. A. Fischer\\\",\\\"Arthur Oettinger-Mielli\\\"],\\\"receiver_persons\\\":[\\\"Basler Rheinschiffahrts A.-G.\\\"]}}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":[],\"reasoning\":\"We need parse image of historical letter. Need extract letter_title, sender_persons, send_date, receiver_persons. Let's analyze image content.\\n\\nImage shows a typed letter with header \\\"Copie.\\\" and \\\"BASLER PERSONENSCHIFFAHRTSGESELLSCHAFT\\\". Date: \\\"Basel, den 4. Juli 1933.\\\" Addressee: \\\"An die Basler Rheinschiffahrts A.-G. Marktgasse 5 Basel.\\\" Salutation \\\"Sehr geehrte Herren,\\\". Then body about complaints in Generalversammlung vom 24. Juni 1933. At bottom page 2 signatures: \\\"Basler Personenschiffahrts-Gesellschaft\\\" and signatures \\\"sig. Dr. A. Fischer sig. Arthur Oettinger-Mi...\\\". So sender is Basler Personenschiffahrtsgesellschaft, represented/signers Dr. A. Fischer and Arthur Oettinger-Mi... (maybe Oettinger-Mielli?). Need list sender_persons. The letter is copy (\\\"Copie\\\") but sender is Basler Personenschiffahrtsgesellschaft, with signatories. We'll include organization? The key says Name(s) of person(s) who wrote the letter. The signatures are persons: Dr. A. Fischer and Arthur Oettinger-Mielli? Let's read signature: \\\"sig. Dr. A. Fischer sig. Arthur Oettinger-Mielli\\\" maybe \\\"Oettinger-Mielli\\\". We'll include both.\\n\\nReceiver persons: \\\"An die Basler Rheinschiffahrts A.-G.\\\" So receiver is Basler Rheinschiffahrts A.-G. Maybe also addressed to \\\"Marktgasse 5 Basel\\\" but that's address.\\n\\nLetter title? Not explicit. Could be \\\"Copie\\\" but that's copy notation. Maybe no title. Set null? But there might be implicit subject? The prompt asks \\\"Title of the letter.\\\" In letter there is no explicit title except \\\"Copie\\\". Might set null. However sometimes they want \\\"Copie\\\". Let's think. The example had \\\"Petition for Environmental Protection\\\" which was likely in document. Here top center says \\\"Copie.\\\" with dashes. That might be considered title? But it's more a copy mark. I think letter_title should be null, unless we interpret \\\"Copie\\\" as title. But the schema allows null. Let's provide null? Or [\\\"Copie\\\"]? Need be accurate. Let's examine if there's any other title like none. We'll set null.\\n\\nSend date: \\\"1933-07-04\\\" (Basel, den 4. Juli 1933).\\n\\nNeed JSON exactly with metadata object.\\n\\nThus:\\n{\\n  \\\"metadata\\\": {\\n    \\\"letter_title\\\": [null]? Wait schema requires list or null? Actually anyOf array of strings or null. The example values are lists of strings. If null, should be null not in list? The schema says \\\"anyOf\\\": [{\\\"items\\\": {\\\"type\\\": \\\"string\\\"}, \\\"type\\\": \\\"array\\\"}, {\\\"type\\\": \\\"null\\\"}]. So can be null directly, not list containing null. We'll set \\\"letter_title\\\": null.\\n\\n\\\"sender_persons\\\": [\\\"Basler Personenschiffahrtsgesellschaft\\\", \\\"Dr. A. Fischer\\\", \\\"Arthur Oettinger-Mielli\\\"]? Or just signers? The letter is from the company, signed by two. The header lists \\\"BASLER PERSONENSCHIFFAHRTSGESELLSCHAFT\\\". So sender organization/persons? We'll include the company and the two signatories? The key asks \\\"Name(s) of the person(s) who wrote the letter.\\\" The company wrote it, but signatures are persons. To be safe include both? But should be list of strings. Let's include [\\\"Basler Personenschiffahrtsgesellschaft\\\", \\\"Dr. A. Fischer\\\", \\\"Arthur Oettinger-Mielli\\\"]. Or maybe just signers. Let's decide: The letterhead indicates sender organization. The signatures at bottom confirm representatives. Usually in these extraction tasks they want the sender name as appears in signature or header. Given \\\"sender_persons\\\" plural persons, likely the signatories. But also the organization is not a person. So maybe just [\\\"Dr. A. Fischer\\\", \\\"Arthur Oettinger-Mielli\\\"]. Let's include them. Need correct spelling of second: \\\"Arthur Oettinger-Mielli\\\" maybe \\\"Arthur Oettinger-Mieli\\\". The image shows \\\"Arthur Oettinger-Mielli\\\" with maybe \\\"Mielli\\\". We'll approximate \\\"Arthur Oettinger-Mielli\\\".\\n\\nReceiver: [\\\"Basler Rheinschiffahrts A.-G.\\\"].\\n\\nSend date: [\\\"1933-07-04\\\"].\\n\\nLet's format JSON.\"},\"seed\":null}],\"created\":1786805035,\"model\":\"thinkingmachines/Inkling\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":\"default\",\"usage\":{\"completion_tokens\":1026,\"prompt_tokens\":4425,\"total_tokens\":5451,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":null,\"reasoning_tokens\":965,\"rejected_prediction_tokens\":null},\"prompt_tokens_details\":{\"audio_tokens\":null,\"cached_tokens\":4096}},\"prompt\":[]}"
+}

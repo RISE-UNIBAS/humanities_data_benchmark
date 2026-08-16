@@ -1,0 +1,44 @@
+{
+    "text": "{\"metadata\":{\"send_date\":[\"1928-05-03\"],\"letter_title\":null,\"sender_persons\":[\"Basler Rheinschiffahrt-Aktiengesellschaft\"],\"receiver_persons\":[\"Dr. Max Vischer\"]}}",
+    "model": "thinkingmachines/Inkling",
+    "provider": "huggingface",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 2254,
+        "output_tokens": 934,
+        "total_tokens": 3188,
+        "input_cost_usd": 0.002254,
+        "output_cost_usd": 0.0037827,
+        "estimated_cost_usd": 0.0060367
+    },
+    "duration": 12.708647966384888,
+    "timestamp": "2026-08-15T16:42:15.501703",
+    "parsed": {
+        "metadata": {
+            "send_date": [
+                "1928-05-03"
+            ],
+            "letter_title": null,
+            "sender_persons": [
+                "Basler Rheinschiffahrt-Aktiengesellschaft"
+            ],
+            "receiver_persons": [
+                "Dr. Max Vischer"
+            ],
+            "document_number": "letter31"
+        }
+    },
+    "conversation_id": "ba1f2175-92d1-4392-8dea-ea4b38d446e0",
+    "score": {
+        "send_date_tp": 1,
+        "send_date_fp": 0,
+        "send_date_fn": 0,
+        "sender_persons_tp": 0,
+        "sender_persons_fp": 1,
+        "sender_persons_fn": 2,
+        "receiver_persons_tp": 1,
+        "receiver_persons_fp": 0,
+        "receiver_persons_fn": 0
+    },
+    "raw_response": "{\"id\":\"owJqHiS-6z2FuN-a2b8f6b4bea01715\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\n  \\\"metadata\\\": {\\n    \\\"send_date\\\": [\\\"1928-05-03\\\"],\\n    \\\"letter_title\\\": null,\\n    \\\"sender_persons\\\": [\\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"],\\n    \\\"receiver_persons\\\": [\\\"Dr. Max Vischer\\\"]\\n  }\\n}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"metadata\":{\"send_date\":[\"1928-05-03\"],\"letter_title\":null,\"sender_persons\":[\"Basler Rheinschiffahrt-Aktiengesellschaft\"],\"receiver_persons\":[\"Dr. Max Vischer\"]}},\"reasoning\":\"We need parse image of historical letter. Need extract letter_title, sender_persons, send_date, receiver_persons. Let's analyze visible text.\\n\\nTop left: \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\" etc. Top right: \\\"Basel, den 3. Mai 1928.\\\" So send_date 1928-05-03.\\n\\nAddressed to: \\\"Herrn Dr. Max Vischer, Basel. St. Albengraben.\\\" So receiver_persons [\\\"Dr. Max Vischer\\\"] maybe include location? Just name.\\n\\nLetter content mentions article in No. 4 der Rheinquellen. Need title? The prompt asks \\\"letter_title: Title of the letter.\\\" Might be absent, but maybe there is a subject/title? Let's inspect. The letter doesn't have explicit title like \\\"Re: ...\\\" but could be inferred? Usually in these extraction tasks, if not present set null. But check if there's any heading/title besides sender letterhead. The letter starts with \\\"In No. 4 der Rheinquellen lesen wir...\\\" No explicit title. So letter_title likely null. However sometimes they consider the document type? But example had \\\"Petition for Environmental Protection\\\" which was likely in document. Here none visible. So null.\\n\\nSender: The letter is from Basler Rheinschiffahrt-Aktiengesellschaft, signed \\\"Hochachtend BASLER RHEINSCHIFFAHRT-AKTIENGESELLSCHAFT\\\" with signature. So sender_persons should be organization? The key says \\\"Name(s) of the person(s) who wrote the letter.\\\" But it's signed by company, not individual. Might list the company? Or maybe the signatory name is in signature but illegible. The printed name is \\\"BASLER RHEINSCHIFFAHRT-AKTIENGESELLSCHAFT\\\". So sender_persons [\\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"].\\n\\nNeed JSON only. Let's format.\\n\\nCheck date format ISO: 1928-05-03.\\n\\nThus:\\n{\\n\\\"letter_title\\\": [null? Wait they said values stored as list, even if single. If information not included set value for corresponding key to \\\"null\\\". Does that mean the list contains null? Or the value is null? In example all are lists of strings. The instruction: \\\"return them in a JSON file where the values corresponding to each key should be stored as a list, even if there is only a single value for a key\\\" and \\\"If a piece of information is not included in the letter, set the value for the corresponding key to 'null'.\\\" This is ambiguous: should it be [\\\"null\\\"] or null? Usually they want the value to be null, not inside list? But they said values corresponding to each key should be stored as a list. So likely [\\\"null\\\"]? Let's examine example: all values are lists. For missing, they said set the value ... to \\\"null\\\". That could mean the list is null? But that violates \\\"stored as a list\\\". However in many similar prompts, they want null as the JSON value (not in list) despite list instruction? Let's think carefully.\\n\\nThe prompt: \\\"extract the values of the following keys from the letter and return them in a JSON file where the values corresponding to each key should be stored as a list, even if there is only a single value for a key\\\"\\n\\nThen: \\\"If a piece of information is not included in the letter, set the value for the corresponding key to \\\"null\\\".\\\"\\n\\nThis suggests that normally value is a list, but if missing, replace the list with null. So key: \\\"letter_title\\\": null. Yes that sounds right. Let's do that.\\n\\nBut wait they said \\\"values corresponding to each key should be stored as a list\\\" - that applies when present. If absent, null.\\n\\nThus:\\n{\\n\\\"letter_title\\\": null,\\n\\\"sender_persons\\\": [\\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"],\\n\\\"send_date\\\": [\\\"1928-05-03\\\"],\\n\\\"receiver_persons\\\": [\\\"Dr. Max Vischer\\\"]\\n}\\n\\nNeed check if sender person might include signatory? The signature is illegible, but printed company name is there. We'll use company.\\n\\nLet's provide exactly.\"},\"seed\":null}],\"created\":1786804925,\"model\":\"thinkingmachines/Inkling\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":\"default\",\"usage\":{\"completion_tokens\":934,\"prompt_tokens\":2254,\"total_tokens\":3188,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":null,\"reasoning_tokens\":867,\"rejected_prediction_tokens\":null},\"prompt_tokens_details\":{\"audio_tokens\":null,\"cached_tokens\":0}},\"prompt\":[]}"
+}

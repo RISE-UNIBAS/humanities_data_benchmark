@@ -1,0 +1,73 @@
+{
+    "text": "{\"advertisements\":[{\"box\":[322.0,281.0,2281.0,1649.0]},{\"box\":[322.0,1684.0,2281.0,2035.0]},{\"box\":[322.0,2070.0,1264.0,2421.0]},{\"box\":[1313.0,2070.0,2281.0,2421.0]},{\"box\":[322.0,2456.0,2281.0,3087.0]}]}",
+    "model": "meta-models/Muse-Glimmer-30B",
+    "provider": "huggingface",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 3916,
+        "output_tokens": 1708,
+        "total_tokens": 5624,
+        "cached_tokens": 48,
+        "input_cost_usd": 0.0013706,
+        "output_cost_usd": 0.002562,
+        "estimated_cost_usd": 0.0039326
+    },
+    "duration": 20.2203311920166,
+    "timestamp": "2026-08-16T03:38:59.780060",
+    "parsed": {
+        "advertisements": [
+            {
+                "box": [
+                    322.0,
+                    281.0,
+                    2281.0,
+                    1649.0
+                ]
+            },
+            {
+                "box": [
+                    322.0,
+                    1684.0,
+                    2281.0,
+                    2035.0
+                ]
+            },
+            {
+                "box": [
+                    322.0,
+                    2070.0,
+                    1264.0,
+                    2421.0
+                ]
+            },
+            {
+                "box": [
+                    1313.0,
+                    2070.0,
+                    2281.0,
+                    2421.0
+                ]
+            },
+            {
+                "box": [
+                    322.0,
+                    2456.0,
+                    2281.0,
+                    3087.0
+                ]
+            }
+        ]
+    },
+    "conversation_id": "3b48687b-abc4-4a0d-8be7-ab48e8d0ea4b",
+    "score": {
+        "f1": 1.0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "mean_iou": 0.928,
+        "true_positives": 5,
+        "false_positives": 0,
+        "false_negatives": 0,
+        "iou_threshold": 0.5
+    },
+    "raw_response": "{\"id\":\"owNKCnx-fdNmn-a2bcb889da31d88a\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{  \\n\\\"advertisements\\\": [  \\n{  \\n\\\"box\\\": [322, 281, 2281, 1649]  \\n},  \\n{  \\n\\\"box\\\": [322, 1684, 2281, 2035]  \\n},  \\n{  \\n\\\"box\\\": [322, 2070, 1264, 2421]  \\n},  \\n{  \\n\\\"box\\\": [1313, 2070, 2281, 2421]  \\n},  \\n{  \\n\\\"box\\\": [322, 2456, 2281, 3087]  \\n}  \\n]  \\n}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"advertisements\":[{\"box\":[322.0,281.0,2281.0,1649.0]},{\"box\":[322.0,1684.0,2281.0,2035.0]},{\"box\":[322.0,2070.0,1264.0,2421.0]},{\"box\":[1313.0,2070.0,2281.0,2421.0]},{\"box\":[322.0,2456.0,2281.0,3087.0]}]},\"reasoning\":\"Extract all advertisements and return their bounding boxes.\\nThe original size of the page is 2479 x 3508 pixels.\\n\\nI see page with multiple ads. Likely:\\n\\n1. J. R. GEIGY, Soc. An. large ad at top.\\n2. BUSINESS MEN! WHEN IN BASEL LUNCH... ad middle.\\n3. Emil Birkh\u00e4user & Co., Basle ad left lower.\\n4. ASK FOR THE TRADE INDEX OF THE BRITISH CHAMBER... ad right lower.\\n5. THE BRITISH CHAMBER OF COMMERCE FOR SWITZERLAND offers... maybe that's not an ad? Might be a notice. But could be advertisement? Might be a section. The page is The Commercial Gazette. The British Chamber of Commerce for Switzerland offers services - maybe an ad.\\n\\nAlso maybe the top header is not ad.\\n\\nWe need bounding boxes. Need coordinates. Estimate relative. Original size 2479 x 3508.\\n\\nLet's approximate.\\n\\nTop ad: J.R. GEIGY. Bounding box from about x ~130 to 925? Wait page width 2479. The ad is within border. Approx left ~130, right ~925? Actually page is 2479 wide, but image shows page with margins. The ad spans most width. Let's estimate x_min ~ 130, x_max ~ 925? Wait 2479 is width. The page content is maybe ~ 130 to 925? No 925 is too small. Let's think: image width 2479. The page occupies maybe ~ 130 to 925? Hmm 2479 is full image width including black border. The page itself is maybe ~ 130 to 925? No.\\n\\nBetter estimate percentages. Visual: ad border left ~ 130px? Actually image has black border. Let's assume page content starts ~ 130px from left edge of image, ends ~ 925? Wait 2479 is width, so half is ~1240. The page is centered. So left margin ~ 40px? Let's approximate.\\n\\nSimpler: give coordinates as [x_min, y_min, x_max, y_max] in pixels.\\n\\nI can estimate:\\n\\nTop ad: y top ~ 80? The header \\\"14 THE COMMERCIAL GAZETTE October, 1924.\\\" is at top. Ad starts below. Approx y_min ~ 80? Actually top of ad border ~ 80? Let's say y_min ~ 80? Hmm.\\n\\nMaybe better to give approximate bounding boxes with reasonable values.\\n\\nLet's assume image coordinates origin top-left.\\n\\nTop ad border: x ~ 130, y ~ 80, x ~ 925? Wait width of ad is about 80% of page width. Page width maybe ~ 2300? Hmm.\\n\\nAlternative: use relative coordinates 0-1 then convert. Might be okay to give approximate.\\n\\nI'll estimate:\\n\\nPage content width ~ 2300? Let's assume left margin ~ 90, right margin ~ 90. So content width ~ 2300. Ad spans ~ 130 to 925? No.\\n\\nLet's look at image: the ad border is inset about 5% from left/right. So x_min ~ 0.13*2479 \u2248 322. x_max ~ 0.92*2479 \u2248 2280. y_min ~ 0.08*3508 \u2248 281. y_max ~ 0.47*3508 \u2248 1650.\\n\\nSecond ad: BUSINESS MEN! WHEN IN BASEL. That's a horizontal strip below first ad. y ~ 0.48 to 0.58. x similar.\\n\\nThird ad: Emil Birkh\u00e4user & Co. left box. x ~ 0.13 to 0.51. y ~ 0.59 to 0.69.\\n\\nFourth ad: TRADE INDEX right box. x ~ 0.53 to 0.92. y ~ 0.59 to 0.69.\\n\\nFifth: THE BRITISH CHAMBER OF COMMERCE FOR SWITZERLAND. That's a big box at bottom. x ~ 0.13 to 0.92. y ~ 0.70 to 0.88.\\n\\nLet's compute approximate pixel values.\\n\\nCompute:\\n\\nx_min1 = 0.13*2479 = 322.27 \u2248 322\\nx_max1 = 0.92*2479 = 2280.68 \u2248 2281\\ny_min1 = 0.08*3508 = 280.64 \u2248 281\\ny_max1 = 0.47*3508 = 1648.76 \u2248 1649\\n\\nAd2: BUSINESS MEN!\\nx_min2 = 322\\nx_max2 = 2281\\ny_min2 = 0.48*3508 = 1683.84 \u2248 1684\\ny_max2 = 0.58*3508 = 2034.64 \u2248 2035\\n\\nAd3: Emil Birkh\u00e4user\\nx_min3 = 0.13*2479 = 322\\nx_max3 = 0.51*2479 = 1264.29 \u2248 1264\\ny_min3 = 0.59*3508 = 2070. \u2248 2070\\ny_max3 = 0.69*3508 = 2420.52 \u2248 2421\\n\\nAd4: TRADE INDEX\\nx_min4 = 0.53*2479 = 1312.87 \u2248 1313\\nx_max4 = 0.92*2479 = 2281\\ny_min4 = 2070\\ny_max4 = 2421\\n\\nAd5: BRITISH CHAMBER OF COMMERCE FOR SWITZERLAND\\nx_min5 = 0.13*2479 = 322\\nx_max5 = 0.92*2479 = 2281\\ny_min5 = 0.70*3508 = 2455.6 \u2248 2456\\ny_max5 = 0.88*3508 = 3087.04 \u2248 3087\\n\\nMight be okay.\\n\\nMaybe the British Chamber section is not an advertisement but a listing. But it looks like an ad.\\n\\nCould also consider the \\\"BUSINESS MEN! WHEN IN BASEL LUNCH...\\\" as one ad.\\n\\nReturn bounding boxes list.\\n\\nI'll output as JSON or list.\\n\\nProbably want each ad with description and coordinates.\\n\\nI'll provide approximate boxes.\\n\\nLet's refine a bit: top ad y_max maybe 0.47. Could be 0.46. Let's keep.\\n\\nI'll output:\\n\\n1. J. R. GEIGY, Soc. An. \u2013 [322, 281, 2281, 1649]\\n2. BUSINESS MEN! / WHEN IN BASEL LUNCH AT THE TERRASSE-RESTAURANT KUNSTHALLE \u2013 [322, 1684, 2281, 2035]\\n3. Emil Birkh\u00e4user & Co., Basle \u2013 [322, 2070, 1264, 2421]\\n4. ASK FOR THE TRADE INDEX OF THE BRITISH CHAMBER OF COMMERCE FOR SWITZERLAND \u2013 [1313, 2070, 2281, 2421]\\n5. THE BRITISH CHAMBER OF COMMERCE FOR SWITZERLAND offers services \u2013 [322, 2456, 2281, 3087]\\n\\nIf they only want advertisements, maybe the last one is not an ad but a notice. Could exclude. But I'll include.\\n\\nProvide answer.\\n\\nLet's output clearly.\"},\"token_ids\":null,\"routed_experts\":null,\"seed\":null}],\"created\":1786844320,\"model\":\"meta-models/Muse-Glimmer-30B\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":\"vllm-0.1.dev19059+g66826a22d-tp2-46311a71\",\"usage\":{\"completion_tokens\":1708,\"prompt_tokens\":3916,\"total_tokens\":5624,\"completion_tokens_details\":null,\"prompt_tokens_details\":{\"audio_tokens\":null,\"cached_tokens\":48,\"created_cache_tokens\":3856,\"multimodal_tokens\":{\"image\":3850}}},\"prompt_token_ids\":null,\"prompt_text\":null,\"kv_transfer_params\":null,\"ec_transfer_params\":null,\"metrics\":null,\"prompt\":[]}"
+}

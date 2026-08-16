@@ -1,0 +1,45 @@
+{
+    "text": "{\"metadata\":{\"send_date\":[\"1926-03-04\"],\"letter_title\":null,\"sender_persons\":[\"Basler Rheinschiffahrt-Aktiengesellschaft\"],\"receiver_persons\":[\"P. Christ-Wackernagel\"]}}",
+    "model": "thinkingmachines/Inkling",
+    "provider": "huggingface",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 10203,
+        "output_tokens": 1522,
+        "total_tokens": 11725,
+        "cached_tokens": 9856,
+        "input_cost_usd": 0.010203,
+        "output_cost_usd": 0.0061641,
+        "estimated_cost_usd": 0.0163671
+    },
+    "duration": 43.51758289337158,
+    "timestamp": "2026-08-15T16:39:36.033375",
+    "parsed": {
+        "metadata": {
+            "letter_title": null,
+            "send_date": [
+                "1926-03-04"
+            ],
+            "sender_persons": [
+                "Basler Rheinschiffahrt-Aktiengesellschaft"
+            ],
+            "receiver_persons": [
+                "P. Christ-Wackernagel"
+            ],
+            "document_number": "letter02"
+        }
+    },
+    "conversation_id": "86285387-ed99-438a-82e9-8c2bda9ab564",
+    "score": {
+        "send_date_tp": 1,
+        "send_date_fp": 0,
+        "send_date_fn": 0,
+        "sender_persons_tp": 0,
+        "sender_persons_fp": 1,
+        "sender_persons_fn": 1,
+        "receiver_persons_tp": 1,
+        "receiver_persons_fp": 0,
+        "receiver_persons_fn": 0
+    },
+    "raw_response": "{\"id\":\"owJqDuH-31r7CA-a2b8f2ab2bcdb4c2\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\n  \\\"metadata\\\": {\\n    \\\"letter_title\\\": null,\\n    \\\"send_date\\\": [\\\"1926-03-04\\\"],\\n    \\\"sender_persons\\\": [\\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"],\\n    \\\"receiver_persons\\\": [\\\"P. Christ-Wackernagel\\\"]\\n  }\\n}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":[],\"reasoning\":\"We need parse images of historical letter, extract keys: letter_title, sender_persons, send_date, receiver_persons. Need return JSON exactly with metadata object.\\n\\nLet's analyze images.\\n\\nImage 1: Header \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\" address etc. Date \\\"Basel, den 4. M\u00e4rz 1926.\\\" Addressee: \\\"Herrn P. Christ - Wackernagel, i/Fa. Paravicini, Christ & Co., Basel. Kaufhausgasse 7.\\\" Then salutation \\\"Sehr geehrter Herr Christ,\\\". So sender is Basler Rheinschiffahrt-Aktiengesellschaft? Or maybe signed later. Need determine sender_persons and receiver_persons, letter_title, send_date.\\n\\nImage 2: Page 2 header \\\"Herrn Christ, Basel. 4.3.26.\\\" So date 4 March 1926.\\n\\nImage 3: Page 3 header \\\"Herrn Christ, Basel. 4.3.26.\\\"\\n\\nImage 4: Page 4 header \\\"Herrn Christ, Basel. 4.3.26.\\\"\\n\\nImage 5: Page 5 header \\\"Herrn Christ, Basel. 4.3.26.\\\" Closing \\\"Hochachtend BASLER RHEINSCHIFFAHRT-AKTIENGESELLSCHAFT Der Pr\u00e4sident\\\" with signature. So sender is Basler Rheinschiffahrt-Aktiengesellschaft, specifically Der Pr\u00e4sident? The key asks \\\"Name(s) of the person(s) who wrote the letter.\\\" The letter is from the company, signed by Der Pr\u00e4sident (President) but name not readable? The signature is illegible, maybe \\\"C. M...\\\" Not clear. But likely sender_persons should be \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\" or \\\"Der Pr\u00e4sident\\\". Let's examine context: The letterhead is Basler Rheinschiffahrt-Aktiengesellschaft. The closing says \\\"BASLER RHEINSCHIFFAHRT-AKTIENGESELLSCHAFT Der Pr\u00e4sident\\\". So the sender entity is the company, represented by its president. Since they ask \\\"Name(s) of the person(s)\\\" maybe include company? But \\\"persons\\\" implies individuals. However in example they used \\\"Lisa Simpson\\\". Here we might put [\\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"]? Or maybe the president's name is in signature but unreadable. Let's check signature: Looks like \\\"E. M\u00fcller\\\"? Actually hard to tell. But likely not required to decipher signature if not clear. However there might be a printed name? No, only \\\"Der Pr\u00e4sident\\\" and then signature. So sender_persons could be [\\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"] since that's the identifiable sender. Or [\\\"Der Pr\u00e4sident der Basler Rheinschiffahrt-Aktiengesellschaft\\\"]. Let's hold that.\\n\\nReceiver: \\\"Herr P. Christ\\\" or \\\"Herrn P. Christ - Wackernagel\\\" addressed. So receiver_persons: [\\\"P. Christ\\\", \\\"Wackernagel\\\"? Actually \\\"Herrn P. Christ - Wackernagel, i/Fa. Paravicini, Christ & Co.\\\" So maybe \\\"P. Christ-Wackernagel\\\" or \\\"P. Christ\\\". We'll include \\\"P. Christ-Wackernagel\\\" or \\\"P. Christ\\\". Let's use \\\"P. Christ-Wackernagel\\\" since that's the full name in address. But salutation is \\\"Herr Christ\\\". So receiver_persons: [\\\"P. Christ-Wackernagel\\\"] or [\\\"Herr P. Christ\\\"]. We'll put [\\\"P. Christ-Wackernagel\\\"].\\n\\nLetter title: Not explicitly given. Could be null? Or maybe there is a subject? The letter discusses cooperation between ships \\\"Vogel-Gryf\\\" and \\\"Rheinfelden\\\" during international exhibition for inland navigation and water power utilization in Basel. But no explicit title. So letter_title: null? Or maybe we can derive \\\"Betriebsgemeinschaft\\\" but not title. The prompt says \\\"Title of the letter.\\\" If not included, set null. So letter_title: null? But sometimes letters have no title. We'll set null.\\n\\nSend date: \\\"4. M\u00e4rz 1926\\\" -> 1926-03-04.\\n\\nNeed output in JSON with metadata object.\\n\\nCheck schema: {\\\"metadata\\\": {\\\"letter_title\\\": ..., \\\"send_date\\\": ..., \\\"sender_persons\\\": ..., \\\"receiver_persons\\\": ...}}\\n\\nValues should be lists, even if single. So:\\n\\n{\\n  \\\"metadata\\\": {\\n    \\\"letter_title\\\": [null? Wait schema says anyOf array of strings or null. But they said values corresponding to each key should be stored as a list, even if single value. For null, should it be [null] or null? The example shows lists of strings. The instruction: \\\"return them in a JSON file where the values corresponding to each key should be stored as a list, even if there is only a single value for a key\\\". If information not included, set value for corresponding key to \\\"null\\\". That suggests the value itself is null, not in a list? But they said stored as a list. There's ambiguity. Let's check schema: \\\"send_date\\\": {\\\"anyOf\\\": [{\\\"items\\\": {\\\"type\\\": \\\"string\\\"}, \\\"type\\\": \\\"array\\\"}, {\\\"type\\\": \\\"null\\\"}]... So it allows either an array of strings or null. So if missing, we should put null (not [null]). For present values, put array of strings. So letter_title missing -> null. Others present -> arrays.\\n\\nThus:\\n\\nletter_title: null\\nsend_date: [\\\"1926-03-04\\\"]\\nsender_persons: [\\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"] maybe also include president? Let's think. The closing is signed by Der Pr\u00e4sident. But name is not readable. So best to use company name. Or \\\"Basler Rheinschiffahrt-Aktiengesellschaft, Der Pr\u00e4sident\\\". But that's not a person name. Given the prompt asks \\\"Name(s) of the person(s) who wrote the letter\\\" and the letterhead is the company, but actually it's written by the president on behalf. Since we can't read name, we'll use the company as sender? But that's not a person. However it's acceptable in extraction? Let's check similar tasks: Usually they extract the signatory name if present. Here it's \\\"Der Pr\u00e4sident\\\" with signature. Maybe the signature reads \\\"C. Mory\\\"? Actually let's examine image 5 signature: It's a cursive signature, maybe \\\"C. Mory\\\"? Not clear. Given uncertainty, using the organization might be safer. But the key is \\\"sender_persons\\\" plural persons. Could be [\\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"]. Let's go with that. Or maybe include both? No.\\n\\nReceiver_persons: [\\\"P. Christ-Wackernagel\\\"] or [\\\"Herr P. Christ\\\"]. Let's use [\\\"P. Christ-Wackernagel\\\"] since that's in address.\\n\\nThus final JSON.\"},\"seed\":null}],\"created\":1786804913,\"model\":\"thinkingmachines/Inkling\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":\"default\",\"usage\":{\"completion_tokens\":1522,\"prompt_tokens\":10203,\"total_tokens\":11725,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":null,\"reasoning_tokens\":1453,\"rejected_prediction_tokens\":null},\"prompt_tokens_details\":{\"audio_tokens\":null,\"cached_tokens\":9856}},\"prompt\":[]}"
+}

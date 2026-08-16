@@ -1,0 +1,47 @@
+{
+    "text": "{\"metadata\":{\"send_date\":[\"1928-05-31\"],\"letter_title\":[\"\"],\"sender_persons\":[\"W. Kauffmann\"],\"receiver_persons\":[\"Dr. Max Vischer\"]}}",
+    "model": "thinkingmachines/Inkling",
+    "provider": "huggingface",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 2254,
+        "output_tokens": 1384,
+        "total_tokens": 3638,
+        "cached_tokens": 256,
+        "input_cost_usd": 0.002254,
+        "output_cost_usd": 0.0056052,
+        "estimated_cost_usd": 0.0078592
+    },
+    "duration": 16.798807621002197,
+    "timestamp": "2026-08-15T16:42:32.305751",
+    "parsed": {
+        "metadata": {
+            "send_date": [
+                "1928-05-31"
+            ],
+            "letter_title": [
+                ""
+            ],
+            "sender_persons": [
+                "W. Kauffmann"
+            ],
+            "receiver_persons": [
+                "Dr. Max Vischer"
+            ],
+            "document_number": "letter42"
+        }
+    },
+    "conversation_id": "19918e8a-b15c-4f74-81a8-e5e50dbd67de",
+    "score": {
+        "send_date_tp": 1,
+        "send_date_fp": 0,
+        "send_date_fn": 0,
+        "sender_persons_tp": 0,
+        "sender_persons_fp": 1,
+        "sender_persons_fn": 1,
+        "receiver_persons_tp": 1,
+        "receiver_persons_fp": 0,
+        "receiver_persons_fn": 0
+    },
+    "raw_response": "{\"id\":\"owJqMEb-6z2FuN-a2b8f7042c331585\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\n  \\\"metadata\\\": {\\n    \\\"send_date\\\": [\\\"1928-05-31\\\"],\\n    \\\"letter_title\\\": [\\\"\\\"],\\n    \\\"sender_persons\\\": [\\\"W. Kauffmann\\\"],\\n    \\\"receiver_persons\\\": [\\\"Dr. Max Vischer\\\"]\\n  }\\n}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"metadata\":{\"send_date\":[\"1928-05-31\"],\"letter_title\":[\"\"],\"sender_persons\":[\"W. Kauffmann\"],\"receiver_persons\":[\"Dr. Max Vischer\"]}},\"reasoning\":\"We need parse image of letter. Need extract letter_title, sender_persons, send_date, receiver_persons. Let's analyze visible text.\\n\\nTop right: KLUSERSTRASSE 25 and number 42.\\n\\nThen \\\"Basel, den 31. Mai 1928.\\\" So send_date 1928-05-31.\\n\\nAddress:\\nHerrn Dr. Max Vischer,\\nSt. Albengraben 8,\\nB A S E L.\\n\\nSalutation \\\"Sehr geehrter Herr,\\\" then body. Closing \\\"Mit meinen freundlichsten Gr\u00fcssen verbleibe ich hochachtungsvoll Ihr\\\" then signature handwritten, likely \\\"W. Kauffmann\\\"? Need determine sender name. The signature looks like \\\"W. Kauffmann\\\" or \\\"W. Kauffmann\\\"? Actually might be \\\"W. Kauffmann\\\" but need be precise? Let's inspect mental image: signature in cursive, maybe \\\"W. Kauffmann\\\" with capital K? Or \\\"W. Hauffmann\\\"? Let's think. But we just need name(s) of person(s) who wrote letter. The signature is present but not clearly readable? Let's examine: The letters appear \\\"W. Kauffmann\\\"? Actually there is a well-known Swiss figure? Not necessary. We'll extract as visible signature: maybe \\\"W. Kauffmann\\\". But need be accurate based on image. Let's parse signature: First initial \\\"W\\\" then period, then capital letter maybe \\\"K\\\" with loops, then \\\"a u f f m a n n\\\"? Hmm \\\"Kauffmann\\\" is plausible. Another possibility \\\"W. Stauffacher\\\"? No, the shape: after capital, there's \\\"a\\\", \\\"u\\\", \\\"f\\\", \\\"f\\\", \\\"m\\\", \\\"a\\\", \\\"n\\\", \\\"n\\\"? Yes \\\"Kauffmann\\\". So sender_persons [\\\"W. Kauffmann\\\"]? Or full first name unknown, just initial. We'll put [\\\"W. Kauffmann\\\"].\\n\\nLetter title? Not present explicitly. So null? The prompt says if not included set null. There's no title like \\\"Re: ...\\\" So letter_title [\\\"null\\\"]? Actually value should be stored as list, even if null? The example shows lists of strings. For missing, probably [\\\"null\\\"]? The instruction: \\\"If a piece of information is not included in the letter, set the value for the corresponding key to 'null'.\\\" Usually in JSON, value is null, but they said store values as list. So likely [\\\"null\\\"]? Or null? Let's check example: all present. Need decide. Probably they want list containing null? But \\\"set the value for the corresponding key to 'null'\\\" could mean the list contains the string \\\"null\\\"? Hmm in many extraction tasks, they do \\\"letter_title\\\": null if missing, but they said values corresponding to each key should be stored as a list, even if single value. So maybe \\\"letter_title\\\": [null]. But JSON can have null inside list. Let's do [null]. But sometimes they want string \\\"null\\\". Let's think: They said \\\"set the value for the corresponding key to 'null'\\\". If key's value is a list, then value is [null]? Actually \\\"value for the corresponding key\\\" is the list. So setting it to \\\"null\\\" conflicts with list requirement. But they said \\\"where the values corresponding to each key should be stored as a list, even if there is only a single value for a key\\\". So the value is always a list. Then \\\"set the value ... to 'null'\\\" likely means the list should contain null? Or maybe they allow breaking the list rule for missing? Usually in these prompts, they want e.g., \\\"letter_title\\\": [\\\"null\\\"]? Let's examine consistency: If information not included, set value to \\\"null\\\". If we must store as list, then [\\\"null\\\"]. But that is a list containing string \\\"null\\\". That might be correct for automated parsing. Let's do [\\\"null\\\"]? Hmm but in example they have lists of strings. For missing, string \\\"null\\\" inside list is readable. But they said \\\"to 'null'\\\" with quotes, indicating the JSON null? Actually they wrote 'null' in quotes in instruction? They said set the value ... to \\\"null\\\". In JSON, null is unquoted. But they put in quotes in text? They wrote: to \\\"null\\\". That suggests string? Let's check exact wording: \\\"If a piece of information is not included in the letter, set the value for the corresponding key to \\\"null\\\". Do not return anything except the JSON file.\\\" This is ambiguous. In many similar prompts, they want the JSON value null (without quotes). But they also said store as list. So maybe they want [null]. Let's provide [null] for missing? Or null? Let's decide on [null] since list required. But wait they said \\\"values corresponding to each key should be stored as a list\\\" -> so key maps to list. If missing, list is empty? No, they said set to null. So likely [null].\\n\\nBut actually letter might have implicit title? No.\\n\\nReceiver: Herr Dr. Max Vischer. So [\\\"Dr. Max Vischer\\\"] or [\\\"Max Vischer\\\"]. We'll include \\\"Dr. Max Vischer\\\" as addressed.\\n\\nThus JSON:\\n{\\n\\\"letter_title\\\": [null],\\n\\\"sender_persons\\\": [\\\"W. Kauffmann\\\"],\\n\\\"send_date\\\": [\\\"1928-05-31\\\"],\\n\\\"receiver_persons\\\": [\\\"Dr. Max Vischer\\\"]\\n}\\n\\nNeed check date format ISO: 1928-05-31 yes.\\n\\nLet's refine sender: The signature might be \\\"W. Kauffmann\\\" but could also be \\\"W. Lauffmann\\\"? Let's examine mental image: The capital letter has a loop up then down, could be \\\"L\\\" or \\\"K\\\". The surname: \\\"Lauffmann\\\"? Actually \\\"Lauffmann\\\" not common. \\\"Kauffmann\\\" is common Swiss/German name. The first letter of surname might be \\\"K\\\" with a loop on left? In cursive German, capital K often has a loop on top left then vertical stroke. The image shows a capital with a high loop then downward stroke, then \\\"a u f f m a n n\\\". Yes Kauffmann. So okay.\\n\\nOne more check: The address includes \\\"Herrn Dr. Max Vischer\\\" and location St. Albengraben 8, Basel. So receiver is Dr. Max Vischer.\\n\\nThus output.\"},\"seed\":null}],\"created\":1786804937,\"model\":\"thinkingmachines/Inkling\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":\"default\",\"usage\":{\"completion_tokens\":1384,\"prompt_tokens\":2254,\"total_tokens\":3638,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":null,\"reasoning_tokens\":1322,\"rejected_prediction_tokens\":null},\"prompt_tokens_details\":{\"audio_tokens\":null,\"cached_tokens\":256}},\"prompt\":[]}"
+}

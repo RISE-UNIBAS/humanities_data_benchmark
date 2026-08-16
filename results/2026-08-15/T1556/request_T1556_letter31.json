@@ -1,0 +1,45 @@
+{
+    "text": "{\"metadata\":{\"send_date\":[\"1928-05-03\"],\"letter_title\":null,\"sender_persons\":[\"Basler Rheinschiffahrt-Aktiengesellschaft\"],\"receiver_persons\":[\"Dr. Max Vischer\"]}}",
+    "model": "thinkingmachines/Inkling",
+    "provider": "huggingface",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 2254,
+        "output_tokens": 1424,
+        "total_tokens": 3678,
+        "cached_tokens": 256,
+        "input_cost_usd": 0.002254,
+        "output_cost_usd": 0.005767199999999999,
+        "estimated_cost_usd": 0.0080212
+    },
+    "duration": 10.102140426635742,
+    "timestamp": "2026-08-15T16:31:34.780142",
+    "parsed": {
+        "metadata": {
+            "send_date": [
+                "1928-05-03"
+            ],
+            "letter_title": null,
+            "sender_persons": [
+                "Basler Rheinschiffahrt-Aktiengesellschaft"
+            ],
+            "receiver_persons": [
+                "Dr. Max Vischer"
+            ],
+            "document_number": "letter31"
+        }
+    },
+    "conversation_id": "af7b514b-a967-4193-b897-4fc8ab56ac7a",
+    "score": {
+        "send_date_tp": 1,
+        "send_date_fp": 0,
+        "send_date_fn": 0,
+        "sender_persons_tp": 0,
+        "sender_persons_fp": 1,
+        "sender_persons_fn": 2,
+        "receiver_persons_tp": 1,
+        "receiver_persons_fp": 0,
+        "receiver_persons_fn": 0
+    },
+    "raw_response": "{\"id\":\"owJn1mF-31r7CA-a2b8e7202f62898c\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\n  \\\"metadata\\\": {\\n    \\\"send_date\\\": [\\\"1928-05-03\\\"],\\n    \\\"letter_title\\\": null,\\n    \\\"sender_persons\\\": [\\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"],\\n    \\\"receiver_persons\\\": [\\\"Dr. Max Vischer\\\"]\\n  }\\n}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"metadata\":{\"send_date\":[\"1928-05-03\"],\"letter_title\":null,\"sender_persons\":[\"Basler Rheinschiffahrt-Aktiengesellschaft\"],\"receiver_persons\":[\"Dr. Max Vischer\"]}},\"reasoning\":\"We need parse image: historical letter. Need extract letter_title, sender_persons, send_date, receiver_persons. Let's analyze visible text.\\n\\nTop left: \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\" etc. Top right: \\\"Basel, den 3. Mai 1928.\\\" So send_date 1928-05-03.\\n\\nAddressed to: \\\"Herrn Dr. Max Vischer, Basel. St. Albengraben.\\\" So receiver_persons: [\\\"Dr. Max Vischer\\\"] maybe include location? Just name.\\n\\nLetter content mentions \\\"In No. 4 der Rheinquellen lesen wir einen Artikel...\\\" No explicit title at top? Maybe letter_title is not present? But we need title of the letter. Could be absent, set null? Or maybe the letterhead serves? Let's think. The prompt asks \\\"letter_title: Title of the letter.\\\" In the letter, there might not be a specific title like \\\"Petition...\\\". However sometimes the subject can be inferred? But instructions say if not included set null. There's no explicit title line like \\\"Betreff:\\\"? Actually there might be hidden? Let's inspect mental image: The letter starts with address block then \\\"In No. 4 der Rheinquellen lesen wir...\\\" No subject heading visible. So letter_title likely null.\\n\\nSender: The letter is from Basler Rheinschiffahrt-Aktiengesellschaft, signed \\\"Hochachtend BASLER RHEINSCHIFFFAHRT-AKTIENGESELLSCHAFT\\\" with signature. So sender_persons might be the company? Or specific person? The signature is illegible but represents company. The prompt asks \\\"Name(s) of the person(s) who wrote the letter.\\\" Could be the company as sender entity? Usually in these extraction tasks, sender is the organization or signatory. Given letterhead and closing with company name, likely sender_persons: [\\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"]. But maybe also the signatory person? The signature is unreadable, but printed below \\\"BASLER RHEINSCHIFFFAHRT-AKTIENGESELLSCHAFT\\\". So we'll use company name.\\n\\nThus JSON:\\n{\\n\\\"letter_title\\\": [null? Wait values should be stored as list, even if single. If null, should it be [\\\"null\\\"]? The example shows values as lists of strings. For missing info, set value for corresponding key to \\\"null\\\". That likely means the list contains the string \\\"null\\\"? Or the value is null? The instruction: \\\"If a piece of information is not included in the letter, set the value for the corresponding key to \\\"null\\\".\\\" Given they want JSON file where values corresponding to each key should be stored as a list, even if there is only a single value. So probably [\\\"null\\\"]? But they said set the value ... to \\\"null\\\". In JSON, that could be null without quotes? But they said \\\"null\\\" in quotes? Let's check example: all values are lists of strings. For missing, likely [null] is not valid if they want list? Actually they said \\\"stored as a list, even if there is only a single value for a key\\\". So value is a list. Then \\\"set the value for the corresponding key to 'null'\\\" - this is ambiguous. Usually in these prompts they want the list to contain null? Or the value itself null breaking list rule? Let's examine consistency: They want every value a list. So if missing, probably [\\\"null\\\"]? But they said set value to \\\"null\\\" (string). However in JSON, \\\"null\\\" is a literal. But since value must be list, maybe they want [null]. Let's think about typical extraction prompts. Often they say: \\\"If a piece of information is not included in the letter, set the value for the corresponding key to null.\\\" And they also say values should be stored as a list. In many prior tasks, they still put null inside the list? Actually I've seen prompts: \\\"return them in a JSON file where the values corresponding to each key should be stored as a list... If a piece of information is not included... set the value... to null.\\\" This usually results in e.g., \\\"letter_title\\\": null, but that conflicts with list requirement. But they said values corresponding to each key should be stored as a list. So likely they want \\\"letter_title\\\": [null]? That seems odd.\\n\\nLet's check the example: all present values are lists. They don't show missing case. Given strict instruction \\\"stored as a list, even if there is only a single value\\\", I think for missing they might still want a list containing null: [null]. But they said \\\"set the value ... to 'null'\\\" with quotes indicating string? Hmm.\\n\\nLet's decide: Use [null] or null? To be safe with list rule, use [null]. But if system expects string \\\"null\\\" inside list? Let's examine wording precisely: \\\"If a piece of information is not included in the letter, set the value for the corresponding key to \\\"null\\\". Do not return anything except the JSON file.\\\" This sounds like the JSON value should be the literal null (not in a list?). But they also said values should be stored as a list. There's conflict. In such extraction templates, often they want list for each key, but if missing then null (not a list). But they said \\\"values corresponding to each key should be stored as a list\\\" - that applies when there is a value. For missing, exception: null.\\n\\nThus I might do:\\n\\\"letter_title\\\": null,\\n\\\"send_date\\\": [\\\"1928-05-03\\\"],\\n\\\"sender_persons\\\": [\\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"],\\n\\\"receiver_persons\\\": [\\\"Dr. Max Vischer\\\"]\\n\\nBut wait they said \\\"even if there is only a single value for a key\\\" -> list. So present ones in lists. For missing, null not in list. That resolves conflict. Yes, that makes sense: always list if present, but if absent then null (not a list). So letter_title: null.\\n\\nBut is there a title? Maybe \\\"R/M\\\" on left? No. So null.\\n\\nCheck sender persons: Could also include signatory name? The signature is unreadable, but printed company name. We'll use company.\\n\\nCheck date: \\\"Basel, den 3. Mai 1928.\\\" -> 1928-05-03.\\n\\nCheck receiver: \\\"Herrn Dr. Max Vischer, Basel. St. Albengraben.\\\" So [\\\"Dr. Max Vischer\\\"].\\n\\nThus output JSON.\"},\"seed\":null}],\"created\":1786804439,\"model\":\"thinkingmachines/Inkling\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":\"default\",\"usage\":{\"completion_tokens\":1424,\"prompt_tokens\":2254,\"total_tokens\":3678,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":null,\"reasoning_tokens\":1356,\"rejected_prediction_tokens\":null},\"prompt_tokens_details\":{\"audio_tokens\":null,\"cached_tokens\":256}},\"prompt\":[]}"
+}

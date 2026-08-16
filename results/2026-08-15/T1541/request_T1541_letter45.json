@@ -1,0 +1,47 @@
+{
+    "text": "{\"metadata\":{\"send_date\":[\"1928-09-28\"],\"letter_title\":[\"\"],\"sender_persons\":[\"\"],\"receiver_persons\":[\"Dr. Max Vischer\"]}}",
+    "model": "thinkingmachines/Inkling-Small",
+    "provider": "huggingface",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 2254,
+        "output_tokens": 1246,
+        "total_tokens": 3500,
+        "cached_tokens": 256,
+        "input_cost_usd": 0.0010143,
+        "output_cost_usd": 0.0014952,
+        "estimated_cost_usd": 0.0025095
+    },
+    "duration": 16.640535354614258,
+    "timestamp": "2026-08-15T16:42:05.053409",
+    "parsed": {
+        "metadata": {
+            "send_date": [
+                "1928-09-28"
+            ],
+            "letter_title": [
+                ""
+            ],
+            "sender_persons": [
+                ""
+            ],
+            "receiver_persons": [
+                "Dr. Max Vischer"
+            ],
+            "document_number": "letter45"
+        }
+    },
+    "conversation_id": "414be4c2-e030-4184-827b-7b248aea74da",
+    "score": {
+        "send_date_tp": 1,
+        "send_date_fp": 0,
+        "send_date_fn": 0,
+        "sender_persons_tp": 0,
+        "sender_persons_fp": 0,
+        "sender_persons_fn": 1,
+        "receiver_persons_tp": 1,
+        "receiver_persons_fp": 0,
+        "receiver_persons_fn": 0
+    },
+    "raw_response": "{\"id\":\"chatcmpl-RGpssJVM59Ry0ellNBymPynd\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\n\\n\\n\\\"metadata\\\": {\\n\\\"send_date\\\": [\\\"1928-09-28\\\"],\\n\\\"letter_title\\\": [\\\"\\\"],\\n\\\"sender_persons\\\": [\\\"\\\"],\\n\\\"receiver_persons\\\": [\\\"Dr. Max Vischer\\\"]\\n}\\n}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"metadata\":{\"send_date\":[\"1928-09-28\"],\"letter_title\":[\"\"],\"sender_persons\":[\"\"],\"receiver_persons\":[\"Dr. Max Vischer\"]}},\"reasoning_content\":\"We need parse letter. Keys: letter_title, sender_persons, send_date, receiver_persons.\\n\\nFrom image: Top left: \\\"VEREIN F\u00dcR DIE SCHIFFAHRT AUF DEM OBERRHEIN\\\". That is likely organization name, maybe letter title? Could be letterhead title. But letter_title likely title of letter? Not explicitly given as title; maybe \\\"Verein f\u00fcr die Schifffahrt auf dem Oberrhein\\\" is sender organization. Let's inspect.\\n\\nLetterhead: \\\"VEREIN F\u00dcR DIE SCHIFFAHRT AUF DEM OBERRHEIN\\\" with flag. So sender is the association (Verein). But also text says \\\"Verein f\u00fcr die Schifffahrt auf dem Oberrhein-Basel\\\" stamp. The signature is likely from the association. The addressee: \\\"Herrn Dr. Max Vischer, Advokat & Notar Basel.\\\" So receiver_persons: [\\\"Dr. Max Vischer\\\"] or [\\\"Max Vischer\\\"]. Sender_persons: Since it's from the Verein, maybe the sender is \\\"Verein f\u00fcr die Schifffahrt auf dem Oberrhein\\\" represented by someone? But key asks name(s) of person(s) who wrote the letter. Could be the secretary? On left: \\\"STANDIGES SEKRETARIAT: BASEL, BLUMENRAIN 32.\\\" Not a person name. The letter is typed and signed with a signature; maybe the signatory is the president or secretary, but name not legible. Could extract from stamp: \\\"Verein f\u00fcr die Schifffahrt auf dem Oberrhein-Basel\\\". But person? Let's think.\\n\\nThe instruction: extract values from letter. If not included, set null. So sender_persons might be null if no individual named. But letterhead indicates organization as sender. However key says \\\"sender_persons: Name(s) of the person(s) who wrote the letter.\\\" Could list organization? Usually person. But we have \\\"Verein f\u00fcr die Schifffahrt auf dem Oberrhein\\\" as sender entity. Might put that as sender_persons? Let's see example: \\\"Lisa Simpson\\\". So individuals. Here likely the association is sender, but since no individual name appears, maybe null. However the signature might be of a person; but unreadable. We cannot invent.\\n\\nSend date: Top right \\\"BASEL, DEN 28 Sept. 1928.\\\" So send_date: [\\\"1928-09-28\\\"].\\n\\nReceiver: \\\"Herrn Dr. Max Vischer, Advokat & Notar Basel.\\\" So receiver_persons: [\\\"Dr. Max Vischer\\\"].\\n\\nLetter title: Not explicitly a title like \\\"Re:\\\" but maybe the subject is about \\\"Akten der Personenschiffahrtsgesellschaft\\\". Could derive title as \\\"Entlastung der Akten der Personenschiffahrtsgesellschaft\\\"? But key likely expects title if present. The letter doesn't have a subject line title. Could be null. But sometimes the letterhead acts as title? Let's decide.\\n\\nLet's examine text: \\\"Anbei \u00fcbermitteln wir Ihnen zu unserer Entlastung die Akten der Personenschiffahrtsgesellschaft, die Sie uns s.Z. leihweise \u00fcberlassen hatten, bestens dankend. Wir f\u00fcgen die beiden No. 4 & 8 der \\\"Rheinquellen\\\" bei...\\\" So it's a cover letter sending files. No title.\\n\\nThus:\\nletter_title: null? Or maybe [\\\"Verein f\u00fcr die Schifffahrt auf dem Oberrhein\\\"]? No.\\n\\nLet's provide:\\n{\\n\\\"letter_title\\\": [null],\\n\\\"sender_persons\\\": [null],\\n\\\"send_date\\\": [\\\"1928-09-28\\\"],\\n\\\"receiver_persons\\\": [\\\"Dr. Max Vischer\\\"]\\n}\\n\\nBut values should be stored as list, even single. If null, maybe [\\\"null\\\"]? The instruction: \\\"If a piece of information is not included in the letter, set the value for the corresponding key to \\\"null\\\".\\\" Since values are lists, likely [\\\"null\\\"]? In example they show strings inside lists. For missing, probably null inside list? Or the value itself is null? It says \\\"set the value for the corresponding key to 'null'\\\". But earlier says \\\"values corresponding to each key should be stored as a list, even if there is only a single value\\\". So if missing, value is null, but should it be [null] or null? To be safe, use [null] because it says stored as a list. But the instruction \\\"set the value ... to null\\\" could mean the list contains null. Let's do [\\\"null\\\"]? Actually in JSON, null is a value. So [\\\"null\\\"] would be string \\\"null\\\". We need actual null: [null]. Yes.\\n\\nLet's decide sender_persons: The letter is from the Verein; but if we treat organization as sender person? Could put [\\\"Verein f\u00fcr die Schifffahrt auf dem Oberrhein\\\"]. But the key is sender_persons. However the letterhead is the sender. In many historical letters, the organization is the sender. But the question explicitly says \\\"Name(s) of the person(s) who wrote the letter.\\\" So if no person named, null.\\n\\nBut maybe the signature is \\\"Lehner\\\" or something? Let's look at signature: It looks like \\\"Lehner\\\"? Actually the last name might be \\\"Lehner\\\"? Not sure. Could be \\\"F. Lehner\\\"? Let's not guess.\\n\\nThus final JSON with letter_title: [null], sender_persons: [null], send_date: [\\\"1928-09-28\\\"], receiver_persons: [\\\"Dr. Max Vischer\\\"].\\n\\nWait letter_title could be derived from header: \\\"VEREIN F\u00dcR DIE SCHIFFAHRT AUF DEM OBERRHEIN\\\" is not title of letter but sender. So null.\\n\\nLet's craft response exactly JSON.\",\"name\":null}}],\"created\":1786804925,\"model\":\"thinkingmachines/Inkling-Small\",\"object\":\"chat.completion\",\"service_tier\":\"default\",\"system_fingerprint\":null,\"usage\":{\"completion_tokens\":1246,\"prompt_tokens\":2254,\"total_tokens\":3500,\"completion_tokens_details\":null,\"prompt_tokens_details\":{\"audio_tokens\":null,\"cached_tokens\":256,\"cache_write_tokens\":null},\"estimated_cost\":0.0024198999997440004,\"reasoning_tokens\":1197}}"
+}

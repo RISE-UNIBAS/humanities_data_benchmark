@@ -1,0 +1,65 @@
+{
+    "text": "{\"advertisements\":[{\"box\":[60.0,55.0,1080.0,1580.0]},{\"box\":[1180.0,55.0,2200.0,1580.0]},{\"box\":[60.0,1580.0,1080.0,3150.0]},{\"box\":[1180.0,1580.0,2200.0,3150.0]}]}",
+    "model": "meta-models/Muse-Glimmer-30B",
+    "provider": "huggingface",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 3916,
+        "output_tokens": 1576,
+        "total_tokens": 5492,
+        "cached_tokens": 3904,
+        "input_cost_usd": 0.0013706,
+        "output_cost_usd": 0.0023639999999999998,
+        "estimated_cost_usd": 0.0037346
+    },
+    "duration": 138.63800644874573,
+    "timestamp": "2026-08-16T03:38:22.940870",
+    "parsed": {
+        "advertisements": [
+            {
+                "box": [
+                    60.0,
+                    55.0,
+                    1080.0,
+                    1580.0
+                ]
+            },
+            {
+                "box": [
+                    1180.0,
+                    55.0,
+                    2200.0,
+                    1580.0
+                ]
+            },
+            {
+                "box": [
+                    60.0,
+                    1580.0,
+                    1080.0,
+                    3150.0
+                ]
+            },
+            {
+                "box": [
+                    1180.0,
+                    1580.0,
+                    2200.0,
+                    3150.0
+                ]
+            }
+        ]
+    },
+    "conversation_id": "33f1a1aa-0c83-42d1-a156-cac0877a4322",
+    "score": {
+        "f1": 0.889,
+        "precision": 1.0,
+        "recall": 0.8,
+        "mean_iou": 0.762,
+        "true_positives": 4,
+        "false_positives": 0,
+        "false_negatives": 1,
+        "iou_threshold": 0.5
+    },
+    "raw_response": "{\"id\":\"owNK2Xw-fdNmn-a2bcb7b39bae1b05\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{  \\n\\\"advertisements\\\": [  \\n{  \\n \\\"box\\\": [60, 55, 1080, 1580]  \\n  },\\n{  \\n \\\"box\\\": [1180, 55, 2200, 1580]  \\n  },\\n{  \\n \\\"box\\\": [60, 1580, 1080, 3150]  \\n  },\\n{  \\n \\\"box\\\": [1180, 1580, 2200, 3150]  \\n  }  \\n]  \\n}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"advertisements\":[{\"box\":[60.0,55.0,1080.0,1580.0]},{\"box\":[1180.0,55.0,2200.0,1580.0]},{\"box\":[60.0,1580.0,1080.0,3150.0]},{\"box\":[1180.0,1580.0,2200.0,3150.0]}]},\"reasoning\":\"Extract all advertisements and return their bounding boxes.\\nThe original size of the page is 2479 x 3508 pixels.\\n\\nWe need bounding boxes for each ad. There are four ads.\\n\\nTop left: The good Swiss Alarm Clock! EBOSA S.A. GRENCHEN. Bounding box approx.\\n\\nTop right: Standard Marine Insurance Co. Ltd. Liverpool. Managers for Switzerland: HIMMELSPACH & WIRZ ZURICH.\\n\\nBottom left: MATIERA LTD. - BASLE (Switzerland) with M logo.\\n\\nBottom right: VOMEDI Meules diamant\u00e9es Les FILS d'ANTOINE VOGEL PIETERLEN p.Bienne.\\n\\nNeed coordinates. Probably normalized? Usually bounding boxes as [x_min, y_min, x_max, y_max] in pixels. Original size 2479 x 3508. Need estimate.\\n\\nLet's approximate.\\n\\nImage width 2479, height 3508.\\n\\nTop left ad: left margin ~ 60? Let's estimate. The ad spans from about x=60 to x= ~ 480? Wait page has two columns. Top left ad occupies left column top. Approx x_min ~ 60, x_max ~ 480? Actually the ad width maybe ~ 420. Let's assume x_min=60, x_max=480. y_min ~ 55, y_max ~ 480? The ad ends at about 480. Let's estimate y_min=55, y_max=480.\\n\\nTop right ad: x_min ~ 490, x_max ~ 895? Actually right column. Maybe x_min=490, x_max=895. y_min=55, y_max=480.\\n\\nBottom left: x_min=60, x_max=480, y_min=490, y_max=915? Wait bottom left extends down to ~ 915. Maybe y_min=490, y_max=915.\\n\\nBottom right: x_min=490, x_max=895, y_min=490, y_max=915.\\n\\nBut need more precise. Could give relative coordinates 0-1. Might be okay approximate.\\n\\nMaybe better to give normalized [x_min, y_min, x_max, y_max] in pixels.\\n\\nLet's approximate using visual.\\n\\nPage width 2479. Left column about 40% of width. Right column about 40%. Margin ~ 10% each side.\\n\\nLeft column x start ~ 60 (2.4%). x end ~ 480? 480/2479=19.3%. Hmm maybe 480 is too small. Wait the ad is about half page width. Page width 2479, half is ~1240. But there are two columns side by side. So each column width ~ ~ 400? Actually the image shows left column about 40% of page width. Let's estimate left column width ~ 900 pixels. Hmm.\\n\\nLet's think: The page is a book page, with left margin maybe 100px, then ad width ~ 900px, gap ~ 100px, right ad width ~ 900px, right margin ~ 100px. So total ~ 2100. Could be.\\n\\nBetter estimate: x_min left ad ~ 60, x_max ~ 480? No.\\n\\nLet's assume image width 2479. The left ad occupies from about 60 to 480? That's 420px. Might be too narrow. Maybe the scan includes the gutter on left. The visible page is maybe ~ 2000px wide. Let's approximate proportionally.\\n\\nVisually, the left ad width is about 42% of page width. 0.42*2479 \u2248 1040. So x_max ~ x_min + 1040. If x_min ~ 60, x_max ~ 1100.\\n\\nSimilarly right ad starts at ~ 1200, ends at ~ 2200.\\n\\nLet's pick:\\n\\nTop left: x_min=60, y_min=55, x_max=480? Hmm.\\n\\nAlternative approach: Provide bounding boxes as relative coordinates (0-1000). Might be acceptable.\\n\\nProbably the expected answer is four boxes:\\n\\n1. Top left alarm clock: {x_min=62, y_min=56, x_max=482, y_max=478}\\n2. Top right insurance: {x_min=492, y_min=56, x_max=894, y_max=478}\\n3. Bottom left Matiera: {x_min=62, y_min=495, x_max=482, y_max=917}\\n4. Bottom right Vomedi: {x_min=492, y_min=495, x_max=894, y_max=917}\\n\\nBut maybe y_max for bottom is ~ 915.\\n\\nLet's refine: Page height 3508. Top ads occupy about top 45% of height. So y_max ~ 0.45*3508 \u2248 1579. Wait 45% is 1579. Hmm earlier I thought 480. So my pixel estimate off.\\n\\nLet's recalc: The page height 3508. The top ads go down to about middle of page. The page shows four ads in 2x2 grid. So each ad height ~ 0.45 of page height. So y_max top ~ 0.45*3508 \u2248 1579. Bottom ads start at ~ 0.45*3508 \u2248 1579 and end at ~ 0.9*3508 \u2248 3157.\\n\\nSo y_min top ~ 55 (maybe 55). y_max top ~ 1580. y_min bottom ~ 1580. y_max bottom ~ 3150.\\n\\nLet's estimate:\\n\\nTop left: x_min ~ 60, x_max ~ 480? Wait width ~ 0.4 of page width. 0.4*2479 \u2248 991. So x_max ~ 1050.\\n\\nLet's pick x_min=60, x_max=1050, y_min=55, y_max=1580.\\n\\nTop right: x_min=1150, x_max=2200, y_min=55, y_max=1580.\\n\\nBottom left: x_min=60, x_max=1050, y_min=1580, y_max=3150.\\n\\nBottom right: x_min=1150, x_max=2200, y_min=1580, y_max=3150.\\n\\nMaybe more precise.\\n\\nGiven uncertainty, provide approximate boxes.\\n\\nI'll output four boxes with coordinates in pixels.\\n\\nLet's propose:\\n\\n- EBOSA alarm clock ad: [60, 55, 1080, 1580]\\n- Standard Marine Insurance ad: [1180, 55, 2200, 1580]\\n- MATIERA LTD ad: [60, 1580, 1080, 3150]\\n- VOMEDI Meules diamant\u00e9es ad: [1180, 1580, 2200, 3150]\\n\\nCould also give normalized 0-1.\\n\\nI'll give both pixel and normalized.\\n\\nI'll output as list.\\n\\nProbably the system expects JSON with bounding boxes.\\n\\nI'll give approximate.\\n\\nFinal answer: four advertisements with bounding boxes.\\n\\nLet's deliver.\"},\"token_ids\":null,\"routed_experts\":null,\"seed\":null}],\"created\":1786844286,\"model\":\"meta-models/Muse-Glimmer-30B\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":\"vllm-0.1.dev19059+g66826a22d-tp2-46311a71\",\"usage\":{\"completion_tokens\":1576,\"prompt_tokens\":3916,\"total_tokens\":5492,\"completion_tokens_details\":null,\"prompt_tokens_details\":{\"audio_tokens\":null,\"cached_tokens\":3904,\"created_cache_tokens\":0,\"multimodal_tokens\":{\"image\":3850}}},\"prompt_token_ids\":null,\"prompt_text\":null,\"kv_transfer_params\":null,\"ec_transfer_params\":null,\"metrics\":null,\"prompt\":[]}"
+}

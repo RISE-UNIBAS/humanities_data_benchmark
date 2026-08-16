@@ -1,0 +1,49 @@
+{
+    "text": "{\"advertisements\":[{\"box\":[130.0,60.0,2450.0,1900.0]},{\"box\":[130.0,2000.0,2450.0,3400.0]}]}",
+    "model": "meta-models/Muse-Glimmer-30B",
+    "provider": "huggingface",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 3916,
+        "output_tokens": 1122,
+        "total_tokens": 5038,
+        "cached_tokens": 48,
+        "input_cost_usd": 0.0013706,
+        "output_cost_usd": 0.001683,
+        "estimated_cost_usd": 0.0030536
+    },
+    "duration": 13.545717716217041,
+    "timestamp": "2026-08-16T03:38:36.490587",
+    "parsed": {
+        "advertisements": [
+            {
+                "box": [
+                    130.0,
+                    60.0,
+                    2450.0,
+                    1900.0
+                ]
+            },
+            {
+                "box": [
+                    130.0,
+                    2000.0,
+                    2450.0,
+                    3400.0
+                ]
+            }
+        ]
+    },
+    "conversation_id": "c9da4e56-dcae-4833-a684-bb6fbd02cce1",
+    "score": {
+        "f1": 1.0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "mean_iou": 0.697,
+        "true_positives": 2,
+        "false_positives": 0,
+        "false_negatives": 0,
+        "iou_threshold": 0.5
+    },
+    "raw_response": "{\"id\":\"owNK7m3-fdNmn-a2bcb8217e088e82\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\\"advertisements\\\": [\\n  {\\n    \\\"box\\\": [130, 60, 2450, 1900]\\n  },\\n  {\\n    \\\"box\\\": [130, 2000, 2450, 3400]\\n  }\\n] }\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"advertisements\":[{\"box\":[130.0,60.0,2450.0,1900.0]},{\"box\":[130.0,2000.0,2450.0,3400.0]}]},\"reasoning\":\"Extract all advertisements and return their bounding boxes.\\nThe original size of the page is 2479 x 3508 pixels.\\n\\nThere are two ads: top Crowe & Co. Ltd., bottom Nivada.\\n\\nNeed bounding boxes. Probably coordinates normalized? Usually return as [x_min, y_min, x_max, y_max] in pixels. Might need relative? The instruction says original size 2479 x 3508 pixels. So give pixel coordinates.\\n\\nEstimate. Top ad: border from about x ~ 130? Let's approximate. Page width 2479. Left margin ~ 130? The border starts around 150? Let's estimate. Top ad top border y ~ 60? Actually page top. Let's approximate.\\n\\nBetter to give approximate bounding boxes. Might be okay with rough.\\n\\nTop ad: x_min ~ 130, y_min ~ 60, x_max ~ 2400, y_max ~ 490? Wait bottom of top ad is about middle. The top ad occupies top half. Let's see image: top ad border ends around y ~ 490? Actually the page is 3508 tall. Top ad maybe up to ~ 490? Hmm maybe 490 is too low. Let's estimate: top ad occupies about top 45% of page. 3508 *0.45 ~ 1578. So y_max ~ 1500? Wait the bottom ad starts below. The gap between ads is small. So top ad bottom maybe around 1900? Let's see: the page number 26 at bottom. The bottom ad ends near bottom. So top ad maybe ends around 1900? Let's approximate.\\n\\nBetter to give relative coordinates 0-1. Might be safer to give normalized? The prompt says original size 2479 x 3508 pixels. So return bounding boxes in pixels.\\n\\nI'll estimate:\\n\\nTop ad bounding box: x_min= 150, y_min= 60, x_max= 2400, y_max= 490? No.\\n\\nLet's look at image: top ad border is a rectangle. The top border is about 60px from top. Left border about 150px from left. Right border about 2400px from left (since page width 2479). Bottom border about  490? Wait the bottom of top ad is about 1/3 down the page. The page is 3508 tall. 1/3 is ~1169. So maybe y_max ~ 1900? Hmm.\\n\\nLet's assume top ad y_min ~ 60, y_max ~  1900? Actually the bottom ad starts around  2000? Let's approximate: top ad occupies about 45% of height. 0.45*3508=1579. So y_max ~ 1600. Bottom ad starts ~ 2000? Hmm gap.\\n\\nMaybe better to give approximate boxes:\\n\\nAd 1 (Crowe & Co. Ltd.): [~140, ~60, ~2450, ~  490? No]\\n\\nLet's search memory: typical magazine page with two ads stacked. Top ad maybe from y= 60 to y= 1900? Wait 1900 is about half. Could be 1900.\\n\\nLet's assume:\\n\\nTop ad: x_min= 130, y_min= 60, x_max= 2450, y_max=  1900? Hmm.\\n\\nBottom ad: x_min= 130, y_min= 2000, x_max= 2450, y_max=  3700? But page height 3508, so max ~ 3400.\\n\\nLet's refine: bottom ad border top ~ 2000, bottom ~  3400? Actually page number 26 at bottom left ~ 3400. So bottom ad bottom ~  3400.\\n\\nMaybe top ad bottom ~  1900.\\n\\nLet's give:\\n\\nCrowe & Co. Ltd. advertisement: {x_min= 140, y_min= 60, x_max= 2450, y_max=  1900}\\n\\nNivada advertisement: {x_min= 140, y_min= 2000, x_max= 2450, y_max=  3400}\\n\\nCould also give normalized 0-1000.\\n\\nMight be acceptable.\\n\\nI'll provide approximate bounding boxes with coordinates.\\n\\nProbably the expected output is two boxes.\\n\\nI'll output as JSON list.\\n\\nLet's give:\\n\\n[{\\\"label\\\": \\\"Crowe & Co. Ltd. advertisement\\\", \\\"bbox\\\": [130, 60, 2450, 1900]}, {\\\"label\\\": \\\"Nivada advertisement\\\", \\\"bbox\\\": [130, 2000, 2450, 3400]}]\\n\\nIf need pixel exact, maybe slightly different.\\n\\nI'll give a bit more precise: top ad y_max ~  490? Wait the image shows top ad border ends at about  490? No.\\n\\nAlternative: maybe the page is scanned with margins. The top ad border is about  150px from top? Let's assume y_min=  150? Hmm.\\n\\nGiven uncertainty, provide approximate.\\n\\nI'll output with coordinates in pixels.\\n\\nFinal answer: two bounding boxes.\\n\\n\"},\"token_ids\":null,\"routed_experts\":null,\"seed\":null}],\"created\":1786844304,\"model\":\"meta-models/Muse-Glimmer-30B\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":\"vllm-0.1.dev19059+g66826a22d-tp2-46311a71\",\"usage\":{\"completion_tokens\":1122,\"prompt_tokens\":3916,\"total_tokens\":5038,\"completion_tokens_details\":null,\"prompt_tokens_details\":{\"audio_tokens\":null,\"cached_tokens\":48,\"created_cache_tokens\":3856,\"multimodal_tokens\":{\"image\":3850}}},\"prompt_token_ids\":null,\"prompt_text\":null,\"kv_transfer_params\":null,\"ec_transfer_params\":null,\"metrics\":null,\"prompt\":[]}"
+}

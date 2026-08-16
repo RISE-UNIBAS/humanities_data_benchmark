@@ -1,0 +1,41 @@
+{
+    "text": "{\"company\":{\"transcription\":\"Brocca Bruno\"},\"location\":{\"transcription\":\"Lugano\"},\"b_id\":{\"transcription\":\"B.51.322.GB.913.\"},\"date\":\"\",\"information\":[{\"transcription\":\"Britische schwarze Liste,\\nAmendment 4, M\u00e4rz 1943.\"},{\"transcription\":\"gestrichen:\\nAmendment 5, April 1944\"}]}",
+    "model": "thinkingmachines/Inkling",
+    "provider": "huggingface",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 2239,
+        "output_tokens": 925,
+        "total_tokens": 3164,
+        "input_cost_usd": 0.002239,
+        "output_cost_usd": 0.00374625,
+        "estimated_cost_usd": 0.00598525
+    },
+    "duration": 12.762415170669556,
+    "timestamp": "2026-08-15T17:12:35.070699",
+    "parsed": {
+        "company": {
+            "transcription": "Brocca Bruno"
+        },
+        "location": {
+            "transcription": "Lugano"
+        },
+        "b_id": {
+            "transcription": "B.51.322.GB.913."
+        },
+        "date": "",
+        "information": [
+            {
+                "transcription": "Britische schwarze Liste,\nAmendment 4, M\u00e4rz 1943."
+            },
+            {
+                "transcription": "gestrichen:\nAmendment 5, April 1944"
+            }
+        ]
+    },
+    "conversation_id": "f748ef3f-2cd6-4b24-8976-cb82f6c6078a",
+    "score": {
+        "fuzzy": 0.8571428571428571
+    },
+    "raw_response": "{\"id\":\"owJzcKr-6z2FuN-a2b9232019a5ef65\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\n  \\\"company\\\": {\\\"transcription\\\": \\\"Brocca Bruno\\\"},\\n  \\\"location\\\": {\\\"transcription\\\": \\\"Lugano\\\"},\\n  \\\"b_id\\\": {\\\"transcription\\\": \\\"B.51.322.GB.913.\\\"},\\n  \\\"date\\\": \\\"\\\",\\n  \\\"information\\\": [\\n    {\\\"transcription\\\": \\\"Britische schwarze Liste,\\\\nAmendment 4, M\u00e4rz 1943.\\\"},\\n    {\\\"transcription\\\": \\\"gestrichen:\\\\nAmendment 5, April 1944\\\"}\\n  ]\\n}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"company\":{\"transcription\":\"Brocca Bruno\"},\"location\":{\"transcription\":\"Lugano\"},\"b_id\":{\"transcription\":\"B.51.322.GB.913.\"},\"date\":\"\",\"information\":[{\"transcription\":\"Britische schwarze Liste,\\nAmendment 4, M\u00e4rz 1943.\"},{\"transcription\":\"gestrichen:\\nAmendment 5, April 1944\"}]},\"reasoning\":\"We need extract data from image. Let's parse card.\\n\\nTop left: \\\"Brocca Bruno,\\\" then \\\"Lugano.\\\" So company? Actually \\\"Brocca Bruno\\\" is name, location Lugano. But prompt says company: primary company name, usually top-left. Exclude location. So company \\\"Brocca Bruno\\\". Location \\\"Lugano\\\". b_id top right \\\"B.51.322.GB.913.\\\" Date: no stamped date visible? There's \\\"M\u00e4rz 1943\\\" and \\\"April 1944\\\" in text but not stamped date? The prompt says \\\"Any stamped dates on the card in YYYY-MM-DD format. If no date is present, use an empty string.\\\" There's no explicit stamp like \\\"1943-03-...\\\" but there are dates in text. However they ask stamped dates. I think none present, so empty string.\\n\\nInformation blocks:\\n\\\"Britische schwarze Liste,\\\"\\n\\\"Amendment 4, M\u00e4rz 1943.\\\"\\nThen \\\"gestrichen:\\\"\\n\\\"Amendment 5, April 1944\\\"\\n\\nNeed maintain line breaks with \\\\n within each block? Actually each block separate string in list. Let's represent as:\\n[\\n  \\\"Britische schwarze Liste,\\\\nAmendment 4, M\u00e4rz 1943.\\\",\\n  \\\"gestrichen:\\\\nAmendment 5, April 1944\\\"\\n]\\n\\nBut need \\\"Each block should be a separate string in the list. Maintain line breaks with \\\\\\\\n.\\\" So yes.\\n\\nCheck bottom left \\\"57905\\\" maybe not needed. Also \\\"Via Ciani 1.\\\" maybe part of address? The card shows \\\"Via Ciani 1.\\\" under location? Actually it's on separate line below location. Might be part of information? Let's include? The prompt asks \\\"A list of text blocks from the main body of the card.\\\" The main body includes \\\"Britische schwarze Liste...\\\" and \\\"gestrichen:...\\\" The address \\\"Via Ciani 1.\\\" is near top, maybe part of company info? But we already have location. Let's see layout:\\nBrocca Bruno, Lugano.\\nVia Ciani 1.\\n\\nThen body:\\nBritische schwarze Liste,\\nAmendment 4, M\u00e4rz 1943.\\n\\ngestrichen:\\nAmendment 5, April 1944\\n\\nSo \\\"Via Ciani 1.\\\" is likely address, but not requested specifically except maybe in information? The prompt says information: list of text blocks from main body. The address is in header area. I think we can omit or include? Usually archivist might include all text blocks except header fields. But since it's separate line near top, maybe it's part of company/address. However the requested fields are company, location, b_id, date, information. The information should contain main body blocks. The address might be considered part of location? But location is just city. Let's include \\\"Via Ciani 1.\\\" as an information block? Hmm, but it's positioned right under company/location header, separated by line. Let's examine image: There is a horizontal line after \\\"Via Ciani 1.\\\" separating header from body. So \\\"Via Ciani 1.\\\" is part of header/address. Since we don't have an address field, maybe leave out or put in information? The prompt says \\\"information: A list of text blocks from the main body of the card.\\\" The header is not main body. So exclude \\\"Via Ciani 1.\\\".\\n\\nThus JSON:\\n{\\n  \\\"company\\\": {\\\"transcription\\\": \\\"Brocca Bruno\\\"},\\n  \\\"location\\\": {\\\"transcription\\\": \\\"Lugano\\\"},\\n  \\\"b_id\\\": {\\\"transcription\\\": \\\"B.51.322.GB.913.\\\"},\\n  \\\"date\\\": \\\"\\\",\\n  \\\"information\\\": [\\n    {\\\"transcription\\\": \\\"Britische schwarze Liste,\\\\nAmendment 4, M\u00e4rz 1943.\\\"},\\n    {\\\"transcription\\\": \\\"gestrichen:\\\\nAmendment 5, April 1944\\\"}\\n  ]\\n}\\n\\nNeed valid JSON only.\"},\"seed\":null}],\"created\":1786806743,\"model\":\"thinkingmachines/Inkling\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":\"default\",\"usage\":{\"completion_tokens\":925,\"prompt_tokens\":2239,\"total_tokens\":3164,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":null,\"reasoning_tokens\":813,\"rejected_prediction_tokens\":null},\"prompt_tokens_details\":{\"audio_tokens\":null,\"cached_tokens\":0}},\"prompt\":[]}"
+}

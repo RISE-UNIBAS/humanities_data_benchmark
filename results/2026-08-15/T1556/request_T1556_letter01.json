@@ -1,0 +1,45 @@
+{
+    "text": "{\"metadata\":{\"send_date\":[\"1926-02-16\"],\"letter_title\":null,\"sender_persons\":[\"Basler Rheinschiffahrt-Aktiengesellschaft\"],\"receiver_persons\":[\"Herr Christ\"]}}",
+    "model": "thinkingmachines/Inkling",
+    "provider": "huggingface",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 6351,
+        "output_tokens": 1583,
+        "total_tokens": 7934,
+        "cached_tokens": 256,
+        "input_cost_usd": 0.006351,
+        "output_cost_usd": 0.00641115,
+        "estimated_cost_usd": 0.01276215
+    },
+    "duration": 55.9522602558136,
+    "timestamp": "2026-08-15T16:27:44.126485",
+    "parsed": {
+        "metadata": {
+            "letter_title": null,
+            "send_date": [
+                "1926-02-16"
+            ],
+            "sender_persons": [
+                "Basler Rheinschiffahrt-Aktiengesellschaft"
+            ],
+            "receiver_persons": [
+                "Herr Christ"
+            ],
+            "document_number": "letter01"
+        }
+    },
+    "conversation_id": "b5215b05-fe89-4bc1-b8a1-0767b57e4800",
+    "score": {
+        "send_date_tp": 1,
+        "send_date_fp": 0,
+        "send_date_fn": 0,
+        "sender_persons_tp": 0,
+        "sender_persons_fp": 1,
+        "sender_persons_fn": 2,
+        "receiver_persons_tp": 1,
+        "receiver_persons_fp": 0,
+        "receiver_persons_fn": 0
+    },
+    "raw_response": "{\"id\":\"owJmZuw-31r7CA-a2b8e142cf6546fd\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\\"metadata\\\": {\\\"letter_title\\\": null, \\\"send_date\\\": [\\\"1926-02-16\\\"], \\\"sender_persons\\\": [\\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"], \\\"receiver_persons\\\": [\\\"Herr Christ\\\"]}}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":[],\"reasoning\":\"We need parse images of letter. Need extract letter_title, sender_persons, send_date, receiver_persons. Let's analyze images.\\n\\nImage 1: Header \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\" address Marktplatz 5 etc. Date \\\"Basel, den 16. Februar 1926.\\\" Addressee \\\"Herrn Christ, i/Fa. Paravicini, Christ & Co., Basel, Kaufhausgasse 7.\\\" Salutation \\\"Sehr geehrter Herr Christ,\\\" Then body mentions \\\"Durch Herrn Ryniker/Dr. Max Vischer...\\\" So sender is Basler Rheinschiffahrt-Aktiengesellschaft? Need sender persons: likely signed at end page 3 by \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\" with signatures? Let's inspect image 3: closing \\\"hochachtend BASLER RHEINSCHIFFAHRT-AKTIENGESELLSCHAFT\\\" with signatures (maybe one is Ryniker?). Also copy to \\\"Herrn Ryniker, Schiffbau-Ingenieur Basel\\\" and \\\"Herrn Dr. Krastins, Basel.\\\" So sender organization is Basler Rheinschiffahrt-Aktiengesellschaft, but key asks \\\"Name(s) of the person(s) who wrote the letter.\\\" Might be the organization? Or specific persons? Usually in these extraction tasks, sender_persons can include organization name if signed? Let's examine carefully.\\n\\nWe need letter_title: maybe none explicit? Could be null. But sometimes title is in header? Not a title like \\\"Petition...\\\". Here it's a business letter, no explicit title. So letter_title likely null.\\n\\nSend date: \\\"16. Februar 1926\\\" -> 1926-02-16. Also page 2 and 3 have \\\"Basel. 16.2.26.\\\" So date is 1926-02-16.\\n\\nReceiver persons: \\\"Herr Christ\\\" addressed, specifically \\\"Herrn Christ, i/Fa. Paravicini, Christ & Co.\\\" So receiver is Christ? Or \\\"Herr Christ\\\" and maybe company? The key asks name(s) of person(s) who received. So [\\\"Herr Christ\\\"]? Or [\\\"Christ\\\"]? Let's include \\\"Herr Christ\\\". But also copy recipients? No, those are copies, not primary receiver. So receiver_persons: [\\\"Herr Christ\\\"] maybe with company? Let's see example uses full names. Here we have \\\"Herrn Christ\\\" and address \\\"i/Fa. Paravicini, Christ & Co., Basel, Kaufhausgasse 7\\\". So person is Christ (first name unknown). We'll put [\\\"Christ\\\"]? Or [\\\"Herr Christ\\\"]. Let's use [\\\"Herr Christ\\\"].\\n\\nSender persons: The letter is from Basler Rheinschiffahrt-Aktiengesellschaft, signed possibly by representatives. At bottom page 3 signatures appear: one looks like \\\"Gustav\\\"?? Actually need not overanalyze. The letterhead indicates sender organization. In many extraction schemas, sender_persons might be [\\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"]. But they said \\\"person(s)\\\" not organization. However the signature block lists company name, not individual names clearly readable except maybe \\\"Ryniker\\\"? Wait Ryniker is mentioned in body and copy, but he might be the author? Let's read image 1 body: \\\"Durch Herrn Ryniker/Dr. Max Vischer haben Sie wahrscheinlich erfahren...\\\" That sounds like through Mr Ryniker/Dr. Max Vischer you have probably learned... So Ryniker and Vischer are intermediaries, not necessarily senders.\\n\\nAt page 3 closing: \\\"hochachtend BASLER RHEINSCHIFFAHRT-AKTIENGESELLSCHAFT\\\" then signatures. One signature might be \\\"F. M\u00fcller\\\"? Hard to tell. But since not clearly readable and not required? Actually we need extract values included in letter. The sender organization is clearly printed in letterhead and closing. So I think sender_persons should be [\\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"]. But if they want persons, maybe null? Let's think.\\n\\nThe prompt: \\\"sender_persons: Name(s) of the person(s) who wrote the letter.\\\" In a formal company letter, the writer might be the company represented by signatories. But since signatories are not clearly legible (except maybe in signatures), but the company name is present. However they said \\\"persons\\\". Let's check copy line: \\\"Copia: Herrn Ryniker, Schiffbau-Ingenieur Basel Herrn Dr. Krastins, Basel.\\\" Not senders.\\n\\nGiven typical extraction from historical letters, they often extract the author name if present. Here letterhead gives organization, not personal name except maybe in signature. Let's examine image 3 signatures: There are two signatures above printed company name? Actually layout: \\\"hochachtend\\\" then \\\"BASLER RHEINSCHIFFAHRT-AKTIENGESELLSCHAFT\\\" then below that signatures? Let's visualize: The text \\\"hochachtend\\\" then \\\"BASLER RHEINSCHIFFAHRT-AKTIENGESELLSCHAFT\\\" then there are handwritten signatures across? One looks like \\\"Gustav\\\" and another \\\"F. M\u00fcller\\\"? Not clear. But we can still list the organization? Hmm.\\n\\nLet's also check if there's a title in the letter? No.\\n\\nThus JSON:\\n{\\n\\\"letter_title\\\": [null]? Wait schema requires list or null? Actually in example values are lists. The schema allows anyOf array of strings or null. So we should put null not [\\\"null\\\"]. Yes.\\n\\n\\\"send_date\\\": [\\\"1926-02-16\\\"]\\n\\\"sender_persons\\\": [\\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"]? Or maybe [\\\"Ryniker\\\"]? Let's examine body first sentence: \\\"Sehr geehrter Herr Christ, Durch Herrn Ryniker/Dr. Max Vischer haben Sie wahrscheinlich erfahren...\\\" This could mean \\\"Through Mr. Ryniker/Dr. Max Vischer you have probably learned...\\\" So they are not senders.\\n\\nThe letter is about a diesel motorboat \\\"Rheinfelden\\\" built about 6m shorter etc. They propose cooperation with \\\"Personenschiffahrtsgesellschaft\\\" in same location. Signed by Basler Rheinschiffahrt-Aktiengesellschaft.\\n\\nThus I will set sender_persons to [\\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"]. But if strictly persons, maybe null? Let's decide. Given they ask \\\"Name(s) of the person(s) who wrote the letter\\\" and the letter is on company letterhead with company signature, it's acceptable to list the company as sender entity? But \\\"persons\\\" plural of person, not entity. However in absence of clear individual, using organization might be wrong.\\n\\nLet's inspect image 1 top left: \\\"Basler Rheinschiffahrt-Aktiengesellschaft Marktplatz 5\\\" That's the sender address. So yes, that's the sender.\\n\\nFor receiver, \\\"Herrn Christ\\\" is addressed. So [\\\"Herr Christ\\\"].\\n\\nLet's also consider if there is a letter title hidden? No.\\n\\nThus output:\\n{\\n\\\"metadata\\\": {\\n\\\"letter_title\\\": null,\\n\\\"send_date\\\": [\\\"1926-02-16\\\"],\\n\\\"sender_persons\\\": [\\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"],\\n\\\"receiver_persons\\\": [\\\"Herr Christ\\\"]\\n}\\n}\\n\\nNeed match exact schema with metadata object. Yes.\"},\"seed\":null}],\"created\":1786804199,\"model\":\"thinkingmachines/Inkling\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":\"default\",\"usage\":{\"completion_tokens\":1583,\"prompt_tokens\":6351,\"total_tokens\":7934,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":null,\"reasoning_tokens\":1529,\"rejected_prediction_tokens\":null},\"prompt_tokens_details\":{\"audio_tokens\":null,\"cached_tokens\":256}},\"prompt\":[]}"
+}

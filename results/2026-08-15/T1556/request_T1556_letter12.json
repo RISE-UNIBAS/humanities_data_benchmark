@@ -1,0 +1,48 @@
+{
+    "text": "{\"metadata\":{\"send_date\":[\"1926-08-13\"],\"letter_title\":[\"Abschrift\"],\"sender_persons\":[\"Groschopf\",\"J.A. Ritter\"],\"receiver_persons\":[\"Dr. Max Vischer\"]}}",
+    "model": "thinkingmachines/Inkling",
+    "provider": "huggingface",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 6106,
+        "output_tokens": 1211,
+        "total_tokens": 7317,
+        "cached_tokens": 256,
+        "input_cost_usd": 0.006106,
+        "output_cost_usd": 0.00490455,
+        "estimated_cost_usd": 0.011010550000000001
+    },
+    "duration": 15.853955030441284,
+    "timestamp": "2026-08-15T16:28:33.356216",
+    "parsed": {
+        "metadata": {
+            "send_date": [
+                "1926-08-13"
+            ],
+            "letter_title": [
+                "Abschrift"
+            ],
+            "sender_persons": [
+                "Groschopf",
+                "J.A. Ritter"
+            ],
+            "receiver_persons": [
+                "Dr. Max Vischer"
+            ],
+            "document_number": "letter12"
+        }
+    },
+    "conversation_id": "228db1f1-ccaa-46ee-810f-9cda07175821",
+    "score": {
+        "send_date_tp": 1,
+        "send_date_fp": 0,
+        "send_date_fn": 0,
+        "sender_persons_tp": 2,
+        "sender_persons_fp": 0,
+        "sender_persons_fn": 0,
+        "receiver_persons_tp": 1,
+        "receiver_persons_fp": 0,
+        "receiver_persons_fn": 0
+    },
+    "raw_response": "{\"id\":\"owJmrER-31r7CA-a2b8e2914ac8fc74\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\n  \\\"metadata\\\": {\\n    \\\"send_date\\\": [\\\"1926-08-13\\\"],\\n    \\\"letter_title\\\": [\\\"Abschrift\\\"],\\n    \\\"sender_persons\\\": [\\\"Groschopf\\\", \\\"J.A. Ritter\\\"],\\n    \\\"receiver_persons\\\": [\\\"Dr. Max Vischer\\\"]\\n  }\\n}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"metadata\":{\"send_date\":[\"1926-08-13\"],\"letter_title\":[\"Abschrift\"],\"sender_persons\":[\"Groschopf\",\"J.A. Ritter\"],\"receiver_persons\":[\"Dr. Max Vischer\"]}},\"reasoning\":\"We need parse images of historical letter, extract title, sender, date, receiver. Need inspect all three images.\\n\\nImage 1: Top right \\\"ABSCHRIFT\\\" and number 12. Left header \\\"Basler Rheinschiffahrt-Aktiengesellschaft Marktgasse 5\\\". Date \\\"Basel, den 13. August 1926.\\\" Addressee: \\\"Herrn Dr. Max Vischer, Pr\u00e4sident der Basler Personenschiffahrtsgesellschaft Basel\\\". So letter is copy (Abschrift). Need letter_title? Maybe \\\"Abschrift\\\" is title? Or maybe no explicit title besides \\\"ABSCHRIFT\\\". We'll include \\\"Abschrift\\\". Sender persons: The letter is written by Basler Rheinschiffahrt-Aktiengesellschaft? Actually it's signed at bottom of page 3 by \\\"sig. Groschopf J.A.Ritter\\\" on behalf of \\\"BASLER RHEINSCHIFFFAHRT - AKTIENGESELLSCHAFT\\\". So sender is Basler Rheinschiffahrt-Aktiengesellschaft, possibly represented by Groschopf and Ritter? Need determine \\\"Name(s) of the person(s) who wrote the letter.\\\" The signatories are sig. Groschopf and J.A.Ritter. But the organization is also sender. Typically in these extraction tasks they want the actual signatory names if present. Let's examine context: The letter starts \\\"Wir best\u00e4tigen Ihr Schreiben vom 9. August...\\\" It's from the company. At end \\\"Hochachtend BASLER RHEINSCHIFFFAHRT - AKTIENGESELLSCHAFT sig. Groschopf J.A.Ritter.\\\" So senders could be [\\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"] or the individuals. Need decide. The key \\\"sender_persons\\\" asks Name(s) of the person(s) who wrote the letter. Given signatories are persons, but also company letterhead. Often in these tasks they extract the organization as sender if it's a corporate letter? Let's think. The example had \\\"Lisa Simpson\\\" as sender person. Here likely they want the signatories: Groschopf and J.A. Ritter? Or maybe \\\"Groschopf\\\" and \\\"J.A. Ritter\\\". But also the letterhead lists company. Let's hold both? The instruction says values stored as list, even if single. We need be accurate based on letter.\\n\\nSend date: \\\"Basel, den 13. August 1926\\\" => 1926-08-13.\\n\\nReceiver persons: \\\"Herrn Dr. Max Vischer, Pr\u00e4sident der Basler Personenschiffahrtsgesellschaft\\\" => [\\\"Dr. Max Vischer\\\"].\\n\\nLetter title: At top right \\\"ABSCHRIFT\\\" with number 12. Could be title \\\"Abschrift\\\". Maybe also \\\"Abschrift 12\\\". We'll put [\\\"Abschrift\\\"].\\n\\nBut need check if there's any other title? No.\\n\\nThus JSON:\\n{\\n\\\"letter_title\\\": [\\\"Abschrift\\\"],\\n\\\"send_date\\\": [\\\"1926-08-13\\\"],\\n\\\"sender_persons\\\": [\\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\", \\\"Groschopf\\\", \\\"J.A. Ritter\\\"]? Or just company? Let's examine image 3 bottom: \\\"geht zur\u00fcck 14.VIII 26 sig.Vischer\\\" indicating received back and signed Vischer? Actually that's on receiver side? Hmm \\\"geht zur\u00fcck\\\" means goes back, dated 14.VIII.26 sig.Vischer. So Vischer received and returned? Not necessary.\\n\\nWe need map all claims. Let's parse full text for any other names. In body they mention \\\"Herr Oettinger\\\" and \\\"Herr Verner Stauffacher\\\" and \\\"Herrn Dr.Max Vischer\\\" as president of other company. But receiver is Dr. Max Vischer.\\n\\nThus answer likely:\\nletter_title: [\\\"Abschrift\\\"]\\nsend_date: [\\\"1926-08-13\\\"]\\nsender_persons: [\\\"Groschopf\\\",\\\"J.A. Ritter\\\"]? Or include company? Let's think about typical extraction from historical letters: They ask \\\"sender_persons: Name(s) of the person(s) who wrote the letter.\\\" In corporate letters, the persons who wrote/sign are the senders. The letterhead indicates the organization but the actual writers/signers are Groschopf and Ritter. However, sometimes they want the entity on the letterhead. Let's check image 1 left top: \\\"Basler Rheinschiffahrt-Aktiengesellschaft Marktgasse 5\\\". That is the sender address. Then on right the recipient. So the sending entity is that company, represented by signatories. I think it's safe to include the company and the signatories? But that might be redundant. Let's see if there is any explicit \\\"Von\\\" or \\\"Absender\\\". No.\\n\\nGiven the instruction \\\"Name(s) of the person(s) who wrote the letter\\\" -> persons, not organizations. So Groschopf and J.A. Ritter are persons. But are they the writers? Yes they signed. So I'll list them. However, we might also include the company? No, that's not a person.\\n\\nBut wait, in image 3 the signature block lists \\\"sig. Groschopf J.A.Ritter.\\\" So two persons.\\n\\nThus:\\nsender_persons: [\\\"Groschopf\\\", \\\"J.A. Ritter\\\"]\\n\\nBut need full names? Only \\\"Groschopf\\\" and \\\"J.A.Ritter\\\" available.\\n\\nReceiver: [\\\"Dr. Max Vischer\\\"]\\n\\nLet's also consider date might be approximate? It's exact: 13 August 1926.\\n\\nThus output JSON.\"},\"seed\":null}],\"created\":1786804253,\"model\":\"thinkingmachines/Inkling\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":\"default\",\"usage\":{\"completion_tokens\":1211,\"prompt_tokens\":6106,\"total_tokens\":7317,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":null,\"reasoning_tokens\":1141,\"rejected_prediction_tokens\":null},\"prompt_tokens_details\":{\"audio_tokens\":null,\"cached_tokens\":256}},\"prompt\":[]}"
+}

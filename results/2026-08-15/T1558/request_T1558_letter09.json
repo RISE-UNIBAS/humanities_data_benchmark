@@ -1,0 +1,48 @@
+{
+    "text": "{\"metadata\":{\"send_date\":[\"1946-06-28\"],\"letter_title\":[\"\"],\"sender_persons\":[\"Dr. Fritz Steiger\",\"Dr. Max Vischer\"],\"receiver_persons\":[\"P. Christ-Wackernagel\"]}}",
+    "model": "thinkingmachines/Inkling",
+    "provider": "huggingface",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 4180,
+        "output_tokens": 1045,
+        "total_tokens": 5225,
+        "cached_tokens": 256,
+        "input_cost_usd": 0.00418,
+        "output_cost_usd": 0.00423225,
+        "estimated_cost_usd": 0.00841225
+    },
+    "duration": 14.208884000778198,
+    "timestamp": "2026-08-15T16:39:44.394696",
+    "parsed": {
+        "metadata": {
+            "send_date": [
+                "1946-06-28"
+            ],
+            "letter_title": [
+                ""
+            ],
+            "sender_persons": [
+                "Dr. Fritz Steiger",
+                "Dr. Max Vischer"
+            ],
+            "receiver_persons": [
+                "P. Christ-Wackernagel"
+            ],
+            "document_number": "letter09"
+        }
+    },
+    "conversation_id": "a7341e72-d50d-4867-87ff-10a97082c2ef",
+    "score": {
+        "send_date_tp": 0,
+        "send_date_fp": 1,
+        "send_date_fn": 1,
+        "sender_persons_tp": 1,
+        "sender_persons_fp": 1,
+        "sender_persons_fn": 0,
+        "receiver_persons_tp": 1,
+        "receiver_persons_fp": 0,
+        "receiver_persons_fn": 0
+    },
+    "raw_response": "{\"id\":\"owJpWC4-6z2FuN-a2b8f2fc1deffeee\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\n  \\\"metadata\\\": {\\n    \\\"send_date\\\": [\\\"1946-06-28\\\"],\\n    \\\"letter_title\\\": [\\\"\\\"],\\n    \\\"sender_persons\\\": [\\\"Dr. Fritz Steiger\\\", \\\"Dr. Max Vischer\\\"],\\n    \\\"receiver_persons\\\": [\\\"P. Christ-Wackernagel\\\"]\\n  }\\n}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"metadata\":{\"send_date\":[\"1946-06-28\"],\"letter_title\":[\"\"],\"sender_persons\":[\"Dr. Fritz Steiger\",\"Dr. Max Vischer\"],\"receiver_persons\":[\"P. Christ-Wackernagel\"]}},\"reasoning\":\"We need parse letter images. Need extract letter_title, sender_persons, send_date, receiver_persons. Let's analyze image content.\\n\\nImage 1: Letterhead \\\"DR FRITZ STEIGER\\\" \\\"DR MAX VISCHER\\\" \\\"ADVOCATEN UND NOTARE\\\" \\\"BASEL\\\" address etc. Date at top right: \\\"Basel, den 28. Juni 1946.\\\" Addressee: \\\"Herrn P. Christ-Wackernagel, vom Hause Paravicini, Christ & Co., Basel Kaufhausgasse\\\". Then salutation \\\"Sehr geehrter Herr Christ,\\\" Body mentions writing on behalf of client? At bottom page 1 maybe signature? Not visible fully. Page 2 continues with \\\"-2-\\\" and ends \\\"Mit hochachtungsvollen Gr\u00fcssen Ihr ergebener\\\" then signature \\\"Max Vischer\\\"? Actually signature looks like \\\"Max Vischer\\\" maybe. So sender likely Dr. Max Vischer? Or law firm? Need determine sender_persons: likely \\\"Max Vischer\\\" or \\\"Dr. Fritz Steiger\\\" and \\\"Dr. Max Vischer\\\"? Let's inspect letterhead lists both. The signature at end page 2 is \\\"Max Vischer\\\" (maybe with Dr.). So sender_persons: [\\\"Max Vischer\\\"]? Or include firm? The prompt asks Name(s) of person(s) who wrote the letter. Given signature is Max Vischer, likely that. Could also be \\\"Dr. Max Vischer\\\". We'll include \\\"Dr. Max Vischer\\\" maybe.\\n\\nLetter title? Not explicit. Maybe null? Or could derive from content? The instruction: \\\"letter_title: Title of the letter.\\\" If not present, null. There's no title like \\\"Betreff\\\" maybe? Actually there might be subject line? In image 1 near top right there's \\\"Basel, den 28. Juni 1946.\\\" Then \\\"Herrn...\\\" Then \\\"Basel\\\" \\\"Kaufhausgasse\\\". No explicit title. So letter_title: [null]? Wait they said values stored as list, even if single value. If not included set value to \\\"null\\\". So [\\\"null\\\"]? In example they used actual values. For missing, probably [\\\"null\\\"]. But need check format: \\\"If a piece of information is not included in the letter, set the value for the corresponding key to \\\"null\\\".\\\" So JSON value should be null? But they said values corresponding to each key should be stored as a list. So likely [\\\"null\\\"]? Or [null]? Usually in these extraction tasks they want list containing null? Let's examine example: all values are lists of strings. For missing, probably [null]. But they said set the value ... to \\\"null\\\" (string?). Hmm but consistency with list might be [\\\"null\\\"]. Let's think: They said \\\"return them in a JSON file where the values corresponding to each key should be stored as a list, even if there is only a single value for a key\\\". Then \\\"If a piece of information is not included in the letter, set the value for the corresponding key to \\\"null\\\".\\\" This could mean the list contains the string \\\"null\\\" or the JSON null inside list? Typically in these prompts they want [\\\"null\\\"] as string? Actually in many similar prompts, they say set value to null (without quotes) but since it's in a list, it becomes [null]. Let's decide later. But likely [null].\\n\\nSend date: \\\"1946-06-28\\\" (Basel, den 28. Juni 1946).\\n\\nReceiver persons: \\\"P. Christ-Wackernagel\\\" maybe full name \\\"P. Christ-Wackernagel\\\". Also \\\"vom Hause Paravicini, Christ & Co.\\\" but receiver is Herr P. Christ-Wackernagel. So [\\\"P. Christ-Wackernagel\\\"].\\n\\nNeed check if there are other senders? The letter is from law firm Dr Fritz Steiger and Dr Max Vischer, but signed by Max Vischer. We'll put [\\\"Dr. Max Vischer\\\"].\\n\\nCheck letter title: Maybe there is a subject in the body? No. So null.\\n\\nThus JSON:\\n{\\n\\\"letter_title\\\": [null],\\n\\\"sender_persons\\\": [\\\"Dr. Max Vischer\\\"],\\n\\\"send_date\\\": [\\\"1946-06-28\\\"],\\n\\\"receiver_persons\\\": [\\\"P. Christ-Wackernagel\\\"]\\n}\\n\\nBut need be precise with name: \\\"P. Christ-Wackernagel\\\" or \\\"Herr P. Christ-Wackernagel\\\". We'll use \\\"P. Christ-Wackernagel\\\".\\n\\nLet's also consider if sender includes both lawyers? The letterhead lists both, but only one signs. Usually sender is the one signing. So Max Vischer.\\n\\nThus output.\"},\"seed\":null}],\"created\":1786804773,\"model\":\"thinkingmachines/Inkling\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":\"default\",\"usage\":{\"completion_tokens\":1045,\"prompt_tokens\":4180,\"total_tokens\":5225,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":null,\"reasoning_tokens\":972,\"rejected_prediction_tokens\":null},\"prompt_tokens_details\":{\"audio_tokens\":null,\"cached_tokens\":256}},\"prompt\":[]}"
+}

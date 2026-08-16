@@ -1,0 +1,73 @@
+{
+    "text": "{\"advertisements\":[{\"box\":[130.0,45.0,2400.0,260.0]},{\"box\":[145.0,295.0,1150.0,665.0]},{\"box\":[1200.0,270.0,2400.0,690.0]},{\"box\":[130.0,705.0,1150.0,910.0]},{\"box\":[1200.0,705.0,2400.0,910.0]}]}",
+    "model": "meta-models/Muse-Glimmer-30B",
+    "provider": "huggingface",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 3916,
+        "output_tokens": 1620,
+        "total_tokens": 5536,
+        "cached_tokens": 48,
+        "input_cost_usd": 0.0013706,
+        "output_cost_usd": 0.00243,
+        "estimated_cost_usd": 0.0038006
+    },
+    "duration": 19.419889211654663,
+    "timestamp": "2026-08-16T03:37:47.465169",
+    "parsed": {
+        "advertisements": [
+            {
+                "box": [
+                    130.0,
+                    45.0,
+                    2400.0,
+                    260.0
+                ]
+            },
+            {
+                "box": [
+                    145.0,
+                    295.0,
+                    1150.0,
+                    665.0
+                ]
+            },
+            {
+                "box": [
+                    1200.0,
+                    270.0,
+                    2400.0,
+                    690.0
+                ]
+            },
+            {
+                "box": [
+                    130.0,
+                    705.0,
+                    1150.0,
+                    910.0
+                ]
+            },
+            {
+                "box": [
+                    1200.0,
+                    705.0,
+                    2400.0,
+                    910.0
+                ]
+            }
+        ]
+    },
+    "conversation_id": "27c85eb3-87a1-4c59-8896-0df69ed2f410",
+    "score": {
+        "f1": 0.0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "mean_iou": 0.0,
+        "true_positives": 0,
+        "false_positives": 5,
+        "false_negatives": 5,
+        "iou_threshold": 0.5
+    },
+    "raw_response": "{\"id\":\"owNJqUk-fdNmn-a2bcb6cb18386c71\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{  \\n  \\\"advertisements\\\": [  \\n    {  \\n      \\\"box\\\": [130, 45, 2400, 260]  \\n    },  \\n    {  \\n      \\\"box\\\": [145, 295, 1150, 665]  \\n    },  \\n    {  \\n      \\\"box\\\": [1200, 270, 2400, 690]  \\n    },  \\n    {  \\n      \\\"box\\\": [130, 705, 1150, 910]  \\n    },  \\n    {  \\n      \\\"box\\\": [1200, 705, 2400, 910]  \\n    }  \\n  ]  \\n}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"advertisements\":[{\"box\":[130.0,45.0,2400.0,260.0]},{\"box\":[145.0,295.0,1150.0,665.0]},{\"box\":[1200.0,270.0,2400.0,690.0]},{\"box\":[130.0,705.0,1150.0,910.0]},{\"box\":[1200.0,705.0,2400.0,910.0]}]},\"reasoning\":\"Extract all advertisements and return their bounding boxes.\\nThe original size of the page is 2479 x 3508 pixels.\\n\\nI need find ads. Page shows:\\n\\nTop: WELTIFURRER ANGLO-SWISS TRANSPORT-SERVICE INTERNATIONAL TRANSPORT CO. LTD. ZURICH. That's an ad. Bounding box.\\n\\nMiddle left: SORNA watch ad. \\\"CELLE QUI S'IMPOSE SORNA E SCHENKER SORNA WATCH DELEMONT / SUISSE\\\". That's an ad.\\n\\nMiddle right: Paul Buhr\u00e9 S.A. LE LOCLE - SUISSE. With Beethoven image and bracelet watch. That's an ad.\\n\\nBottom left: OSCAR NEHER & CO., LTD., MELS Switzerland Manufacturer of electro-chemical products for bleaching... That's an ad.\\n\\nBottom right: DONALD HARRADINE Turf Specialist Magliaso-Lugano Golf Courses... That's an ad.\\n\\nSo 5 ads.\\n\\nNeed bounding boxes. Coordinates likely normalized? Usually return as [x_min, y_min, x_max, y_max] in pixels. Original size 2479 x 3508. Need estimate.\\n\\nLet's approximate.\\n\\nTop ad: spans almost full width. Top ~ 45px? Let's estimate. Image shows top ad from about y=45 to y=260? Actually top margin. Let's approximate coordinates.\\n\\nBetter to give relative? Might be expected as pixel coordinates.\\n\\nI'll estimate:\\n\\nTop ad: x_min ~ 130, y_min ~ 45, x_max ~ 945? Wait page width 2479. The ad is maybe from left ~130 to right ~ 945? Actually the page is a bit narrower. The ad spans almost full width of page content. Let's assume left margin ~ 130, right ~ 945? No 2479 is full image including black border. The page content is inside. Let's approximate content area: left ~ 130, right ~ 945? Hmm 2479 is wide. Maybe the image is 2479 wide, page is centered. The ad width maybe ~ 900? Let's look: the top ad is about 85% of page width. So x_min ~ 130, x_max ~ 2350? Wait 2479 is total. The page is maybe 2400 wide. Let's assume left ~ 130, right ~ 2400. Let's try more precise.\\n\\nGiven typical layout, I can give approximate bounding boxes in pixels:\\n\\nTop ad: [130, 45, 945? No]. Hmm.\\n\\nAlternative: use normalized 0-1000. Might be better to give relative coordinates.\\n\\nThe instruction: return their bounding boxes. Original size 2479 x 3508 pixels. So give pixel coordinates.\\n\\nI'll estimate:\\n\\nTop ad: x_min=130, y_min=45, x_max=945? Wait 945 is too small. Let's think: the image width 2479. The page content maybe starts at ~ 130 and ends at ~ 2400. So width ~ 2270. So top ad x_min ~ 130, x_max ~ 2400. y_min ~ 45, y_max ~ 260.\\n\\nMiddle left SORNA: x_min ~ 145, y_min ~ 295, x_max ~ 520, y_max ~ 665.\\n\\nMiddle right Paul Buhr\u00e9: x_min ~ 560, y_min ~ 270, x_max ~ 935, y_max ~ 690.\\n\\nBottom left Oscar Neher: x_min ~ 130, y_min ~ 705, x_max ~ 530, y_max ~ 910.\\n\\nBottom right Donald Harradine: x_min ~ 560, y_min ~ 705, x_max ~ 935, y_max ~ 910.\\n\\nBut these x_max values seem off because 935 is less than 2400. Maybe the image is cropped? Actually the page is a left page, the right edge is near 950? Wait the image shows the page with a black border on left and right. The page width in image is maybe ~ 2400. The ads are within that. My x_max 935 is too small.\\n\\nLet's re-evaluate: The image width 2479. The page occupies maybe from x=40 to x=2400. The ads span from ~ 130 to ~ 2400. So x_max ~ 2400.\\n\\nLet's assume:\\n\\nTop ad: x_min=130, y_min=45, x_max=2400, y_max=260.\\n\\nSorna ad: x_min=145, y_min=295, x_max=520, y_max=665.\\n\\nPaul Buhr\u00e9 ad: x_min=560, y_min=270, x_max=935? Wait 935 is still small. Maybe the right ad is at x ~ 560 to 935? No that would be narrow. Actually the right ad is to the right of the Sorna ad, but still within page. The page width is ~ 2400. So the right ad x_max maybe ~ 940? Hmm.\\n\\nMaybe the image is not full page width; the scan shows the page with a dark border, but the page itself is about 1000 pixels wide? Let's check typical scan: 2479 x 3508 is about A4 size at ~300 dpi. So width ~ 2479. The page content width maybe ~ 2200. So my earlier estimate of x_max 2400 is plausible.\\n\\nBut the Sorna ad is left half, so x_max maybe ~ 1200. Paul Buhr\u00e9 ad is right half, x_min ~ 1200, x_max ~ 2400.\\n\\nLet's refine:\\n\\nTop ad spans full width: x_min ~ 130, x_max ~ 2400, y_min ~ 45, y_max ~ 260.\\n\\nSorna (left middle): x_min ~ 145, x_max ~ 1150, y_min ~ 295, y_max ~ 665.\\n\\nPaul Buhr\u00e9 (right middle): x_min ~ 1200, x_max ~ 2400, y_min ~ 270, y_max ~ 690.\\n\\nOscar Neher (bottom left): x_min ~ 130, x_max ~ 1150, y_min ~ 705, y_max ~ 910.\\n\\nDonald Harradine (bottom right): x_min ~ 1200, x_max ~ 2400, y_min ~ 705, y_max ~ 910.\\n\\nThat seems more plausible.\\n\\nI'll provide approximate bounding boxes.\\n\\nMaybe provide as [x_min, y_min, x_max, y_max].\\n\\nLet's give:\\n\\n1. Weltifurrer: [130, 45, 2400, 260]\\n2. Sorna watch: [145, 295, 1150, 665]\\n3. Paul Buhr\u00e9 S.A.: [1200, 270, 2400, 690]\\n4. Oscar Neher & Co.: [130, 705, 1150, 910]\\n5. Donald Harradine: [1200, 705, 2400, 910]\\n\\nIf need more precise, could adjust.\\n\\nI'll output list.\\n\\n\"},\"token_ids\":null,\"routed_experts\":null,\"seed\":null}],\"created\":1786844249,\"model\":\"meta-models/Muse-Glimmer-30B\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":\"vllm-0.1.dev19059+g66826a22d-tp2-46311a71\",\"usage\":{\"completion_tokens\":1620,\"prompt_tokens\":3916,\"total_tokens\":5536,\"completion_tokens_details\":null,\"prompt_tokens_details\":{\"audio_tokens\":null,\"cached_tokens\":48,\"created_cache_tokens\":3856,\"multimodal_tokens\":{\"image\":3850}}},\"prompt_token_ids\":null,\"prompt_text\":null,\"kv_transfer_params\":null,\"ec_transfer_params\":null,\"metrics\":null,\"prompt\":[]}"
+}

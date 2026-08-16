@@ -1,0 +1,47 @@
+{
+    "text": "{\"metadata\":{\"send_date\":[\"1928-04-26\"],\"letter_title\":[\"\"],\"sender_persons\":[\"Basler Rheinschiffahrt-Aktiengesellschaft\"],\"receiver_persons\":[\"Max Oettinger\"]}}",
+    "model": "thinkingmachines/Inkling",
+    "provider": "huggingface",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 2254,
+        "output_tokens": 1130,
+        "total_tokens": 3384,
+        "cached_tokens": 256,
+        "input_cost_usd": 0.002254,
+        "output_cost_usd": 0.0045765,
+        "estimated_cost_usd": 0.0068305
+    },
+    "duration": 22.247097492218018,
+    "timestamp": "2026-08-15T16:31:30.017062",
+    "parsed": {
+        "metadata": {
+            "send_date": [
+                "1928-04-26"
+            ],
+            "letter_title": [
+                ""
+            ],
+            "sender_persons": [
+                "Basler Rheinschiffahrt-Aktiengesellschaft"
+            ],
+            "receiver_persons": [
+                "Max Oettinger"
+            ],
+            "document_number": "letter29"
+        }
+    },
+    "conversation_id": "4de914e4-dad3-494a-8b05-1f54f49840ae",
+    "score": {
+        "send_date_tp": 1,
+        "send_date_fp": 0,
+        "send_date_fn": 0,
+        "sender_persons_tp": 0,
+        "sender_persons_fp": 1,
+        "sender_persons_fn": 2,
+        "receiver_persons_tp": 1,
+        "receiver_persons_fp": 0,
+        "receiver_persons_fn": 0
+    },
+    "raw_response": "{\"id\":\"owJmvqJ-6z2FuN-a2b8e6b81ecc2158\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\n  \\\"metadata\\\": {\\n    \\\"send_date\\\": [\\\"1928-04-26\\\"],\\n    \\\"letter_title\\\": [\\\"\\\"],\\n    \\\"sender_persons\\\": [\\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"],\\n    \\\"receiver_persons\\\": [\\\"Max Oettinger\\\"]\\n  }\\n}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"metadata\":{\"send_date\":[\"1928-04-26\"],\"letter_title\":[\"\"],\"sender_persons\":[\"Basler Rheinschiffahrt-Aktiengesellschaft\"],\"receiver_persons\":[\"Max Oettinger\"]}},\"reasoning\":\"We need parse image: letter from Basler Rheinschiffahrt-Aktiengesellschaft? Need extract title, sender, date, receiver.\\n\\nLooking at image: Top left \\\"Basler Rheinschiffahrt-Aktiengesellschaft Marktgasse 5...\\\" Top right \\\"Basel, den 26. April 1928.\\\" So send_date 1928-04-26.\\n\\nAddressee: \\\"Herrn Max Oettinger, Verkehrsbureau, Basel.\\\" So receiver Max Oettinger, maybe Verkehrsbureau? But key receiver_persons list names. So [\\\"Max Oettinger\\\"].\\n\\nLetter title? Not explicit title like \\\"Betreff\\\"? There's \\\"R/N.\\\" maybe not title. Could be null? But maybe letter has no title. Let's check if there's a subject line. The body mentions \\\"Wir best\u00e4tigen den Empfang Ihres Schreibens vom 25. ds. mit den darin unter 1 - 5 erw\u00e4hnten Schriftst\u00fccken...\\\" Not a title. So letter_title null? Or maybe \\\"R/N\\\" is reference? But likely null.\\n\\nSender persons: Signed \\\"Hochachtend BASLER RHEINSCHIFFFAHRT-AKTIENGESELLSCHAFT\\\" with signature. So sender organization/person? The prompt asks Name(s) of person(s) who wrote the letter. Might be the company? But \\\"sender_persons\\\" likely can include organization? In example they used personal names. Here the letter is from company, signed maybe by someone with signature unreadable. The letterhead is Basler Rheinschiffahrt-Aktiengesellschaft. So sender_persons maybe [\\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"]? Or null if not a person? Let's think.\\n\\nWe need return JSON exactly.\\n\\nThus:\\n{\\n\\\"letter_title\\\": [null? Or empty? The instructions say if not included set value to \\\"null\\\". But value should be stored as a list, even if single value. So [\\\"null\\\"]? Actually they said set the value for corresponding key to \\\"null\\\". In example values are lists of strings. If missing, probably [\\\"null\\\"]? Or the value is null inside list? Let's check wording: \\\"return them in a JSON file where the values corresponding to each key should be stored as a list, even if there is only a single value for a key\\\" and \\\"If a piece of information is not included in the letter, set the value for the corresponding key to 'null'.\\\" This is ambiguous: do they want the list to contain the string \\\"null\\\", or the JSON null? Usually in these extraction tasks they want [\\\"null\\\"]? Let's examine example: all present. But in other prompts they often want null not in list? However they explicitly said values should be stored as a list. So likely [\\\"null\\\"] if missing. But sometimes they want null (without list) despite saying list? Let's adhere strictly: value is a list. If information missing, the list should contain \\\"null\\\"? Or be [null]? The phrase \\\"set the value for the corresponding key to 'null'\\\" suggests the value (the list?) is null? But they said store as list. Hmm.\\n\\nLet's decide: letter_title is missing, so \\\"letter_title\\\": [\\\"null\\\"]? Or \\\"letter_title\\\": null? Given consistency, probably [\\\"null\\\"]. But I think better to use null inside list? Actually JSON can have [null]. But they said set value to \\\"null\\\" (string?). Let's check typical patterns in these prompts: They ask \\\"set the value for the corresponding key to 'null'\\\" and in outputs often see \\\"letter_title\\\": null without brackets? But they also said values should be stored as a list. There's conflict. Let's resolve by putting list with null element? Or list with string \\\"null\\\"? Let's examine mental examples: If date missing, they'd want [\\\"null\\\"]? Not sure.\\n\\nBut we have date, sender, receiver. For sender, we can put [\\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"]. Or maybe include signature name? The signature is illegible, but printed below \\\"Hochachtend BASLER RHEINSCHIFFFAHRT-AKTIENGESELLSCHAFT\\\". So that's the sender entity.\\n\\nThus:\\n{\\n\\\"letter_title\\\": null? Let's provide [\\\"null\\\"]? Actually I think safest is to include null not in list? No, they said list. Let's do:\\n\\\"letter_title\\\": [null]\\nBut JSON null is not quoted. Or \\\"letter_title\\\": [\\\"null\\\"]. Let's pick [\\\"null\\\"] as string? Hmm.\\n\\nLet's check receiver: \\\"Herrn Max Oettinger, Verkehrsbureau, Basel\\\" -> [\\\"Max Oettinger\\\"].\\n\\nSend date: [\\\"1928-04-26\\\"].\\n\\nSender: [\\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"].\\n\\nLet's output that. For title missing: [\\\"null\\\"]? Actually if I put [null] it's a list containing null. That might be correct interpretation of \\\"value ... to null\\\" within list constraint. Let's do [null]. But some parsers expect string. However it's okay.\\n\\nWait, there might be a title \\\"R/N.\\\"? No, that's reference number.\\n\\nThus final JSON.\"},\"seed\":null}],\"created\":1786804269,\"model\":\"thinkingmachines/Inkling\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":\"default\",\"usage\":{\"completion_tokens\":1130,\"prompt_tokens\":2254,\"total_tokens\":3384,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":null,\"reasoning_tokens\":1063,\"rejected_prediction_tokens\":null},\"prompt_tokens_details\":{\"audio_tokens\":null,\"cached_tokens\":256}},\"prompt\":[]}"
+}

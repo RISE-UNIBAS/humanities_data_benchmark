@@ -1,0 +1,65 @@
+{
+    "text": "{\"advertisements\":[{\"box\":[150.0,130.0,950.0,1750.0]},{\"box\":[970.0,130.0,1850.0,1750.0]},{\"box\":[150.0,1750.0,950.0,3200.0]},{\"box\":[970.0,1750.0,1850.0,3200.0]}]}",
+    "model": "meta-models/Muse-Glimmer-30B",
+    "provider": "huggingface",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 3916,
+        "output_tokens": 1333,
+        "total_tokens": 5249,
+        "cached_tokens": 48,
+        "input_cost_usd": 0.0013706,
+        "output_cost_usd": 0.0019995,
+        "estimated_cost_usd": 0.0033701
+    },
+    "duration": 16.09759521484375,
+    "timestamp": "2026-08-16T03:38:26.862217",
+    "parsed": {
+        "advertisements": [
+            {
+                "box": [
+                    150.0,
+                    130.0,
+                    950.0,
+                    1750.0
+                ]
+            },
+            {
+                "box": [
+                    970.0,
+                    130.0,
+                    1850.0,
+                    1750.0
+                ]
+            },
+            {
+                "box": [
+                    150.0,
+                    1750.0,
+                    950.0,
+                    3200.0
+                ]
+            },
+            {
+                "box": [
+                    970.0,
+                    1750.0,
+                    1850.0,
+                    3200.0
+                ]
+            }
+        ]
+    },
+    "conversation_id": "08898961-9c51-4057-a17a-043c4be48bf1",
+    "score": {
+        "f1": 0.5,
+        "precision": 0.5,
+        "recall": 0.5,
+        "mean_iou": 0.751,
+        "true_positives": 2,
+        "false_positives": 2,
+        "false_negatives": 2,
+        "iou_threshold": 0.5
+    },
+    "raw_response": "{\"id\":\"owNK45g-fdNmn-a2bcb7d40ac9dff2\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{  \\n\\\"advertisements\\\": [  \\n{  \\n \\\"box\\\": [150, 130, 950, 1750]  \\n},  \\n{  \\n \\\"box\\\": [970, 130, 1850, 1750]  \\n},  \\n{  \\n \\\"box\\\": [150, 1750, 950, 3200]  \\n},  \\n{  \\n \\\"box\\\": [970, 1750, 1850, 3200]  \\n}  \\n]  \\n}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"advertisements\":[{\"box\":[150.0,130.0,950.0,1750.0]},{\"box\":[970.0,130.0,1850.0,1750.0]},{\"box\":[150.0,1750.0,950.0,3200.0]},{\"box\":[970.0,1750.0,1850.0,3200.0]}]},\"reasoning\":\"Extract all advertisements and return their bounding boxes. The original size of the page is 2479 x 3508 pixels.\\n\\nWe need bounding boxes for each advertisement. There are four ads: top left Langford's Technical and Commercial Dictionary, top right W. Triebold watch, bottom left Sindaco S.A. Locarno, bottom right Rodana.\\n\\nNeed coordinates. Probably normalized? Usually bounding boxes as [x_min, y_min, x_max, y_max] in pixels. Original size 2479 x 3508. Need estimate.\\n\\nLet's approximate. Image shows page with left margin. The ads are within.\\n\\nTop left ad: from about x ~ 60 to ~ 460? Wait page width 2479. The leftmost content starts around maybe 120? Let's estimate relative.\\n\\nBetter to give approximate coordinates. Might be expected as normalized 0-1000? Usually bounding boxes in pixels.\\n\\nI'll estimate:\\n\\nTop left dictionary ad: x_min ~ 150, y_min ~ 130, x_max ~ 460, y_max ~ 500? Wait y up to about 500? Actually top left box ends around middle. Let's see image: top left box occupies top left quadrant. Approx y from ~ 130 to ~ 500? The box border. Maybe y_max ~ 500? Hmm.\\n\\nAlternative: use relative percentages. Could give [x1,y1,x2,y2] in pixels.\\n\\nLet's assume page width 2479, height 3508.\\n\\nTop left ad bounding box: left ~ 150, top ~ 130, right ~ 460? Wait width of box maybe ~ 450? Actually the box is about 1/3 of page width. Page width 2479, so 1/3 ~ 826. Hmm maybe 150 to 900? Let's look: the top left box is left side, about 1/3 width. The top right ad starts at about 470? Actually the gap between them is small. So top left right edge ~ 470? No.\\n\\nBetter estimate visually: The page has a margin left ~ 50px. The top left box starts at ~ 120 px from left edge of image. Ends at ~ 460? Wait the top right ad starts at ~ 470. So top left ends ~ 460. Height from top ~ 120 to ~ 500? The box ends at about middle of page. Middle is ~ 1754. So maybe y_max ~ 500? Actually the box is about 1/3 height. So ~ 1200? Hmm.\\n\\nLet's approximate more carefully. The image shows four quadrants. Top left occupies top left quarter. So x from ~ 100 to ~ 900? Wait the page is maybe 2479 wide. The left column is about 40% width. So x_max ~ 1000. The top right starts at ~ 1000. So top left x_max ~ 1000. Similarly y_max ~ 1750? No top half is ~ 1754. So top left y_max ~ 1750? But the box has a border, and below it is bottom left ad. The gap between top and bottom is small. So top left y_max ~ 1750? Actually the top half height is about 1750. So top left y_max ~ 1750? Wait the top left box ends at about 50% height. So y_max ~ 1750.\\n\\nLet's assume:\\n\\nTop left: x_min=150, y_min=130, x_max=950, y_max=1750\\n\\nTop right: x_min=950, y_min=130, x_max=1850, y_max=1750\\n\\nBottom left: x_min=150, y_min=1750, x_max=950, y_max=3200\\n\\nBottom right: x_min=950, y_min=1750, x_max=1850, y_max=3200\\n\\nBut need more precise. Could be 60 to 460? Hmm.\\n\\nMaybe the coordinates are relative to the page content, not the whole image including black border. The original size 2479x3508. The page content is centered. The black border is maybe 50px. Might be okay.\\n\\nAlternative approach: Provide normalized coordinates 0-1. Might be acceptable.\\n\\nI'll give approximate pixel boxes:\\n\\n1. Langford's Technical and Commercial Dictionary: [~140, ~130, ~950, ~1750]\\n2. W. Triebold watch: [~970, ~130, ~1850, ~1750]\\n3. Sindaco S.A. Locarno: [~140, ~1750, ~950, ~3200]\\n4. Rodana: [~970, ~1750, ~1850, ~3200]\\n\\nMaybe refine: top left x_max ~ 460? Wait the image shows the top left box is narrower than top right? Actually top left box looks about same width as top right. So maybe x_max ~ 1000.\\n\\nLet's give bounding boxes with some margin.\\n\\nI'll output as list.\\n\\nProbably the expected format: [{\\\"x_min\\\":..., \\\"y_min\\\":..., \\\"x_max\\\":..., \\\"y_max\\\":...}, ...]\\n\\nI'll provide approximate.\\n\\nLet's assume:\\n\\nLangford: x_min=150, y_min=130, x_max=950, y_max=1750\\n\\nW. Triebold: x_min=970, y_min=130, x_max=1850, y_max=1750\\n\\nSindaco: x_min=150, y_min=1750, x_max=950, y_max=3200\\n\\nRodana: x_min=970, y_min=1750, x_max=1850, y_max=3200\\n\\nIf need tighter: maybe x_min=160, y_min=140, x_max=940, y_max=1700 etc.\\n\\nI'll give ranges.\\n\\nFinal answer with four boxes.\\n\\n\"},\"token_ids\":null,\"routed_experts\":null,\"seed\":null}],\"created\":1786844292,\"model\":\"meta-models/Muse-Glimmer-30B\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":\"vllm-0.1.dev19059+g66826a22d-tp2-46311a71\",\"usage\":{\"completion_tokens\":1333,\"prompt_tokens\":3916,\"total_tokens\":5249,\"completion_tokens_details\":null,\"prompt_tokens_details\":{\"audio_tokens\":null,\"cached_tokens\":48,\"created_cache_tokens\":3856,\"multimodal_tokens\":{\"image\":3850}}},\"prompt_token_ids\":null,\"prompt_text\":null,\"kv_transfer_params\":null,\"ec_transfer_params\":null,\"metrics\":null,\"prompt\":[]}"
+}

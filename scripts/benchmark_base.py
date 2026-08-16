@@ -107,7 +107,7 @@ class Benchmark(ABC):
         if not os.path.exists(os.path.join(self.benchmark_dir, "ground_truths")):
             logging.error(f"Ground truths directory not found: {self.benchmark_dir}")
             return False
-        if self.provider not in ["openai", "genai", "anthropic", "mistral", "openrouter", "scicore", "cohere", "deepseek", "x-ai", "alibaba"] \
+        if self.provider not in ["openai", "genai", "anthropic", "mistral", "openrouter", "scicore", "cohere", "deepseek", "x-ai", "alibaba", "huggingface"] \
                 and not is_local_provider(self.provider):
             logging.error(f"Invalid provider: {self.provider}")
             return False
@@ -571,6 +571,10 @@ class Benchmark(ABC):
             answer = self.ask_llm(object_basename)
             if answer is None:
                 logging.error(f"{prefix} LLM returned None for {self.id}, {object_basename}")
+                score = None
+            elif self.dataclass and answer.parsed is None:
+                logging.error(f"{prefix} No parseable JSON for {self.id}, {object_basename} "
+                              f"(truncated, empty or non-JSON completion); scoring skipped")
                 score = None
             else:
                 ground_truth = self.load_ground_truth(object_basename)

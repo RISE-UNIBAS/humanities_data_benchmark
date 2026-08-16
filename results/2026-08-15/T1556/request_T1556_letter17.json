@@ -1,0 +1,45 @@
+{
+    "text": "{\"metadata\":{\"send_date\":[\"1928-03-01\"],\"letter_title\":null,\"sender_persons\":[\"Basler Rheinschiffahrt-Aktiengesellschaft\"],\"receiver_persons\":[\"Basler Personenschiffahrtsgesellschaft\"]}}",
+    "model": "thinkingmachines/Inkling",
+    "provider": "huggingface",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 4425,
+        "output_tokens": 1008,
+        "total_tokens": 5433,
+        "cached_tokens": 256,
+        "input_cost_usd": 0.004425,
+        "output_cost_usd": 0.0040824,
+        "estimated_cost_usd": 0.0085074
+    },
+    "duration": 42.320513010025024,
+    "timestamp": "2026-08-15T16:29:41.986037",
+    "parsed": {
+        "metadata": {
+            "letter_title": null,
+            "sender_persons": [
+                "Basler Rheinschiffahrt-Aktiengesellschaft"
+            ],
+            "send_date": [
+                "1928-03-01"
+            ],
+            "receiver_persons": [
+                "Basler Personenschiffahrtsgesellschaft"
+            ],
+            "document_number": "letter17"
+        }
+    },
+    "conversation_id": "9b14e3a6-b1ee-42ce-a062-89e8acd967cb",
+    "score": {
+        "send_date_tp": 1,
+        "send_date_fp": 0,
+        "send_date_fn": 0,
+        "sender_persons_tp": 0,
+        "sender_persons_fp": 1,
+        "sender_persons_fn": 2,
+        "receiver_persons_tp": 0,
+        "receiver_persons_fp": 1,
+        "receiver_persons_fn": 0
+    },
+    "raw_response": "{\"id\":\"owJmReq-31r7CA-a2b8e4530e49563a\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\n  \\\"metadata\\\": {\\n    \\\"letter_title\\\": null,\\n    \\\"sender_persons\\\": [\\n      \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"\\n    ],\\n    \\\"send_date\\\": [\\n      \\\"1928-03-01\\\"\\n    ],\\n    \\\"receiver_persons\\\": [\\n      \\\"Basler Personenschiffahrtsgesellschaft\\\"\\n    ]\\n  }\\n}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":[],\"reasoning\":\"We need parse image of historical letter, extract keys: letter_title, sender_persons, send_date, receiver_persons. Need return JSON with lists.\\n\\nLet's analyze images.\\n\\nImage 1: Letterhead \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\" address etc. Date at top right: \\\"Basel, den 1. M\u00e4rz 1928.\\\" Then addressed? \\\"Basler Personenschiffahrtsgesellschaft, Basel.\\\" Subject line: \\\"Betrifft Ihr Schreiben vom 27. Februar.\\\" So letter is from Basler Rheinschiffahrt-Aktiengesellschaft? Actually letterhead is Basler Rheinschiffahrt-Aktiengesellschaft, and they write to Basler Personenschiffahrtsgesellschaft, Basel. At bottom of page 2 there is signature \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\" with signatures. So sender is Basler Rheinschiffahrt-Aktiengesellschaft. Receiver is Basler Personenschiffahrtsgesellschaft, Basel (maybe just Basler Personenschiffahrtsgesellschaft). Send date 1928-03-01. Letter title? Maybe none explicit, but could be null? Or maybe subject \\\"Betrifft Ihr Schreiben vom 27. Februar\\\" not a title. The prompt asks \\\"letter_title: Title of the letter.\\\" Might be null if not present. But sometimes they use the subject line? Let's check example had \\\"Petition for Environmental Protection\\\" which sounds like title. Here there is no explicit title except maybe the letterhead? But likely null. However need be precise.\\n\\nLet's verify page 2 header: \\\"Basler Personenschiffahrtsgesellschaft, B a s e l. 1.3.28.\\\" That might indicate recipient address block? Actually it's centered at top of page 2, maybe indicating the recipient? Wait page 1 has letterhead sender on left, date right, then on right side \\\"Basler Personenschiffahrtsgesellschaft, Basel.\\\" That is the addressee. So receiver_persons: [\\\"Basler Personenschiffahrtsgesellschaft\\\"].\\n\\nThus JSON:\\n{\\n\\\"metadata\\\": {\\n\\\"letter_title\\\": [null? Or maybe \\\"Betrifft Ihr Schreiben vom 27. Februar\\\"? Let's think. The key is \\\"letter_title\\\" not \\\"subject\\\". In many extraction tasks, if there's a subject line like \\\"Betreff: ...\\\" they might consider it title? But example used \\\"Petition for Environmental Protection\\\" which is like a document title. Here there is \\\"Betrifft Ihr Schreiben vom 27. Februar.\\\" That is more of a reference line, not title. I think null is appropriate, but need check consistency. However they said \\\"If a piece of information is not included in the letter, set the value for the corresponding key to 'null'.\\\" Is there a title included? Not really. So letter_title: null? But they want values stored as a list, even if single value. So [\\\"null\\\"]? Wait they said set value for corresponding key to \\\"null\\\". In example all values are lists of strings. For missing, likely [null]? Or \\\"null\\\" inside list? The schema allows anyOf array of strings or null. Actually schema for each key: anyOf [{\\\"items\\\":{\\\"type\\\":\\\"string\\\"},\\\"type\\\":\\\"array\\\"},{\\\"type\\\":\\\"null\\\"}]. So the value can be either an array of strings or null (not array containing null). Let's check: \\\"anyOf\\\": [{\\\"items\\\": {\\\"type\\\": \\\"string\\\"}, \\\"type\\\": \\\"array\\\"}, {\\\"type\\\": \\\"null\\\"}]. So valid values are either array of strings, or null. So for missing, we should set the key's value to null, not [\\\"null\\\"]. Yes.\\n\\nThus:\\nletter_title: null\\nsender_persons: [\\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"]\\nsend_date: [\\\"1928-03-01\\\"]\\nreceiver_persons: [\\\"Basler Personenschiffahrtsgesellschaft\\\"]\\n\\nNeed match exact schema with metadata object.\\n\\nLet's return:\\n{\\n\\\"metadata\\\": {\\n\\\"letter_title\\\": null,\\n\\\"sender_persons\\\": [\\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"],\\n\\\"send_date\\\": [\\\"1928-03-01\\\"],\\n\\\"receiver_persons\\\": [\\\"Basler Personenschiffahrtsgesellschaft\\\"]\\n}\\n}\\n\\nCheck if sender persons might include individual signatories? The signature at bottom has two signatures, but printed \\\"BASLER RHEINSCHIFFAHRT-AKTIENGESELLSCHAFT\\\". So organization is sender. We'll use that.\\n\\nThus output.\"},\"seed\":null}],\"created\":1786804324,\"model\":\"thinkingmachines/Inkling\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":\"default\",\"usage\":{\"completion_tokens\":1008,\"prompt_tokens\":4425,\"total_tokens\":5433,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":null,\"reasoning_tokens\":927,\"rejected_prediction_tokens\":null},\"prompt_tokens_details\":{\"audio_tokens\":null,\"cached_tokens\":256}},\"prompt\":[]}"
+}

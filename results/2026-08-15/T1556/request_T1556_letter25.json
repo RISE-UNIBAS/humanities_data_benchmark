@@ -1,0 +1,47 @@
+{
+    "text": "{\"metadata\":{\"send_date\":[\"1928-04-04\"],\"letter_title\":[\"Kauf \\\"Rheinfelden\\\"\"],\"sender_persons\":[\"Basler Rheinschiffahrt-Aktiengesellschaft\"],\"receiver_persons\":[\"Basler Personenschiffahrtsgesellschaft\"]}}",
+    "model": "thinkingmachines/Inkling",
+    "provider": "huggingface",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 4180,
+        "output_tokens": 1011,
+        "total_tokens": 5191,
+        "cached_tokens": 256,
+        "input_cost_usd": 0.00418,
+        "output_cost_usd": 0.00409455,
+        "estimated_cost_usd": 0.008274549999999999
+    },
+    "duration": 10.842703342437744,
+    "timestamp": "2026-08-15T16:30:47.637558",
+    "parsed": {
+        "metadata": {
+            "send_date": [
+                "1928-04-04"
+            ],
+            "letter_title": [
+                "Kauf \"Rheinfelden\""
+            ],
+            "sender_persons": [
+                "Basler Rheinschiffahrt-Aktiengesellschaft"
+            ],
+            "receiver_persons": [
+                "Basler Personenschiffahrtsgesellschaft"
+            ],
+            "document_number": "letter25"
+        }
+    },
+    "conversation_id": "7f869b79-bd78-4916-acb8-a97437076418",
+    "score": {
+        "send_date_tp": 1,
+        "send_date_fp": 0,
+        "send_date_fn": 0,
+        "sender_persons_tp": 0,
+        "sender_persons_fp": 1,
+        "sender_persons_fn": 2,
+        "receiver_persons_tp": 0,
+        "receiver_persons_fp": 1,
+        "receiver_persons_fn": 0
+    },
+    "raw_response": "{\"id\":\"owJmmiE-31r7CA-a2b8e5f7fc9dc94b\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\n  \\\"metadata\\\": {\\n    \\\"send_date\\\": [\\\"1928-04-04\\\"],\\n    \\\"letter_title\\\": [\\\"Kauf \\\\\\\"Rheinfelden\\\\\\\"\\\"],\\n    \\\"sender_persons\\\": [\\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"],\\n    \\\"receiver_persons\\\": [\\\"Basler Personenschiffahrtsgesellschaft\\\"]\\n  }\\n}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"metadata\":{\"send_date\":[\"1928-04-04\"],\"letter_title\":[\"Kauf \\\"Rheinfelden\\\"\"],\"sender_persons\":[\"Basler Rheinschiffahrt-Aktiengesellschaft\"],\"receiver_persons\":[\"Basler Personenschiffahrtsgesellschaft\"]}},\"reasoning\":\"We need parse letter images. Need extract letter_title, sender_persons, send_date, receiver_persons. Let's analyze image content.\\n\\nImage 1: Header \\\"Basler Rheinschiffahrt-Aktiengesellschaft Marktgasse 5 ...\\\" Date \\\"Basel, den 4. April 1928.\\\" Addressee? \\\"Basler Personenschiffahrtsgesellschaft, Basel.\\\" Then subject \\\"Betrifft Kauf \\\"Rheinfelden\\\" Ihr Schreiben vom 4. April.\\\" So letter is from Basler Rheinschiffahrt-Aktiengesellschaft to Basler Personenschiffahrtsgesellschaft, dated 1928-04-04. Need title? Maybe not explicit title except subject line? The prompt asks \\\"letter_title: Title of the letter.\\\" Might be null if none, but there might be a title in header? Actually letterhead includes company name, not title. Could use subject \\\"Kauf 'Rheinfelden'\\\"? But need be precise based on visible text. Let's hold.\\n\\nImage 2: Continuation page \\\"- 2 -\\\" Header \\\"Basler Personenschiffahrtsgesellschaft, Basel. 4.4.28.\\\" Then text and signatures \\\"Hochachtend BASLER RHEINSCHIFFAHRT-AKTIENGESELLSCHAFT\\\" with signatures. So sender is Basler Rheinschiffahrt-Aktiengesellschaft. Receiver is Basler Personenschiffahrtsgesellschaft. Date 1928-04-04 (or 4.4.28). Need list values.\\n\\nCheck if there are specific person names? The signatures are illegible? One looks like \\\"G. ...\\\"? But not clear. The prompt asks \\\"Name(s) of the person(s) who wrote the letter.\\\" Might be the company? Or signatories? Usually in these extraction tasks, if only company is present, use company? But key says sender_persons, likely individuals. However signatures are present but unreadable. Let's examine image 2 bottom right: There are two signatures, one maybe \\\"G. Wanner\\\"? Actually hard to tell. But there is printed \\\"BASLER RHEINSCHIFFAHRT-AKTIENGESELLSCHAFT\\\" below. Given instructions \\\"If a piece of information is not included in the letter, set the value... to null\\\". The names of individuals might not be clearly readable, but the company is the sender entity. However \\\"sender_persons\\\" plural persons. Might include the company? Hmm.\\n\\nLet's think about typical extraction from historical letters: They want sender and receiver names, which could be organizations if individuals not named. Here the letter is between two companies. So sender_persons: [\\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"]? Or maybe signatories are present but unreadable, so null? Let's examine image 2 signatures: One signature looks like \\\"J. M\u00fcller\\\"? No, it's cursive. Another signature maybe \\\"A. Huber\\\"? Not clear. Given we shouldn't guess. But the printed name of organization is clear. The address block on image 1 lists sender address with company name at top left. The recipient is \\\"Basler Personenschiffahrtsgesellschaft, Basel.\\\" So likely they want these.\\n\\nWhat about letter_title? Maybe \\\"Kauf 'Rheinfelden'\\\" is the subject/title. Or there might be no explicit title. Let's check image 1: \\\"Betrifft Kauf \\\"Rheinfelden\\\"\\\" means \\\"Subject: Purchase 'Rheinfelden'\\\". That can serve as title. So letter_title: [\\\"Kauf \\\\\\\"Rheinfelden\\\\\\\"\\\"]? Or include \\\"Betrifft\\\"? Probably \\\"Kauf 'Rheinfelden'\\\".\\n\\nSend date: \\\"Basel, den 4. April 1928\\\" -> 1928-04-04.\\n\\nReceiver persons: [\\\"Basler Personenschiffahrtsgesellschaft\\\"].\\n\\nNeed JSON only.\\n\\nBut wait image 2 header includes \\\"Basler Personenschiffahrtsgesellschaft, Basel. 4.4.28.\\\" confirming receiver and date.\\n\\nThus output:\\n{\\n\\\"letter_title\\\": [\\\"Kauf \\\\\\\"Rheinfelden\\\\\\\"\\\"],\\n\\\"send_date\\\": [\\\"1928-04-04\\\"],\\n\\\"sender_persons\\\": [\\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"],\\n\\\"receiver_persons\\\": [\\\"Basler Personenschiffahrtsgesellschaft\\\"]\\n}\\n\\nNeed lists even if single. Yes.\\n\\nDouble-check if any other names appear? In text they mention \\\"Ihr Schreiben vom 4. April\\\" but no names.\\n\\nThus I will return that.\"},\"seed\":null}],\"created\":1786804392,\"model\":\"thinkingmachines/Inkling\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":\"default\",\"usage\":{\"completion_tokens\":1011,\"prompt_tokens\":4180,\"total_tokens\":5191,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":null,\"reasoning_tokens\":933,\"rejected_prediction_tokens\":null},\"prompt_tokens_details\":{\"audio_tokens\":null,\"cached_tokens\":256}},\"prompt\":[]}"
+}

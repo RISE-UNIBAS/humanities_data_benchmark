@@ -1,0 +1,106 @@
+{
+    "text": "{\"type\":{\"type\":\"Dissertation or thesis\"},\"author\":{\"last_name\":\"Ulmer\",\"first_name\":\"Else\"},\"publication\":{\"title\":\"Die T\u00e4tigkeit der Privatnotenbanken w\u00e4hrend des Krieges.\",\"year\":\"1922\",\"place\":\"Erlangen\",\"pages\":\"108\",\"publisher\":\"\",\"format\":\"4\u00b0\",\"editor\":null},\"library_reference\":{\"shelfmark\":\"U 22. 2156\",\"subjects\":\"\"}}",
+    "model": "meta-models/Muse-Glimmer-30B",
+    "provider": "huggingface",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 1918,
+        "output_tokens": 2144,
+        "total_tokens": 4062,
+        "cached_tokens": 1168,
+        "input_cost_usd": 0.0006713,
+        "output_cost_usd": 0.003216,
+        "estimated_cost_usd": 0.0038873000000000002
+    },
+    "duration": 385.02430272102356,
+    "timestamp": "2026-08-15T22:59:30.902620",
+    "parsed": {
+        "type": {
+            "type": "Dissertation or thesis"
+        },
+        "author": {
+            "last_name": "Ulmer",
+            "first_name": "Else"
+        },
+        "publication": {
+            "title": "Die T\u00e4tigkeit der Privatnotenbanken w\u00e4hrend des Krieges.",
+            "year": "1922",
+            "place": "Erlangen",
+            "pages": "108",
+            "publisher": "",
+            "format": "4\u00b0"
+        },
+        "library_reference": {
+            "shelfmark": "U 22. 2156",
+            "subjects": ""
+        }
+    },
+    "conversation_id": "29984285-b044-412b-8849-20ed624e9bcc",
+    "score": {
+        "f1_score": 0.88,
+        "precision": 0.7777777777777778,
+        "recall": 1.0,
+        "true_positives": 7,
+        "false_positives": 2,
+        "false_negatives": 0,
+        "field_scores": {
+            "publication.publisher": {
+                "response": null,
+                "ground_truth": null,
+                "score": 1.0
+            },
+            "publication.title": {
+                "response": "Die T\u00e4tigkeit der Privatnotenbanken w\u00e4hrend des Krieges.",
+                "ground_truth": "Die T\u00e4tigkeit der Privatnotenbanken w\u00e4hrend des Krieges",
+                "score": 0.990990990990991
+            },
+            "publication.format": {
+                "response": "4\u00b0",
+                "ground_truth": "4\u00b0",
+                "score": 1.0
+            },
+            "author.last_name": {
+                "response": "Ulmer",
+                "ground_truth": "Ulmer",
+                "score": 1.0
+            },
+            "library_reference.shelfmark": {
+                "response": "U 22. 2156",
+                "ground_truth": "U 22. 2156",
+                "score": 1.0
+            },
+            "publication.pages": {
+                "response": "108",
+                "ground_truth": "108",
+                "score": 1.0
+            },
+            "library_reference.subjects": {
+                "response": null,
+                "ground_truth": null,
+                "score": 1.0
+            },
+            "type.type": {
+                "response": "Dissertation or thesis",
+                "ground_truth": "Dissertation or thesis",
+                "score": 1.0
+            },
+            "publication.place": {
+                "response": "Erlangen",
+                "ground_truth": null,
+                "score": 0.0
+            },
+            "author.first_name": {
+                "response": "Else",
+                "ground_truth": "Else",
+                "score": 1.0
+            },
+            "publication.year": {
+                "response": "1922",
+                "ground_truth": null,
+                "score": 0.0
+            }
+        },
+        "total_fields": 11
+    },
+    "raw_response": "{\"id\":\"owLqF1q-fdNmn-a2bb1f115c41db5c\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\n  \\\"type\\\": {\\n    \\\"type\\\": \\\"Dissertation or thesis\\\"\\n  },\\n  \\\"author\\\": {\\n    \\\"last_name\\\": \\\"Ulmer\\\",\\n    \\\"first_name\\\": \\\"Else\\\"\\n  },\\n  \\\"publication\\\": {\\n    \\\"title\\\": \\\"Die T\u00e4tigkeit der Privatnotenbanken w\u00e4hrend des Krieges.\\\",\\n    \\\"year\\\": \\\"1922\\\",\\n    \\\"place\\\": \\\"Erlangen\\\",\\n    \\\"pages\\\": \\\"108\\\",\\n    \\\"publisher\\\": \\\"\\\",\\n    \\\"format\\\": \\\"4\u00b0\\\"\\n  },\\n  \\\"library_reference\\\": {\\n    \\\"shelfmark\\\": \\\"U 22. 2156\\\",\\n    \\\"subjects\\\": \\\"\\\"\\n  }\\n}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":[],\"reasoning\":\"Extract bibliographic information about a historical dissertation from this index card and return it as structured JSON object with exact format.\\n\\nEXTRACTION RULES:\\n1. Card Type: If a card contains the note \\\"s.\\\" on a separate line, it is a \\\"Reference\\\". Otherwise, it is a \\\"Dissertation or thesis\\\".\\n2. Author: Extract last_name and first_name. If only one name is given, put it in last_name and leave first_name empty.\\n3. Publication:\\n   - title: main title\\n   - year: Publication year as integer\\n   - place: Publication place\\n   - pages: Page count (remove \\\" S.\\\" suffix if present)\\n   - publisher: Publishing house/institution\\n   - format: Usually \\\"8\u00b0\\\", \\\"8'\\\", or \\\"4\u00b0\\\" - single value only\\n4. Library Reference:\\n   - shelfmark: Often begins with \\\"Diss.\\\" or \\\"AT\\\", may be marked with \\\"Standort:\\\"\\n   - subjects: Subject classifications or keywords\\n5. Missing Information: Use empty string \\\"\\\" for missing text fields, omit year fields entirely if not present.\\n6. Ignore: Disregard any information that doesn't fit.\\n\\nReturn ONLY JSON object.\\n\\nCard text:\\nUlmer, Else: Die T\u00e4tigkeit der Privatnotenbanken w\u00e4hrend des Krieges.\\n[Maschinenschrift.] 108 S. 4\u00b0 [Lag nicht vor.] \u2014 Auszug: o. O.\\nu. J. 1 Bl. 8\u00b0 1921\\nErlangen, Phil. Diss. v. 6. Mai 1922\\n[U 22. 2156.\\n\\nWe need parse.\\n\\nAuthor: Ulmer, Else\\nlast_name: Ulmer\\nfirst_name: Else\\n\\nPublication:\\ntitle: Die T\u00e4tigkeit der Privatnotenbanken w\u00e4hrend des Krieges.\\nyear? Publication year as integer. There's \\\"1921\\\" handwritten? Also \\\"Erlangen, Phil. Diss. v. 6. Mai 1922\\\". The dissertation date is 6 May 1922. The Auszug: o. O. u. J. 1 Bl. 8\u00b0 1921. Hmm.\\n\\nThe main work is dissertation. Year maybe 1922? The card says Erlangen, Phil. Diss. v. 6. Mai 1922. So year 1922. The 1921 handwritten maybe is year of Auszug? The rule: year: Publication year as integer. Could be 1922. Might be 1922.\\n\\nPlace: Erlangen\\npages: 108 S. -> remove \\\" S.\\\" suffix => \\\"108\\\"\\npublisher: empty? Maybe Phil. Diss.? Publisher is empty string.\\nformat: Usually \\\"8\u00b0\\\", \\\"8'\\\", or \\\"4\u00b0\\\" - single value only. There is 4\u00b0 for manuscript, and 8\u00b0 for Auszug. Which to pick? Probably format of main work? The main work is [Maschinenschrift.] 108 S. 4\u00b0. So format 4\u00b0. Could also be 8\u00b0 for Auszug. Hmm. The rule says format: Usually \\\"8\u00b0\\\", \\\"8'\\\", or \\\"4\u00b0\\\" - single value only. Might pick 4\u00b0.\\n\\nLibrary reference:\\nshelfmark: [U 22. 2156. ? The card shows [U 22. 2156. Possibly shelfmark. Also \\\"Erlangen, Phil. Diss.\\\" maybe not shelfmark. Shelfmark often begins with \\\"Diss.\\\" or \\\"AT\\\", may be marked with \\\"Standort:\\\". Here we have [U 22. 2156. That's likely shelfmark.\\n\\nsubjects: empty string? No subjects given.\\n\\nCard Type: Does card contain note \\\"s.\\\" on a separate line? It contains \\\"108 S.\\\" but not on separate line? The note \\\"s.\\\" appears in \\\"108 S.\\\" That's not on separate line. Rule: If a card contains the note \\\"s.\\\" on a separate line, it is a \\\"Reference\\\". Otherwise, it is a \\\"Dissertation or thesis\\\". So type is Dissertation or thesis.\\n\\nPublication year integer: 1922? Could be 1922. The handwritten 1921 maybe is year of Auszug. The main dissertation date is 6 Mai 1922. So year 1922.\\n\\nPlace: Erlangen\\n\\npages: \\\"108\\\" (remove S.)\\n\\npublisher: empty string\\n\\nformat: \\\"4\u00b0\\\"\\n\\nlibrary_reference shelfmark: \\\"U 22. 2156.\\\"? Might be \\\"[U 22. 2156.\\\" The brackets? Probably \\\"U 22. 2156\\\". Use empty string if missing. Let's put \\\"U 22. 2156\\\". Might keep as is.\\n\\nsubjects: \\\"\\\" empty string.\\n\\nThe JSON schema in prompt says publication year type string? Wait schema shows year: type string. But extraction rules say year as integer. Conflict. The schema definition shows Publication year: type string. The required format in problem statement says year: integer. Hmm.\\n\\nThe schema provided in the MUST respond with valid JSON matching this exact schema: {\\\"$defs\\\":... \\\"year\\\": {\\\"title\\\": \\\"Year\\\", \\\"type\\\": \\\"string\\\"}... } So year is string in schema. But extraction rules say integer. Might need integer? The schema says string. The instruction says return as structured JSON object with following exact format: year: integer. Hmm conflict.\\n\\nThe final instruction says You MUST respond with valid JSON matching this exact schema. Schema says year type string. Also publication properties: place, pages, publisher, format are anyOf string or null default null. But the format requested earlier says string or empty string. Might need empty string not null.\\n\\nThe schema shows library_reference shelfmark anyOf string or null default null. subjects anyOf string or null default null.\\n\\nThe initial format requested: \\\"place\\\": \\\"string or empty string\\\", etc. So empty string.\\n\\nWe need reconcile. Probably follow schema: year as string? But extraction rules say integer. Might be okay to output integer as JSON number, but schema expects string. Might cause validation error.\\n\\nThe instruction says Return ONLY the JSON object, no additional text. And MUST respond with valid JSON matching this exact schema.\\n\\nSchema defines Publication required [\\\"title\\\", \\\"year\\\"] and year type string. So year must be string. Could be \\\"1922\\\". Might be okay.\\n\\nAlso publication place, pages, publisher, format are optional with default null. But earlier format says empty string. Hmm.\\n\\nMaybe we can output empty string for missing text fields, as per extraction rules. Schema allows null. Might be okay to use empty string.\\n\\nThe schema for LibraryReference shelfmark anyOf string or null. So empty string is allowed.\\n\\nLet's produce JSON with year as integer? Might fail schema. Safer to follow schema: year as string. But extraction rules say integer. Hmm.\\n\\nThe problem statement first says return it as structured JSON object with following exact format: year: integer. Then later says MUST respond with valid JSON matching this exact schema where year is string.\\n\\nWhich to prioritize? The MUST respond with valid JSON matching this exact schema is stronger.\\n\\nAlso author first_name string, last_name string.\\n\\ntype: {type: \\\"Dissertation or thesis\\\"}\\n\\npublication: title string, year string? Could be number? JSON number is valid for string? No.\\n\\nMaybe we can output year as string \\\"1922\\\". That satisfies both? It's not integer but string representation.\\n\\nMaybe the validator will coerce? Hmm.\\n\\nAlso publication place etc: schema says anyOf string or null. Could use empty string.\\n\\nlibrary_reference shelfmark: string or null. Use \\\"U 22. 2156\\\". subjects: \\\"\\\" or null. Use \\\"\\\".\\n\\nLet's produce:\\n\\n{\\n  \\\"type\\\": {\\\"type\\\": \\\"Dissertation or thesis\\\"},\\n  \\\"author\\\": {\\\"last_name\\\": \\\"Ulmer\\\", \\\"first_name\\\": \\\"Else\\\"},\\n  \\\"publication\\\": {\\n    \\\"title\\\": \\\"Die T\u00e4tigkeit der Privatnotenbanken w\u00e4hrend des Krieges.\\\",\\n    \\\"year\\\": \\\"1922\\\",\\n    \\\"place\\\": \\\"Erlangen\\\",\\n    \\\"pages\\\": \\\"108\\\",\\n    \\\"publisher\\\": \\\"\\\",\\n    \\\"format\\\": \\\"4\u00b0\\\"\\n  },\\n  \\\"library_reference\\\": {\\n    \\\"shelfmark\\\": \\\"U 22. 2156\\\",\\n    \\\"subjects\\\": \\\"\\\"\\n  }\\n}\\n\\nIf year must be integer, we could output 1922. Let's see schema: year type string. Might be strict.\\n\\nAlternative: output year as integer 1922, but schema says string. Might still be accepted? JSON schema type string would reject number.\\n\\nMaybe the schema in the prompt is generic and the earlier format is authoritative. The instruction says EXTRACTION RULES... Return ONLY JSON object. Then later says You MUST respond with valid JSON matching this exact schema. Could be a trick.\\n\\nI think the safest is to follow the schema definition provided in the MUST respond section, as it's explicit about validation.\\n\\nAlso publication has editor field in schema but not required. We can omit.\\n\\nLibraryReference shelfmark default null. Could be null. But we have value.\\n\\nSubjects empty string.\\n\\nAlso note the title includes period at end. Keep as is.\\n\\nPages: remove \\\" S.\\\" suffix. So \\\"108\\\". Good.\\n\\nFormat: \\\"4\u00b0\\\". Could also be \\\"8\u00b0\\\"? The Auszug is 8\u00b0. Hmm.\\n\\nThe main work is manuscript 108 S. 4\u00b0. So format 4\u00b0.\\n\\nPlace: Erlangen\\n\\nPublisher empty.\\n\\nYear: 1922.\\n\\nShelfmark: \\\"[U 22. 2156.\\\" The text shows [U 22. 2156. Maybe include bracket? Probably shelfmark is U 22. 2156. Let's output \\\"U 22. 2156\\\".\\n\\nSubjects empty.\\n\\nReturn JSON.\\n\\nLet's output compact.\\n\\n\"},\"token_ids\":null,\"routed_experts\":null,\"seed\":null}],\"created\":1786827548,\"model\":\"meta-models/Muse-Glimmer-30B\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":\"vllm-0.1.dev19059+g66826a22d-tp2-46311a71\",\"usage\":{\"completion_tokens\":2144,\"prompt_tokens\":1918,\"total_tokens\":4062,\"completion_tokens_details\":null,\"prompt_tokens_details\":{\"audio_tokens\":null,\"cached_tokens\":1168,\"created_cache_tokens\":736,\"multimodal_tokens\":{\"image\":737}}},\"prompt_token_ids\":null,\"prompt_text\":null,\"kv_transfer_params\":null,\"ec_transfer_params\":null,\"metrics\":null,\"prompt\":[]}"
+}

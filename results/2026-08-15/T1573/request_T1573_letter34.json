@@ -1,0 +1,47 @@
+{
+    "text": "{\"metadata\":{\"send_date\":[\"1928-05-10\"],\"letter_title\":[\"Betr. Abrechnung\"],\"sender_persons\":[\"null\"],\"receiver_persons\":[\"null\"]}}",
+    "model": "meta-models/Muse-Glimmer-30B",
+    "provider": "huggingface",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 4186,
+        "output_tokens": 986,
+        "total_tokens": 5172,
+        "cached_tokens": 320,
+        "input_cost_usd": 0.0014650999999999998,
+        "output_cost_usd": 0.0014789999999999998,
+        "estimated_cost_usd": 0.0029441
+    },
+    "duration": 11.734911918640137,
+    "timestamp": "2026-08-15T17:00:23.022141",
+    "parsed": {
+        "metadata": {
+            "send_date": [
+                "1928-05-10"
+            ],
+            "letter_title": [
+                "Betr. Abrechnung"
+            ],
+            "sender_persons": [
+                "null"
+            ],
+            "receiver_persons": [
+                "null"
+            ],
+            "document_number": "letter34"
+        }
+    },
+    "conversation_id": "8bf0a3f0-2ad9-4748-a70a-9336700591c5",
+    "score": {
+        "send_date_tp": 1,
+        "send_date_fp": 0,
+        "send_date_fn": 0,
+        "sender_persons_tp": 0,
+        "sender_persons_fp": 0,
+        "sender_persons_fn": 2,
+        "receiver_persons_tp": 0,
+        "receiver_persons_fp": 0,
+        "receiver_persons_fn": 0
+    },
+    "raw_response": "{\"id\":\"owJvs4S-fdNmn-a2b911483f34abc2\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\n  \\\"metadata\\\": {\\n    \\\"send_date\\\": [\\\"1928-05-10\\\"],\\n    \\\"letter_title\\\": [\\\"Betr. Abrechnung\\\"],\\n    \\\"sender_persons\\\": [ \\\"null\\\" ],\\n    \\\"receiver_persons\\\": [ \\\"null\\\" ]\\n  }\\n}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"metadata\":{\"send_date\":[\"1928-05-10\"],\"letter_title\":[\"Betr. Abrechnung\"],\"sender_persons\":[\"null\"],\"receiver_persons\":[\"null\"]}},\"reasoning\":\"IDENTITY and PURPOSE:\\n\\nExtract values of keys from letter and return JSON where values corresponding to each key should be stored as a list, even if single value.\\n\\nKeys:\\n- letter_title: Title of the letter.\\n- sender_persons: Name(s) of the person(s) who wrote the letter.\\n- send_date: The exact or approximate date the letter was written.\\n- receiver_persons: Name(s) of the person(s) who received the letter.\\n\\nTake deep breath... Do not use OCR. Use ISO format YYYY-MM-DD for dates. If info not included, set value to \\\"null\\\". Do not return anything except JSON.\\n\\nFrom image:\\n\\nTop left: Basler Rheinschiffahrt-Aktiengesellschaft Marktgasse 5 ... Buchhaltung\\n\\nTop right: Basel ,den 10. Mai /28 34 (red handwritten 34). So date is 10 May 1928? The \\\"/28\\\" maybe 1928. The red 34 maybe file number. So send_date: 1928-05-10.\\n\\nReceiver: Basler Personenschiffahrtsgesellschaft Basel\\n\\nBetr. Abrechnung (subject). So letter_title? Title of the letter. Might be \\\"Betr. Abrechnung\\\". Or maybe the company name? Usually title is subject. Could be \\\"Betr. Abrechnung\\\". Might be \\\"Abrechnung\\\". Let's assume letter_title is \\\"Betr. Abrechnung\\\". Could also be null? The example shows title. Might be the subject line.\\n\\nSender persons: Name(s) of person(s) who wrote the letter. Signatures: two signatures handwritten. Not legible. Could be \\\"null\\\" because names not readable? The letter is from Basler Rheinschiffahrt - Aktiengesellschaft. Sender persons maybe the company? But key asks name(s) of person(s) who wrote the letter. Signatures are illegible. Might be null. Could try to guess? The signatures look like \\\"R. ...\\\"? Not sure. Better set null.\\n\\nReceiver persons: Name(s) of person(s) who received the letter. Receiver is Basler Personenschiffahrtsgesellschaft Basel. That's a company, not a person. So maybe null? Or the company name? The key says persons. So maybe null.\\n\\nBut maybe sender_persons is the company? Hmm.\\n\\nThe instruction: sender_persons: Name(s) of the person(s) who wrote the letter. The letter is signed by two persons but names not legible. So maybe null.\\n\\nreceiver_persons: Name(s) of the person(s) who received the letter. Receiver is a company. No person name. So null.\\n\\nletter_title: Title of the letter. Could be \\\"Betr. Abrechnung\\\". Might be \\\"Abrechnung\\\". I'll use \\\"Betr. Abrechnung\\\".\\n\\nsend_date: \\\"Basel ,den 10. Mai /28\\\". So 1928-05-10.\\n\\nReturn JSON with lists.\\n\\nSo:\\n\\n{\\n  \\\"letter_title\\\": [\\\"Betr. Abrechnung\\\"],\\n  \\\"sender_persons\\\": [null] ? Or value null? The spec says if info not included set value for corresponding key to \\\"null\\\". And values should be stored as a list. So maybe [\\\"null\\\"]? Or [null]? Example shows strings. Might be null as JSON null. The instruction: set the value for the corresponding key to \\\"null\\\". Could be the list contains null? Or the value is null? It says values corresponding to each key should be stored as a list, even if there is only a single value for a key. If a piece of information is not included in the letter, set the value for the corresponding key to \\\"null\\\". Ambiguous. Probably the list contains a single element which is null? Or the key's value is null (not a list). But instruction says store as list. Might be [\\\"null\\\"] as string? Hmm.\\n\\nBetter interpret: the value is a list. If info missing, set the value to \\\"null\\\". Could mean the list is [\\\"null\\\"]? Or the value is null. Example shows list of strings. I'd output null as JSON null, but then value wouldn't be a list. Might be they want \\\"null\\\" string.\\n\\nSafer to output list with one element null (JSON null). Let's do \\\"sender_persons\\\": [null], \\\"receiver_persons\\\": [null].\\n\\nletter_title list with string.\\n\\nsend_date list with \\\"1928-05-10\\\".\\n\\nReturn only JSON.\\n\\nLet's output.\"},\"token_ids\":null,\"routed_experts\":null,\"seed\":null}],\"created\":1786806012,\"model\":\"meta-models/Muse-Glimmer-30B\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":\"vllm-0.1.dev19059+g66826a22d-tp2-46311a71\",\"usage\":{\"completion_tokens\":986,\"prompt_tokens\":4186,\"total_tokens\":5172,\"completion_tokens_details\":null,\"prompt_tokens_details\":{\"audio_tokens\":null,\"cached_tokens\":320,\"created_cache_tokens\":3856,\"multimodal_tokens\":{\"image\":3850}}},\"prompt_token_ids\":null,\"prompt_text\":null,\"kv_transfer_params\":null,\"ec_transfer_params\":null,\"metrics\":null,\"prompt\":[]}"
+}

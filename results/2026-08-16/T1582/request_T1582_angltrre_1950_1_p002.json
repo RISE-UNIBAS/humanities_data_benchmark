@@ -1,0 +1,49 @@
+{
+    "text": "{\"advertisements\":[{\"box\":[135.0,60.0,2420.0,1680.0]},{\"box\":[135.0,1750.0,2420.0,3300.0]}]}",
+    "model": "meta-models/Muse-Glimmer-30B",
+    "provider": "huggingface",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 3916,
+        "output_tokens": 1073,
+        "total_tokens": 4989,
+        "cached_tokens": 48,
+        "input_cost_usd": 0.0013706,
+        "output_cost_usd": 0.0016094999999999998,
+        "estimated_cost_usd": 0.0029801
+    },
+    "duration": 12.688083171844482,
+    "timestamp": "2026-08-16T03:38:39.554296",
+    "parsed": {
+        "advertisements": [
+            {
+                "box": [
+                    135.0,
+                    60.0,
+                    2420.0,
+                    1680.0
+                ]
+            },
+            {
+                "box": [
+                    135.0,
+                    1750.0,
+                    2420.0,
+                    3300.0
+                ]
+            }
+        ]
+    },
+    "conversation_id": "c2ecded5-75e2-4212-8bc9-b47aa16230ea",
+    "score": {
+        "f1": 1.0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "mean_iou": 0.813,
+        "true_positives": 2,
+        "false_positives": 0,
+        "false_negatives": 0,
+        "iou_threshold": 0.5
+    },
+    "raw_response": "{\"id\":\"owNK8uJ-7ArivV-a2bcb839686d2d1e\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\\"advertisements\\\": [\\n  {\\n    \\\"box\\\": [135, 60, 2420, 1680]\\n  },\\n  {\\n    \\\"box\\\": [135, 1750, 2420, 3300]\\n  }\\n] }\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"advertisements\":[{\"box\":[135.0,60.0,2420.0,1680.0]},{\"box\":[135.0,1750.0,2420.0,3300.0]}]},\"reasoning\":\"Extract all advertisements and return their bounding boxes.\\nThe original size of the page is 2479 x 3508 pixels.\\n\\nThe page shows two ads: top Swiss Bank Corporation, bottom Crowe & Co. Ltd.\\n\\nNeed bounding boxes. Likely coordinates normalized? Usually return as [x_min, y_min, x_max, y_max] in pixels. Might need relative? Probably absolute pixel coordinates.\\n\\nEstimate. Page width 2479, height 3508.\\n\\nTop ad border: left ~ 130? Let's approximate. The image shows left margin about 130 px, right about 950? Wait page width 2479. The visible page is left side. The border of top ad: x_min ~ 130? Let's estimate ~ 130 to 2400? Actually the page is a book page, the right edge is maybe 2400? The ad border is inset. Let's approximate.\\n\\nBetter to give approximate bounding boxes.\\n\\nTop ad: from top ~ 60? The border top ~ 60? Let's say y_min ~ 60? Actually top of page maybe 60 px. The border top ~ 60? Let's estimate y_min ~ 60? Hmm.\\n\\nMaybe use relative coordinates 0-1. Could give pixel.\\n\\nI'll estimate:\\n\\nTop ad box: x_min ~ 130, y_min ~ 60, x_max ~ 2400, y_max ~ 490? Wait the border ends around middle. The top ad ends about 48% down. 3508 * 0.48 ~ 1684. So y_max ~ 1680.\\n\\nBottom ad: y_min ~ 500? Actually starts below. Maybe y_min ~ 500? Wait gap. Let's say y_min ~ 500? No top ad ends ~ 490? Let's look: top ad occupies top half. Approx top 0-48%. So y_max ~ 1680. Bottom ad starts ~ 500? Actually gap ~ 20 px. So y_min ~ 500? Hmm 500 is too low. Let's say y_min ~ 500? Wait 500 px is ~14% down. Might be ~ 500? Let's assume top ad ends at ~ 490? No.\\n\\nBetter approximate: top ad border top ~ 60 px, bottom ~ 480? Wait 480 is too small. Let's think: image height 3508. The top ad is about 45% of height. 0.45*3508=1579. So bottom ~ 1600.\\n\\nBottom ad starts ~ 500? Actually 500 is 14%. Might be ~ 500? Let's say start ~ 500? Hmm.\\n\\nMaybe more accurate: top ad top ~ 60, bottom ~ 485? No.\\n\\nLet's assume:\\n\\nTop ad: [130, 60, 2400, 485? Wait 485 is too small. Let's pick 130, 60, 2400, 485? Hmm.\\n\\nAlternative: use normalized coordinates 0-1000.\\n\\nMight be acceptable to give approximate.\\n\\nI'll give bounding boxes as:\\n\\nSwiss Bank Corporation ad: {x_min=130, y_min=60, x_max=2400, y_max=485?} Hmm.\\n\\nLet's search mental: The page image shows top ad occupies about top 45% of page. So y_max ~ 0.48*3508 \u2248 1684. x_min ~ 130, x_max ~ 2400.\\n\\nBottom ad: y_min ~ 500? Actually 500 is 14%. Might be ~ 500? Wait 500 is 14%. The gap between ads is small. So bottom ad y_min ~ 500? No 500 is too high. Maybe y_min ~ 500? Let's say y_min ~ 500? Hmm.\\n\\nLet's estimate y_min ~ 500? Actually top ad bottom ~ 1700. So bottom ad y_min ~ 1750? Wait 1750 is 50%. That seems plausible. So bottom ad starts around 1750.\\n\\nSo bottom ad: y_min ~ 1750, y_max ~ 3300? Actually bottom margin. So y_max ~ 3300.\\n\\nLet's propose:\\n\\nTop ad: x_min=130, y_min=60, x_max=2400, y_max=1680\\n\\nBottom ad: x_min=130, y_min=1750, x_max=2400, y_max=3300\\n\\nMaybe refine x_max ~ 2350.\\n\\nI'll output two boxes.\\n\\nProbably need format like [{\\\"x_min\\\":..., \\\"y_min\\\":..., \\\"x_max\\\":..., \\\"y_max\\\":...}]\\n\\nI'll give approximate.\\n\\nLet's output:\\n\\nSwiss Bank Corporation: [135, 60, 2420, 1680]\\n\\nCrowe & Co. Ltd.: [135, 1750, 2420, 3300]\\n\\nIf need pixel coordinates.\\n\\nI'll present.\\n\\n\"},\"token_ids\":null,\"routed_experts\":null,\"seed\":null}],\"created\":1786844307,\"model\":\"meta-models/Muse-Glimmer-30B\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":\"vllm-0.1.dev19059+g66826a22d-tp2-46311a71\",\"usage\":{\"completion_tokens\":1073,\"prompt_tokens\":3916,\"total_tokens\":4989,\"completion_tokens_details\":null,\"prompt_tokens_details\":{\"audio_tokens\":null,\"cached_tokens\":48,\"created_cache_tokens\":3856,\"multimodal_tokens\":{\"image\":3850}}},\"prompt_token_ids\":null,\"prompt_text\":null,\"kv_transfer_params\":null,\"ec_transfer_params\":null,\"metrics\":null,\"prompt\":[]}"
+}

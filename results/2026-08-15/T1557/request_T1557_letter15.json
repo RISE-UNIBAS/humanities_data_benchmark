@@ -1,0 +1,45 @@
+{
+    "text": "{\"metadata\":{\"send_date\":[\"1928-02-23\"],\"letter_title\":null,\"sender_persons\":[\"Basler Personenschiffahrtsgesellschaft\"],\"receiver_persons\":[\"Basler Rheinschiffahrts A.-G.\"]}}",
+    "model": "thinkingmachines/Inkling",
+    "provider": "huggingface",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 2254,
+        "output_tokens": 1293,
+        "total_tokens": 3547,
+        "cached_tokens": 256,
+        "input_cost_usd": 0.002254,
+        "output_cost_usd": 0.00523665,
+        "estimated_cost_usd": 0.00749065
+    },
+    "duration": 15.370484352111816,
+    "timestamp": "2026-08-15T16:36:14.679903",
+    "parsed": {
+        "metadata": {
+            "send_date": [
+                "1928-02-23"
+            ],
+            "letter_title": null,
+            "sender_persons": [
+                "Basler Personenschiffahrtsgesellschaft"
+            ],
+            "receiver_persons": [
+                "Basler Rheinschiffahrts A.-G."
+            ],
+            "document_number": "letter15"
+        }
+    },
+    "conversation_id": "5c3e28f1-b14c-47ae-9a46-442290678025",
+    "score": {
+        "send_date_tp": 1,
+        "send_date_fp": 0,
+        "send_date_fn": 0,
+        "sender_persons_tp": 0,
+        "sender_persons_fp": 1,
+        "sender_persons_fn": 0,
+        "receiver_persons_tp": 0,
+        "receiver_persons_fp": 1,
+        "receiver_persons_fn": 0
+    },
+    "raw_response": "{\"id\":\"owJoRxA-6z2FuN-a2b8edd619f91272\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\n  \\\"metadata\\\": {\\n    \\\"send_date\\\": [\\\"1928-02-23\\\"],\\n    \\\"letter_title\\\": null,\\n    \\\"sender_persons\\\": [\\\"Basler Personenschiffahrtsgesellschaft\\\"],\\n    \\\"receiver_persons\\\": [\\\"Basler Rheinschiffahrts A.-G.\\\"]\\n  }\\n}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"metadata\":{\"send_date\":[\"1928-02-23\"],\"letter_title\":null,\"sender_persons\":[\"Basler Personenschiffahrtsgesellschaft\"],\"receiver_persons\":[\"Basler Rheinschiffahrts A.-G.\"]}},\"reasoning\":\"We need parse image of letter. Need extract letter_title, sender_persons, send_date, receiver_persons. Let's analyze visible text.\\n\\nImage shows typed letter dated 23.Februar 1928. Addressed to \\\"Basler Rheinschiffahrts A.-G.\\\" with address Basel Marktplatz 5? Actually \\\"Basler Rheinschiffahrts A.-G. Basel ----------- Marktplatz 5\\\". Then body: \\\"Ich bin in Besitze Ihres Geehrten vom 18. ds., das ich leider wegen Abwesenheit erst heute beantworten kann. Ihr Vorschlag wird dem Vorstand unterbreitet, und wir werden alsdann unverz\u00fcglich darauf zur\u00fcckkommen. In Hochachtung Basler Personenschiffahrtsgesellschaft Der Pr\u00e4sident:\\\"\\n\\nSo sender is \\\"Basler Personenschiffahrtsgesellschaft\\\" represented by \\\"Der Pr\u00e4sident\\\" but specific name not visible? Maybe signature absent? The letter is from Basler Personenschiffahrtsgesellschaft, president unnamed. Need sender_persons: likely [\\\"Basler Personenschiffahrtsgesellschaft\\\"]? Or \\\"Der Pr\u00e4sident\\\"? Let's determine best.\\n\\nReceiver: \\\"Basler Rheinschiffahrts A.-G.\\\" Maybe also specific person? The salutation addresses company. So receiver_persons: [\\\"Basler Rheinschiffahrts A.-G.\\\"].\\n\\nSend date: \\\"23.Februar 1928\\\" -> 1928-02-23.\\n\\nLetter title: Not present? Maybe null. But sometimes title can be inferred? The prompt says if not included set null. There's no explicit title like \\\"Re: ...\\\" So letter_title: null? Or maybe \\\"In Hochachtung\\\"? No that's closing. So null.\\n\\nBut need values as list. Let's provide:\\n\\n{\\n\\\"letter_title\\\": [null]? Wait example shows values stored as list, even if single value. If information not included, set value for corresponding key to \\\"null\\\". Does that mean the list contains null? Or the key maps to null? The instruction: \\\"return them in a JSON file where the values corresponding to each key should be stored as a list, even if there is only a single value for a key\\\" and \\\"If a piece of information is not included in the letter, set the value for the corresponding key to 'null'.\\\" This is ambiguous: should it be [\\\"null\\\"] or null? Usually they want the value (the list) to be null? But they said values corresponding to each key should be stored as a list. So likely if missing, use null instead of list? Let's check example: all present as lists. For missing, probably [null]? But they said set the value for the corresponding key to \\\"null\\\". That suggests the JSON value is null, not a list containing null. However they also said values should be stored as a list. There's conflict. In many similar prompts, they want list always, but if missing then empty list? No they specifically said set to \\\"null\\\". I think they mean the list should contain the string \\\"null\\\"? Hmm.\\n\\nLet's examine wording precisely: \\\"extract the values of the following keys from the letter and return them in a JSON file where the values corresponding to each key should be stored as a list, even if there is only a single value for a key: ... If a piece of information is not included in the letter, set the value for the corresponding key to \\\"null\\\".\\\"\\n\\nThis sounds like: normally value is a list of strings. If missing, don't use a list, just use null. So key: \\\"letter_title\\\": null. Yes that makes sense.\\n\\nThus:\\n\\nletter_title: null\\nsender_persons: [\\\"Basler Personenschiffahrtsgesellschaft\\\"]? Or [\\\"Der Pr\u00e4sident\\\"]? Let's think. The letter is signed \\\"Basler Personenschiffahrtsgesellschaft Der Pr\u00e4sident:\\\". The actual sender entity is the company, but the person is the president (unnamed). The key is sender_persons (persons). Since no specific name given, maybe null? But the company is not a person. However they ask \\\"Name(s) of the person(s) who wrote the letter.\\\" The writer is the president of Basler Personenschiffahrtsgesellschaft, but name absent. So sender_persons might be null? But we can identify the organizational sender? The prompt says \\\"person(s)\\\" so likely expecting individual names. Since not present, maybe null. But we do have \\\"Basler Personenschiffahrtsgesellschaft\\\" as the signing party. Let's decide.\\n\\nLooking at address block: The letterhead? Actually it's typed on plain paper with number 15 in red. The closing includes organization name and \\\"Der Pr\u00e4sident:\\\". So the sender is Basler Personenschiffahrtsgesellschaft, represented by its president. If we need persons, there is none named. But often in these extraction tasks they accept the organization as sender if named in signature. Let's include [\\\"Basler Personenschiffahrtsgesellschaft\\\"]? Or [\\\"Der Pr\u00e4sident der Basler Personenschiffahrtsgesellschaft\\\"]?\\n\\nLet's check receiver: \\\"Basler Rheinschiffahrts A.-G.\\\" That's an organization, but they ask receiver_persons. So they allow organizations? The key name says persons but example includes \\\"Mayor Joe Quimby\\\" and \\\"Seymour Skinner\\\" (persons). But they might still accept organization if addressed. So for consistency, sender should be the organization that sent it: \\\"Basler Personenschiffahrtsgesellschaft\\\". Let's put that.\\n\\nBut wait there might be a specific president name in original document not visible due to image quality? The image shows \\\"Der Pr\u00e4sident:\\\" with no name following, maybe on next page? But we only have this image. So no name.\\n\\nThus:\\nletter_title: null\\nsend_date: [\\\"1928-02-23\\\"]\\nsender_persons: [\\\"Basler Personenschiffahrtsgesellschaft\\\"]\\nreceiver_persons: [\\\"Basler Rheinschiffahrts A.-G.\\\"]\\n\\nNeed JSON only.\"},\"seed\":null}],\"created\":1786804562,\"model\":\"thinkingmachines/Inkling\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":\"default\",\"usage\":{\"completion_tokens\":1293,\"prompt_tokens\":2254,\"total_tokens\":3547,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":null,\"reasoning_tokens\":1223,\"rejected_prediction_tokens\":null},\"prompt_tokens_details\":{\"audio_tokens\":null,\"cached_tokens\":256}},\"prompt\":[]}"
+}

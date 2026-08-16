@@ -1,0 +1,43 @@
+{
+    "text": "{\"metadata\":{\"send_date\":[\"1928-03-24\"],\"letter_title\":[\"Verkauf.\"],\"sender_persons\":null,\"receiver_persons\":null}}",
+    "model": "meta-models/Muse-Glimmer-30B",
+    "provider": "huggingface",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 8036,
+        "output_tokens": 1261,
+        "total_tokens": 9297,
+        "cached_tokens": 320,
+        "input_cost_usd": 0.0028125999999999997,
+        "output_cost_usd": 0.0018915,
+        "estimated_cost_usd": 0.004704099999999999
+    },
+    "duration": 13.522627830505371,
+    "timestamp": "2026-08-15T16:31:00.074296",
+    "parsed": {
+        "metadata": {
+            "send_date": [
+                "1928-03-24"
+            ],
+            "letter_title": [
+                "Verkauf."
+            ],
+            "sender_persons": null,
+            "receiver_persons": null,
+            "document_number": "letter20"
+        }
+    },
+    "conversation_id": "af9294d9-e8da-4622-9f5f-6ddc5a1aa030",
+    "score": {
+        "send_date_tp": 1,
+        "send_date_fp": 0,
+        "send_date_fn": 0,
+        "sender_persons_tp": 0,
+        "sender_persons_fp": 0,
+        "sender_persons_fn": 0,
+        "receiver_persons_tp": 0,
+        "receiver_persons_fp": 0,
+        "receiver_persons_fn": 0
+    },
+    "raw_response": "{\"id\":\"owJmpW7-7ArivV-a2b8e6338acb7d5c\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\n  \\\"metadata\\\": {\\n    \\\"send_date\\\": [\\\"1928-03-24\\\"],\\n    \\\"letter_title\\\": [\\\"Verkauf.\\\"],\\n    \\\"sender_persons\\\": null,\\n    \\\"receiver_persons\\\": null\\n  }\\n}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"metadata\":{\"send_date\":[\"1928-03-24\"],\"letter_title\":[\"Verkauf.\"],\"sender_persons\":null,\"receiver_persons\":null}},\"reasoning\":\"IDENTITY and PURPOSE:\\n\\nWe need extract values of keys from letter and return JSON where values corresponding to each key should be stored as a list, even if single value.\\n\\nKeys:\\n- letter_title: Title of the letter.\\n- sender_persons: Name(s) of the person(s) who wrote the letter.\\n- send_date: The exact or approximate date the letter was written.\\n- receiver_persons: Name(s) of the person(s) who received the letter.\\n\\nTake deep breath... Do not use OCR. Use ISO format YYYY-MM-DD for dates. If piece of information is not included, set value to \\\"null\\\". Do not return anything except JSON file.\\n\\nWe have two images. First page: top right 24. M\u00e4rz 1928, . \\\"Verkauf.\\\" \\\"An die Basler Rheinschiffahrt A.-G., Basel.\\\" Sender? At bottom of second page: \\\"Basler Personenschiffahrtsgesellschaft Der Gesch\u00e4ftsf\u00fchrer:\\\" So sender is Basler Personenschiffahrtsgesellschaft? Or Der Gesch\u00e4ftsf\u00fchrer? Might be the company. Sender persons: name(s) of person(s) who wrote the letter. The signature is not a personal name, just \\\"Der Gesch\u00e4ftsf\u00fchrer\\\". Might be null? Could be the company as sender. The key says sender_persons: Name(s) of the person(s) who wrote the letter. Might be no personal name. Could be null. Or maybe the company name is considered sender? Might be sender_persons null.\\n\\nLetter title? \\\"Verkauf.\\\" maybe title. Or \\\"O/R.\\\"? The first line \\\"O/R.\\\" maybe reference. Title maybe \\\"Verkauf.\\\" Could be letter_title: [\\\"Verkauf.\\\"] Or maybe no title. Could be null? The example shows title. Might be \\\"Verkauf.\\\" The letter is about sale.\\n\\nReceiver persons: \\\"An die Basler Rheinschiffahrt A.-G., Basel.\\\" So receiver is Basler Rheinschiffahrt A.-G. That's a company, not a person. Might be null? The key says name(s) of person(s) who received the letter. Could be null. But maybe they want the company name as receiver_persons. Hmm.\\n\\nThe instruction: extract values of keys from the letter. sender_persons: Name(s) of the person(s) who wrote the letter. If no person name, set null. The letter is signed by \\\"Der Gesch\u00e4ftsf\u00fchrer\\\" no name. So null.\\n\\nreceiver_persons: Name(s) of the person(s) who received the letter. The address is a company. No person name. So null.\\n\\nletter_title: Title of the letter. Maybe \\\"Verkauf.\\\" That's a subject. Could be \\\"Verkauf.\\\" Might be title.\\n\\nsend_date: 24. M\u00e4rz 1928. So 1928-03-24.\\n\\nCheck second page: \\\"II.\\\" maybe continuation. No date.\\n\\nThus JSON:\\n\\n{\\n  \\\"letter_title\\\": [\\\"Verkauf.\\\"],\\n  \\\"sender_persons\\\": null,\\n  \\\"send_date\\\": [\\\"1928-03-24\\\"],\\n  \\\"receiver_persons\\\": null\\n}\\n\\nBut maybe they want receiver_persons as [\\\"Basler Rheinschiffahrt A.-G.\\\"] even though it's a company. The key says persons. Might be ambiguous. Could be they want the entity name. The example has Mayor Joe Quimby, Seymour Skinner - persons. Hmm.\\n\\nAlternative interpretation: sender_persons could be \\\"Basler Personenschiffahrtsgesellschaft\\\" as the sender entity, but it's not a person. Might be null.\\n\\nCould also be letter_title null? Maybe title is not present. \\\"Verkauf.\\\" is a subject line. Might be considered title.\\n\\nSome might extract \\\"O/R.\\\" as reference. Hmm.\\n\\nMaybe letter_title is null because no explicit title. \\\"Verkauf.\\\" is a subject heading.\\n\\nI think best to provide title as \\\"Verkauf.\\\" and sender_persons null, receiver_persons null.\\n\\nBut maybe they want receiver_persons as [\\\"Basler Rheinschiffahrt A.-G.\\\"] and sender_persons as [\\\"Basler Personenschiffahrtsgesellschaft\\\"] even though not persons. The instruction says name(s) of the person(s). Could be they treat company as person? Might be okay.\\n\\nAlternative: sender_persons could be [\\\"Der Gesch\u00e4ftsf\u00fchrer\\\"]? That's a role not name.\\n\\nMaybe the letter is from the Basler Personenschiffahrtsgesellschaft, signed by the Gesch\u00e4ftsf\u00fchrer, but no name given. So sender_persons null.\\n\\nReceiver persons: \\\"An die Basler Rheinschiffahrt A.-G.\\\" No person name. So null.\\n\\nLet's output JSON with lists. For null, should be null not list? The example shows values as list. But instruction: if piece of information is not included, set value for corresponding key to \\\"null\\\". So value is null, not list.\\n\\nThus:\\n\\n{\\n  \\\"letter_title\\\": [\\\"Verkauf.\\\"],\\n  \\\"sender_persons\\\": null,\\n  \\\"send_date\\\": [\\\"1928-03-24\\\"],\\n  \\\"receiver_persons\\\": null\\n}\\n\\nIf they want receiver_persons as company, could be [\\\"Basler Rheinschiffahrt A.-G.\\\"].\\n\\nLet's search memory: This is a historical letter from Basler Personenschiffahrtsgesellschaft to Basler Rheinschiffahrt A.-G. about sale of ship Rheinfelden. Date 24 March 1928. Might be known. The sender is the company, not a person.\\n\\nI think the strict interpretation is null for persons.\\n\\nCould also letter_title be null? Maybe title is not given. \\\"Verkauf.\\\" is a subject. Might be considered title.\\n\\nI'll output as above.\\n\\nIf they wanted list for null? Might be [\\\"null\\\"]? No.\\n\\nI'll provide JSON.\\n\\nEnsure no extra text.\\n\\n\"},\"token_ids\":null,\"routed_experts\":null,\"seed\":null}],\"created\":1786804248,\"model\":\"meta-models/Muse-Glimmer-30B\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":\"vllm-0.1.dev19059+g66826a22d-tp2-46311a71\",\"usage\":{\"completion_tokens\":1261,\"prompt_tokens\":8036,\"total_tokens\":9297,\"completion_tokens_details\":null,\"prompt_tokens_details\":{\"audio_tokens\":null,\"cached_tokens\":320,\"created_cache_tokens\":7712,\"multimodal_tokens\":{\"image\":7700}}},\"prompt_token_ids\":null,\"prompt_text\":null,\"kv_transfer_params\":null,\"ec_transfer_params\":null,\"metrics\":null,\"prompt\":[]}"
+}

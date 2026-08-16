@@ -508,6 +508,13 @@ This benchmark suite currently tests models from the following providers:
 | | gemini-3.5-flash                          | Gemini 3.5 Flash                                           |
 | | gemini-3.6-flash                          | Gemini 3.6 Flash                                           |
 | | gemini-3.5-flash-lite                     | Gemini 3.5 Flash-Lite                                      |
+| **Hugging Face** | swiss-ai/Apertus-v1.5-70B:publicai        | Apertus v1.5, 70B (Swiss AI Initiative); multimodal         |
+| | swiss-ai/Apertus-v1.5-8B:publicai         | Apertus v1.5, 8B (Swiss AI Initiative); multimodal          |
+| | Qwen/Qwen3-VL-235B-A22B-Instruct:deepinfra | Qwen3-VL 235B-A22B Instruct (Alibaba); multimodal          |
+| | MiniMaxAI/MiniMax-M3:deepinfra            | MiniMax M3 (MiniMax); multimodal                            |
+| | thinkingmachines/Inkling-Small:deepinfra  | Inkling Small (Thinking Machines); multimodal               |
+| | thinkingmachines/Inkling:together         | Inkling (Thinking Machines); multimodal                     |
+| | meta-models/Muse-Glimmer-30B:together     | Muse Glimmer 30B (Meta Models); multimodal                  |
 | **Mistral AI** | ~~magistral-medium-2509~~                 | ~~Magistral Medium (Sep 2025); reasoning~~ (legacy)        |
 | | ~~magistral-small-2509~~                  | ~~Magistral Small (Sep 2025); reasoning~~ (legacy)         |
 | | ministral-14b-2512                        | Ministral 3 14B (Dec 2025)                                 |
@@ -565,7 +572,7 @@ This benchmark suite currently tests models from the following providers:
 | | grok-4.3                                  | Grok 4.3                                                   |
 | | grok-4.5                                  | Grok 4.5; multimodal                                       |
 
-**Note:** OpenRouter provides access to models from multiple providers through a unified API. sciCORE provides access to models hosted on the University of Basel's high-performance computing infrastructure.
+**Note:** OpenRouter provides access to models from multiple providers through a unified API. Hugging Face routes to third-party inference providers through an OpenAI-compatible API; the suffix on each model name pins the provider that serves it (`:publicai`, `:deepinfra`, `:together`), so that the price and the routing of a benchmark run are reproducible. sciCORE provides access to models hosted on the University of Basel's high-performance computing infrastructure.
 
 
 ## 5. Benchmarking Methodology

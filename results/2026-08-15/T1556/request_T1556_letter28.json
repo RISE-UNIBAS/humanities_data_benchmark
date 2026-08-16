@@ -1,0 +1,47 @@
+{
+    "text": "{\"metadata\":{\"send_date\":[\"1928-04-28\"],\"letter_title\":[\"\"],\"sender_persons\":[\"Basler Rheinschiffahrt A.G.\"],\"receiver_persons\":[\"\"]}}",
+    "model": "thinkingmachines/Inkling",
+    "provider": "huggingface",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 2254,
+        "output_tokens": 1566,
+        "total_tokens": 3820,
+        "cached_tokens": 256,
+        "input_cost_usd": 0.002254,
+        "output_cost_usd": 0.0063422999999999995,
+        "estimated_cost_usd": 0.0085963
+    },
+    "duration": 26.578310251235962,
+    "timestamp": "2026-08-15T16:31:24.672004",
+    "parsed": {
+        "metadata": {
+            "send_date": [
+                "1928-04-28"
+            ],
+            "letter_title": [
+                ""
+            ],
+            "sender_persons": [
+                "Basler Rheinschiffahrt A.G."
+            ],
+            "receiver_persons": [
+                ""
+            ],
+            "document_number": "letter28"
+        }
+    },
+    "conversation_id": "9e15c1ae-8376-4df1-8ea9-ac424bc09dae",
+    "score": {
+        "send_date_tp": 0,
+        "send_date_fp": 1,
+        "send_date_fn": 1,
+        "sender_persons_tp": 0,
+        "sender_persons_fp": 1,
+        "sender_persons_fn": 0,
+        "receiver_persons_tp": 0,
+        "receiver_persons_fp": 0,
+        "receiver_persons_fn": 0
+    },
+    "raw_response": "{\"id\":\"owJmssU-6z2FuN-a2b8e67a5d848b1a\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\n  \\\"metadata\\\": {\\n    \\\"send_date\\\": [\\\"1928-04-28\\\"],\\n    \\\"letter_title\\\": [\\\"\\\"],\\n    \\\"sender_persons\\\": [\\\"Basler Rheinschiffahrt A.G.\\\"],\\n    \\\"receiver_persons\\\": [\\\"\\\"]\\n  }\\n}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"metadata\":{\"send_date\":[\"1928-04-28\"],\"letter_title\":[\"\"],\"sender_persons\":[\"Basler Rheinschiffahrt A.G.\"],\"receiver_persons\":[\"\"]}},\"reasoning\":\"We need parse image of historical letter, extract title, sender, date, receiver. Need inspect visible text.\\n\\nImage shows typed letter in German, dated 28.April 1928 at top right. Header: Basler Rheinschiffahrt A.G. Basel. Then text \\\"Wir erhalten Ihr Geehrtes vom 23.ct. und wurden heute te= lephonisch wegen des Vertragsentwurfs angefragt. Sie empfangen nun beiliegend: ...\\\" Then list items 1-5. At bottom \\\"Hochachtungsvoll\\\" and signature \\\"Basler Personenschiffahrts-Gesellschaft\\\" maybe \\\"Der Gesch\u00e4ftsf\u00fchrer\\\" etc. Need determine sender and receiver.\\n\\nWe need letter_title: maybe not explicit title, but could be null? Let's examine. The letter is from Basler Rheinschiffahrt A.G. to someone? Actually header is Basler Rheinschiffahrt A.G. Basel. That might be sender organization. The bottom signature says \\\"Basler Personenschiffahrts-Gesellschaft\\\" with \\\"Der Gesch\u00e4ftsf\u00fchrer\\\" maybe. So sender persons might be the company or specific person? The prompt asks \\\"Name(s) of the person(s) who wrote the letter.\\\" Might be organization? But example uses personal names. Here likely sender is \\\"Basler Rheinschiffahrt A.G.\\\" or \\\"Basler Personenschiffahrts-Gesellschaft\\\". Let's determine precisely.\\n\\nThe date is 28.April 1928 => 1928-04-28.\\n\\nReceiver: The letter addresses \\\"Wir erhalten Ihr Geehrtes vom 23.ct.\\\" meaning \\\"We received your esteemed [letter] of the 23rd...\\\" So the receiver is the one who sent the previous letter, but not named explicitly in visible part? Maybe at top left there is address? Let's inspect image: There might be recipient address at top left? The image shows some faint text on left margin? Actually top left has some handwritten numbers \\\"28\\\" in red? Not clear. But in body they mention \\\"Sie empfangen...\\\" addressing \\\"Sie\\\". But no explicit name visible. However maybe the letter is addressed to \\\"Herrn\\\" something? Let's examine image details: At top center/right date. Then \\\"Basler Rheinschiffahrt A.G.\\\" then \\\"Basel.\\\" Then salutation? Actually \\\"Wir erhalten Ihr Geehrtes vom 23.ct. und wurden heute te= lephonisch wegen des Vertragsentwurfs angefragt.\\\" This sounds like reply to a letter. The recipient might be implied by context but not visible in image. So receiver_persons might be null if not included.\\n\\nBut wait, there might be an address block at very top left that is faint. Let's think: The image is a yellowed paper with hole punches on left. At top left corner there might be handwritten \\\"28\\\" in red. Not a name.\\n\\nThus likely:\\nletter_title: null? Or maybe \\\"Vertragsentwurf\\\" but not title. The prompt says \\\"Title of the letter.\\\" Often letters don't have titles. So null.\\n\\nsender_persons: [\\\"Basler Rheinschiffahrt A.G.\\\"]? Or maybe specific signatory at bottom is unreadable except \\\"Der Gesch\u00e4ftsf\u00fchrer\\\". Let's inspect bottom right: \\\"Hochachtungsvoll\\\" then some signature line, then printed \\\"Basler Personenschiffahrts-Gesellschaft\\\" and below \\\"Der Gesch\u00e4ftsf\u00fchrer\\\". So the sender entity is Basler Rheinschiffahrt A.G., and the person is the Gesch\u00e4ftsf\u00fchrer (managing director) but name not readable? Actually there might be a handwritten signature above the printed name, but it's not legible in image. So sender_persons could be [\\\"Basler Rheinschiffahrt A.G.\\\"] or [\\\"Basler Personenschiffahrts-Gesellschaft\\\"]. Let's provide the organization as sender since person unknown.\\n\\nBut need be precise: The letterhead is \\\"Basler Rheinschiffahrt A.G.\\\" So that's the sender.\\n\\nreceiver_persons: Maybe null, since not visible. But could be inferred? The letter mentions \\\"Vertrag mit W.Buess Sissach nebst Vorbehaltsscopie\\\" and \\\"Feldschl\u00f6sschen Rheinfelden nebst Vorbehaltsscopie\\\". Those might be parties, not receiver.\\n\\nThus output:\\n{\\n\\\"letter_title\\\": [null]? Wait instructions: values stored as list, even if single value. If not included, set value to \\\"null\\\". But should it be [\\\"null\\\"]? The example shows lists of strings. For missing info, likely [\\\"null\\\"]? Actually they said \\\"set the value for the corresponding key to 'null'\\\". In JSON, that means the value is null, but they also said values should be stored as a list. So probably [\\\"null\\\"]? Or null? Let's check example: all values are lists. For missing, likely [null] but that mixes. Usually in these extraction tasks, they want \\\"null\\\" inside list? Let's examine wording: \\\"return them in a JSON file where the values corresponding to each key should be stored as a list, even if there is only a single value for a key\\\" and \\\"If a piece of information is not included in the letter, set the value for the corresponding key to 'null'.\\\" This is ambiguous but likely means the list contains the string \\\"null\\\" or the JSON null? Given they said \\\"set the value ... to 'null'\\\" with quotes, maybe string \\\"null\\\". But in JSON, null is without quotes. However they said \\\"value ... to 'null'\\\" using quotes in instruction. Let's see typical patterns: In many prompt templates, they say set value to null (without quotes) but here they wrote \\\"null\\\" in quotes? Actually they wrote: set the value for the corresponding key to \\\"null\\\". That suggests the JSON value should be null, but then they said store as list. So maybe [\\\"null\\\"]? Hmm.\\n\\nLet's decide: For missing keys, use [null]. But they said \\\"value ... to 'null'\\\" not \\\"list containing null\\\". However consistency with list requires [null]. Let's do [null] for missing? Or \\\"null\\\" string inside list? I think [null] is correct JSON representation of a list with null element. But they said \\\"the values corresponding to each key should be stored as a list\\\" so the value is a list. If information missing, the list should be [null]? Or empty list? They specifically said set value to \\\"null\\\". So the list is [null]. Yes.\\n\\nBut for letter_title, is there a title? The document might be considered a letter with subject \\\"Vertragsentwurf\\\" but not explicit title. So [null].\\n\\nSend date: [\\\"1928-04-28\\\"].\\n\\nSender persons: [\\\"Basler Rheinschiffahrt A.G.\\\"] maybe also include signatory? Let's provide [\\\"Basler Rheinschiffahrt A.G.\\\"].\\n\\nReceiver persons: [null] since not named.\\n\\nBut wait, there might be recipient in address block at top left that is obscured. Let's examine image layout: The paper is centered, with margins. At the very top left, there is faint writing maybe \\\"An die...\\\" but not readable. Given instructions say do not use OCR, but use visual. I can't clearly see a name. So null.\\n\\nThus final JSON.\"},\"seed\":null}],\"created\":1786804259,\"model\":\"thinkingmachines/Inkling\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":\"default\",\"usage\":{\"completion_tokens\":1566,\"prompt_tokens\":2254,\"total_tokens\":3820,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":null,\"reasoning_tokens\":1501,\"rejected_prediction_tokens\":null},\"prompt_tokens_details\":{\"audio_tokens\":null,\"cached_tokens\":256}},\"prompt\":[]}"
+}

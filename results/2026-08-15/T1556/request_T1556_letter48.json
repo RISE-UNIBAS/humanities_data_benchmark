@@ -1,0 +1,47 @@
+{
+    "text": "{\"metadata\":{\"send_date\":[\"1932-09-07\"],\"letter_title\":[\"Betr.Personenschiffahrt\"],\"sender_persons\":[\"null\"],\"receiver_persons\":[\"Dr. M. Vischer-von Planta\"]}}",
+    "model": "thinkingmachines/Inkling",
+    "provider": "huggingface",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 6106,
+        "output_tokens": 1312,
+        "total_tokens": 7418,
+        "cached_tokens": 256,
+        "input_cost_usd": 0.006106,
+        "output_cost_usd": 0.0053136,
+        "estimated_cost_usd": 0.0114196
+    },
+    "duration": 16.722736120224,
+    "timestamp": "2026-08-15T16:33:18.826705",
+    "parsed": {
+        "metadata": {
+            "send_date": [
+                "1932-09-07"
+            ],
+            "letter_title": [
+                "Betr.Personenschiffahrt"
+            ],
+            "sender_persons": [
+                "null"
+            ],
+            "receiver_persons": [
+                "Dr. M. Vischer-von Planta"
+            ],
+            "document_number": "letter48"
+        }
+    },
+    "conversation_id": "14bc1ada-de07-4a52-af21-a0a6439edf8e",
+    "score": {
+        "send_date_tp": 1,
+        "send_date_fp": 0,
+        "send_date_fn": 0,
+        "sender_persons_tp": 0,
+        "sender_persons_fp": 0,
+        "sender_persons_fn": 2,
+        "receiver_persons_tp": 1,
+        "receiver_persons_fp": 0,
+        "receiver_persons_fn": 0
+    },
+    "raw_response": "{\"id\":\"owJnWxL-31r7CA-a2b8e9845c53e091\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\n  \\\"metadata\\\": {\\n    \\\"send_date\\\": [\\\"1932-09-07\\\"],\\n    \\\"letter_title\\\": [\\\"Betr.Personenschiffahrt\\\"],\\n    \\\"sender_persons\\\": [\\\"null\\\"],\\n    \\\"receiver_persons\\\": [\\\"Dr. M. Vischer-von Planta\\\"]\\n  }\\n}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"metadata\":{\"send_date\":[\"1932-09-07\"],\"letter_title\":[\"Betr.Personenschiffahrt\"],\"sender_persons\":[\"null\"],\"receiver_persons\":[\"Dr. M. Vischer-von Planta\"]}},\"reasoning\":\"We need extract values from images of historical letter. Need identify letter_title, sender_persons, send_date, receiver_persons. Let's analyze images.\\n\\nImage 1: Header \\\"Basler Rheinschiffahrt-Aktiengesellschaft Basel\\\" with address line. Date \\\"Basel , den 7.Sept.1932\\\". Addressee:\\nHerr\\nDr.M.Vischer-von Planta\\nB a s e l\\nAlbangraben 8\\n\\nSubject line \\\"Betr.Personenschiffahrt\\\" maybe not title? The letter title might be \\\"Betr.Personenschiffahrt\\\" or maybe no explicit title except subject. Need determine \\\"letter_title\\\": Title of the letter. Could be \\\"Betr.Personenschiffahrt\\\" as subject/title. Or maybe the company letterhead is not title. We'll include that.\\n\\nImage 2: Continuation of body.\\n\\nImage 3: Closing \\\"Mit vorz\u00fcglicher Hochachtung:\\\" then \\\"Basler Rheinschiffahrt Aktiengesellschaft\\\" and signatures (illegible). So sender is Basler Rheinschiffahrt-Aktiengesellschaft? Or specific persons? The signatures are present but not readable clearly. The prompt asks \\\"Name(s) of the person(s) who wrote the letter.\\\" Since it's signed on behalf of company with signatures that are illegible, but the entity is Basler Rheinschiffahrt Aktiengesellschaft. However they ask persons. Might be null if not readable? But we can identify the organization? The key is sender_persons, likely names of individuals. The signatures appear to be two signatures, but I can't read them precisely. One might be \\\"R. ...\\\"? Let's examine mental image: There are two signatures, one looks like \\\"Rhein\\\"?? Actually not clear. Given instructions \\\"If a piece of information is not included in the letter, set the value... to null\\\". But the letter includes signatures, albeit unreadable. However as an AI with image understanding, I might not be able to decipher exactly. But maybe I can? Let's think: The signatures are handwritten in cursive. One might be \\\"G. ...\\\"? Hmm not clear. But the letter is from \\\"Basler Rheinschiffahrt Aktiengesellschaft\\\" and signed by representatives. The question might expect sender_persons as the company? No, \\\"persons\\\" plural. But example uses \\\"Lisa Simpson\\\". So likely individual names. Since unreadable, maybe null? But there might be printed name below? No, only handwritten signatures and printed company name. So sender_persons might be null, or maybe \\\"Basler Rheinschiffahrt Aktiengesellschaft\\\" is not a person.\\n\\nBut wait, in the salutation they address \\\"Herr Dr.M.Vischer-von Planta\\\". So receiver is Dr. M. Vischer-von Planta.\\n\\nSend date is 1932-09-07.\\n\\nLetter title: Maybe \\\"Betr.Personenschiffahrt\\\" which stands for \\\"Betreff: Personenschiffahrt\\\" meaning subject: passenger shipping. So title could be [\\\"Betr.Personenschiffahrt\\\"].\\n\\nLet's formulate JSON.\\n\\nNeed lists even for single value.\\n\\n{\\n\\\"letter_title\\\": [\\\"Betr.Personenschiffahrt\\\"],\\n\\\"sender_persons\\\": [\\\"Basler Rheinschiffahrt Aktiengesellschaft\\\"],? Or null?\\nLet's examine image 3 closer: The printed text \\\"Basler Rheinschiffahrt Aktiengesellschaft\\\" is the company name, then there are two signatures over/around it. The letter is written by the company (Direktion). In image 1, there's \\\"DIREKTION\\\" printed on left. So the sender is the Direktion of Basler Rheinschiffahrt-Aktiengesellschaft. But specific persons? Not named except signatures unreadable. Given task \\\"extract the values of the following keys from the letter\\\" and \\\"sender_persons: Name(s) of the person(s) who wrote the letter.\\\" If signatures are present but illegible, technically information is included but not extractable. However I should try to extract if possible. Let's see if signatures correspond to known figures? Maybe one is \\\"Rudolf\\\"? Not sure.\\n\\nGiven typical extraction tasks, they might accept the company as sender? But key says persons. Let's keep null? Or include company? Let's think about consistency: receiver_persons is \\\"Dr.M.Vischer-von Planta\\\". That's a person. For sender, they might want the signatories if readable. Since I can't read them reliably, but I can see there are signatures. However I might guess one is \\\"J. Gysin\\\"? No.\\n\\nActually, looking at image 3, there is a signature that looks like \\\"Rhein\\\"?? Wait there's a large signature that might be \\\"R. Gysin\\\"? Let's not guess.\\n\\nBut there is also the printed \\\"Basler Rheinschiffahrt Aktiengesellschaft\\\" right above signatures, indicating the entity. In many formal letters, the signers are not named in print, only signatures. If unreadable, then sender persons are unknown. So null might be appropriate. However, the letterhead includes the company name, but that's not a person.\\n\\nThus:\\nletter_title: [\\\"Betr.Personenschiffahrt\\\"]\\nsend_date: [\\\"1932-09-07\\\"]\\nsender_persons: null? Or [\\\"Basler Rheinschiffahrt Aktiengesellschaft\\\"]?\\nreceiver_persons: [\\\"Dr. M. Vischer-von Planta\\\"]\\n\\nBut wait, there might be more receiver? Only one.\\n\\nLet's check date format: \\\"den 7.Sept.1932\\\" -> 1932-09-07.\\n\\nThus output JSON. I think include sender_persons as null since specific persons not readable/identifiable. But is there any name in the body? No.\\n\\nHowever, sometimes they want the organization if individuals not specified. The key is \\\"sender_persons\\\" not \\\"sender_organization\\\". So null is safer if not identifiable.\\n\\nBut I want to be accurate: The letter is sent by \\\"Basler Rheinschiffahrt-Aktiengesellschaft, Direktion\\\". That's not a person. So null.\\n\\nLet's provide that.\"},\"seed\":null}],\"created\":1786804538,\"model\":\"thinkingmachines/Inkling\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":\"default\",\"usage\":{\"completion_tokens\":1312,\"prompt_tokens\":6106,\"total_tokens\":7418,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":null,\"reasoning_tokens\":1244,\"rejected_prediction_tokens\":null},\"prompt_tokens_details\":{\"audio_tokens\":null,\"cached_tokens\":256}},\"prompt\":[]}"
+}

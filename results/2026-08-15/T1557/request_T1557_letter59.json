@@ -1,0 +1,47 @@
+{
+    "text": "{\"metadata\":{\"send_date\":[\"1922-12-16\"],\"letter_title\":[\"\"],\"sender_persons\":[\"\"],\"receiver_persons\":[\"\"]}}",
+    "model": "thinkingmachines/Inkling",
+    "provider": "huggingface",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 2254,
+        "output_tokens": 1553,
+        "total_tokens": 3807,
+        "cached_tokens": 256,
+        "input_cost_usd": 0.002254,
+        "output_cost_usd": 0.006289649999999999,
+        "estimated_cost_usd": 0.00854365
+    },
+    "duration": 16.869717359542847,
+    "timestamp": "2026-08-15T16:38:27.917714",
+    "parsed": {
+        "metadata": {
+            "send_date": [
+                "1922-12-16"
+            ],
+            "letter_title": [
+                ""
+            ],
+            "sender_persons": [
+                ""
+            ],
+            "receiver_persons": [
+                ""
+            ],
+            "document_number": "letter59"
+        }
+    },
+    "conversation_id": "5082cf42-694a-4ab2-a8d7-62d0efd7596e",
+    "score": {
+        "send_date_tp": 0,
+        "send_date_fp": 1,
+        "send_date_fn": 1,
+        "sender_persons_tp": 0,
+        "sender_persons_fp": 0,
+        "sender_persons_fn": 0,
+        "receiver_persons_tp": 0,
+        "receiver_persons_fp": 0,
+        "receiver_persons_fn": 0
+    },
+    "raw_response": "{\"id\":\"owJp6ge-6z2FuN-a2b8f10ecab7f3c2\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\n  \\\"metadata\\\": {\\n    \\\"send_date\\\": [\\\"1922-12-16\\\"],\\n    \\\"letter_title\\\": [\\\"\\\"],\\n    \\\"sender_persons\\\": [\\\"\\\"],\\n    \\\"receiver_persons\\\": [\\\"\\\"]\\n  }\\n}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"metadata\":{\"send_date\":[\"1922-12-16\"],\"letter_title\":[\"\"],\"sender_persons\":[\"\"],\"receiver_persons\":[\"\"]}},\"reasoning\":\"We need parse image of historical letter. Need extract letter_title, sender_persons, send_date, receiver_persons. Let's analyze visible text.\\n\\nImage shows typed letter with header \\\"BASLER PERSONENSCHIFFAHRT-GESELLSCHAFT\\\" maybe title? There's date \\\"Basel, den 16. Dezember 1922.\\\" Addressee: \\\"An die Basler Rheinschiffahrt A.-G.- Marktgasse 5 B a s e l ---------\\\"\\n\\nThen body mentions receiving letter of 15 Dec and contract draft accepted in general assembly without change. Discussion association for shipping on Oberrhein promised to share personal data for propaganda purposes if they pay for costs of personenschiffe for propaganda purposes. \\\"Wir geben Ihnen hiervon Kenntnis und zeichnen mit vorz\u00fcglicher Hochachtung\\\" then signatures? At bottom right maybe \\\"Der Pr\u00e4sident\\\" and \\\"Der Pr\u00e4sident\\\"? Actually there might be signatures but not clearly readable. Need determine sender persons: likely representatives of Basler Personenschiffahrt-Gesellschaft? The letterhead is \\\"BASLER PERSONENSCHIFFAHRT-GESELLSCHAFT\\\" and sign-off might include names but not legible in image. However we need extract values present. Let's inspect mental image: bottom right has printed \\\"Der Pr\u00e4sident\\\" and maybe \\\"Der Pr\u00e4sident\\\"? Or \\\"Der Pr\u00e4sident\\\" and \\\"Der Gesch\u00e4ftsf\u00fchrer\\\"? The image resolution low, but there might be handwritten signatures? Actually I can see faint text at bottom center-right: \\\"Der Pr\u00e4sident\\\" on left and \\\"Der Gesch\u00e4ftsf\u00fchrer\\\" on right? Let's think.\\n\\nWe need not use OCR but read visible. The letter is from Basler Personenschiffahrt-Gesellschaft? The address block is recipient \\\"Basler Rheinschiffahrt A.-G.\\\" So sender is Basler Personenschiffahrt-Gesellschaft, but \\\"sender_persons\\\" asks name(s) of person(s) who wrote the letter. If signatures not readable, maybe null? But perhaps there are printed names below signatures? Let's examine mental image: At bottom right, there is \\\"Der Pr\u00e4sident\\\" then maybe a name? And \\\"Der Gesch\u00e4ftsf\u00fchrer\\\" with name? The image is blurry, but I think I can discern \\\"Der Pr\u00e4sident\\\" and \\\"Der Gesch\u00e4ftsf\u00fchrer\\\" without specific personal names. So sender_persons might be null if no specific names. However sometimes in these extraction tasks they want the organization? No, key is sender_persons, so individuals.\\n\\nLet's parse letter_title: Maybe none explicit, but header \\\"BASLER PERSONENSCHIFFAHRT-GESELLSCHAFT\\\" is not title of letter. There might be no title, so null? Or could be \\\"Basler Personenschiffahrt-Gesellschaft\\\"? The example had \\\"Petition for Environmental Protection\\\" as title. Here there is no explicit title line except letterhead. So letter_title likely null.\\n\\nSend date: \\\"Basel, den 16. Dezember 1922\\\" => 1922-12-16.\\n\\nReceiver persons: \\\"An die Basler Rheinschiffahrt A.-G.\\\" So receiver is Basler Rheinschiffahrt A.-G., maybe as organization, but key asks name(s) of person(s). Still we can list the organization? The example lists persons and institutions? Actually \\\"Mayor Joe Quimby\\\" etc. Here recipient is a company, but we can put [\\\"Basler Rheinschiffahrt A.-G.\\\"].\\n\\nBut need be precise. Let's check if there are individual names in address? No, just company and address.\\n\\nThus JSON:\\n{\\n\\\"letter_title\\\": [null? Or should omit? The instructions say values corresponding to each key should be stored as a list, even if single value. If not included set value to \\\"null\\\". So list containing null? Actually they said set the value for corresponding key to \\\"null\\\". But also said values should be stored as a list. In example all values are lists of strings. For missing, probably [\\\"null\\\"]? Or null? Let's check wording: \\\"If a piece of information is not included in the letter, set the value for the corresponding key to \\\"null\\\". Do not return anything except the JSON file.\\\" Given they want list for values, but if missing set value to \\\"null\\\" (not in list?). However consistency might be [\\\"null\\\"]? Let's examine example: all present. Usually in these prompts they want list, and if missing then [\\\"null\\\"]? Actually they said \\\"the values corresponding to each key should be stored as a list, even if there is only a single value for a key\\\" then \\\"If a piece of information is not included... set the value for the corresponding key to \\\"null\\\".\\\" This is ambiguous but likely means the list should contain \\\"null\\\" as string? Or the value should be null (not list). But they said values should be stored as a list. So probably [\\\"null\\\"]. But I think safer to use null inside list? Let's decide later.\\n\\nBut maybe sender_persons are readable: At bottom there might be signatures \\\"Dr. ...\\\" Hmm. Let's think more. The letter discusses \\\"Verein f\u00fcr die Schiffahrt auf dem Oberrhein\\\" and promises to share personal data for propaganda if they pay costs. The sign-off \\\"Wir geben Ihnen hiervon Kenntnis und zeichnen mit vorz\u00fcglicher Hochachtung\\\" then likely two signatures: one for president, one for secretary. But names might be printed below. In the image, near bottom right, I can faintly see \\\"Der Pr\u00e4sident\\\" and then maybe \\\"E. B. ...\\\"? Actually it's too blurry.\\n\\nGiven task is extraction from visible letter, if names not legible, then null.\\n\\nBut wait, there is a red number \\\"59\\\" at top right, not relevant.\\n\\nThus output:\\n{\\n\\\"letter_title\\\": [\\\"null\\\"]? Or null?\\nLet's check similar prompts: Usually they want {\\\"letter_title\\\": [\\\"...\\\"], ...} and if missing \\\"letter_title\\\": null? But they said values stored as list. So maybe \\\"letter_title\\\": [null]. But JSON can have null inside list. Let's do that? Or maybe they want \\\"letter_title\\\": null despite list instruction? Hmm.\\n\\nLet's provide lists with values or null element:\\n\\\"letter_title\\\": [null],\\n\\\"sender_persons\\\": [null],\\n\\\"send_date\\\": [\\\"1922-12-16\\\"],\\n\\\"receiver_persons\\\": [\\\"Basler Rheinschiffahrt A.-G.\\\"]\\n\\nBut if sender_persons actually are \\\"Basler Personenschiffahrt-Gesellschaft\\\"? No that's organization, not persons.\\n\\nWait, the letterhead says \\\"BASLER PERSONENSCHIFFAHRT-GESELLSCHAFT\\\" which is the sender organization. The signatories might be representatives but unnamed. So sender_persons null.\\n\\nBut maybe there is a name in the address? No.\\n\\nThus I will return with lists containing null where missing. Actually for consistency with \\\"value ... should be stored as a list\\\" I'll put [null]. But some parsers might not like. Let's do exactly: \\\"letter_title\\\": null? No, that violates list. Let's do [\\\"null\\\"]? That treats null as string. The instruction said set value to \\\"null\\\" (the JSON null). So inside list: [null]. Yes.\\n\\nBut wait, receiver_persons might include address? No just name.\\n\\nThus final JSON.\"},\"seed\":null}],\"created\":1786804693,\"model\":\"thinkingmachines/Inkling\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":\"default\",\"usage\":{\"completion_tokens\":1553,\"prompt_tokens\":2254,\"total_tokens\":3807,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":null,\"reasoning_tokens\":1499,\"rejected_prediction_tokens\":null},\"prompt_tokens_details\":{\"audio_tokens\":null,\"cached_tokens\":256}},\"prompt\":[]}"
+}

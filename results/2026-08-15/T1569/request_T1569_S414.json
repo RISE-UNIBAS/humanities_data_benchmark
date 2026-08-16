@@ -1,0 +1,895 @@
+{
+    "text": "We need parse images. Need extract header: year 2025, month April (April 2025). Need icon legend image (second image) to map icons. Need roster row image (third image) for single person. Need identify person id, profession, employment percent, is_jumper, and shifts for each day using header mapping.\n\nLet's analyze images carefully.\n\nImage 1 (header): shows \"BG S April 2025\" and days columns with dates 01 to 30? Let's read precisely. The visible part shows columns:\nDi 01\nMi 02\nDo 03\nFr 04\nSa 05\nSo 06\nMo 07\nDi 08\nMi 09\nDo 10\nFr 11\nSa 12\nSo 13\nMo 14\nDi 15\nMi 16\nDo 17\nFr 18\nSa 19\nSo 20\nMo 21\nDi 22\nMi 23\nDo 24\nFr 25\nSa 26\nSo 27\nMo 28\nDi 29\nMi 30\nThen maybe 31? Not visible but April has 30 days, so up to 30.\n\nNeed map each cell in row to date.\n\nImage 2 (icon legend): lists icons with codes and descriptions. Need match icons in row cells.\n\nImage 3 (roster row): shows row with \"S 4 14\" maybe? Let's parse.\n\nThe row image shows at left \"S 4 14\" handwritten? Then \"0 S\" maybe? Let's understand layout: There are columns for each day? Actually image is a horizontal strip of cells with icons/text. Need decode precisely.\n\nLet's examine image 3 in detail. The visible text:\nLeft side: \"S 4 14\" in blue handwritten? Then \"0 S\" in black? Then there are cells with icons/text across days.\n\nSpecifically visible sequence:\n- Cell with \"ASH\" in red? Let's parse left to right corresponding to days 01-30?\n\nWe need understand the row layout: likely each day is a cell, some contain icon/text, some empty. The image shows a continuous strip with separators. Let's list visible content in order from left to right:\n\nStarting left:\n\"S 4 14\" (maybe margin notes: id? jumper?)\nThen \"0\" and \"S\" in small boxes? Hmm.\n\nThen a cell with \"ASH\" (red/pink background?) maybe day 01?\nThen \"ASH\" again?\nThen \"ASH\"?\nThen \"ASH\"?\nThen some blue cells with \"N\" and \"D\"?\nThen \"D\"?\nThen empty/pink cells?\nThen \"ASH\" repeated?\nThen \"ASH\"?\nThen \"ASH\"?\nThen \"ASH\"?\nThen \"ASH\"?\nThen \"ASH\"?\nThen \"ASH\"?\nThen \"ASH\"?\nThen \"ASH\"?\nThen \"ASH\"?\nThen \"2SO\"?\nThen \"ASH\"?\nThen \"ASH\"?\nThen \"ASH\"?\nThen \"ASH\"?\nThen \"ASH\"?\nThen \"ASH\"?\nThen \"ASH\"?\nThen \"ASH\"?\nThen \"ASH\"?\nThen \"ASH\"?\nThen \"4\" at far right?\n\nThis is ambiguous. Let's think differently: The row might correspond to a specific person with shifts mostly \"ASH\" (maybe alternate unit?). But we need extract for each day of month. However image only shows part of row? Actually the image is a crop of one row across all days. The cells have background colors: some red/pink, some blue, some white.\n\nWe need identify the person details from the row image? Wait the prompt says \"You are given three images: (1) the roster header, (2) an icon legend, and (3) one roster row for a single person.\" So image 3 should contain the row with person info on left and cells across days. But the image shown is just the cells? Let's examine the left part: \"S 4 14\" might be the person id? Or \"S\" in jumper column? Actually in the header image there might be columns on left: BG, S, then maybe employment? But not visible.\n\nWe need extract:\n- id: person number (may be handwritten in margin)\n- profession: section label printed ABOVE the row (e.g., \"WBL\", \"Terti\u00e4r\"), not a value from data columns\n- employment_percent: number in employment column\n- is_jumper: true if \"S\" marked in S column\n\nBut image 3 doesn't clearly show these left columns except \"S 4 14\" and \"0 S\". Let's parse: Maybe left margin has handwritten \"S 4 14\" meaning id \"4\" or \"14\"? And \"0\" is employment percent? And \"S\" is jumper? Or \"0 S\" means employment 0 and jumper S?\n\nWe need be precise based on visible data.\n\nLet's also consider the icon legend image includes descriptions:\n- L 932 L\n- M 817 (NDP) N 1 (NDP)\n- RAI 228 RAI/RUG\n- FDT 300 F-Dienst 1\n- 219 BESPRECHUNG\n- HO 200 HomeOffice\n- 922 Sch\u00fclerbetreuung\n- ED 340 S-Dienst 1\n- 232 B\u00fcrotag\n- M03 322 (4SO) M-Dienst 3 (4SO)\n- M01 323 M-Dienst 4\n- FD 905 TV-FAL\n- SD 919 SD\n- 8897 Azu-Gespr\u00e4che dives (PZG ...)\n- Interne Einblicke (icon I)\n- Auszubildende Lerntandem (icon yellow square?)\n- UK 206 (3SO) Unfall\n- K 203 Kranktag\n- KK 204 (3SO) KIND KRANK (3SO)\n- F 202 Ferien\n- ZT 211 Z\u00fcgeltag\n- 214 Mutterschutz\n- D 222 (ASH) Wunschfrei (ASH)\n- D 224 (2SO) Freier Tag (2SO)\n- OFD 238 Obl.Fort-Bildung\n- S 216 Schultag\n- KURS 207 Kurse bezahlte Weiterb.\n- Pers\u00f6nliche Absenz PA PA\n- Schwangerschaftsurlaub Su Su Su Su\n- Schule S\n- Unbezahlter Urlaub UU\n- Betriebsausflug Y\n\nSo icons include letters/numbers in boxes.\n\nNow image 3 row: We see \"ASH\" in many cells. In legend, \"D 222 (ASH) Wunschfrei (ASH)\" has icon \"D\" with blue? Actually \"Wunschfrei\" is represented by \"D\" in blue box? And \"(ASH)\" indicates alternate unit ASH. So cells with \"ASH\" likely correspond to \"Wunschfrei\" with alternate unit ASH. The background might be white or blue? Let's check: In image 3, there are cells with \"ASH\" printed in black? Some have red/pink background? Actually the image shows alternating background colors: left part yellowish, middle reddish/pink, right blueish. But the text \"ASH\" appears in many cells with black text on various backgrounds.\n\nAlso there are cells with \"N\" and \"D\" in blue boxes? Let's parse the visible sequence more concretely using positions.\n\nWe need map each day 01-30. The row image might show exactly 30 cells separated by vertical lines. Let's try to count.\n\nLooking at image 3, there are vertical separators. Let's count cells from left to right after the margin.\n\nAt far left, there's \"S 4 14\" then \"0 S\" then maybe first cell (day 01?) with \"ASH\" in red/pink? Actually the first visible cell after margin is a red/pink cell with \"ASH\" printed? Let's examine the image layout: The left part is yellowish background with \"S 4 14\" handwritten in blue. Then there's a black \"0\" and \"S\" in boxes? Then there is a red/pink region that extends across several cells with \"ASH\" printed repeatedly. Then there is a blue region with \"N\" and \"D\" boxes. Then more red/pink with \"ASH\". Then at far right \"4\".\n\nBut we need be precise about which days have which shifts.\n\nHowever, maybe the row is not for all days but only for a subset? No, it's a roster row, so should cover all days.\n\nLet's examine the header image for column alignment: The days are arranged in groups of 7? Actually they are in a single row with day abbreviations and numbers. The row image likely aligns with these columns.\n\nGiven the difficulty, maybe we should extract only the clearly visible shifts and leave others? But the schema requires days array with entries for each date? Actually the schema requires \"days\" array of DayEntry, each with date and shifts array. It doesn't explicitly require every day of month, but likely should include all days that have shifts? Or all days? The prompt says \"For each day of the month, extract the shift(s).\" So we need 30 entries, one per day, with shifts array possibly empty? But ShiftEntry requires \"length\" and \"planned_on_current_unit\". If no shift, maybe empty array? The schema allows shifts array of ShiftEntry, could be empty.\n\nBut we need determine for each day.\n\nLet's try to decode the row image precisely by counting cells.\n\nThe image is a horizontal strip. Let's imagine the columns are aligned with the header's 30 days. The left margin takes some space, then cells start.\n\nWe can see printed text in cells:\n- \"ASH\" appears many times.\n- There are blue boxes with \"N\" and \"D\" near the left-middle.\n- There's \"2",
+    "model": "thinkingmachines/Inkling",
+    "provider": "huggingface",
+    "finish_reason": "length",
+    "usage": {
+        "input_tokens": 3342,
+        "output_tokens": 2048,
+        "total_tokens": 5390,
+        "cached_tokens": 2432,
+        "input_cost_usd": 0.003342,
+        "output_cost_usd": 0.008294399999999999,
+        "estimated_cost_usd": 0.011636399999999998
+    },
+    "duration": 47.96356987953186,
+    "timestamp": "2026-08-15T17:54:52.819559",
+    "conversation_id": "5dea88e9-1ba5-4b54-8eeb-52a36dbe6c9e",
+    "score": {
+        "f1_score": 0.0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "true_positives": 0,
+        "false_positives": 0,
+        "false_negatives": 141,
+        "field_scores": {
+            "": {
+                "response": null,
+                "ground_truth": null,
+                "score": 1.0
+            },
+            "persons[0].days[1].shifts[0].icon": {
+                "response": null,
+                "ground_truth": null,
+                "score": 1.0
+            },
+            "persons[0].days[0].shifts[0].length": {
+                "response": null,
+                "ground_truth": "full",
+                "score": 0.0
+            },
+            "persons[0].days[2].shifts[0].icon": {
+                "response": null,
+                "ground_truth": null,
+                "score": 1.0
+            },
+            "persons[0].days[4].shifts[1].alternate_unit": {
+                "response": null,
+                "ground_truth": null,
+                "score": 1.0
+            },
+            "persons[0].days[8].shifts[0].alternate_unit": {
+                "response": null,
+                "ground_truth": "ASH",
+                "score": 0.0
+            },
+            "persons[0].days[22].shifts[0].alternate_unit": {
+                "response": null,
+                "ground_truth": "ASH",
+                "score": 0.0
+            },
+            "persons[0].days[13].shifts[0].alternate_unit": {
+                "response": null,
+                "ground_truth": "ASH",
+                "score": 0.0
+            },
+            "persons[0].days[9].shifts[0].alternate_unit": {
+                "response": null,
+                "ground_truth": "ASH",
+                "score": 0.0
+            },
+            "persons[0].days[24].date": {
+                "response": null,
+                "ground_truth": "2025-04-25",
+                "score": 0.0
+            },
+            "persons[0].days[10].shifts[0].icon": {
+                "response": null,
+                "ground_truth": null,
+                "score": 1.0
+            },
+            "persons[0].days[14].shifts[0].planned_on_current_unit": {
+                "response": null,
+                "ground_truth": false,
+                "score": 0.0
+            },
+            "persons[0].days[20].shifts[0].planned_on_current_unit": {
+                "response": null,
+                "ground_truth": false,
+                "score": 0.0
+            },
+            "persons[0].days[18].shifts[0].length": {
+                "response": null,
+                "ground_truth": "full",
+                "score": 0.0
+            },
+            "persons[0].days[1].shifts[0].alternate_unit": {
+                "response": null,
+                "ground_truth": "ASH",
+                "score": 0.0
+            },
+            "persons[0].days[13].date": {
+                "response": null,
+                "ground_truth": "2025-04-14",
+                "score": 0.0
+            },
+            "persons[0].days[18].date": {
+                "response": null,
+                "ground_truth": "2025-04-19",
+                "score": 0.0
+            },
+            "persons[0].days[17].date": {
+                "response": null,
+                "ground_truth": "2025-04-18",
+                "score": 0.0
+            },
+            "persons[0].days[21].shifts[0].icon": {
+                "response": null,
+                "ground_truth": null,
+                "score": 1.0
+            },
+            "persons[0].days[22].shifts[0].icon": {
+                "response": null,
+                "ground_truth": null,
+                "score": 1.0
+            },
+            "persons[0].days[28].date": {
+                "response": null,
+                "ground_truth": "2025-04-29",
+                "score": 0.0
+            },
+            "persons[0].days[16].date": {
+                "response": null,
+                "ground_truth": "2025-04-17",
+                "score": 0.0
+            },
+            "persons[0].days[26].date": {
+                "response": null,
+                "ground_truth": "2025-04-27",
+                "score": 0.0
+            },
+            "persons[0].days[11].shifts[0].icon": {
+                "response": null,
+                "ground_truth": null,
+                "score": 1.0
+            },
+            "persons[0].days[19].shifts[0].planned_on_current_unit": {
+                "response": null,
+                "ground_truth": false,
+                "score": 0.0
+            },
+            "persons[0].days[24].shifts[0].alternate_unit": {
+                "response": null,
+                "ground_truth": "ASH",
+                "score": 0.0
+            },
+            "persons[0].days[4].shifts[0].length": {
+                "response": null,
+                "ground_truth": "half_left",
+                "score": 0.0
+            },
+            "persons[0].days[3].shifts[0].planned_on_current_unit": {
+                "response": null,
+                "ground_truth": false,
+                "score": 0.0
+            },
+            "persons[0].days[20].shifts[0].alternate_unit": {
+                "response": null,
+                "ground_truth": "2SO",
+                "score": 0.0
+            },
+            "persons[0].days[21].shifts[0].length": {
+                "response": null,
+                "ground_truth": "full",
+                "score": 0.0
+            },
+            "persons[0].days[27].date": {
+                "response": null,
+                "ground_truth": "2025-04-28",
+                "score": 0.0
+            },
+            "persons[0].days[26].shifts[1].icon": {
+                "response": null,
+                "ground_truth": "SD",
+                "score": 0.0
+            },
+            "persons[0].days[23].shifts[0].alternate_unit": {
+                "response": null,
+                "ground_truth": "ASH",
+                "score": 0.0
+            },
+            "persons[0].days[6].shifts[0].icon": {
+                "response": null,
+                "ground_truth": null,
+                "score": 1.0
+            },
+            "persons[0].days[29].shifts[0].alternate_unit": {
+                "response": null,
+                "ground_truth": "ASH",
+                "score": 0.0
+            },
+            "persons[0].days[4].shifts[0].alternate_unit": {
+                "response": null,
+                "ground_truth": null,
+                "score": 1.0
+            },
+            "persons[0].days[12].shifts[0].alternate_unit": {
+                "response": null,
+                "ground_truth": "ASH",
+                "score": 0.0
+            },
+            "persons[0].days[4].date": {
+                "response": null,
+                "ground_truth": "2025-04-05",
+                "score": 0.0
+            },
+            "persons[0].days[0].date": {
+                "response": null,
+                "ground_truth": "2025-04-01",
+                "score": 0.0
+            },
+            "persons[0].days[19].shifts[0].length": {
+                "response": null,
+                "ground_truth": "full",
+                "score": 0.0
+            },
+            "persons[0].days[5].shifts[1].alternate_unit": {
+                "response": null,
+                "ground_truth": null,
+                "score": 1.0
+            },
+            "persons[0].days[10].shifts[0].alternate_unit": {
+                "response": null,
+                "ground_truth": "ASH",
+                "score": 0.0
+            },
+            "persons[0].days[11].date": {
+                "response": null,
+                "ground_truth": "2025-04-12",
+                "score": 0.0
+            },
+            "persons[0].days[22].date": {
+                "response": null,
+                "ground_truth": "2025-04-23",
+                "score": 0.0
+            },
+            "persons[0].days[24].shifts[0].length": {
+                "response": null,
+                "ground_truth": "full",
+                "score": 0.0
+            },
+            "persons[0].days[25].shifts[0].length": {
+                "response": null,
+                "ground_truth": "half_left",
+                "score": 0.0
+            },
+            "persons[0].days[25].shifts[0].planned_on_current_unit": {
+                "response": null,
+                "ground_truth": false,
+                "score": 0.0
+            },
+            "persons[0].days[25].shifts[1].planned_on_current_unit": {
+                "response": null,
+                "ground_truth": true,
+                "score": 0.0
+            },
+            "persons[0].days[26].shifts[0].planned_on_current_unit": {
+                "response": null,
+                "ground_truth": false,
+                "score": 0.0
+            },
+            "persons[0].days[27].shifts[0].alternate_unit": {
+                "response": null,
+                "ground_truth": "ASH",
+                "score": 0.0
+            },
+            "persons[0].days[18].shifts[0].icon": {
+                "response": null,
+                "ground_truth": null,
+                "score": 1.0
+            },
+            "persons[0].days[23].shifts[0].length": {
+                "response": null,
+                "ground_truth": "full",
+                "score": 0.0
+            },
+            "persons[0].days[3].date": {
+                "response": null,
+                "ground_truth": "2025-04-04",
+                "score": 0.0
+            },
+            "persons[0].days[12].shifts[0].planned_on_current_unit": {
+                "response": null,
+                "ground_truth": false,
+                "score": 0.0
+            },
+            "persons[0].days[19].shifts[0].icon": {
+                "response": null,
+                "ground_truth": null,
+                "score": 1.0
+            },
+            "persons[0].days[2].shifts[0].planned_on_current_unit": {
+                "response": null,
+                "ground_truth": false,
+                "score": 0.0
+            },
+            "persons[0].days[19].date": {
+                "response": null,
+                "ground_truth": "2025-04-20",
+                "score": 0.0
+            },
+            "persons[0].days[8].shifts[0].length": {
+                "response": null,
+                "ground_truth": "full",
+                "score": 0.0
+            },
+            "persons[0].days[8].shifts[0].planned_on_current_unit": {
+                "response": null,
+                "ground_truth": false,
+                "score": 0.0
+            },
+            "persons[0].days[15].shifts[0].icon": {
+                "response": null,
+                "ground_truth": null,
+                "score": 1.0
+            },
+            "persons[0].days[29].shifts[0].planned_on_current_unit": {
+                "response": null,
+                "ground_truth": false,
+                "score": 0.0
+            },
+            "persons[0].days[11].shifts[0].alternate_unit": {
+                "response": null,
+                "ground_truth": "ASH",
+                "score": 0.0
+            },
+            "persons[0].days[10].shifts[0].length": {
+                "response": null,
+                "ground_truth": "full",
+                "score": 0.0
+            },
+            "persons[0].days[17].shifts[0].planned_on_current_unit": {
+                "response": null,
+                "ground_truth": false,
+                "score": 0.0
+            },
+            "persons[0].days[29].shifts[0].icon": {
+                "response": null,
+                "ground_truth": null,
+                "score": 1.0
+            },
+            "persons[0].days[17].shifts[0].length": {
+                "response": null,
+                "ground_truth": "full",
+                "score": 0.0
+            },
+            "persons[0].days[21].shifts[0].alternate_unit": {
+                "response": null,
+                "ground_truth": "ASH",
+                "score": 0.0
+            },
+            "persons[0].days[29].date": {
+                "response": null,
+                "ground_truth": "2025-04-30",
+                "score": 0.0
+            },
+            "persons[0].days[16].shifts[0].length": {
+                "response": null,
+                "ground_truth": "full",
+                "score": 0.0
+            },
+            "persons[0].days[5].shifts[1].icon": {
+                "response": null,
+                "ground_truth": "SD",
+                "score": 0.0
+            },
+            "persons[0].days[10].date": {
+                "response": null,
+                "ground_truth": "2025-04-11",
+                "score": 0.0
+            },
+            "persons[0].days[7].shifts[0].icon": {
+                "response": null,
+                "ground_truth": null,
+                "score": 1.0
+            },
+            "persons[0].days[5].shifts[1].planned_on_current_unit": {
+                "response": null,
+                "ground_truth": true,
+                "score": 0.0
+            },
+            "persons[0].days[15].date": {
+                "response": null,
+                "ground_truth": "2025-04-16",
+                "score": 0.0
+            },
+            "persons[0].days[5].shifts[0].icon": {
+                "response": null,
+                "ground_truth": "Freier Tag",
+                "score": 0.0
+            },
+            "persons[0].days[20].date": {
+                "response": null,
+                "ground_truth": "2025-04-21",
+                "score": 0.0
+            },
+            "persons[0].employment_percent": {
+                "response": null,
+                "ground_truth": 0,
+                "score": 0.0
+            },
+            "persons[0].days[26].shifts[1].length": {
+                "response": null,
+                "ground_truth": "half_right",
+                "score": 0.0
+            },
+            "persons[0].days[2].shifts[0].alternate_unit": {
+                "response": null,
+                "ground_truth": "ASH",
+                "score": 0.0
+            },
+            "persons[0].days[3].shifts[0].icon": {
+                "response": null,
+                "ground_truth": null,
+                "score": 1.0
+            },
+            "persons[0].days[9].shifts[0].planned_on_current_unit": {
+                "response": null,
+                "ground_truth": false,
+                "score": 0.0
+            },
+            "persons[0].days[27].shifts[0].length": {
+                "response": null,
+                "ground_truth": "full",
+                "score": 0.0
+            },
+            "persons[0].days[9].shifts[0].length": {
+                "response": null,
+                "ground_truth": "full",
+                "score": 0.0
+            },
+            "persons[0].days[25].shifts[0].icon": {
+                "response": null,
+                "ground_truth": null,
+                "score": 1.0
+            },
+            "persons[0].days[6].shifts[0].length": {
+                "response": null,
+                "ground_truth": "full",
+                "score": 0.0
+            },
+            "persons[0].days[25].shifts[1].alternate_unit": {
+                "response": null,
+                "ground_truth": "ASH",
+                "score": 0.0
+            },
+            "persons[0].days[4].shifts[0].icon": {
+                "response": null,
+                "ground_truth": "Freier Tag",
+                "score": 0.0
+            },
+            "persons[0].days[7].date": {
+                "response": null,
+                "ground_truth": "2025-04-08",
+                "score": 0.0
+            },
+            "persons[0].days[20].shifts[0].icon": {
+                "response": null,
+                "ground_truth": "SD",
+                "score": 0.0
+            },
+            "persons[0].days[4].shifts[1].planned_on_current_unit": {
+                "response": null,
+                "ground_truth": true,
+                "score": 0.0
+            },
+            "persons[0].days[16].shifts[0].icon": {
+                "response": null,
+                "ground_truth": null,
+                "score": 1.0
+            },
+            "persons[0].days[4].shifts[1].icon": {
+                "response": null,
+                "ground_truth": "SD",
+                "score": 0.0
+            },
+            "persons[0].days[4].shifts[1].length": {
+                "response": null,
+                "ground_truth": "half_right",
+                "score": 0.0
+            },
+            "persons[0].days[13].shifts[0].planned_on_current_unit": {
+                "response": null,
+                "ground_truth": false,
+                "score": 0.0
+            },
+            "persons[0].days[14].date": {
+                "response": null,
+                "ground_truth": "2025-04-15",
+                "score": 0.0
+            },
+            "persons[0].days[25].shifts[1].length": {
+                "response": null,
+                "ground_truth": "half_right",
+                "score": 0.0
+            },
+            "persons[0].days[5].shifts[1].length": {
+                "response": null,
+                "ground_truth": "half_right",
+                "score": 0.0
+            },
+            "persons[0].days[28].shifts[0].length": {
+                "response": null,
+                "ground_truth": "full",
+                "score": 0.0
+            },
+            "persons[0].days[1].shifts[0].length": {
+                "response": null,
+                "ground_truth": "full",
+                "score": 0.0
+            },
+            "persons[0].days[22].shifts[0].length": {
+                "response": null,
+                "ground_truth": "full",
+                "score": 0.0
+            },
+            "persons[0].days[16].shifts[0].planned_on_current_unit": {
+                "response": null,
+                "ground_truth": false,
+                "score": 0.0
+            },
+            "persons[0].days[23].shifts[0].planned_on_current_unit": {
+                "response": null,
+                "ground_truth": false,
+                "score": 0.0
+            },
+            "persons[0].days[29].shifts[0].length": {
+                "response": null,
+                "ground_truth": "full",
+                "score": 0.0
+            },
+            "persons[0].days[1].date": {
+                "response": null,
+                "ground_truth": "2025-04-02",
+                "score": 0.0
+            },
+            "persons[0].days[3].shifts[0].alternate_unit": {
+                "response": null,
+                "ground_truth": "ASH",
+                "score": 0.0
+            },
+            "persons[0].days[24].shifts[0].icon": {
+                "response": null,
+                "ground_truth": null,
+                "score": 1.0
+            },
+            "persons[0].days[7].shifts[0].planned_on_current_unit": {
+                "response": null,
+                "ground_truth": false,
+                "score": 0.0
+            },
+            "persons[0].days[13].shifts[0].length": {
+                "response": null,
+                "ground_truth": "full",
+                "score": 0.0
+            },
+            "persons[0].days[6].date": {
+                "response": null,
+                "ground_truth": "2025-04-07",
+                "score": 0.0
+            },
+            "persons[0].days[4].shifts[0].planned_on_current_unit": {
+                "response": null,
+                "ground_truth": true,
+                "score": 0.0
+            },
+            "persons[0].days[2].shifts[0].length": {
+                "response": null,
+                "ground_truth": "full",
+                "score": 0.0
+            },
+            "persons[0].days[16].shifts[0].alternate_unit": {
+                "response": null,
+                "ground_truth": "ASH",
+                "score": 0.0
+            },
+            "persons[0].days[25].date": {
+                "response": null,
+                "ground_truth": "2025-04-26",
+                "score": 0.0
+            },
+            "persons[0].days[23].date": {
+                "response": null,
+                "ground_truth": "2025-04-24",
+                "score": 0.0
+            },
+            "persons[0].days[18].shifts[0].alternate_unit": {
+                "response": null,
+                "ground_truth": "ASH",
+                "score": 0.0
+            },
+            "persons[0].days[8].shifts[0].icon": {
+                "response": null,
+                "ground_truth": null,
+                "score": 1.0
+            },
+            "persons[0].is_jumper": {
+                "response": null,
+                "ground_truth": true,
+                "score": 0.0
+            },
+            "persons[0].days[6].shifts[0].alternate_unit": {
+                "response": null,
+                "ground_truth": "ASH",
+                "score": 0.0
+            },
+            "year": {
+                "response": null,
+                "ground_truth": 2025,
+                "score": 0.0
+            },
+            "persons[0].days[17].shifts[0].alternate_unit": {
+                "response": null,
+                "ground_truth": "ASH",
+                "score": 0.0
+            },
+            "persons[0].days[1].shifts[0].planned_on_current_unit": {
+                "response": null,
+                "ground_truth": false,
+                "score": 0.0
+            },
+            "persons[0].days[0].shifts[0].icon": {
+                "response": null,
+                "ground_truth": null,
+                "score": 1.0
+            },
+            "persons[0].days[3].shifts[0].length": {
+                "response": null,
+                "ground_truth": "full",
+                "score": 0.0
+            },
+            "persons[0].days[0].shifts[0].planned_on_current_unit": {
+                "response": null,
+                "ground_truth": false,
+                "score": 0.0
+            },
+            "persons[0].days[12].shifts[0].icon": {
+                "response": null,
+                "ground_truth": null,
+                "score": 1.0
+            },
+            "persons[0].days[21].shifts[0].planned_on_current_unit": {
+                "response": null,
+                "ground_truth": false,
+                "score": 0.0
+            },
+            "persons[0].days[22].shifts[0].planned_on_current_unit": {
+                "response": null,
+                "ground_truth": false,
+                "score": 0.0
+            },
+            "persons[0].days[25].shifts[0].alternate_unit": {
+                "response": null,
+                "ground_truth": "ASH",
+                "score": 0.0
+            },
+            "persons[0].days[5].shifts[0].planned_on_current_unit": {
+                "response": null,
+                "ground_truth": true,
+                "score": 0.0
+            },
+            "persons[0].days[21].date": {
+                "response": null,
+                "ground_truth": "2025-04-22",
+                "score": 0.0
+            },
+            "persons[0].days[0].shifts[0].alternate_unit": {
+                "response": null,
+                "ground_truth": "ASH",
+                "score": 0.0
+            },
+            "persons[0].days[11].shifts[0].length": {
+                "response": null,
+                "ground_truth": "full",
+                "score": 0.0
+            },
+            "persons[0].days[15].shifts[0].planned_on_current_unit": {
+                "response": null,
+                "ground_truth": false,
+                "score": 0.0
+            },
+            "persons[0].days[5].shifts[0].length": {
+                "response": null,
+                "ground_truth": "half_left",
+                "score": 0.0
+            },
+            "persons[0].days[20].shifts[0].length": {
+                "response": null,
+                "ground_truth": "full",
+                "score": 0.0
+            },
+            "persons[0].days[9].shifts[0].icon": {
+                "response": null,
+                "ground_truth": null,
+                "score": 1.0
+            },
+            "persons[0].days[8].date": {
+                "response": null,
+                "ground_truth": "2025-04-09",
+                "score": 0.0
+            },
+            "persons[0].days[7].shifts[0].alternate_unit": {
+                "response": null,
+                "ground_truth": "ASH",
+                "score": 0.0
+            },
+            "persons[0].days[27].shifts[0].icon": {
+                "response": null,
+                "ground_truth": null,
+                "score": 1.0
+            },
+            "persons[0].days[6].shifts[0].planned_on_current_unit": {
+                "response": null,
+                "ground_truth": false,
+                "score": 0.0
+            },
+            "persons[0].days[10].shifts[0].planned_on_current_unit": {
+                "response": null,
+                "ground_truth": false,
+                "score": 0.0
+            },
+            "persons[0].days[28].shifts[0].alternate_unit": {
+                "response": null,
+                "ground_truth": "ASH",
+                "score": 0.0
+            },
+            "persons[0].days[24].shifts[0].planned_on_current_unit": {
+                "response": null,
+                "ground_truth": false,
+                "score": 0.0
+            },
+            "persons[0].days[5].shifts[0].alternate_unit": {
+                "response": null,
+                "ground_truth": null,
+                "score": 1.0
+            },
+            "persons[0].days[26].shifts[1].planned_on_current_unit": {
+                "response": null,
+                "ground_truth": true,
+                "score": 0.0
+            },
+            "persons[0].days[28].shifts[0].planned_on_current_unit": {
+                "response": null,
+                "ground_truth": false,
+                "score": 0.0
+            },
+            "persons[0].days[5].date": {
+                "response": null,
+                "ground_truth": "2025-04-06",
+                "score": 0.0
+            },
+            "persons[0].days[15].shifts[0].length": {
+                "response": null,
+                "ground_truth": "full",
+                "score": 0.0
+            },
+            "persons[0].days[19].shifts[0].alternate_unit": {
+                "response": null,
+                "ground_truth": "2SO",
+                "score": 0.0
+            },
+            "persons[0].days[18].shifts[0].planned_on_current_unit": {
+                "response": null,
+                "ground_truth": false,
+                "score": 0.0
+            },
+            "persons[0].profession": {
+                "response": null,
+                "ground_truth": "Terti\u00e4r",
+                "score": 0.0
+            },
+            "persons[0].days[13].shifts[0].icon": {
+                "response": null,
+                "ground_truth": null,
+                "score": 1.0
+            },
+            "persons[0].days[11].shifts[0].planned_on_current_unit": {
+                "response": null,
+                "ground_truth": false,
+                "score": 0.0
+            },
+            "persons[0].id": {
+                "response": null,
+                "ground_truth": "S414",
+                "score": 0.0
+            },
+            "persons[0].days[12].shifts[0].length": {
+                "response": null,
+                "ground_truth": "full",
+                "score": 0.0
+            },
+            "persons[0].days[25].shifts[1].icon": {
+                "response": null,
+                "ground_truth": "SD",
+                "score": 0.0
+            },
+            "persons[0].days[9].date": {
+                "response": null,
+                "ground_truth": "2025-04-10",
+                "score": 0.0
+            },
+            "persons[0].days[26].shifts[0].length": {
+                "response": null,
+                "ground_truth": "half_left",
+                "score": 0.0
+            },
+            "persons[0].days[27].shifts[0].planned_on_current_unit": {
+                "response": null,
+                "ground_truth": false,
+                "score": 0.0
+            },
+            "persons[0].days[17].shifts[0].icon": {
+                "response": null,
+                "ground_truth": null,
+                "score": 1.0
+            },
+            "persons[0].days[26].shifts[0].icon": {
+                "response": null,
+                "ground_truth": null,
+                "score": 1.0
+            },
+            "persons[0].days[12].date": {
+                "response": null,
+                "ground_truth": "2025-04-13",
+                "score": 0.0
+            },
+            "persons[0].days[14].shifts[0].icon": {
+                "response": null,
+                "ground_truth": null,
+                "score": 1.0
+            },
+            "persons[0].days[15].shifts[0].alternate_unit": {
+                "response": null,
+                "ground_truth": "ASH",
+                "score": 0.0
+            },
+            "persons[0].days[26].shifts[1].alternate_unit": {
+                "response": null,
+                "ground_truth": "ASH",
+                "score": 0.0
+            },
+            "persons[0].days[7].shifts[0].length": {
+                "response": null,
+                "ground_truth": "full",
+                "score": 0.0
+            },
+            "persons[0].days[23].shifts[0].icon": {
+                "response": null,
+                "ground_truth": null,
+                "score": 1.0
+            },
+            "persons[0].days[14].shifts[0].length": {
+                "response": null,
+                "ground_truth": "full",
+                "score": 0.0
+            },
+            "persons[0].days[2].date": {
+                "response": null,
+                "ground_truth": "2025-04-03",
+                "score": 0.0
+            },
+            "persons[0].days[26].shifts[0].alternate_unit": {
+                "response": null,
+                "ground_truth": "ASH",
+                "score": 0.0
+            },
+            "persons[0].days[28].shifts[0].icon": {
+                "response": null,
+                "ground_truth": null,
+                "score": 1.0
+            },
+            "month": {
+                "response": null,
+                "ground_truth": "April",
+                "score": 0.0
+            },
+            "persons[0].days[14].shifts[0].alternate_unit": {
+                "response": null,
+                "ground_truth": "ASH",
+                "score": 0.0
+            }
+        },
+        "total_fields": 173
+    },
+    "raw_response": "{\"id\":\"owKDYLn-6z2FuN-a2b960ae496686a6\",\"choices\":[{\"finish_reason\":\"length\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"We need parse images. Need extract header: year 2025, month April (April 2025). Need icon legend image (second image) to map icons. Need roster row image (third image) for single person. Need identify person id, profession, employment percent, is_jumper, and shifts for each day using header mapping.\\n\\nLet's analyze images carefully.\\n\\nImage 1 (header): shows \\\"BG S April 2025\\\" and days columns with dates 01 to 30? Let's read precisely. The visible part shows columns:\\nDi 01\\nMi 02\\nDo 03\\nFr 04\\nSa 05\\nSo 06\\nMo 07\\nDi 08\\nMi 09\\nDo 10\\nFr 11\\nSa 12\\nSo 13\\nMo 14\\nDi 15\\nMi 16\\nDo 17\\nFr 18\\nSa 19\\nSo 20\\nMo 21\\nDi 22\\nMi 23\\nDo 24\\nFr 25\\nSa 26\\nSo 27\\nMo 28\\nDi 29\\nMi 30\\nThen maybe 31? Not visible but April has 30 days, so up to 30.\\n\\nNeed map each cell in row to date.\\n\\nImage 2 (icon legend): lists icons with codes and descriptions. Need match icons in row cells.\\n\\nImage 3 (roster row): shows row with \\\"S 4 14\\\" maybe? Let's parse.\\n\\nThe row image shows at left \\\"S 4 14\\\" handwritten? Then \\\"0 S\\\" maybe? Let's understand layout: There are columns for each day? Actually image is a horizontal strip of cells with icons/text. Need decode precisely.\\n\\nLet's examine image 3 in detail. The visible text:\\nLeft side: \\\"S 4 14\\\" in blue handwritten? Then \\\"0 S\\\" in black? Then there are cells with icons/text across days.\\n\\nSpecifically visible sequence:\\n- Cell with \\\"ASH\\\" in red? Let's parse left to right corresponding to days 01-30?\\n\\nWe need understand the row layout: likely each day is a cell, some contain icon/text, some empty. The image shows a continuous strip with separators. Let's list visible content in order from left to right:\\n\\nStarting left:\\n\\\"S 4 14\\\" (maybe margin notes: id? jumper?)\\nThen \\\"0\\\" and \\\"S\\\" in small boxes? Hmm.\\n\\nThen a cell with \\\"ASH\\\" (red/pink background?) maybe day 01?\\nThen \\\"ASH\\\" again?\\nThen \\\"ASH\\\"?\\nThen \\\"ASH\\\"?\\nThen some blue cells with \\\"N\\\" and \\\"D\\\"?\\nThen \\\"D\\\"?\\nThen empty/pink cells?\\nThen \\\"ASH\\\" repeated?\\nThen \\\"ASH\\\"?\\nThen \\\"ASH\\\"?\\nThen \\\"ASH\\\"?\\nThen \\\"ASH\\\"?\\nThen \\\"ASH\\\"?\\nThen \\\"ASH\\\"?\\nThen \\\"ASH\\\"?\\nThen \\\"ASH\\\"?\\nThen \\\"ASH\\\"?\\nThen \\\"2SO\\\"?\\nThen \\\"ASH\\\"?\\nThen \\\"ASH\\\"?\\nThen \\\"ASH\\\"?\\nThen \\\"ASH\\\"?\\nThen \\\"ASH\\\"?\\nThen \\\"ASH\\\"?\\nThen \\\"ASH\\\"?\\nThen \\\"ASH\\\"?\\nThen \\\"ASH\\\"?\\nThen \\\"ASH\\\"?\\nThen \\\"4\\\" at far right?\\n\\nThis is ambiguous. Let's think differently: The row might correspond to a specific person with shifts mostly \\\"ASH\\\" (maybe alternate unit?). But we need extract for each day of month. However image only shows part of row? Actually the image is a crop of one row across all days. The cells have background colors: some red/pink, some blue, some white.\\n\\nWe need identify the person details from the row image? Wait the prompt says \\\"You are given three images: (1) the roster header, (2) an icon legend, and (3) one roster row for a single person.\\\" So image 3 should contain the row with person info on left and cells across days. But the image shown is just the cells? Let's examine the left part: \\\"S 4 14\\\" might be the person id? Or \\\"S\\\" in jumper column? Actually in the header image there might be columns on left: BG, S, then maybe employment? But not visible.\\n\\nWe need extract:\\n- id: person number (may be handwritten in margin)\\n- profession: section label printed ABOVE the row (e.g., \\\"WBL\\\", \\\"Terti\u00e4r\\\"), not a value from data columns\\n- employment_percent: number in employment column\\n- is_jumper: true if \\\"S\\\" marked in S column\\n\\nBut image 3 doesn't clearly show these left columns except \\\"S 4 14\\\" and \\\"0 S\\\". Let's parse: Maybe left margin has handwritten \\\"S 4 14\\\" meaning id \\\"4\\\" or \\\"14\\\"? And \\\"0\\\" is employment percent? And \\\"S\\\" is jumper? Or \\\"0 S\\\" means employment 0 and jumper S?\\n\\nWe need be precise based on visible data.\\n\\nLet's also consider the icon legend image includes descriptions:\\n- L 932 L\\n- M 817 (NDP) N 1 (NDP)\\n- RAI 228 RAI/RUG\\n- FDT 300 F-Dienst 1\\n- 219 BESPRECHUNG\\n- HO 200 HomeOffice\\n- 922 Sch\u00fclerbetreuung\\n- ED 340 S-Dienst 1\\n- 232 B\u00fcrotag\\n- M03 322 (4SO) M-Dienst 3 (4SO)\\n- M01 323 M-Dienst 4\\n- FD 905 TV-FAL\\n- SD 919 SD\\n- 8897 Azu-Gespr\u00e4che dives (PZG ...)\\n- Interne Einblicke (icon I)\\n- Auszubildende Lerntandem (icon yellow square?)\\n- UK 206 (3SO) Unfall\\n- K 203 Kranktag\\n- KK 204 (3SO) KIND KRANK (3SO)\\n- F 202 Ferien\\n- ZT 211 Z\u00fcgeltag\\n- 214 Mutterschutz\\n- D 222 (ASH) Wunschfrei (ASH)\\n- D 224 (2SO) Freier Tag (2SO)\\n- OFD 238 Obl.Fort-Bildung\\n- S 216 Schultag\\n- KURS 207 Kurse bezahlte Weiterb.\\n- Pers\u00f6nliche Absenz PA PA\\n- Schwangerschaftsurlaub Su Su Su Su\\n- Schule S\\n- Unbezahlter Urlaub UU\\n- Betriebsausflug Y\\n\\nSo icons include letters/numbers in boxes.\\n\\nNow image 3 row: We see \\\"ASH\\\" in many cells. In legend, \\\"D 222 (ASH) Wunschfrei (ASH)\\\" has icon \\\"D\\\" with blue? Actually \\\"Wunschfrei\\\" is represented by \\\"D\\\" in blue box? And \\\"(ASH)\\\" indicates alternate unit ASH. So cells with \\\"ASH\\\" likely correspond to \\\"Wunschfrei\\\" with alternate unit ASH. The background might be white or blue? Let's check: In image 3, there are cells with \\\"ASH\\\" printed in black? Some have red/pink background? Actually the image shows alternating background colors: left part yellowish, middle reddish/pink, right blueish. But the text \\\"ASH\\\" appears in many cells with black text on various backgrounds.\\n\\nAlso there are cells with \\\"N\\\" and \\\"D\\\" in blue boxes? Let's parse the visible sequence more concretely using positions.\\n\\nWe need map each day 01-30. The row image might show exactly 30 cells separated by vertical lines. Let's try to count.\\n\\nLooking at image 3, there are vertical separators. Let's count cells from left to right after the margin.\\n\\nAt far left, there's \\\"S 4 14\\\" then \\\"0 S\\\" then maybe first cell (day 01?) with \\\"ASH\\\" in red/pink? Actually the first visible cell after margin is a red/pink cell with \\\"ASH\\\" printed? Let's examine the image layout: The left part is yellowish background with \\\"S 4 14\\\" handwritten in blue. Then there's a black \\\"0\\\" and \\\"S\\\" in boxes? Then there is a red/pink region that extends across several cells with \\\"ASH\\\" printed repeatedly. Then there is a blue region with \\\"N\\\" and \\\"D\\\" boxes. Then more red/pink with \\\"ASH\\\". Then at far right \\\"4\\\".\\n\\nBut we need be precise about which days have which shifts.\\n\\nHowever, maybe the row is not for all days but only for a subset? No, it's a roster row, so should cover all days.\\n\\nLet's examine the header image for column alignment: The days are arranged in groups of 7? Actually they are in a single row with day abbreviations and numbers. The row image likely aligns with these columns.\\n\\nGiven the difficulty, maybe we should extract only the clearly visible shifts and leave others? But the schema requires days array with entries for each date? Actually the schema requires \\\"days\\\" array of DayEntry, each with date and shifts array. It doesn't explicitly require every day of month, but likely should include all days that have shifts? Or all days? The prompt says \\\"For each day of the month, extract the shift(s).\\\" So we need 30 entries, one per day, with shifts array possibly empty? But ShiftEntry requires \\\"length\\\" and \\\"planned_on_current_unit\\\". If no shift, maybe empty array? The schema allows shifts array of ShiftEntry, could be empty.\\n\\nBut we need determine for each day.\\n\\nLet's try to decode the row image precisely by counting cells.\\n\\nThe image is a horizontal strip. Let's imagine the columns are aligned with the header's 30 days. The left margin takes some space, then cells start.\\n\\nWe can see printed text in cells:\\n- \\\"ASH\\\" appears many times.\\n- There are blue boxes with \\\"N\\\" and \\\"D\\\" near the left-middle.\\n- There's \\\"2\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":[]},\"seed\":null}],\"created\":1786809267,\"model\":\"thinkingmachines/Inkling\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":\"default\",\"usage\":{\"completion_tokens\":2048,\"prompt_tokens\":3342,\"total_tokens\":5390,\"completion_tokens_details\":null,\"prompt_tokens_details\":{\"audio_tokens\":null,\"cached_tokens\":2432}},\"prompt\":[]}"
+}

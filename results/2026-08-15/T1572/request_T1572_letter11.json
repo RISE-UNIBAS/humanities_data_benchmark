@@ -1,0 +1,41 @@
+{
+    "text": "{\"metadata\":{\"send_date\":[\"1926-07-14\"],\"letter_title\":null,\"sender_persons\":null,\"receiver_persons\":null}}",
+    "model": "meta-models/Muse-Glimmer-30B",
+    "provider": "huggingface",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 4186,
+        "output_tokens": 1104,
+        "total_tokens": 5290,
+        "cached_tokens": 320,
+        "input_cost_usd": 0.0014650999999999998,
+        "output_cost_usd": 0.001656,
+        "estimated_cost_usd": 0.0031211
+    },
+    "duration": 12.06729769706726,
+    "timestamp": "2026-08-15T16:57:14.481422",
+    "parsed": {
+        "metadata": {
+            "send_date": [
+                "1926-07-14"
+            ],
+            "letter_title": null,
+            "sender_persons": null,
+            "receiver_persons": null,
+            "document_number": "letter11"
+        }
+    },
+    "conversation_id": "8d56e374-92cc-4f8e-95de-ff1da9d30665",
+    "score": {
+        "send_date_tp": 1,
+        "send_date_fp": 0,
+        "send_date_fn": 0,
+        "sender_persons_tp": 0,
+        "sender_persons_fp": 0,
+        "sender_persons_fn": 0,
+        "receiver_persons_tp": 0,
+        "receiver_persons_fp": 0,
+        "receiver_persons_fn": 0
+    },
+    "raw_response": "{\"id\":\"owJutxK-fdNmn-a2b90cac9cbed91c\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\n  \\\"metadata\\\": {\\n    \\\"send_date\\\": [\\\"1926-07-14\\\"],\\n    \\\"letter_title\\\": null,\\n    \\\"sender_persons\\\": null,\\n    \\\"receiver_persons\\\": null\\n  }\\n}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"metadata\":{\"send_date\":[\"1926-07-14\"],\"letter_title\":null,\"sender_persons\":null,\"receiver_persons\":null}},\"reasoning\":\"IDENTITY and PURPOSE:\\n\\nExtract values of keys from letter and return JSON where values corresponding to each key should be stored as a list, even if single value.\\n\\nKeys:\\n- letter_title: Title of the letter.\\n- sender_persons: Name(s) of the person(s) who wrote the letter.\\n- send_date: The exact or approximate date the letter was written.\\n- receiver_persons: Name(s) of the person(s) who received the letter.\\n\\nTake deep breath... Do not use OCR. Use ISO format YYYY-MM-DD for dates. If info not included, set value to \\\"null\\\". Do not return anything except JSON.\\n\\nWe need parse letter. Image shows German text.\\n\\nTop right: 14. Juli 1926\\n\\nLeft: O/R.\\n\\nCenter: An die Redaktion der \\\"Basler Nachrichten\\\", Basel.\\n\\nText about Rheinfelden etc.\\n\\nClosing: Hochachtungsvoll: Basler Personenschiffahrtsgesellschaft Der Gesch\u00e4ftsf\u00fchreri\\n\\nSo sender is Basler Personenschiffahrtsgesellschaft (Basel Passenger Shipping Company). Possibly the managing director but name not given. Sender_persons: maybe company name? The key says Name(s) of the person(s) who wrote the letter. Might be company, not person. Could be null? Might be \\\"Basler Personenschiffahrtsgesellschaft\\\". Might be considered sender entity. Could be null because no person name. The letter is signed by the company, Der Gesch\u00e4ftsf\u00fchreri (managing director) but name not printed. So sender_persons maybe null? Or list with company name? The instruction says name(s) of person(s). Company is not a person. Might be null.\\n\\nReceiver_persons: \\\"An die Redaktion der 'Basler Nachrichten', Basel\\\". So receiver is the editorial office of Basler Nachrichten. Person name not given. Could be null? Or receiver_persons is \\\"Redaktion der Basler Nachrichten\\\"? Might be an entity. Hmm.\\n\\nLetter_title: Title of the letter. Maybe none. Could be null. Or maybe \\\"An die Redaktion der 'Basler Nachrichten'\\\" is the address, not title. Might be no title. Could be null.\\n\\nSend_date: 14. Juli 1926 => 1926-07-14\\n\\nSender_persons: maybe null because no individual name. Could be \\\"Basler Personenschiffahrtsgesellschaft\\\". Might be considered sender. The example uses persons. Might be null.\\n\\nReceiver_persons: maybe null because no person name, just editorial.\\n\\nAlternative interpretation: sender_persons could be \\\"Basler Personenschiffahrtsgesellschaft\\\" as the sender entity, even though not a person. Might be acceptable.\\n\\nLetter_title: maybe null.\\n\\nLet's see typical historical letter extraction. Title might be missing. Could be \\\"O/R.\\\"? No.\\n\\nMaybe the letter title is not present. So null.\\n\\nThus JSON:\\n\\n{\\n  \\\"letter_title\\\": null,\\n  \\\"sender_persons\\\": null,\\n  \\\"send_date\\\": [\\\"1926-07-14\\\"],\\n  \\\"receiver_persons\\\": null\\n}\\n\\nBut maybe receiver_persons is [\\\"Redaktion der Basler Nachrichten\\\"]? The key says name(s) of person(s) who received. Redaktion is not a person. Hmm.\\n\\nCould be we list the company as sender_persons? Might be considered a person? No.\\n\\nAlternative: sender_persons could be [\\\"Basler Personenschiffahrtsgesellschaft\\\"] as the signatory. Might be okay.\\n\\nThe instruction: \\\"Name(s) of the person(s) who wrote the letter.\\\" The letter is signed by the company, not a person. So null.\\n\\nReceiver_persons: \\\"An die Redaktion der 'Basler Nachrichten'\\\" - no person name. So null.\\n\\nLetter_title: maybe the subject is about Rheinfelden flag. No title.\\n\\nThus output JSON with lists. For null, should be \\\"null\\\" not list? Example shows values as list. But if info not included, set value for corresponding key to \\\"null\\\". So value is null, not list. The instruction: return them in a JSON file where the values corresponding to each key should be stored as a list, even if there is only a single value for a key. If a piece of information is not included, set the value for the corresponding key to \\\"null\\\". So null overrides list requirement.\\n\\nThus send_date is list with one element.\\n\\nLet's output:\\n\\n{\\n  \\\"letter_title\\\": null,\\n  \\\"sender_persons\\\": null,\\n  \\\"send_date\\\": [\\\"1926-07-14\\\"],\\n  \\\"receiver_persons\\\": null\\n}\\n\\nCheck date format: 14. Juli 1926 => 1926-07-14.\\n\\nPotential nuance: The letter is dated 14. Juli 1926. Good.\\n\\nMaybe sender_persons could be [\\\"Der Gesch\u00e4ftsf\u00fchreri\\\"]? No name.\\n\\nCould be the letter title is \\\"An die Redaktion der 'Basler Nachrichten'\\\"? Might be considered title? No.\\n\\nI think answer is as above.\\n\\nIf they want lists for null? Could be [\\\"null\\\"]? No.\\n\\nI'll output JSON exactly.\\n\\nEnsure no extra text.\\n\\n\"},\"token_ids\":null,\"routed_experts\":null,\"seed\":null}],\"created\":1786805824,\"model\":\"meta-models/Muse-Glimmer-30B\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":\"vllm-0.1.dev19059+g66826a22d-tp2-46311a71\",\"usage\":{\"completion_tokens\":1104,\"prompt_tokens\":4186,\"total_tokens\":5290,\"completion_tokens_details\":null,\"prompt_tokens_details\":{\"audio_tokens\":null,\"cached_tokens\":320,\"created_cache_tokens\":3856,\"multimodal_tokens\":{\"image\":3850}}},\"prompt_token_ids\":null,\"prompt_text\":null,\"kv_transfer_params\":null,\"ec_transfer_params\":null,\"metrics\":null,\"prompt\":[]}"
+}

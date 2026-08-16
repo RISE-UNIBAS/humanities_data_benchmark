@@ -870,6 +870,74 @@ Return only JSON:"""
             print(f"  ✗ Error fetching OpenRouter pricing: {e}")
             return {}
 
+    def scrape_huggingface_pricing(self, models: List[str]) -> Dict[str, Dict]:
+        """Fetch Hugging Face router pricing via their models API"""
+        if not SCRAPING_AVAILABLE:
+            return {}
+
+        try:
+            url = "https://router.huggingface.co/v1/models"
+            print(f"  Fetching {url}...")
+            response = requests.get(url, headers=self._get_browser_headers(), timeout=15)
+            response.raise_for_status()
+
+            data = response.json()
+            model_list = data.get('data', [])
+
+            # Build two lookups: model_id -> pricing of its cheapest live inference
+            # provider, and (model_id, provider) -> that provider's pricing. Model
+            # names may carry a routing suffix ("<repo_id>:<provider>") that pins one
+            # provider; those must be priced from the pinned route, not the cheapest.
+            api_pricing = {}
+            route_pricing = {}
+            for entry in model_list:
+                model_id = entry.get('id', '')
+                candidates = []
+                for prov in entry.get('providers', []):
+                    if prov.get('status') != 'live':
+                        continue
+                    pricing = prov.get('pricing') or {}
+                    input_price = pricing.get('input')
+                    output_price = pricing.get('output')
+                    if input_price is None or output_price is None:
+                        continue
+                    try:
+                        # Hugging Face router prices are already per million tokens
+                        prices = {
+                            'input_price': float(input_price),
+                            'output_price': float(output_price),
+                        }
+                    except (ValueError, TypeError):
+                        continue
+                    candidates.append(prices)
+                    route_pricing[(model_id, prov.get('provider'))] = prices
+                if candidates:
+                    api_pricing[model_id] = min(candidates, key=lambda p: p['input_price'])
+
+            result = {}
+            for model in models:
+                repo_id, _, pinned_provider = model.partition(':')
+                if pinned_provider:
+                    # A pinned route must be priced from that provider; falling back to
+                    # the cheapest one would record a price we never pay.
+                    if (repo_id, pinned_provider) in route_pricing:
+                        result[model] = route_pricing[(repo_id, pinned_provider)]
+                        print(f"  ✓ {model}: ${result[model]['input_price']} / ${result[model]['output_price']}")
+                    else:
+                        print(f"  ✗ {model}: provider '{pinned_provider}' publishes no price "
+                              f"for {repo_id} in the Hugging Face router API")
+                elif repo_id in api_pricing:
+                    result[model] = api_pricing[repo_id]
+                    print(f"  ✓ {model}: ${result[model]['input_price']} / ${result[model]['output_price']}")
+                else:
+                    print(f"  ✗ {model} not found in Hugging Face router API")
+
+            return result
+
+        except Exception as e:
+            print(f"  ✗ Error fetching Hugging Face pricing: {e}")
+            return {}
+
     # Maps provider -> base URL for single-page providers
     XAI_MODEL_URLS = {
         'grok-4.20-0309-reasoning': 'https://docs.x.ai/developers/models/grok-4.20-beta-0309-reasoning',
@@ -920,6 +988,16 @@ Return only JSON:"""
         'moonshotai/kimi-k3':             'https://openrouter.ai/moonshotai/kimi-k3',
     }
 
+    HUGGINGFACE_MODEL_URLS = {
+        'swiss-ai/Apertus-v1.5-70B:publicai':          'https://router.huggingface.co/v1/models',
+        'swiss-ai/Apertus-v1.5-8B:publicai':           'https://router.huggingface.co/v1/models',
+        'Qwen/Qwen3-VL-235B-A22B-Instruct:deepinfra':  'https://router.huggingface.co/v1/models',
+        'MiniMaxAI/MiniMax-M3:deepinfra':              'https://router.huggingface.co/v1/models',
+        'thinkingmachines/Inkling-Small:deepinfra':    'https://router.huggingface.co/v1/models',
+        'thinkingmachines/Inkling:together':           'https://router.huggingface.co/v1/models',
+        'meta-models/Muse-Glimmer-30B:together':       'https://router.huggingface.co/v1/models',
+    }
+
     PROVIDER_URLS = {
         'anthropic': 'https://docs.claude.com/en/docs/about-claude/pricing',
         'genai':     'https://ai.google.dev/gemini-api/docs/pricing',
@@ -945,6 +1023,8 @@ Return only JSON:"""
             return self.OPENROUTER_MODEL_URLS.get(model, f"https://openrouter.ai/{model}")
         elif provider == 'x-ai':
             return self.XAI_MODEL_URLS.get(model, "")
+        elif provider == 'huggingface':
+            return self.HUGGINGFACE_MODEL_URLS.get(model, "https://router.huggingface.co/v1/models")
         return ""
 
     def scrape_pricing(self, provider: str, models: List[str]) -> Dict[str, Dict]:
@@ -975,6 +1055,8 @@ Return only JSON:"""
             return scraper_map[provider](models=models)
         elif provider == 'openrouter':
             return self.scrape_openrouter_pricing(models)
+        elif provider == 'huggingface':
+            return self.scrape_huggingface_pricing(models)
         else:
             print(f"  No scraper available for {provider}")
             return {}
