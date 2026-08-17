@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased
+## Unreleased (v0.5.5-pre1)
 
 ### Changed
 - `requirements.txt`: relaxed all pins to the versions actually installed in the development environment; dropped the unused `matplotlib` and the redundant `dotenv` shim, and added `pytest`, which CI previously installed separately. 
