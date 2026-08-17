@@ -5,23 +5,27 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased] (v0.5.4-pre1)
+## [v0.5.4] - 2026-08-17
 
 ### Added
 - 9 new models: grok-4.5 (xAI), qwen/qwen3.8-max (OpenRouter), and seven on Hugging Face, namely swiss-ai/Apertus-v1.5-70B, swiss-ai/Apertus-v1.5-8B, Qwen/Qwen3-VL-235B-A22B-Instruct, MiniMaxAI/MiniMax-M3, thinkingmachines/Inkling, thinkingmachines/Inkling-Small and meta-models/Muse-Glimmer-30B
 - New `huggingface` provider: routes to third-party inference providers over the OpenAI-compatible Hugging Face router API.
 - Hugging Face models are recorded with their downstream inference provider pinned in the model name (`<repo_id>:<provider>`, e.g. `MiniMaxAI/MiniMax-M3:deepinfra`), which the router honors per request.
 - 135 new benchmark test configurations (T1450-T1584) for the 9 new models across all benchmarks (15 tests each): grok-4.5 (T1450-T1464), qwen/qwen3.8-max (T1465-T1479), swiss-ai/Apertus-v1.5-70B:publicai (T1480-T1494), swiss-ai/Apertus-v1.5-8B:publicai (T1495-T1509), Qwen/Qwen3-VL-235B-A22B-Instruct:deepinfra (T1510-T1524), MiniMaxAI/MiniMax-M3:deepinfra (T1525-T1539), thinkingmachines/Inkling-Small:deepinfra (T1540-T1554), thinkingmachines/Inkling:together (T1555-T1569), meta-models/Muse-Glimmer-30B:together (T1570-T1584)
+- Tests on 2026-06-30: 4 `book_advert_xml` tests (Cohere) — command-r-08-2024 (T0483), command-r-plus-08-2024 (T0484), command-r7b-12-2024 (T0485) and command-a-03-2025 (T0486).
 - Tests on 2026-08-04: T1450-T1479 (30 tests) — grok-4.5 (T1450-T1464) (x-ai) and qwen/qwen3.8-max (T1465-T1479) (OpenRouter)
 - Tests on 2026-08-14: 21 tests (Hugging Face) with swiss-ai/Apertus-v1.5-70B:publicai (T1480-T1486) and swiss-ai/Apertus-v1.5-8B:publicai (T1495-T1508).
 - Tests on 2026-08-15: 66 tests (Hugging Face) with Qwen/Qwen3-VL-235B-A22B-Instruct:deepinfra (T1510-T1524), MiniMaxAI/MiniMax-M3:deepinfra (T1525-T1539), thinkingmachines/Inkling-Small:deepinfra (T1540-T1545), thinkingmachines/Inkling:together (T1555-T1560, T1562-T1569), meta-models/Muse-Glimmer-30B:together (T1570-T1575), swiss-ai/Apertus-v1.5-70B:publicai (T1485-T1494) and swiss-ai/Apertus-v1.5-8B:publicai (T1509).
 - Tests on 2026-08-16: 19 tests (Hugging Face) with thinkingmachines/Inkling-Small:deepinfra (T1546-T1554), thinkingmachines/Inkling:together (T1561) and meta-models/Muse-Glimmer-30B:together (T1576-T1584).
-- Pricing data for 2026-08-04 (grok-4.5, qwen/qwen3.8-max), 2026-08-10 (the two `swiss-ai/Apertus-*` models on Hugging Face) and 2026-08-15 (five new Hugging Face models, each priced from its pinned route).
-- `scripts/data/model_aliases.json` (v1.3): `huggingface` aliases for all seven pinned model names, mapping each to the model id its route writes into result files.
+- Pricing data for 2026-08-04 (grok-4.5, qwen/qwen3.8-max), 2026-08-10 (the two `swiss-ai/Apertus-*` models on Hugging Face) and 2026-08-15 (five new Hugging Face models, each priced from its pinned route); `pricing.json` metadata bumped to version 1.42.
+- `scripts/data/model_aliases.json` (v1.4): `huggingface` aliases for all seven pinned model names, mapping each to the model id its route writes into result files, plus an `alibaba` alias `qwen3.5-plus-2026-02-15` → `qwen3.5-plus`.
+- `scripts/ndr_export/copy_static_data.py`: copies `pricing.json` and `model_aliases.json` verbatim into `collected_results/` as a sixth `generate_all.py` step, making the export self-contained. The viz widget joins `benchmark_export.json` (model names from `benchmarks_tests.csv`) to `test_runs_export.json` (model names as result files report them) on provider + model, so without the alias map it silently lost cost and speed figures for every aliased model.
+- `CITATION.cff`: `references` block listing the two peer-reviewed *Journal of Open Humanities Data* articles describing the benchmark ([10.5334/johd.470](https://doi.org/10.5334/johd.470) and [10.5334/johd.481](https://doi.org/10.5334/johd.481)), so citation tools surface the papers alongside the software.
 
 ### Fixed
 - Added the missing `duty_rosters` entry to the Available Benchmarks table in `README.md`
 - `README.md` consistency pass.
+- Tests with a `dataclass` whose completion yields no parseable JSON (truncated, empty or non-JSON) are now logged and skipped instead of being passed to `score_request_answer` with a `None` payload.
 
 ## [v0.5.3] - 2026-08-04
 
@@ -261,7 +265,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Changelog
 
-[Unreleased]: https://github.com/RISE-UNIBAS/humanities_data_benchmark/compare/v0.5.3...HEAD
+[Unreleased]: https://github.com/RISE-UNIBAS/humanities_data_benchmark/compare/v0.5.4...HEAD
 [v0.1.0]: https://github.com/RISE-UNIBAS/humanities_data_benchmark/releases/tag/v0.1.0
 [v0.2.0]: https://github.com/RISE-UNIBAS/humanities_data_benchmark/releases/tag/v0.2.0
 [v0.2.1]: https://github.com/RISE-UNIBAS/humanities_data_benchmark/releases/tag/v0.2.1
@@ -274,3 +278,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [v0.5.1]: https://github.com/RISE-UNIBAS/humanities_data_benchmark/releases/tag/v0.5.1
 [v0.5.2]: https://github.com/RISE-UNIBAS/humanities_data_benchmark/releases/tag/v0.5.2
 [v0.5.3]: https://github.com/RISE-UNIBAS/humanities_data_benchmark/releases/tag/v0.5.3
+[v0.5.4]: https://github.com/RISE-UNIBAS/humanities_data_benchmark/releases/tag/v0.5.4
