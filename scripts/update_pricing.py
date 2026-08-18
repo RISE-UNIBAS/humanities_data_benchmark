@@ -943,6 +943,7 @@ Return only JSON:"""
         'grok-4.20-0309-reasoning': 'https://docs.x.ai/developers/models/grok-4.20-beta-0309-reasoning',
         'grok-4.3':                 'https://docs.x.ai/developers/models/grok-4.3',
         'grok-4.5':                 'https://docs.x.ai/developers/models/grok-4.5',
+        'grok-4.6':                 'https://docs.x.ai/developers/models/grok-4.6',
     }
 
     ALIBABA_MODEL_URLS = {
@@ -966,6 +967,8 @@ Return only JSON:"""
     }
 
     OPENROUTER_MODEL_URLS = {
+        'meta/muse-spark-1.2':            'https://openrouter.ai/meta/muse-spark-1.2',
+        'z-ai/glm-5v-turbo':              'https://openrouter.ai/z-ai/glm-5v-turbo',
         'google/gemma-4-26b-a4b-it':      'https://openrouter.ai/google/gemma-4-26b-a4b-it',
         'google/gemma-4-31b-it':          'https://openrouter.ai/google/gemma-4-31b-it',
         'meta-llama/llama-4-maverick':    'https://openrouter.ai/meta-llama/llama-4-maverick',

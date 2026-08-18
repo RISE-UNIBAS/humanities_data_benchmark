@@ -565,12 +565,15 @@ This benchmark suite currently tests models from the following providers:
 | | meta-llama/llama-4-scout                  | Llama 4 Scout                                              |
 | | stepfun/step-3.7-flash                    | StepFun Step 3.7 Flash                                     |
 | | moonshotai/kimi-k3                        | Kimi K3                                                    |
+| | meta/muse-spark-1.2                       | Muse Spark 1.2 (Meta); multimodal                          |
+| | z-ai/glm-5v-turbo                         | GLM-5V Turbo (Z.ai); multimodal                            |
 | **sciCORE** | ~~GLM-4.5V-FP8~~                              | ~~GLM-4.5V, FP8 quantization; multimodal (Univ. of Basel HPC)~~ (legacy) |
 | | ~~qwen3-235b-fp8~~                            | ~~Qwen3 235B, FP8 quantization (Univ. of Basel HPC)~~ (legacy)          |
 | | qwen35-397b-a17b-fp8                      | Qwen3.5 397B-A17B, FP8 quantization (Univ. of Basel HPC)   |
 | **xAI** | grok-4.20-0309-reasoning                  | Grok 4.20; reasoning                                       |
 | | grok-4.3                                  | Grok 4.3                                                   |
 | | grok-4.5                                  | Grok 4.5; multimodal                                       |
+| | grok-4.6                                  | Grok 4.6; multimodal                                       |
 
 **Note:** OpenRouter provides access to models from multiple providers through a unified API. Hugging Face routes to third-party inference providers through an OpenAI-compatible API; the suffix on each model name pins the provider that serves it (`:publicai`, `:deepinfra`, `:together`), so that the price and the routing of a benchmark run are reproducible. sciCORE provides access to models hosted on the University of Basel's high-performance computing infrastructure.
 

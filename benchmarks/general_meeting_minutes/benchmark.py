@@ -62,6 +62,8 @@ class GeneralMeetingMinutes(Benchmark):
         Returns:
             Dictionary containing aggregated benchmark scores
         """
+        if not all_scores:
+            return {"fuzzy": 0.0}
         total_score = 0
         for score in all_scores:
             print(score)
