@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased (v0.5.5-pre1)
 
+### Added
+- New model gemini-3.7-flash (genai), with 15 benchmark test configurations (T1585-T1599).
+- Pricing data for 2026-08-18 (gemini-3.7-flash); `pricing.json` metadata bumped to version 1.43.
+- Tests on 2026-08-18: T1585-T1599 (15 tests) for gemini-3.7-flash (GenAI) across all benchmarks
+
 ### Changed
 - `requirements.txt`: relaxed all pins to the versions actually installed in the development environment; dropped the unused `matplotlib` and the redundant `dotenv` shim, and added `pytest`, which CI previously installed separately. 
 

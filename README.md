@@ -507,6 +507,7 @@ This benchmark suite currently tests models from the following providers:
 | | gemini-3.5-flash                          | Gemini 3.5 Flash                                           |
 | | gemini-3.6-flash                          | Gemini 3.6 Flash                                           |
 | | gemini-3.5-flash-lite                     | Gemini 3.5 Flash-Lite                                      |
+| | gemini-3.7-flash                          | Gemini 3.7 Flash                                           |
 | **Hugging Face** | swiss-ai/Apertus-v1.5-70B:publicai        | Apertus v1.5, 70B (Swiss AI Initiative); multimodal         |
 | | swiss-ai/Apertus-v1.5-8B:publicai         | Apertus v1.5, 8B (Swiss AI Initiative); multimodal          |
 | | Qwen/Qwen3-VL-235B-A22B-Instruct:deepinfra | Qwen3-VL 235B-A22B Instruct (Alibaba); multimodal          |
