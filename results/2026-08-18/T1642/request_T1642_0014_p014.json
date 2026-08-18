@@ -1,0 +1,73 @@
+{
+    "text": "{\"advertisements\":[{\"box\":[140.0,94.0,931.0,483.0]},{\"box\":[141.0,494.0,932.0,590.0]},{\"box\":[142.0,602.0,530.0,698.0]},{\"box\":[550.0,601.0,932.0,697.0]},{\"box\":[140.0,707.0,934.0,898.0]}]}",
+    "model": "z-ai/glm-5v-turbo",
+    "provider": "openrouter",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 4046,
+        "output_tokens": 1161,
+        "total_tokens": 5207,
+        "cached_tokens": 105,
+        "estimated_cost_usd": 0.0094992,
+        "input_cost_usd": 0.0048552,
+        "output_cost_usd": 0.004644
+    },
+    "duration": 55.99463224411011,
+    "timestamp": "2026-08-18T12:03:31.760044",
+    "parsed": {
+        "advertisements": [
+            {
+                "box": [
+                    140,
+                    94,
+                    931,
+                    483
+                ]
+            },
+            {
+                "box": [
+                    141,
+                    494,
+                    932,
+                    590
+                ]
+            },
+            {
+                "box": [
+                    142,
+                    602,
+                    530,
+                    698
+                ]
+            },
+            {
+                "box": [
+                    550,
+                    601,
+                    932,
+                    697
+                ]
+            },
+            {
+                "box": [
+                    140,
+                    707,
+                    934,
+                    898
+                ]
+            }
+        ]
+    },
+    "conversation_id": "90f73eb6-4ae6-4048-97c0-95268e50bdfd",
+    "score": {
+        "f1": 0.0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "mean_iou": 0.0,
+        "true_positives": 0,
+        "false_positives": 5,
+        "false_negatives": 5,
+        "iou_threshold": 0.5
+    },
+    "raw_response": "{\"id\":\"gen-1787047386-C2T00X3pngCfTBxUr1gi\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\n  \\\"advertisements\\\": [\\n    {\\n      \\\"box\\\": [\\n        140,\\n        94,\\n        931,\\n        483\\n      ]\\n    },\\n    {\\n      \\\"box\\\": [\\n        141,\\n        494,\\n        932,\\n        590\\n      ]\\n    },\\n    {\\n      \\\"box\\\": [\\n        142,\\n        602,\\n        530,\\n        698\\n      ]\\n    },\\n    {\\n      \\\"box\\\": [\\n        550,\\n        601,\\n        932,\\n        697\\n      ]\\n    },\\n    {\\n      \\\"box\\\": [\\n        140,\\n        707,\\n        934,\\n        898\\n      ]\\n    }\\n  ]\\n}\\n\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"reasoning\":\"The user wants me to extract all advertisements from the provided image of a historical magazine page and return their bounding boxes in a specific JSON format.\\n\\n1.  **Identify the page**: The image is page 14 of \\\"THE COMMERCIAL GAZETTE\\\" from January 1925.\\n2.  **Scan for advertisements**:\\n    *   **Ad 1**: Large ad at the top for \\\"J.R. GEIGY, Soc. An.\\\" selling \\\"ANILINE COLOURS FOR ALL TRADES\\\". Bounding box: [140, 94, 931, 483].\\n    *   **Ad 2**: Middle left/right combined ad. Left side: \\\"BUSINESS MEN! The Premier Rendez-vous...\\\". Right side: \\\"WHEN IN BASEL LUNCH AT THE TERRASSE-RESTAURANT KUNSTHALLE\\\". Bounding box: [141, 494, 932, 590].\\n    *   **Ad 3**: Bottom left ad for \\\"Emil Birkh\u00e4user & Co., Basle\\\" (Printers and Publishers). Bounding box: [142, 602, 530, 698].\\n    *   **Ad 4**: Bottom right ad for \\\"TRADE INDEX OF THE BRITISH CHAMBER OF COMMERCE FOR SWITZERLAND\\\". Bounding box: [550, 601, 932, 697].\\n    *   **Ad 5**: Large bottom ad for \\\"THE BRITISH CHAMBER OF COMMERCE FOR SWITZERLAND\\\" listing services. Bounding box: [140, 707, 934, 898].\\n\\n3.  **Refine bounding boxes based on visual inspection**:\\n    *   Ad 1 (J.R. Geigy): Top-left around (140, 94), bottom-right around (931, 483).\\n    *   Ad 2 (Business Men / Kunsthalle): Top-left around (141, 494), bottom-right around (932, 590).\\n    *   Ad 3 (Emil Birkh\u00e4user): Top-left around (142, 602), bottom-right around (530, 698).\\n    *   Ad 4 (Trade Index): Top-left around (550, 601), bottom-right around (932, 697).\\n    *   Ad 5 (British Chamber of Commerce): Top-left around (140, 707), bottom-right around (934, 898).\\n\\n4.  **Format as JSON**: Ensure it matches the requested schema.\\n    *   `advertisements` is an array of objects.\\n    *   Each object has a `box` property with `[x0, y0, x1, y1]`.\\n\\nLet's double check coordinates.\\nImage size is 2479 x 3508.\\nAd 1: x0=140, y0=94, x1=931, y1=483. Looks correct.\\nAd 2: x0=141, y0=494, x1=932, y1=590. Looks correct.\\nAd 3: x0=142, y0=602, x1=530, y1=698. Looks correct.\\nAd 4: x0=550, y0=601, x1=932, y1=697. Looks correct.\\nAd 5: x0=140, y0=707, x1=934, y1=898. Looks correct.\\n\\nFinal check on schema:\\n```json\\n{\\n  \\\"$defs\\\": {\\n    \\\"Advertisement\\\": {\\n      \\\"properties\\\": {\\n        \\\"box\\\": {\\n          \\\"description\\\": \\\"Bounding box of the advertisement as [x0, y0, x1, y1] pixel coordinates, where (x0, y0) is the top-left corner and (x1, y1) is the bottom-right corner.\\\",\\n          \\\"items\\\": {\\\"type\\\": \\\"number\\\"},\\n          \\\"title\\\": \\\"Box\\\",\\n          \\\"type\\\": \\\"array\\\"\\n        }\\n      },\\n      \\\"required\\\": [\\\"box\\\"],\\n      \\\"title\\\": \\\"Advertisement\\\",\\n      \\\"type\\\": \\\"object\\\"\\n    }\\n  },\\n  \\\"properties\\\": {\\n    \\\"advertisements\\\": {\\n      \\\"description\\\": \\\"All advertisements found on the page. Empty list if none are present.\\\",\\n      \\\"items\\\": {\\\"$ref\\\": \\\"#/$defs/Advertisement\\\"},\\n      \\\"title\\\": \\\"Advertisements\\\",\\n      \\\"type\\\": \\\"array\\\"\\n    }\\n  },\\n  \\\"required\\\": [\\\"advertisements\\\"],\\n  \\\"title\\\": \\\"MagazinePage\\\",\\n  \\\"type\\\": \\\"object\\\"\\n}\\n```\\nI will output the JSON now.\",\"reasoning_details\":[{\"type\":\"reasoning.text\",\"text\":\"The user wants me to extract all advertisements from the provided image of a historical magazine page and return their bounding boxes in a specific JSON format.\\n\\n1.  **Identify the page**: The image is page 14 of \\\"THE COMMERCIAL GAZETTE\\\" from January 1925.\\n2.  **Scan for advertisements**:\\n    *   **Ad 1**: Large ad at the top for \\\"J.R. GEIGY, Soc. An.\\\" selling \\\"ANILINE COLOURS FOR ALL TRADES\\\". Bounding box: [140, 94, 931, 483].\\n    *   **Ad 2**: Middle left/right combined ad. Left side: \\\"BUSINESS MEN! The Premier Rendez-vous...\\\". Right side: \\\"WHEN IN BASEL LUNCH AT THE TERRASSE-RESTAURANT KUNSTHALLE\\\". Bounding box: [141, 494, 932, 590].\\n    *   **Ad 3**: Bottom left ad for \\\"Emil Birkh\u00e4user & Co., Basle\\\" (Printers and Publishers). Bounding box: [142, 602, 530, 698].\\n    *   **Ad 4**: Bottom right ad for \\\"TRADE INDEX OF THE BRITISH CHAMBER OF COMMERCE FOR SWITZERLAND\\\". Bounding box: [550, 601, 932, 697].\\n    *   **Ad 5**: Large bottom ad for \\\"THE BRITISH CHAMBER OF COMMERCE FOR SWITZERLAND\\\" listing services. Bounding box: [140, 707, 934, 898].\\n\\n3.  **Refine bounding boxes based on visual inspection**:\\n    *   Ad 1 (J.R. Geigy): Top-left around (140, 94), bottom-right around (931, 483).\\n    *   Ad 2 (Business Men / Kunsthalle): Top-left around (141, 494), bottom-right around (932, 590).\\n    *   Ad 3 (Emil Birkh\u00e4user): Top-left around (142, 602), bottom-right around (530, 698).\\n    *   Ad 4 (Trade Index): Top-left around (550, 601), bottom-right around (932, 697).\\n    *   Ad 5 (British Chamber of Commerce): Top-left around (140, 707), bottom-right around (934, 898).\\n\\n4.  **Format as JSON**: Ensure it matches the requested schema.\\n    *   `advertisements` is an array of objects.\\n    *   Each object has a `box` property with `[x0, y0, x1, y1]`.\\n\\nLet's double check coordinates.\\nImage size is 2479 x 3508.\\nAd 1: x0=140, y0=94, x1=931, y1=483. Looks correct.\\nAd 2: x0=141, y0=494, x1=932, y1=590. Looks correct.\\nAd 3: x0=142, y0=602, x1=530, y1=698. Looks correct.\\nAd 4: x0=550, y0=601, x1=932, y1=697. Looks correct.\\nAd 5: x0=140, y0=707, x1=934, y1=898. Looks correct.\\n\\nFinal check on schema:\\n```json\\n{\\n  \\\"$defs\\\": {\\n    \\\"Advertisement\\\": {\\n      \\\"properties\\\": {\\n        \\\"box\\\": {\\n          \\\"description\\\": \\\"Bounding box of the advertisement as [x0, y0, x1, y1] pixel coordinates, where (x0, y0) is the top-left corner and (x1, y1) is the bottom-right corner.\\\",\\n          \\\"items\\\": {\\\"type\\\": \\\"number\\\"},\\n          \\\"title\\\": \\\"Box\\\",\\n          \\\"type\\\": \\\"array\\\"\\n        }\\n      },\\n      \\\"required\\\": [\\\"box\\\"],\\n      \\\"title\\\": \\\"Advertisement\\\",\\n      \\\"type\\\": \\\"object\\\"\\n    }\\n  },\\n  \\\"properties\\\": {\\n    \\\"advertisements\\\": {\\n      \\\"description\\\": \\\"All advertisements found on the page. Empty list if none are present.\\\",\\n      \\\"items\\\": {\\\"$ref\\\": \\\"#/$defs/Advertisement\\\"},\\n      \\\"title\\\": \\\"Advertisements\\\",\\n      \\\"type\\\": \\\"array\\\"\\n    }\\n  },\\n  \\\"required\\\": [\\\"advertisements\\\"],\\n  \\\"title\\\": \\\"MagazinePage\\\",\\n  \\\"type\\\": \\\"object\\\"\\n}\\n```\\nI will output the JSON now.\",\"format\":\"unknown\",\"index\":0}]},\"native_finish_reason\":\"stop\"}],\"created\":1787047386,\"model\":\"z-ai/glm-5v-turbo\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":null,\"usage\":{\"completion_tokens\":1161,\"prompt_tokens\":4046,\"total_tokens\":5207,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":0,\"reasoning_tokens\":995,\"rejected_prediction_tokens\":null,\"image_tokens\":0},\"prompt_tokens_details\":{\"audio_tokens\":0,\"cached_tokens\":105,\"cache_write_tokens\":0,\"video_tokens\":0},\"cost\":0.0093984,\"is_byok\":false,\"cost_details\":{\"upstream_inference_cost\":0.0093984,\"upstream_inference_prompt_cost\":0.0047544,\"upstream_inference_completions_cost\":0.004644}},\"provider\":\"Z.AI\"}"
+}
