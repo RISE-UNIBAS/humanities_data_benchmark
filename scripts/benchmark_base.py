@@ -9,13 +9,20 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime
 from pathlib import Path
 from typing import Dict, List, Union, Pattern, Optional, Iterable, Set
-
-from ai_client.pricing import calculate_cost
-
 from data_loader import read_file, write_file
 from ai_client import create_ai_client, LLMResponse, Usage
+from ai_client.pricing import calculate_cost, set_pricing_file
 from local import is_local_provider, get_backend
 from local.backends.base import LocalRequest
+
+logger = logging.getLogger(__name__)
+
+_PRICING_FILE = Path(__file__).parent / "data" / "pricing.json"
+if _PRICING_FILE.exists():
+    set_pricing_file(str(_PRICING_FILE))
+else:
+    logger.warning("Pricing table not found at %s; falling back to the ai_client bundled "
+                   "table, which may not price newer models at all.", _PRICING_FILE)
 
 
 class Benchmark(ABC):

@@ -3,7 +3,44 @@ import os
 
 from scripts.ndr_export import BENCHMARKS_PATH, RESULTS_PATH, EXPORT_PATH
 from scripts.ndr_export.meta_utils import calculate_normalized_score, get_meta, load_json
+from scripts.ndr_export.pricing_resolver import resolve_pricing
 from scripts.ndr_export.test_utils import get_all_tests
+
+
+def pricing_provenance(request_data, test_config, run_date):
+    """The price in force for a run, derived from the pricing table and the run's date.
+
+    Exported under its own key rather than folded into `scoring`, because `scoring` is a
+    verbatim copy of the run's scoring.json and this is not in that file: it is derived
+    here, fresh on every export, and never written back into results/.
+
+    Note the claim this makes -- "the price in force on that date", not "the price this
+    run was charged". The two diverge where a run was costed against a stale table.
+
+    Prefers the provider/model as written in the result file, since that is what the
+    model_aliases map is keyed on, and falls back to the test config.
+    """
+    provider = model = None
+    if isinstance(request_data, dict):
+        provider, model = request_data.get("provider"), request_data.get("model")
+    if not (provider and model):
+        provider, model = test_config.get("provider"), test_config.get("model")
+    if not (provider and model and run_date):
+        return None
+
+    # Unbounded: the table has gaps longer than 30 days in the past, and a stale price
+    # carrying an explicit age is more useful than no provenance at all.
+    pricing = resolve_pricing(provider, model, run_date, max_age_days=None)
+    if pricing is None:
+        return None
+
+    return {
+        "bucket_date": pricing.bucket_date,
+        "age_days": pricing.age_days,
+        "input_price_per_million": pricing.input_price,
+        "output_price_per_million": pricing.output_price,
+    }
+
 
 def load_prompt(benchmark_name, prompt_file):
     """Load prompt content from a benchmark's prompts directory.
@@ -127,6 +164,7 @@ def generate_test_runs_export():
                 "prompt": prompt_content,
                 "results": request_data,
                 "scoring": scoring_data,
+                "pricing": pricing_provenance(request_data, test_config, date_str),
                 "normalized_score": normalized_score
             }
 

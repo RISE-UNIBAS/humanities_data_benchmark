@@ -964,6 +964,7 @@ Return only JSON:"""
         'gemini-3.6-flash':              'https://ai.google.dev/gemini-api/docs/pricing',
         'gemini-3.5-flash-lite':         'https://ai.google.dev/gemini-api/docs/pricing',
         'gemini-3.7-flash':              'https://ai.google.dev/gemini-api/docs/pricing',
+        'gemini-3.8-flash':              'https://ai.google.dev/gemini-api/docs/pricing',
     }
 
     OPENROUTER_MODEL_URLS = {
