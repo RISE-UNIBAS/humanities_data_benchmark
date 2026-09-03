@@ -543,6 +543,7 @@ This benchmark suite currently tests models from the following providers:
 | | gpt-5.6-sol                               | GPT-5.6 Sol                                                |
 | | gpt-5.6-terra                             | GPT-5.6 Terra                                              |
 | | gpt-5.6-luna                              | GPT-5.6 Luna                                               |
+| | gpt-6-astra                               | GPT-6 Astra                                                |
 | | gpt-5-mini                                | GPT-5 Mini                                                 |
 | | gpt-5-nano                                | GPT-5 Nano                                                 |
 | | o3                                        | OpenAI o3; reasoning                                       |

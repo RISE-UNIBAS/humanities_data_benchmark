@@ -8,8 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Unreleased (v0.5.5-pre1)
 
 ### Added
-- 5 new models: gemini-3.7-flash and gemini-3.8-flash (GenAI), grok-4.6 (xAI), meta/muse-spark-1.2 and z-ai/glm-5v-turbo (OpenRouter), with 75 benchmark test configurations (T1585-T1659, 15 each).
-- Pricing data for 2026-08-18 (gemini-3.7-flash, grok-4.6, meta/muse-spark-1.2, z-ai/glm-5v-turbo) and 2026-09-02 (gemini-3.8-flash); `pricing.json` metadata bumped to version 1.45.
+- 6 new models: gemini-3.7-flash and gemini-3.8-flash (GenAI), grok-4.6 (xAI), meta/muse-spark-1.2 and z-ai/glm-5v-turbo (OpenRouter), gpt-6-astra (OpenAI; added to the `benchmark_base.py` hotfix list that forces `temperature=1`), with 90 benchmark test configurations (T1585-T1674, 15 each).
+- Pricing data for 2026-08-18 (gemini-3.7-flash, grok-4.6, meta/muse-spark-1.2, z-ai/glm-5v-turbo), 2026-09-02 (gemini-3.8-flash) and 2026-09-03 (gpt-6-astra); `pricing.json` metadata bumped to version 1.46.
 - Tests on 2026-08-18: T1585-T1644 (60 tests) for the 4 new models across all benchmarks — gemini-3.7-flash (T1585-T1599) (GenAI), grok-4.6 (T1600-T1614) (x-ai), meta/muse-spark-1.2 (T1615-T1629) and z-ai/glm-5v-turbo (T1630-T1644) (OpenRouter)
 - Tests on 2026-09-03: T1645-T1659 (15 tests) for gemini-3.8-flash (GenAI) across all benchmarks
 
