@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Pricing data for 2026-08-18 (gemini-3.7-flash, grok-4.6, meta/muse-spark-1.2, z-ai/glm-5v-turbo), 2026-09-02 (gemini-3.8-flash) and 2026-09-03 (gpt-6-astra); `pricing.json` metadata bumped to version 1.46.
 - Tests on 2026-08-18: T1585-T1644 (60 tests) for the 4 new models across all benchmarks — gemini-3.7-flash (T1585-T1599) (GenAI), grok-4.6 (T1600-T1614) (x-ai), meta/muse-spark-1.2 (T1615-T1629) and z-ai/glm-5v-turbo (T1630-T1644) (OpenRouter)
 - Tests on 2026-09-03: T1645-T1659 (15 tests) for gemini-3.8-flash (GenAI) across all benchmarks
+- Tests on 2026-09-04: T1660-T1674 (15 tests) for gpt-6-astra (OpenAI) across all benchmarks
 
 ### Fixed
 - `general_meeting_minutes`: `score_benchmark` no longer raises `ZeroDivisionError` when every request fails, matching the empty-score guard in the other benchmarks.
