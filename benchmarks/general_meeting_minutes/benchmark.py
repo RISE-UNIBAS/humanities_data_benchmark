@@ -10,6 +10,8 @@ from scripts.scoring_helper import get_all_keys, get_nested_value, calculate_fuz
 class GeneralMeetingMinutes(Benchmark):
     """Benchmark for General Meeting Minutes."""
 
+    max_output_tokens = 40960  # Minutes pages legitimately reach ~34k output tokens
+
     def get_prompt_kwargs(self, basename: str,
                           filenames: List[str]) -> Dict:
         """If the prompt file contains file information."""

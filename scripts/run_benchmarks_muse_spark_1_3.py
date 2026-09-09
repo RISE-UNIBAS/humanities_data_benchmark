@@ -26,7 +26,10 @@ logging.basicConfig(
     handlers=[
         logging.FileHandler(f"{log_dir}/{time.strftime('%Y%m%d-%H%M%S')}.log"),
         logging.StreamHandler(),
-    ]
+    ],
+    # force: an imported module that logs on the root logger before this point installs a
+    # default handler, which would otherwise make this call a no-op and swallow all output.
+    force=True,
 )
 
 
@@ -96,4 +99,4 @@ def main(limit_to: list[str] = None, regenerate_existing_results: bool = False, 
 
 
 if __name__ == "__main__":
-    main(limit_to=["T0892"], workers=20)
+    main(limit_to=['T1690', 'T1691', 'T1692', 'T1693', 'T1694', 'T1695', 'T1696', 'T1697', 'T1698', 'T1699', 'T1700', 'T1701', 'T1702', 'T1703', 'T1704'], workers=10)

@@ -32,6 +32,7 @@ original_cwd = os.getcwd()
 os.chdir(SCRIPT_DIR)
 
 from run_benchmarks import load_benchmark
+from scripts.benchmark_base import FatalProviderError
 from local import is_local_provider, LOCAL_PROVIDERS
 
 
@@ -526,6 +527,8 @@ def run_adhoc_test(test_config: Dict, regenerate: bool = True, workers: int = 1)
         print_success(f"\nAd-hoc test {test_config['id']} completed!")
         print_info(f"Results saved to: test_runs/{benchmark.date}/{benchmark.id}/")
 
+    except FatalProviderError as e:
+        print_error(str(e))
     except Exception as e:
         print_error(f"Error running ad-hoc test: {e}")
         import traceback
@@ -552,6 +555,8 @@ def run_test(test_id: str, regenerate: bool = False, workers: int = 1):
         print_success(f"\nTest {test_id} completed!")
         print_info(f"Results saved to: results/{benchmark.date}/{benchmark.id}/")
 
+    except FatalProviderError as e:
+        print_error(str(e))
     except Exception as e:
         print_error(f"Error running test: {e}")
         import traceback

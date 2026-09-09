@@ -4,6 +4,7 @@ import json
 import logging
 import os
 import re
+import threading
 from abc import ABC, abstractmethod
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime
@@ -25,6 +26,23 @@ else:
                    "table, which may not price newer models at all.", _PRICING_FILE)
 
 
+DEFAULT_MAX_OUTPUT_TOKENS = 32768
+
+# Provider errors that no amount of retrying will fix. Matched against the message
+# stored in LLMResponse.raw_response['error'] by the client's error path.
+FATAL_ERROR_MARKERS = (
+    "Error code: 402",
+    "Error code: 401",
+    "Error code: 403",
+    "Insufficient credits",
+    "invalid_api_key",
+)
+
+
+class FatalProviderError(RuntimeError):
+    """ Raised when a run is aborted because the provider rejected the request outright. """
+
+
 class Benchmark(ABC):
     """ Base class for all benchmark workflows. """
 
@@ -32,6 +50,7 @@ class Benchmark(ABC):
     multi_text_support = False
     use_shared_context = False  # Enable multi-stage requests with shared context (conversation-based)
     cache_context_per_request = False  # Enable per-request caching of context files/images
+    max_output_tokens = DEFAULT_MAX_OUTPUT_TOKENS  # Per-request output ceiling; raise per benchmark if needed
 
     def __init__(self, config, api_key, benchmark_directory):
         """ Initialize the benchmark. """
@@ -53,7 +72,7 @@ class Benchmark(ABC):
         # TODO: hotfix, to be fixed in generic-llm-api-client
         if self.model in ["gpt-5", "gpt-5-mini", "gpt-5-nano", "gpt-5.1-2025-11-13", "gpt-5.2", "o3", "gpt-5.5-2026-04-23", "gpt-5.3-codex", "gpt-5.6-sol", "gpt-5.6-terra", "gpt-5.6-luna", "gpt-6-astra"]:
             self.temperature = 1
-        if self.model in ["claude-opus-4-7", "claude-opus-4-8", "claude-sonnet-5", "claude-fable-5", "claude-opus-5"]:
+        if self.model in ["claude-opus-4-7", "claude-opus-4-8", "claude-sonnet-5", "claude-fable-5", "claude-fable-5-1", "claude-opus-5"]:
             self.temperature = None
 
         # Prompt
@@ -87,6 +106,11 @@ class Benchmark(ABC):
             if self.rules and "api_style" in self.rules and self.rules["api_style"]:
                 kwargs["api_style"] = self.rules["api_style"]
             base_url = self.rules.get("base_url") if self.rules else None
+            # Bound the output of every request. Without this the provider default applies,
+            # which for reasoning models is the full context window: a single runaway
+            # generation cost ~$0.34 and 9 minutes before this cap existed.
+            cap = (self.rules or {}).get("max_tokens") or self.max_output_tokens
+            kwargs["max_output_tokens" if self.provider == "genai" else "max_tokens"] = cap
             self.client = create_ai_client(self.provider,
                                            self.api_key,
                                            system_prompt=self.role_description,
@@ -96,6 +120,9 @@ class Benchmark(ABC):
         # Shared context support (for multi-stage requests)
         self.conversation_id = None  # Track conversation for subsequent requests
         self.shared_context_established = False
+
+        # Set when a provider error makes the rest of the run pointless (see FATAL_ERROR_MARKERS)
+        self._abort = threading.Event()
 
         logging.debug(f"Initialized benchmark {config['name']}")
 
@@ -564,8 +591,19 @@ class Benchmark(ABC):
         """ Hook to run after processing each object. """
         pass
 
+    @staticmethod
+    def _is_fatal_provider_error(answer: LLMResponse) -> bool:
+        """ Check whether a failed answer carries a provider error that retrying cannot fix. """
+        if answer is None or answer.finish_reason != "error":
+            return False
+        message = str((answer.raw_response or {}).get("error", ""))
+        return any(marker in message for marker in FATAL_ERROR_MARKERS)
+
     def _process_object(self, object_basename: str, regenerate_existing_results: bool):
         """Process a single object (request + score). Safe to run in parallel threads."""
+        if self._abort.is_set():
+            return None, None
+
         prefix = f"[{object_basename}]"
         answer_file_name = self.get_request_answer_file_name(object_basename)
         should_process = (regenerate_existing_results and os.path.exists(answer_file_name)) or \
@@ -576,6 +614,13 @@ class Benchmark(ABC):
         if should_process:
             logging.info(f"{prefix} Processing {self.id}, {object_basename}...")
             answer = self.ask_llm(object_basename)
+            if self._is_fatal_provider_error(answer):
+                # Deliberately not saved: an error file counts as a finished object in
+                # should_process above, so saving it would make a later resume skip it.
+                logging.critical(f"{prefix} Fatal provider error for {self.id}, aborting run: "
+                                 f"{(answer.raw_response or {}).get('error', '')}")
+                self._abort.set()
+                return None, None
             if answer is None:
                 logging.error(f"{prefix} LLM returned None for {self.id}, {object_basename}")
                 score = None
@@ -629,6 +674,11 @@ class Benchmark(ABC):
             results = self._run_parallel(object_basenames, regenerate_existing_results, workers)
         else:
             results = [self._process_object(bn, regenerate_existing_results) for bn in object_basenames]
+
+        if self._abort.is_set():
+            # Raised before scoring so a truncated run is never written out as a result.
+            raise FatalProviderError(
+                f"{self.get_title()} aborted on a fatal provider error; no score saved.")
 
         all_answers = [r[0] for r in results]
         benchmark_scores = [r[1] for r in results if r[1] is not None]
