@@ -1,0 +1,106 @@
+{
+    "text": "{\"type\":{\"type\":\"Dissertation or thesis\"},\"author\":{\"last_name\":\"Wilcox\",\"first_name\":\"Rothwell\"},\"publication\":{\"title\":\"Private secondary education in the association of colleges and secondary schools of the Southern States.\",\"year\":\"1932\",\"place\":\"Baltimore\",\"pages\":\"\",\"publisher\":\"\",\"format\":\"8.\",\"editor\":null},\"library_reference\":{\"shelfmark\":\"AT 33\",\"subjects\":\"\"}}",
+    "model": "deepseek-v4-flash-vision-exp",
+    "provider": "deepseek",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 1635,
+        "output_tokens": 3312,
+        "total_tokens": 4947,
+        "cached_tokens": 512,
+        "input_cost_usd": 0.0007194,
+        "output_cost_usd": 0.00437184,
+        "estimated_cost_usd": 0.00509124
+    },
+    "duration": 30.408924341201782,
+    "timestamp": "2026-09-08T10:03:22.324420",
+    "parsed": {
+        "type": {
+            "type": "Dissertation or thesis"
+        },
+        "author": {
+            "last_name": "Wilcox",
+            "first_name": "Rothwell"
+        },
+        "publication": {
+            "title": "Private secondary education in the association of colleges and secondary schools of the Southern States.",
+            "year": "1932",
+            "place": "Baltimore",
+            "pages": "",
+            "publisher": "",
+            "format": "8."
+        },
+        "library_reference": {
+            "shelfmark": "AT 33",
+            "subjects": ""
+        }
+    },
+    "conversation_id": "f74e6f3a-2625-4cb6-8c21-9f34a2b1849b",
+    "score": {
+        "f1_score": 0.75,
+        "precision": 0.75,
+        "recall": 0.75,
+        "true_positives": 6,
+        "false_positives": 2,
+        "false_negatives": 2,
+        "field_scores": {
+            "publication.place": {
+                "response": "Baltimore",
+                "ground_truth": "Baltimore",
+                "score": 1.0
+            },
+            "author.last_name": {
+                "response": "Wilcox",
+                "ground_truth": "Wilcox",
+                "score": 1.0
+            },
+            "publication.publisher": {
+                "response": null,
+                "ground_truth": null,
+                "score": 1.0
+            },
+            "type.type": {
+                "response": "Dissertation or thesis",
+                "ground_truth": "Dissertation or thesis",
+                "score": 1.0
+            },
+            "publication.pages": {
+                "response": null,
+                "ground_truth": "8",
+                "score": 0.0
+            },
+            "author.first_name": {
+                "response": "Rothwell",
+                "ground_truth": "Rothwell",
+                "score": 1.0
+            },
+            "library_reference.shelfmark": {
+                "response": "AT 33",
+                "ground_truth": "Diss.Baltimore 1932",
+                "score": 0.16666666666666663
+            },
+            "publication.format": {
+                "response": "8.",
+                "ground_truth": null,
+                "score": 0.0
+            },
+            "publication.year": {
+                "response": "1932",
+                "ground_truth": 1932,
+                "score": 1.0
+            },
+            "library_reference.subjects": {
+                "response": null,
+                "ground_truth": null,
+                "score": 1.0
+            },
+            "publication.title": {
+                "response": "Private secondary education in the association of colleges and secondary schools of the Southern States.",
+                "ground_truth": "Private secondary education in the association of colleges and secondary schools of the Southern States",
+                "score": 0.9951690821256038
+            }
+        },
+        "total_fields": 11
+    },
+    "raw_response": "{\"id\":\"83cab06a-4731-464f-9e4d-887bc3884155\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\n  \\\"type\\\": {\\n    \\\"type\\\": \\\"Dissertation or thesis\\\"\\n  },\\n  \\\"author\\\": {\\n    \\\"last_name\\\": \\\"Wilcox\\\",\\n    \\\"first_name\\\": \\\"Rothwell\\\"\\n  },\\n  \\\"publication\\\": {\\n    \\\"title\\\": \\\"Private secondary education in the association of colleges and secondary schools of the Southern States.\\\",\\n    \\\"year\\\": \\\"1932\\\",\\n    \\\"place\\\": \\\"Baltimore\\\",\\n    \\\"pages\\\": \\\"\\\",\\n    \\\"publisher\\\": \\\"\\\",\\n    \\\"format\\\": \\\"8.\\\"\\n  },\\n  \\\"library_reference\\\": {\\n    \\\"shelfmark\\\": \\\"AT 33\\\",\\n    \\\"subjects\\\": \\\"\\\"\\n  }\\n}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"reasoning_content\":\"We are given an image of an index card and need to extract bibliographic information as JSON. The card text is:\\n\\n\\\"Wilcox, Rothwell. Private secondary education in the association of colleges and secondary schools of the Southern States. Diss. of the Johns Hopkins University 1930. Baltimore 1932. 8.\\\"\\n\\nThen below: \\\"Diss. Baltimore 1932\\\" and \\\"AT 33\\\" (maybe shelfmark).\\n\\nWe need to parse according to rules.\\n\\nFirst, determine type: If card contains \\\"s.\\\" on a separate line, it's a Reference. Otherwise, Dissertation or thesis. Here, there is no separate \\\"s.\\\" line. So type is \\\"Dissertation or thesis\\\".\\n\\nAuthor: Last name and first name. \\\"Wilcox, Rothwell\\\" -> last_name: \\\"Wilcox\\\", first_name: \\\"Rothwell\\\".\\n\\nPublication:\\n- title: The main title. The text: \\\"Private secondary education in the association of colleges and secondary schools of the Southern States.\\\" So title = that full string.\\n- year: Publication year. There are two years: 1930 (dissertation year?) and 1932 (publication? Actually \\\"Diss. of the Johns Hopkins University 1930.\\\" and \\\"Baltimore 1932.\\\" Both appear. The year in publication should be from the place and year? Typically \\\"Baltimore 1932\\\" indicates publication place and year. So year = 1932. But also \\\"Diss. of the Johns Hopkins University 1930\\\" might be the degree year. According to extraction rules, publication year is the year of publication. The card says \\\"Johns Hopkins University 1930. Baltimore 1932.\\\" So 1930 is the year for the degree, and 1932 is the year of publication. So year = 1932.\\n- place: \\\"Baltimore\\\" from \\\"Baltimore 1932.\\\"\\n- pages: There is no page count mentioned. The \\\"8.\\\" at the end likely is format. But note: \\\"8.\\\" could be format (octavo). So pages: empty string.\\n- publisher: Not mentioned. So empty.\\n- format: \\\"8.\\\" appears as \\\"8.\\\" or \\\"8\u00b0\\\"? In text it's \\\"8.\\\" maybe a period. But rule says format is usually \\\"8\u00b0\\\", \\\"8'\\\", or \\\"4\u00b0\\\". Here we see \\\"8.\\\" So we can set format to \\\"8.\\\"? But better to interpret as \\\"8\u00b0\\\"? The instruction says: \\\"format: Usually '8\u00b0', '8'', or '4\u00b0' - single value only\\\". In the card, it is \\\"8.\\\" but that could be a typo. It's likely \\\"8\u00b0\\\". However, we should extract exactly as printed? The rules say \\\"format: Usually '8\u00b0', '8'', or '4\u00b0' - single value only\\\". Since no explicit example with period, but we see \\\"8.\\\" in text. I'll take it as \\\"8.\\\"? But to match the expected, maybe \\\"8\u00b0\\\". Wait, in OCR it could be \\\"8.\\\" meaning 8vo. I'll use \\\"8\u00b0\\\"? But the text says \\\"8.\\\" with a period. The rule says \\\"remove ' S.' suffix if present\\\" for pages, not for format. The format is likely the \\\"8.\\\" at the end. I'll set format to \\\"8.\\\"? But the examples use 8\u00b0, 8', 4\u00b0. The actual character might be \\\"8.\\\" from OCR. Let's assume it's \\\"8\u00b0\\\"? Hmm. Better to output exactly what is on the card? The rule says \\\"format: Usually '8\u00b0', '8'', or '4\u00b0' - single value only\\\". I think it's safer to extract \\\"8\u00b0\\\" as the standard representation. But we have to be precise. In the card text, it's \\\"8.\\\" written with a period. Could be \\\"8.\\\" meaning octavo. I'll put \\\"8.\\\"? However, note the rule for pages says: \\\"Page count (remove ' S.' suffix if present)\\\". That is for pages. For format, no such instruction. So I'll output \\\"8.\\\" as the format? But many library cards use \\\"8\u00b0\\\" as a symbol. Since we see \\\"8.\\\" with a period, I'll treat it as \\\"8.\\\"? Let's see the overall: The text has \\\"Baltimore 1932. 8.\\\" So the \\\"8.\\\" is after the year. So it's probably the format. I'll output \\\"8.\\\".\\n\\nBut wait, maybe it's \\\"8\u00b0\\\" but the degree symbol was not captured? The image shows \\\"8.\\\" with a period. So I'll use \\\"8.\\\".\\n\\nHowever, the JSON schema says format is a string, nullable. So we can put \\\"8.\\\" as string.\\n\\nNow library_reference:\\n- shelfmark: The text has \\\"AT 33\\\" at the bottom right. And also \\\"Diss. Baltimore 1932\\\" at bottom left. Actually the bottom line says \\\"Diss. Baltimore 1932\\\" and right \\\"AT 33\\\". So shelfmark is \\\"AT 33\\\"? Or maybe \\\"Diss.\\\" is part of the reference? The rule says: \\\"shelfmark: Often begins with 'Diss.' or 'AT', may be marked with 'Standort:'\\\". So \\\"AT 33\\\" fits. Also the \\\"Diss.\\\" might be part of the shelfmark? But often dissertations have \\\"Diss.\\\" prefix. The bottom line includes \\\"Diss. Baltimore 1932\\\" and separately \\\"AT 33\\\". The shelfmark is likely \\\"AT 33\\\". So I'll put shelfmark: \\\"AT 33\\\".\\n- subjects: The card doesn't have explicit subjects. The title itself might be a description, but no keywords are given. So subjects: empty string.\\n\\nNow, the year field in publication: we have \\\"year\\\": integer. But the extracted year is 1932. The schema says year is string? Wait, the schema in the prompt: \\\"publication\\\": { \\\"title\\\": \\\"string\\\", \\\"year\\\": integer, ... } But in the JSON schema definition provided at the end, the Publication has \\\"year\\\": {\\\"title\\\": \\\"Year\\\", \\\"type\\\": \\\"string\\\"}? Actually in the response format, it says year: integer. But the schema generated at the end says \\\"year\\\": {\\\"title\\\": \\\"Year\\\", \\\"type\\\": \\\"string\\\"}? Let's check.\\n\\nIn the initial response format, it says:\\n\\n```json\\n{\\n  \\\"type\\\": {\\n    \\\"type\\\": \\\"Dissertation or thesis\\\" OR \\\"Reference\\\"\\n  },\\n  \\\"author\\\": {\\n    \\\"last_name\\\": \\\"string\\\",\\n    \\\"first_name\\\": \\\"string\\\"\\n  },\\n  \\\"publication\\\": {\\n    \\\"title\\\": \\\"string\\\",\\n    \\\"year\\\": integer,\\n    \\\"place\\\": \\\"string or empty string\\\",\\n    \\\"pages\\\": \\\"string or empty string\\\",\\n    \\\"publisher\\\": \\\"string or empty string\\\",\\n    \\\"format\\\": \\\"string or empty string\\\"\\n  },\\n  \\\"library_reference\\\": {\\n    \\\"shelfmark\\\": \\\"string or empty string\\\",\\n    \\\"subjects\\\": \\\"string or empty string\\\"\\n  }\\n}\\n```\\n\\nSo year is integer. But later, in the JSON schema definition, it says: \\\"publication\\\": {\\\"properties\\\": {\\\"title\\\": {\\\"title\\\": \\\"Title\\\", \\\"type\\\": \\\"string\\\"}, \\\"year\\\": {\\\"title\\\": \\\"Year\\\", \\\"type\\\": \\\"string\\\"}, ...}} So there is a discrepancy. The user explicitly says: \\\"Return ONLY the JSON object\\\" and the required format is given at the top. The schema at the end is for validation? Actually the prompt says: \\\"You MUST respond with valid JSON matching this exact schema: ...\\\" and then the schema is defined. In that schema, year is a string. But in the extraction rules, it says \\\"year: Publication year as integer\\\". So there is inconsistency. To resolve, note that the top of the prompt says: \\\"Reply with JSON object ONLY.\\\" and then gives a format with year as integer. Then later says \\\"You MUST respond with valid JSON matching this exact schema:\\\" and that schema has year as string. Which one to follow? The schema is the final instruction, so we should follow the schema. But the extraction rules say integer. Actually, the schema is more specific: \\\"year\\\": {\\\"title\\\": \\\"Year\\\", \\\"type\\\": \\\"string\\\"}. However, in the example format, it says integer. I think we should follow the exact schema provided at the end because it says \\\"matching this exact schema\\\". So year should be a string. But the example says integer. Let's re-read the prompt carefully.\\n\\nThe prompt starts with \\\"Extract the bibliographic information...\\\" and then gives the format. Then it says: \\\"EXTRACTION RULES:\\\" and among them: \\\"year: Publication year as integer\\\". Then at the end: \\\"You MUST respond with valid JSON matching this exact schema: ...\\\" and that schema has year as string. This is a conflict. To be safe, I'll follow the schema because it says \\\"exact schema\\\". However, the example uses integer. Actually, the schema is a JSON Schema definition, and it defines the type for year as string. It also says \\\"required\\\": [\\\"title\\\", \\\"year\\\"]. So we must output year as a string. But we also have to output JSON that matches the schema. So I'll output year as \\\"1932\\\" (string). But wait, the extraction rule says integer. But the schema overrides. I'll go with string.\\n\\nLet's check the schema again: It has \\\"$defs\\\" etc. The top-level required properties are type, author, publication, library_reference. The types for fields: Author has last_name, first_name both strings. Publication: title string, year string, place nullable string, pages nullable string, publisher nullable string, format nullable string, editor nullable string. Note: The schema also has an \\\"editor\\\" field, but the extraction format didn't mention editor. The schema includes editor as optional? Actually in Publication, it has \\\"editor\\\" property. In the extraction format, there is no editor. So we should include editor? The schema says editor is a property, but it's not required? It doesn't say required, so it can be omitted. But to be safe, we might include it as empty string? However, the required fields for publication are only title and year. So we can omit editor. But the schema says \\\"properties\\\" includes editor, but it's not in required. So we can ignore it. But the schema also says \\\"additionalProperties\\\": false? Actually it doesn't specify additionalProperties, so it's allowed to have extra properties? But the instruction says \\\"matching this exact schema\\\". So we should only include the properties defined. For Publication, the properties are title, year, place, pages, publisher, format, editor. But we can have place, pages, publisher, format as null or string. They have \\\"anyOf\\\": [{\\\"type\\\": \\\"string\\\"}, {\\\"type\\\": \\\"null\\\"}], so we can set them to null or empty string? But the initial format says \\\"string or empty string\\\". So empty string is a string, so it's fine. So we can set them to \\\"\\\".\\n\\nSimilarly, library_reference: shelfmark and subjects are nullable strings. So we can set to \\\"\\\".\\n\\nNow, the \\\"type\\\" field: It is an object with \\\"type\\\" inside. So we need to output: \\\"type\\\": {\\\"type\\\": \\\"Dissertation or thesis\\\"}.\\n\\nAuthor: last_name and first_name.\\n\\nNow, let's construct with nulls or empty strings? The schema allows null, but the prompt says \\\"string or empty string\\\". So we should use empty string for missing text fields. For year, we'll use \\\"1932\\\" as string.\\n\\nNow, check if there is an editor? Not mentioned, so we can omit it.\\n\\nAlso, note that the card might have \\\"Diss.\\\" as part of the title? The title is explicitly \\\"Private secondary education in the association of colleges and secondary schools of the Southern States.\\\" Yes.\\n\\nNow, the place: \\\"Baltimore\\\" from \\\"Baltimore 1932.\\\"\\n\\nPages: none, so empty string.\\n\\nPublisher: none, empty string.\\n\\nFormat: \\\"8.\\\" we'll put \\\"8.\\\".\\n\\nShelfmark: \\\"AT 33\\\".\\n\\nSubjects: none, empty string.\\n\\nNow, ensure JSON is valid and matches schema.\\n\\nOne more thing: The schema has \\\"type\\\": {\\\"$ref\\\": \\\"#/$defs/WorkType\\\"} which is an object with property \\\"type\\\". So we output \\\"type\\\": {\\\"type\\\": \\\"Dissertation or thesis\\\"}.\\n\\nNow, the year: The schema says year is string, so \\\"year\\\": \\\"1932\\\".\\n\\nLet's double-check the extraction rules: \\\"publication\\\": { \\\"title\\\": \\\"string\\\", \\\"year\\\": integer, ... } So maybe they want an integer. But the final schema says string. I'll go with string to be safe with the regex? Actually, the instruction \\\"You MUST respond with valid JSON matching this exact schema\\\" is the last and definite. So I'll follow that.\\n\\nBut wait, in the initial example, it says year: integer. But the schema generated might have a bug. Actually, the schema is auto-generated from a Pydantic model perhaps. In that model, year is a string? The description says \\\"Year of publication\\\" but type is string. So I'll output string.\\n\\nAlso, note that the schema includes an \\\"editor\\\" field. The extraction rules don't mention editor, so we omit it.\\n\\nNow, construct the JSON:\\n\\n{\\n  \\\"type\\\": {\\n    \\\"type\\\": \\\"Dissertation or thesis\\\"\\n  },\\n  \\\"author\\\": {\\n    \\\"last_name\\\": \\\"Wilcox\\\",\\n    \\\"first_name\\\": \\\"Rothwell\\\"\\n  },\\n  \\\"publication\\\": {\\n    \\\"title\\\": \\\"Private secondary education in the association of colleges and secondary schools of the Southern States.\\\",\\n    \\\"year\\\": \\\"1932\\\",\\n    \\\"place\\\": \\\"Baltimore\\\",\\n    \\\"pages\\\": \\\"\\\",\\n    \\\"publisher\\\": \\\"\\\",\\n    \\\"format\\\": \\\"8.\\\"\\n  },\\n  \\\"library_reference\\\": {\\n    \\\"shelfmark\\\": \\\"AT 33\\\",\\n    \\\"subjects\\\": \\\"\\\"\\n  }\\n}\\n\\nBut wait, is \\\"AT 33\\\" the shelfmark? The card says at bottom: \\\"Diss. Baltimore 1932\\\" and to the right \\\"AT 33\\\". There is also a line \\\"Diss. Baltimore 1932\\\" at the bottom left, which seems like a note. Perhaps the shelfmark is \\\"AT 33\\\" only. Also, consider that the \\\"Diss.\\\" might be part of the type? But type is already dissertation. So it's fine.\\n\\nOne more thing: The card has \\\"8.\\\" at the end of the first paragraph. This is likely the format. But sometimes \\\"8.\\\" could indicate pages? No, the rule says format is usually \\\"8\u00b0\\\". So I'll take it as format.\\n\\nNow, ensure that the title ends with a period? The card title has a period at the end. I'll include it.\\n\\nAlso, note that the year 1930 is the year of the dissertation from Johns Hopkins University. But the publication year is 1932. The extraction rules say \\\"year: Publication year as integer\\\". So 1932.\\n\\nNow, output the JSON.\"}}],\"created\":1788854572,\"model\":\"deepseek-v4-flash-vision-exp\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":\"aa8d6caccae4a22492bb51091cfc8eab\",\"usage\":{\"completion_tokens\":3312,\"prompt_tokens\":1635,\"total_tokens\":4947,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":null,\"reasoning_tokens\":3178,\"rejected_prediction_tokens\":null},\"prompt_tokens_details\":{\"audio_tokens\":null,\"cached_tokens\":512},\"prompt_cache_hit_tokens\":512,\"prompt_cache_miss_tokens\":1123}}"
+}

@@ -1,0 +1,45 @@
+{
+    "text": "{\"metadata\":{\"send_date\":[\"1928-03-01\"],\"letter_title\":null,\"sender_persons\":[\"Basler Rheinschiffahrt-Aktiengesellschaft\"],\"receiver_persons\":[\"Basler Personenschiffahrtsgesellschaft\"]}}",
+    "model": "deepseek-v4-flash-vision-exp",
+    "provider": "deepseek",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 1385,
+        "output_tokens": 1034,
+        "total_tokens": 2419,
+        "cached_tokens": 384,
+        "input_cost_usd": 0.0006094,
+        "output_cost_usd": 0.00136488,
+        "estimated_cost_usd": 0.00197428
+    },
+    "duration": 11.85311484336853,
+    "timestamp": "2026-09-08T09:48:42.739424",
+    "parsed": {
+        "metadata": {
+            "letter_title": null,
+            "send_date": [
+                "1928-03-01"
+            ],
+            "sender_persons": [
+                "Basler Rheinschiffahrt-Aktiengesellschaft"
+            ],
+            "receiver_persons": [
+                "Basler Personenschiffahrtsgesellschaft"
+            ],
+            "document_number": "letter17"
+        }
+    },
+    "conversation_id": "647dcead-8ed9-463c-ab31-0c18c417a4bc",
+    "score": {
+        "send_date_tp": 1,
+        "send_date_fp": 0,
+        "send_date_fn": 0,
+        "sender_persons_tp": 0,
+        "sender_persons_fp": 1,
+        "sender_persons_fn": 2,
+        "receiver_persons_tp": 0,
+        "receiver_persons_fp": 1,
+        "receiver_persons_fn": 0
+    },
+    "raw_response": "{\"id\":\"2bfb7da4-40f2-4487-bb30-aead7287550f\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\\"metadata\\\": {\\\"letter_title\\\": null, \\\"send_date\\\": [\\\"1928-03-01\\\"], \\\"sender_persons\\\": [\\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"], \\\"receiver_persons\\\": [\\\"Basler Personenschiffahrtsgesellschaft\\\"]}}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"reasoning_content\":\"We are given a historical letter in German. We need to extract four keys: letter_title, sender_persons, send_date, receiver_persons. The output must be a JSON object with a \\\"metadata\\\" key containing these values. The values should be lists, or \\\"null\\\" if not present.\\n\\nLet's analyze the letter.\\n\\nThe letterhead: \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\" (Basler Rhine Navigation Stock Company). Address: Marktgasse 5, Basel. Date: \\\"Basel, den 1. M\u00e4rz 1928.\\\" So send_date is 1928-03-01.\\n\\nThe recipient: \\\"Basler Personenschiffahrtsgesellschaft, Basel.\\\" So receiver_persons: [\\\"Basler Personenschiffahrtsgesellschaft\\\"].\\n\\nThe sender: The company is the sender. The letter is from Basler Rheinschiffahrt-Aktiengesellschaft. There is no personal name. So sender_persons should be that company name.\\n\\nThe letter_title: There is no explicit title. However, the subject line: \\\"Betrifft Ihr Schreiben vom 27. Februar.\\\" That is \\\"Re: Your letter of February 27.\\\" So it's a response. But we need a title. Possibly we can infer a title from the content? The letter discusses a proposed lease of the ship \\\"Rheinfelden\\\" and operational community. But we should not invent a title. The instruction says: \\\"If a piece of information is not included in the letter, set the value for the corresponding key to 'null'.\\\" So if there is no title, we set null. But maybe the subject line can be considered a title? It is a common practice to use the subject as title. But the key is \\\"letter_title\\\". In many letters, there is no explicit title. The example had a title. Here, the letter just has \\\"Betrifft Ihr Schreiben vom 27. Februar.\\\" That is not a title but a subject. I think it's safer to set null for letter_title because it's not a title. However, we might extract the subject as the title? The instruction says \\\"Title of the letter.\\\" In the example, it was a petition. If there is no explicit title, we should set null. But some might consider the subject as the title. Let's read the letter carefully. There is no printed title. The subject line is \\\"Betrifft Ihr Schreiben vom 27. Februar.\\\" That is a reference. I'll set null.\\n\\nAlternatively, maybe we can derive a title from the content? But the instruction is to extract from the letter, not to generate. So null.\\n\\nSimilarly, sender_persons: The company is the sender. There is no individual name, but the company is the sender. So we list the company name: \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\". Note: The letterhead also has \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\". So that is the sender.\\n\\nReceiver_persons: The addressee is \\\"Basler Personenschiffahrtsgesellschaft, Basel.\\\" So that is the receiver.\\n\\nNow, we need to output JSON in the format:\\n\\n{\\n  \\\"metadata\\\": {\\n    \\\"letter_title\\\": null,\\n    \\\"send_date\\\": [\\\"1928-03-01\\\"],\\n    \\\"sender_persons\\\": [\\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"],\\n    \\\"receiver_persons\\\": [\\\"Basler Personenschiffahrtsgesellschaft\\\"]\\n  }\\n}\\n\\nBut careful: The send_date is given as \\\"Basel, den 1. M\u00e4rz 1928.\\\" So it's 1928-03-01. Since it's a single date, we put it in a list.\\n\\nNow, check if there are other possible individuals? The signature is illegible but there are two signatures. However, they are not named in the text. So we do not include them because we only have the company as the sender. The instruction says \\\"Name(s) of the person(s) who wrote the letter.\\\" If we don't know individual names, we use the company? That might be acceptable as it is the sender entity. Alternatively, we could set the sender as \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\". That is correct because it's the organization that wrote it.\\n\\nIs there any title? Possibly not.\\n\\nThus, the output should be this JSON.\\n\\nLet's ensure we follow the exact schema: {\\\"metadata\\\": {...}} with keys: send_date, letter_title, sender_persons, receiver_persons. Values are arrays or null.\\n\\nWe must output only the JSON. No additional text.\\n\\nSo final answer.\"}}],\"created\":1788853712,\"model\":\"deepseek-v4-flash-vision-exp\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":\"aa8d6caccae4a22492bb51091cfc8eab\",\"usage\":{\"completion_tokens\":1034,\"prompt_tokens\":1385,\"total_tokens\":2419,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":null,\"reasoning_tokens\":973,\"rejected_prediction_tokens\":null},\"prompt_tokens_details\":{\"audio_tokens\":null,\"cached_tokens\":384},\"prompt_cache_hit_tokens\":384,\"prompt_cache_miss_tokens\":1001}}"
+}

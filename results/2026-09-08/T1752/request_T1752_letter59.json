@@ -1,0 +1,45 @@
+{
+    "text": "{\"metadata\":{\"send_date\":[\"1952-12-16\"],\"letter_title\":null,\"sender_persons\":[\"Basler Personenschiffahrtsgesellschaft\"],\"receiver_persons\":[\"Basler Rheinschiffahrt A.-G.\"]}}",
+    "model": "deepseek-v4-flash-vision-exp",
+    "provider": "deepseek",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 1029,
+        "output_tokens": 1281,
+        "total_tokens": 2310,
+        "cached_tokens": 1024,
+        "input_cost_usd": 0.00045275999999999997,
+        "output_cost_usd": 0.00169092,
+        "estimated_cost_usd": 0.0021436800000000002
+    },
+    "duration": 13.044941425323486,
+    "timestamp": "2026-09-08T09:50:58.273378",
+    "parsed": {
+        "metadata": {
+            "send_date": [
+                "1952-12-16"
+            ],
+            "letter_title": null,
+            "sender_persons": [
+                "Basler Personenschiffahrtsgesellschaft"
+            ],
+            "receiver_persons": [
+                "Basler Rheinschiffahrt A.-G."
+            ],
+            "document_number": "letter59"
+        }
+    },
+    "conversation_id": "5caf6a2e-a6c3-4371-9c0c-3da80a832423",
+    "score": {
+        "send_date_tp": 0,
+        "send_date_fp": 1,
+        "send_date_fn": 1,
+        "sender_persons_tp": 0,
+        "sender_persons_fp": 1,
+        "sender_persons_fn": 0,
+        "receiver_persons_tp": 0,
+        "receiver_persons_fp": 1,
+        "receiver_persons_fn": 0
+    },
+    "raw_response": "{\"id\":\"fc60d208-5efd-41c2-a534-6395b27f77a7\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\\"metadata\\\":{\\\"send_date\\\":[\\\"1952-12-16\\\"],\\\"letter_title\\\":null,\\\"sender_persons\\\":[\\\"Basler Personenschiffahrtsgesellschaft\\\"],\\\"receiver_persons\\\":[\\\"Basler Rheinschiffahrt A.-G.\\\"]}}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"reasoning_content\":\"We are given an image of a historical letter. We need to extract letter_title, sender_persons, send_date, receiver_persons. The letter is in German. Let's examine the image.\\n\\nThe letterhead says: \\\"BASLER PERSONENSCHIFFAHRTSGESELLSCHAFT\\\" which is the Basler Personenschiffahrtsgesellschaft (Basel Passenger Shipping Company). So the sender is likely this company.\\n\\nThe date at top right: \\\"Basel, den 16. Dezember 1952.\\\" So send_date is 1952-12-16.\\n\\nThe addressee: \\\"An die Basler Rheinschiffahrt A.-G.-\\\" and below \\\"Marktgasse 5\\\" and \\\"Basel\\\". So the receiver is \\\"Basler Rheinschiffahrt A.-G.\\\" (maybe with address? But we need name(s) only). So receiver_persons: [\\\"Basler Rheinschiffahrt A.-G.\\\"]\\n\\nThe letter has no explicit title. The letter is a business letter. We might set letter_title to null, or perhaps derive from content? The instruction says: \\\"letter_title: Title of the letter.\\\" If not included, set to null. The letter has no title, so null.\\n\\nSender: The letterhead indicates the sender is \\\"Basler Personenschiffahrtsgesellschaft\\\". But there might be a signature at bottom: It looks like handwritten signatures, but blurry. The typed name seems: \\\"Der Pr\u00e4sident\\\" and \\\"Der Gesch\u00e4ftsf\u00fchrer\\\"? Actually, it says \\\"Der Pr\u00e4sident\\\" and \\\"Der Gesch\u00e4ftsf\u00fchrer\\\" but there are handwritten signatures. However, the sender is the organization, not individuals. The instruction asks for \\\"sender_persons: Name(s) of the person(s) who wrote the letter.\\\" If it's from a company, then we put the company name? Since it's a person or persons? Possibly we should list the individuals if they are named. But the text does not name individuals explicitly; it's just \\\"Wir\\\" (we) and the letterhead. The signature is illegible. So for sender_persons, we can use the company name as the sender. The instruction says \\\"sender_persons: Name(s) of the person(s) who wrote the letter.\\\" Since it's from the company, we can list \\\"Basler Personenschiffahrtsgesellschaft\\\". But note that the JSON schema expects strings. The example uses \\\"Lisa Simpson\\\" as a person. For company, it's acceptable.\\n\\nSo we have:\\n- letter_title: null\\n- send_date: [\\\"1952-12-16\\\"]\\n- sender_persons: [\\\"Basler Personenschiffahrtsgesellschaft\\\"]\\n- receiver_persons: [\\\"Basler Rheinschiffahrt A.-G.\\\"]\\n\\nCheck: The letter is addressed to \\\"An die Basler Rheinschiffahrt A.-G.\\\" so that's the receiver.\\n\\nThus the JSON output:\\n{\\n  \\\"metadata\\\": {\\n    \\\"send_date\\\": [\\\"1952-12-16\\\"],\\n    \\\"letter_title\\\": null,\\n    \\\"sender_persons\\\": [\\\"Basler Personenschiffahrtsgesellschaft\\\"],\\n    \\\"receiver_persons\\\": [\\\"Basler Rheinschiffahrt A.-G.\\\"]\\n  }\\n}\\n\\nBut wait: The schema says: \\\"$defs\\\": {\\\"Metadata\\\": {\\\"properties\\\": {\\\"send_date\\\": {\\\"anyOf\\\": [{\\\"items\\\": {\\\"type\\\": \\\"string\\\"}, \\\"type\\\": \\\"array\\\"}, {\\\"type\\\": \\\"null\\\"}], \\\"title\\\": \\\"Send Date\\\"}, \\\"letter_title\\\": {\\\"anyOf\\\": [{\\\"items\\\": {\\\"type\\\": \\\"string\\\"}, \\\"type\\\": \\\"array\\\"}, {\\\"type\\\": \\\"null\\\"}], \\\"title\\\": \\\"Letter Title\\\"}, \\\"sender_persons\\\": {\\\"anyOf\\\": [{\\\"items\\\": {\\\"type\\\": \\\"string\\\"}, \\\"type\\\": \\\"array\\\"}, {\\\"type\\\": \\\"null\\\"}], \\\"title\\\": \\\"Sender Persons\\\"}, \\\"receiver_persons\\\": {\\\"anyOf\\\": [{\\\"items\\\": {\\\"type\\\": \\\"string\\\"}, \\\"type\\\": \\\"array\\\"}, {\\\"type\\\": \\\"null\\\"}], \\\"title\\\": \\\"Receiver Persons\\\"}}, \\\"required\\\": [\\\"send_date\\\", \\\"letter_title\\\", \\\"sender_persons\\\", \\\"receiver_persons\\\"], \\\"title\\\": \\\"Metadata\\\", \\\"type\\\": \\\"object\\\"}}, \\\"properties\\\": {\\\"metadata\\\": {\\\"$ref\\\": \\\"#/$defs/Metadata\\\"}}, \\\"required\\\": [\\\"metadata\\\"], \\\"title\\\": \\\"Document\\\", \\\"type\\\": \\\"object\\\"\\n\\nSo we need to output a JSON object with a \\\"metadata\\\" key. Inside, we have keys. For null values, we can set them to null directly. For arrays, we put strings. So we output accordingly.\\n\\nIn the example, they used arrays for all values. But the schema allows null for the whole key. So we can set letter_title: null. But note: \\\"If a piece of information is not included in the letter, set the value for the corresponding key to 'null'.\\\" This means the value of the key should be the string \\\"null\\\" or the JSON null? The instruction says set the value to \\\"null\\\". But in JSON, we can use null. The schema says anyOf array or null. So we can put null. In the example, they didn't have null. So we'll use null.\\n\\nThus the final JSON is as above. But we must output only that JSON, no other text.\\n\\nLet's double-check the date: \\\"Basel, den 16. Dezember 1952.\\\" So date is 1952-12-16.\\n\\nThe sender is the company. Could there be a specific department? But the letterhead is \\\"BASLER PERSONENSCHIFFAHRTSGESELLSCHAFT\\\". So that is the sender.\\n\\nThe receiver is \\\"Basler Rheinschiffahrt A.-G.\\\" with address. We take only the name.\\n\\nThus final answer.\"}}],\"created\":1788853846,\"model\":\"deepseek-v4-flash-vision-exp\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":\"aa8d6caccae4a22492bb51091cfc8eab\",\"usage\":{\"completion_tokens\":1281,\"prompt_tokens\":1029,\"total_tokens\":2310,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":null,\"reasoning_tokens\":1223,\"rejected_prediction_tokens\":null},\"prompt_tokens_details\":{\"audio_tokens\":null,\"cached_tokens\":1024},\"prompt_cache_hit_tokens\":1024,\"prompt_cache_miss_tokens\":5}}"
+}

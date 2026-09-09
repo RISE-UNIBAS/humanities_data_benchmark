@@ -1,0 +1,41 @@
+{
+    "text": "{\"metadata\":{\"send_date\":[\"1932-12-21\"],\"letter_title\":null,\"sender_persons\":null,\"receiver_persons\":null}}",
+    "model": "deepseek-v4-flash-vision-exp",
+    "provider": "deepseek",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 1029,
+        "output_tokens": 666,
+        "total_tokens": 1695,
+        "cached_tokens": 384,
+        "input_cost_usd": 0.00045275999999999997,
+        "output_cost_usd": 0.00087912,
+        "estimated_cost_usd": 0.0013318800000000001
+    },
+    "duration": 8.335800170898438,
+    "timestamp": "2026-09-08T09:49:29.859449",
+    "parsed": {
+        "metadata": {
+            "send_date": [
+                "1932-12-21"
+            ],
+            "letter_title": null,
+            "sender_persons": null,
+            "receiver_persons": null,
+            "document_number": "letter61"
+        }
+    },
+    "conversation_id": "505cb64a-787f-4128-82c6-52fb9bd66615",
+    "score": {
+        "send_date_tp": 1,
+        "send_date_fp": 0,
+        "send_date_fn": 0,
+        "sender_persons_tp": 0,
+        "sender_persons_fp": 0,
+        "sender_persons_fn": 0,
+        "receiver_persons_tp": 0,
+        "receiver_persons_fp": 0,
+        "receiver_persons_fn": 0
+    },
+    "raw_response": "{\"id\":\"d4f68794-75cb-471d-8a3b-2044c05445b1\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\\"metadata\\\":{\\\"send_date\\\":[\\\"1932-12-21\\\"],\\\"letter_title\\\":null,\\\"sender_persons\\\":null,\\\"receiver_persons\\\":null}}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"reasoning_content\":\"We need to extract from the letter image. The letter is in German. Let's read it:\\n\\n\\\"Basel, den 21. Dezember 1932.\\\"\\n\\n\\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"\\n\\n\\\"BASEL\\\"\\n\\n\\\"Marktgasse 5.\\\"\\n\\n\\\"Namens der Basler Personenschiffahrtsgesellschaft best\u00e4tige ich Ihnen den Empfang Ihres Geehrten vom 19.ds. Ich habe dieses Schreiben an den Verein f\u00fcr die Schiffahrt auf dem Oberrhein weitergeleitet und nehme an, dass sich dieser mit Ihnen direkt in Verbindung setzen werde.\\\"\\n\\n\\\"In Hochachtung\\\"\\n\\nSo, the sender is \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"? Actually, the letter is written on behalf of \\\"Basler Personenschiffahrtsgesellschaft\\\". The sender is the company, but we need persons? The instruction: \\\"sender_persons: Name(s) of the person(s) who wrote the letter.\\\" The letter is signed \\\"In Hochachtung\\\" but no name. It says \\\"Namens der Basler Personenschiffahrtsgesellschaft\\\" meaning \\\"On behalf of the Basel Passenger Shipping Company\\\". So the sender is the company. But the key is sender_persons. Usually we extract names of persons. Here there is no personal name. So we might set to null? Or maybe the sender is the company? The example shows names of persons. The instruction says \\\"person(s)\\\". It might be ambiguous. But the letter is from the company, not a specific person. So probably null.\\n\\nReceiver: The letter is addressed to \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\" at \\\"Basel, Marktgasse 5.\\\" So the receiver is that company. Again a company, not persons.\\n\\nLetter title: There is no explicit title. So null.\\n\\nSend date: \\\"Basel, den 21. Dezember 1932.\\\" So date is 1932-12-21.\\n\\nNow, the JSON schema expects a \\\"metadata\\\" object with keys send_date, letter_title, sender_persons, receiver_persons. All values should be lists or null.\\n\\nSo output:\\n\\n{\\n  \\\"metadata\\\": {\\n    \\\"send_date\\\": [\\\"1932-12-21\\\"],\\n    \\\"letter_title\\\": null,\\n    \\\"sender_persons\\\": null,\\n    \\\"receiver_persons\\\": null\\n  }\\n}\\n\\nBut wait: Should the sender be the company name? The instruction says \\\"Name(s) of the person(s) who wrote the letter.\\\" If no person, null. Similarly receiver. So null.\\n\\nAlternatively, we could put the company names as strings, but they are not persons. The example has names like \\\"Lisa Simpson\\\". So I'll stick to null.\\n\\nCheck the letter: It says \\\"Namens der Basler Personenschiffahrtsgesellschaft\\\" - so the sender is that society. The receiver is the \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\". But again, no person names.\\n\\nThus the output.\"}}],\"created\":1788853762,\"model\":\"deepseek-v4-flash-vision-exp\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":\"aa8d6caccae4a22492bb51091cfc8eab\",\"usage\":{\"completion_tokens\":666,\"prompt_tokens\":1029,\"total_tokens\":1695,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":null,\"reasoning_tokens\":630,\"rejected_prediction_tokens\":null},\"prompt_tokens_details\":{\"audio_tokens\":null,\"cached_tokens\":384},\"prompt_cache_hit_tokens\":384,\"prompt_cache_miss_tokens\":645}}"
+}

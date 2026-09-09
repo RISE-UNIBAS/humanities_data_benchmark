@@ -1,0 +1,41 @@
+{
+    "text": "{\"metadata\":{\"send_date\":[\"1932-10-07\"],\"letter_title\":null,\"sender_persons\":null,\"receiver_persons\":null}}",
+    "model": "deepseek-v4-flash-vision-exp",
+    "provider": "deepseek",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 1029,
+        "output_tokens": 1141,
+        "total_tokens": 2170,
+        "cached_tokens": 1024,
+        "input_cost_usd": 0.00045275999999999997,
+        "output_cost_usd": 0.0015061200000000001,
+        "estimated_cost_usd": 0.00195888
+    },
+    "duration": 12.057548999786377,
+    "timestamp": "2026-09-08T09:51:50.632440",
+    "parsed": {
+        "metadata": {
+            "letter_title": null,
+            "send_date": [
+                "1932-10-07"
+            ],
+            "sender_persons": null,
+            "receiver_persons": null,
+            "document_number": "letter53"
+        }
+    },
+    "conversation_id": "da0b1da0-22b5-4965-9334-3cbd3d5d04df",
+    "score": {
+        "send_date_tp": 1,
+        "send_date_fp": 0,
+        "send_date_fn": 0,
+        "sender_persons_tp": 0,
+        "sender_persons_fp": 0,
+        "sender_persons_fn": 1,
+        "receiver_persons_tp": 0,
+        "receiver_persons_fp": 0,
+        "receiver_persons_fn": 0
+    },
+    "raw_response": "{\"id\":\"c82dffa2-e795-4786-beb0-48108f0d7dd9\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\\"metadata\\\": {\\\"letter_title\\\": null, \\\"send_date\\\": [\\\"1932-10-07\\\"], \\\"sender_persons\\\": null, \\\"receiver_persons\\\": null}}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"reasoning_content\":\"We are given an image of a letter. The letter is from the Basler Personenschiffahrts-Gesellschaft, dated Basel, den 7. Oktober 1932. It is addressed to \\\"An die Vorstandsmitglieder der Basler Personenschiffahrtsgesellschaft\\\". The letter is signed \\\"Der Gesch\u00e4ftsf\u00fchrer\\\" but the name is not readable. The sender is the company itself. The receiver is the board members of the same company. The letter title is not explicitly given, but perhaps we can infer from the content or leave null. The date is 1932-10-07.\\n\\nWe need to return JSON with keys: letter_title, sender_persons, send_date, receiver_persons, each as a list (or null).\\n\\n- letter_title: The letter does not have a title. So \\\"null\\\".\\n- sender_persons: The sender is the \\\"Basler Personenschiffahrts-Gesellschaft\\\" but the letter is signed by \\\"Der Gesch\u00e4ftsf\u00fchrer\\\" (the managing director). However, the sender is the company. In the example they used a person's name. Typically sender_persons would be the person(s) who wrote it. But the letterhead says the company. The signature is illegible. So we might use the company name as sender? But it says \\\"sender_persons\\\" - persons. Possibly we should extract the name from signature? It's illegible. Alternatively, the sender is the organization. But the schema says persons. Since no individual name is clear, maybe set to null? But we have the company. However, the instruction says: \\\"Name(s) of the person(s) who wrote the letter.\\\" So if it's a company, it's not a person. But sometimes we use the company as a sender. The example used persons. In the letter, it says \\\"Basler Personenschiffahrts-Gesellschaft\\\" at the top, and \\\"Der Gesch\u00e4ftsf\u00fchrer\\\" below. The signature is illegible. So we cannot extract a person's name. I think we should set to null because no person name is present. However, the letter is signed by the Gesch\u00e4ftsf\u00fchrer, but we don't know the name. So we can set to null.\\n\\nBut wait, the instruction says: \\\"If a piece of information is not included in the letter, set the value for the corresponding key to \\\"null\\\".\\\" So for sender_persons, we don't have a person's name. So null.\\n\\n- send_date: The letter says \\\"Basel, den 7. Oktober 1932.\\\" So date is 1932-10-07.\\n\\n- receiver_persons: \\\"An die Vorstandsmitglieder der Basler Personenschiffahrtsgesellschaft\\\" - so the receivers are the board members. But no specific names are given. So we have \\\"Vorstandsmitglieder\\\" which means \\\"members of the board\\\". We don't have individual names. Should we put null? Or perhaps we can infer it's the board members as a group, but the key is receiver_persons, expecting a list of persons. Since no individual names, null. But wait, they are explicitly addressed as \\\"Vorstandsmitglieder\\\" - so the receiver is a group. But without names, we can't list persons. So null.\\n\\nBut maybe we can put the description? No, the instruction says \\\"Name(s) of the person(s) who received the letter.\\\" If no names, then null.\\n\\nAlso letter_title: There is no title. So null.\\n\\nSo the JSON would be:\\n\\n{\\n  \\\"metadata\\\": {\\n    \\\"letter_title\\\": null,\\n    \\\"send_date\\\": [\\\"1932-10-07\\\"],\\n    \\\"sender_persons\\\": null,\\n    \\\"receiver_persons\\\": null\\n  }\\n}\\n\\nBut wait, the example shows arrays for each key. For null, it says set the value to \\\"null\\\" (string?) or actually the key value should be null? The instruction: \\\"set the value for the corresponding key to \\\"null\\\".\\\" That might mean the string \\\"null\\\"? But in the schema, they allow null type. Looking at the schema: \\\"anyOf\\\": [{\\\"items\\\": {\\\"type\\\": \\\"string\\\"}, \\\"type\\\": \\\"array\\\"}, {\\\"type\\\": \\\"null\\\"}]. So the value can be null or an array of strings. So we can set it to null.\\n\\nBut also note: The sender is the company, but the letter is signed by \\\"Der Gesch\u00e4ftsf\u00fchrer\\\" and there is a signature. Perhaps we can extract the company name as sender? But the key is persons. I think it's safer to set to null.\\n\\nAlternatively, some might argue that the sender is \\\"Basler Personenschiffahrts-Gesellschaft\\\" and that is not a person, so null.\\n\\nAlso, note the letter has \\\"1 Beilage\\\" at bottom, etc.\\n\\nSo final answer:\\n\\n{\\n  \\\"metadata\\\": {\\n    \\\"letter_title\\\": null,\\n    \\\"send_date\\\": [\\\"1932-10-07\\\"],\\n    \\\"sender_persons\\\": null,\\n    \\\"receiver_persons\\\": null\\n  }\\n}\\n\\nBut wait, the receiver is \\\"Vorstandsmitglieder\\\" which is plural, so multiple persons, but no names. So null.\\n\\nI will output that.\"}}],\"created\":1788853899,\"model\":\"deepseek-v4-flash-vision-exp\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":\"aa8d6caccae4a22492bb51091cfc8eab\",\"usage\":{\"completion_tokens\":1141,\"prompt_tokens\":1029,\"total_tokens\":2170,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":null,\"reasoning_tokens\":1102,\"rejected_prediction_tokens\":null},\"prompt_tokens_details\":{\"audio_tokens\":null,\"cached_tokens\":1024},\"prompt_cache_hit_tokens\":1024,\"prompt_cache_miss_tokens\":5}}"
+}

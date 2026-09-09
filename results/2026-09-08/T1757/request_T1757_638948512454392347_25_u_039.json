@@ -1,0 +1,42 @@
+{
+    "text": "{\"company\":{\"transcription\":\"\\\"ITALEVETICA\\\" S.A. di partecipazione finanziarie ed industriali\"},\"location\":{\"transcription\":\"Chur\"},\"b_id\":{\"transcription\":\"B.51.322.GB.87.\"},\"date\":\"\",\"information\":[{\"transcription\":\"Britische schwarze Liste\\n13. Amendment vom 16.12.1940\"},{\"transcription\":\"gestrichen:\\nAmendment 11, 30.10.45.\"}]}",
+    "model": "deepseek-v4-flash-vision-exp",
+    "provider": "deepseek",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 1069,
+        "output_tokens": 871,
+        "total_tokens": 1940,
+        "cached_tokens": 256,
+        "input_cost_usd": 0.00047036,
+        "output_cost_usd": 0.0011497200000000001,
+        "estimated_cost_usd": 0.00162008
+    },
+    "duration": 9.661419868469238,
+    "timestamp": "2026-09-08T10:08:41.935178",
+    "parsed": {
+        "company": {
+            "transcription": "\"ITALEVETICA\" S.A. di partecipazione finanziarie ed industriali"
+        },
+        "location": {
+            "transcription": "Chur"
+        },
+        "b_id": {
+            "transcription": "B.51.322.GB.87."
+        },
+        "date": "",
+        "information": [
+            {
+                "transcription": "Britische schwarze Liste\n13. Amendment vom 16.12.1940"
+            },
+            {
+                "transcription": "gestrichen:\nAmendment 11, 30.10.45."
+            }
+        ]
+    },
+    "conversation_id": "59b4af68-4c8a-43b0-ad0d-83ff182d1061",
+    "score": {
+        "fuzzy": 0.9986876640419947
+    },
+    "raw_response": "{\"id\":\"21bcbf85-11b9-4a77-8f1b-298e667d1e61\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\n  \\\"company\\\": {\\\"transcription\\\": \\\"\\\\\\\"ITALEVETICA\\\\\\\" S.A. di partecipazione finanziarie ed industriali\\\"},\\n  \\\"location\\\": {\\\"transcription\\\": \\\"Chur\\\"},\\n  \\\"b_id\\\": {\\\"transcription\\\": \\\"B.51.322.GB.87.\\\"},\\n  \\\"date\\\": \\\"\\\",\\n  \\\"information\\\": [\\n    {\\\"transcription\\\": \\\"Britische schwarze Liste\\\\n13. Amendment vom 16.12.1940\\\"},\\n    {\\\"transcription\\\": \\\"gestrichen:\\\\nAmendment 11, 30.10.45.\\\"}\\n  ]\\n}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"reasoning_content\":\"We need to extract from the image. Let's look at the image carefully.\\n\\nThe card is greenish. Top-left: \\\"ITALEVETICA\\\" S.A. di partecipazione finanziarie ed industriali. Below that in the same block, to the right: Chur. So company: \\\"ITALEVETICA\\\" S.A. di partecipazione finanziarie ed industriali (but we might want to keep it as is, excluding location? The instruction says \\\"Exclude the location\\\" for company. So we should not include \\\"Chur\\\" in company. Location is \\\"Chur\\\". \\n\\nTop-right: B.51.322.GB.87. So b_id: \\\"B.51.322.GB.87.\\\"\\n\\nDate: There is no explicit date? Actually, there is text: \\\"13. Amendment vom 16.12.1940\\\" and \\\"Amendment 11, 30.10.45.\\\" But the instruction says \\\"Any stamped dates on the card\\\". These are typed, not stamped. So probably date is empty? But maybe we should extract the date? The instruction says \\\"Any stamped dates on the card in YYYY-MM-DD format\\\". There are no stamps, just typewritten dates. So we should leave date as empty string.\\n\\nInformation: The main body of the card. The text blocks: First line: \\\"Britische schwarze Liste\\\" then \\\"13. Amendment vom 16.12.1940\\\" then a blank line? Actually there is: \\\"gestrichen:\\\" and \\\"Amendment 11, 30.10.45.\\\" So we need to split into blocks. The instruction: \\\"A list of text blocks from the main body of the card. Each block should be a separate string in the list. Maintain line breaks with \\\\\\\\n.\\\"\\n\\nSo possibly we can have blocks:\\n1. \\\"Britische schwarze Liste\\\\n13. Amendment vom 16.12.1940\\\"\\n2. \\\"gestrichen:\\\\nAmendment 11, 30.10.45.\\\"\\n\\nBut we need to be careful with line breaks. The image shows:\\nBritische schwarze Liste\\n13. Amendment vom 16.12.1940\\n\\ngestrichen:\\nAmendment 11, 30.10.45.\\n\\nSo there is a gap between them. So we can consider two separate blocks. Alternatively, we might combine? But the instruction says \\\"text blocks\\\" so we can separate by visual blocks. The first block is two lines, second block is two lines with a blank line between. So we'll output two entries.\\n\\nLet's construct the JSON.\\n\\nThe schema expects:\\n{\\n  \\\"company\\\": {\\\"transcription\\\": \\\"...\\\"},\\n  \\\"location\\\": {\\\"transcription\\\": \\\"...\\\"},\\n  \\\"b_id\\\": {\\\"transcription\\\": \\\"...\\\"},\\n  \\\"date\\\": \\\"\\\",\\n  \\\"information\\\": [ {\\\"transcription\\\": \\\"...\\\"}, ... ]\\n}\\n\\nWe need to ensure we output only JSON. Also note that the \\\"date\\\" field can be string or null, but we'll use empty string.\\n\\nNow transcribe exactly.\\n\\nCompany: \\\"ITALEVETICA\\\" S.A. di partecipazione finanziarie ed industriali\\nLocation: Chur\\nb_id: B.51.322.GB.87.\\ndate: \\\"\\\"\\ninformation: \\n  - \\\"Britische schwarze Liste\\\\n13. Amendment vom 16.12.1940\\\"\\n  - \\\"gestrichen:\\\\nAmendment 11, 30.10.45.\\\"\\n\\nCheck for any other text? There is a number \\\"35272\\\" at bottom left. That is not part of information? Probably not. So ignore.\\n\\nNow output JSON.\"}}],\"created\":1788854913,\"model\":\"deepseek-v4-flash-vision-exp\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":\"aa8d6caccae4a22492bb51091cfc8eab\",\"usage\":{\"completion_tokens\":871,\"prompt_tokens\":1069,\"total_tokens\":1940,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":null,\"reasoning_tokens\":748,\"rejected_prediction_tokens\":null},\"prompt_tokens_details\":{\"audio_tokens\":null,\"cached_tokens\":256},\"prompt_cache_hit_tokens\":256,\"prompt_cache_miss_tokens\":813}}"
+}

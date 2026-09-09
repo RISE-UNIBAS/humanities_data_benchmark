@@ -1,0 +1,64 @@
+{
+    "text": "{\"advertisements\":[{\"box\":[100.0,250.0,2380.0,800.0]},{\"box\":[100.0,900.0,1250.0,2100.0]},{\"box\":[1300.0,900.0,2380.0,2100.0]},{\"box\":[100.0,2300.0,2380.0,3000.0]}]}",
+    "model": "deepseek-v4-flash-vision-exp",
+    "provider": "deepseek",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 694,
+        "output_tokens": 2187,
+        "total_tokens": 2881,
+        "input_cost_usd": 0.00030535999999999996,
+        "output_cost_usd": 0.0028868400000000003,
+        "estimated_cost_usd": 0.0031922
+    },
+    "duration": 20.382999897003174,
+    "timestamp": "2026-09-08T10:27:09.149883",
+    "parsed": {
+        "advertisements": [
+            {
+                "box": [
+                    100,
+                    250,
+                    2380,
+                    800
+                ]
+            },
+            {
+                "box": [
+                    100,
+                    900,
+                    1250,
+                    2100
+                ]
+            },
+            {
+                "box": [
+                    1300,
+                    900,
+                    2380,
+                    2100
+                ]
+            },
+            {
+                "box": [
+                    100,
+                    2300,
+                    2380,
+                    3000
+                ]
+            }
+        ]
+    },
+    "conversation_id": "18e159f3-8e48-4530-8c4f-5767317e8d07",
+    "score": {
+        "f1": 1.0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "mean_iou": 0.591,
+        "true_positives": 4,
+        "false_positives": 0,
+        "false_negatives": 0,
+        "iou_threshold": 0.5
+    },
+    "raw_response": "{\"id\":\"a43564e7-1adc-45fe-b922-a5b94dd61ea7\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\\"advertisements\\\":[{\\\"box\\\":[100,250,2380,800]},{\\\"box\\\":[100,900,1250,2100]},{\\\"box\\\":[1300,900,2380,2100]},{\\\"box\\\":[100,2300,2380,3000]}]}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"reasoning_content\":\"We need to extract all advertisements and their bounding boxes from the provided page image. The page is 2479 x 3508 pixels. The image shows four distinct advertisements: top-left (coal), middle-left (shipping), middle-right (watches), and bottom (shipping). We need to identify their bounding boxes in pixel coordinates.\\n\\nLet's examine the image. The page has margins. The ads are separated by white space and thin borders. We'll approximate the coordinates.\\n\\n1. Top advertisement: \\\"South Wales Anthracite\\\" etc. It spans the top portion, starting near the left margin to the right margin. The top edge is around y=300, bottom edge around y=750? The left edge is around x=100, right edge around x=2350. But let's be precise.\\n\\nWe'll estimate based on the visible layout. The image is 2479x3508. The ads are roughly within the main content area. Let's assume the top ad is from x=100 to x=2380, y=250 to y=800.\\n\\nBut we need to output exactly. Let's look at the image carefully. The top ad has a border. It extends from near the top left corner to the top right. The bottom of that ad is above the middle ads. The middle ads: left one is a block with text and image, right one is a dark rectangle with a watch. They are side by side. The bottom ad is a full-width block.\\n\\nLet's assign coordinates based on visual inspection. Since the image is provided, we can estimate pixel positions. However, as an AI, I don't have precise pixel measurements. I'll need to make reasonable guesses based on proportions.\\n\\nThe page has a margin. The content area seems to start at around x=100 and end at x=2380. The top ad starts at around y=300 and ends at y=800. The middle ads start at y=900 and end at y=2000? Actually, the left middle ad is from y=900 to y=2000, and the right middle ad is from y=900 to y=2000 as well. Then the bottom ad is from y=2200 to y=2900.\\n\\nBut let's be more specific. The top ad has text \\\"South Wales Anthracite\\\" etc. It has a border. The border seems to be at the top-left corner around (100, 300) and bottom-right around (2380, 800). So box: [100, 300, 2380, 800].\\n\\nThe middle left ad: \\\"Speditions A.-G., Basle 13\\\" with a photo below. The box likely from (100, 950) to (1200, 2100). The middle right ad: dark box with watch. It is to the right, roughly from (1300, 950) to (2380, 2100). The bottom ad: \\\"JACKY, MAEDER & Co.\\\" from (100, 2400) to (2380, 3100).\\n\\nBut we need to be accurate. Let's think in terms of the overall image dimensions. The image is 2479x3508. The page has additional white space at the top and bottom. The printed area is not the full page. The ads are within a certain region.\\n\\nSometimes i might not have exact coordinates, but for the purpose of this exercise, we need to output plausible bounding boxes. The user expects a JSON array of objects with \\\"box\\\" property.\\n\\nLet's analyze the image structure. I can see four distinct rectangles:\\n\\n1. Top: The coal advertisement. It has a border. The border starts at approximately (89, 291) and ends at (2351, 758) based on visual? Actually, looking at the image, the top ad is at the top of the page, but there is some margin. Let's estimate: top-left corner (100, 300), bottom-right (2380, 800).\\n\\n2. Middle-left: Shipping ad. It has a border. It spans from the left side to a vertical line separating it from the right ad. The vertical line is around x=1250. So the left ad is from (100, 900) to (1250, 2200). The right ad is from (1300, 900) to (2380, 2200).\\n\\n3. Middle-right: Watch ad. This one is a dark rectangle. It goes from about (1300, 900) to (2380, 2200). Actually, it might be a bit higher. Let's look at the image: the left ad has a photo at the bottom, and the right ad has a watch. They appear to be aligned vertically.\\n\\n4. Bottom: The Jacky Maeder ad. It has a border. It spans the full width from (100, 2400) to (2380, 3100).\\n\\nBut we need to be more precise. Since I don't have pixel-to-pixel measurement, I'll make an educated guess based on typical page layout. The page is 2479x3508, which is roughly A4 ratio (1:1.414). The margins are about 100 pixels on each side.\\n\\nLet's assume the following coordinates:\\n\\n- Top ad: [100, 200, 2400, 800]? Actually, the top of the page has a small header? No, the ad is at the very top? The image shows the ad starting right away, but there is a margin. The top ad's top edge is around y=250, bottom edge around y=750.\\n\\n- Middle-left: [100, 900, 1250, 2100]\\n- Middle-right: [1300, 900, 2400, 2100]\\n- Bottom: [100, 2300, 2400, 3000]\\n\\nBut we need to check the actual image. The text in the middle-left ad starts with \\\"Speditions A.-G., Basle 13\\\". The ad has a border. The border appears to be at the top around y=950? Actually, looking at the image, the middle ads are slightly below the top ad. The top ad ends at around y=800. Then there is a gap. The middle ads start at around y=950. The left ad has a photo that goes to about y=2000. The right ad has a watch that is centered, but the ad background is dark and extends from y=950 to y=2100. The bottom ad starts at around y=2400 and ends at y=3100.\\n\\nLet's try to be more accurate by recognizing that the image is a scan of a magazine page. The coordinates should be for the actual advertisement regions as they appear. I'll set:\\n\\nTop: x0=100, y0=300, x1=2380, y1=800\\nMiddle-left: x0=100, y0=900, x1=1250, y1=2100\\nMiddle-right: x0=1300, y0=900, x1=2380, y1=2100\\nBottom: x0=100, y0=2300, x1=2380, y1=3000\\n\\nBut the image might have some extra space. Let's consider the entire page. The bottom ad is at the bottom, but there is a page number at the bottom right. So the bottom ad might end before that.\\n\\nLet's re-examine the image description: The page shows a top ad, two middle ads, and a bottom ad. The bottom ad has text \\\"JACKY, MAEDER & Co.\\\" and \\\"Branch offices at: ZURICH, ST. GALL, LAUSANNE, CHIASSO, SCHAFFHOUSE, GENEVA, LA CHAUX-DE-FONDS, BUCHS, BIENNE\\\". So it's a large ad.\\n\\nI think the bounding boxes should cover the entire area of each ad, including any white space within the ad's border. So we need to approximate the borders.\\n\\nFor the top ad, the border is visible. For the middle ads, the left one has a border, and the right one is a dark rectangle. The bottom ad has a border.\\n\\nTo be safe, we can provide the coordinates in the required format. The output should be JSON.\\n\\nI'll produce:\\n\\n{\\n  \\\"advertisements\\\": [\\n    {\\\"box\\\": [100, 250, 2380, 800]},\\n    {\\\"box\\\": [100, 900, 1250, 2100]},\\n    {\\\"box\\\": [1300, 900, 2380, 2100]},\\n    {\\\"box\\\": [100, 2300, 2380, 3000]}\\n  ]\\n}\\n\\nBut let's double-check the vertical positions. The top ad is quite tall. Actually, from the image, the top ad has text lines and a logo on the right. Its height might be about 500 pixels. The middle ads are similar in height. The bottom ad is a bit shorter.\\n\\nMaybe the top ad is from y=200 to y=700. The middle from y=850 to y=2100. The bottom from y=2400 to y=3100.\\n\\nI think the exact coordinates are not critical as long as they are within the ad regions. However, the user expects valid JSON with precise coordinates. I'll try to be as accurate as possible.\\n\\nLet's look at the image I have in my mind. The page number \\\"91\\\" is at the bottom right, so the bottom ad is above that. The bottom ad's bottom edge is probably around y=3000, leaving space for the page number.\\n\\nI'll go with:\\n\\nTop: x: 100 to 2380, y: 250 to 800\\nMiddle-left: x: 100 to 1250, y: 900 to 2100\\nMiddle-right: x: 1300 to 2380, y: 900 to 2100\\nBottom: x: 100 to 2380, y: 2300 to 3000\\n\\nThat seems reasonable.\\n\\nLet's output the JSON.\"}}],\"created\":1788856010,\"model\":\"deepseek-v4-flash-vision-exp\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":\"aa8d6caccae4a22492bb51091cfc8eab\",\"usage\":{\"completion_tokens\":2187,\"prompt_tokens\":694,\"total_tokens\":2881,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":null,\"reasoning_tokens\":2127,\"rejected_prediction_tokens\":null},\"prompt_tokens_details\":{\"audio_tokens\":null,\"cached_tokens\":0},\"prompt_cache_hit_tokens\":0,\"prompt_cache_miss_tokens\":694}}"
+}

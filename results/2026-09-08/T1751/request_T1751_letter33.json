@@ -1,0 +1,43 @@
+{
+    "text": "{\"metadata\":{\"send_date\":[\"1928-05-05\"],\"letter_title\":null,\"sender_persons\":null,\"receiver_persons\":[\"Basler Rheinschiffahrts-A.G.\"]}}",
+    "model": "deepseek-v4-flash-vision-exp",
+    "provider": "deepseek",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 1029,
+        "output_tokens": 1164,
+        "total_tokens": 2193,
+        "cached_tokens": 384,
+        "input_cost_usd": 0.00045275999999999997,
+        "output_cost_usd": 0.0015364800000000002,
+        "estimated_cost_usd": 0.00198924
+    },
+    "duration": 12.66650390625,
+    "timestamp": "2026-09-08T09:49:05.222178",
+    "parsed": {
+        "metadata": {
+            "letter_title": null,
+            "send_date": [
+                "1928-05-05"
+            ],
+            "sender_persons": null,
+            "receiver_persons": [
+                "Basler Rheinschiffahrts-A.G."
+            ],
+            "document_number": "letter33"
+        }
+    },
+    "conversation_id": "da1b7a44-1158-4000-856e-1b5ad744ffd0",
+    "score": {
+        "send_date_tp": 1,
+        "send_date_fp": 0,
+        "send_date_fn": 0,
+        "sender_persons_tp": 0,
+        "sender_persons_fp": 0,
+        "sender_persons_fn": 0,
+        "receiver_persons_tp": 0,
+        "receiver_persons_fp": 1,
+        "receiver_persons_fn": 0
+    },
+    "raw_response": "{\"id\":\"e8b22b3f-e4e8-4904-a90b-283837152570\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\\"metadata\\\": {\\\"letter_title\\\": null, \\\"send_date\\\": [\\\"1928-05-05\\\"], \\\"sender_persons\\\": null, \\\"receiver_persons\\\": [\\\"Basler Rheinschiffahrts-A.G.\\\"]}}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"reasoning_content\":\"We need to extract metadata from the letter image. The letter is in German. Let's read it.\\n\\nThe image shows a typewritten letter. Let's transcribe the text:\\n\\nAbschrift. (Copy)\\n\\n5. Mai 1928.\\n\\nAn die Basler Rheinschiffahrts-A.G.,\\n\\nB A S E L.\\n\\nHerr Direktor W. Stauffenegger, Pr\u00e4sident unseres Vereins, \u00fcbermittelt mir als Schriftleiter der Zeitschrift \\\"Die Rheinquellen\\\" Ihr an ihn gerichtetes Schreiben vom 3.d.M. zur Kenntnisnahme und Erledigung.\\n\\nSie beschweren sich darin \u00fcber einen in No. 4 erschienenen Artikel \\\"Aenderungen in der Personenschiffahrt Basel-Rheinfelden\\\" und behaupten, er entspreche nicht den Tatsachen.\\n\\nGem\u00e4ss den bei der Fachpresse herrschenden Usancen sind wir ohne weiteres bereit, Ihre Berichtigung aufzunehmen, wenn sich herausstellt, dass sie berechtigt ist. Wir ersuchen Sie, uns Ihre Berichtigung zustellen zu wollen, damit wir die Angelegenheit pr\u00fcfen k\u00f6nnen. Erst nach vorgenommener Pr\u00fcfung werden wir in der Lage sein, zu entscheiden, ob die unterzeichnete Schriftleitung alsdann \\\"richtigstellen und bedauern wird\\\".\\n\\nHochachtend\\n\\nNow, we need to extract:\\n\\n- letter_title: Title of the letter. There is no explicit title. The letter has \\\"Abschrift.\\\" at top and \\\"5. Mai 1928.\\\" date. No title. So null.\\n\\n- send_date: The date is \\\"5. Mai 1928.\\\" So format: 1928-05-05.\\n\\n- sender_persons: The sender is the Schriftleitung (editorial office) of the journal \\\"Die Rheinquellen\\\". But there is no name. The letter mentions \\\"Herr Direktor W. Stauffenegger, Pr\u00e4sident unseres Vereins\\\" but he is the one who forwarded the letter to the editor. The actual sender is \\\"die unterzeichnete Schriftleitung\\\" (the undersigned editorial board). However, the signature is not visible in the image? Actually, at the bottom it says \\\"Hochachtend\\\" and then the image cuts off. There is no signature. So the sender is not explicitly named. The letter is from the Schriftleitung of \\\"Die Rheinquellen\\\". But the instruction says: \\\"sender_persons: Name(s) of the person(s) who wrote the letter.\\\" Since no name is given, we should use \\\"null\\\". But maybe we can infer? No, the instruction says \\\"If a piece of information is not included in the letter, set the value for the corresponding key to 'null'.\\\" So since no name, null.\\n\\n- receiver_persons: The letter is addressed \\\"An die Basler Rheinschiffahrts-A.G., B A S E L.\\\" So receiver is the company \\\"Basler Rheinschiffahrts-A.G.\\\" That is a person? It is an organization. The instruction says \\\"Name(s) of the person(s) who received the letter.\\\" But it could be an organization. We should list the organization name as the receiver. Possibly also \\\"Herr Direktor W. Stauffenegger\\\" is the president of the association, but he is not the receiver; the letter is addressed to the company. The letter says \\\"An die Basler Rheinschiffahrts-A.G.\\\" So receiver_persons: [\\\"Basler Rheinschiffahrts-A.G.\\\"]\\n\\nNote: The letter also says \\\"Herr Direktor W. Stauffenegger, Pr\u00e4sident unseres Vereins, \u00fcbermittelt mir...\\\" So Stauffenegger is the one who sent the letter to the editor. But the editor is writing to the company. So the receiver is the company.\\n\\nNo letter title, so null.\\n\\nCheck the schema: The output should be a JSON with a \\\"metadata\\\" object containing the keys.\\n\\nThus:\\n\\n{\\n  \\\"metadata\\\": {\\n    \\\"letter_title\\\": null,\\n    \\\"sender_persons\\\": null,\\n    \\\"send_date\\\": [\\\"1928-05-05\\\"],\\n    \\\"receiver_persons\\\": [\\\"Basler Rheinschiffahrts-A.G.\\\"]\\n  }\\n}\\n\\nBut note: the instruction says \\\"values corresponding to each key should be stored as a list\\\". So for null, should it be null or [null]? The schema says anyOf: items type string, type array, or type null. But the instruction: \\\"If a piece of information is not included in the letter, set the value for the corresponding key to 'null'.\\\" So null is allowed. However, the example shows lists for all. To be safe, use null for missing keys? The schema allows null. The instruction says \\\"values corresponding to each key should be stored as a list, even if there is only a single value for a key\\\". That implies that if there is a value, it's in a list. If no value, \\\"null\\\" as per instruction. So we will set to null for missing.\\n\\nFor send_date, it's a list with one string.\\n\\nThus final JSON.\\n\\nAlso, note the letter_title: There is no title. So null.\\n\\nI'll output exactly that.\"}}],\"created\":1788853733,\"model\":\"deepseek-v4-flash-vision-exp\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":\"aa8d6caccae4a22492bb51091cfc8eab\",\"usage\":{\"completion_tokens\":1164,\"prompt_tokens\":1029,\"total_tokens\":2193,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":null,\"reasoning_tokens\":1113,\"rejected_prediction_tokens\":null},\"prompt_tokens_details\":{\"audio_tokens\":null,\"cached_tokens\":384},\"prompt_cache_hit_tokens\":384,\"prompt_cache_miss_tokens\":645}}"
+}

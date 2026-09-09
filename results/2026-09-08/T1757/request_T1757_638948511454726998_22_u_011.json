@@ -1,0 +1,44 @@
+{
+    "text": "{\"company\":{\"transcription\":\"H\u00e4uselmann Carlos\"},\"location\":{\"transcription\":\"CARACAS\"},\"b_id\":{\"transcription\":\"B.51.322.GB.384.\"},\"date\":\"\",\"information\":[{\"transcription\":\"Britische schwarze Liste\\nAmendment 9, 1940.\"},{\"transcription\":\"gestrichen:\"},{\"transcription\":\"Amendment 14, vom 23.Nov.1944.(Venezuela)\"}]}",
+    "model": "deepseek-v4-flash-vision-exp",
+    "provider": "deepseek",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 1069,
+        "output_tokens": 1092,
+        "total_tokens": 2161,
+        "input_cost_usd": 0.00047036,
+        "output_cost_usd": 0.0014414400000000002,
+        "estimated_cost_usd": 0.0019118000000000002
+    },
+    "duration": 11.398370504379272,
+    "timestamp": "2026-09-08T10:08:35.636459",
+    "parsed": {
+        "company": {
+            "transcription": "H\u00e4uselmann Carlos"
+        },
+        "location": {
+            "transcription": "CARACAS"
+        },
+        "b_id": {
+            "transcription": "B.51.322.GB.384."
+        },
+        "date": "",
+        "information": [
+            {
+                "transcription": "Britische schwarze Liste\nAmendment 9, 1940."
+            },
+            {
+                "transcription": "gestrichen:"
+            },
+            {
+                "transcription": "Amendment 14, vom 23.Nov.1944.(Venezuela)"
+            }
+        ]
+    },
+    "conversation_id": "51eb9742-7833-4c23-84ba-bd06e6765ae7",
+    "score": {
+        "fuzzy": 0.890625
+    },
+    "raw_response": "{\"id\":\"4d1b8491-06fd-445e-a097-173422fe0c95\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\n  \\\"company\\\": {\\\"transcription\\\": \\\"H\u00e4uselmann Carlos\\\"},\\n  \\\"location\\\": {\\\"transcription\\\": \\\"CARACAS\\\"},\\n  \\\"b_id\\\": {\\\"transcription\\\": \\\"B.51.322.GB.384.\\\"},\\n  \\\"date\\\": \\\"\\\",\\n  \\\"information\\\": [\\n    {\\\"transcription\\\": \\\"Britische schwarze Liste\\\\nAmendment 9, 1940.\\\"},\\n    {\\\"transcription\\\": \\\"gestrichen:\\\"},\\n    {\\\"transcription\\\": \\\"Amendment 14, vom 23.Nov.1944.(Venezuela)\\\"}\\n  ]\\n}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"reasoning_content\":\"We need to extract information from the image. The image shows an index card with text.\\n\\nTop-left: \\\"H\u00e4uselmann Carlos, CARACAS\\\" - This is the company name and location. The company is \\\"H\u00e4uselmann Carlos\\\" and location is \\\"CARACAS\\\".\\n\\nTop-right: \\\"B.51.322.GB.384.\\\" - This is the b_id.\\n\\nThere is a stamped date? The text \\\"Amendment 14, vom 23.Nov.1944.(Venezuela)\\\" has a date. But is that a stamped date? The instruction says \\\"Any stamped dates on the card\\\". The date appears in the body text, not necessarily stamped. The image shows no obvious stamp. We'll check: there is no separate date stamp like a postmark. So date should be empty string unless we consider the date in the text. But it says \\\"stamped dates\\\", so probably none.\\n\\nThe main body text: \\n\\\"Britische schwarze Liste\\nAmendment 9, 1940.\\n\\ngestrichen:\\nAmendment 14, vom 23.Nov.1944.(Venezuela)\\\"\\n\\nSo information should be a list of text blocks. There are three distinct blocks: \\n1. \\\"Britische schwarze Liste\\\\nAmendment 9, 1940.\\\"\\n2. \\\"gestrichen:\\\"\\n3. \\\"Amendment 14, vom 23.Nov.1944.(Venezuela)\\\"\\n\\nBut note the spacing: there is a blank line between the first block and \\\"gestrichen:\\\"? Actually, the text is:\\nLine 1: \\\"Britische schwarze Liste\\\"\\nLine 2: \\\"Amendment 9, 1940.\\\"\\nThen a space (blank line)\\nLine 3: \\\"gestrichen:\\\"\\nThen a space (blank line)\\nLine 4: \\\"Amendment 14, vom 23.Nov.1944.(Venezuela)\\\"\\n\\nSo we can make each line a separate block? But the instruction says \\\"a list of text blocks from the main body of the card. Each block should be a separate string in the list. Maintain line breaks with \\\\\\\\n.\\\" It suggests that if there are multiple blocks (like paragraphs), we separate them. Here we have three logical blocks: one about the list and amendment 9, then \\\"gestrichen:\\\", then the amendment 14 line. Possibly the first two lines are one block. But they are on separate lines without blank line? Actually, there is a blank line between \\\"Amendment 9, 1940.\\\" and \\\"gestrichen:\\\". So we can treat the first two lines as one block with \\\\n. Then \\\"gestrichen:\\\" as a separate block. Then the last line as a separate block.\\n\\nBut also, look at the image: there is a horizontal line separating the top section? The card has a table-like structure. The top row has the company and b_id. Below that, there's a horizontal line, and then the main body text. So the body text starts with \\\"Britische schwarze Liste\\\". So we'll include all that.\\n\\nWe need to output JSON with this structure:\\n{\\n  \\\"company\\\": {\\\"transcription\\\": \\\"H\u00e4uselmann Carlos\\\"},\\n  \\\"location\\\": {\\\"transcription\\\": \\\"CARACAS\\\"},\\n  \\\"b_id\\\": {\\\"transcription\\\": \\\"B.51.322.GB.384.\\\"},\\n  \\\"date\\\": \\\"\\\",\\n  \\\"information\\\": [\\n    {\\\"transcription\\\": \\\"Britische schwarze Liste\\\\nAmendment 9, 1940.\\\"},\\n    {\\\"transcription\\\": \\\"gestrichen:\\\"},\\n    {\\\"transcription\\\": \\\"Amendment 14, vom 23.Nov.1944.(Venezuela)\\\"}\\n  ]\\n}\\n\\nCheck the exact text: The company name is \\\"H\u00e4uselmann Carlos\\\" with umlaut on the 'a'. In the image, it's \\\"H\u00e4uselmann Carlos\\\". So we use that.\\n\\nNote: The b_id has a period at the end: \\\"B.51.322.GB.384.\\\" We should include that.\\n\\nDate: If we consider the date in the text, it's \\\"1944-11-23\\\" but that is not a stamped date. So leave empty.\\n\\nThe \\\"information\\\" array: We need to make sure we capture the line breaks. The instruction says \\\"Maintain line breaks with \\\\\\\\n.\\\" So within a block, if there are multiple lines, we use \\\\n. But in our case, the first block has two lines, so we join with \\\\n.\\n\\nWe also need to ensure the JSON is exactly as required. The schema provided uses $defs, but we just output the object.\\n\\nLet's construct the JSON.\"}}],\"created\":1788854905,\"model\":\"deepseek-v4-flash-vision-exp\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":\"aa8d6caccae4a22492bb51091cfc8eab\",\"usage\":{\"completion_tokens\":1092,\"prompt_tokens\":1069,\"total_tokens\":2161,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":null,\"reasoning_tokens\":970,\"rejected_prediction_tokens\":null},\"prompt_tokens_details\":{\"audio_tokens\":null,\"cached_tokens\":0},\"prompt_cache_hit_tokens\":0,\"prompt_cache_miss_tokens\":1069}}"
+}

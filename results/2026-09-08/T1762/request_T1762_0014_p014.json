@@ -1,0 +1,80 @@
+{
+    "text": "{\"advertisements\":[{\"box\":[200.0,140.0,2270.0,1690.0]},{\"box\":[220.0,1750.0,1200.0,1900.0]},{\"box\":[1250.0,1750.0,2270.0,1900.0]},{\"box\":[220.0,1950.0,1200.0,2200.0]},{\"box\":[1250.0,1950.0,2270.0,2200.0]},{\"box\":[180.0,2240.0,2300.0,2970.0]}]}",
+    "model": "deepseek-v4-flash-vision-exp",
+    "provider": "deepseek",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 694,
+        "output_tokens": 2013,
+        "total_tokens": 2707,
+        "input_cost_usd": 0.00030535999999999996,
+        "output_cost_usd": 0.00265716,
+        "estimated_cost_usd": 0.0029625199999999997
+    },
+    "duration": 18.575761556625366,
+    "timestamp": "2026-09-08T10:26:31.672552",
+    "parsed": {
+        "advertisements": [
+            {
+                "box": [
+                    200,
+                    140,
+                    2270,
+                    1690
+                ]
+            },
+            {
+                "box": [
+                    220,
+                    1750,
+                    1200,
+                    1900
+                ]
+            },
+            {
+                "box": [
+                    1250,
+                    1750,
+                    2270,
+                    1900
+                ]
+            },
+            {
+                "box": [
+                    220,
+                    1950,
+                    1200,
+                    2200
+                ]
+            },
+            {
+                "box": [
+                    1250,
+                    1950,
+                    2270,
+                    2200
+                ]
+            },
+            {
+                "box": [
+                    180,
+                    2240,
+                    2300,
+                    2970
+                ]
+            }
+        ]
+    },
+    "conversation_id": "a5674e6c-a806-40d1-93a8-3c5ef9b8ad97",
+    "score": {
+        "f1": 0.182,
+        "precision": 0.167,
+        "recall": 0.2,
+        "mean_iou": 0.788,
+        "true_positives": 1,
+        "false_positives": 5,
+        "false_negatives": 4,
+        "iou_threshold": 0.5
+    },
+    "raw_response": "{\"id\":\"cffd4a88-26d8-43b5-921a-4ffc0eee074f\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\\"advertisements\\\":[{\\\"box\\\":[200,140,2270,1690]},{\\\"box\\\":[220,1750,1200,1900]},{\\\"box\\\":[1250,1750,2270,1900]},{\\\"box\\\":[220,1950,1200,2200]},{\\\"box\\\":[1250,1950,2270,2200]},{\\\"box\\\":[180,2240,2300,2970]}]}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"reasoning_content\":\"We need to extract all advertisements from the page. The page is a magazine page from \\\"The Commercial Gazette\\\" dated January 1925. The size is 2479 x 3508 pixels.\\n\\nWe need to identify regions that are advertisements. Typically, ads have borders or distinct layouts.\\n\\nFrom the image, there are multiple distinct ad blocks:\\n\\n1. Top large ad: \\\"J.R. GEIGY, Soc. An.\\\" with details. It occupies a large portion of the top half. It has a double border. Coordinates: approximately x0=210, y0=140, x1=2270, y1=1690? Let's estimate more precisely. The page is 2479 wide, 3508 tall. The top ad starts around y=140 and ends around y=1690. Left margin around x=210, right around x=2270.\\n\\n2. Below that, there are two smaller ads side by side:\\n\\n   - Left: \\\"BUSINESS MEN!\\\" with \\\"The Premier Rendezvous of business men\\\" - located in a box. Coordinates: roughly x0=220, y0=1750, x1=1200, y1=1900.\\n\\n   - Right: \\\"WHEN IN BASEL LUNCH AT THE TERRASSE-RESTAURANT KUNSTHALLE\\\" - also in a box. Coordinates: roughly x0=1250, y0=1750, x1=2270, y1=1900.\\n\\n3. Next row: two more smaller ads:\\n\\n   - Left: \\\"Emil Birkh\u00e4user & Co., Basle\\\" with \\\"All kinds of High-class Printing for Commercial and Industrial Purposes Printers Publishers\\\" \u2013 box. Coordinates: roughly x0=220, y0=1950, x1=1200, y1=2200.\\n\\n   - Right: \\\"ASK FOR THE TRADE INDEX OF THE BRITISH CHAMBER OF COMMERCE FOR SWITZERLAND\\\" \u2013 box. Coordinates: roughly x0=1250, y0=1950, x1=2270, y1=2200.\\n\\n4. Bottom large ad: \\\"THE BRITISH CHAMBER OF COMMERCE FOR SWITZERLAND\\\" with a list of services. This has a decorative border. Coordinates: roughly x0=180, y0=2250, x1=2300, y1=2950? Actually, it seems to extend to maybe y=3000. Let's check the image: the bottom ad starts after the two smaller ones, around y=2250 and ends around y=2950.\\n\\nWe need to return bounding boxes as [x0, y0, x1, y1] in pixels.\\n\\nLet's refine the coordinates. The image is 2479 x 3508. The top ad is large: it spans from left margin to right margin. The left margin is about 200 pixels. The right margin is about 2270. So x0=200, x1=2270? Actually, the ad has a border that is a bit inside. From the image, the outer border starts at around x=215 and ends at x=2270. The top y=140 and bottom y=1690.\\n\\nFor the middle two ads, they are in a row. Let's estimate: left box starts at x=220, right side of left box is at x=1200, then right box starts at x=1250 and ends at x=2270. y from 1750 to 1900.\\n\\nNext row: left box similar x=220 to 1200, right box x=1250 to 2270, y from 1950 to 2200.\\n\\nBottom ad: it is centered, with a decorative border. x0=170, y0=2250, x1=2300, y1=2950. Actually, looking at the bottom ad, it has a wide border, so maybe x0=180, x1=2300, y0=2240, y1=2970.\\n\\nWe need to output all advertisements. Are there any other advertisements? The header at top? No, that's the magazine title. The bottom ad is definitely an ad. The others are ads. So in total, we have 5 ads? Actually, the two smaller ones in the middle row are two separate ads? Yes, they are separate. So 1 large top, 2 in second row, 2 in third row, 1 bottom = 6? Wait: second row: left \\\"Business Men\\\", right \\\"When in Basel\\\" - yes two. Third row: left \\\"Emil Birkh\u00e4user\\\", right \\\"Ask for Trade Index\\\" - two. Bottom: one. Top: one. So total 6.\\n\\nBut wait, the top ad is one. So total 6 advertisements.\\n\\nWe need to list them in some order. The schema expects a list of Advertisement objects, each with a box.\\n\\nLet's write JSON.\\n\\nWe need to be precise. Since we don't have exact pixel values, we'll estimate based on visual inspection. The original image is 2479 x 3508, so we can use these proportions.\\n\\nLet's create approximate bounding boxes:\\n\\n1. Top ad: [200, 140, 2270, 1700] but let's refine: the top ad actually has a double border, and the text is inside. The outer border is from x=215 to x=2265, y=140 to y=1690. So box: [215, 140, 2265, 1690]\\n\\n2. Business Men ad: [220, 1750, 1200, 1900] but wait, the box might be a bit wider. From the image, left ad starts at x=220 and ends at x=1200. The top is at y=1750 and bottom at y=1900. So [220, 1750, 1200, 1900]\\n\\n3. When in Basel ad: [1250, 1750, 2270, 1900] but let's check: the right box starts at x=1250 and ends at x=2270. So [1250, 1750, 2270, 1900]\\n\\n4. Emil Birkh\u00e4user ad: [220, 1950, 1200, 2200] Actually the box is from y=1950 to y=2200. So [220, 1950, 1200, 2200]\\n\\n5. Ask for Trade Index ad: [1250, 1950, 2270, 2200]\\n\\n6. Bottom ad: [180, 2240, 2300, 2970] but the bottom ad has a border with a pattern. The top border is at y=2240, bottom at y=2970. Left border at x=180, right at x=2300. So [180, 2240, 2300, 2970]\\n\\nHowever, these are estimates. We need to output exactly as required.\\n\\nWe should also note that the page itself has a black border on the left and right? No, the page is scanned with some black edges? But we only need ads.\\n\\nMake sure to output JSON.\\n\\nLet's structure:\\n\\n{\\n  \\\"advertisements\\\": [\\n    {\\\"box\\\": [215, 140, 2265, 1690]},\\n    {\\\"box\\\": [220, 1750, 1200, 1900]},\\n    {\\\"box\\\": [1250, 1750, 2270, 1900]},\\n    {\\\"box\\\": [220, 1950, 1200, 2200]},\\n    {\\\"box\\\": [1250, 1950, 2270, 2200]},\\n    {\\\"box\\\": [180, 2240, 2300, 2970]}\\n  ]\\n}\\n\\nBut we should double-check the bottom ad: The text \\\"THE BRITISH CHAMBER OF COMMERCE FOR SWITZERLAND\\\" is within the box, and the box has a decorative border. The y-coordinate starts at about 2250 and ends at 2950. The x-coordinates: left margin around 180, right around 2300. So it's fine.\\n\\nAlso, the top ad might have different x: actually, the ad has a border that is a bit smaller than the page margins. The page has margins of about 200 pixels on each side. So x0=200, x1=2270? Actually, the border might start at x=200 and end at x=2270. The text \\\"J.R. GEIGY\\\" is centered. Let's use x0=200, x1=2270.\\n\\nSimilarly, the y range: the top ad starts at y=140 and ends at y=1690. That seems reasonable.\\n\\nWe can slightly adjust to make the boxes fit perfectly. Since we don't have exact pixel values, we can use approximate values.\\n\\nWe should also consider if the page header is an advertisement? No, it's a title.\\n\\nSo final answer.\\n\\nI'll output JSON.\"}}],\"created\":1788855974,\"model\":\"deepseek-v4-flash-vision-exp\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":\"aa8d6caccae4a22492bb51091cfc8eab\",\"usage\":{\"completion_tokens\":2013,\"prompt_tokens\":694,\"total_tokens\":2707,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":null,\"reasoning_tokens\":1921,\"rejected_prediction_tokens\":null},\"prompt_tokens_details\":{\"audio_tokens\":null,\"cached_tokens\":0},\"prompt_cache_hit_tokens\":0,\"prompt_cache_miss_tokens\":694}}"
+}

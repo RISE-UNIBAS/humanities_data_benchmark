@@ -1,0 +1,56 @@
+{
+    "text": "{\"advertisements\":[{\"box\":[150.0,100.0,2330.0,1500.0]},{\"box\":[150.0,1700.0,1200.0,3000.0]},{\"box\":[1300.0,1700.0,2330.0,3000.0]}]}",
+    "model": "deepseek-v4-flash-vision-exp",
+    "provider": "deepseek",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 694,
+        "output_tokens": 1074,
+        "total_tokens": 1768,
+        "input_cost_usd": 0.00030535999999999996,
+        "output_cost_usd": 0.0014176800000000002,
+        "estimated_cost_usd": 0.0017230400000000001
+    },
+    "duration": 10.966265439987183,
+    "timestamp": "2026-09-08T10:26:35.324123",
+    "parsed": {
+        "advertisements": [
+            {
+                "box": [
+                    150,
+                    100,
+                    2330,
+                    1500
+                ]
+            },
+            {
+                "box": [
+                    150,
+                    1700,
+                    1200,
+                    3000
+                ]
+            },
+            {
+                "box": [
+                    1300,
+                    1700,
+                    2330,
+                    3000
+                ]
+            }
+        ]
+    },
+    "conversation_id": "d3686adb-bbec-4b8e-b77c-ba45528090a8",
+    "score": {
+        "f1": 1.0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "mean_iou": 0.767,
+        "true_positives": 3,
+        "false_positives": 0,
+        "false_negatives": 0,
+        "iou_threshold": 0.5
+    },
+    "raw_response": "{\"id\":\"e26939f6-c8c3-4a2f-bb3d-588b8404dbbf\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\\"advertisements\\\":[{\\\"box\\\":[150,100,2330,1500]},{\\\"box\\\":[150,1700,1200,3000]},{\\\"box\\\":[1300,1700,2330,3000]}]}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"reasoning_content\":\"We need to extract advertisements from the page and return bounding boxes. The image is 2479 x 3508 pixels. We see three distinct advertisements: one large at the top, and two smaller ones at the bottom left and bottom right. We need to output JSON with the boxes.\\n\\nFirst, identify the coordinates. The page has margins. Let's approximate.\\n\\nTop advertisement: It spans from around x=150 to x=2330, y=100 to y=1550? Let's look: the top box has a border. It starts around y=100 and ends around y=1500. Left edge around x=150, right edge around x=2330. So box: [150, 100, 2330, 1500].\\n\\nBottom left advertisement: It is a box with a machine. It starts around x=150, y=1700 to y=3000? Actually, it's in the lower part. Let's estimate: The left box is from x=150 to x=1200, y=1700 to y=3000. But we need precise.\\n\\nBetter to use the image dimensions. The image is 2479x3508. Let's visually map:\\n\\nThe top advertisement: its border is roughly at x=150, y=100, x=2330, y=1500. So box: [150, 100, 2330, 1500].\\n\\nBottom-left advertisement: The box appears to start at x=150, y=1700, and end at x=1200, y=3000. But wait, the bottom left box includes text at the bottom. Actually, the box for the machine is from y=1700 to y=3000? Let's check: The image shows a large box containing a machine and text below. The box outline is visible. Let's assume it goes from y=1700 to y=3000, x=150 to x=1200.\\n\\nBottom-right advertisement: It is from x=1300 to x=2330, y=1700 to y=3000.\\n\\nBut we should be precise. Since we don't have exact pixel values, we need to estimate based on the given image. Alternatively, we can infer from the layout.\\n\\nThe page is scanned. Let's assume the coordinates are in the original image pixel space.\\n\\nWe can use approximate values. The top box is nearly full width. The bottom two are side by side.\\n\\nLet's output the bounding boxes. We'll provide the coordinates [x0, y0, x1, y1].\\n\\nFrom the image, the top advertisement includes the \\\"Goth\\\" logo and text. Its bounding box likely goes from (150, 100) to (2330, 1500).\\n\\nFor the bottom left, it includes the machine and text \\\"High precision and production ...\\\" so the box is around (150, 1700) to (1200, 3000).\\n\\nFor the bottom right, the box includes the E. Borel advertisement, around (1300, 1700) to (2330, 3000).\\n\\nBut note: The three boxes are separate. There might be white space between them.\\n\\nLet's double-check the image. The top box is clearly one advertisement. The bottom left and bottom right are two separate ads.\\n\\nWe'll output the JSON.\\n\\nWe need to ensure the format is exactly as required. The schema expects \\\"advertisements\\\" as an array of objects with \\\"box\\\" as an array of four numbers.\\n\\nSo final answer:\\n\\n{\\n  \\\"advertisements\\\": [\\n    { \\\"box\\\": [150, 100, 2330, 1500] },\\n    { \\\"box\\\": [150, 1700, 1200, 3000] },\\n    { \\\"box\\\": [1300, 1700, 2330, 3000] }\\n  ]\\n}\\n\\nBut we should refine. The original size is 2479x3508. Let's look at the proportions. The top box is about 60% of the height? Actually, 1500 out of 3508 is about 43%. That seems reasonable.\\n\\nMaybe the top box is from y=100 to y=1550? Let's use 1550.\\n\\nSimilarly, bottom boxes start at y=1700 and end at y=3000.\\n\\nI'll use these estimates.\\n\\nTo be more accurate, let's find the actual edges. I'll zoom in mentally.\\n\\nThe top box has a border. The top edge is around 100 pixels from top, bottom edge around 1500. Left edge around 150, right edge around 2330.\\n\\nBottom left box: top edge around 1700, bottom edge around 3000, left edge 150, right edge 1200.\\n\\nBottom right box: top edge 1700, bottom edge 3000, left edge 1300, right edge 2330.\\n\\nSo the JSON is valid.\\n\\nI will output the JSON.\"}}],\"created\":1788855985,\"model\":\"deepseek-v4-flash-vision-exp\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":\"aa8d6caccae4a22492bb51091cfc8eab\",\"usage\":{\"completion_tokens\":1074,\"prompt_tokens\":694,\"total_tokens\":1768,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":null,\"reasoning_tokens\":1025,\"rejected_prediction_tokens\":null},\"prompt_tokens_details\":{\"audio_tokens\":null,\"cached_tokens\":0},\"prompt_cache_hit_tokens\":0,\"prompt_cache_miss_tokens\":694}}"
+}

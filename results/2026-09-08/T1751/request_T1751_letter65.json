@@ -1,0 +1,43 @@
+{
+    "text": "{\"metadata\":{\"send_date\":[\"1935-08-17\"],\"letter_title\":null,\"sender_persons\":null,\"receiver_persons\":[\"Fritz Ritter\"]}}",
+    "model": "deepseek-v4-flash-vision-exp",
+    "provider": "deepseek",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 1029,
+        "output_tokens": 1145,
+        "total_tokens": 2174,
+        "cached_tokens": 384,
+        "input_cost_usd": 0.00045275999999999997,
+        "output_cost_usd": 0.0015114,
+        "estimated_cost_usd": 0.00196416
+    },
+    "duration": 12.24570345878601,
+    "timestamp": "2026-09-08T09:49:41.093667",
+    "parsed": {
+        "metadata": {
+            "send_date": [
+                "1935-08-17"
+            ],
+            "letter_title": null,
+            "sender_persons": null,
+            "receiver_persons": [
+                "Fritz Ritter"
+            ],
+            "document_number": "letter65"
+        }
+    },
+    "conversation_id": "9af17c75-84d3-44d5-8260-1f489fe465da",
+    "score": {
+        "send_date_tp": 1,
+        "send_date_fp": 0,
+        "send_date_fn": 0,
+        "sender_persons_tp": 0,
+        "sender_persons_fp": 0,
+        "sender_persons_fn": 0,
+        "receiver_persons_tp": 1,
+        "receiver_persons_fp": 0,
+        "receiver_persons_fn": 0
+    },
+    "raw_response": "{\"id\":\"433d1802-00fe-4f5c-be92-d99f4e612629\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\n  \\\"metadata\\\": {\\n    \\\"send_date\\\": [\\\"1935-08-17\\\"],\\n    \\\"letter_title\\\": null,\\n    \\\"sender_persons\\\": null,\\n    \\\"receiver_persons\\\": [\\\"Fritz Ritter\\\"]\\n  }\\n}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"reasoning_content\":\"We need to extract from the letter image. Let's read the text.\\n\\nThe letter is from \\\"Basler Personenschiffahrtsgesellschaft\\\" (Basel Passenger Shipping Company). Addressed to \\\"Herrn Fritz Ritter, Basler Rheinschiffahrt A.-G., Basel 19\\\". The date is Basel, den 17. August 1935.\\n\\nSo:\\n- letter_title: The letter doesn't have an explicit title. It's a business letter. The key is \\\"letter_title\\\" and if not included, set to null. But maybe we can infer? The instructions say: \\\"If a piece of information is not included in the letter, set the value for the corresponding key to 'null'.\\\" So for letter_title, there is no title. So set to null.\\n\\n- sender_persons: The sender is the company \\\"Basler Personenschiffahrtsgesellschaft\\\". But does it have a specific person? The letter is signed \\\"Basler Personenschiffahrtsgesellschaft Der Gesch\u00e4ftsf\u00fchrer\\\" (the managing director). No name is given. So sender_persons: we can list the company? But the key says \\\"Name(s) of the person(s) who wrote the letter.\\\" Since no personal name is given, we should probably use the company name? Or null? The instruction says \\\"person(s)\\\". But in many letters, the sender is a company. The example shows persons. I think we should extract the name as it appears. But the instruction says \\\"person(s)\\\" - but we can treat the company as the organizational sender. However, to be precise, if no specific person is named, we might set to null. But the letter is from the company. Let's see the example: they gave \\\"Lisa Simpson\\\" as sender. So they expect names. But here it's a company. I'd argue we should use the company name as the sender? But the key says \\\"sender_persons\\\" - plural? Actually it's \\\"sender_persons\\\" so it's a list of person names. If no person, then null. Let's think.\\n\\nLooking at the text: The letterhead is \\\"BASLER PERSONENSCHIFFAHRTSGESELLSCHAFT\\\". And the signature is \\\"Basler Personenschiffahrtsgesellschaft Der Gesch\u00e4ftsf\u00fchrer\\\". No individual name. So sender_persons could be null because no specific person is named. But the company is the sender. The instruction says: \\\"sender_persons: Name(s) of the person(s) who wrote the letter.\\\" Since no person, set to null. However, if we consider the company as a legal person? But the keys are for persons. I'll go with null to be safe.\\n\\nAlternatively, we can extract \\\"Basler Personenschiffahrtsgesellschaft\\\" as the sender. But the prompt says \\\"person(s)\\\" not organization. The example has person names. In historical letters, companies often write without individual names. I think we should set to null if the specific individual is not indicated. But let's see: the letter is signed by \\\"Der Gesch\u00e4ftsf\u00fchrer\\\" which means \\\"The Managing Director\\\". That is a title, not a name. So no name. So null.\\n\\n- receiver_persons: The letter is addressed to \\\"Herrn Fritz Ritter\\\" at \\\"Basler Rheinschiffahrt A.-G., Basel 19\\\". So receiver person is Fritz Ritter. So receiver_persons: [\\\"Fritz Ritter\\\"].\\n\\n- send_date: The date is \\\"Basel, den 17. August 1935.\\\" So date is 1935-08-17.\\n\\n- letter_title: There is no title. So null.\\n\\nThus the JSON should be:\\n{\\n  \\\"letter_title\\\": null,\\n  \\\"send_date\\\": [\\\"1935-08-17\\\"],\\n  \\\"sender_persons\\\": null,\\n  \\\"receiver_persons\\\": [\\\"Fritz Ritter\\\"]\\n}\\n\\nBut wait: The schema requires that each value is a list or null. The instructions say: \\\"values corresponding to each key should be stored as a list, even if there is only a single value for a key\\\". So for send_date we have a single date, so list with one element. For receiver_persons, list with one element. For letter_title and sender_persons, if not included, set to null. So they are null, not lists.\\n\\nSo the metadata object should be:\\n{\\n    \\\"send_date\\\": [\\\"1935-08-17\\\"],\\n    \\\"letter_title\\\": null,\\n    \\\"sender_persons\\\": null,\\n    \\\"receiver_persons\\\": [\\\"Fritz Ritter\\\"]\\n}\\n\\nThen wrap in metadata. The output should be a JSON object with a \\\"metadata\\\" key.\\n\\nBut the instruction says \\\"Return them in a JSON file where the values corresponding to each key should be stored as a list, even if there is only a single value for a key\\\". So for null it's not a list but null. That's fine.\\n\\nDouble-check: Is there any title? The letter has no title. It's just a business letter. So null.\\n\\nAlso note the date format: ISO YYYY-MM-DD. 1935-08-17.\\n\\nI think that's correct.\\n\\nLet's produce the output.\"}}],\"created\":1788853769,\"model\":\"deepseek-v4-flash-vision-exp\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":\"aa8d6caccae4a22492bb51091cfc8eab\",\"usage\":{\"completion_tokens\":1145,\"prompt_tokens\":1029,\"total_tokens\":2174,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":null,\"reasoning_tokens\":1093,\"rejected_prediction_tokens\":null},\"prompt_tokens_details\":{\"audio_tokens\":null,\"cached_tokens\":384},\"prompt_cache_hit_tokens\":384,\"prompt_cache_miss_tokens\":645}}"
+}

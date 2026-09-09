@@ -1,0 +1,43 @@
+{
+    "text": "{\"metadata\":{\"send_date\":[\"1929-05-27\"],\"letter_title\":null,\"sender_persons\":null,\"receiver_persons\":[\"F. Lutzelschwab\"]}}",
+    "model": "deepseek-v4-flash-vision-exp",
+    "provider": "deepseek",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 1385,
+        "output_tokens": 951,
+        "total_tokens": 2336,
+        "cached_tokens": 1280,
+        "input_cost_usd": 0.0006094,
+        "output_cost_usd": 0.00125532,
+        "estimated_cost_usd": 0.00186472
+    },
+    "duration": 11.494962215423584,
+    "timestamp": "2026-09-08T09:50:54.315618",
+    "parsed": {
+        "metadata": {
+            "send_date": [
+                "1929-05-27"
+            ],
+            "letter_title": null,
+            "sender_persons": null,
+            "receiver_persons": [
+                "F. Lutzelschwab"
+            ],
+            "document_number": "letter46"
+        }
+    },
+    "conversation_id": "a52fbf40-4a0c-4dce-8171-cab9236ae9cd",
+    "score": {
+        "send_date_tp": 1,
+        "send_date_fp": 0,
+        "send_date_fn": 0,
+        "sender_persons_tp": 0,
+        "sender_persons_fp": 0,
+        "sender_persons_fn": 1,
+        "receiver_persons_tp": 0,
+        "receiver_persons_fp": 1,
+        "receiver_persons_fn": 1
+    },
+    "raw_response": "{\"id\":\"2d8c0385-f20e-421b-b62a-dbac8601be9e\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\\"metadata\\\": {\\\"send_date\\\": [\\\"1929-05-27\\\"], \\\"letter_title\\\": null, \\\"sender_persons\\\": null, \\\"receiver_persons\\\": [\\\"F. Lutzelschwab\\\"]}}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"reasoning_content\":\"We need to extract information from the letter. The letter is in German, dated Basel, 27. Mai 1929. The sender is likely the \\\"Basler Personenschiffahrtgesellschaft\\\" (from the second page, \\\"Basler Personenschiffahrt A.G.\\\"). The receiver is \\\"Herrn F. Lutzelschwab, z. Adler, Kaiseraugst\\\". The letter title? It doesn't have a specific title, so we set null. The send_date is 1929-05-27. Sender persons: from the signature \\\"Basler Personenschiffahrt\\\" but without a specific name. Actually, the letter is from the company. But we need names of persons. The sender is an entity, but maybe we can put \\\"Basler Personenschiffahrt A.G.\\\" as the sender. However, the instruction says \\\"Name(s) of the person(s) who wrote the letter.\\\" It might be a company. Since no specific person's name is given, possibly null? But the letterhead says \\\"Basler Personenschiffahrt A.G.\\\" So we can put that as the sender. However, the schema expects strings. We'll put the company name.\\n\\nThe receiver is \\\"Herrn F. Lutzelschwab\\\" so that is a person.\\n\\nThe letter_title: no explicit title. So null.\\n\\nSend_date: from \\\"Basel, den 27. Mai 1929\\\" so it's 1929-05-27.\\n\\nWe must output JSON with metadata keys.\\n\\nSo:\\n\\n{\\n  \\\"metadata\\\": {\\n    \\\"send_date\\\": [\\\"1929-05-27\\\"],\\n    \\\"letter_title\\\": null,\\n    \\\"sender_persons\\\": [\\\"Basler Personenschiffahrt A.G.\\\"],\\n    \\\"receiver_persons\\\": [\\\"F. Lutzelschwab\\\"]\\n  }\\n}\\n\\nBut wait: the sender is a company, but the instruction says persons. Could it be the person who signed? The signature is \\\"Der Pr\u00e4sident:\\\" but no name. So we only have the company. Possibly we should set null for sender because no person's name? But the letter is from the company. The instruction says \\\"sender_persons: Name(s) of the person(s) who wrote the letter.\\\" It might be a person. But in this case, it's an organization. I think it's acceptable to use the organization name. However, to strictly follow \\\"person(s)\\\", we might set null. But then we lose information. Let's check the example: they use \\\"Lisa Simpson\\\" as a person. For company, maybe not. I'll consider the sender as \\\"Basler Personenschiffahrt A.G.\\\" as it represents the entity. Alternatively, we could extract \\\"Der Pr\u00e4sident\\\" but no name.\\n\\nLooking at the letter: at the top right, it says \\\"Basel, den 27. Mai 1929.\\\" The address: \\\"Herrn F. Lutzelschwab, z. Adler, Kaiseraugst.\\\" So the receiver is clearly that person. The sender is the company, and the letter is signed \\\"Hochachtungsvoll: Basler Personenschiffahrt A.G. Der Pr\u00e4sident:\\\" but no name. So the sender person is unknown. The instruction says: if not included, set to null. So sender_persons should be null? But the company is included. However, they are not a person. So strictly, we should put null. But maybe we can put the company as sender? The key is \\\"sender_persons\\\", not \\\"sender_entities\\\". I'm leaning to null.\\n\\nAlso, the letter might have a title? No.\\n\\nAlternatively, we can set the title to something like \\\"Correspondence\\\" but that's not in the letter. So null.\\n\\nI'll go with:\\n\\n{\\n  \\\"metadata\\\": {\\n    \\\"send_date\\\": [\\\"1929-05-27\\\"],\\n    \\\"letter_title\\\": null,\\n    \\\"sender_persons\\\": null,\\n    \\\"receiver_persons\\\": [\\\"F. Lutzelschwab\\\"]\\n  }\\n}\\n\\nBut wait: the receiver is given as \\\"Herrn F. Lutzelschwab\\\" with title \\\"Herrn\\\" which is Mr. So we can extract \\\"F. Lutzelschwab\\\". That's a person.\\n\\nI'll output that.\"}}],\"created\":1788853844,\"model\":\"deepseek-v4-flash-vision-exp\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":\"aa8d6caccae4a22492bb51091cfc8eab\",\"usage\":{\"completion_tokens\":951,\"prompt_tokens\":1385,\"total_tokens\":2336,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":null,\"reasoning_tokens\":903,\"rejected_prediction_tokens\":null},\"prompt_tokens_details\":{\"audio_tokens\":null,\"cached_tokens\":1280},\"prompt_cache_hit_tokens\":1280,\"prompt_cache_miss_tokens\":105}}"
+}

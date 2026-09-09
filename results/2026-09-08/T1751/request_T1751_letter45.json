@@ -1,0 +1,43 @@
+{
+    "text": "{\"metadata\":{\"send_date\":[\"1928-09-28\"],\"letter_title\":null,\"sender_persons\":null,\"receiver_persons\":[\"Dr. Max Vischer\"]}}",
+    "model": "deepseek-v4-flash-vision-exp",
+    "provider": "deepseek",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 1029,
+        "output_tokens": 1332,
+        "total_tokens": 2361,
+        "cached_tokens": 384,
+        "input_cost_usd": 0.00045275999999999997,
+        "output_cost_usd": 0.00175824,
+        "estimated_cost_usd": 0.0022110000000000003
+    },
+    "duration": 14.319718837738037,
+    "timestamp": "2026-09-08T09:49:16.383571",
+    "parsed": {
+        "metadata": {
+            "send_date": [
+                "1928-09-28"
+            ],
+            "letter_title": null,
+            "sender_persons": null,
+            "receiver_persons": [
+                "Dr. Max Vischer"
+            ],
+            "document_number": "letter45"
+        }
+    },
+    "conversation_id": "a4bbb38a-2873-4ec5-b092-c659490178ca",
+    "score": {
+        "send_date_tp": 1,
+        "send_date_fp": 0,
+        "send_date_fn": 0,
+        "sender_persons_tp": 0,
+        "sender_persons_fp": 0,
+        "sender_persons_fn": 1,
+        "receiver_persons_tp": 1,
+        "receiver_persons_fp": 0,
+        "receiver_persons_fn": 0
+    },
+    "raw_response": "{\"id\":\"8a4f18e0-494b-422e-9d6a-50ec5460b169\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\\"metadata\\\": {\\\"send_date\\\": [\\\"1928-09-28\\\"], \\\"letter_title\\\": null, \\\"sender_persons\\\": null, \\\"receiver_persons\\\": [\\\"Dr. Max Vischer\\\"]}}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"reasoning_content\":\"We need to extract from the letter image. The letter is from \\\"Verein f\u00fcr die Schifffahrt auf dem Oberrhein\\\" (Association for Navigation on the Upper Rhine). It is dated \\\"Basel, den 28. Sept. 1928\\\" at top right. So date: 1928-09-28. The receiver is \\\"Herrn Dr. Max Vischer, Advokat & Notar, Basel\\\". The sender is the association, but the letter is signed by someone. The letterhead has the association's name, and at the bottom it says \\\"Verein f\u00fcr die Schifffahrt auf dem Oberrhein-BASEL\\\" and a handwritten signature. The signature appears to be \\\"Jean Drey\\\" or something? Actually it's hard to read, but we need sender persons. The letter is from the association, but typically the sender is the person who signs. However, the instruction says \\\"sender_persons: Name(s) of the person(s) who wrote the letter.\\\" In many cases, if the letter is from an organization, we list the organization? But the schema expects names. The example uses \\\"Lisa Simpson\\\" as a person. So we should extract the name of the person who signed. But the signature is handwritten and not clear. Let's look at the bottom right: There is a signature that looks like \\\"Jean Drey\\\"? Actually, I see \\\"Jean Drey\\\" or \\\"Jean Dry\\\"? The letterhead includes the name \\\"Jean Drey\\\" as the president? On the left side, under the flag, there is a list: \\\"Standiges Sekretariat, Basel, Blumenrain 26, Telephon: 4. 66. 61, Postcheckkonto V 854, Telegram-Adresse: SCHIFFAHRT BASEL\\\" and then \\\"Verlag der Zeitschrift 'Die Rheinquellen'\\\", \\\"Schweizerisches Wasserwirtschaftsarchiv\\\", etc. There is no explicit sender name. The letter is signed by someone, but the name is illegible. However, the printed text at the bottom says \\\"Verein f\u00fcr die Schifffahrt auf dem Oberrhein-BASEL\\\" which is the organization. Since the sender is an organization, we might put the organization's name? But the key is \\\"sender_persons\\\" meaning persons. In this case, it might be \\\"null\\\" because no person is explicitly named. But we have the handwritten signature. It might be the signatory. Let's try to read it: It looks like \\\"Jean Drey\\\" but with a flourish. I'll check if there is any known person. Alternatively, the letter is from the association, so the sender could be the association. However, the instruction says \\\"Name(s) of the person(s) who wrote the letter.\\\" So if it's from an organization, we might list the organization as a sender, but the key is \\\"sender_persons\\\" so perhaps we should list the person who signed. But the signature is not clearly legible. In the interest of accuracy, we could leave it as null. But let's examine the image carefully. The letterhead has the organization name, and the signature is below. The signature might be \\\"Jean Drey\\\" but I'm not sure. Another thought: The letter is from the \\\"Verein f\u00fcr die Schifffahrt auf dem Oberrhein\\\" and the signature is probably the president or secretary. Without OCR, we cannot extract the exact name. The instructions say \\\"Do not use OCR.\\\" So we rely on our visual interpretation. The signature is quite elaborate. At the bottom, there is a handwritten signature. It looks like \\\"Jean Drey\\\" or \\\"Jean Dry\\\". But I'm not confident. To be safe, we could set sender_persons to null. However, the letterhead explicitly says the association, but that is not a person. The receiver is clearly \\\"Herrn Dr. Max Vischer\\\" so receiver_persons: [\\\"Dr. Max Vischer\\\"] (or just \\\"Max Vischer\\\"? The letter says \\\"Herrn Dr. Max Vischer, Advokat & Notar, Basel.\\\" So we can list him as \\\"Dr. Max Vischer\\\" or \\\"Max Vischer\\\". Usually we keep the title? The example didn't include titles. So probably \\\"Max Vischer\\\" is fine. But the instruction says \\\"Name(s) of the person(s) who received the letter.\\\" So we can include the full name as it appears: \\\"Dr. Max Vischer\\\". The letter_title: There is no explicit title. The letter is just a letter. So letter_title should be null. But wait, the content mentions \\\"Personenschiffahrtgesellschaft\\\" and it's about returning documents. There is no title given. So null.\\n\\nSo our JSON should be:\\n\\n{\\n    \\\"metadata\\\": {\\n        \\\"send_date\\\": [\\\"1928-09-28\\\"],\\n        \\\"letter_title\\\": null,\\n        \\\"sender_persons\\\": null,\\n        \\\"receiver_persons\\\": [\\\"Dr. Max Vischer\\\"]\\n    }\\n}\\n\\nBut wait, the sender might be the association, but we are asked for persons. The instruction says \\\"sender_persons: Name(s) of the person(s) who wrote the letter.\\\" If it's a letter from an organization, there might be a person signing. Since we cannot read the signature, we set null. Alternatively, we could consider the president? But not given. So null is safe.\\n\\nLet's double-check: The date is \\\"Basel, den 28. Sept. 1928.\\\" So we convert to 1928-09-28.\\n\\nThe receiver: \\\"Herrn Dr. Max Vischer, Advokat & Notar, Basel.\\\" So receiver_persons: [\\\"Dr. Max Vischer\\\"].\\n\\nThe letter_title: There is no title. So null.\\n\\nThus output.\\n\\nBut wait, the instructions say: \\\"If a piece of information is not included in the letter, set the value for the corresponding key to 'null'.\\\" So we do that.\\n\\nAlso, the schema requires the output to be a JSON object with a \\\"metadata\\\" key. So we wrap it.\\n\\nFinal answer.\"}}],\"created\":1788853743,\"model\":\"deepseek-v4-flash-vision-exp\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":\"aa8d6caccae4a22492bb51091cfc8eab\",\"usage\":{\"completion_tokens\":1332,\"prompt_tokens\":1029,\"total_tokens\":2361,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":null,\"reasoning_tokens\":1287,\"rejected_prediction_tokens\":null},\"prompt_tokens_details\":{\"audio_tokens\":null,\"cached_tokens\":384},\"prompt_cache_hit_tokens\":384,\"prompt_cache_miss_tokens\":645}}"
+}

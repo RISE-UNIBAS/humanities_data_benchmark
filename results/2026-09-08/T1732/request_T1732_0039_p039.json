@@ -1,0 +1,57 @@
+{
+    "text": "{\"advertisements\":[{\"box\":[58.0,85.0,891.0,275.0]},{\"box\":[500.0,275.0,898.0,478.0]},{\"box\":[506.0,509.0,901.0,912.0]}]}",
+    "model": "qwen/qwen3.8-flash",
+    "provider": "openrouter",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 2834,
+        "output_tokens": 1248,
+        "total_tokens": 4082,
+        "cached_tokens": 256,
+        "input_cost_usd": 0.00042510000000000003,
+        "output_cost_usd": 0.00058656,
+        "estimated_cost_usd": 0.00101166
+    },
+    "duration": 16.487342596054077,
+    "timestamp": "2026-09-08T12:21:48.900269",
+    "parsed": {
+        "advertisements": [
+            {
+                "box": [
+                    58.0,
+                    85.0,
+                    891.0,
+                    275.0
+                ]
+            },
+            {
+                "box": [
+                    500.0,
+                    275.0,
+                    898.0,
+                    478.0
+                ]
+            },
+            {
+                "box": [
+                    506.0,
+                    509.0,
+                    901.0,
+                    912.0
+                ]
+            }
+        ]
+    },
+    "conversation_id": "e288394d-b38e-4d94-9e3b-07be0c267289",
+    "score": {
+        "f1": 0.0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "mean_iou": 0.0,
+        "true_positives": 0,
+        "false_positives": 3,
+        "false_negatives": 4,
+        "iou_threshold": 0.5
+    },
+    "raw_response": "{\"id\":\"gen-1788862893-qDsdBDTFlbKfR98gMAgw\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\\"advertisements\\\": [{\\\"box\\\": [58, 85, 891, 275]}, {\\\"box\\\": [500, 275, 898, 478]}, {\\\"box\\\": [506, 509, 901, 912]}]}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"advertisements\":[{\"box\":[58.0,85.0,891.0,275.0]},{\"box\":[500.0,275.0,898.0,478.0]},{\"box\":[506.0,509.0,901.0,912.0]}]},\"reasoning\":\"The user wants me to extract all advertisements from this magazine page and return their bounding boxes. Let me analyze the page carefully.\\n\\nLooking at the page, I can identify several distinct advertisement blocks:\\n\\n1. At the top, there's a large bordered advertisement for \\\"LA MONDIALE EXPRESS TRANSPORTS S.A.\\\" with the decorative border (the X-pattern border). This spans the full width at the top.\\n\\n2. On the right side, there's a bordered advertisement for \\\"Banque Cantonale Neuch\u00e2teloise\\\" with a rectangular border.\\n\\n3. Below that on the right, there's an advertisement for \\\"CHOCOLATS PETER, CAILLER, KOHLER\\\" with an illustration of a woman.\\n\\nThe left column contains article text (\\\"Tool Steel in Switzerland\\\", \\\"Adelaide wool sales\\\", \\\"International Monument to the Telegraph\\\") which are not advertisements.\\n\\nLet me determine the bounding boxes. The page is 2479 x 3508.\\n\\nFor the top advertisement (LA MONDIALE), the decorative border starts around y=85 and ends around y=275. The x range is roughly from 60 to 890. Let me look at the image coordinates. The image appears scaled. I'll estimate based on the visible layout.\\n\\nLet me think in terms of the actual pixel coordinates of the original 2479x3508. The displayed image is smaller but I should map proportionally. Actually, the bounding boxes should be in the original coordinate space. Let me estimate from the visual.\\n\\nThe top ad border: left edge ~ x=60/1754 * 2479? Hmm, the displayed image width seems to be about 1754 px. Let me just estimate proportionally.\\n\\nLooking at the layout, the top advertisement with the X-border spans almost the full width. Left margin ~ 60px in display, right ~ 890px in display out of ~930 width? This is getting too detailed.\\n\\nLet me use a reasonable coordinate system. The displayed image is 1754 wide and 2480 tall perhaps. The original is 2479x3508, ratio ~1.413.\\n\\nI'll just provide bounding boxes that look proportional in the original space.\\n\\nTop ad: box approximately [120, 290, 1260, 970] in original? Let me think. The header \\\"September, 1921\\\" is at top. The X-border starts below it.\\n\\nHonestly, I'll estimate based on fractions of the page.\\n\\nTop advertisement occupies from about 8% to 27% of height, and 6% to 89% of width.\\nHeight: 0.08*3508=280 to 0.27*3508=947. Width: 0.06*2479=149 to 0.89*2479=2206. Hmm but the border right edge in display ~890/930 = 0.957. Let me reexamine.\\n\\nThe display image width I'll treat as the full page width. The X-border left edge is at about 6% and right edge at about 89%? Looking at the image, the right edge of the top border is near the page right margin, maybe 89%. The left edge near 6%.\\n\\nLet me look at the \\\"Banque Cantonale\\\" box: it's on the right half, from about x=50% to x=89%, y=28% to y=48%.\\n\\nThe \\\"CHOCOLATS\\\" box: x=50% to x=89%, y=51% to y=91%.\\n\\nI'll convert to pixels.\\n\\nTop ad: x0=150, y0=290, x1=2200, y1=960.\\nBanque: x0=1230, y0=980, x1=2200, y1=1680.\\nChocolats: x0=1230, y0=1780, x1=2200, y1=3180.\\n\\nHmm the Chocolats bottom includes \\\"PETER, CAILLER, KOHLER\\\" text at ~91% height = 3190. The illustration bottom border around 87% = 3050, text below to 91%.\\n\\nLet me look at display: Chocolats box top ~51%, the bordered rectangle bottom ~87%, then text PETER... at ~90%. I'll include text in box: y1 ~ 0.91*3508 = 3192.\\n\\nBanque box: top ~28% (980), bottom ~48% (1684).\\n\\nTop ad: top ~8.5% (298), bottom ~27.5% (965).\\n\\nThese are reasonable. Let me finalize.\\n\\nActually I want the top ad left edge. The X-border left is around 6% = 149. Right edge around 89% = 2206. Good.\\n\\nI'll provide three advertisements.\",\"reasoning_details\":[{\"type\":\"reasoning.text\",\"text\":\"The user wants me to extract all advertisements from this magazine page and return their bounding boxes. Let me analyze the page carefully.\\n\\nLooking at the page, I can identify several distinct advertisement blocks:\\n\\n1. At the top, there's a large bordered advertisement for \\\"LA MONDIALE EXPRESS TRANSPORTS S.A.\\\" with the decorative border (the X-pattern border). This spans the full width at the top.\\n\\n2. On the right side, there's a bordered advertisement for \\\"Banque Cantonale Neuch\u00e2teloise\\\" with a rectangular border.\\n\\n3. Below that on the right, there's an advertisement for \\\"CHOCOLATS PETER, CAILLER, KOHLER\\\" with an illustration of a woman.\\n\\nThe left column contains article text (\\\"Tool Steel in Switzerland\\\", \\\"Adelaide wool sales\\\", \\\"International Monument to the Telegraph\\\") which are not advertisements.\\n\\nLet me determine the bounding boxes. The page is 2479 x 3508.\\n\\nFor the top advertisement (LA MONDIALE), the decorative border starts around y=85 and ends around y=275. The x range is roughly from 60 to 890. Let me look at the image coordinates. The image appears scaled. I'll estimate based on the visible layout.\\n\\nLet me think in terms of the actual pixel coordinates of the original 2479x3508. The displayed image is smaller but I should map proportionally. Actually, the bounding boxes should be in the original coordinate space. Let me estimate from the visual.\\n\\nThe top ad border: left edge ~ x=60/1754 * 2479? Hmm, the displayed image width seems to be about 1754 px. Let me just estimate proportionally.\\n\\nLooking at the layout, the top advertisement with the X-border spans almost the full width. Left margin ~ 60px in display, right ~ 890px in display out of ~930 width? This is getting too detailed.\\n\\nLet me use a reasonable coordinate system. The displayed image is 1754 wide and 2480 tall perhaps. The original is 2479x3508, ratio ~1.413.\\n\\nI'll just provide bounding boxes that look proportional in the original space.\\n\\nTop ad: box approximately [120, 290, 1260, 970] in original? Let me think. The header \\\"September, 1921\\\" is at top. The X-border starts below it.\\n\\nHonestly, I'll estimate based on fractions of the page.\\n\\nTop advertisement occupies from about 8% to 27% of height, and 6% to 89% of width.\\nHeight: 0.08*3508=280 to 0.27*3508=947. Width: 0.06*2479=149 to 0.89*2479=2206. Hmm but the border right edge in display ~890/930 = 0.957. Let me reexamine.\\n\\nThe display image width I'll treat as the full page width. The X-border left edge is at about 6% and right edge at about 89%? Looking at the image, the right edge of the top border is near the page right margin, maybe 89%. The left edge near 6%.\\n\\nLet me look at the \\\"Banque Cantonale\\\" box: it's on the right half, from about x=50% to x=89%, y=28% to y=48%.\\n\\nThe \\\"CHOCOLATS\\\" box: x=50% to x=89%, y=51% to y=91%.\\n\\nI'll convert to pixels.\\n\\nTop ad: x0=150, y0=290, x1=2200, y1=960.\\nBanque: x0=1230, y0=980, x1=2200, y1=1680.\\nChocolats: x0=1230, y0=1780, x1=2200, y1=3180.\\n\\nHmm the Chocolats bottom includes \\\"PETER, CAILLER, KOHLER\\\" text at ~91% height = 3190. The illustration bottom border around 87% = 3050, text below to 91%.\\n\\nLet me look at display: Chocolats box top ~51%, the bordered rectangle bottom ~87%, then text PETER... at ~90%. I'll include text in box: y1 ~ 0.91*3508 = 3192.\\n\\nBanque box: top ~28% (980), bottom ~48% (1684).\\n\\nTop ad: top ~8.5% (298), bottom ~27.5% (965).\\n\\nThese are reasonable. Let me finalize.\\n\\nActually I want the top ad left edge. The X-border left is around 6% = 149. Right edge around 89% = 2206. Good.\\n\\nI'll provide three advertisements.\",\"format\":\"unknown\",\"index\":0}]},\"native_finish_reason\":\"stop\"}],\"created\":1788862893,\"model\":\"qwen/qwen3.8-flash\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":null,\"usage\":{\"completion_tokens\":1248,\"prompt_tokens\":2834,\"total_tokens\":4082,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":0,\"reasoning_tokens\":1171,\"rejected_prediction_tokens\":null,\"image_tokens\":0},\"prompt_tokens_details\":{\"audio_tokens\":0,\"cached_tokens\":256,\"cache_write_tokens\":0,\"video_tokens\":0},\"cost\":0.000977356,\"is_byok\":false,\"cost_details\":{\"upstream_inference_cost\":0.000977356,\"upstream_inference_prompt_cost\":0.000390796,\"upstream_inference_completions_cost\":0.00058656}},\"provider\":\"Alibaba\"}"
+}

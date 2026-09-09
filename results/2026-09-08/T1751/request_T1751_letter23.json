@@ -1,0 +1,43 @@
+{
+    "text": "{\"metadata\":{\"send_date\":[\"1928-04-03\"],\"letter_title\":[\"Kauf 'Rheinfelden'\"],\"sender_persons\":null,\"receiver_persons\":null}}",
+    "model": "deepseek-v4-flash-vision-exp",
+    "provider": "deepseek",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 1385,
+        "output_tokens": 1473,
+        "total_tokens": 2858,
+        "cached_tokens": 384,
+        "input_cost_usd": 0.0006094,
+        "output_cost_usd": 0.00194436,
+        "estimated_cost_usd": 0.00255376
+    },
+    "duration": 15.474849462509155,
+    "timestamp": "2026-09-08T09:48:55.266756",
+    "parsed": {
+        "metadata": {
+            "letter_title": [
+                "Kauf 'Rheinfelden'"
+            ],
+            "send_date": [
+                "1928-04-03"
+            ],
+            "sender_persons": null,
+            "receiver_persons": null,
+            "document_number": "letter23"
+        }
+    },
+    "conversation_id": "4c5a003a-dab7-4fa5-b5a6-3cc2c1235daf",
+    "score": {
+        "send_date_tp": 1,
+        "send_date_fp": 0,
+        "send_date_fn": 0,
+        "sender_persons_tp": 0,
+        "sender_persons_fp": 0,
+        "sender_persons_fn": 2,
+        "receiver_persons_tp": 0,
+        "receiver_persons_fp": 0,
+        "receiver_persons_fn": 0
+    },
+    "raw_response": "{\"id\":\"34d22059-0f36-4213-90b4-fb184dda11f0\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\n  \\\"metadata\\\": {\\n    \\\"letter_title\\\": [\\\"Kauf 'Rheinfelden'\\\"],\\n    \\\"send_date\\\": [\\\"1928-04-03\\\"],\\n    \\\"sender_persons\\\": null,\\n    \\\"receiver_persons\\\": null\\n  }\\n}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"reasoning_content\":\"We are given two images of a letter. We need to extract the requested keys: letter_title, sender_persons, send_date, receiver_persons. We must output JSON with a schema that includes a \\\"metadata\\\" object.\\n\\nThe letter is from \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\" to \\\"Basler Personenschiffahrtsgesellschaft\\\". The date on the letter is \\\"Basel, den 3. April 1928.\\\" So send_date is \\\"1928-04-03\\\".\\n\\nThe title of the letter: There is a line \\\"Betrifft Kauf 'Rheinfelden'\\\" and \\\"Ihr Schreiben vom 24. M\u00e4rz.\\\" This might be the subject/title. We can interpret letter_title as the subject line. Possibly \\\"Kauf 'Rheinfelden'\\\". But the exact title might be the full subject: \\\"Betrifft Kauf 'Rheinfelden'\\\". However, note that the key is \\\"letter_title\\\" which could be the title of the letter. In letters, sometimes there is a subject line. Let's extract it as \\\"Kauf 'Rheinfelden'\\\". Alternatively, we could use the entire first line: \\\"Betrifft Kauf 'Rheinfelden'\\\". But more likely it's just the subject. Since the instruction says \\\"Title of the letter\\\", we can use the subject line. I'll put \\\"Kauf 'Rheinfelden'\\\".\\n\\nSender persons: The sender is the company: \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\". The letter is signed by individuals? The signature at the bottom appears to be handwritten. The text says \\\"Hochachtend BASLER RHEINSCHIFFAHRT-AKTIENGESELLSCHAFT\\\" and then there are two signatures. But the sender_persons should be the names of the persons who wrote the letter. This is a company letter. Typically, the sender is the company, but we need names of people. The signatures are illegible, but we might infer names? The text says \\\"Wir haben die heute schriftlich niedergelegten Vorschl\u00e4ge bereits Herrn Oettinger m\u00fcndlich genannt\\\" - so there is a person named Oettinger in the company. But is he the sender? Probably not. The signatures are likely from authorized signatories. Without reading the names, we cannot extract them. Since the letter is from a company, we might consider the sender_persons as the company? But the key says \\\"person(s)\\\" so probably names of individuals. Since we cannot read the names, we might set to null. However, the instruction says: \\\"Name(s) of the person(s) who wrote the letter.\\\" In a formal business letter, the sender is the organization. But if we strictly need persons, we don't have clear names. We could put the company name as a \\\"person\\\" but that's not a person. Let's examine if there is any name in the letter. The letter mentions \\\"Herrn Oettinger\\\" but that's in the context of discussing with him, not necessarily the sender. The signature might be something like \\\"M\u00fcller\\\" and \\\"Gruber\\\" but we can't read. So best to set to null. Alternatively, we could consider the sender as \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\" but that is an entity, not a person. The instruction says \\\"Name(s) of the person(s)\\\" so I'd say null.\\n\\nReceiver persons: The letter is addressed to \\\"Basler Personenschiffahrtsgesellschaft, Basel.\\\" So the receiver is an organization, not a person. Again, no specific person name. So we set to null? Or we could put the organization name. But again, the key says \\\"person(s)\\\". So null.\\n\\nWe might need to consider that sometimes the receiver could be the company itself. But to strictly follow the schema, they want names of persons. Since the letter is addressed to a company, we can either put the company name or null. In many historical contexts, the receiver is the organization. But the instruction is explicit: \\\"Name(s) of the person(s) who received the letter.\\\" So if no person is named, we should output null.\\n\\nLet's double-check the letter: The top right says \\\"Basel, den 3. April 1928.\\\" and below the address: \\\"Basler Personenschiffahrtsgesellschaft, Basel.\\\" There is no individual name. So receiver_persons should be null.\\n\\nSimilarly, sender: The letterhead says \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\" and the sign-offs are signatures. I can't read them. So sender_persons null.\\n\\nWhat about letter_title? There is a subject line: \\\"Betrifft Kauf 'Rheinfelden'\\\" and \\\"Ihr Schreiben vom 24. M\u00e4rz.\\\" So the subject is about the purchase of the ship \\\"Rheinfelden\\\". So we can set letter_title to [\\\"Betrifft Kauf 'Rheinfelden'\\\"] or simply [\\\"Kauf 'Rheinfelden'\\\"]. I think the whole subject line is \\\"Betrifft Kauf 'Rheinfelden'\\\". Let's extract that.\\n\\nsend_date: \\\"1928-04-03\\\" as ISO.\\n\\nNow, let's construct JSON according to the schema. The schema has a top-level object with \\\"metadata\\\" which contains the four keys. Each value is an array or null. So we need to output something like:\\n\\n{\\n  \\\"metadata\\\": {\\n    \\\"letter_title\\\": [\\\"Kauf 'Rheinfelden'\\\"],\\n    \\\"send_date\\\": [\\\"1928-04-03\\\"],\\n    \\\"sender_persons\\\": null,\\n    \\\"receiver_persons\\\": null\\n  }\\n}\\n\\nBut we must ensure the JSON is valid. The example shows arrays even for single values. So we put lists. For null, we put null.\\n\\nBut wait: The schema says: \\\"letter_title\\\": {\\\"anyOf\\\": [{\\\"items\\\": {\\\"type\\\": \\\"string\\\"}, \\\"type\\\": \\\"array\\\"}, {\\\"type\\\": \\\"null\\\"}]} so it can be an array or null. So we can set null if not present.\\n\\nI'll set letter_title as [\\\"Kauf 'Rheinfelden'\\\"]. But maybe the title should include \\\"Betrifft\\\"? Actually, in German letters, \\\"Betrifft\\\" means \\\"Subject:\\\" or \\\"Re:\\\". It is not part of the title per se. The actual topic is \\\"Kauf 'Rheinfelden'\\\". So I'll use that.\\n\\nAlternatively, we could use the entire subject line as the title. But that might be too long. I'll go with \\\"Kauf 'Rheinfelden'\\\".\\n\\nAlso check if there is any other title? The letter is from the company to another. No separate title.\\n\\nThus final answer.\"}}],\"created\":1788853721,\"model\":\"deepseek-v4-flash-vision-exp\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":\"aa8d6caccae4a22492bb51091cfc8eab\",\"usage\":{\"completion_tokens\":1473,\"prompt_tokens\":1385,\"total_tokens\":2858,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":null,\"reasoning_tokens\":1416,\"rejected_prediction_tokens\":null},\"prompt_tokens_details\":{\"audio_tokens\":null,\"cached_tokens\":384},\"prompt_cache_hit_tokens\":384,\"prompt_cache_miss_tokens\":1001}}"
+}
