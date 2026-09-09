@@ -1,0 +1,46 @@
+{
+    "text": "{\"metadata\":{\"send_date\":[\"1926-08-12\"],\"letter_title\":null,\"sender_persons\":[\"Grosskopf\",\"J.A. Ritter\"],\"receiver_persons\":[\"Max Fischer\"]}}",
+    "model": "deepseek-v4-flash-vision-exp",
+    "provider": "deepseek",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 1741,
+        "output_tokens": 888,
+        "total_tokens": 2629,
+        "cached_tokens": 384,
+        "input_cost_usd": 0.00076604,
+        "output_cost_usd": 0.00117216,
+        "estimated_cost_usd": 0.0019382
+    },
+    "duration": 10.591697216033936,
+    "timestamp": "2026-09-08T09:48:36.535894",
+    "parsed": {
+        "metadata": {
+            "letter_title": null,
+            "send_date": [
+                "1926-08-12"
+            ],
+            "sender_persons": [
+                "Grosskopf",
+                "J.A. Ritter"
+            ],
+            "receiver_persons": [
+                "Max Fischer"
+            ],
+            "document_number": "letter12"
+        }
+    },
+    "conversation_id": "fe71c175-90af-4c00-b664-27cf57730da1",
+    "score": {
+        "send_date_tp": 0,
+        "send_date_fp": 1,
+        "send_date_fn": 1,
+        "sender_persons_tp": 1,
+        "sender_persons_fp": 1,
+        "sender_persons_fn": 1,
+        "receiver_persons_tp": 0,
+        "receiver_persons_fp": 1,
+        "receiver_persons_fn": 1
+    },
+    "raw_response": "{\"id\":\"b666c775-36d2-427c-8cc2-d52d089c3c15\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\\"metadata\\\": {\\\"letter_title\\\": null, \\\"send_date\\\": [\\\"1926-08-12\\\"], \\\"sender_persons\\\": [\\\"Grosskopf\\\", \\\"J.A. Ritter\\\"], \\\"receiver_persons\\\": [\\\"Max Fischer\\\"]}}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"reasoning_content\":\"We need to extract values from images of a historical letter. The letter is in German. We need to extract: letter_title, send_date, sender_persons, receiver_persons. Use ISO format for dates. If not included, set to null. Return JSON with keys as lists.\\n\\nFirst, examine the images.\\n\\nImage 1:\\nTop: \\\"ABSCHRIFT\\\" (copy) and \\\"12\\\" in red.\\nTop left: \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\" and \\\"Marktgasse 5\\\"\\nTop right: \\\"Basel, den 12. August 1926.\\\"\\n\\nThen \\\"R/M\\\" (initials?) and then address: \\\"Herrn Dr. Max Fischer, Pr\u00e4sident der Basler Personenschiffahrtgesellschaft Basel\\\"\\n\\nThen the body begins: \\\"Wir best\u00e4tigen Ihr Schreiben vom 9. August betreffend Ben\u00fctzung der Landungsstege und teilen Ihnen mit, ...\\\" etc.\\n\\nSo sender: Basler Rheinschiffahrt-Aktiengesellschaft. The letter is signed at the end (image 3): \\\"Basler Rheinschiffahrt = Aktiengesellschaft sig. Grosskopf J.A.Ritter.\\\" So sender persons: Grosskopf and J.A. Ritter? But the company is the sender. The instruction says sender_persons: Name(s) of the person(s) who wrote the letter. So we have names: Grosskopf and J.A. Ritter. Also possibly the company? But \\\"person(s)\\\" indicates individuals. So we should list those names.\\n\\nReceiver: The letter is addressed to \\\"Herrn Dr. Max Fischer, Pr\u00e4sident der Basler Personenschiffahrtgesellschaft Basel\\\". So receiver_persons: Max Fischer.\\n\\nDate: \\\"Basel, den 12. August 1926.\\\" So send_date: \\\"1926-08-12\\\".\\n\\nLetter title: There is no explicit title. The letter is a business letter. We might infer from content? But the instruction says \\\"Title of the letter.\\\" If not explicit, maybe null. But perhaps we can derive a title from subject? The letter is about \\\"Ben\u00fctzung der Landungsstege\\\" (use of landing stages). However, the instruction says \\\"If a piece of information is not included in the letter, set the value for the corresponding key to 'null.'\\\" Since there is no title explicitly stated, we should set to null. But let's see if there is any heading. The letter starts directly with \\\"Wir best\u00e4tigen Ihr Schreiben...\\\" No title.\\n\\nCheck the images: Image 1 has no title. So letter_title should be null.\\n\\nBut note: The instruction says \\\"letter_title: Title of the letter.\\\" It might be that we need to extract a title if present, but if not, null. So null.\\n\\nThus:\\n\\nletter_title: null\\nsend_date: [\\\"1926-08-12\\\"]\\nsender_persons: [\\\"Grosskopf\\\", \\\"J.A. Ritter\\\"] but maybe we need full names? The signature is \\\"sig. Grosskopf J.A.Ritter.\\\" So first name? Not given. So we can use as is.\\nreceiver_persons: [\\\"Max Fischer\\\"] (Dr. is a title, but name is Max Fischer)\\n\\nWe need to output JSON with the exact schema: {\\\"metadata\\\": {...}}.\\n\\nMake sure keys are lists even if single.\\n\\nSo output:\\n\\n{\\n  \\\"metadata\\\": {\\n    \\\"letter_title\\\": null,\\n    \\\"send_date\\\": [\\\"1926-08-12\\\"],\\n    \\\"sender_persons\\\": [\\\"Grosskopf\\\", \\\"J.A. Ritter\\\"],\\n    \\\"receiver_persons\\\": [\\\"Max Fischer\\\"]\\n  }\\n}\\n\\nCheck if there are any other persons? The letter mentions \\\"Herr Oettinger\\\" in the body: \\\"da uns Herr Oettinger bereits unterm 29. Juli mitgeteilt hat\\\" but he is not the sender or receiver. Also mentions \\\"Herr Pr\u00e4sident\\\" etc. So we only have the explicit ones.\\n\\nThus final answer.\"}}],\"created\":1788853707,\"model\":\"deepseek-v4-flash-vision-exp\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":\"aa8d6caccae4a22492bb51091cfc8eab\",\"usage\":{\"completion_tokens\":888,\"prompt_tokens\":1741,\"total_tokens\":2629,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":null,\"reasoning_tokens\":837,\"rejected_prediction_tokens\":null},\"prompt_tokens_details\":{\"audio_tokens\":null,\"cached_tokens\":384},\"prompt_cache_hit_tokens\":384,\"prompt_cache_miss_tokens\":1357}}"
+}

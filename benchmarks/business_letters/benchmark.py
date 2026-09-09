@@ -66,6 +66,9 @@ class BusinessLetters(Benchmark):
                              ground_truth: dict) -> Optional[dict]:
         """ Score the answer.
 
+        A response that does not match the expected structure is scored as a complete failure,
+        that is, no true positives and every ground truth item a false negative.
+
         :param image_name: the name of the image
         :param response: the response
         :param ground_truth: the ground truth
@@ -80,54 +83,25 @@ class BusinessLetters(Benchmark):
 
         ground_truth_letter = self._initialize_letter(raw_letter=ground_truth,
                                                       image_name=image_name)
+        if ground_truth_letter is None:
+            logging.error(f"Unusable ground truth for {image_name}: scoring skipped!")
+            return None
 
-        # Handle errors: count as complete failure (0 TP, all FN)
+        response_letter = self._extract_response_letter(data=data,
+                                                        image_name=image_name)
+        if response_letter is None:
+            logging.error(f"Unusable response for {image_name}: scored as complete failure!")
+            response_letter = Letter(document_number=image_name)
+
         try:
-            response_letter = self._initialize_letter(raw_letter=data["metadata"],
-                                                      image_name=image_name)
-        except KeyError:
-            if "error" in data:
-                # Model failed - return score with 0 TP and all ground truth as FN
-                try:
-                    persons = json.load(open(os.path.join(self.benchmark_dir, "ground_truths", "persons.json")))
-                except FileNotFoundError as e:
-                    logging.error(f"{e}: Persons ground truth not found!")
-                    persons = []
-
-                # Count ground truth items for FN
-                sender_persons_gt = self._select_persons(sender_or_receiver="sender",
-                                                         ground_truth_letter=ground_truth_letter,
-                                                         inferred_from_function=inferred_from_function,
-                                                         inferred_from_correspondence=inferred_from_correspondence)
-                receiver_persons_gt = self._select_persons(sender_or_receiver="receiver",
-                                                           ground_truth_letter=ground_truth_letter,
-                                                           inferred_from_function=inferred_from_function,
-                                                           inferred_from_correspondence=inferred_from_correspondence)
-
-                sender_count = len([p for p in sender_persons_gt if p.name != "None"])
-                receiver_count = len([p for p in receiver_persons_gt if p.name != "None"])
-
-                return {
-                    "send_date_tp": 0,
-                    "send_date_fp": 0,
-                    "send_date_fn": 1 if ground_truth_letter.send_date else 0,
-                    "sender_persons_tp": 0,
-                    "sender_persons_fp": 0,
-                    "sender_persons_fn": sender_count,
-                    "receiver_persons_tp": 0,
-                    "receiver_persons_fp": 0,
-                    "receiver_persons_fn": receiver_count
-                }
-            response_letter = self._initialize_letter(raw_letter=data,
-                                                      image_name=image_name)
+            persons = json.load(open(os.path.join(self.benchmark_dir, "ground_truths", "persons.json"),
+                                     encoding="utf-8"))
+        except (OSError, json.JSONDecodeError) as e:
+            logging.error(f"{e}: Persons ground truth not usable!")
+            persons = []
 
         score = self._score_send_date(ground_truth_letter=ground_truth_letter,
                                       predicted_letter=response_letter)
-
-        try:
-            persons = json.load(open(os.path.join(self.benchmark_dir, "ground_truths", "persons.json")))
-        except FileNotFoundError as e:
-            logging.error(f"{e}: Persons ground truth not found!")
 
         score = score | self._score_persons(sender_or_receiver="sender",
                                             ground_truth_letter=ground_truth_letter,
@@ -155,12 +129,18 @@ class BusinessLetters(Benchmark):
             ground_truth = self.load_ground_truth(object_basename)
             ground_truth_letter = self._initialize_letter(raw_letter=ground_truth,
                                                           image_name=object_basename)
+            if ground_truth_letter is None:
+                logging.error(f"Unusable ground truth for {object_basename}: not skipped!")
+                return False
             if ground_truth_letter.has_signatures is True:
                 return True
         elif self.rules.get("skip_non_signatures") is True:
             ground_truth = self.load_ground_truth(object_basename)
             ground_truth_letter = self._initialize_letter(raw_letter=ground_truth,
                                                           image_name=object_basename)
+            if ground_truth_letter is None:
+                logging.error(f"Unusable ground truth for {object_basename}: not skipped!")
+                return False
             if ground_truth_letter.has_signatures is False:
                 return True
 
@@ -185,6 +165,25 @@ class BusinessLetters(Benchmark):
         """ If an update of the ground truth is required before running the benchmark. """
 
         return True
+
+    def _extract_response_letter(self,
+                                 data,
+                                 image_name: str) -> Letter | None:
+        """ Extract a Letter from the response, whether wrapped in 'metadata' or flat.
+
+        :param data: the prepared scoring data
+        :param image_name: the name of the image
+        """
+
+        if not isinstance(data, dict):
+            return None
+        if "metadata" in data:
+            letter = self._initialize_letter(raw_letter=data["metadata"],
+                                             image_name=image_name)
+            if letter is not None:
+                return letter
+        return self._initialize_letter(raw_letter=data,
+                                       image_name=image_name)
 
     @staticmethod
     def _get_f1_macro(categories: list[Category]) -> float:
@@ -237,7 +236,7 @@ class BusinessLetters(Benchmark):
                         logging.error(f"Failed to parse raw_letter string: {e} for {image_name}!")
                         return None
 
-            raw_letter["document_number"] = image_name
+            raw_letter = {**raw_letter, "document_number": image_name}
             return Letter(**raw_letter)
         except (ValueError, TypeError, AttributeError) as e:
             logging.error(f"{e} parsing {raw_letter} for {image_name}!")

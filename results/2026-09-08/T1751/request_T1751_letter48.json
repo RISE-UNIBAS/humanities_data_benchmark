@@ -1,0 +1,47 @@
+{
+    "text": "{\"metadata\":{\"send_date\":[\"1932-09-07\"],\"letter_title\":[\"Personenschiffahrt\"],\"sender_persons\":[\"Basler Rheinschiffahrt-Aktiengesellschaft\"],\"receiver_persons\":[\"Dr. W. Vischer-von Planta\"]}}",
+    "model": "deepseek-v4-flash-vision-exp",
+    "provider": "deepseek",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 1741,
+        "output_tokens": 1071,
+        "total_tokens": 2812,
+        "cached_tokens": 384,
+        "input_cost_usd": 0.00076604,
+        "output_cost_usd": 0.00141372,
+        "estimated_cost_usd": 0.00217976
+    },
+    "duration": 12.631969213485718,
+    "timestamp": "2026-09-08T09:49:17.862658",
+    "parsed": {
+        "metadata": {
+            "letter_title": [
+                "Personenschiffahrt"
+            ],
+            "send_date": [
+                "1932-09-07"
+            ],
+            "sender_persons": [
+                "Basler Rheinschiffahrt-Aktiengesellschaft"
+            ],
+            "receiver_persons": [
+                "Dr. W. Vischer-von Planta"
+            ],
+            "document_number": "letter48"
+        }
+    },
+    "conversation_id": "56bd99ea-6b9a-4244-a8fb-4f56708e537f",
+    "score": {
+        "send_date_tp": 1,
+        "send_date_fp": 0,
+        "send_date_fn": 0,
+        "sender_persons_tp": 0,
+        "sender_persons_fp": 1,
+        "sender_persons_fn": 2,
+        "receiver_persons_tp": 0,
+        "receiver_persons_fp": 1,
+        "receiver_persons_fn": 1
+    },
+    "raw_response": "{\"id\":\"9e55ca1c-0713-4c74-837c-59a32bbc2c9b\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\\"metadata\\\": {\\\"letter_title\\\": [\\\"Personenschiffahrt\\\"], \\\"send_date\\\": [\\\"1932-09-07\\\"], \\\"sender_persons\\\": [\\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"], \\\"receiver_persons\\\": [\\\"Dr. W. Vischer-von Planta\\\"]}}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"reasoning_content\":\"We are given three images of a historical letter. We need to extract the title, sender persons, send date, and receiver persons. The letter is in German. We must not use OCR, but we can read the text from the images. The letter is from \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\" (Basel Rhine Shipping Company). The letter is dated \\\"Basel, den 7.Sept.1932\\\". The recipient is \\\"Herr Dr. W. Vischer-von Planta, Basel, Albrangraben 8\\\". The subject is \\\"Betr. Personenschiffahrt\\\" (Regarding passenger shipping). The title of the letter could be derived from the subject line: \\\"Personenschiffahrt\\\" or perhaps more specific. But the instruction says: \\\"letter_title: Title of the letter.\\\" It might be the subject line. The sender is the company, so the sender_persons should be the name of the company? But the schema expects a list of names. The company is \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\". There are handwritten signatures at the end, but we can't read them. The sender is the company, so we can list the company as the sender. The receiver is \\\"Herr Dr. W. Vischer-von Planta\\\". So we output:\\n\\n- letter_title: [\\\"Personenschiffahrt\\\"]? Or \\\"Betr. Personenschiffahrt\\\"? Let's see the example: they had \\\"Petition for Environmental Protection\\\" which is a title. In this letter, the subject line is \\\"Betr. Personenschiffahrt\\\". Usually a letter's title is the subject. I think we can use that.\\n\\n- sender_persons: [\\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"]? But that is an organization, not a person. The key says \\\"sender_persons\\\", but it might accept companies. The example had \\\"Lisa Simpson\\\" as a person. If the sender is an organization, we can put the organization name. There are also handwritten signatures, but we cannot identify them. So we use the company name.\\n\\n- send_date: [\\\"1932-09-07\\\"]\\n\\n- receiver_persons: [\\\"Dr. W. Vischer-von Planta\\\"]\\n\\nWe need to output JSON with \\\"metadata\\\" object. The schema says: {\\\"metadata\\\": {\\\"send_date\\\": [...], \\\"letter_title\\\": [...], \\\"sender_persons\\\": [...], \\\"receiver_persons\\\": [...]}}. So we need to wrap it in \\\"metadata\\\".\\n\\nDouble-check: The letter is written by the company, so the sender is the company. The receiver is the person. The date is explicit.\\n\\nThus the JSON should be:\\n\\n{\\n  \\\"metadata\\\": {\\n    \\\"letter_title\\\": [\\\"Personenschiffahrt\\\"],\\n    \\\"send_date\\\": [\\\"1932-09-07\\\"],\\n    \\\"sender_persons\\\": [\\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"],\\n    \\\"receiver_persons\\\": [\\\"Dr. W. Vischer-von Planta\\\"]\\n  }\\n}\\n\\nBut wait, the example has no \\\"metadata\\\" wrapper? Actually the schema provided at the end says: {\\\"metadata\\\": {...}} so yes, we include \\\"metadata\\\". The example in the prompt is just the inner object, but the instruction says: \\\"You MUST respond with valid JSON matching this exact schema\\\". So we need to output with \\\"metadata\\\" key.\\n\\nAlso, note: The letter title might be \\\"Betr. Personenschiffahrt\\\" or just \\\"Personenschiffahrt\\\". I think \\\"Personenschiffahrt\\\" is the subject. But the letter itself doesn't have a formal title. In historical letters, the subject line is often considered the title. I'll use \\\"Personenschiffahrt\\\".\\n\\nAlternatively, there is a possibility that the letter_title is null if there is no explicit title. But the instruction says: \\\"If a piece of information is not included in the letter, set the value for the corresponding key to 'null'.\\\" Here, the letter does have a subject line, so we can use that. However, the subject line is \\\"Betr. Personenschiffahrt\\\" which means \\\"Regarding passenger shipping\\\". I think it's safer to use that as the title. But to be precise, we could include the \\\"Betr.\\\" part? In the example, they used \\\"Petition for Environmental Protection\\\", which is a descriptive title. I'll go with \\\"Personenschiffahrt\\\" as it is the core topic.\\n\\nAnother thing: The sender is a company, but the key is \\\"sender_persons\\\". It might expect a person. But the company is the sender. If there is a specific person writing? Actually, the letter is from the company, signed by two people. We don't know their names. So it's best to put the company name.\\n\\nThus final JSON.\"}}],\"created\":1788853746,\"model\":\"deepseek-v4-flash-vision-exp\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":\"aa8d6caccae4a22492bb51091cfc8eab\",\"usage\":{\"completion_tokens\":1071,\"prompt_tokens\":1741,\"total_tokens\":2812,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":null,\"reasoning_tokens\":1005,\"rejected_prediction_tokens\":null},\"prompt_tokens_details\":{\"audio_tokens\":null,\"cached_tokens\":384},\"prompt_cache_hit_tokens\":384,\"prompt_cache_miss_tokens\":1357}}"
+}

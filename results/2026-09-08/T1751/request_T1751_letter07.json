@@ -1,0 +1,42 @@
+{
+    "text": "{\"metadata\":{\"send_date\":[\"1926-06-22\"],\"letter_title\":null,\"sender_persons\":null,\"receiver_persons\":[\"P. Christ - Wackernagel\"]}}",
+    "model": "deepseek-v4-flash-vision-exp",
+    "provider": "deepseek",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 1045,
+        "output_tokens": 935,
+        "total_tokens": 1980,
+        "input_cost_usd": 0.00045979999999999995,
+        "output_cost_usd": 0.0012342,
+        "estimated_cost_usd": 0.001694
+    },
+    "duration": 10.343356609344482,
+    "timestamp": "2026-09-08T09:48:28.170978",
+    "parsed": {
+        "metadata": {
+            "letter_title": null,
+            "send_date": [
+                "1926-06-22"
+            ],
+            "sender_persons": null,
+            "receiver_persons": [
+                "P. Christ - Wackernagel"
+            ],
+            "document_number": "letter07"
+        }
+    },
+    "conversation_id": "017be4a0-8ede-45ea-a2f0-c2b6c04a8b38",
+    "score": {
+        "send_date_tp": 1,
+        "send_date_fp": 0,
+        "send_date_fn": 0,
+        "sender_persons_tp": 0,
+        "sender_persons_fp": 0,
+        "sender_persons_fn": 2,
+        "receiver_persons_tp": 1,
+        "receiver_persons_fp": 0,
+        "receiver_persons_fn": 0
+    },
+    "raw_response": "{\"id\":\"e3764650-8b1a-4f77-b2e0-929ac7f56491\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\\"metadata\\\": {\\\"letter_title\\\": null, \\\"send_date\\\": [\\\"1926-06-22\\\"], \\\"sender_persons\\\": null, \\\"receiver_persons\\\": [\\\"P. Christ - Wackernagel\\\"]}}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"reasoning_content\":\"We are given a letter image. We need to extract values for letter_title, sender_persons, send_date, receiver_persons. The letter is written in German. Let's analyze the text visible in the image.\\n\\nThe letterhead says: \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\" and address details. Then date: \\\"Basel, den 22. Juni 1926.\\\" The receiver is \\\"Herrn P. Christ - Wackernagel, Basel.\\\" The body: \\\"Sehr geehrter Herr Christ, Wir erlauben uns, Ihnen in der Beilage Abschrift unseres gestrigen Schreibens an Herrn Dr. Max Vischer, Pr\u00e4sident der Basler Personenschiffahrts-Gesellschaft, zur gefl. Kenntnisnahme zu \u00fcbergeben.\\\" Signature: \\\"BASLER RHEINSCHIFFAHRT-AKTIENGESELLSCHAFT\\\" with two signatures.\\n\\nNo explicit title for the letter. So we set letter_title to null.\\n\\nSender: The letter is from the \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\". But the instructions ask for \\\"sender_persons: Name(s) of the person(s) who wrote the letter.\\\" The company is the sender, but there are also two signatures. The signatures are not legible from the image? We can see two handwritten signatures, but the names are not clear. The text says \\\"Hochachtend\\\" and then the company name. So it is from the company. But we need to extract the names of persons. The letter is signed by individuals, but their names are not printed. The instructions say: \\\"If a piece of information is not included in the letter, set the value for the corresponding key to 'null'.\\\" So if no person's name is given as sender, we set to null. However, we have the company name. Should we consider that as the sender? The key is \\\"sender_persons\\\" expecting person names. Since it's a company, and no individual names are explicitly mentioned as the authors (the signatures are illegible), we might set to null. But perhaps we can extract the company name? No, the key expects person names. So I think sender_persons should be null.\\n\\nWait, the instructions: \\\"sender_persons: Name(s) of the person(s) who wrote the letter.\\\" The letter is from a company, but the letter is written by someone. The signatures are present but not legible. So it's not possible to extract names. So set to null.\\n\\nReceiver: \\\"Herrn P. Christ - Wackernagel, Basel\\\" So receiver is \\\"P. Christ - Wackernagel\\\". We can include the full name as printed: \\\"P. Christ - Wackernagel\\\". But note: The letter is addressed to \\\"Herrn P. Christ - Wackernagel\\\" so the person's name is P. Christ-Wackernagel. We'll use that.\\n\\nDate: \\\"Basel, den 22. Juni 1926.\\\" So date is 1926-06-22.\\n\\nLetter title: No explicit title. So null.\\n\\nThus output should be:\\n\\n{\\n  \\\"metadata\\\": {\\n    \\\"letter_title\\\": null,\\n    \\\"send_date\\\": [\\\"1926-06-22\\\"],\\n    \\\"sender_persons\\\": null,\\n    \\\"receiver_persons\\\": [\\\"P. Christ - Wackernagel\\\"]\\n  }\\n}\\n\\nBut check the schema: The JSON must have \\\"metadata\\\" object containing these keys. Also note that the values should be lists even if single. So for send_date we have a list with one element. For letter_title and sender_persons, since null is allowed, we can set them to null. The schema says \\\"anyOf: [items: {type: string}, array, type: null]\\\". So we can set to null. For receiver_persons, it's a list.\\n\\nLet's double-check if there is any mention of a title. The letter has no specific subject line. So letter_title is null.\\n\\nAlso note: The text mentions \\\"Abschrift unseres gestrigen Schreibens\\\" but that's not a title.\\n\\nSo I'll output accordingly.\"}}],\"created\":1788853698,\"model\":\"deepseek-v4-flash-vision-exp\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":\"aa8d6caccae4a22492bb51091cfc8eab\",\"usage\":{\"completion_tokens\":935,\"prompt_tokens\":1045,\"total_tokens\":1980,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":null,\"reasoning_tokens\":886,\"rejected_prediction_tokens\":null},\"prompt_tokens_details\":{\"audio_tokens\":null,\"cached_tokens\":0},\"prompt_cache_hit_tokens\":0,\"prompt_cache_miss_tokens\":1045}}"
+}

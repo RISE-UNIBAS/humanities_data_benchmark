@@ -16,6 +16,7 @@ class DutyRosters(Benchmark):
 
     # Send header + icons with every request (works across all providers)
     cache_context_per_request = True
+    max_output_tokens = 98304  # Rosters legitimately reach ~94k output tokens
 
     def get_shared_context_images(self) -> List[str]:
         """Return header and icon legend images to prepend to every request."""

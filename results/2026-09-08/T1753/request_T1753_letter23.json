@@ -1,0 +1,43 @@
+{
+    "text": "{\"metadata\":{\"send_date\":[\"1928-04-03\"],\"letter_title\":[\"Betrifft Kauf 'Rheinfelden'\"],\"sender_persons\":null,\"receiver_persons\":null}}",
+    "model": "deepseek-v4-flash-vision-exp",
+    "provider": "deepseek",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 1385,
+        "output_tokens": 1518,
+        "total_tokens": 2903,
+        "cached_tokens": 1280,
+        "input_cost_usd": 0.0006094,
+        "output_cost_usd": 0.0020037600000000003,
+        "estimated_cost_usd": 0.0026131600000000002
+    },
+    "duration": 16.11263132095337,
+    "timestamp": "2026-09-08T09:51:37.545637",
+    "parsed": {
+        "metadata": {
+            "letter_title": [
+                "Betrifft Kauf 'Rheinfelden'"
+            ],
+            "send_date": [
+                "1928-04-03"
+            ],
+            "sender_persons": null,
+            "receiver_persons": null,
+            "document_number": "letter23"
+        }
+    },
+    "conversation_id": "e246d895-f26f-49ca-af1a-3321f9b8ace9",
+    "score": {
+        "send_date_tp": 1,
+        "send_date_fp": 0,
+        "send_date_fn": 0,
+        "sender_persons_tp": 0,
+        "sender_persons_fp": 0,
+        "sender_persons_fn": 2,
+        "receiver_persons_tp": 0,
+        "receiver_persons_fp": 0,
+        "receiver_persons_fn": 0
+    },
+    "raw_response": "{\"id\":\"5a3454dd-ec73-4744-8d2e-4393abb38162\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\\"metadata\\\":{\\\"letter_title\\\":[\\\"Betrifft Kauf 'Rheinfelden'\\\"],\\\"send_date\\\":[\\\"1928-04-03\\\"],\\\"sender_persons\\\":null,\\\"receiver_persons\\\":null}}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"reasoning_content\":\"We are given images of a historical letter. We need to extract specific keys: letter_title, send_date, sender_persons, receiver_persons. We must output JSON with a specific schema: a \\\"metadata\\\" object containing those keys, each value should be a list (or null).\\n\\nWe need to read the letter. The letter is in German. Let's carefully examine the content.\\n\\nFrom the first image:\\n\\nHeader: \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\" and \\\"Marktgasse 5\\\" etc. Date: \\\"Basel, den 3. April 1928.\\\"\\n\\nRecipient: \\\"Basler Personenschiffahrtsgesellschaft, Basel.\\\"\\n\\nSubject line: \\\"Betrifft Kauf 'Rheinfelden'\\\" and \\\"Ihr Schreiben vom 24. M\u00e4rz.\\\"\\n\\nThen body: They refer to a letter from March 24, and make proposals.\\n\\nSecond image: continuation, signed \\\"Hochachtend BASLER RHEINSCHIFFAHRT-AKTIENGESELLSCHAFT\\\" with two signatures (probably names, but hard to read). The sender is the company: Basler Rheinschiffahrt-Aktiengesellschaft. The receiver is Basler Personenschiffahrtsgesellschaft.\\n\\nThe letter_title: Usually the subject line: \\\"Betrifft Kauf 'Rheinfelden'\\\" could be the title, or perhaps \\\"Kauf 'Rheinfelden'\\\". But the key is \\\"letter_title\\\". In the example, it's like \\\"Petition for Environmental Protection\\\". So we can extract the subject line as the title.\\n\\nSender persons: This is a company, but the key expects names of persons. However, the instructions say \\\"Name(s) of the person(s) who wrote the letter.\\\" In this case, it's an organization. But from the signature, there are two signatures. They are illegible in the OCR but we can see handwritten signatures. Possibly names like \\\"M\u00fcller\\\" and \\\"Gautschi\\\"? But we cannot read them exactly. The letterhead says the company, but the sender_persons should be the individuals who signed. We might need to extract from the signatures. However, the image is not clear enough. But we can infer from the context that the letter is from the company, and the signatories are probably two individuals. Without OCR, we cannot get exact names. So perhaps we should set sender_persons to null? But the instruction says to extract values from the letter. If it's not included, set to null. The names of the signatories are not clearly readable, but they are present as signatures. However, since we are not using OCR, we as a historian with keyword knowledge might be able to identify them? But we don't have access to external knowledge. The signatures are in cursive and not legible from the image description. So we should set sender_persons to null, or possibly use the company name? But the key specifically says \\\"sender_persons\\\" meaning persons, not organizations. So likely it's expected to be the names of the individuals who wrote it. But if they are not explicitly stated in the text (the signatures are not in typed form), we cannot extract them. So we should set to null. Similarly, receiver_persons: There is a typed receiver: \\\"Basler Personenschiffahrtsgesellschaft\\\". That is an organization, not a person. So should we set to null? But the example had \\\"Mayor Joe Quimby\\\" and \\\"Seymour Skinner\\\" which are persons. So maybe we should extract the names of persons if present. In the letter, no individual persons are named in the receiver line; it's a company. So receiver_persons could be null.\\n\\nBut wait, the instructions: \\\"sender_persons: Name(s) of the person(s) who wrote the letter.\\\" and \\\"receiver_persons: Name(s) of the person(s) who received the letter.\\\" If the sender and receiver are organizations, then there are no persons. However, the letter is signed by individuals (the signatories), so the sender_persons could be those individuals. But since we cannot read their names, we set to null. Alternatively, we might consider that the sender is the company, but the key specifically says persons. So probably null.\\n\\nWhat about the letter_title? The subject line is \\\"Betrifft Kauf 'Rheinfelden'\\\". That could be the title. So we can set letter_title to [\\\"Betrifft Kauf 'Rheinfelden'\\\"] or maybe just \\\"Kauf 'Rheinfelden'\\\". I'll take the full subject line.\\n\\nSend_date: \\\"Basel, den 3. April 1928.\\\" So date is 1928-04-03.\\n\\nSo metadata:\\n- letter_title: [\\\"Betrifft Kauf 'Rheinfelden'\\\"]? But note that the subject line is in the letter. We can include the whole line? Actually, \\\"Betrifft\\\" means \\\"Regarding\\\". So the title could be \\\"Kauf 'Rheinfelden'\\\". But the instruction says \\\"Title of the letter.\\\" In historical letters, sometimes there is a subject line. We can use that as the title. The example used a descriptive title. So I'll use \\\"Betrifft Kauf 'Rheinfelden'\\\" as the title.\\n\\n- send_date: [\\\"1928-04-03\\\"]\\n- sender_persons: null (since no individual names are identifiable)\\n- receiver_persons: null (since it's an organization)\\n\\nBut wait, the receiver is explicitly typed: \\\"Basler Personenschiffahrtsgesellschaft\\\". That is the receiver, but it's not a person. So the key \\\"receiver_persons\\\" expects persons. Should we set it to null? The instruction says: \\\"Name(s) of the person(s) who received the letter.\\\" So if the receiver is an organization, it's not a person. So null.\\n\\nHowever, the example in the prompt included \\\"Mayor Joe Quimby\\\" and \\\"Seymour Skinner\\\" which are persons. So indeed, only persons.\\n\\nThus, the JSON should be:\\n\\n{\\n  \\\"metadata\\\": {\\n    \\\"letter_title\\\": [\\\"Betrifft Kauf 'Rheinfelden'\\\"],\\n    \\\"send_date\\\": [\\\"1928-04-03\\\"],\\n    \\\"sender_persons\\\": null,\\n    \\\"receiver_persons\\\": null\\n  }\\n}\\n\\nBut we need to ensure the output is exactly this JSON, no other text.\\n\\nDouble-check: Is there any person mentioned? In the body, there is \\\"Herr Oetinger\\\". That is a person, but he is not the sender or receiver; he is a third party. So we don't include.\\n\\nAlso, the sender is the company. However, the signature block includes two names, but since we cannot read them, we set to null.\\n\\nOne more thing: The schema uses \\\"send_date\\\" but in the example they have \\\"send_date\\\": [\\\"1993-03-12\\\"]. In our schema, the property is \\\"send_date\\\". So we are fine.\\n\\nThus, final answer.\"}}],\"created\":1788853882,\"model\":\"deepseek-v4-flash-vision-exp\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":\"aa8d6caccae4a22492bb51091cfc8eab\",\"usage\":{\"completion_tokens\":1518,\"prompt_tokens\":1385,\"total_tokens\":2903,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":null,\"reasoning_tokens\":1471,\"rejected_prediction_tokens\":null},\"prompt_tokens_details\":{\"audio_tokens\":null,\"cached_tokens\":1280},\"prompt_cache_hit_tokens\":1280,\"prompt_cache_miss_tokens\":105}}"
+}

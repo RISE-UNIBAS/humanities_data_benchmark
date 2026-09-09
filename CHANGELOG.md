@@ -8,16 +8,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Unreleased (v0.5.5-pre1)
 
 ### Added
-- 6 new models: gemini-3.7-flash and gemini-3.8-flash (GenAI), grok-4.6 (xAI), meta/muse-spark-1.2 and z-ai/glm-5v-turbo (OpenRouter), gpt-6-astra (OpenAI; added to the `benchmark_base.py` hotfix list that forces `temperature=1`), with 90 benchmark test configurations (T1585-T1674, 15 each).
-- Pricing data for 2026-08-18 (gemini-3.7-flash, grok-4.6, meta/muse-spark-1.2, z-ai/glm-5v-turbo), 2026-09-02 (gemini-3.8-flash) and 2026-09-03 (gpt-6-astra); `pricing.json` metadata bumped to version 1.46.
+- 12 new models: gemini-3.7-flash and gemini-3.8-flash (GenAI), grok-4.6 (xAI), meta/muse-spark-1.2, meta/muse-spark-1.3, z-ai/glm-5v-turbo, z-ai/glm-5.3-flash, qwen/qwen3.8-flash and qwen/qwen3.8-27b (OpenRouter), gpt-6-astra (OpenAI; added to the `benchmark_base.py` hotfix list that forces `temperature=1`), claude-fable-5-1 (Anthropic; added to the `benchmark_base.py` no-`temperature` hotfix list) and deepseek-v4-flash-vision-exp (DeepSeek; first DeepSeek model with image input), with 180 benchmark test configurations (T1585-T1764, 15 each).
+- Pricing data for 2026-08-18 (gemini-3.7-flash, grok-4.6, meta/muse-spark-1.2, z-ai/glm-5v-turbo), 2026-09-02 (gemini-3.8-flash), 2026-09-03 (gpt-6-astra) and 2026-09-08 (claude-fable-5-1, meta/muse-spark-1.3, z-ai/glm-5.3-flash, qwen/qwen3.8-flash, qwen/qwen3.8-27b, deepseek-v4-flash-vision-exp); `pricing.json` metadata bumped to version 1.47.
 - Tests on 2026-08-18: T1585-T1644 (60 tests) for the 4 new models across all benchmarks — gemini-3.7-flash (T1585-T1599) (GenAI), grok-4.6 (T1600-T1614) (x-ai), meta/muse-spark-1.2 (T1615-T1629) and z-ai/glm-5v-turbo (T1630-T1644) (OpenRouter)
 - Tests on 2026-09-03: T1645-T1659 (15 tests) for gemini-3.8-flash (GenAI) across all benchmarks
 - Tests on 2026-09-04: T1660-T1674 (15 tests) for gpt-6-astra (OpenAI) across all benchmarks
+- Tests on 2026-09-08: T1690-T1739 and T1750-T1764 (50 tests) — meta/muse-spark-1.3 (T1690-T1704), z-ai/glm-5.3-flash (T1705-T1719), qwen/qwen3.8-flash (T1720-T1734) (OpenRouter), deepseek-v4-flash-vision-exp (T1750-T1764) (DeepSeek) across all benchmarks, and qwen/qwen3.8-27b on 5 of 15 (T1735-T1739) (OpenRouter)
+- Tests on 2026-09-09: T1740-T1749 (10 tests) completing qwen/qwen3.8-27b (OpenRouter).
+- `tests/integrity/test_client_capability_integrity.py`: fails when the installed `ai_client` would silently drop images from a DeepSeek vision model; `dev/DEPENDENCY_PATCHES.md` records the patch to re-apply after a venv rebuild.
+- `FatalProviderError`: a 402, 401 or 403 now aborts the run instead of being retried per object for every remaining test.
 
 ### Fixed
 - `general_meeting_minutes`: `score_benchmark` no longer raises `ZeroDivisionError` when every request fails, matching the empty-score guard in the other benchmarks.
+- `business_letters`: a response that does not match the expected schema now scores as a complete failure instead of crashing the run.
+- `business_letters`: scoring no longer injects `document_number` into the saved response payload.
 
 ### Changed
+- Requests now send a 32k `max_tokens` cap (`duty_rosters` 96k, `general_meeting_minutes` 40k, per-test override via the `rules` column); previously the provider default applied.
 - `requirements.txt`: relaxed all pins to the versions actually installed in the development environment; dropped the unused `matplotlib` and the redundant `dotenv` shim, and added `pytest`, which CI previously installed separately. 
 
 ## [v0.5.4] - 2026-08-17

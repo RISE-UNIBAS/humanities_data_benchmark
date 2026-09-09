@@ -1,0 +1,45 @@
+{
+    "text": "{\"metadata\":{\"send_date\":[\"1932-09-07\"],\"letter_title\":[\"Betr.Personenschiffahrt\"],\"sender_persons\":null,\"receiver_persons\":[\"Dr. W. Vischer-von Planta\"]}}",
+    "model": "deepseek-v4-flash-vision-exp",
+    "provider": "deepseek",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 1741,
+        "output_tokens": 1470,
+        "total_tokens": 3211,
+        "cached_tokens": 1664,
+        "input_cost_usd": 0.00076604,
+        "output_cost_usd": 0.0019404000000000001,
+        "estimated_cost_usd": 0.00270644
+    },
+    "duration": 16.433253049850464,
+    "timestamp": "2026-09-08T09:51:53.987887",
+    "parsed": {
+        "metadata": {
+            "letter_title": [
+                "Betr.Personenschiffahrt"
+            ],
+            "send_date": [
+                "1932-09-07"
+            ],
+            "sender_persons": null,
+            "receiver_persons": [
+                "Dr. W. Vischer-von Planta"
+            ],
+            "document_number": "letter48"
+        }
+    },
+    "conversation_id": "b7c7bff0-481f-403d-9c21-46493fd6cf1d",
+    "score": {
+        "send_date_tp": 1,
+        "send_date_fp": 0,
+        "send_date_fn": 0,
+        "sender_persons_tp": 0,
+        "sender_persons_fp": 0,
+        "sender_persons_fn": 2,
+        "receiver_persons_tp": 0,
+        "receiver_persons_fp": 1,
+        "receiver_persons_fn": 1
+    },
+    "raw_response": "{\"id\":\"e117bdac-52b3-4a81-99f6-7689ccc88b98\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\n  \\\"metadata\\\": {\\n    \\\"letter_title\\\": [\\\"Betr.Personenschiffahrt\\\"],\\n    \\\"send_date\\\": [\\\"1932-09-07\\\"],\\n    \\\"sender_persons\\\": null,\\n    \\\"receiver_persons\\\": [\\\"Dr. W. Vischer-von Planta\\\"]\\n  }\\n}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"reasoning_content\":\"We need to extract information from the letter. The letter is in German. Let's identify the keys:\\n\\n- letter_title: There is a subject line \\\"Betr.Personenschiffahrt\\\" (Regarding passenger shipping). That could be a title. But we need to see if there is an explicit title. The letter does not have a separate title; the subject line is \\\"Betr.Personenschiffahrt\\\". We'll use that as letter_title? Or maybe the title is \\\"Betr.Personenschiffahrt\\\" but it's not a title. However, in the context, it's the subject. The instruction says \\\"Title of the letter.\\\" Often letters have a subject line. So we can take that as title: \\\"Betr.Personenschiffahrt\\\". But let's check if there is any other heading. At the top of the first page: \\\"Basler Rheinschiffahrt-Aktiengesellschaft Basel\\\" is the company header. Then \\\"DIREKTION\\\". Then the subject \\\"Betr.Personenschiffahrt\\\". So the title is likely \\\"Betr.Personenschiffahrt\\\". But we should be careful: the title might not be present, so we might set to null. However, the subject line is clearly a title. So I'll use \\\"Betr.Personenschiffahrt\\\". But wait: The example had a title like \\\"Petition for Environmental Protection\\\", which is descriptive. Here it's a subject. It's acceptable.\\n\\n- sender_persons: The letter is from \\\"Basler Rheinschiffahrt Aktiengesellschaft\\\". That is a company. But we need names of persons. The letter is signed by individuals? At the end: \\\"Mit vorz\u00fcglicher Hochachtung : Basler Rheinschiffahrt Aktiengesellschaft\\\" followed by two signatures (illegible). The sender is the company, but the persons are the signatories. Their names are not legible from the images. However, the instructions say: \\\"sender_persons: Name(s) of the person(s) who wrote the letter.\\\" If it's a company letterhead, the sender is the company, but we need person names. Since the signatories are not clearly readable, we might set to null? Or we could infer that the sender is the company, but we need person names. In such cases, we might include the company name? But the key is \\\"sender_persons\\\", so it expects people. The letterhead says \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\", but that is a corporation. There are signatures, but not readable. Probably we should set to null because no specific person's name is given. However, sometimes the sender can be the company itself. But the key says \\\"persons\\\". So we need to decide.\\n\\n- send_date: \\\"Basel, den 7.Sept.1932\\\" -> 1932-09-07.\\n\\n- receiver_persons: \\\"Herr Dr.W.Vischer-von Planta\\\" and address \\\"Basel, Albangraben 8\\\". So receiver is Dr. W. Vischer-von Planta.\\n\\nNow, let's extract precisely.\\n\\nLetter title: The subject line is \\\"Betr.Personenschiffahrt\\\". So we can put that. But it's not exactly a title. Maybe the letter has no title, so null? However, the instruction says \\\"Title of the letter.\\\" It might be the subject. To be safe, we can set it to \\\"Betr.Personenschiffahrt\\\" as it is the topic.\\n\\nAlternatively, there is no explicit title like \\\"Letter regarding...\\\", so we might set null. But in the example, the title was descriptive. Here, it's a subject line. I think it's acceptable to use \\\"Betr.Personenschiffahrt\\\". But let's check if there is any other heading? No.\\n\\nSo:\\n\\n- letter_title: [\\\"Betr.Personenschiffahrt\\\"]\\n- send_date: [\\\"1932-09-07\\\"]\\n- sender_persons: Since the letter is from a company, and no clear individual names are legible, we can put null. But we could also put \\\"Basler Rheinschiffahrt Aktiengesellschaft\\\" as a company? The key is \\\"persons\\\", so no. Alternatively, maybe we can extract from the signatures? They are just scribbles. So null.\\n- receiver_persons: [\\\"Dr. W. Vischer-von Planta\\\"] or \\\"Herr Dr.W.Vischer-von Planta\\\"? I'll use \\\"Dr. W. Vischer-von Planta\\\".\\n\\nBut we need to be precise: The address is \\\"Herr Dr.W.Vischer-von Planta\\\" - so the name is \\\"Dr. W. Vischer-von Planta\\\".\\n\\nNow, format: JSON with metadata object containing arrays. The instruction says: \\\"extract the values of the following keys from the letter and return them in a JSON file where the values corresponding to each key should be stored as a list, even if there is only a single value for a key\\\". And the schema we must respond with includes a \\\"metadata\\\" object with those keys. So the output should be:\\n\\n{\\n  \\\"metadata\\\": {\\n    \\\"letter_title\\\": [\\\"Betr.Personenschiffahrt\\\"],\\n    \\\"send_date\\\": [\\\"1932-09-07\\\"],\\n    \\\"sender_persons\\\": null,\\n    \\\"receiver_persons\\\": [\\\"Dr. W. Vischer-von Planta\\\"]\\n  }\\n}\\n\\nBut we need to ensure that the schema is exactly as given. The schema says properties: send_date, letter_title, sender_persons, receiver_persons. Each can be an array of strings or null. So null is allowed for the whole value, not inside an array. So for sender_persons, we can set to null.\\n\\nBut wait: The instruction says \\\"If a piece of information is not included in the letter, set the value for the corresponding key to 'null'.\\\" So if no sender persons, we set to null.\\n\\nNow, is there any other sender info? The letter is signed by \\\"Basler Rheinschiffahrt Aktiengesellschaft\\\" and two signatures. But no names. So null.\\n\\nIs there a possibility that the sender is the company? But the key says sender_persons, so no.\\n\\nThus, final answer.\\n\\nLet's double-check the date: \\\"Basel, den 7.Sept.1932\\\" -> 7th September 1932. So 1932-09-07. Good.\\n\\nReceiver: \\\"Herr Dr.W.Vischer-von Planta\\\" - that is a person, so yes.\\n\\nTitle: \\\"Betr.Personenschiffahrt\\\" is the subject. I'll include it.\\n\\nSo output JSON.\"}}],\"created\":1788853899,\"model\":\"deepseek-v4-flash-vision-exp\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":\"aa8d6caccae4a22492bb51091cfc8eab\",\"usage\":{\"completion_tokens\":1470,\"prompt_tokens\":1741,\"total_tokens\":3211,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":null,\"reasoning_tokens\":1404,\"rejected_prediction_tokens\":null},\"prompt_tokens_details\":{\"audio_tokens\":null,\"cached_tokens\":1664},\"prompt_cache_hit_tokens\":1664,\"prompt_cache_miss_tokens\":77}}"
+}

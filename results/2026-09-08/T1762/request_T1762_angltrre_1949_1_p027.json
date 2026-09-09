@@ -1,0 +1,64 @@
+{
+    "text": "{\"advertisements\":[{\"box\":[80.0,190.0,1190.0,1680.0]},{\"box\":[1290.0,100.0,2400.0,1680.0]},{\"box\":[80.0,1800.0,1190.0,3350.0]},{\"box\":[1290.0,1800.0,2400.0,3350.0]}]}",
+    "model": "deepseek-v4-flash-vision-exp",
+    "provider": "deepseek",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 694,
+        "output_tokens": 2314,
+        "total_tokens": 3008,
+        "input_cost_usd": 0.00030535999999999996,
+        "output_cost_usd": 0.00305448,
+        "estimated_cost_usd": 0.0033598400000000002
+    },
+    "duration": 21.54917812347412,
+    "timestamp": "2026-09-08T10:27:23.822922",
+    "parsed": {
+        "advertisements": [
+            {
+                "box": [
+                    80,
+                    190,
+                    1190,
+                    1680
+                ]
+            },
+            {
+                "box": [
+                    1290,
+                    100,
+                    2400,
+                    1680
+                ]
+            },
+            {
+                "box": [
+                    80,
+                    1800,
+                    1190,
+                    3350
+                ]
+            },
+            {
+                "box": [
+                    1290,
+                    1800,
+                    2400,
+                    3350
+                ]
+            }
+        ]
+    },
+    "conversation_id": "46ce4669-5e5d-4ced-8115-5a1f79f05d47",
+    "score": {
+        "f1": 1.0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "mean_iou": 0.758,
+        "true_positives": 4,
+        "false_positives": 0,
+        "false_negatives": 0,
+        "iou_threshold": 0.5
+    },
+    "raw_response": "{\"id\":\"a88da0dd-1284-4b9d-bc25-38f7e142c73a\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\\"advertisements\\\":[{\\\"box\\\":[80,190,1190,1680]},{\\\"box\\\":[1290,100,2400,1680]},{\\\"box\\\":[80,1800,1190,3350]},{\\\"box\\\":[1290,1800,2400,3350]}]}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"reasoning_content\":\"We need to extract all advertisements and return their bounding boxes. The page is 2479 x 3508 pixels. The image shows four distinct sections: top-left (dictionary ad), top-right (W. TIEBOLD watch ad), bottom-left (Sindaco S.A. watch ad), bottom-right (RODANA watch ad). Each is an advertisement. We need to provide bounding boxes as [x0, y0, x1, y1] in pixel coordinates.\\n\\nFrom the image, the page is split roughly into four quadrants. Let's estimate coordinates based on the visible image. The whole image has a white border. The page content starts after some margin. The four boxes are separated by white space.\\n\\nTop-left: The ad with \\\"LANGFORD'S Technical and Commercial Dictionary\\\" spans roughly from x=100 to x=1200? Actually, looking at the image, the top-left ad occupies the left half top. But we need precise pixel coordinates. The image size is 2479 x 3508. The top-left ad appears to start at around x=100, y=200 and end at x=1200, y=1600? Let's examine more carefully.\\n\\nThe image provided is a scan. In the image, the top-left ad is on the left side, top. There is a white margin around the page. The ad itself has a border. The top-left ad's box seems to be from approximately (60, 180) to (1210, 1700)? But we should be accurate.\\n\\nLet's look at the image: The top-left ad has a thin black border. The top of that border is around y=200? Actually, we can see there is a header \\\"Well closed...\\\" on the top-right ad. The top-left ad starts lower.\\n\\nWe need to output JSON with bounding boxes. Since we don't have exact pixel measurements from the given image, we need to estimate based on the provided image dimensions. The image is a scanned page, and we can visually divide the page into four equal quadrants? But they might not be exactly equal.\\n\\nLet's describe each ad:\\n\\n1. Dictionary ad (top-left): It has a black border. The text is centered. It occupies roughly the top-left quarter.\\n2. W. TIEBOLD watch ad (top-right): It has an image of a gate and a watch. It says \\\"Well closed...\\\" at top. It occupies the top-right quarter.\\n3. Sindaco ad (bottom-left): It shows a pocket watch and a wristwatch. It occupies the bottom-left quarter.\\n4. RODANA ad (bottom-right): It shows a watch and a building. It occupies the bottom-right quarter.\\n\\nThe page has two columns horizontally and two rows vertically. The dividing line between top and bottom is around y=1700? Actually, from the image, there is a horizontal white gap between the top and bottom ads. Similarly, there is a vertical white gap between left and right ads.\\n\\nLet's assume the page is evenly split into four quadrants, but with some margins. However, the ads have their own borders, so the bounding boxes should be the outer edges of the ad content, not the entire quadrant.\\n\\nMaybe we can use the fact that the image is 2479x3508. Typically, the margins might be about 100 pixels on each side. So the content area is from x=100 to x=2379, y=100 to y=3408. But the ads are not full content area.\\n\\nActually, looking at the image, the top-left ad starts at maybe x=120, y=200 and ends at x=1200, y=1700. The top-right ad starts at x=1300, y=100 and ends at x=2400, y=1700. The bottom-left starts at x=100, y=1800 and ends at x=1200, y=3300. The bottom-right starts at x=1300, y=1800 and ends at x=2400, y=3300.\\n\\nWe need to be as precise as possible. Since we only have the image, we can estimate. But as an AI, we can infer typical layout.\\n\\nWait, maybe these are two-page spread? No, this is a single page. The image shows a left side with a vertical bar (probably a spine or edge of the page) on the left, indicating it's a single page from a magazine. So the content is within the main area.\\n\\nLet's look at the coordinates more carefully. The image has a black border on the left side? Actually, there is a white margin, then a thin black line, then the content. The leftmost edge of the content is around x=60? There is also a vertical line on the left side of the page, which might be a page fold.\\n\\nWe can assume the four ads are arranged in a 2x2 grid. The bounding boxes for each ad are the rectangles that enclose the ad content.\\n\\nMaybe we can find the exact coordinates by examining the image. Since we are a text model, we need to infer strictly from the description. The user says: \\\"Extract all advertisements and return their bounding boxes.\\\" and \\\"The original size of the page is 2479 x 3508 pixels.\\\"\\n\\nWe need to output JSON with the bounding boxes.\\n\\nI will estimate as follows:\\n\\n- Top-left ad: [80, 180, 1190, 1680] (approx)\\n- Top-right ad: [1250, 90, 2450, 1680] (approx)\\n- Bottom-left ad: [80, 1760, 1190, 3360] (approx)\\n- Bottom-right ad: [1250, 1760, 2450, 3360] (approx)\\n\\nBut these are just guesses. Let's try to be more consistent. Since the page is roughly A4 proportion? Actually, 2479x3508 is roughly 1:1.414, which is A4. So the content area might be from x=100 to x=2379 (width 2279) and y=100 to y=3408 (height 3308). But the ads might not span the full width.\\n\\nLet's look at the image: The top-left ad has a white border inside the black border. The black border seems to start at around x=100, y=200 and end at x=1200, y=1700. The top-right ad has no visible black border? Actually, it has a grey background? The image of the gate is at the top, and the text is below. The ad might be from x=1300, y=100 to x=2400, y=1700.\\n\\nThe bottom-left ad has a black background? Actually, it has a grey background. The coordinates might be similar.\\n\\nWe need to output the bounding box as [x0, y0, x1, y1] where (x0,y0) is top-left and (x1,y1) is bottom-right.\\n\\nGiven the natural split, we can set:\\n\\n- The vertical dividing line is at about x=1230.\\n- The horizontal dividing line is at about y=1700.\\n\\nSo:\\n\\nAd1: x0=70, y0=180, x1=1210, y1=1680\\nAd2: x0=1290, y0=100, x1=2450, y1=1680\\nAd3: x0=70, y0=1750, x1=1210, y1=3350\\nAd4: x0=1290, y0=1750, x1=2450, y1=3350\\n\\nBut let's check the actual image: The top-left ad has a border. The top-left corner is around (100, 180). The bottom-right corner is around (1200, 1680). The top-right ad: its top is around y=100 (because there is text \\\"Well closed...\\\" at the very top). Its left is around x=1300. Its right is around x=2400. Its bottom is around y=1680.\\n\\nThe bottom-left ad: its top is around y=1800? Actually, there is a gap between top and bottom. The bottom-left ad has a black background? The top of it is around y=1800. The left is around x=100. The right is around x=1200. The bottom is around y=3300.\\n\\nThe bottom-right ad: its top is around y=1800, left around x=1300, right around x=2400, bottom around y=3300.\\n\\nWe need to be precise. Since we are to output JSON, we should make our best estimate.\\n\\nMaybe there are also other advertisements? No, only four.\\n\\nThus, the JSON should have a list of four advertisements.\\n\\nLet's produce the JSON.\\n\\nBut wait: the instruction says \\\"Extract all advertisements and return their bounding boxes.\\\" So we need to output only the bounding boxes. The schema expects an array of objects with a \\\"box\\\" property.\\n\\nI'll output:\\n\\n{\\n  \\\"advertisements\\\": [\\n    {\\n      \\\"box\\\": [70, 180, 1210, 1680]\\n    },\\n    {\\n      \\\"box\\\": [1290, 100, 2450, 1680]\\n    },\\n    {\\n      \\\"box\\\": [70, 1750, 1210, 3350]\\n    },\\n    {\\n      \\\"box\\\": [1290, 1750, 2450, 3350]\\n    }\\n  ]\\n}\\n\\nBut I should adjust the values to be more correct. Let's think about the page dimensions: 2479 x 3508. The white margin might be about 50 pixels on all sides. So content area is from x=50 to x=2429, y=50 to y=3458. But the ads have their own margins.\\n\\nActually, looking at the image, there is a left edge that has some text (page numbers?) and a vertical line. The main content starts after that. The leftmost part of the ads is maybe x=100. The rightmost part is maybe x=2400.\\n\\nI'll use reasonable values: [100, 200, 1200, 1700] for top-left, etc.\\n\\nBut to be more consistent, I'll set:\\n\\nTop-left: [80, 190, 1190, 1680]\\nTop-right: [1290, 100, 2400, 1680]\\nBottom-left: [80, 1800, 1190, 3350]\\nBottom-right: [1290, 1800, 2400, 3350]\\n\\nThese seem plausible.\\n\\nLet's output the JSON.\"}}],\"created\":1788856023,\"model\":\"deepseek-v4-flash-vision-exp\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":\"aa8d6caccae4a22492bb51091cfc8eab\",\"usage\":{\"completion_tokens\":2314,\"prompt_tokens\":694,\"total_tokens\":3008,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":null,\"reasoning_tokens\":2251,\"rejected_prediction_tokens\":null},\"prompt_tokens_details\":{\"audio_tokens\":null,\"cached_tokens\":0},\"prompt_cache_hit_tokens\":0,\"prompt_cache_miss_tokens\":694}}"
+}

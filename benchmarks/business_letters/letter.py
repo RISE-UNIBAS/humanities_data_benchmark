@@ -32,6 +32,10 @@ class Letter:
         if type(self.send_date) is list:
             self.send_date = self.send_date[0] if self.send_date else None
 
+        # Reject a date that scoring cannot put in a set:
+        if isinstance(self.send_date, (list, dict, set)):
+            raise TypeError(f"Unhashable send_date: {self.send_date!r}")
+
         # Normalize has_signatures:
         if self.has_signatures == "TRUE":
             self.has_signatures = True
@@ -42,6 +46,8 @@ class Letter:
     def _split_and_process(persons):
         if persons is None:
             return None
+        if isinstance(persons, dict):
+            raise TypeError(f"Unusable persons: {persons!r}")
         if isinstance(persons, str):
             persons = [p.strip() for p in persons.split('|')]
         # Handle lists that might contain non-string items

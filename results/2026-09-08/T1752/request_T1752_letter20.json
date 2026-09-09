@@ -1,0 +1,47 @@
+{
+    "text": "{\"metadata\":{\"send_date\":[\"1929-03-24\"],\"letter_title\":[\"Verkauf\"],\"sender_persons\":[\"Basler Personenschiffahrtsgesellschaft\"],\"receiver_persons\":[\"Basler Rheinschiffahrt A.-G.\"]}}",
+    "model": "deepseek-v4-flash-vision-exp",
+    "provider": "deepseek",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 1385,
+        "output_tokens": 1535,
+        "total_tokens": 2920,
+        "cached_tokens": 1280,
+        "input_cost_usd": 0.0006094,
+        "output_cost_usd": 0.0020262,
+        "estimated_cost_usd": 0.0026356
+    },
+    "duration": 16.470314025878906,
+    "timestamp": "2026-09-08T09:50:42.813655",
+    "parsed": {
+        "metadata": {
+            "letter_title": [
+                "Verkauf"
+            ],
+            "send_date": [
+                "1929-03-24"
+            ],
+            "sender_persons": [
+                "Basler Personenschiffahrtsgesellschaft"
+            ],
+            "receiver_persons": [
+                "Basler Rheinschiffahrt A.-G."
+            ],
+            "document_number": "letter20"
+        }
+    },
+    "conversation_id": "2d777b87-8e58-410a-a868-119700814852",
+    "score": {
+        "send_date_tp": 0,
+        "send_date_fp": 1,
+        "send_date_fn": 1,
+        "sender_persons_tp": 0,
+        "sender_persons_fp": 1,
+        "sender_persons_fn": 0,
+        "receiver_persons_tp": 0,
+        "receiver_persons_fp": 1,
+        "receiver_persons_fn": 0
+    },
+    "raw_response": "{\"id\":\"53db5145-e866-4e1b-a41c-1208b7dd8233\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\\"metadata\\\": {\\\"letter_title\\\": [\\\"Verkauf\\\"], \\\"send_date\\\": [\\\"1929-03-24\\\"], \\\"sender_persons\\\": [\\\"Basler Personenschiffahrtsgesellschaft\\\"], \\\"receiver_persons\\\": [\\\"Basler Rheinschiffahrt A.-G.\\\"]}}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"reasoning_content\":\"We are given two images of a historical letter. We need to extract the values for letter_title, sender_persons, send_date, receiver_persons. We are told not to use OCR, but we can read the text from the images. We need to produce JSON in a specific schema. Let's analyze the images.\\n\\nFirst image: \\n- Top left: \\\"C/H.\\\"\\n- Top right: \\\"20\\\" (or maybe \\\"2e\\\"?)\\n- Below top left: \\\"Verkauf.\\\" (Sale)\\n- Date: \\\"24. M\u00e4rz 1929,\\\" (24 March 1929)\\n- Addressee: \\\"An die Basler Rheinschiffahrt A.-G., Basel.\\\" (To the Basel Rhine Shipping Co., Basel.)\\n- Body text: It starts with \\\"Wir bekennen uns zum Empfang Ihrer gesch\u00e4tzten Offerte bez\u00fcglich Ankauf unseres Schiffes 'Rheinfelden'...\\\" The letter is about the sale of the ship \\\"Rheinfelden\\\". \\n- At the bottom: \\\"b.w.\\\" (which is \\\"bitte wenden\\\" - please turn over)\\n\\nSecond image:\\n- Top: \\\"II.\\\" (page 2)\\n- Continues with numbered points: 2.), 3.), 4.) \\n- At the end: \\\"Basel Personenschiffahrtsgesellschaft Der Gesch\u00e4ftsleiter\\\" (Basel Passenger Shipping Company, The Business Manager)\\n- So the sender is \\\"Basler Personenschiffahrtsgesellschaft\\\" (Basel Passenger Shipping Company). The letter is signed by \\\"Der Gesch\u00e4ftsleiter\\\" but we don't have a specific name. So sender_persons might be \\\"Basler Personenschiffahrtsgesellschaft\\\" or \\\"Der Gesch\u00e4ftsleiter\\\"? But it says \\\"Name(s) of the person(s) who wrote the letter.\\\" The company is an entity, but in the context of historical letters, the sender is often the company. But we should check if there is a specific person. The letter is from the company, and the \\\"Gesch\u00e4ftsleiter\\\" (business manager) is the signatory. But we don't have a name. Probably we should list the company name as the sender. Alternatively, we could list \\\"Der Gesch\u00e4ftsleiter\\\" but that is a title. The instructions say \\\"Name(s) of the person(s)\\\" so it might be the organization. In many similar tasks, if the sender is a company, we use the company name. But let's see the receiver: \\\"An die Basler Rheinschiffahrt A.-G., Basel.\\\" So the receiver is the Basler Rheinschiffahrt AG. So receiver_persons should be that.\\n\\nNow, what is the letter_title? The letter is about a sale (\\\"Verkauf\\\") of the ship \\\"Rheinfelden\\\". The text mentions \\\"Verkauf.\\\" at the top. So the title might be \\\"Verkauf\\\" or something like \\\"Sale of the ship Rheinfelden\\\". But we need to extract from the letter. Possibly the title is not explicitly given, but there is a heading \\\"Verkauf.\\\" We can use that as the title. Alternatively, we could use \\\"Verkauf\\\" as the title. The instructions say \\\"letter_title: Title of the letter.\\\" We should look for any title. On the first page, there is \\\"Verkauf.\\\" under the date? Actually, it's above the address. So it might be the subject. So title = \\\"Verkauf\\\" (Sale). But to be more descriptive? The instruction says \\\"letter_title\\\" should be the title of the letter. So likely \\\"Verkauf\\\" is the title. We'll use that.\\n\\nSend_date: \\\"24. M\u00e4rz 1929\\\" -> ISO format: 1929-03-24.\\n\\nSender_persons: The letter is from \\\"Basler Personenschiffahrtsgesellschaft\\\". We can put that. But if we need a person, the Gesch\u00e4ftsleiter is not named. So we'll put the company name. Since it says \\\"Name(s) of the person(s)\\\", it might be acceptable to put the company as an entity. In some examples, they use organization names. Let's see the example: \\\"sender_persons\\\": [\\\"Lisa Simpson\\\"] - a person. So they expect names of people, but sometimes it's a group or organization. We'll interpret \\\"person(s)\\\" broadly. We could also put \\\"Basler Personenschiffahrtsgesellschaft\\\" as the sender. \\n\\nReceiver_persons: \\\"Basler Rheinschiffahrt A.-G., Basel\\\" -> so \\\"Basler Rheinschiffahrt A.-G.\\\" or \\\"Basler Rheinschiffahrt A.-G., Basel\\\"? Probably the organization name. We'll put \\\"Basler Rheinschiffahrt A.-G.\\\"\\n\\nNow, we need to check if there are multiple persons? The sender is a company, so one. Receiver is a company, so one.\\n\\nLet's construct the JSON. The schema expects a top-level object with \\\"metadata\\\" key, and within that the four keys. The output should be a JSON object with metadata.\\n\\nWe must output only the JSON. So:\\n\\n{\\n  \\\"metadata\\\": {\\n    \\\"letter_title\\\": [\\\"Verkauf\\\"],\\n    \\\"send_date\\\": [\\\"1929-03-24\\\"],\\n    \\\"sender_persons\\\": [\\\"Basler Personenschiffahrtsgesellschaft\\\"],\\n    \\\"receiver_persons\\\": [\\\"Basler Rheinschiffahrt A.-G.\\\"]\\n  }\\n}\\n\\nBut wait: The instructions say \\\"Do not use OCR.\\\" But we are manually reading the text from the images. That's fine. Also, \\\"Take a deep breath and think step by step\\\" but we should not output reasoning, just JSON.\\n\\nLet's double-check the date: \\\"24. M\u00e4rz 1929\\\" -> 24 March 1929 -> 1929-03-24. Good.\\n\\nTitle: Actually, the letter starts with \\\"Verkauf.\\\" as a subject line. So that is likely the title. So \\\"Verkauf\\\" is appropriate.\\n\\nOne more thing: The sender is \\\"Basler Personenschiffahrtsgesellschaft\\\" at the bottom. The receiver is \\\"Basler Rheinschiffahrt A.-G.\\\" So that's correct.\\n\\nWe should also consider if the sender is \\\"Der Gesch\u00e4ftsleiter\\\" as a person? But that is a role, not a name. Since we don't have a name, we can't list a person. So better to use the organization name. If the instruction strictly meant individual persons, we might need to put null? But that seems unlikely because the letter is clearly from a company. The instruction says \\\"Name(s) of the person(s) who wrote the letter.\\\" Sometimes letters are written by organizations. So it's acceptable to put the organization.\\n\\nAlternatively, maybe we can infer the name from initials? No.\\n\\nLet's proceed.\\n\\nWe must output valid JSON. The schema example shows the keys inside \\\"metadata\\\". So we'll do that.\\n\\nThus final answer.\"}}],\"created\":1788853828,\"model\":\"deepseek-v4-flash-vision-exp\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":\"aa8d6caccae4a22492bb51091cfc8eab\",\"usage\":{\"completion_tokens\":1535,\"prompt_tokens\":1385,\"total_tokens\":2920,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":null,\"reasoning_tokens\":1472,\"rejected_prediction_tokens\":null},\"prompt_tokens_details\":{\"audio_tokens\":null,\"cached_tokens\":1280},\"prompt_cache_hit_tokens\":1280,\"prompt_cache_miss_tokens\":105}}"
+}

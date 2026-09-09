@@ -1,0 +1,45 @@
+{
+    "text": "{\"metadata\":{\"send_date\":[\"1933-07-04\"],\"letter_title\":null,\"sender_persons\":[\"Basler Personenschiffahrtgesellschaft\"],\"receiver_persons\":[\"Basler Rheinschiffahrt A.-G.\"]}}",
+    "model": "deepseek-v4-flash-vision-exp",
+    "provider": "deepseek",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 1385,
+        "output_tokens": 1196,
+        "total_tokens": 2581,
+        "cached_tokens": 384,
+        "input_cost_usd": 0.0006094,
+        "output_cost_usd": 0.00157872,
+        "estimated_cost_usd": 0.00218812
+    },
+    "duration": 14.508618593215942,
+    "timestamp": "2026-09-08T09:49:38.704485",
+    "parsed": {
+        "metadata": {
+            "send_date": [
+                "1933-07-04"
+            ],
+            "letter_title": null,
+            "sender_persons": [
+                "Basler Personenschiffahrtgesellschaft"
+            ],
+            "receiver_persons": [
+                "Basler Rheinschiffahrt A.-G."
+            ],
+            "document_number": "letter62"
+        }
+    },
+    "conversation_id": "955f4dcd-b826-46ca-8b40-51e2ac8d7f0e",
+    "score": {
+        "send_date_tp": 1,
+        "send_date_fp": 0,
+        "send_date_fn": 0,
+        "sender_persons_tp": 0,
+        "sender_persons_fp": 1,
+        "sender_persons_fn": 2,
+        "receiver_persons_tp": 0,
+        "receiver_persons_fp": 1,
+        "receiver_persons_fn": 0
+    },
+    "raw_response": "{\"id\":\"dbe077a9-e631-44a7-b874-02d60964c97c\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\\"metadata\\\":{\\\"send_date\\\":[\\\"1933-07-04\\\"],\\\"letter_title\\\":null,\\\"sender_persons\\\":[\\\"Basler Personenschiffahrtgesellschaft\\\"],\\\"receiver_persons\\\":[\\\"Basler Rheinschiffahrt A.-G.\\\"]}}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"reasoning_content\":\"We are given two images of a letter. We need to extract four keys: letter_title, sender_persons, send_date, receiver_persons. We must output JSON with a \\\"metadata\\\" object containing these keys. The values must be lists even if single. Use ISO dates. If not included, \\\"null\\\". Do not use OCR, but we can read the text from images.\\n\\nLet's examine the images.\\n\\nFirst image: It's a letterhead: \\\"BASLER PERSONENSCHIFFAHRTSGESELLSCHAFT\\\" (Basel Passenger Navigation Company). It says \\\"Copie.\\\" at top. Date: \\\"Basel, den 4. Juli 1933.\\\" So send_date is 1933-07-04.\\n\\nThe letter is addressed to: \\\"An die Basler Rheinschiffahrt A.-G., Marktgasse 5, Basel.\\\" So receiver_persons: The company \\\"Basler Rheinschiffahrt A.-G.\\\" Possibly also the address? But the receiver is the company. So list: [\\\"Basler Rheinschiffahrt A.-G.\\\"]\\n\\nThe letter starts: \\\"Sehr geehrte Herren,\\\" and then discusses a general assembly of 24 June 1933. It is signed by \\\"Basler Personenschiffahrtgesellschaft\\\" with signatures. The sender is the Basler Personenschiffahrtgesellschaft. So sender_persons: [\\\"Basler Personenschiffahrtgesellschaft\\\"] (or maybe the individual signatories? But the letter is from the company, so it's the organization. The signatories are named? In the second image, at the bottom, there are handwritten signatures but we can't read them clearly. The typed part says \\\"Basler Personenschiffahrtgesellschaft\\\" and then \\\"Der Pr\u00e4sident\\\" and \\\"Der Sekret\u00e4r\\\" with handwritten names. But the sender is the company. So we should put the company as the sender. However, we need to extract \\\"Name(s) of the person(s) who wrote the letter.\\\" It might be the individuals who signed? But the letter is written on behalf of the company. In historical context, the sender is the organization. But the instruction says \\\"person(s)\\\". Possibly we need to include the signatories if they are named. Let's look at the handwritten part: It says \\\"Dr. ...\\\" and \\\"A. ...\\\" but it's not clear. Actually, in the second image, the signatures are handwritten: one appears to be \\\"Dr. R. ...\\\" and another \\\"A. Oettinger\\\"? Let's zoom in mentally. We can read \\\"Dr. Rich. ...\\\" maybe? But it's not accurate. Since we are not using OCR, we rely on what we can see. The typed part has \\\"Der Pr\u00e4sident\\\" and \\\"Der Sekret\u00e4r\\\" but the names are not typed. So the sender_persons might be the company. But the example given includes individual names. The instruction says \\\"Name(s) of the person(s) who wrote the letter.\\\" The letter is from a company, so the sender is the company. In historical letters from organizations, the sender is the organization. So we can put \\\"Basler Personenschiffahrtgesellschaft\\\". However, maybe we should also consider the signatories. But since we cannot clearly read them, we might omit them. But if the instruction says \\\"person(s)\\\", it might expect the individuals. But the letter is from the company, so it's a corporate entity. Let's think: The top says \\\"BASLER PERSONENSCHIFFAHRTSGESELLSCHAFT\\\" and the letter ends with that typed name. So the sender is that company. So I'll set sender_persons to [\\\"Basler Personenschiffahrtgesellschaft\\\"]. But wait, the letter also says \\\"Wir erlauben uns\\\" which is first person plural, typical for a company.\\n\\nWhat about letter_title? The letter does not have a title. It is just a letter. So letter_title should be \\\"null\\\"? But maybe we can infer a title from content? The instruction says \\\"Title of the letter.\\\" If no title, set null. So letter_title: null.\\n\\nNow, receiver_persons: The addressee is \\\"An die Basler Rheinschiffahrt A.-G., Marktgasse 5, Basel.\\\" So the receiver is that company. So list: [\\\"Basler Rheinschiffahrt A.-G.\\\"]. Possibly we could include the address but it's not necessary.\\n\\nNow, send_date: \\\"Basel, den 4. Juli 1933.\\\" So date is 1933-07-04.\\n\\nSo the output should be:\\n{\\n  \\\"metadata\\\": {\\n    \\\"send_date\\\": [\\\"1933-07-04\\\"],\\n    \\\"letter_title\\\": null,\\n    \\\"sender_persons\\\": [\\\"Basler Personenschiffahrtgesellschaft\\\"],\\n    \\\"receiver_persons\\\": [\\\"Basler Rheinschiffahrt A.-G.\\\"]\\n  }\\n}\\n\\nBut wait: The schema says for each field: \\\"anyOf\\\": [{\\\"items\\\": {\\\"type\\\": \\\"string\\\"}, \\\"type\\\": \\\"array\\\"}, {\\\"type\\\": \\\"null\\\"}] So if it's null, it's allowed. So we can set letter_title to null.\\n\\nLet's double-check if there is any title in the letter. The first page has \\\"Copie.\\\" at top, but that's not a title. So no title.\\n\\nThus, JSON is as above.\\n\\nI'll output exactly that.\"}}],\"created\":1788853765,\"model\":\"deepseek-v4-flash-vision-exp\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":\"aa8d6caccae4a22492bb51091cfc8eab\",\"usage\":{\"completion_tokens\":1196,\"prompt_tokens\":1385,\"total_tokens\":2581,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":null,\"reasoning_tokens\":1139,\"rejected_prediction_tokens\":null},\"prompt_tokens_details\":{\"audio_tokens\":null,\"cached_tokens\":384},\"prompt_cache_hit_tokens\":384,\"prompt_cache_miss_tokens\":1001}}"
+}

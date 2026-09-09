@@ -7,7 +7,7 @@ import time
 # Add project root to sys.path before any local imports
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-from benchmark_base import DefaultBenchmark
+from scripts.benchmark_base import DefaultBenchmark, FatalProviderError
 from dotenv import load_dotenv
 from local import is_local_provider
 import logging
@@ -86,7 +86,13 @@ def main(limit_to: list[str] = None, regenerate_existing_results: bool = False, 
             # Load benchmark
             benchmark = load_benchmark(test_config)
             # Run benchmark
-            benchmark.run(regenerate_existing_results=regenerate_existing_results, workers=workers)
+            try:
+                benchmark.run(regenerate_existing_results=regenerate_existing_results, workers=workers)
+            except FatalProviderError as e:
+                # Credits exhausted, bad key or a blocked model: every remaining test would
+                # fail the same way, so stop instead of hammering the API.
+                logging.critical(f"Stopping run: {e}")
+                break
 
 
 if __name__ == "__main__":

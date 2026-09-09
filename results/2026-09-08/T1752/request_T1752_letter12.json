@@ -1,0 +1,46 @@
+{
+    "text": "{\"metadata\":{\"send_date\":[\"1926-08-15\"],\"letter_title\":null,\"sender_persons\":[\"Grosskopf\",\"J.A.Ritter\"],\"receiver_persons\":[\"Max Vischer\"]}}",
+    "model": "deepseek-v4-flash-vision-exp",
+    "provider": "deepseek",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 1741,
+        "output_tokens": 1373,
+        "total_tokens": 3114,
+        "cached_tokens": 1664,
+        "input_cost_usd": 0.00076604,
+        "output_cost_usd": 0.0018123600000000003,
+        "estimated_cost_usd": 0.0025784000000000002
+    },
+    "duration": 15.01516079902649,
+    "timestamp": "2026-09-08T09:50:41.352503",
+    "parsed": {
+        "metadata": {
+            "send_date": [
+                "1926-08-15"
+            ],
+            "letter_title": null,
+            "sender_persons": [
+                "Grosskopf",
+                "J.A.Ritter"
+            ],
+            "receiver_persons": [
+                "Max Vischer"
+            ],
+            "document_number": "letter12"
+        }
+    },
+    "conversation_id": "46fb26b8-f8ce-408d-a1d1-1901ae7d4b84",
+    "score": {
+        "send_date_tp": 0,
+        "send_date_fp": 1,
+        "send_date_fn": 1,
+        "sender_persons_tp": 1,
+        "sender_persons_fp": 1,
+        "sender_persons_fn": 1,
+        "receiver_persons_tp": 1,
+        "receiver_persons_fp": 0,
+        "receiver_persons_fn": 0
+    },
+    "raw_response": "{\"id\":\"43bab376-e23f-4c6f-a88c-1555de0bcf03\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\\"metadata\\\": {\\\"send_date\\\": [\\\"1926-08-15\\\"], \\\"letter_title\\\": null, \\\"sender_persons\\\": [\\\"Grosskopf\\\", \\\"J.A.Ritter\\\"], \\\"receiver_persons\\\": [\\\"Max Vischer\\\"]}}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"reasoning_content\":\"We need to extract from the letter the values for the keys: letter_title, sender_persons, send_date, receiver_persons. The letter is in German. We must output JSON with a \\\"metadata\\\" object containing these keys as arrays or null.\\n\\nFirst, analyze the images. The letter is from Basler Rheinschiffahrt-Aktiengesellschaft, dated \\\"Basel, den 15. August 1926.\\\" So send_date is 1926-08-15.\\n\\nThe sender persons: It is signed at the end: \\\"Basler Rheinschiffahrt = Aktiengesellschaft sig. Grosskopf J.A.Ritter.\\\" So sender persons are likely the company, but maybe the individuals? The key is \\\"sender_persons\\\" - typically the person(s) who wrote the letter. The letter is from the company, signed by Grosskopf and Ritter. But the sender is the company, or the individuals? The instruction says \\\"Name(s) of the person(s) who wrote the letter.\\\" In formal letters, the signatories are the senders. So we can list \\\"Grosskopf\\\" and \\\"J.A.Ritter\\\". However, the letterhead is the company. But the signatories are individuals. Let's see if there is a name in the letterhead: \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\". That is the company. The sender_persons could be the individuals who signed. But careful: The key is \\\"sender_persons\\\" not \\\"sender_organization\\\". Usually in historical letters, we extract the individuals. The examples show \\\"Lisa Simpson\\\" as a person. So we should extract the names of the individuals. The letter is signed by Grosskopf and J.A.Ritter. But also note that there is a note at the bottom: \\\"geht zur\u00fcck 14.VIII 26 sig.Vischer\\\" which is a handwritten note? Actually it says \\\"geht zur\u00fcck\\\" meaning \\\"returned\\\", and \\\"sig.Vischer\\\" possibly indicating that Vischer returned it. But that is not part of the letter content, it's a stamp or note. The main letter is from Grosskopf and Ritter.\\n\\nReceiver persons: The letter is addressed to \\\"Herrn Dr. Max Vischer, Pr\u00e4sident der Basler Personenschiffahrtgesellschaft\\\" at \\\"Basel\\\". So the receiver is Dr. Max Vischer.\\n\\nLetter title: The letter does not have an explicit title. It is a letter, so maybe the title is \\\"null\\\"? Or we can infer? The instruction says: \\\"letter_title: Title of the letter.\\\" If there is no explicit title, we set null. In historical letters, sometimes the title is not given. Here there is no title. So set to null.\\n\\nSend_date: The date is given as \\\"Basel, den 15. August 1926.\\\" So ISO format: 1926-08-15.\\n\\nNow, the JSON structure: It should be a \\\"Document\\\" with a \\\"metadata\\\" object. According to the expected schema, the output should be:\\n\\n{\\n  \\\"metadata\\\": {\\n    \\\"send_date\\\": [\\\"1926-08-15\\\"],\\n    \\\"letter_title\\\": null,\\n    \\\"sender_persons\\\": [\\\"Grosskopf\\\", \\\"J.A.Ritter\\\"],\\n    \\\"receiver_persons\\\": [\\\"Dr. Max Vischer\\\"]\\n  }\\n}\\n\\nBut check if the sender persons include the company? The letter is from \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\" as the company. However, the signature is by Grosskopf and J.A.Ritter. The instruction says \\\"sender_persons: Name(s) of the person(s) who wrote the letter.\\\" So it's the individuals. So we list the signatories.\\n\\nAlso, consider whether \\\"Dr. Max Vischer\\\" is the receiver. The letter is addressed to him. So yes.\\n\\nThe letter_title: There is no title. So null.\\n\\nOne thing: The date at the top says \\\"Basel, den 15. August 1926.\\\" The note at the bottom says \\\"geht zur\u00fcck 14.VIII 26\\\" which is August 14, 1926. But that is a note about returning, not the send date. So the send date is 15. August 1926.\\n\\nNow, verify if the sender_persons should be an array of strings. The signatories: \\\"Grosskopf\\\" and \\\"J.A.Ritter\\\". So two names.\\n\\nAlso, note that the letter has a handwritten note at the top: \\\"ABSCHRIFT\\\" (copy) and a red number \\\"12\\\". That is not relevant.\\n\\nSo final output:\\n\\n{\\n  \\\"metadata\\\": {\\n    \\\"send_date\\\": [\\\"1926-08-15\\\"],\\n    \\\"letter_title\\\": null,\\n    \\\"sender_persons\\\": [\\\"Grosskopf\\\", \\\"J.A.Ritter\\\"],\\n    \\\"receiver_persons\\\": [\\\"Dr. Max Vischer\\\"]\\n  }\\n}\\n\\nBut wait: The schema says for send_date, it's an array of strings or null. So we provide array. For letter_title, it's null or array. Since no title, use null. For sender_persons and receiver_persons, arrays.\\n\\nDouble-check: The receiver might include \\\"Herrn Dr. Max Vischer\\\" but the name is Max Vischer. Should we include the title? The instruction says names. So \\\"Max Vischer\\\" is the name. But we can include \\\"Dr. Max Vischer\\\" as that is the name as written. The example did not include titles. But it's okay. We can extract \\\"Max Vischer\\\" without \\\"Dr.\\\"? Let's use \\\"Max Vischer\\\". Actually the letter says \\\"Herrn Dr. Max Vischer\\\" so the name is Max Vischer, with title. For consistency, we can put \\\"Max Vischer\\\". But the key is \\\"receiver_persons\\\" so just the name. I'll use \\\"Max Vischer\\\".\\n\\nSimilarly for sender: \\\"Grosskopf\\\" and \\\"J. A. Ritter\\\". The signature says \\\"sig. Grosskopf J.A.Ritter.\\\" So the names are Grosskopf and J.A.Ritter. We can split them.\\n\\nAlso, note that the letterhead mentions the company, but we are extracting persons.\\n\\nThus the output.\\n\\nMake sure to output valid JSON. The response must be only the JSON.\"}}],\"created\":1788853828,\"model\":\"deepseek-v4-flash-vision-exp\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":\"aa8d6caccae4a22492bb51091cfc8eab\",\"usage\":{\"completion_tokens\":1373,\"prompt_tokens\":1741,\"total_tokens\":3114,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":null,\"reasoning_tokens\":1321,\"rejected_prediction_tokens\":null},\"prompt_tokens_details\":{\"audio_tokens\":null,\"cached_tokens\":1664},\"prompt_cache_hit_tokens\":1664,\"prompt_cache_miss_tokens\":77}}"
+}

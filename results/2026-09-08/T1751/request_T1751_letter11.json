@@ -1,0 +1,41 @@
+{
+    "text": "{\"metadata\":{\"send_date\":[\"1938-07-14\"],\"letter_title\":null,\"sender_persons\":null,\"receiver_persons\":null}}",
+    "model": "deepseek-v4-flash-vision-exp",
+    "provider": "deepseek",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 1029,
+        "output_tokens": 1318,
+        "total_tokens": 2347,
+        "cached_tokens": 384,
+        "input_cost_usd": 0.00045275999999999997,
+        "output_cost_usd": 0.00173976,
+        "estimated_cost_usd": 0.00219252
+    },
+    "duration": 14.091566324234009,
+    "timestamp": "2026-09-08T09:48:37.571885",
+    "parsed": {
+        "metadata": {
+            "send_date": [
+                "1938-07-14"
+            ],
+            "letter_title": null,
+            "sender_persons": null,
+            "receiver_persons": null,
+            "document_number": "letter11"
+        }
+    },
+    "conversation_id": "19790c78-5fb8-4ecc-99cb-4f42ba0281ea",
+    "score": {
+        "send_date_tp": 0,
+        "send_date_fp": 1,
+        "send_date_fn": 1,
+        "sender_persons_tp": 0,
+        "sender_persons_fp": 0,
+        "sender_persons_fn": 0,
+        "receiver_persons_tp": 0,
+        "receiver_persons_fp": 0,
+        "receiver_persons_fn": 0
+    },
+    "raw_response": "{\"id\":\"7b43653d-f141-46ff-b67e-e4d0cd697f70\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\\"metadata\\\":{\\\"send_date\\\":[\\\"1938-07-14\\\"],\\\"letter_title\\\":null,\\\"sender_persons\\\":null,\\\"receiver_persons\\\":null}}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"reasoning_content\":\"We need to extract metadata from the letter image. The letter is in German. Let's read it carefully.\\n\\nThe image shows a typed letter. Top left has \\\"O/S.\\\" and a red \\\"11\\\" at top right. Date at top right: \\\"14. Juli 1938\\\". \\n\\nAddress: \\\"An die Redaktion der 'Basler Nachrichten',\\\" and \\\"Basel\\\" below.\\n\\nThen the body: \\\"Im Briefkasten des Publikums vom 15. Juli in No. 189 wird ger\u00fcgt, dass die 'Rheinfelden' am 10. Juli bei der Abendfahrt die Bahre nicht geh\u00e4ngt hatte.\\\"\\n\\nSo the letter is from the \\\"Basler Personenschiffahrtsgesellschaft\\\" (Basel Passenger Shipping Company) to the editor of \\\"Basler Nachrichten\\\". \\n\\nThe sender is the company, but the signatory is \\\"Der Gesch\u00e4ftsf\u00fchrer\\\" (the manager). The letter is signed as \\\"Basler Personenschiffahrtsgesellschaft\\\" and \\\"Der Gesch\u00e4ftsf\u00fchrer\\\". So the sender is the company, but we need names. The company name is \\\"Basler Personenschiffahrtsgesellschaft\\\". Since there is no personal name, we should list the company as sender? Or we can list \\\"Der Gesch\u00e4ftsf\u00fchrer\\\" as the sender? But the instruction says \\\"Name(s) of the person(s) who wrote the letter.\\\" So we should extract the name of the person. In this case, the letter is from the company and signed by the manager. But without a specific name, we can't extract a person's name. So we should set \\\"sender_persons\\\" to null? Or we could use the company name. However, the instruction says \\\"person(s)\\\", so we should only extract personal names. Since it's a company, there is no explicit person's name. The letter is not signed with a name, just \\\"Der Gesch\u00e4ftsf\u00fchrer\\\". So we should set to null? But maybe the company name is the sender? The key is \\\"sender_persons\\\" so it expects persons. The examples show names of individuals. So we should not put the company name. Let's see if there is any other clue. The letter mentions \\\"wir\\\" (we), so it's from the company. But no personal name. So \\\"sender_persons\\\" should be null.\\n\\nReceiver: \\\"An die Redaktion der 'Basler Nachrichten'\\\" so receiver is the editor (Redaktion) of Basler Nachrichten. But again, no specific person's name. So we can put \\\"Redaktion der Basler Nachrichten\\\" as receiver? It's not a person. The key is \\\"receiver_persons\\\" so it expects persons. However, in some contexts, a company can be a receiver. But the instruction says \\\"person(s)\\\". So if no specific name, null. But the example includes \\\"Mayor Joe Quimby\\\" and \\\"Seymour Skinner\\\", which are persons. So we should only extract named persons.\\n\\nSo for receiver, we have \\\"Redaktion der Basler Nachrichten\\\" (the editorial office). That is not a person. So null.\\n\\nBut wait, the letter is addressed to a specific entity. Should we consider the receiver as an organization? The key is \\\"receiver_persons\\\" meaning the persons who receive the letter. In many cases, letters to companies are addressed to the company. But since no personal name, we can either put the organization name or null. The instructions say \\\"Name(s) of the person(s) who received the letter.\\\" So if no person, null. However, maybe we can interpret \\\"Redaktion\\\" as a collective? But still not a specific person.\\n\\nLet's double-check: In the example, \\\"receiver_persons\\\" has two names. So they expect personal names.\\n\\nWhat about the date? The date is clearly \\\"14. Juli 1938\\\". So format as \\\"1938-07-14\\\".\\n\\nWhat about the letter title? The letter doesn't have an explicit title. The instruction says \\\"letter_title\\\". If not included, set to null. This is a letter to the editor, no title. So null.\\n\\nThus, the JSON should be:\\n{\\n  \\\"metadata\\\": {\\n    \\\"send_date\\\": [\\\"1938-07-14\\\"],\\n    \\\"letter_title\\\": null,\\n    \\\"sender_persons\\\": null,\\n    \\\"receiver_persons\\\": null\\n  }\\n}\\n\\nBut wait, the instruction says: \\\"If a piece of information is not included in the letter, set the value for the corresponding key to 'null'.\\\" So null should be a single value, not a list? Actually, it says \\\"stored as a list, even if there is only a single value\\\". So for null, it should be null, not a list. The schema also defines the type as either array or null. So we set the value to null.\\n\\nBut the example has lists. So we can do \\\"send_date\\\": [\\\"1938-07-14\\\"], and others: null.\\n\\nHowever, the instruction says \\\"values corresponding to each key should be stored as a list, even if there is only a single value for a key\\\". So if the date is a single value, it's in a list. If it's not included, it's null. So we should have null for the missing ones.\\n\\nBut what about sender? The letter is from the Basler Personenschiffahrtsgesellschaft. Is that a \\\"person\\\"? No. So null.\\n\\nBut maybe we can put the company name as a string? The instruction is strict: \\\"person(s)\\\". So I think null is correct.\\n\\nLet's re-read the letter: \\\"Hochachtungsvoll: Basler Personenschiffahrtsgesellschaft Der Gesch\u00e4ftsf\u00fchrer\\\" - So the sender is the company, and the manager. But no individual name. So indeed, no persons.\\n\\nSimilarly, receiver: \\\"An die Redaktion der 'Basler Nachrichten'\\\" - no individual name.\\n\\nSo the JSON should be as above.\\n\\nBut let's confirm the date format: \\\"14. Juli 1938\\\" -> 1938-07-14.\\n\\nSo final answer.\"}}],\"created\":1788853704,\"model\":\"deepseek-v4-flash-vision-exp\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":\"aa8d6caccae4a22492bb51091cfc8eab\",\"usage\":{\"completion_tokens\":1318,\"prompt_tokens\":1029,\"total_tokens\":2347,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":null,\"reasoning_tokens\":1282,\"rejected_prediction_tokens\":null},\"prompt_tokens_details\":{\"audio_tokens\":null,\"cached_tokens\":384},\"prompt_cache_hit_tokens\":384,\"prompt_cache_miss_tokens\":645}}"
+}

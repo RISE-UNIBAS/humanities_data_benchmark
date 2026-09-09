@@ -1,0 +1,43 @@
+{
+    "text": "{\"metadata\":{\"send_date\":[\"1928-05-05\"],\"letter_title\":null,\"sender_persons\":null,\"receiver_persons\":[\"Basler Rheinschiffahrt-A.G.\"]}}",
+    "model": "deepseek-v4-flash-vision-exp",
+    "provider": "deepseek",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 1029,
+        "output_tokens": 1142,
+        "total_tokens": 2171,
+        "cached_tokens": 1024,
+        "input_cost_usd": 0.00045275999999999997,
+        "output_cost_usd": 0.00150744,
+        "estimated_cost_usd": 0.0019602
+    },
+    "duration": 12.566644430160522,
+    "timestamp": "2026-09-08T09:50:53.013943",
+    "parsed": {
+        "metadata": {
+            "letter_title": null,
+            "send_date": [
+                "1928-05-05"
+            ],
+            "sender_persons": null,
+            "receiver_persons": [
+                "Basler Rheinschiffahrt-A.G."
+            ],
+            "document_number": "letter33"
+        }
+    },
+    "conversation_id": "cd87a430-0a60-4711-8e70-1b2a48efdda4",
+    "score": {
+        "send_date_tp": 1,
+        "send_date_fp": 0,
+        "send_date_fn": 0,
+        "sender_persons_tp": 0,
+        "sender_persons_fp": 0,
+        "sender_persons_fn": 0,
+        "receiver_persons_tp": 0,
+        "receiver_persons_fp": 1,
+        "receiver_persons_fn": 0
+    },
+    "raw_response": "{\"id\":\"45461827-4d11-4fdb-bcde-a28e9335ec40\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\\"metadata\\\": {\\\"letter_title\\\": null, \\\"send_date\\\": [\\\"1928-05-05\\\"], \\\"sender_persons\\\": null, \\\"receiver_persons\\\": [\\\"Basler Rheinschiffahrt-A.G.\\\"]}}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"reasoning_content\":\"We need to extract from the image. The letter is in German. Let's read it.\\n\\nThe letter is dated \\\"5. Mai 1928.\\\" (5 May 1928). The sender is the Schriftleitung of the Zeitschrift \\\"Die Rheinquellen\\\" (editorial office). The letter is addressed to \\\"An die Basler Rheinschiffahrt-A.G., Basel.\\\" (To the Basel Rhine Shipping Company). Inside, it mentions Herr Direktor W. Stauffacher, President of the association, who forwarded a letter. So the letter writer is the Schriftleitung, but we need the name of the person? The letter is signed with \\\"Hochachtend\\\" but no name? Actually, the letter is typed, and there is no explicit name at the end. The sender is the editorial office, but the specific person is not named. However, the letter is from the editorial office. We need to extract sender_persons. Possibly it is the editorial office? But the key asks for \\\"Name(s) of the person(s) who wrote the letter.\\\" The letter is written by the editor? The letter says \\\"\u00fcbermittelt mir als Schriftleiter der Zeitschrift...\\\" meaning the editor is the writer. But the name is not given. So we might set it to null? But the sender is the Schriftleitung. However, the instruction says \\\"if a piece of information is not included in the letter, set the value for the corresponding key to 'null'.\\\" So sender person name is not explicitly mentioned. But we have \\\"Herr Direktor W. Stauffacher\\\" who is the President of the association and he forwarded a letter, but he is not the sender of this letter. The sender is the Schriftleitung (editorial office). The specific person is not named. So sender_persons should be null? Or maybe we can infer \\\"Schriftleitung\\\" as the sender, but it's not a person name. The key is \\\"sender_persons\\\", so we need names. Since no name is given, we set to null.\\n\\nReceiver: \\\"An die Basler Rheinschiffahrt-A.G., Basel.\\\" So the receiver is the Basel Rhine Shipping Company. That is an organization, not a person. But the key asks for \\\"Name(s) of the person(s) who received the letter.\\\" However, it might be the company. The instruction says \\\"Name(s) of the person(s)\\\" - but if it's an organization, it might be acceptable. The example used \\\"Mayor Joe Quimby\\\" and \\\"Seymour Skinner\\\" which are persons. But here it's a company. Maybe we can set receiver_persons to [\\\"Basler Rheinschiffahrt-A.G.\\\"]? But it's not a person. Alternatively, the letter is addressed to the company, and inside it mentions \\\"Herr Direktor W. Stauffacher\\\" as the addressee? Actually, the letter is to the company, but the content is for the director. The address line says \\\"An die Basler Rheinschiffahrt-A.G., Basel.\\\" So the receiver is the company. But perhaps we can list the company as the receiver. The instruction says \\\"Name(s) of the person(s)\\\" but it's ambiguous. However, the schema defines anyOf array of strings, so we can put the company name. But we need to be careful: the example had persons. I think it's safe to put the company name as the receiver. But we should also consider if the letter is addressed to W. Stauffacher? Actually, the letter is to the company, and the first sentence says \\\"Herr Direktor W. Stauffacher, Pr\u00e4sident unseres Vereins, \u00fcbermittelt mir als Schriftleiter der Zeitschrift...\\\" meaning he forwarded a letter to the editor. So the letter is from the editor to the company. So receiver is the company.\\n\\nLetter title: There is no explicit title. So we set letter_title to null.\\n\\nDate: \\\"5. Mai 1928.\\\" So convert to ISO: 1928-05-05.\\n\\nSo we have:\\n- letter_title: null\\n- send_date: [\\\"1928-05-05\\\"]\\n- sender_persons: null (since no specific person named)\\n- receiver_persons: [\\\"Basler Rheinschiffahrt-A.G.\\\"]\\n\\nBut check: The letter is signed \\\"Hochachtend\\\" without a name. So sender is not specified. So null.\\n\\nAlternatively, we might try to identify the sender as the \\\"Schriftleiter\\\" but no name. So null.\\n\\nThe output should be a JSON with a \\\"metadata\\\" key containing these fields.\\n\\nSo the final JSON:\\n{\\n  \\\"metadata\\\": {\\n    \\\"letter_title\\\": null,\\n    \\\"send_date\\\": [\\\"1928-05-05\\\"],\\n    \\\"sender_persons\\\": null,\\n    \\\"receiver_persons\\\": [\\\"Basler Rheinschiffahrt-A.G.\\\"]\\n  }\\n}\\n\\nBut we need to confirm if the receiver should be the person? The letter is addressed to company, but inside it says \\\"Herr Direktor W. Stauffacher\\\" is the President of the association, not the receiver. Actually, the letter is to the company. So it's fine.\\n\\nLet's output this.\"}}],\"created\":1788853841,\"model\":\"deepseek-v4-flash-vision-exp\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":\"aa8d6caccae4a22492bb51091cfc8eab\",\"usage\":{\"completion_tokens\":1142,\"prompt_tokens\":1029,\"total_tokens\":2171,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":null,\"reasoning_tokens\":1092,\"rejected_prediction_tokens\":null},\"prompt_tokens_details\":{\"audio_tokens\":null,\"cached_tokens\":1024},\"prompt_cache_hit_tokens\":1024,\"prompt_cache_miss_tokens\":5}}"
+}

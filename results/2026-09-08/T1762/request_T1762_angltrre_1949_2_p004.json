@@ -1,0 +1,48 @@
+{
+    "text": "{\"advertisements\":[{\"box\":[150.0,100.0,2350.0,1700.0]},{\"box\":[150.0,1900.0,2350.0,3300.0]}]}",
+    "model": "deepseek-v4-flash-vision-exp",
+    "provider": "deepseek",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 694,
+        "output_tokens": 1337,
+        "total_tokens": 2031,
+        "input_cost_usd": 0.00030535999999999996,
+        "output_cost_usd": 0.0017648400000000002,
+        "estimated_cost_usd": 0.0020702000000000003
+    },
+    "duration": 13.537707090377808,
+    "timestamp": "2026-09-08T10:27:18.603369",
+    "parsed": {
+        "advertisements": [
+            {
+                "box": [
+                    150,
+                    100,
+                    2350,
+                    1700
+                ]
+            },
+            {
+                "box": [
+                    150,
+                    1900,
+                    2350,
+                    3300
+                ]
+            }
+        ]
+    },
+    "conversation_id": "827a5140-2003-415d-8332-46978feed16e",
+    "score": {
+        "f1": 1.0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "mean_iou": 0.827,
+        "true_positives": 2,
+        "false_positives": 0,
+        "false_negatives": 0,
+        "iou_threshold": 0.5
+    },
+    "raw_response": "{\"id\":\"48a2fae1-81d8-4f2c-9772-50dedc052e14\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\\"advertisements\\\": [{\\\"box\\\": [150, 100, 2350, 1700]}, {\\\"box\\\": [150, 1900, 2350, 3300]}]}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"reasoning_content\":\"We need to extract advertisements from the page. The image is 2479 x 3508 pixels. We see two distinct advertisements: the top one for \\\"Crowe & Co. Ltd.\\\" and the bottom one for \\\"Nivada\\\". They are separated by a horizontal line. There is also a page number \\\"26\\\" at the bottom left, but that is not an advertisement.\\n\\nWe need to output bounding boxes in pixel coordinates. We'll estimate based on the image. The top advertisement occupies roughly from the top of the page (but not the very top, there's some white space) down to about halfway. Let's look at the image: The top ad has a border, and the bottom ad also has a border. They are separate.\\n\\nWe need coordinates: The page is 2479 wide, 3508 tall. The top ad starts around y=100? Actually, the top border of the top ad is at around y=110? Let's examine: The top of the page has a header? Actually, the image shows a page with a black border at the top? There's a thin black line at the very top. Then the top ad starts after some white space. We'll approximate.\\n\\nLooking at the image, the top ad has a rectangular border. Its top-left corner is around (150, 110) maybe? But we need accurate bounding boxes. Since we are to extract all advertisements, we should identify the regions that are clearly ads.\\n\\nThe top ad: It has text \\\"Freight Agents to\\\" and then a list, and \\\"THE RELIABLE FORWARDING AGENT\\\" on the right. Then the logo, then \\\"CROWE & CO. LTD.\\\" and addresses. The entire area within the border is the ad. The bottom ad is for Nivada watches.\\n\\nLet's measure from the image description: The image is 2479 x 3508. The top ad appears to start at around y = 100? Actually, the top of the image has a black bar? The image shows a black border at the top edge of the page. Then there's a white area, then the ad starts. The ad's top border line is visible below the top edge. We'll estimate: The top ad's bounding box: x0 = about 150, y0 = about 100, x1 = about 2300, y1 = about 1700? But we need to be more precise.\\n\\nAlternatively, since the instruction says \\\"Extract all advertisements and return their bounding boxes\\\", we can provide the bounding boxes for the two ads. We'll output a list of two objects.\\n\\nI'll approximate based on typical proportions. The page is 2479 x 3508. The top ad occupies roughly from 4% to 48% of the height? Actually, from the image, the top ad ends at around y=1700? Let's check: The bottom ad starts at y=1800? There's a horizontal line separating them? Actually, there is a line at the end of the top ad, then the bottom ad starts. The bottom ad as well has a border.\\n\\nLooking at the image, the top ad's border is at the top, and the bottom ad's border is at the bottom. The bottom ad seems to occupy from about y=1900 to y=3300? Possibly.\\n\\nWe need to output JSON. Since we cannot measure pixel-perfect, we'll give reasonable estimates. I'll assume the top ad covers the top half, and the bottom ad covers the bottom half, with some margins.\\n\\nBetter: Let's look at the image visually. The top ad: It starts a bit down from the top. The top of the ad border is at about 10% of the height? Actually, the page has a black top edge, then white, then the ad border. The ad border is somewhat rectangular. I'll estimate:\\n\\nTop ad: x0 = 150, y0 = 100, x1 = 2350, y1 = 1700 (roughly)\\nBottom ad: x0 = 150, y0 = 1900, x1 = 2350, y1 = 3400 (roughly)\\n\\nBut these are guesses. We can do better by using the fact that the image is 2479 x 3508. The top ad appears to have its top-left corner at about (150, 100) from the top-left of the image. Actually, from the visual, the top ad starts at about y=100, and its bottom is at about y=1700? There's a horizontal line at the bottom of the top ad. The bottom ad starts around y=1900 and ends around y=3300.\\n\\nMake sure to include only the advertisement regions. The page number \\\"26\\\" is not part of an ad.\\n\\nThus, the advertisements array will have two objects.\\n\\nWe'll output:\\n\\n{\\n  \\\"advertisements\\\": [\\n    {\\\"box\\\": [150, 100, 2350, 1700]},\\n    {\\\"box\\\": [150, 1900, 2350, 3300]}\\n  ]\\n}\\n\\nBut we need to be cautious: The boxes should be [x0, y0, x1, y1] where (x0,y0) is top-left and (x1,y1) is bottom-right.\\n\\nLet's refine with actual measurements from the image: The image is 2479 x 3508. The top ad's left border seems to be at x=150, right border at x=2350. The top border is at y=100, bottom border at y=1700. The bottom ad has the same x coordinates, but y from 1900 to 3300.\\n\\nAlternatively, we can estimate using the fact that the ads are symmetrical. Let's see: The top ad has a border, and its top edge is not at the very top because there's some white space. The bottom ad also has a border, and its bottom edge is not at the very bottom because there's some white space.\\n\\nI'll go with those numbers.\\n\\nBut let's think: The instructions say \\\"Extract all advertisements and return their bounding boxes.\\\" So we only need to output the JSON. We'll do that.\\n\\nFinal answer.\"}}],\"created\":1788856026,\"model\":\"deepseek-v4-flash-vision-exp\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":\"aa8d6caccae4a22492bb51091cfc8eab\",\"usage\":{\"completion_tokens\":1337,\"prompt_tokens\":694,\"total_tokens\":2031,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":null,\"reasoning_tokens\":1293,\"rejected_prediction_tokens\":null},\"prompt_tokens_details\":{\"audio_tokens\":null,\"cached_tokens\":0},\"prompt_cache_hit_tokens\":0,\"prompt_cache_miss_tokens\":694}}"
+}

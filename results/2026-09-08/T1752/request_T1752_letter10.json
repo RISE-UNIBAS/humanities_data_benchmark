@@ -1,0 +1,43 @@
+{
+    "text": "{\"metadata\":{\"send_date\":[\"1926-07-13\"],\"letter_title\":[\"Betr. 'ALBATROS'\"],\"sender_persons\":null,\"receiver_persons\":null}}",
+    "model": "deepseek-v4-flash-vision-exp",
+    "provider": "deepseek",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 1029,
+        "output_tokens": 1420,
+        "total_tokens": 2449,
+        "cached_tokens": 1024,
+        "input_cost_usd": 0.00045275999999999997,
+        "output_cost_usd": 0.0018744000000000002,
+        "estimated_cost_usd": 0.00232716
+    },
+    "duration": 14.790186882019043,
+    "timestamp": "2026-09-08T09:50:41.124527",
+    "parsed": {
+        "metadata": {
+            "letter_title": [
+                "Betr. 'ALBATROS'"
+            ],
+            "send_date": [
+                "1926-07-13"
+            ],
+            "sender_persons": null,
+            "receiver_persons": null,
+            "document_number": "letter10"
+        }
+    },
+    "conversation_id": "df86c4f6-1f57-4698-8181-0022b64b96c5",
+    "score": {
+        "send_date_tp": 1,
+        "send_date_fp": 0,
+        "send_date_fn": 0,
+        "sender_persons_tp": 0,
+        "sender_persons_fp": 0,
+        "sender_persons_fn": 0,
+        "receiver_persons_tp": 0,
+        "receiver_persons_fp": 0,
+        "receiver_persons_fn": 0
+    },
+    "raw_response": "{\"id\":\"b84be33a-2b69-486e-9694-64f6b0183393\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\\"metadata\\\":{\\\"letter_title\\\":[\\\"Betr. 'ALBATROS'\\\"],\\\"send_date\\\":[\\\"1926-07-13\\\"],\\\"sender_persons\\\":null,\\\"receiver_persons\\\":null}}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"reasoning_content\":\"We need to extract data from the letter image. The letter is in German. We need to provide JSON with keys: letter_title, sender_persons, send_date, receiver_persons. Use ISO format for date. If not included, set to \\\"null\\\". The output should be JSON object with \\\"metadata\\\" key containing these fields. The instruction says \\\"Reply with JSON object ONLY.\\\" and \\\"Do not return anything except the JSON file.\\\" But the output format in the schema expects a \\\"metadata\\\" key. The example in the prompt shows a JSON with the keys directly. However, the schema says: {\\\"$defs\\\": {\\\"Metadata\\\": {...}}, \\\"properties\\\": {\\\"metadata\\\": {\\\"$ref\\\": \\\"#/$defs/Metadata\\\"}}, ...} So we need to wrap the metadata inside a \\\"metadata\\\" key. Let's carefully read: \\\"You MUST respond with valid JSON matching this exact schema\\\". So output should have \\\"metadata\\\" object with properties.\\n\\nNow, from the letter:\\n\\n- date: \\\"13. Juli 1926.\\\" So send_date should be \\\"1926-07-13\\\".\\n- Letter title: It says \\\"Betr. 'ALBATROS'.\\\" This is the subject line, likely the title. So letter_title: [\\\"Betr. 'ALBATROS'\\\"] or maybe \\\"Albatros\\\"? We'll use the exact text \\\"Betr. 'ALBATROS'\\\".\\n- Sender: At bottom, \\\"Basler Personenschiffahrtsgesellschaft\\\" and \\\"Der Aktuarius\\\" with signature. So sender_persons should be the company name? The instruction says \\\"Name(s) of the person(s) who wrote the letter.\\\" It might be the company, but we need person(s). The letter is from the company, signed by \\\"Der Aktuarius\\\" (the secretary). The name of the person is not clearly readable. The signature is illegible. So we might put the company or \\\"null\\\"? Since we need names of persons, and no specific person name is mentioned, we can set sender_persons to [\\\"Basler Personenschiffahrtsgesellschaft\\\"] or maybe we need to extract the person's name. But in many letters, the sender is the organization. However, the key is \\\"sender_persons\\\", not \\\"sender_organizations\\\". The example uses \\\"Lisa Simpson\\\" which is a person. So we should extract person names. The letter does not contain a specific person's name for the sender. The sender is the company, and the person is the \\\"Aktuarius\\\" but with no name. We might set to \\\"null\\\" because no specific person name is given. But wait, the letter is signed by \\\"Der Aktuarius\\\" - that's a role, not a name. So we should set sender_persons to \\\"null\\\"? But we have the company. The instruction says \\\"Name(s) of the person(s) who wrote the letter.\\\" A company is not a person. So probably \\\"null\\\". However, it's common in archival metadata to include organizations as agents. But the schema expects \\\"sender_persons\\\", so let's be strict. The available information is that the letter is from the \\\"Basler Personenschiffahrtsgesellschaft\\\" (a company). The person's name is not mentioned. So we set \\\"sender_persons\\\" to \\\"null\\\"? Or we could treat the company as the sender, but the key is \\\"persons\\\". Let's re-read the prompt: \\\"sender_persons: Name(s) of the person(s) who wrote the letter.\\\" So it's about people. So if no person name is given, set to \\\"null\\\".\\n\\nSimilarly, receiver_persons: The letter is addressed to \\\"An das Elektrizit\u00e4tswerk, Basel.\\\" So the receiver is the Elektrizit\u00e4tswerk (electricity works) in Basel. That's an organization, not a person. So we set \\\"receiver_persons\\\" to \\\"null\\\"? Or maybe we should include the organization? But the key says \\\"persons\\\". The instruction says: \\\"receiver_persons: Name(s) of the person(s) who received the letter.\\\" Again, persons. So if it's an organization, it's not a person. So set to \\\"null\\\". However, the example includes \\\"Mayor Joe Quimby\\\" and \\\"Seymour Skinner\\\" which are persons. So indeed, we should only include person names. So in this letter, there are no person names for sender or receiver. Only organizational entities. So we set sender_persons and receiver_persons to \\\"null\\\".\\n\\nBut wait, the letter is addressed to \\\"Elektrizit\u00e4tswerk\\\" and the sender is \\\"Basler Personenschiffahrtsgesellschaft\\\". Neither are persons. So both should be \\\"null\\\".\\n\\nletter_title: The title is the subject line. It says \\\"Betr. 'ALBATROS'.\\\" So we can extract that as the title. Or maybe the title is just \\\"ALBATROS\\\"? But the full subject is \\\"Betr. 'ALBATROS'.\\\" We can use that as the title. Since it's a list, we put it as a single-element list.\\n\\nsend_date: The date is in the top right: \\\"13. Juli 1926.\\\" So convert to ISO: \\\"1926-07-13\\\".\\n\\nNow, output JSON with \\\"metadata\\\" key. So:\\n\\n{\\n  \\\"metadata\\\": {\\n    \\\"letter_title\\\": [\\\"Betr. 'ALBATROS'\\\"],\\n    \\\"send_date\\\": [\\\"1926-07-13\\\"],\\n    \\\"sender_persons\\\": null,\\n    \\\"receiver_persons\\\": null\\n  }\\n}\\n\\nBut wait the schema says: \\\"send_date\\\": {\\\"anyOf\\\": [{\\\"items\\\": {\\\"type\\\": \\\"string\\\"}, \\\"type\\\": \\\"array\\\"}, {\\\"type\\\": \\\"null\\\"}]}. So it can be an array of strings or null. Since there is one date, it's okay to have an array with one string. But in the example, they have arrays for all. So we can keep arrays. For sender_persons and receiver_persons, we set to null because no persons.\\n\\nLet's double-check: Is there any person mentioned? The letter mentions \\\"Herrn H. Wylemann\\\" (Herr H. Wylemann) but he is not the sender or receiver; he is mentioned as an engineer who conducted the test runs. So not relevant. Also \\\"Herr Wylemann\\\" is mentioned. So no.\\n\\nThus the answer is as above. Ensure it's valid JSON. The response should contain only JSON. So output that.\"}}],\"created\":1788853827,\"model\":\"deepseek-v4-flash-vision-exp\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":\"aa8d6caccae4a22492bb51091cfc8eab\",\"usage\":{\"completion_tokens\":1420,\"prompt_tokens\":1029,\"total_tokens\":2449,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":null,\"reasoning_tokens\":1374,\"rejected_prediction_tokens\":null},\"prompt_tokens_details\":{\"audio_tokens\":null,\"cached_tokens\":1024},\"prompt_cache_hit_tokens\":1024,\"prompt_cache_miss_tokens\":5}}"
+}

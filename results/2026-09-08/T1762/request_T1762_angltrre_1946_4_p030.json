@@ -1,0 +1,40 @@
+{
+    "text": "{\"advertisements\":[{\"box\":[200.0,2900.0,1800.0,3300.0]}]}",
+    "model": "deepseek-v4-flash-vision-exp",
+    "provider": "deepseek",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 694,
+        "output_tokens": 1099,
+        "total_tokens": 1793,
+        "input_cost_usd": 0.00030535999999999996,
+        "output_cost_usd": 0.00145068,
+        "estimated_cost_usd": 0.00175604
+    },
+    "duration": 11.546985387802124,
+    "timestamp": "2026-09-08T10:26:43.223550",
+    "parsed": {
+        "advertisements": [
+            {
+                "box": [
+                    200,
+                    2900,
+                    1800,
+                    3300
+                ]
+            }
+        ]
+    },
+    "conversation_id": "093e3a25-4d34-4e40-be2b-12ff85e17995",
+    "score": {
+        "f1": 0.0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "mean_iou": 0.0,
+        "true_positives": 0,
+        "false_positives": 1,
+        "false_negatives": 1,
+        "iou_threshold": 0.5
+    },
+    "raw_response": "{\"id\":\"11d6c2c7-64b8-4475-886b-a9de0187cb4c\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\\"advertisements\\\": [{\\\"box\\\": [200, 2900, 1800, 3300]}]}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"reasoning_content\":\"We need to extract all advertisements from the given page image. The page is from a magazine, likely \\\"The Aeroplane\\\" or similar. The image shows an article on the left and right columns, with an advertisement at the bottom left area.\\n\\nLooking at the image: At the bottom, there is a section that says \\\"Modern Printing\\\" and \\\"VOGT-SCHILD Ltd., PRINTERS, SOLEURE\\\" with some text on the right. This is clearly an advertisement. There might be others, but scanning the page, there is only one distinct advertisement.\\n\\nWe need the bounding box. The page size is 2479 x 3508. So we need to provide coordinates in that scale. Let's approximate the location.\\n\\nThe advertisement is at the bottom left, starting around x=200, y=2900? Actually let's look at the image layout. The text \\\"Modern Printing\\\" is in a box. The box seems to start around x=250, y=2900? Wait, the image is 2479x3508. Let's estimate based on the visual.\\n\\nIn the provided image, at the bottom, there is a rectangular box containing the ad. The left edge is around x=250 (in original pixels), the right edge is around x=1800? Actually it spans across the left and middle columns. Let's look more carefully.\\n\\nThe ad starts with a line \\\"Modern Printing\\\" in script, then \\\"VOGT-SCHILD Ltd., PRINTERS, SOLEURE\\\" in bold. It is within a bordered box. The box seems to be from roughly x=250 to x=1800, and y=2900 to y=3300? Let's look at the actual image coordinates.\\n\\nGiven the image is 2479x3508, the ad appears to be in the lower left quadrant. Let's estimate:\\n\\n- The top left of the advertisement box is around x=250, y=2900.\\n- The bottom right is around x=1800, y=3300.\\n\\nBut we need to be precise. Let's try to infer from the text. The article text above the ad ends around y=2900? Actually, the text \\\"economy.\\\" is at the bottom of the left column, and then the ad starts below that. The ad has a border.\\n\\nAlternatively, we can use an image processing approach mentally. But since we are to output JSON, we must provide a box.\\n\\nLet's re-examine the image. The page number \\\"140\\\" is at bottom left. The ad box seems to span from about the left margin to about two-thirds of the page width. The top of the ad box is below the main text. The bottom of the ad box is above the page number.\\n\\nLet's estimate in pixels: The page is 2479 wide, 3508 tall. The ad box appears to start at x=200 (left margin) and end at x=1800 (right edge of the box). The y-coordinate: top around 2900, bottom around 3300.\\n\\nIn the image, the text \\\"Modern Printing\\\" is large and italic. The box has a border. The ad is clearly distinct from the article.\\n\\nThus, the box: [200, 2900, 1800, 3300] approximately.\\n\\nBut let's try to be more accurate. Looking at the image, the left edge of the box is aligned with the left margin of the page, which is about 200 pixels from the left. The right edge of the box extends to about the middle of the page, maybe around 1700? Actually, the text \\\"VOGT-SCHILD Ltd., PRINTERS, SOLEURE\\\" ends around x=1200? But the box might be wider. Let's look at the border.\\n\\nThe ad box has a thin border. On the right side, the border is visible around x=1800. The top border is around y=2950. The bottom border is around y=3350.\\n\\nSo box: [200, 2950, 1800, 3350]? But page number \\\"140\\\" is at bottom left, so the bottom of the ad is above that, so y=3300 is safe.\\n\\nAlternatively, maybe there is another ad? No, the rest is text.\\n\\nThus, the JSON should contain one advertisement with this box.\\n\\nLet's round: [200, 2900, 1800, 3300] is plausible.\\n\\nBut we need to ensure coordinates are within the page size. Since the page is 2479x3508, max x is 2479, max y is 3508. [200,2900,1800,3300] is within.\\n\\nSo I'll output:\\n\\n{\\\"advertisements\\\": [{\\\"box\\\": [200, 2900, 1800, 3300]}]}\\n\\nBut let's double-check. The ad text \\\"Modern Printing\\\" starts around x=300? Actually, the left edge of the box is at the margin, so x=200 is fine. The top of the box is below the article text, so y=2900 is reasonable.\\n\\nI'll go with that.\"}}],\"created\":1788855993,\"model\":\"deepseek-v4-flash-vision-exp\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":\"aa8d6caccae4a22492bb51091cfc8eab\",\"usage\":{\"completion_tokens\":1099,\"prompt_tokens\":694,\"total_tokens\":1793,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":null,\"reasoning_tokens\":1073,\"rejected_prediction_tokens\":null},\"prompt_tokens_details\":{\"audio_tokens\":null,\"cached_tokens\":0},\"prompt_cache_hit_tokens\":0,\"prompt_cache_miss_tokens\":694}}"
+}

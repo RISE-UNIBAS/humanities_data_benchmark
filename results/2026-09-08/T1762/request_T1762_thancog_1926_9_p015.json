@@ -1,0 +1,48 @@
+{
+    "text": "{\"advertisements\":[{\"box\":[200.0,200.0,2300.0,1650.0]},{\"box\":[200.0,1800.0,2300.0,3200.0]}]}",
+    "model": "deepseek-v4-flash-vision-exp",
+    "provider": "deepseek",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 694,
+        "output_tokens": 1499,
+        "total_tokens": 2193,
+        "input_cost_usd": 0.00030535999999999996,
+        "output_cost_usd": 0.00197868,
+        "estimated_cost_usd": 0.00228404
+    },
+    "duration": 14.718498229980469,
+    "timestamp": "2026-09-08T10:28:17.545991",
+    "parsed": {
+        "advertisements": [
+            {
+                "box": [
+                    200,
+                    200,
+                    2300,
+                    1650
+                ]
+            },
+            {
+                "box": [
+                    200,
+                    1800,
+                    2300,
+                    3200
+                ]
+            }
+        ]
+    },
+    "conversation_id": "36c1132c-dd68-46c3-aed0-e06563405208",
+    "score": {
+        "f1": 1.0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "mean_iou": 0.847,
+        "true_positives": 2,
+        "false_positives": 0,
+        "false_negatives": 0,
+        "iou_threshold": 0.5
+    },
+    "raw_response": "{\"id\":\"9e726c28-b636-4982-998d-876f3f916fcd\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\\"advertisements\\\": [{\\\"box\\\": [200, 200, 2300, 1650]}, {\\\"box\\\": [200, 1800, 2300, 3200]}]}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"reasoning_content\":\"We need to extract advertisements from the page. The image shows a page from \\\"THE ANGLO-SWISS COMMERCIAL GAZETTE\\\" from September 1926. There are two distinct advertisements:\\n\\n1. Top advertisement: \\\"Die Britische Industrie-Messe 1927\\\" - a large ad with text about the British Industries Fair. It has a bordered box. The top-left corner is roughly around x=200, y=200, and bottom-right around x=2300, y=1700? Actually let's look at the image dimensions: 2479 x 3508 pixels. So we need to estimate coordinates.\\n\\n2. Bottom advertisement: \\\"APPLICATION FOR ADMISSION TO MEMBERSHIP\\\" - this is a form for the British Chamber of Commerce for Switzerland. It also appears in a bordered box. Top-left around x=200, y=1800, bottom-right around x=2300, y=3200? Need to be precise.\\n\\nWe should output the bounding boxes. Since we don't have exact pixel coordinates, we can approximate based on the visual layout. Let's analyze the image.\\n\\nThe image is a scanned page. The top advertisement (the one about the British Industries Fair) occupies the upper half. It has a border. The text starts at the top. Let's estimate: The border seems to start at around x=150, y=200? Actually, there is a margin. The page number \\\"15\\\" is at top right. The title \\\"THE ANGLO-SWISS COMMERCIAL GAZETTE\\\" is at top center. So the advertisement begins below that.\\n\\nLooking at the image: The top ad's outer border appears to be from roughly x=200, y=200 to x=2300, y=1700. But we need to be more precise.\\n\\nLet's consider the image scale. The page is 2479 x 3508. Typical margins: The left margin is around 100 pixels, right margin around 100, top margin around 100, bottom around 100. So the content area is about 2279 x 3308.\\n\\nThe top ad has a clear rectangular border. Its top edge is a few pixels below the header. The header occupies about the top 100-150 pixels. So the ad's top might be around y=200. The bottom of the top ad is around y=1600? Actually, there is a gap before the next ad.\\n\\nThe bottom ad starts around y=1800 and goes down to near the bottom, maybe y=3200.\\n\\nLet's try to estimate from the image content. The image shows the top ad with a bold title \\\"Die Britische Industrie-Messe 1927\\\" and then text. The bottom ad is a form with \\\"APPLICATION FOR ADMISSION TO MEMBERSHIP\\\".\\n\\nWe can output the bounding boxes as [x0, y0, x1, y1]. We'll use approximate coordinates.\\n\\nOne way: The entire page is 2479x3508. The top ad appears to start at around x=160, y=180 and end at x=2320, y=1650. The bottom ad appears to start at x=160, y=1800 and end at x=2320, y=3200.\\n\\nBut let's look more carefully at the image. The top ad has a border that is not the page border. It has an outer border. The image shows a box around it. Similarly, the bottom ad has a box.\\n\\nGiven the typical resolution, the coordinates should be integers. We'll output two advertisements.\\n\\nLet's refine:\\n\\n- Top advertisement bounding box: The top border is just below the header. The header is at the very top. In the image, there is a horizontal line? Actually, the ad has its own border. Looking at the image, the ad starts at y=about 200 (since the header text is at y~90). The left border is at x~200? Actually, the page has a small margin, but the ad border is indented. The ad seems to start at x=170. The right border is at x=2300. The bottom border is at y=1650. So box: [170, 200, 2300, 1650].\\n\\n- Bottom advertisement bounding box: The top border is at y=1800 (below the gap). The left and right are similar. The bottom goes to y=3200 (leaving some margin). So box: [170, 1800, 2300, 3200].\\n\\nBut let's see if there is any other advertisement. The bottom ad is a membership application, which is an advertisement? It's a form, but it's promotional. We'll include it.\\n\\nThus, the JSON should have two advertisements.\\n\\nWe must output valid JSON with the schema. So:\\n\\n{\\n  \\\"advertisements\\\": [\\n    {\\\"box\\\": [170, 200, 2300, 1650]},\\n    {\\\"box\\\": [170, 1800, 2300, 3200]}\\n  ]\\n}\\n\\nWait, the schema requires \\\"box\\\" as an array of numbers. So we can do that.\\n\\nBut we need to be precise? The user said \\\"Extract all advertisements and return their bounding boxes.\\\" So we need to output exactly as per schema.\\n\\nLet's double-check the coordinates. The image dimensions are 2479 x 3508. The top ad might actually span from x=200 to x=2300? Actually, looking at the image, the outer border of the top ad seems to be at maybe x=200 on left and x=2300 on right. But the ad has a thick border. We'll use these.\\n\\nHowever, to be more accurate, we can estimate from the image. I'll try to visually map.\\n\\nThe page has a black border? The scan shows the page with a black background? Actually, the image is a scan of a page, so the page itself is white with text. The entire image is the page. So the outer edges of the image are the page edges. So the content starts near the top.\\n\\nThe header \\\"THE ANGLO-SWISS COMMERCIAL GAZETTE\\\" is at the top center, with page number 15 at top right. So the ad starts below that.\\n\\nThe top ad's border: I can see a rectangular border. Its top edge is around y=200 (just below the header). Its left edge is around x=200. Its right edge is around x=2300. Its bottom edge is around y=1650. There is a line separating the top ad from the bottom ad.\\n\\nThe bottom ad's border: top edge around y=1800, left x=200, right x=2300, bottom y=3200.\\n\\nI'll go with that.\\n\\nBut let's consider any other ads? There might be a small ad in the middle? No, the bottom ad is a form. It's an advertisement for the British Chamber of Commerce.\\n\\nThus, final answer.\"}}],\"created\":1788856084,\"model\":\"deepseek-v4-flash-vision-exp\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":\"aa8d6caccae4a22492bb51091cfc8eab\",\"usage\":{\"completion_tokens\":1499,\"prompt_tokens\":694,\"total_tokens\":2193,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":null,\"reasoning_tokens\":1455,\"rejected_prediction_tokens\":null},\"prompt_tokens_details\":{\"audio_tokens\":null,\"cached_tokens\":0},\"prompt_cache_hit_tokens\":0,\"prompt_cache_miss_tokens\":694}}"
+}

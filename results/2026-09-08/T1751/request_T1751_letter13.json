@@ -1,0 +1,43 @@
+{
+    "text": "{\"metadata\":{\"send_date\":[\"1927-09-15\"],\"letter_title\":null,\"sender_persons\":null,\"receiver_persons\":[\"Rupprecht\"]}}",
+    "model": "deepseek-v4-flash-vision-exp",
+    "provider": "deepseek",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 1385,
+        "output_tokens": 1497,
+        "total_tokens": 2882,
+        "cached_tokens": 384,
+        "input_cost_usd": 0.0006094,
+        "output_cost_usd": 0.00197604,
+        "estimated_cost_usd": 0.00258544
+    },
+    "duration": 16.11812710762024,
+    "timestamp": "2026-09-08T09:48:43.168345",
+    "parsed": {
+        "metadata": {
+            "send_date": [
+                "1927-09-15"
+            ],
+            "letter_title": null,
+            "sender_persons": null,
+            "receiver_persons": [
+                "Rupprecht"
+            ],
+            "document_number": "letter13"
+        }
+    },
+    "conversation_id": "a2226920-d76f-4b65-92e7-feeaa33e3b94",
+    "score": {
+        "send_date_tp": 1,
+        "send_date_fp": 0,
+        "send_date_fn": 0,
+        "sender_persons_tp": 0,
+        "sender_persons_fp": 0,
+        "sender_persons_fn": 2,
+        "receiver_persons_tp": 0,
+        "receiver_persons_fp": 1,
+        "receiver_persons_fn": 1
+    },
+    "raw_response": "{\"id\":\"f55ded52-20d2-43f2-b1b3-a89fb30f2f25\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\\"metadata\\\": {\\\"send_date\\\": [\\\"1927-09-15\\\"], \\\"letter_title\\\": null, \\\"sender_persons\\\": null, \\\"receiver_persons\\\": [\\\"Rupprecht\\\"]}}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"reasoning_content\":\"We need to extract from the letter: letter_title, sender_persons, send_date, receiver_persons.\\n\\nThe letter is from Basler Rheinschiffahrt-Aktiengesellschaft, dated Basel, den 15. September 1927. The recipient is Herr Rupprecht, Hotelier, in Rheinfelden.\\n\\nTitle: There is no explicit title. The letter is just a business letter. So we set letter_title to null or maybe empty list? But spec says if not included, set to null. Since the key expects a list, we can set to null for the whole value? Actually in the schema, letter_title can be array or null. So we set to null.\\n\\nSender persons: The letter is from the company. Usually the sender is the company or the person signing. The signature appears to be two names? One looks like \\\"G. A. Frey\\\" or something? Actually on the second page, there are two signatures. One is illegible, the other looks like \\\"M. Wenk\\\"? Or \\\"H. Wenk\\\"? But the sender is the company: \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\". We should list the company as sender? Or the individuals? Typically, the sender person would be the person who wrote the letter, but since it's from a company, we might list the company name. However, the key is \\\"sender_persons\\\" so we need person names. Looking at the signatures: the first signature looks like \\\"G. A. Frei\\\"? Or \\\"G. A. Frey\\\"? Actually I see \\\"G. A. Frey\\\" maybe? The second is \\\"M. Wernli\\\"? Hmm. Better to put the company as sender? But the instruction says \\\"Name(s) of the person(s) who wrote the letter.\\\" The letter is from the company, so the sender is the company. But we are to extract person names. There is no individual named in the letter except the recipient and some people mentioned (e.g., Herr Oettinger, Herr Ingenieur Ryhner, Herr Dr. Speich). But they are not senders. So we might set sender_persons to null? But the letter is signed by two people, but their names are not clearly readable. Let's see the letterhead: \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\" is the company. The signature on the second page: there are two signatures. One looks like \\\"G. Frey\\\" and the other \\\"M. Wernli\\\"? Actually the first might be \\\"H. Grob\\\"? Not sure. Since we are not using OCR but visual extraction, we can try to read them. On the first page, there is a handwritten \\\"13\\\" at top right. On the second page, there are two signatures. The left one is illegible, the right one looks like \\\"M. Wernli\\\" or \\\"M. Wenk\\\". The printed company name \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\" is also there. Usually, in such letters, the sender is the company, so we can set sender_persons to [\\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"]? But that's an organization, not a person. The instruction says \\\"person(s)\\\". So if no person is explicitly named as sender, we should set to null. However, sometimes the letterhead indicates the sender. We can use the company name. Let's see the examples: they have \\\"sender_persons\\\": [\\\"Lisa Simpson\\\"] which is a person. So we should output persons. Since we cannot identify the individual signatories, we might set to null. But wait, the letter itself does not have a personal name as the sender; it's from a company. So I think it's acceptable to set the company as the sender? The spec says \\\"Name(s) of the person(s) who wrote the letter.\\\" The company wrote it. But it's not a person. So to be safe, we should set to null unless we can read the signature. Can we read the signature? Let's look closely at the second page: the left signature seems to be \\\"G. Frey\\\" or \\\"G. Frei\\\"? The right one looks like \\\"M. Wernli\\\"? Actually on the right, it says \\\"M. Wernli\\\" maybe? Let's zoom in mentally: It looks like \\\"M. Wernli\\\" or \\\"M. Wenk\\\". The first letter is M, then a dot, then a surname. Could be \\\"M. Wernli\\\". But there is also a \\\"G\\\" and a dot? Actually the left signature has something like \\\"G. A.\\\"? Hmm.\\n\\nAlternative: Since the letter is from a company, and the standard in historical letters is to list the sender as the company, we can include the company name as sender_persons? But the schema expects list of strings for persons. We could put the company name. However, the instruction says \\\"person(s)\\\" not \\\"entity\\\". So I'll go with null for sender_persons if no clear person is identified. But wait, there is a person mentioned: \\\"Herrn Ingenieur Ryhner\\\" and \\\"Herr Dr. Speich\\\" and \\\"Herr Oettinger\\\". But they are not senders. So sender is not a specific person. Thus, we should set sender_persons to null.\\n\\nWhat about receiver_persons? The letter is addressed to \\\"Herrn Rupprecht, Hotelier, in Rheinfelden.\\\" So receiver is Herr Rupprecht. Also his full name is not given, just \\\"Rupprecht\\\". So we set receiver_persons: [\\\"Rupprecht\\\"].\\n\\nSend date: The letter is dated \\\"Basel, den 15. September 1927.\\\" So date is 1927-09-15.\\n\\nLetter title: There is no title. The letter is just a letter. So null.\\n\\nThus the JSON should be:\\n\\n{\\n  \\\"metadata\\\": {\\n    \\\"send_date\\\": [\\\"1927-09-15\\\"],\\n    \\\"letter_title\\\": null,\\n    \\\"sender_persons\\\": null,\\n    \\\"receiver_persons\\\": [\\\"Rupprecht\\\"]\\n  }\\n}\\n\\nBut wait, the schema says for send_date, it can be array of strings or null. We have a single date, so we put it in an array. For letter_title, it can be array or null. Since no title, set null. For sender_persons, we have no person, so null. For receiver_persons, we have one person, so array with string.\\n\\nIs there any possibility that the receiver is also \\\"Herr Rupprecht\\\" and maybe his full name? The letter is addressed to \\\"Herrn Rupprecht, Hotelier, Soobad 'Eden', Rheinfelden.\\\" So the receiver is Rupprecht. So we can put \\\"Rupprecht\\\" and maybe also \\\"Hotelier\\\"? No, just the name.\\n\\nThus the final answer.\"}}],\"created\":1788853708,\"model\":\"deepseek-v4-flash-vision-exp\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":\"aa8d6caccae4a22492bb51091cfc8eab\",\"usage\":{\"completion_tokens\":1497,\"prompt_tokens\":1385,\"total_tokens\":2882,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":null,\"reasoning_tokens\":1454,\"rejected_prediction_tokens\":null},\"prompt_tokens_details\":{\"audio_tokens\":null,\"cached_tokens\":384},\"prompt_cache_hit_tokens\":384,\"prompt_cache_miss_tokens\":1001}}"
+}

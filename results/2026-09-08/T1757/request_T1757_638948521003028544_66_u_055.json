@@ -1,0 +1,42 @@
+{
+    "text": "{\"company\":{\"transcription\":\"Winterstein & Co., Ernst\"},\"location\":{\"transcription\":\"ZUERICH\"},\"b_id\":{\"transcription\":\"B.51.322.G3.452.\"},\"date\":\"\",\"information\":[{\"transcription\":\"Britische schwarze Liste\\nAmendment 21, Dezember 1941.\"},{\"transcription\":\"gestrichen:\\nAmendment 13, 23.11.1945.\"}]}",
+    "model": "deepseek-v4-flash-vision-exp",
+    "provider": "deepseek",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 1069,
+        "output_tokens": 1269,
+        "total_tokens": 2338,
+        "cached_tokens": 256,
+        "input_cost_usd": 0.00047036,
+        "output_cost_usd": 0.00167508,
+        "estimated_cost_usd": 0.00214544
+    },
+    "duration": 13.30316710472107,
+    "timestamp": "2026-09-08T10:09:19.305517",
+    "parsed": {
+        "company": {
+            "transcription": "Winterstein & Co., Ernst"
+        },
+        "location": {
+            "transcription": "ZUERICH"
+        },
+        "b_id": {
+            "transcription": "B.51.322.G3.452."
+        },
+        "date": "",
+        "information": [
+            {
+                "transcription": "Britische schwarze Liste\nAmendment 21, Dezember 1941."
+            },
+            {
+                "transcription": "gestrichen:\nAmendment 13, 23.11.1945."
+            }
+        ]
+    },
+    "conversation_id": "0f57623e-9a49-4d60-98d5-f00b7d376d25",
+    "score": {
+        "fuzzy": 0.9895833333333334
+    },
+    "raw_response": "{\"id\":\"39063e9f-8fe7-4e5f-962f-d0c2929b6669\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\n  \\\"company\\\": {\\\"transcription\\\": \\\"Winterstein & Co., Ernst\\\"},\\n  \\\"location\\\": {\\\"transcription\\\": \\\"ZUERICH\\\"},\\n  \\\"b_id\\\": {\\\"transcription\\\": \\\"B.51.322.G3.452.\\\"},\\n  \\\"date\\\": \\\"\\\",\\n  \\\"information\\\": [\\n    {\\\"transcription\\\": \\\"Britische schwarze Liste\\\\nAmendment 21, Dezember 1941.\\\"},\\n    {\\\"transcription\\\": \\\"gestrichen:\\\\nAmendment 13, 23.11.1945.\\\"}\\n  ]\\n}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"reasoning_content\":\"We need to extract data from the image. The image shows an index card. Let's analyze it.\\n\\nTop-left: \\\"Winterstein & Co., Ernst, ZUERICH\\\" - company is \\\"Winterstein & Co., Ernst\\\" but exclude location. So company transcription: \\\"Winterstein & Co., Ernst\\\". Location: \\\"ZUERICH\\\" (or Zurich, but it's written as ZUERICH). Actually the text is \\\"Winterstein & Co., Ernst, ZUERICH\\\". The comma separates company and location. So company is \\\"Winterstein & Co., Ernst\\\" and location is \\\"ZUERICH\\\".\\n\\nTop-right: \\\"B.51.322.G3.452.\\\" - that is b_id.\\n\\nDate: There is a stamped date? Actually there is text \\\"Amendment 21, Dezember 1941.\\\" and \\\"Amendment 13, 23.11.1945.\\\" But these are not stamped dates on the card? The instruction says \\\"Any stamped dates on the card in YYYY-MM-DD format.\\\" In this image, there are dates written, but are they stamped? Possibly they are typed. However, we should look for a date stamp. The card might have a date stamp in the corner? Not visible. The date field might be empty if no stamped date. But we have \\\"23.11.1945.\\\" in the text. But that is part of the information. The instruction says \\\"If no date is present, use an empty string.\\\" So we need to check if there is a separate date stamp. Typically, these index cards have a date stamp somewhere. But in this image, I don't see a stamp; the dates are part of the text. So we might leave date as empty. However, let's reconsider: The instruction says \\\"Any stamped dates on the card\\\" - meaning if there is a date that appears to be stamped (e.g., in a different color or positioned for archival purposes), extract it. In this case, there is no obvious stamp. So date should be empty string.\\n\\nInformation: The main body text blocks. We need to list each block as a separate string. The text is as follows:\\n\\n\\\"Britische schwarze Liste\\nAmendment 21, Dezember 1941.\\\"\\n\\nThen there is a gap, then:\\n\\n\\\"gestrichen:\\nAmendment 13, 23.11.1945.\\\"\\n\\nSo there are two blocks? Or maybe they are separate paragraphs. We should preserve line breaks. The instruction says: \\\"Each block should be a separate string in the list. Maintain line breaks with \\\\\\\\n.\\\" So we can either combine each paragraph into a single string with line breaks, or treat each line? Typically, a \\\"block\\\" is a paragraph. Here we have two paragraphs: the first one is two lines, the second one is two lines. So we can have two strings, each with \\\\n inside. Alternatively, we might split into individual lines? But \\\"block\\\" suggests a paragraph. Let's check the exact wording: \\\"A list of text blocks from the main body of the card. Each block should be a separate string in the list. Maintain line breaks with \\\\\\\\n.\\\" So each block can have multiple lines. So we can output two strings:\\n\\n\\\"Britische schwarze Liste\\\\nAmendment 21, Dezember 1941.\\\"\\n\\n\\\"gestrichen:\\\\nAmendment 13, 23.11.1945.\\\"\\n\\nThat seems appropriate.\\n\\nNow the JSON structure is given in the schema. The required fields are company, location, b_id. We need to provide transcription objects for those. For date, it can be a string or null? The schema says \\\"anyOf\\\": [{\\\"type\\\":\\\"string\\\"}, {\\\"type\\\":\\\"null\\\"}] and default null. But the instruction says \\\"use an empty string\\\" if no date. So we should put \\\"\\\" (empty string). Similarly for information, it's \\\"anyOf\\\": [{\\\"items\\\": ...}, {\\\"type\\\":\\\"null\\\"}] but we have information, so we provide an array.\\n\\nLet's construct the JSON:\\n\\n{\\n  \\\"company\\\": {\\\"transcription\\\": \\\"Winterstein & Co., Ernst\\\"},\\n  \\\"location\\\": {\\\"transcription\\\": \\\"ZUERICH\\\"},\\n  \\\"b_id\\\": {\\\"transcription\\\": \\\"B.51.322.G3.452.\\\"},\\n  \\\"date\\\": \\\"\\\",\\n  \\\"information\\\": [\\n    {\\\"transcription\\\": \\\"Britische schwarze Liste\\\\nAmendment 21, Dezember 1941.\\\"},\\n    {\\\"transcription\\\": \\\"gestrichen:\\\\nAmendment 13, 23.11.1945.\\\"}\\n  ]\\n}\\n\\nCheck if there is any other text: bottom left \\\"47019\\\" - that is a number, likely a file number, not part of the information blocks? Probably not. So we ignore.\\n\\nEnsure we use proper escaping for \\\\n in JSON: In the string, it should be \\\"\\\\\\\\n\\\" as two characters? Actually when outputting JSON, we need to escape the backslash. So in the JSON string, it should be \\\"Britische schwarze Liste\\\\\\\\nAmendment 21, Dezember 1941.\\\" but in the final JSON, the string contains the literal backslash and n. So we write \\\"\\\\\\\\n\\\" in the JSON.\\n\\nAlso, note the company: \\\"Winterstein & Co., Ernst\\\" - there is a comma before Ernst? Actually the text is \\\"Winterstein & Co., Ernst, ZUERICH\\\" so the company part includes \\\"Winterstein & Co., Ernst\\\" but sometimes the name is \\\"Ernst Winterstein & Co.\\\"? But we transcribe exactly as written. So we follow the order.\\n\\nThus final JSON.\"}}],\"created\":1788854947,\"model\":\"deepseek-v4-flash-vision-exp\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":\"aa8d6caccae4a22492bb51091cfc8eab\",\"usage\":{\"completion_tokens\":1269,\"prompt_tokens\":1069,\"total_tokens\":2338,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":null,\"reasoning_tokens\":1157,\"rejected_prediction_tokens\":null},\"prompt_tokens_details\":{\"audio_tokens\":null,\"cached_tokens\":256},\"prompt_cache_hit_tokens\":256,\"prompt_cache_miss_tokens\":813}}"
+}

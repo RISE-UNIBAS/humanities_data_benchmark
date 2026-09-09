@@ -88,6 +88,7 @@ class PricingUpdater:
         'deepseek-reasoner': 'https://api-docs.deepseek.com/quick_start/pricing',
         'deepseek-v4-flash': 'https://api-docs.deepseek.com/quick_start/pricing',
         'deepseek-v4-pro':   'https://api-docs.deepseek.com/quick_start/pricing',
+        'deepseek-v4-flash-vision-exp': 'https://api-docs.deepseek.com/quick_start/pricing',
     }
 
     MISTRAL_MODEL_URLS = {
@@ -969,7 +970,9 @@ Return only JSON:"""
     }
 
     OPENROUTER_MODEL_URLS = {
+        'meta/muse-spark-1.3':            'https://openrouter.ai/meta/muse-spark-1.3',
         'meta/muse-spark-1.2':            'https://openrouter.ai/meta/muse-spark-1.2',
+        'z-ai/glm-5.3-flash':             'https://openrouter.ai/z-ai/glm-5.3-flash',
         'z-ai/glm-5v-turbo':              'https://openrouter.ai/z-ai/glm-5v-turbo',
         'google/gemma-4-26b-a4b-it':      'https://openrouter.ai/google/gemma-4-26b-a4b-it',
         'google/gemma-4-31b-it':          'https://openrouter.ai/google/gemma-4-31b-it',
@@ -978,6 +981,8 @@ Return only JSON:"""
         'qwen/qwen3-vl-8b-instruct':      'https://openrouter.ai/qwen/qwen3-vl-8b-instruct',
         'qwen/qwen3-vl-8b-thinking':      'https://openrouter.ai/qwen/qwen3-vl-8b-thinking',
         'qwen/qwen3.8-max':               'https://openrouter.ai/qwen/qwen3.8-max',
+        'qwen/qwen3.8-flash':             'https://openrouter.ai/qwen/qwen3.8-flash',
+        'qwen/qwen3.8-27b':               'https://openrouter.ai/qwen/qwen3.8-27b',
         'qwen/qwen3.7-plus':              'https://openrouter.ai/qwen/qwen3.7-plus',
         'qwen/qwen3.6-plus':              'https://openrouter.ai/qwen/qwen3.6-plus',
         'qwen/qwen3.6-plus-04-02':        'https://openrouter.ai/qwen/qwen3.6-plus',

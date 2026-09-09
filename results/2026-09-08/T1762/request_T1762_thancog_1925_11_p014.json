@@ -1,0 +1,80 @@
+{
+    "text": "{\"advertisements\":[{\"box\":[140.0,130.0,2340.0,1450.0]},{\"box\":[140.0,1490.0,1230.0,1810.0]},{\"box\":[1240.0,1490.0,2340.0,1810.0]},{\"box\":[140.0,1950.0,1230.0,2350.0]},{\"box\":[1240.0,1950.0,2340.0,2350.0]},{\"box\":[140.0,2600.0,2340.0,3450.0]}]}",
+    "model": "deepseek-v4-flash-vision-exp",
+    "provider": "deepseek",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 694,
+        "output_tokens": 3278,
+        "total_tokens": 3972,
+        "input_cost_usd": 0.00030535999999999996,
+        "output_cost_usd": 0.00432696,
+        "estimated_cost_usd": 0.0046323200000000005
+    },
+    "duration": 29.871116876602173,
+    "timestamp": "2026-09-08T10:27:42.610735",
+    "parsed": {
+        "advertisements": [
+            {
+                "box": [
+                    140,
+                    130,
+                    2340,
+                    1450
+                ]
+            },
+            {
+                "box": [
+                    140,
+                    1490,
+                    1230,
+                    1810
+                ]
+            },
+            {
+                "box": [
+                    1240,
+                    1490,
+                    2340,
+                    1810
+                ]
+            },
+            {
+                "box": [
+                    140,
+                    1950,
+                    1230,
+                    2350
+                ]
+            },
+            {
+                "box": [
+                    1240,
+                    1950,
+                    2340,
+                    2350
+                ]
+            },
+            {
+                "box": [
+                    140,
+                    2600,
+                    2340,
+                    3450
+                ]
+            }
+        ]
+    },
+    "conversation_id": "e11e53f2-0ec4-41cc-b32c-cb238db773df",
+    "score": {
+        "f1": 0.364,
+        "precision": 0.333,
+        "recall": 0.4,
+        "mean_iou": 0.604,
+        "true_positives": 2,
+        "false_positives": 4,
+        "false_negatives": 3,
+        "iou_threshold": 0.5
+    },
+    "raw_response": "{\"id\":\"29cfd4ae-4dd4-4019-9467-e1f1f82bb264\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\n  \\\"advertisements\\\": [\\n    {\\\"box\\\": [140, 130, 2340, 1450]},\\n    {\\\"box\\\": [140, 1490, 1230, 1810]},\\n    {\\\"box\\\": [1240, 1490, 2340, 1810]},\\n    {\\\"box\\\": [140, 1950, 1230, 2350]},\\n    {\\\"box\\\": [1240, 1950, 2340, 2350]},\\n    {\\\"box\\\": [140, 2600, 2340, 3450]}\\n  ]\\n}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"reasoning_content\":\"We need to extract all advertisements and their bounding boxes from the page. The page is 2479 x 3508 pixels. The image shows several distinct advertisement blocks.\\n\\nLet's identify each advertisement:\\n\\n1. Top large ad: J.R. Geigy, Soc. An. - spans from roughly top of content area to just above the \\\"BUSINESS MEN!\\\" box. We'll need coordinates.\\n2. \\\"BUSINESS MEN!\\\" box on left, and \\\"WHEN IN BASEL LUNCH\\\" box on right. They appear as two separate ads? Actually they are side by side. The left one is \\\"BUSINESS MEN!\\\" with text \\\"The Premier Rendez-vous for business men\\\". The right one is \\\"WHEN IN BASEL LUNCH AT THE TERRASSE-RESTAURANT KUNSTHALLE\\\". They share a border? It looks like they are within a larger box? Looking carefully, there is a box that contains both? Actually, there is a horizontal line separating them from the top ad, and they are adjacent. They appear to be two separate advertisements but positioned closely. However, the left box has borders on left, bottom, and top, and the right box has borders on right, bottom, and top. They share a vertical line? They are separate but touching. For bounding boxes, they should be separate.\\n\\n3. Below that, there are two boxes: left \\\"Emil Birkh\u00e4user & Co., Basle\\\" and right \\\"ASK FOR THE 1925-1926 EDITION OF THE TRADE INDEX\\\". These are also side by side.\\n\\n4. At the bottom, there is a large advertisement for \\\"THE BRITISH CHAMBER OF COMMERCE FOR SWITZERLAND\\\" with a border.\\n\\nWe need to determine precise pixel coordinates. We'll estimate based on the image. The image is 2479 x 3508. Let's use approximate positions.\\n\\nFirst, consider the overall layout. The page has a margin. The content area seems to be from around x=150 to x=2330? Actually, looking at the scan, the left edge of the ads is at about x=140 and the right edge at about x=2340. But we need precise.\\n\\nLet's analyze the image visually. The image is a scan of a magazine page. The page dimensions are given. We can assume the entire image is the page. The top border of the first ad is a horizontal line starting at about x=150 to x=2330? Actually, the line is at the top of the Geigy ad. Let's estimate coordinates.\\n\\nI will approximate by looking at the text and positions.\\n\\nBetter approach: Since it's a single page, we can define approximate coordinates based on relative positions.\\n\\nLet's list the ads and their approximate bounding boxes:\\n\\n1. J.R. Geigy, Soc. An. \\n   - Top-left corner: around (150, 150) \\n   - Bottom-right corner: around (2330, 1450) \\n   But we need to be more precise. Actually, looking at the image, the top line of Geigy ad is at about y=150, and the bottom line is just above the box containing \\\"BUSINESS MEN!\\\" and \\\"LUNCH\\\". That bottom line is at about y=1450. Left edge is about x=150, right edge about x=2330.\\n\\n2. \\\"BUSINESS MEN!\\\" box (left)\\n   - Top: y=1500 (the top line of that box)\\n   - Bottom: y=1800? Actually, it ends just above the next row of boxes. The next row starts at a bit lower.\\n   - Left: x=150\\n   - Right: x=1230? It shares a vertical border with the right box. So its right edge is the left edge of the right box.\\n\\n3. \\\"WHEN IN BASEL LUNCH\\\" (right)\\n   - Top: same y=1500\\n   - Bottom: same y=1800\\n   - Left: x=1240 (starting at the shared border)\\n   - Right: x=2330\\n\\nWait, there is a small gap? Actually, they are two separate boxes but adjacent. The left box ends and right box starts at a vertical line. So left box right edge is about x=1230, right box left edge is about x=1240.\\n\\nBut we need to check the actual scan. The line separating them is not visible? It looks like there is a vertical line. Possibly they are in one box? No, the text is separate.\\n\\n4. \\\"Emil Birkh\u00e4user & Co., Basle\\\" (left)\\n   - Top: y=2000? Actually, it's below the previous box. The gap is small. The previous box bottom is at maybe y=1800, then a gap, then this box top at y=1950?\\n   - Bottom: y=2500? Actually, these boxes are shorter.\\n   - Left: x=150\\n   - Right: x=1230\\n\\n5. \\\"ASK FOR THE 1925-1926 EDITION OF THE TRADE INDEX\\\" (right)\\n   - Top: same as left\\n   - Bottom: same as left\\n   - Left: x=1240\\n   - Right: x=2330\\n\\n6. \\\"THE BRITISH CHAMBER OF COMMERCE FOR SWITZERLAND\\\" (bottom)\\n   - This spans the full width? It appears to be a single box with a border. The border starts at about x=130 and ends at about x=2340? Actually, the left and right edges are slightly indented compared to the top ad? It looks like it's from x=140 to x=2340.\\n   - Top: y=2700? It is below the previous boxes.\\n   - Bottom: y=3400? It extends nearly to the bottom.\\n\\nWe need to produce bounding boxes as [x0, y0, x1, y1].\\n\\nLet's refine using the image proportions. The image is 2479 x 3508. The page is the whole image. We'll estimate based on visual inspection.\\n\\nLet's open the image mentally. There is a header at the top: page number 14 and magazine name and date. That is not an ad; it's part of the page header. So we ignore it.\\n\\nThe first ad starts after a horizontal line. That line is at about y=130? Actually, the top of the ad has a double line? The ad has a border on top. Let's set:\\n\\nAd 1 (Geigy): top-left (140, 120), bottom-right (2340, 1450) - perhaps.\\n\\nAd 2 (Business Men): top-left (140, 1500), bottom-right (1230, 1800)\\n\\nAd 3 (Lunch): top-left (1240, 1500), bottom-right (2340, 1800)\\n\\nAd 4 (Emil Birkh\u00e4user): top-left (140, 1900), bottom-right (1230, 2300)\\n\\nAd 5 (Trade Index): top-left (1240, 1900), bottom-right (2340, 2300)\\n\\nAd 6 (British Chamber): top-left (140, 2600), bottom-right (2340, 3400)\\n\\nBut these are rough. Let's try to be more accurate by looking at the actual positions in the image. Since I don't have pixel analysis, I'll use relative estimates.\\n\\nLooking at the image, the top ad has a lot of text. It ends right at the line above the \\\"Business Men\\\" box. That line is at about y=1460. The \\\"Business Men\\\" box has a top line at y=1460 and a bottom line at y=1870. The next row of boxes has a top line at y=1950 and bottom line at y=2350. Then the bottom ad starts at y=2600 and ends at y=3400.\\n\\nOn the x-axis, the left border of all ads is about x=140. The right border is about x=2340. For the split ones, the left box right edge is at about x=1230, and the right box left edge is at about x=1250? Actually, there might be a small gap? Looking at the image, the left box and right box are separated by a vertical line? Yes, there is a clear vertical line separating them. That line is at about x=1235. So left box right edge is x=1235, right box left edge is x=1235? Actually, if they are separate, each has its own border. So the left box right border is at x=1235, and the right box left border is at x=1240? But they are adjacent, so the border might be shared? In printed magazines, it's common to have two separate ads sitting next to each other with a small gap. In this scan, they appear to be in the same horizontal band but separated by a white space. Looking at the provided image, the \\\"BUSINESS MEN!\\\" box has a border on all sides? It has a top border, left border, bottom border, and right border? But the right border is not visible because it's adjacent to the other box? Actually, it does seem there is a vertical line. Let's assume they are two separate boxes with a small gap. We'll set the left box right edge at x=1230, and the right box left edge at x=1240.\\n\\nSimilarly for the next row.\\n\\nThe bottom ad has a double line border? It has a top and bottom border with a dashed pattern? Actually, it has a solid border.\\n\\nLet's summarize with estimated coordinates:\\n\\n1. Geigy: [140, 130, 2340, 1450]\\n2. Business Men: [140, 1480, 1230, 1800]\\n3. Lunch: [1240, 1480, 2340, 1800]\\n4. Birkh\u00e4user: [140, 1950, 1230, 2350]\\n5. Trade Index: [1240, 1950, 2340, 2350]\\n6. British Chamber: [140, 2600, 2340, 3400]\\n\\nWe need to ensure that the coordinates are within the page. The page is 2479 x 3508, so our y1 for the last ad is 3400, which is fine.\\n\\nLet's refine using the actual image. Looking at the scan, the top border of the Geigy ad is a thick line. It starts at x~150 and ends at x~2330. The y coordinate of that line is about 140. So x0=150, y0=140, x1=2330, y1=1450. But we need to be careful: the box includes a double line at the bottom? Actually, the bottom of the Geigy ad is just above the \\\"Business Men\\\" box, so y1=1450.\\n\\nFor the Business Men box, it appears to have a border. Its top line is at y=1470, bottom line at y=1780. The left edge is at x=150, right edge at x=1220. The Lunch box has left edge at x=1240, right edge at x=2330, same y.\\n\\nThe next row: Birkh\u00e4user box top at y=1920, bottom at y=2320. Trade Index box same.\\n\\nThe bottom ad: top at y=2600, bottom at y=3400, left at x=140, right at x=2340.\\n\\nThese are all estimates. To be more precise, we could try to infer from the text positions. But the request says \\\"Extract all advertisements and return their bounding boxes.\\\" We need to output valid JSON.\\n\\nI'll output the list of boxes.\\n\\nCheck: Are there any other ads? The header is not an ad. The text at the very bottom \\\"Marconi's, A.B.C. British Edition, etc.\\\" is part of the bottom ad? Yes, it's in the bottom ad.\\n\\nSo there are 6 advertisements.\\n\\nLet's write the JSON.\\n\\nEnsure the JSON matches the schema: {\\\"advertisements\\\": [{\\\"box\\\": [x0, y0, x1, y1]}, ...]}\\n\\nI'll use the approximate coordinates.\\n\\nOne more thing: The boxes might be slightly different. Let's look at the image again. The Geigy ad has a border, and inside there are lines. The actual bounding box should be the outer border of the ad. So coordinates: top-left is the top-left corner of the border, bottom-right is the bottom-right corner.\\n\\nFrom the image, the top border of the Geigy ad is a double line? It's a solid thick line. It starts at the left at about x=140 and ends at the right at about x=2340. The y is about 120. The bottom of the Geigy ad is a line separating it from the next row. That line is at about y=1460. So y1=1460.\\n\\nSo Geigy: [140, 120, 2340, 1460]\\n\\nBusiness Men and Lunch: They are side by side. The top border of both is at y=1500? Actually, the line is at y=1470? There is a gap between the Geigy ad bottom and the top of these boxes. The Geigy ad bottom is at y=1460, then there is white space, then the boxes start at y=1500. So y0=1500 for both. The bottom of these boxes is at y=1800? Looking at the image, the boxes are fairly short. They end at about y=1820. Let's say y1=1820.\\n\\nSimilarly, the next row starts at y=1950 and ends at y=2350.\\n\\nThe bottom ad starts at y=2600 and ends at y=3450.\\n\\nLet's adjust.\\n\\nI think we should provide the best estimate. The key is to be within reason.\\n\\nI'll output:\\n\\n[\\n  [140, 130, 2340, 1450],\\n  [140, 1490, 1230, 1810],\\n  [1240, 1490, 2340, 1810],\\n  [140, 1950, 1230, 2350],\\n  [1240, 1950, 2340, 2350],\\n  [140, 2600, 2340, 3450]\\n]\\n\\nBut wait, are the left and right boxes actually the same height? They should be.\\n\\nOne more detail: The \\\"Business Men\\\" box has text \\\"The Premier Rendez-vous for business men\\\" and the right has \\\"WHEN IN BASEL LUNCH AT THE TERRASSE-RESTAURANT KUNSTHALLE\\\". They are separate.\\n\\nI'll proceed with these coordinates.\\n\\nNow, convert to JSON.\"}}],\"created\":1788856034,\"model\":\"deepseek-v4-flash-vision-exp\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":\"aa8d6caccae4a22492bb51091cfc8eab\",\"usage\":{\"completion_tokens\":3278,\"prompt_tokens\":694,\"total_tokens\":3972,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":null,\"reasoning_tokens\":3147,\"rejected_prediction_tokens\":null},\"prompt_tokens_details\":{\"audio_tokens\":null,\"cached_tokens\":0},\"prompt_cache_hit_tokens\":0,\"prompt_cache_miss_tokens\":694}}"
+}

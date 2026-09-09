@@ -1,0 +1,44 @@
+{
+    "text": "{\"company\":{\"transcription\":\"Brocca Bruno\"},\"location\":{\"transcription\":\"Lugano\"},\"b_id\":{\"transcription\":\"B.51.322.GB.913.\"},\"date\":\"\",\"information\":[{\"transcription\":\"Britische schwarze Liste,\\nAmendment 4, M\u00e4rz 1943.\"},{\"transcription\":\"gestrichen;\"},{\"transcription\":\"Amendment 5, April 1944\"}]}",
+    "model": "deepseek-v4-flash-vision-exp",
+    "provider": "deepseek",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 1069,
+        "output_tokens": 1500,
+        "total_tokens": 2569,
+        "input_cost_usd": 0.00047036,
+        "output_cost_usd": 0.00198,
+        "estimated_cost_usd": 0.00245036
+    },
+    "duration": 15.81797456741333,
+    "timestamp": "2026-09-08T10:08:40.055063",
+    "parsed": {
+        "company": {
+            "transcription": "Brocca Bruno"
+        },
+        "location": {
+            "transcription": "Lugano"
+        },
+        "b_id": {
+            "transcription": "B.51.322.GB.913."
+        },
+        "date": "",
+        "information": [
+            {
+                "transcription": "Britische schwarze Liste,\nAmendment 4, M\u00e4rz 1943."
+            },
+            {
+                "transcription": "gestrichen;"
+            },
+            {
+                "transcription": "Amendment 5, April 1944"
+            }
+        ]
+    },
+    "conversation_id": "5f8dd9ec-767d-4ffb-97e0-27dfb337b583",
+    "score": {
+        "fuzzy": 0.8090505767524402
+    },
+    "raw_response": "{\"id\":\"4d7ae362-9f01-441b-8c27-621675898222\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\n  \\\"company\\\": {\\\"transcription\\\": \\\"Brocca Bruno\\\"},\\n  \\\"location\\\": {\\\"transcription\\\": \\\"Lugano\\\"},\\n  \\\"b_id\\\": {\\\"transcription\\\": \\\"B.51.322.GB.913.\\\"},\\n  \\\"date\\\": \\\"\\\",\\n  \\\"information\\\": [\\n    {\\\"transcription\\\": \\\"Britische schwarze Liste,\\\\nAmendment 4, M\u00e4rz 1943.\\\"},\\n    {\\\"transcription\\\": \\\"gestrichen;\\\"},\\n    {\\\"transcription\\\": \\\"Amendment 5, April 1944\\\"}\\n  ]\\n}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"reasoning_content\":\"We need to extract information from the image. The image shows an index card with text. Let's parse it.\\n\\nTop-left: \\\"Brocca Bruno,\\\" and below \\\"Via Ciani 1.\\\" The company name is likely \\\"Brocca Bruno\\\" and the location \\\"Lugano\\\" appears to the right? Actually, the top-left has \\\"Brocca Bruno,\\\" then \\\"Via Ciani 1.\\\" On the same line as \\\"Brocca Bruno,\\\" there is \\\"L u g a n o .\\\" spread out. So the company is \\\"Brocca Bruno\\\" and location is \\\"Lugano\\\". The b_id is top-right: \\\"B.51.322.GB.913.\\\"\\n\\nThe main body has:\\n\\\"Britische schwarze Liste,\\\"\\n\\\"Amendment 4, M\u00e4rz 1943.\\\"\\n\\nThen \\\"gestrichen;\\\" (underlined) and below \\\"Amendment 5, April 1944\\\"\\n\\nSo we need to extract information as a list of text blocks. Each block should be a separate string with line breaks. Possibly the first block is the two lines about Britische schwarze Liste and Amendment 4. The second block is \\\"gestrichen;\\\" and the third is \\\"Amendment 5, April 1944\\\". But note \\\"gestrichen;\\\" is underlined and appears as a separate heading. The instruction says: \\\"A list of text blocks from the main body of the card. Each block should be a separate string in the list. Maintain line breaks with \\\\\\\\n.\\\" So we need to decide what constitutes a block. Probably each paragraph or segment. Let's examine the layout:\\n\\nThere are three distinct segments:\\n1. \\\"Britische schwarze Liste,\\\\nAmendment 4, M\u00e4rz 1943.\\\"\\n2. \\\"gestrichen;\\\" (with underline)\\n3. \\\"Amendment 5, April 1944\\\"\\n\\nSo the information list should contain these three strings. Also note the date field: any stamped dates on the card. There is no explicit stamp, but there are dates in the text. However, the instruction says \\\"stamped dates\\\" so probably no. So date should be empty string. But wait, the image has a date? No, it's typed. So date is empty.\\n\\nWe need to output JSON exactly as per schema. The schema expects: company, location, b_id, date, information. The \\\"information\\\" is an array of objects with \\\"transcription\\\" keys.\\n\\nLet's construct the JSON:\\n\\ncompany: {\\\"transcription\\\": \\\"Brocca Bruno\\\"}\\nlocation: {\\\"transcription\\\": \\\"Lugano\\\"}\\nb_id: {\\\"transcription\\\": \\\"B.51.322.GB.913.\\\"}\\ndate: \\\"\\\" (empty string)\\ninformation: [\\n  {\\\"transcription\\\": \\\"Britische schwarze Liste,\\\\nAmendment 4, M\u00e4rz 1943.\\\"},\\n  {\\\"transcription\\\": \\\"gestrichen;\\\"},\\n  {\\\"transcription\\\": \\\"Amendment 5, April 1944\\\"}\\n]\\n\\nMake sure to preserve the exact text. Note that \\\"Brocca Bruno,\\\" has a comma, but we should include it? The company name might be \\\"Brocca Bruno\\\" without comma? The image shows \\\"Brocca Bruno,\\\" with a comma. Typically the company name is the full name as written. We'll include the comma? Actually, looking closely, it says \\\"Brocca Bruno,\\\" with a comma after Bruno. But the location is on the same line? Actually the text is: \\\"Brocca Bruno,       L u g a n o .\\\" So the comma is part of the company? Possibly it's just punctuation. We'll transcribe exactly as seen: \\\"Brocca Bruno,\\\"? But the instruction says \\\"The primary company name, usually in the top-left. Exclude the location.\\\" So maybe we should exclude the comma? Let's see the image: It's \\\"Brocca Bruno,\\\" with a comma. But the comma might be just separating the name and location. Similarly, \\\"Via Ciani 1.\\\" is the address, but we are not asked to extract that. The location is given as \\\"L u g a n o .\\\" spread out. So the company is \\\"Brocca Bruno\\\" without the comma? Hmm.\\n\\nLet's re-read: \\\"company\\\": The primary company name, usually in the top-left. Exclude the location. So if the line is \\\"Brocca Bruno, Lugano.\\\" then we should take \\\"Brocca Bruno\\\" as the company. But the actual text has a comma after Bruno. But the company name is likely just the name without the comma. Similarly, location is \\\"Lugano\\\". So we'll transcribe company as \\\"Brocca Bruno\\\" and location as \\\"Lugano\\\". However, to be precise, we should transcribe exactly what is written for the company field? The schema says \\\"transcription\\\" so we transcribe the text. But the instruction says \\\"Exclude the location\\\" which might mean we shouldn't include the location in the company field. So we should output \\\"Brocca Bruno\\\" (without the comma and without the location). Similarly, location is just \\\"Lugano\\\".\\n\\nBut wait, the image also has \\\"Via Ciani 1.\\\" which is an address. That is not the location? The location is the city. So we can ignore \\\"Via Ciani 1.\\\" So yes.\\n\\nLet's double-check the b_id: \\\"B.51.322.GB.913.\\\" It has a period at the end. We'll include that.\\n\\nNow, about the date: \\\"date\\\": any stamped dates. There are no stamps, only typed text. So date is empty string.\\n\\nThe information list: We need to consider if \\\"gestrichen;\\\" should be its own block. It is underlined and on its own line. So yes.\\n\\nAlso, note that the image has a number \\\"57905\\\" at the bottom left, but that's not part of the main body.\\n\\nSo the final JSON should be:\\n\\n{\\n  \\\"company\\\": {\\\"transcription\\\": \\\"Brocca Bruno\\\"},\\n  \\\"location\\\": {\\\"transcription\\\": \\\"Lugano\\\"},\\n  \\\"b_id\\\": {\\\"transcription\\\": \\\"B.51.322.GB.913.\\\"},\\n  \\\"date\\\": \\\"\\\",\\n  \\\"information\\\": [\\n    {\\\"transcription\\\": \\\"Britische schwarze Liste,\\\\nAmendment 4, M\u00e4rz 1943.\\\"},\\n    {\\\"transcription\\\": \\\"gestrichen;\\\"},\\n    {\\\"transcription\\\": \\\"Amendment 5, April 1944\\\"}\\n  ]\\n}\\n\\nBut we must ensure that the \\\"date\\\" field in the schema is either string or null. It says \\\"anyOf\\\": [{\\\"type\\\": \\\"string\\\"}, {\\\"type\\\": \\\"null\\\"}], so we can use empty string. That's fine.\\n\\nNow, let's output valid JSON only.\"}}],\"created\":1788854905,\"model\":\"deepseek-v4-flash-vision-exp\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":\"aa8d6caccae4a22492bb51091cfc8eab\",\"usage\":{\"completion_tokens\":1500,\"prompt_tokens\":1069,\"total_tokens\":2569,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":null,\"reasoning_tokens\":1388,\"rejected_prediction_tokens\":null},\"prompt_tokens_details\":{\"audio_tokens\":null,\"cached_tokens\":0},\"prompt_cache_hit_tokens\":0,\"prompt_cache_miss_tokens\":1069}}"
+}
