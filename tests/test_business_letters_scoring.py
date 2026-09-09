@@ -5,6 +5,9 @@ Covers:
     (send_date, sender_persons, receiver_persons).
   - score_request_answer: an end-to-end golden with a hand-verified score,
     exercising person matching and the inferred-person exclusion.
+  - score_request_answer on non-conforming responses (issue #111): anything the scorer
+    cannot turn into a Letter is a complete failure (0 TP, 0 FP, all GT items FN)
+    instead of an exception, while the flat no-metadata payload keeps scoring normally.
   - skip_object: the signature skip rules (skip_signatures / skip_non_signatures).
 
 Person/letter ground truth is provided via a temporary benchmark_dir holding the
@@ -108,3 +111,114 @@ class TestSkipObject:
         self._write_letter(benchmark_dir, "nosig", "FALSE")
         scorer = make_scorer(BusinessLetters, rules={"skip_non_signatures": True}, benchmark_dir=str(benchmark_dir))
         assert scorer.skip_object("nosig") is True
+
+    def test_unusable_ground_truth_never_skips(self, make_scorer, benchmark_dir):
+        (benchmark_dir / "ground_truths" / "broken.json").write_text("not json", encoding="utf-8")
+        scorer = make_scorer(BusinessLetters, rules={"skip_signatures": True}, benchmark_dir=str(benchmark_dir))
+        assert scorer.skip_object("broken") is False
+
+
+class TestScoreRequestAnswerNonConforming:
+    """A response the scorer cannot use must score as a complete failure, not raise."""
+
+    GROUND_TRUTH = {
+        "send_date": "1947-03-05",
+        "letter_title": "Test",
+        # "<Some Boss>" is inferred_from_function -> excluded, so one scorable sender
+        "sender_persons": ["Hans Mueller", "<Some Boss>"],
+        "receiver_persons": ["Anna Meier", "Karl Weber"],
+        "has_signatures": "TRUE",
+    }
+    # 1 send date + 1 scorable sender + 2 receivers, none of them found
+    TOTAL_FAILURE = _score(sd=(0, 0, 1), sp=(0, 0, 1), rp=(0, 0, 2))
+
+    @pytest.fixture
+    def scorer(self, make_scorer, benchmark_dir):
+        return make_scorer(BusinessLetters, benchmark_dir=str(benchmark_dir))
+
+    def _run(self, scorer, response, parsed, ground_truth=None):
+        return scorer.score_request_answer(
+            "letter_1", response(parsed=parsed), ground_truth or dict(self.GROUND_TRUTH)
+        )
+
+    def test_flat_payload_scores_normally(self, scorer, response):
+        """The no-metadata-wrapper shape Cohere returns must keep scoring, not fail."""
+        parsed = {
+            "send_date": "1947-03-05",
+            "sender_persons": ["Hans Mueller"],
+            "receiver_persons": ["Anna Meier"],
+        }
+        assert self._run(scorer, response, parsed) == _score(sd=(1, 0, 0), sp=(1, 0, 0), rp=(1, 0, 1))
+
+    def test_wrapped_payload_scores_normally(self, scorer, response):
+        """The exact Document/Metadata shape, with every field a list."""
+        parsed = {"metadata": {
+            "send_date": ["1947-03-05"],
+            "letter_title": ["Test"],
+            "sender_persons": ["Hans Mueller"],
+            "receiver_persons": ["Anna Meier", "Karl Weber"],
+        }}
+        assert self._run(scorer, response, parsed) == _score(sd=(1, 0, 0), sp=(1, 0, 0), rp=(2, 0, 0))
+
+    def test_metadata_is_json_string(self, scorer, response):
+        parsed = {"metadata": '{"send_date": "1947-03-05", "sender_persons": ["Hans Mueller"]}'}
+        assert self._run(scorer, response, parsed) == _score(sd=(1, 0, 0), sp=(1, 0, 0), rp=(0, 0, 2))
+
+    def test_hallucinated_values_count_as_false_positives(self, scorer, response):
+        """The failure path must not mask normal FP accounting."""
+        parsed = {"metadata": {
+            "send_date": ["1900-01-01"],
+            "sender_persons": ["Nobody"],
+            "receiver_persons": [],
+        }}
+        assert self._run(scorer, response, parsed) == _score(sd=(0, 1, 1), sp=(0, 1, 1), rp=(0, 0, 2))
+
+    @pytest.mark.parametrize("parsed", [
+        pytest.param(None, id="parsed_is_none"),
+        pytest.param([{"send_date": "1947-03-05"}], id="parsed_is_list"),
+        pytest.param({"metadata": None}, id="metadata_null"),
+        pytest.param({"metadata": [{"send_date": "1947-03-05"}]}, id="metadata_is_list"),
+        pytest.param({"metadata": "could not read the letter"}, id="metadata_is_prose"),
+        pytest.param({"letters": [{"send_date": "1947-03-05"}]}, id="unexpected_wrapper"),
+        pytest.param({"metadata": {"send_date": "1947-03-05", "sender_orgs": ["X"]}}, id="unknown_field"),
+        pytest.param({"metadata": {"send_date": {"year": 1947}}}, id="send_date_is_dict"),
+        pytest.param({"metadata": {"send_date": [["1947-03-05"]]}}, id="send_date_is_nested_list"),
+        pytest.param({"metadata": {"sender_persons": {"name": "Hans Mueller"}}}, id="persons_is_dict"),
+    ])
+    def test_unusable_response_is_complete_failure(self, scorer, response, parsed):
+        assert self._run(scorer, response, parsed) == self.TOTAL_FAILURE
+
+    def test_conforming_all_nulls_is_complete_failure(self, scorer, response):
+        """A model that validly reports 'found nothing' scores the same as a broken one."""
+        parsed = {"metadata": {
+            "send_date": None, "letter_title": None,
+            "sender_persons": None, "receiver_persons": None,
+        }}
+        assert self._run(scorer, response, parsed) == self.TOTAL_FAILURE
+
+    def test_null_string_sentinels_are_complete_failure(self, scorer, response):
+        parsed = {"metadata": {
+            "send_date": ["null"], "sender_persons": ["null"], "receiver_persons": ["null"],
+        }}
+        assert self._run(scorer, response, parsed) == self.TOTAL_FAILURE
+
+    def test_unusable_ground_truth_returns_none(self, scorer, response):
+        """load_ground_truth yields {"error": ...} for a missing or corrupt file."""
+        parsed = {"metadata": {"send_date": ["1947-03-05"]}}
+        assert self._run(scorer, response, parsed, {"error": "Invalid JSON format."}) is None
+
+    def test_missing_persons_json_still_scores(self, make_scorer, response, tmp_path):
+        """persons.json absent must not leave `persons` unbound."""
+        scorer = make_scorer(BusinessLetters, benchmark_dir=str(tmp_path))
+        parsed = {"send_date": "1947-03-05", "sender_persons": ["Hans Mueller"],
+                  "receiver_persons": ["Anna Meier"]}
+        assert self._run(scorer, response, parsed) == _score(sd=(1, 0, 0), sp=(1, 0, 0), rp=(1, 0, 1))
+
+    def test_scoring_does_not_mutate_its_inputs(self, scorer, response):
+        """document_number used to be injected into response.parsed and saved to disk."""
+        parsed = {"metadata": {"send_date": ["1947-03-05"], "sender_persons": ["Hans Mueller"]}}
+        ground_truth = dict(self.GROUND_TRUTH)
+        scorer.score_request_answer("letter_1", response(parsed=parsed), ground_truth)
+        assert "document_number" not in parsed
+        assert "document_number" not in parsed["metadata"]
+        assert "document_number" not in ground_truth

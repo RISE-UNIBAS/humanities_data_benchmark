@@ -475,6 +475,7 @@ This benchmark suite currently tests models from the following providers:
 | | claude-sonnet-4-6                         | Claude Sonnet 4.6                                          |
 | | claude-sonnet-5                           | Claude Sonnet 5                                            |
 | | claude-fable-5                            | Claude Fable 5                                             |
+| | claude-fable-5-1                          | Claude Fable 5.1                                           |
 | | claude-opus-5                             | Claude Opus 5                                              |
 | **Cohere** | command-a-03-2025                         | Command A (Mar 2025)                                       |
 | | command-a-vision-07-2025                  | Command A Vision (Jul 2025); multimodal                    |
@@ -485,6 +486,7 @@ This benchmark suite currently tests models from the following providers:
 | | deepseek-reasoner                         | DeepSeek R1; reasoning                                     |
 | | deepseek-v4-flash                         | DeepSeek V4 Flash                                          |
 | | deepseek-v4-pro                           | DeepSeek V4 Pro                                            |
+| | deepseek-v4-flash-vision-exp              | DeepSeek V4 Flash Vision (experimental); multimodal        |
 | **Google/Gemini** | ~~gemini-1.5-flash~~                      | ~~Gemini 1.5 Flash~~ (legacy)                              |
 | | ~~gemini-1.5-pro~~                        | ~~Gemini 1.5 Pro~~ (legacy)                                |
 | | ~~gemini-2.0-flash~~                      | ~~Gemini 2.0 Flash~~ (legacy)                              |
@@ -554,6 +556,8 @@ This benchmark suite currently tests models from the following providers:
 | | qwen/qwen3-vl-8b-instruct                 | Qwen3-VL 8B, instruction-tuned; multimodal                 |
 | | qwen/qwen3-vl-8b-thinking                 | Qwen3-VL 8B, reasoning; multimodal                         |
 | | qwen/qwen3.8-max                          | Qwen 3.8 Max; multimodal                                   |
+| | qwen/qwen3.8-flash                        | Qwen 3.8 Flash; multimodal                                 |
+| | qwen/qwen3.8-27b                          | Qwen 3.8, 27B dense; multimodal                            |
 | | qwen/qwen3.7-plus                         | Qwen 3.7 Plus                                              |
 | | qwen/qwen3.6-plus                         | Qwen 3.6 Plus                                              |
 | | qwen/qwen3.5-122b-a10b                    | Qwen 3.5, 122B MoE (10B active)                            |
@@ -569,6 +573,8 @@ This benchmark suite currently tests models from the following providers:
 | | moonshotai/kimi-k3                        | Kimi K3                                                    |
 | | meta/muse-spark-1.2                       | Muse Spark 1.2 (Meta); multimodal                          |
 | | z-ai/glm-5v-turbo                         | GLM-5V Turbo (Z.ai); multimodal                            |
+| | meta/muse-spark-1.3                       | Muse Spark 1.3 (Meta); multimodal                          |
+| | z-ai/glm-5.3-flash                        | GLM-5.3 Flash (Z.ai); multimodal                           |
 | **sciCORE** | ~~GLM-4.5V-FP8~~                              | ~~GLM-4.5V, FP8 quantization; multimodal (Univ. of Basel HPC)~~ (legacy) |
 | | ~~qwen3-235b-fp8~~                            | ~~Qwen3 235B, FP8 quantization (Univ. of Basel HPC)~~ (legacy)          |
 | | qwen35-397b-a17b-fp8                      | Qwen3.5 397B-A17B, FP8 quantization (Univ. of Basel HPC)   |
