@@ -6,6 +6,7 @@ roughly $100 for 5 of 15 benchmarks: uncapped generations ran to the model's ful
 See dev/DEPENDENCY_PATCHES.md.
 """
 import threading
+from pathlib import Path
 from unittest.mock import patch
 
 import pytest
@@ -17,7 +18,7 @@ import benchmark_base as bb
 BASE_CONFIG = dict(id="T9999", name="library_cards", provider="openrouter",
                    model="test/model", role_description="", prompt_file="prompt.txt",
                    dataclass="", temperature="0.0", rules="")
-BENCHMARK_DIR = "benchmarks/library_cards"
+BENCHMARK_DIR = Path(__file__).resolve().parents[1] / "benchmarks" / "library_cards"
 
 
 def _error(message):
