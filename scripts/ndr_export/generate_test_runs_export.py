@@ -1,10 +1,58 @@
 import json
 import os
+from datetime import datetime
 
 from scripts.ndr_export import BENCHMARKS_PATH, RESULTS_PATH, EXPORT_PATH
 from scripts.ndr_export.meta_utils import calculate_normalized_score, get_meta, load_json
 from scripts.ndr_export.pricing_resolver import resolve_pricing
 from scripts.ndr_export.test_utils import get_all_tests
+
+
+def run_timing(request_files):
+    """How long a run's inputs took, summed from the stored responses.
+
+    There is no run-level timing anywhere in results/, so it is derived here. Two things
+    it deliberately does not claim:
+
+    `total_response_s` is the sum of the per-input durations, which is model time and not
+    elapsed time. Runs execute in a ThreadPoolExecutor whose `workers` is a runtime
+    argument that is never stored, so elapsed time cannot be recovered from it: one
+    magazine_pages run sums to 215s of model time across 46 inputs but spans 10s.
+
+    `span_s` is first to last stored response, which is not run duration either. It
+    includes whatever idle sat between requests: a business_letters run spans 62 minutes
+    around 5 minutes of model time.
+
+    `mean_response_s` is the honest per-input figure, and the one to compare runs on.
+    """
+    durations, stamps = [], []
+    for path in request_files:
+        record = load_json(path)
+        if not isinstance(record, dict):
+            continue
+        value = record.get("duration")
+        if isinstance(value, (int, float)):
+            durations.append(value)
+        stamp = record.get("timestamp")
+        if stamp:
+            try:
+                stamps.append(datetime.fromisoformat(stamp))
+            except (TypeError, ValueError):
+                pass
+
+    if not durations:
+        return None
+
+    timing = {
+        "total_response_s": round(sum(durations), 2),
+        "mean_response_s": round(sum(durations) / len(durations), 2),
+        "slowest_response_s": round(max(durations), 2),
+        "inputs_timed": len(durations),
+        "inputs_stored": len(request_files),
+    }
+    if len(stamps) > 1:
+        timing["span_s"] = round((max(stamps) - min(stamps)).total_seconds(), 2)
+    return timing
 
 
 def pricing_provenance(request_data, test_config, run_date):
@@ -117,10 +165,13 @@ def generate_test_runs_export():
             scoring_data = load_json(scoring_path) if scoring_path.exists() else None
 
             # Load request/response data (find the request_*.json file)
-            request_files = list(test_folder.glob("request_*.json"))
+            request_files = sorted(test_folder.glob("request_*.json"))
             request_data = None
             if request_files:
                 request_data = load_json(request_files[0])
+            # Note that `results` above is one arbitrary input, so its `duration` is that
+            # input's, never the run's. The run-level figures come from every file.
+            timing = run_timing(request_files)
 
             # Calculate normalized score
             normalized_score = calculate_normalized_score(scoring_data, benchmark_name)
@@ -165,6 +216,7 @@ def generate_test_runs_export():
                 "results": request_data,
                 "scoring": scoring_data,
                 "pricing": pricing_provenance(request_data, test_config, date_str),
+                "timing": timing,
                 "normalized_score": normalized_score
             }
 
