@@ -156,9 +156,26 @@ class MedievalManuscripts(Benchmark):
             avg_fuzzy = 0.0
             avg_cer = 1.0
 
+        # compare_folios already produced the per-field comparison -- the model text
+        # beside the ground-truth text, with the similarity and CER assigned to each.
+        # Averaging it away left the view nothing to show but two documents whose
+        # shapes do not even line up: ground truth is keyed by folio reference while
+        # the response is a list, and these were matched by position.
+        field_scores = {}
+        for result in results:
+            key = "%s %s" % (result.get("folio_ref", "?"), result.get("field", "?"))
+            field_scores[key] = {
+                "response": result.get("response_text"),
+                "ground_truth": result.get("ground_truth_text"),
+                "score": result.get("similarity"),
+                "cer": result.get("cer"),
+                "match_found": result.get("match_found"),
+            }
+
         return {
             "fuzzy": round(avg_fuzzy, 3),
-            "cer": round(avg_cer, 3)
+            "cer": round(avg_cer, 3),
+            "field_scores": field_scores
         }
 
     def compare_folios(self,

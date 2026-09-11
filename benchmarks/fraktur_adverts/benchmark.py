@@ -152,9 +152,25 @@ class FrakturAdverts(Benchmark):
             avg_fuzzy = 0.0
             avg_cer = 1.0
 
+        # compare_ads matched each advertisement by section and number prefix and
+        # scored the pair; the loop above also filled in each one's CER. Keep that
+        # instead of only its average, so the comparison view can show which advert
+        # was matched to which and how far apart the two texts were.
+        field_scores = {}
+        for index, result in enumerate(results):
+            key = "%s %s" % (result.get("section", "?"), result.get("number", index))
+            field_scores[key] = {
+                "response": result.get("response_text"),
+                "ground_truth": result.get("ground_truth_text"),
+                "score": result.get("similarity"),
+                "cer": result.get("cer"),
+                "match_found": result.get("match_found"),
+            }
+
         return {
             "fuzzy": round(avg_fuzzy, 2),
-            "cer": round(avg_cer, 3)  # Use 3 decimal places for CER for more precision
+            "cer": round(avg_cer, 3),  # Use 3 decimal places for CER for more precision
+            "field_scores": field_scores
         }
 
     def extract_number_prefix(self,

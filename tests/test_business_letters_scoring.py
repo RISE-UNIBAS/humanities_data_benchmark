@@ -63,7 +63,7 @@ class TestScoreBenchmark:
 
 
 class TestScoreRequestAnswerGolden:
-    def test_golden(self, make_scorer, response, benchmark_dir):
+    def test_golden(self, make_scorer, response, benchmark_dir, metrics):
         scorer = make_scorer(BusinessLetters, benchmark_dir=str(benchmark_dir))
         ground_truth = {
             "send_date": "1947-03-05",
@@ -79,7 +79,7 @@ class TestScoreRequestAnswerGolden:
             "receiver_persons": ["Anna Meier"],        # Karl Weber missing -> receiver tp=1, fn=1
         }}
         result = scorer.score_request_answer("letter_1", response(parsed=parsed), ground_truth)
-        assert result == {
+        assert metrics(result) == {
             "send_date_tp": 1, "send_date_fp": 0, "send_date_fn": 0,
             "sender_persons_tp": 1, "sender_persons_fp": 0, "sender_persons_fn": 0,
             "receiver_persons_tp": 1, "receiver_persons_fp": 0, "receiver_persons_fn": 1,
@@ -137,9 +137,14 @@ class TestScoreRequestAnswerNonConforming:
         return make_scorer(BusinessLetters, benchmark_dir=str(benchmark_dir))
 
     def _run(self, scorer, response, parsed, ground_truth=None):
-        return scorer.score_request_answer(
+        score = scorer.score_request_answer(
             "letter_1", response(parsed=parsed), ground_truth or dict(self.GROUND_TRUTH)
         )
+        # Metrics only. The scorer also returns field_scores -- the values it compared --
+        # and these cases are about the counts, not about restating that structure.
+        if isinstance(score, dict):
+            score = dict((k, v) for k, v in score.items() if k != "field_scores")
+        return score
 
     def test_flat_payload_scores_normally(self, scorer, response):
         """The no-metadata-wrapper shape Cohere returns must keep scoring, not fail."""

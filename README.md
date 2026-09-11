@@ -297,12 +297,23 @@ def score_request_answer(self, object_name, response, ground_truth):
    # object_name: basename of the processed files
    # response: large language model response
    # ground_truth: corresponding_ground_truth
-   
+
    calculated_score = 0
-   # implement scoring for one object
-   
-   return {"fuzzy": calculated_score}
+   field_scores = {}
+   # implement scoring for one object, recording each comparison as you make it
+   field_scores["title"] = {"response": "Der Process",
+                            "ground_truth": "Der Proceß",
+                            "score": 0.8}
+
+   return {"fuzzy": calculated_score, "field_scores": field_scores}
 ```
+
+Besides your metrics, record **`field_scores`**: the values you compared, keyed by whatever unit
+your scorer uses (a field name, a folio reference, a matched box). The result views display your
+scorer's own judgement and cannot derive it: one benchmark matches boxes by overlap, another aligns
+folios by position, so an independent comparison would contradict the score beside it. Use
+`score: None` where your scorer gives counts rather than a similarity, and keep everything
+JSON-serializable, because the dict is written verbatim into the stored answer.
 
 _Implement the scoring of the whole test run:_
 Take the average or the mean or use any other functionality to score across all requests for the test run.
@@ -314,6 +325,9 @@ def score_benchmark(self, all_scores):
            total_score += score['fuzzy']
        return {"fuzzy": total_score / len(all_scores)}
 ```
+
+`score_benchmark` receives those same dicts, `field_scores` included: read metrics by key, and do
+not log a whole score, which carries every comparison made for that object.
 
 Return at least one metric. Commonly used metrics are fuzzy, f1_score, cer
 

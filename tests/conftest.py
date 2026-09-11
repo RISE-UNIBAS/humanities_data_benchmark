@@ -37,3 +37,19 @@ def response():
     def _response(parsed=None, text=""):
         return SimpleNamespace(parsed=parsed, text=text)
     return _response
+
+@pytest.fixture
+def metrics():
+    """A score with its comparison detail stripped off.
+
+    Scorers return `field_scores` alongside their metrics -- the values they actually
+    compared and the similarity assigned to each -- so a comparison view can show the
+    scorer's own judgement instead of re-deriving one that would disagree with it.
+    These tests are about the metrics, so drop that rather than restate a large nested
+    structure in every expectation.
+    """
+    def _metrics(score):
+        if not isinstance(score, dict):
+            return score
+        return dict((k, v) for k, v in score.items() if k != "field_scores")
+    return _metrics

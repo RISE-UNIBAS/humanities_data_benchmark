@@ -453,6 +453,7 @@ def generate_html_content(
         .field-score.high {{ color: #28a745; }}
         .field-score.medium {{ color: #ffc107; }}
         .field-score.low {{ color: #dc3545; }}
+        .field-score.unscored {{ opacity: .5; }}
 
         @media print {{
             body {{
@@ -715,8 +716,17 @@ def generate_html_content(
 """
 
             for field_name, field_data in score_data['field_scores'].items():
-                field_score = field_data.get('score', 0)
-                score_class = 'high' if field_score >= 0.8 else ('medium' if field_score >= 0.5 else 'low')
+                # Not every scorer states a per-field similarity. business_letters, for
+                # one, counts true/false positives per category and never computes a
+                # ratio, so it reports score None rather than inventing one -- render
+                # that as "no score", not as a zero the scorer never produced.
+                field_score = field_data.get('score')
+                if isinstance(field_score, (int, float)):
+                    score_class = 'high' if field_score >= 0.8 else ('medium' if field_score >= 0.5 else 'low')
+                    score_text = f"{field_score:.2f}"
+                else:
+                    score_class = 'unscored'
+                    score_text = '&mdash;'
 
                 response_val = field_data.get('response', '')
                 gt_val = field_data.get('ground_truth', '')
@@ -732,7 +742,7 @@ def generate_html_content(
                                 <div class="field-name">{field_name}</div>
                                 <div class="field-value">{response_val}</div>
                                 <div class="field-value">{gt_val}</div>
-                                <div class="field-score {score_class}">{field_score:.2f}</div>
+                                <div class="field-score {score_class}">{score_text}</div>
                             </div>
 """
 

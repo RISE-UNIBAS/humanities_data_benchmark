@@ -40,6 +40,7 @@ import re
 from datetime import datetime
 
 from scripts.ndr_export import BENCHMARKS_PATH, EXPORT_PATH, RESULTS_PATH
+from scripts.ndr_export.generate_compare_detail import DETAIL_DIR
 from scripts.ndr_export.meta_utils import get_benchmarks, get_meta, load_json
 
 REPO_RAW_BASE = ("https://raw.githubusercontent.com/RISE-UNIBAS/"
@@ -129,6 +130,14 @@ def get_runs():
                 "has_scoring": isinstance(scoring, dict),
             }
 
+            # Whether generate_compare_detail wrote re-scored field detail for this run.
+            # Recorded so the widget knows to fetch it instead of probing for a file
+            # that is absent for the runs whose scorer already recorded its own. Only
+            # set when true, to keep the index small. This is why the detail step runs
+            # before this one.
+            if (DETAIL_DIR / date_dir.name / (run_dir.name + ".json")).is_file():
+                record["detail"] = True
+
             # A response file is `request_<prefix>_<basename>.json`, and for 188 older
             # run directories the prefix is not the directory name: the ids were
             # re-padded (T17 -> T0017, T02 -> T0002) without renaming the files, and the
@@ -153,9 +162,12 @@ def attach_benchmarks(runs, benchmarks):
     test list contains this id.
     """
     for name, entry in benchmarks.items():
+        prompts = entry.pop("_prompts", {})
         for test_id in entry.pop("_test_ids", []):
             if test_id in runs:
                 runs[test_id]["benchmark"] = name
+                if prompts.get(test_id):
+                    runs[test_id]["prompt_file"] = prompts[test_id]
 
 
 def generate_compare_index():
@@ -171,12 +183,18 @@ def generate_compare_index():
         if orphans:
             print(f"  {benchmark}: {len(orphans)} ground truth(s) with no source file, "
                   f"skipped: {orphans}")
+        tests = [t for t in all_tests if t.get("name") == benchmark and t.get("id")]
         benchmarks[benchmark] = {
             "title": meta.get("title", benchmark),
             "ranking": meta.get("ranking"),
             "inputs": inputs,
-            "_test_ids": [t.get("id") for t in all_tests
-                          if t.get("name") == benchmark and t.get("id")],
+            "_test_ids": [t["id"] for t in tests],
+            # test id -> prompt file, so the widget can fetch and show the prompt a run
+            # used. The prompt is a template: `load_prompt` substitutes per-object
+            # values such as {width}/{height} at request time, and the formatted result
+            # is not stored, so what can be shown is the template.
+            "_prompts": dict((t["id"], t.get("prompt_file") or "prompt.txt")
+                             for t in tests),
         }
 
     runs = get_runs()
@@ -205,3 +223,6 @@ def generate_compare_index():
     print(f"Wrote {target} - {len(benchmarks)} benchmarks, {objects} scored objects, "
           f"{len(runs)} test ids, {total_runs} runs "
           f"({target.stat().st_size / 1024:.0f} KB)")
+
+if __name__ == "__main__":
+    generate_compare_index()

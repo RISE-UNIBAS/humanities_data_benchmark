@@ -63,7 +63,7 @@ class TestExtractNumberPrefix:
 class TestScoreRequestAnswerGolden:
     """End-to-end goldens with hand-verified expected scores."""
 
-    def test_standard_match_and_miss(self, scorer, response):
+    def test_standard_match_and_miss(self, scorer, response, metrics):
         section = "Es werden zum Verkauff offerirt"
         gt = {section: [
             {"tags_section": section, "text": "1. Ein schoenes Buch"},
@@ -75,10 +75,10 @@ class TestScoreRequestAnswerGolden:
         # ad 1: exact match -> similarity 1.0, cer 0.0
         # ad 2: no response  -> similarity 0.0, cer 1.0
         # averages: fuzzy (1.0+0.0)/2 = 0.5, cer (0.0+1.0)/2 = 0.5
-        assert scorer.score_request_answer("image_1", response(parsed=parsed), gt) == {"fuzzy": 0.5, "cer": 0.5}
+        assert metrics(scorer.score_request_answer("image_1", response(parsed=parsed), gt)) == {"fuzzy": 0.5, "cer": 0.5}
 
-    def test_image_4_default_section_forced(self, scorer, response):
+    def test_image_4_default_section_forced(self, scorer, response, metrics):
         gt = {DEFAULT_SECTION: [{"tags_section": DEFAULT_SECTION, "text": "1. Foo"}]}
         # response ad has no tags_section -> image_4 handling forces DEFAULT_SECTION, then matches
         parsed = {"advertisements": [{"text": "1. Foo"}]}
-        assert scorer.score_request_answer("image_4", response(parsed=parsed), gt) == {"fuzzy": 1.0, "cer": 0.0}
+        assert metrics(scorer.score_request_answer("image_4", response(parsed=parsed), gt)) == {"fuzzy": 1.0, "cer": 0.0}

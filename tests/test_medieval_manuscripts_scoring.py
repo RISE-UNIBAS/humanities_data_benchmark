@@ -55,12 +55,12 @@ class TestScoreBenchmark:
 
 
 class TestScoreRequestAnswer:
-    def test_perfect_match(self, scorer, response):
+    def test_perfect_match(self, scorer, response, metrics):
         gt = {"[3r]": [{"folio": "3r", "text": "hello"}]}
         parsed = {"folios": [{"folio": "3r", "text": "hello"}]}
-        assert scorer.score_request_answer("img", response(parsed=parsed), gt) == {"fuzzy": 1.0, "cer": 0.0}
+        assert metrics(scorer.score_request_answer("img", response(parsed=parsed), gt)) == {"fuzzy": 1.0, "cer": 0.0}
 
-    def test_no_response_folio_is_worst(self, scorer, response):
+    def test_no_response_folio_is_worst(self, scorer, response, metrics):
         gt = {"[3r]": [{"folio": "3r", "text": "hello"}]}
         parsed = {"folios": []}  # nothing to match -> similarity 0, cer 1
-        assert scorer.score_request_answer("img", response(parsed=parsed), gt) == {"fuzzy": 0.0, "cer": 1.0}
+        assert metrics(scorer.score_request_answer("img", response(parsed=parsed), gt)) == {"fuzzy": 0.0, "cer": 1.0}

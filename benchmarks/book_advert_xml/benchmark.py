@@ -26,7 +26,19 @@ class BookAdvertXml(Benchmark):
 
         score = fuzz.ratio(fixed_xml, gt_xml)
 
-        return {"fuzzy": score}
+        # One comparison, but record it: the two whitespace-stripped strings this
+        # score was actually computed from, which is not what either document looks
+        # like on its own.
+        return {
+            "fuzzy": score,
+            "field_scores": {
+                "fixed_xml": {
+                    "response": fixed_xml,
+                    "ground_truth": gt_xml,
+                    "score": score,
+                }
+            }
+        }
 
     def score_benchmark(self, all_scores: list) -> dict:
         """Aggregate scores from all requests."""

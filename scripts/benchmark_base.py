@@ -755,7 +755,28 @@ class Benchmark(ABC):
                              object_basename: str,
                              response: LLMResponse,
                              ground_truth: dict) -> dict:
-        """ Score the response. """
+        """ Score the response.
+
+        The returned dict is stored verbatim in the request answer file, so every value
+        in it must be JSON-serializable -- plain strings and numbers, not the objects
+        the scorer compared.
+
+        Besides its metrics, it should carry `field_scores`: what this scorer compared,
+        keyed by whatever unit it compares (a field name, a folio reference, a matched
+        box). Each entry is
+
+            {"response": <value seen>, "ground_truth": <value expected>, "score": <0..1>}
+
+        with `score` None where the scorer states its verdict some other way -- counts
+        of true and false positives, say -- rather than as a per-field similarity. Extra
+        scalar keys are kept and shown alongside.
+
+        This is what lets a comparison view report the scorer's own judgement. Each
+        benchmark matches differently -- by box overlap, by folio position, against a
+        fuzzy threshold -- so an independent diff would contradict the score beside it.
+        Enforced by tests/integrity/test_field_scores_integrity.py; consumed by
+        scripts/generate_test_report.py and the run-comparison widget.
+        """
         pass
 
     @abstractmethod

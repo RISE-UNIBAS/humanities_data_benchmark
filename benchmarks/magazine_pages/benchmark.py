@@ -146,6 +146,7 @@ class MagazinePages(Benchmark):
         # Perfect score when both are empty (model correctly predicted nothing)
         if not gt_boxes and not pred_boxes:
             return {
+                "field_scores":    {},
                 "f1":              1.0,
                 "precision":       1.0,
                 "recall":          1.0,
@@ -169,7 +170,36 @@ class MagazinePages(Benchmark):
         )
         mean_iou = sum(m[2] for m in matches) / len(matches) if matches else 0.0
 
+        # The pairing is the comparison: which predicted box was matched to which
+        # ground-truth box, and at what IoU. Only its length survived before, so the
+        # view had no way to show why a page scored as it did -- and an independent
+        # box-equality check contradicts this scorer, which matches by overlap.
+        field_scores = {}
+        matched_pred = set()
+        for gt_i, pred_i, iou in matches:
+            matched_pred.add(pred_i)
+            field_scores["box %d" % gt_i] = {
+                "response": pred_boxes[pred_i],
+                "ground_truth": gt_boxes[gt_i],
+                "score": round(iou, 3),
+            }
+        for gt_i, box in enumerate(gt_boxes):
+            if not any(m[0] == gt_i for m in matches):
+                field_scores["box %d" % gt_i] = {
+                    "response": None,          # nothing matched it: a false negative
+                    "ground_truth": box,
+                    "score": 0.0,
+                }
+        for pred_i, box in enumerate(pred_boxes):
+            if pred_i not in matched_pred:
+                field_scores["unmatched prediction %d" % pred_i] = {
+                    "response": box,
+                    "ground_truth": None,      # matched nothing: a false positive
+                    "score": 0.0,
+                }
+
         return {
+            "field_scores":    field_scores,
             "f1":              round(f1, 3),
             "precision":       round(precision, 3),
             "recall":          round(recall, 3),

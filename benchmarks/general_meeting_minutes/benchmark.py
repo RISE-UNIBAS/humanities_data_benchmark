@@ -2,7 +2,9 @@
 
 Extract names, locations, signatures from table-like metting minutes of Mines de Costano S.A., 1930s - 1960s
 """
+import logging
 from typing import Dict, List
+
 from scripts.benchmark_base import Benchmark
 from scripts.scoring_helper import get_all_keys, get_nested_value, calculate_fuzzy_score
 
@@ -33,18 +35,24 @@ class GeneralMeetingMinutes(Benchmark):
         Returns:
             Dictionary containing scores for this request
         """
-        print("Scoring response for:", image_name)
+        logging.info("Scoring response for: %s", image_name)
         data = self.prepare_scoring_data(response)
 
         my_keys = get_all_keys(ground_truth)
 
         avg_score = 0
         total_keys = 0
+        field_scores = {}
         for k in my_keys:
             test_value = get_nested_value(data, k)
             gold_value = get_nested_value(ground_truth, k)
 
             score = calculate_fuzzy_score(test_value, gold_value)
+            field_scores[k] = {
+                'response': test_value,
+                'ground_truth': gold_value,
+                'score': score,
+            }
             avg_score += score
             total_keys += 1
 
@@ -53,7 +61,11 @@ class GeneralMeetingMinutes(Benchmark):
         else:
             avg_score = 0
 
-        return {"fuzzy": avg_score}
+        # Record what was compared, not just the average. The scorer already has the
+        # two values and the similarity it assigned; keeping them lets the comparison
+        # view show this scorer's own judgement instead of re-deriving one that would
+        # disagree with it. Same shape as library_cards, which has always done this.
+        return {"fuzzy": avg_score, "field_scores": field_scores}
 
     def score_benchmark(self, all_scores: list) -> dict:
         """Aggregate scores from all requests.
@@ -68,7 +80,7 @@ class GeneralMeetingMinutes(Benchmark):
             return {"fuzzy": 0.0}
         total_score = 0
         for score in all_scores:
-            print(score)
+            logging.debug("fuzzy: %s", score['fuzzy'])
             total_score += score['fuzzy']
 
         return {"fuzzy": total_score / len(all_scores)}

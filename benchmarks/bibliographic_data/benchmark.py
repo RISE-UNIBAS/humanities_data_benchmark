@@ -36,6 +36,7 @@ class BibliographicData(Benchmark):
         
         avg_score = 0
         total_keys = 0
+        field_scores = {}
         for k in my_keys:
             test_value = get_nested_value(data, k)
             gold_value = get_nested_value(ground_truth, k)
@@ -45,6 +46,11 @@ class BibliographicData(Benchmark):
                 continue
                 
             score = calculate_fuzzy_score(test_value, gold_value)
+            field_scores[k] = {
+                'response': test_value,
+                'ground_truth': gold_value,
+                'score': score,
+            }
             avg_score += score
             total_keys += 1
             
@@ -53,4 +59,8 @@ class BibliographicData(Benchmark):
         else:
             avg_score = 0
             
-        return {"fuzzy": avg_score}
+        # Record what was compared, not just the average. The scorer already has the
+        # two values and the similarity it assigned; keeping them lets the comparison
+        # view show this scorer's own judgement instead of re-deriving one that would
+        # disagree with it. Same shape as library_cards, which has always done this.
+        return {"fuzzy": avg_score, "field_scores": field_scores}

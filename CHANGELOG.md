@@ -17,11 +17,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Tests on 2026-09-09: T1740-T1749 (10 tests) completing qwen/qwen3.8-27b (OpenRouter).
 - `tests/integrity/test_client_capability_integrity.py`: fails when the installed `ai_client` would silently drop images from a DeepSeek vision model; `dev/DEPENDENCY_PATCHES.md` records the patch to re-apply after a venv rebuild.
 - `FatalProviderError`: a 402, 401 or 403 now aborts the run instead of being retried per object for every remaining test.
+- `field_scores` in `score_request_answer` for the eight benchmarks that lacked it (`bibliographic_data`, `blacklist_cards`, `book_advert_xml`, `business_letters`, `fraktur_adverts`, `general_meeting_minutes`, `magazine_pages`, `medieval_manuscripts`), so all twelve now record what the scorer compared as `{response, ground_truth, score}`, with `score` set to `null` where a scorer counts true/false positives instead of assigning a similarity. Scores are unchanged: all 77,866 stored inputs re-score identically. Documented on `Benchmark.score_request_answer` and enforced by the new `tests/integrity/test_field_scores_integrity.py`, which also rejects a score that will not serialise, since `save_answer` writes it verbatim into the stored answer.
+- `scripts/offline_scoring.py` and `scripts/rescore.py`: re-run a benchmark's own scorer over stored results with no model call, to prove a scorer change leaves its numbers untouched. Each run's `rules` are applied, because `personnel_cards` selects which fields it scores from them.
+- `scripts/ndr_export/generate_compare_detail.py`, a new `generate_all.py` step (now 8), writing `collected_results/compare_detail/<date>/<test_id>.json` (1,792 files, ~13 MB in git). Only inputs whose stored answer has no `field_scores` are re-scored, so detail recorded at run time is always preferred and `results/` is never rewritten (`dev/DATASET_EXPORT_PLAN.md` §6); each file records its provenance and whether re-scoring still reproduces the stored score. `compare_index.json` marks such runs with `detail: true`.
 
 ### Fixed
 - `general_meeting_minutes`: `score_benchmark` no longer raises `ZeroDivisionError` when every request fails, matching the empty-score guard in the other benchmarks.
 - `business_letters`: a response that does not match the expected schema now scores as a complete failure instead of crashing the run.
 - `business_letters`: scoring no longer injects `document_number` into the saved response payload.
+- `scripts/generate_test_report.py`: a field with no per-field similarity no longer raises when the field-by-field table is rendered; `score` was formatted with `:.2f`, which fails on the `null` a counting scorer reports.
+- `general_meeting_minutes`: two `print()` calls in the scoring path now log instead of writing to stdout on every run.
 
 ### Changed
 - Requests now send a 32k `max_tokens` cap (`duty_rosters` 96k, `general_meeting_minutes` 40k, per-test override via the `rules` column); previously the provider default applied.

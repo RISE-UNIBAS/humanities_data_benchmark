@@ -100,22 +100,47 @@ class BusinessLetters(Benchmark):
             logging.error(f"{e}: Persons ground truth not usable!")
             persons = []
 
+        details = {"send_date": {}, "sender_persons": {}, "receiver_persons": {}}
+
         score = self._score_send_date(ground_truth_letter=ground_truth_letter,
-                                      predicted_letter=response_letter)
+                                      predicted_letter=response_letter,
+                                      detail=details["send_date"])
 
         score = score | self._score_persons(sender_or_receiver="sender",
                                             ground_truth_letter=ground_truth_letter,
                                             predicted_letter=response_letter,
                                             persons=persons,
                                             inferred_from_function=inferred_from_function,
-                                            inferred_from_correspondence=inferred_from_correspondence)
+                                            inferred_from_correspondence=inferred_from_correspondence,
+                                            detail=details["sender_persons"])
 
         score = score | self._score_persons(sender_or_receiver="receiver",
                                             ground_truth_letter=ground_truth_letter,
                                             predicted_letter=response_letter,
                                             persons=persons,
                                             inferred_from_function=inferred_from_function,
-                                            inferred_from_correspondence=inferred_from_correspondence)
+                                            inferred_from_correspondence=inferred_from_correspondence,
+                                            detail=details["receiver_persons"])
+
+        # This scorer states its verdict as true/false positives and negatives per
+        # category, not as a per-field similarity, so record the values it compared and
+        # leave "score" unset rather than inventing a number it never computed.
+        #
+        # The reported values are the normalized sets the counts were taken from -- the
+        # ground truth after the inference filter, the response after preferred-name
+        # matching -- and not the parsed response, so the detail cannot disagree with
+        # the counts beside it. They are also plain strings: the letters hold Person
+        # dataclasses, which do not survive the JSON write of the stored answer.
+        counts = dict(score)
+        score["field_scores"] = {
+            field: {
+                "response": detail.get("response"),
+                "ground_truth": detail.get("ground_truth"),
+                "score": None,
+                "counts": {k: v for k, v in counts.items() if k.startswith(field + "_")},
+            }
+            for field, detail in details.items()
+        }
         return score
 
     def skip_object(self,
@@ -276,11 +301,14 @@ class BusinessLetters(Benchmark):
 
     @staticmethod
     def _score_send_date(ground_truth_letter: Letter,
-                         predicted_letter: Letter) -> dict[str, int]:
+                         predicted_letter: Letter,
+                         detail: Optional[dict] = None) -> dict[str, int]:
         """ Score 'send_date'.
 
         :param ground_truth_letter: the ground truth letter
         :param predicted_letter: the predicted letter
+        :param detail: if given, filled with the two normalized sets the counts are
+            taken from, for reporting what was compared
         """
 
         predicted_date = predicted_letter.send_date
@@ -301,6 +329,10 @@ class BusinessLetters(Benchmark):
         logging.debug(f"ground_truth_date: {ground_truth_date}")
         logging.debug(f"predicted_date: {predicted_date}")
 
+        if detail is not None:
+            detail["response"] = sorted(predicted_date, key=str)
+            detail["ground_truth"] = sorted(ground_truth_date, key=str)
+
         return {"send_date_tp": len(ground_truth_date & predicted_date),
                 "send_date_fp": len(predicted_date - ground_truth_date),
                 "send_date_fn": len(ground_truth_date - predicted_date)}
@@ -311,7 +343,8 @@ class BusinessLetters(Benchmark):
                        predicted_letter: Letter,
                        persons: dict,
                        inferred_from_function: bool = False,
-                       inferred_from_correspondence: bool = False) -> dict[str, int]:
+                       inferred_from_correspondence: bool = False,
+                       detail: Optional[dict] = None) -> dict[str, int]:
         """ Score 'sender_persons' or 'receiver_persons'.
 
         :param sender_or_receiver: whether to score by sender or receiver persons
@@ -320,6 +353,8 @@ class BusinessLetters(Benchmark):
         :param persons: the persons ground_truth
         :param inferred_from_function: whether sender person was inferred from function, defaults to False
         :param inferred_from_correspondence: whether sender person was inferred from correspondence, defaults to False
+        :param detail: if given, filled with the two normalized name sets the counts are
+            taken from, for reporting what was compared
         """
 
         # select ground truth persons:
@@ -366,6 +401,10 @@ class BusinessLetters(Benchmark):
                 continue
             else:
                 predicted_persons.add(predicted_person)
+
+        if detail is not None:
+            detail["response"] = sorted(predicted_persons)
+            detail["ground_truth"] = sorted(ground_truth_persons)
 
         return {f"{sender_or_receiver}_persons_tp": len(ground_truth_persons & predicted_persons),  # intersection
                 f"{sender_or_receiver}_persons_fp": len(predicted_persons - ground_truth_persons),
