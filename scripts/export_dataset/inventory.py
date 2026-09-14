@@ -14,6 +14,7 @@ document. `dev/DATASET_EXPORT_PLAN.md` §9.1 is explicit about this: the corpus 
 a hard-coded expectation turns an ordinary new run into a failed build.
 """
 import hashlib
+from pathlib import Path
 
 from scripts.results_index import (BENCHMARKS_PATH, PROJECT_ROOT, RESULTS_PATH, TESTS_CSV,
                                    benchmark_names, iter_run_dirs)
@@ -36,11 +37,20 @@ def sha256_of(path):
     return digest.hexdigest()
 
 
-def _relative(path):
+def relative_path(path):
+    """A path as it will appear in the release: relative to the repository root, posix.
+
+    An absolute path would carry the build machine's username and directory layout into a
+    published artifact, and would mean nothing to anyone reading it. Falls back to the
+    absolute form only for a path outside the repository, which the export does not read.
+    """
     try:
-        return path.relative_to(PROJECT_ROOT).as_posix()
+        return Path(path).relative_to(PROJECT_ROOT).as_posix()
     except ValueError:
-        return path.as_posix()
+        return Path(path).as_posix()
+
+
+_relative = relative_path
 
 
 def consumed_files(results_path=RESULTS_PATH):

@@ -173,3 +173,27 @@ def test_unknown_test_ids_would_survive(extracted):
     statuses = set(row["config_status"] for row in extracted.runs)
     assert statuses <= {"matched", "unknown_test_id"}
     assert "matched" in statuses
+
+
+def test_no_exported_path_is_absolute(extracted):
+    """The release condition: nothing carries the build machine's directory layout.
+
+    This is the assertion that would have caught the bug, and it has to run here rather
+    than over a fixture, because `relative_path` deliberately falls back to the absolute
+    form for a path outside the repository -- which every tmp_path corpus is.
+    """
+    paths = ([r["source_path"] for r in extracted.runs]
+             + [r["source_path"] for r in extracted.requests]
+             + [p["source_path"] for records in extracted.payloads.values()
+                for p in records]
+             + [p["source_path"] for p in extracted.run_payloads]
+             + [d["source_path"] for d in extracted.diagnostics])
+    assert paths
+
+    absolute = [p for p in paths
+                if p.startswith("/") or p.startswith("\\")
+                or (len(p) > 1 and p[1] == ":")]
+    assert not absolute, (
+        "%d of %d exported paths are absolute, so a published artifact would carry this "
+        "machine's username and directory layout. Record paths through "
+        "inventory.relative_path. First: %r" % (len(absolute), len(paths), absolute[0]))

@@ -492,3 +492,38 @@ def test_a_failed_build_leaves_the_previous_one_intact(tmp_path):
     with pytest.raises(RuntimeError, match="nothing staged"):
         writers.publish(tmp_path / "never_created", final)
     assert (final / "runs.csv").read_text(encoding="utf-8") == "good"
+
+
+# --------------------------------------------------------------------------------
+# Nothing about the build machine reaches the release
+# --------------------------------------------------------------------------------
+
+def test_relative_path_strips_the_repository_root():
+    """An absolute path would publish the build machine's username and layout.
+
+    This shipped once. `source_path` was `Path.as_posix()` on an absolute path in `runs`,
+    `requests` and every payload record -- 106,766 rows of
+    `C:/Users/<name>/.../results/...` headed for a citable artifact -- and nothing was
+    checking, because every other test asserted what a row contained rather than what it
+    should not. The corpus-wide assertion lives in
+    tests/integrity/test_dataset_export_integrity.py, since a tmp_path fixture sits
+    outside the repository and cannot exercise the real case.
+    """
+    from scripts.export_dataset.inventory import relative_path
+    from scripts.results_index import PROJECT_ROOT
+
+    inside = PROJECT_ROOT / "results" / "2026-01-01" / "T0001" / "request_T0001_a.json"
+    assert relative_path(inside) == "results/2026-01-01/T0001/request_T0001_a.json"
+    assert relative_path(PROJECT_ROOT) == "."
+
+
+def test_relative_path_falls_back_for_a_path_outside_the_repository(tmp_path):
+    """Documented, not silent: a build whose --source lies elsewhere keeps absolute paths.
+
+    Acceptable because such a build is a development one, and the release condition is
+    asserted over the real corpus instead. Stated here so the fallback is a decision
+    rather than a surprise.
+    """
+    from scripts.export_dataset.inventory import relative_path
+    outside = tmp_path / "elsewhere" / "runs"
+    assert relative_path(outside) == outside.as_posix()

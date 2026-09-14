@@ -24,6 +24,7 @@ import re
 from datetime import datetime
 
 from scripts.export_dataset import metrics as M
+from scripts.export_dataset.inventory import relative_path
 from scripts.export_dataset.schema import empty_string_is_null
 from scripts.ndr_export.pricing_resolver import resolve_pricing
 from scripts.results_index import (TestCatalog, benchmark_meta, iter_request_records,
@@ -166,7 +167,7 @@ class Extractor:
         typed = self.catalog.typed_by_id().get(run.test_id) or {}
         benchmark = self.catalog.benchmark_of(run.test_id)
         meta = self._meta(benchmark) if benchmark else None
-        source = run.path.as_posix()
+        source = relative_path(run.path)
 
         files = read_run(run)
         request_rows = []
@@ -177,7 +178,7 @@ class Extractor:
         scoring = read_scoring(files)
         status = scoring_status_of(scoring.status, scoring.value)
         if scoring.status == "invalid":
-            self._diag(files.scoring_path.as_posix(), "unparseable_scoring_json",
+            self._diag(relative_path(files.scoring_path), "unparseable_scoring_json",
                        "warning", "row kept with scoring_status=invalid; bytes preserved "
                        "under payloads/invalid/")
             self.invalid_sources.append(files.scoring_path)
@@ -201,7 +202,7 @@ class Extractor:
                                        request_rows, scoring, status, cost))
 
     def _one_request(self, run, request, read, benchmark, typed, meta):
-        source = request.path.as_posix()
+        source = relative_path(request.path)
 
         if request.object_id is None:
             self._diag(source, "unresolvable_object_id", "blocking",
