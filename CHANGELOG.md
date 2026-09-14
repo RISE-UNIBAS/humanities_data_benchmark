@@ -14,6 +14,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `dataset/examples/business_letters_cost.py`: cost per correct extraction by provider and date, shipped inside the dataset. Withholds a ratio, with a reason, where coverage is too thin or true positives are zero, and flags a cell whose cost is zero only because the pricing table has no price.
 - `dataset/` now ships `coverage.csv` (69,099 rows: every column counted globally and per benchmark, provider, date and triple), `datapackage.json`, a README, a dataset changelog and `CITATION.cff`, all generated from the schema and a column dictionary. No licence is declared: the terms covering stored responses and ground truths are undecided, and the README records that as a release blocker.
 - `scripts/export_dataset/crosscheck.py`: reconciles the dataset export against `test_runs_export.json`. All 2,371 runs agree on benchmark, visibility, provider, model, every run-level score, recorded cost summaries and resolved prices.
+- `dataset_version` (`<data_cutoff>.<serial>`) in the manifest, distinct from `schema_version` and `data_cutoff`; it is what a citation names, and the serial is passed rather than inferred because only a human knows whether a build is new data or a correction.
+- `scripts/package_dataset.py`: builds the tree to commit to the release repository — 26.6 MB, CSVs and the source manifest gzipped so `scores_long` clears GitHub's 100 MB limit — plus a separate payload archive and `SHA256SUMS` written beside the output. Refuses to package a tree that cannot be pushed.
 
 ### Fixed
 - `benchmark_export.json` and `test_runs_export.json`: run order no longer depends on filesystem order.
