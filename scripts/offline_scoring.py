@@ -26,7 +26,6 @@ values must say so; see `generate_compare_detail.py`.
 import importlib
 import json
 import logging
-import re
 import sys
 from pathlib import Path
 
@@ -36,7 +35,8 @@ from pathlib import Path
 # does it explicitly, tests/conftest.py does it for the suite -- so the dotted form
 # resolves in all of them.
 from scripts.results_index import (BENCHMARKS_PATH, PROJECT_ROOT,  # noqa: F401
-                                   RESULTS_PATH, TESTS_CSV, TestCatalog)
+                                   RESULTS_PATH, TESTS_CSV, RunDir, TestCatalog,
+                                   iter_request_records, iter_run_dirs, known_tests)
 
 for _path in (PROJECT_ROOT, PROJECT_ROOT / "scripts"):
     if str(_path) not in sys.path:
@@ -128,81 +128,49 @@ def ground_truth_for(benchmark, basename):
         return None
 
 
-REQUEST_FILE = re.compile(r"^request_(?P<stem>.+)\.json$")
-
-
-def object_id_of(file_name, test_id, fallback_prefix=None):
-    """The input's identity, which exists only in the request filename.
-
-    The prefix is usually the directory's test id, but not always: the earliest runs
-    stored `request_T01_jaccuse.json` under `T0001`. So the directory id is tried first
-    and a prefix observed in the directory is the fallback. Returns None rather than
-    guessing when neither applies -- a greedy split on underscores would silently
-    mangle ids like `Se_18_Bilanz1967_page_4`.
-    """
-    match = REQUEST_FILE.match(file_name)
-    if not match:
-        return None
-    stem = match.group("stem")
-    for prefix in (test_id, fallback_prefix):
-        if prefix and stem.startswith(prefix + "_"):
-            object_id = stem[len(prefix) + 1:]
-            return object_id or None
-    return None
-
-
-def observed_prefix(file_names):
-    """The prefix actually used in a run directory, from its first request file."""
-    for name in sorted(file_names):
-        match = REQUEST_FILE.match(name)
-        if match:
-            return match.group("stem").split("_")[0]
-    return None
-
-
-def iter_run_inputs(run_dir, test_id=None):
+def iter_run_inputs(run_dir, test_id=None, catalog=None):
     """Yields (object_id, record, StoredAnswer, ground_truth) for one run directory.
 
     Inputs whose ground truth is missing or whose request file will not parse are
-    skipped: there is nothing to compare them against. `record` is the whole stored
+    skipped: there is nothing to compare them against. That is a filter over the shared
+    layer's complete iteration, not a property of the walk -- the dataset export reads
+    the same directories and must keep every one of them. `record` is the whole stored
     answer, so a caller can read the score the run itself recorded.
+
+    Pass `catalog` when looping over many runs; otherwise each call re-reads the test CSV.
     """
+    catalog = catalog if catalog is not None else TestCatalog.load()
     run_dir = Path(run_dir)
     test_id = test_id or run_dir.name
-    benchmark = benchmark_of_test().get(test_id)
+    benchmark = catalog.benchmark_of(test_id)
     if not benchmark:
         return
 
-    file_names = [p.name for p in run_dir.glob("request_*.json")]
-    fallback = observed_prefix(file_names)
+    # A RunDir rather than the bare path, so a caller-supplied test_id still drives the
+    # filename prefix the way it did when this function derived it itself.
+    run = RunDir(run_dir, run_dir.parent.name, test_id,
+                 "%s@%s" % (test_id, run_dir.parent.name))
 
-    for name in sorted(file_names):
-        object_id = object_id_of(name, test_id, fallback)
-        if object_id is None:
+    for request, read in iter_request_records(run):
+        if request.object_id is None or read.status != "ok":
             continue
-        truth = ground_truth_for(benchmark, object_id)
+        truth = ground_truth_for(benchmark, request.object_id)
         if truth is None:
             continue
-        try:
-            with (run_dir / name).open(encoding="utf-8") as handle:
-                record = json.load(handle)
-        except (OSError, json.JSONDecodeError):
-            continue
-        yield object_id, record, StoredAnswer(record), truth
+        yield request.object_id, read.value, StoredAnswer(read.value), truth
 
 
 def iter_runs(benchmark=None, newest_first=False):
-    """Yields (run_dir, test_id, benchmark) for every stored run with a known benchmark."""
-    if not RESULTS_PATH.is_dir():
-        return
-    mapping = benchmark_of_test()
-    dates = sorted((p for p in RESULTS_PATH.iterdir() if p.is_dir()), reverse=newest_first)
-    for date_dir in dates:
-        for run_dir in sorted((p for p in date_dir.iterdir() if p.is_dir()),
-                              reverse=newest_first):
-            name = mapping.get(run_dir.name)
-            if name and (benchmark is None or name == benchmark):
-                yield run_dir, run_dir.name, name
+    """Yields (run_dir, test_id, benchmark) for every stored run with a known benchmark.
+
+    The "with a known benchmark" part is `known_tests`, the shared layer's named filter.
+    Runs whose test id is not in the CSV are dropped here because a scorer cannot be
+    chosen for them, not because the walk cannot see them.
+    """
+    catalog = TestCatalog.load()
+    for run, name in known_tests(iter_run_dirs(newest_first=newest_first), catalog,
+                                 benchmark):
+        yield run.path, run.test_id, name
 
 
 def numeric_metrics(score):
