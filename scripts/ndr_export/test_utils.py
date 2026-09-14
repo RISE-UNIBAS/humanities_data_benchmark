@@ -1,30 +1,16 @@
-import csv
-
 from scripts.ndr_export import TESTS_CSV
+from scripts.results_index import TestCatalog
 
 
 def get_all_tests():
-    """Load and parse the benchmarks_tests.csv file."""
+    """Load and parse the benchmarks_tests.csv file.
 
-    tests = []
+    The reading and the type coercion live in `results_index.TestCatalog`, shared with
+    the dataset export. The warning stays here: the shared reader is silent by design,
+    and this pipeline's callers rely on seeing it on stdout.
+    """
     if not TESTS_CSV.exists():
         print(f"⚠️ Tests CSV not found: {TESTS_CSV}")
-        return tests
+        return []
 
-    with TESTS_CSV.open("r", encoding="utf-8") as f:
-        reader = csv.DictReader(f)
-        for row in reader:
-            # Clean up empty string values
-            cleaned_row = {}
-            for key, value in row.items():
-                if value == "":
-                    cleaned_row[key] = None
-                elif key == "temperature" and value:
-                    cleaned_row[key] = float(value)
-                elif key == "legacy_test":
-                    cleaned_row[key] = value.lower() == "true"
-                else:
-                    cleaned_row[key] = value
-            tests.append(cleaned_row)
-
-    return tests
+    return TestCatalog.load().typed_rows()

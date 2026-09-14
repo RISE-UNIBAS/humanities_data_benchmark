@@ -23,7 +23,6 @@ revised -- 568 stored request scores no longer reproduce -- so a re-score reflec
 ground truth, not the one the run was scored against. Callers that publish re-scored
 values must say so; see `generate_compare_detail.py`.
 """
-import csv
 import importlib
 import json
 import logging
@@ -37,7 +36,7 @@ from pathlib import Path
 # does it explicitly, tests/conftest.py does it for the suite -- so the dotted form
 # resolves in all of them.
 from scripts.results_index import (BENCHMARKS_PATH, PROJECT_ROOT,  # noqa: F401
-                                   RESULTS_PATH, TESTS_CSV)
+                                   RESULTS_PATH, TESTS_CSV, TestCatalog)
 
 for _path in (PROJECT_ROOT, PROJECT_ROOT / "scripts"):
     if str(_path) not in sys.path:
@@ -68,26 +67,26 @@ class StoredAnswer:
 
 def read_tests():
     """The test CSV as {test_id: row}."""
-    rows = {}
-    with TESTS_CSV.open(encoding="utf-8") as handle:
-        for row in csv.DictReader(handle):
-            test_id = (row.get("id") or "").strip()
-            if test_id:
-                rows[test_id] = row
-    return rows
+    return TestCatalog.load().raw_by_id()
 
 
 def benchmark_of_test(tests=None):
     """{test_id: benchmark}. A run directory does not record its own benchmark."""
-    tests = tests if tests is not None else read_tests()
+    if tests is None:
+        return TestCatalog.load().benchmark_map()
     return dict((test_id, (row.get("name") or "").strip())
                 for test_id, row in tests.items() if (row.get("name") or "").strip())
 
 
 def rules_of_test(test_id, tests=None):
-    """The run's `rules`, parsed as `Benchmark.__init__` parses it (None when unusable)."""
-    tests = tests if tests is not None else read_tests()
-    raw = (tests.get(test_id) or {}).get("rules")
+    """The run's `rules`, parsed as `Benchmark.__init__` parses it (None when unusable).
+
+    Parsed here rather than through `TestCatalog.rules_of` so the warning survives: the
+    shared layer is silent, and a run scored with the wrong field set is worth a line in
+    the log. The two are held to the same answer by test_results_index_integrity.
+    """
+    rows = tests if tests is not None else TestCatalog.load().raw_by_id()
+    raw = (rows.get(test_id) or {}).get("rules")
     if not raw:
         return None
     try:
