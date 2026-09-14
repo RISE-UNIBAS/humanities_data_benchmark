@@ -12,6 +12,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `scripts/export_dataset/`: builds `dataset/` — typed `runs`, `requests` and `scores_long` tables in Parquet and CSV, a 114-entry metric dictionary, lossless JSONL payload sidecars, source and output manifests and diagnostics. Every run directory and request file becomes exactly one row; nothing is filtered.
 - Per-request cost is also derived from the recorded tokens and the price in force on the run's date, beside the stored figure rather than replacing it: 92,508 requests get a derived cost against 72,544 with a stored one.
 - `dataset/examples/business_letters_cost.py`: cost per correct extraction by provider and date, shipped inside the dataset. Withholds a ratio, with a reason, where coverage is too thin or true positives are zero, and flags a cell whose cost is zero only because the pricing table has no price.
+- `dataset/` now ships `coverage.csv` (69,099 rows: every column counted globally and per benchmark, provider, date and triple), `datapackage.json`, a README, a dataset changelog and `CITATION.cff`, all generated from the schema and a column dictionary. No licence is declared: the terms covering stored responses and ground truths are undecided, and the README records that as a release blocker.
+- `scripts/export_dataset/crosscheck.py`: reconciles the dataset export against `test_runs_export.json`. All 2,371 runs agree on benchmark, visibility, provider, model, every run-level score, recorded cost summaries and resolved prices.
 
 ### Fixed
 - `benchmark_export.json` and `test_runs_export.json`: run order no longer depends on filesystem order.
