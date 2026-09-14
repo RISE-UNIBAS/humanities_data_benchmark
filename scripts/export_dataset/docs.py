@@ -5,11 +5,12 @@
 dictionary rather than written by hand, so a column cannot be renamed in one place and
 documented in another.
 
-One thing is deliberately absent: a licence. The software is GPL-3.0, but a dataset is not
-software, and whether the stored model responses and the ground truths can carry the same
-terms has not been decided. The plan's §6 is explicit that unresolved terms are release
-preparation work, not something to assume, so the README says the licence is undetermined
-and the build does not invent one. That is a release blocker, and it is stated as one.
+The dataset is CC BY 4.0, which is a separate decision from the software's GPL-3.0: a
+dataset is not software, and the plan's §6 requires the terms to be stated rather than
+inherited by assumption. The README says what the licence covers and what it does not,
+because the export bundles three kinds of content -- the tables this repository derives,
+the ground truths it maintains, and stored responses returned by third-party models -- and
+a single licence line over all of them would overstate what is being granted.
 """
 import json
 from datetime import date
@@ -23,6 +24,10 @@ DATASET_NAME = "humanities-data-benchmark-results"
 DATASET_TITLE = "Humanities Data Benchmark: complete stored results"
 
 SOFTWARE_CONCEPT_DOI = "10.5281/zenodo.16941752"
+
+LICENSE_ID = "CC-BY-4.0"
+LICENSE_TITLE = "Creative Commons Attribution 4.0 International"
+LICENSE_URL = "https://creativecommons.org/licenses/by/4.0/"
 
 _ARROW_TO_FRICTIONLESS = {
     "string": "string",
@@ -82,7 +87,7 @@ def datapackage(manifest):
             "longer known are rows carrying a status, not omissions."),
         "version": SCHEMA_VERSION,
         "created": manifest["build_started_utc"],
-        "licenses": [],
+        "licenses": [{"name": LICENSE_ID, "title": LICENSE_TITLE, "path": LICENSE_URL}],
         "resources": resources,
         "keywords": ["benchmark", "LLM", "digital humanities", "OCR", "HTR",
                      "information extraction"],
@@ -238,11 +243,20 @@ those changes with whatever else you are measuring.
 
 ## Loading the CSV
 
-Use Parquet if you can. If you must use the CSV, `pandas.read_csv` will get two things
-wrong: it turns leading-zero object ids into integers, and it cannot distinguish a null
-from an empty string. The second matters in exactly one place — `scores_long.field_path` is
-legitimately the empty string for several thousand field observations — and the rule that
-recovers it is that **`field_path` is non-null exactly when `level` is `field`**.
+Use Parquet if you can. Two things to know if you use the CSV.
+
+**`pandas.read_csv` cannot tell a null from an empty string.** On disk they are different —
+a null is a bare field, an empty string is a quoted `""` — but pandas returns `NaN` for both
+by default, and `''` for both with `keep_default_na=False`. This matters in exactly one
+place: `scores_long.field_path` is legitimately the empty string for several thousand field
+observations. The rule that recovers it is that **`field_path` is non-null exactly when
+`level` is `field`**, and that invariant is asserted over the whole corpus at build time.
+
+**`object_id` is a string, and type inference can undo that when you subset.** In the files
+as shipped the column is mixed — `letter01`, `page_10`, `00414956` — so pandas infers a
+string column and leaves the values alone. Filter to a benchmark whose ids are all
+numeric-looking (`library_cards` has `00414956`, `duty_rosters` has `100`), write that out
+and read it back, and they become integers. Quoting does not prevent this. Pass the dtype:
 
 ```python
 import pandas as pd
@@ -273,10 +287,21 @@ differs can be traced to an input or to the exporter.
 
 ## Licence
 
-**Not yet determined.** The software that produced these results is GPL-3.0, but a dataset
-is not software, and the terms covering the stored model responses and the ground truths
-have not been settled. Do not assume the software licence applies. This is a release
-blocker and is recorded as one rather than resolved by assumption.
+**{license_title} ({license_id})** — {license_url}
+
+You may share and adapt this material for any purpose, including commercially, provided you
+give attribution. Cite the dataset as set out in `CITATION.cff`.
+
+This is a separate grant from the software that produced the results, which is GPL-3.0. A
+dataset is not software, and the licence here is stated rather than inherited.
+
+What it covers, and what it cannot: the tables, the metric dictionary, the coverage and
+manifest files and the documentation are the work of this project and are offered under the
+licence above, as are the ground truths. The payload sidecars additionally contain
+**responses returned by third-party models**, reproduced here as evidence of what those
+models did. This project does not claim authorship of that text and cannot grant rights it
+does not hold; if your use depends on the status of generated output, check the terms of
+the provider concerned. Benchmark input documents are **not** included in this export.
 
 ## Citation
 
@@ -291,6 +316,9 @@ version — figures change between releases as results are added and as correcti
         files=inv["files_hashed"],
         counts=counts,
         partial=PARTIAL_BANNER if manifest.get("partial") else "",
+        license_id=LICENSE_ID,
+        license_title=LICENSE_TITLE,
+        license_url=LICENSE_URL,
     )
 
 
@@ -311,7 +339,8 @@ Initial export. Data through {cutoff}, built from source commit `{commit}`.
   tokens and the price in force on the run's date.
 - `timestamp_utc` is null throughout: every stored timestamp is naive and no source
   timezone is recorded.
-- Licence not yet determined; see the README. Not depositable until it is.
+- Licensed CC BY 4.0, separately from the software's GPL-3.0. The payload
+  sidecars additionally contain third-party model output; see the README.
 """.format(
         version=SCHEMA_VERSION,
         cutoff=manifest["data_cutoff"],
@@ -344,6 +373,7 @@ def citation(manifest, software_citation):
         "  Nothing is filtered: unscored, failed and unresolved runs are rows carrying a",
         "  status rather than omissions.",
         "version: %s" % SCHEMA_VERSION,
+        "license: %s" % LICENSE_ID,
         "date-released: '%s'" % date.today().isoformat(),
     ]
 
@@ -365,7 +395,6 @@ def citation(manifest, software_citation):
         "  - LLM",
         "  - digital humanities",
         "identifiers: []   # version DOI is added at deposit",
-        "# license: intentionally absent -- not yet determined, see README.md",
         "references:",
         "  - type: software",
         "    title: Humanities Data Benchmark",

@@ -4,11 +4,10 @@
 written, which removes one failure mode and introduces another: they cannot drift from the
 schema, but they can silently omit something. These tests are mostly about omission.
 
-The licence assertions look odd until you know why they are there. The software is GPL-3.0
-and the temptation is to stamp that on the dataset too, but a dataset is not software and
-the terms covering stored model responses and ground truths have not been decided. The
-build must therefore ship *no* licence and say so, and a future change that quietly fills
-one in should fail here rather than reach a deposit.
+The licence assertions are there because the dataset's CC BY 4.0 is a separate grant from
+the software's GPL-3.0, and the temptation is to let one drift into the other. They also
+pin the limit of the grant: the payload sidecars contain third-party model output this
+project did not author and cannot license, and the README has to keep saying so.
 
 Run with the rest of the logic-only suite: pytest -m "not integrity".
 """
@@ -142,9 +141,10 @@ def test_datapackage_relates_the_dataset_to_the_software(manifest):
     assert related[0]["relatedIdentifier"] == docs.SOFTWARE_CONCEPT_DOI
 
 
-def test_datapackage_declares_no_licence(manifest):
-    """Undetermined, and an empty list says so where a guess would mislead."""
-    assert docs.datapackage(manifest)["licenses"] == []
+def test_datapackage_declares_the_dataset_licence(manifest):
+    licenses = docs.datapackage(manifest)["licenses"]
+    assert [lic["name"] for lic in licenses] == ["CC-BY-4.0"]
+    assert licenses[0]["path"].startswith("https://creativecommons.org/licenses/by/4.0")
 
 
 def test_datapackage_is_json_serialisable(manifest):
@@ -161,8 +161,10 @@ def test_readme_states_the_things_an_analyst_will_get_wrong(manifest):
         "null for every row in this release",            # timestamp_utc
         "independent replicates",                        # repeated runs
         "hidden = false",                                # default view
-        "leading-zero object ids into integers",         # CSV loading
-        "Not yet determined",                            # licence
+        "cannot tell a null from an empty string",       # CSV loading
+        "type inference can undo that when you subset",  # the real leading-zero hazard
+        "CC-BY-4.0",                                     # licence
+        "does not claim authorship",                     # limit of the grant
     ):
         assert expected in text, "README no longer explains: %s" % expected
 
@@ -193,12 +195,13 @@ def test_citation_survives_a_missing_software_citation(manifest):
     assert "cff-version: 1.2.0" in text and "authors:" not in text
 
 
-def test_citation_carries_no_doi_and_no_licence(manifest):
-    """A placeholder that looks like an identifier is worse than no identifier."""
+def test_citation_carries_the_licence_but_no_doi(manifest):
+    """A DOI placeholder that looks like an identifier is worse than no identifier."""
     text = docs.citation(manifest, None)
     assert "identifiers: []" in text
     assert "10.5281/zenodo" in text, "the software DOI is still referenced"
-    assert "\nlicense:" not in text, "the dataset licence is undetermined; do not stamp one"
+    assert "license: CC-BY-4.0" in text, (
+        "the dataset licence is CC BY 4.0 and separate from the software's GPL-3.0")
 
 
 def test_citation_parses_as_yaml(manifest):
@@ -208,4 +211,4 @@ def test_citation_parses_as_yaml(manifest):
     assert parsed["cff-version"] == "1.2.0"
     assert parsed["type"] == "dataset"
     assert parsed["identifiers"] == []
-    assert "license" not in parsed
+    assert parsed["license"] == "CC-BY-4.0"
