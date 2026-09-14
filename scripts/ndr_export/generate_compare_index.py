@@ -39,8 +39,9 @@ import json
 import re
 from datetime import datetime
 
-from scripts.ndr_export import BENCHMARKS_PATH, EXPORT_PATH, RESULTS_PATH
+from scripts.ndr_export import BENCHMARKS_PATH, EXPORT_PATH
 from scripts.ndr_export.generate_compare_detail import DETAIL_DIR
+from scripts.results_index import iter_run_dirs, read_run
 from scripts.ndr_export.meta_utils import get_benchmarks, get_meta, load_json
 
 REPO_RAW_BASE = ("https://raw.githubusercontent.com/RISE-UNIBAS/"
@@ -112,45 +113,40 @@ def get_runs():
     not depend on the order the generators run in.
     """
     runs = {}
-    for date_dir in sorted(p for p in RESULTS_PATH.iterdir() if p.is_dir()):
-        for run_dir in sorted(p for p in date_dir.iterdir() if p.is_dir()):
-            request_files = sorted(run_dir.glob("request_*.json"))
-            provider = model = None
-            for request_file in request_files:
-                data = load_json(request_file)
-                if isinstance(data, dict) and data.get("provider") and data.get("model"):
-                    provider, model = data["provider"], data["model"]
-                    break
+    for run in iter_run_dirs():
+        files = read_run(run)
+        provider = model = None
+        for request in files.requests:
+            data = load_json(request.path)
+            if isinstance(data, dict) and data.get("provider") and data.get("model"):
+                provider, model = data["provider"], data["model"]
+                break
 
-            scoring = load_json(run_dir / "scoring.json")
-            record = {
-                "date": date_dir.name,
-                "provider": provider,
-                "model": model,
-                "has_scoring": isinstance(scoring, dict),
-            }
+        scoring = load_json(files.scoring_path)
+        record = {
+            "date": run.date,
+            "provider": provider,
+            "model": model,
+            "has_scoring": isinstance(scoring, dict),
+        }
 
-            # Whether generate_compare_detail wrote re-scored field detail for this run.
-            # Recorded so the widget knows to fetch it instead of probing for a file
-            # that is absent for the runs whose scorer already recorded its own. Only
-            # set when true, to keep the index small. This is why the detail step runs
-            # before this one.
-            if (DETAIL_DIR / date_dir.name / (run_dir.name + ".json")).is_file():
-                record["detail"] = True
+        # Whether generate_compare_detail wrote re-scored field detail for this run.
+        # Recorded so the widget knows to fetch it instead of probing for a file
+        # that is absent for the runs whose scorer already recorded its own. Only
+        # set when true, to keep the index small. This is why the detail step runs
+        # before this one.
+        if (DETAIL_DIR / run.date / (run.test_id + ".json")).is_file():
+            record["detail"] = True
 
-            # A response file is `request_<prefix>_<basename>.json`, and for 188 older
-            # run directories the prefix is not the directory name: the ids were
-            # re-padded (T17 -> T0017, T02 -> T0002) without renaming the files, and the
-            # two padding widths in use make it unsafe to derive. Test ids contain no
-            # underscore, so the first token of the stem is the prefix. Recorded only
-            # when it differs, so the index does not carry 2000 redundant strings.
-            if request_files:
-                stem = request_files[0].name[len("request_"):-len(".json")]
-                prefix = stem.split("_")[0]
-                if prefix != run_dir.name:
-                    record["prefix"] = prefix
+        # A response file is `request_<prefix>_<basename>.json`, and for 188 older
+        # run directories the prefix is not the directory name: the ids were
+        # re-padded (T17 -> T0017, T02 -> T0002) without renaming the files, and the
+        # two padding widths in use make it unsafe to derive. Recorded only when it
+        # differs, so the index does not carry 2000 redundant strings.
+        if files.prefix and files.prefix != run.test_id:
+            record["prefix"] = files.prefix
 
-            runs.setdefault(run_dir.name, {"benchmark": None, "runs": []})["runs"].append(record)
+        runs.setdefault(run.test_id, {"benchmark": None, "runs": []})["runs"].append(record)
 
     return runs
 
