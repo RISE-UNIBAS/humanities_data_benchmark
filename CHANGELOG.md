@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased (v0.5.5-pre1)
+## [v0.5.5] - 2026-09-14
 
 ### Added
 - 12 new models: gemini-3.7-flash and gemini-3.8-flash (GenAI), grok-4.6 (xAI), meta/muse-spark-1.2, meta/muse-spark-1.3, z-ai/glm-5v-turbo, z-ai/glm-5.3-flash, qwen/qwen3.8-flash and qwen/qwen3.8-27b (OpenRouter), gpt-6-astra (OpenAI; added to the `benchmark_base.py` hotfix list that forces `temperature=1`), claude-fable-5-1 (Anthropic; added to the `benchmark_base.py` no-`temperature` hotfix list) and deepseek-v4-flash-vision-exp (DeepSeek; first DeepSeek model with image input), with 180 benchmark test configurations (T1585-T1764, 15 each).
@@ -20,6 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `field_scores` in `score_request_answer` for the eight benchmarks that lacked it (`bibliographic_data`, `blacklist_cards`, `book_advert_xml`, `business_letters`, `fraktur_adverts`, `general_meeting_minutes`, `magazine_pages`, `medieval_manuscripts`), so all twelve now record what the scorer compared as `{response, ground_truth, score}`, with `score` set to `null` where a scorer counts true/false positives instead of assigning a similarity. Scores are unchanged: all 77,866 stored inputs re-score identically. Documented on `Benchmark.score_request_answer` and enforced by the new `tests/integrity/test_field_scores_integrity.py`, which also rejects a score that will not serialise, since `save_answer` writes it verbatim into the stored answer.
 - `scripts/offline_scoring.py` and `scripts/rescore.py`: re-run a benchmark's own scorer over stored results with no model call, to prove a scorer change leaves its numbers untouched. Each run's `rules` are applied, because `personnel_cards` selects which fields it scores from them.
 - `scripts/ndr_export/generate_compare_detail.py`, a new `generate_all.py` step (now 8), writing `collected_results/compare_detail/<date>/<test_id>.json` (1,792 files, ~13 MB in git). Only inputs whose stored answer has no `field_scores` are re-scored, so detail recorded at run time is always preferred and `results/` is never rewritten (`dev/DATASET_EXPORT_PLAN.md` §6); each file records its provenance and whether re-scoring still reproduces the stored score. `compare_index.json` marks such runs with `detail: true`.
+- `timing` on every test run in `test_runs_export.json`: total model time, mean and slowest per input, and inputs timed.
 
 ### Fixed
 - `general_meeting_minutes`: `score_benchmark` no longer raises `ZeroDivisionError` when every request fails, matching the empty-score guard in the other benchmarks.
@@ -27,6 +28,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `business_letters`: scoring no longer injects `document_number` into the saved response payload.
 - `scripts/generate_test_report.py`: a field with no per-field similarity no longer raises when the field-by-field table is rendered; `score` was formatted with `:.2f`, which fails on the `null` a counting scorer reports.
 - `general_meeting_minutes`: two `print()` calls in the scoring path now log instead of writing to stdout on every run.
+- `benchmark_export.json`: `used_providers` and `used_models` are now sorted instead of reordering on every run.
 
 ### Changed
 - Requests now send a 32k `max_tokens` cap (`duty_rosters` 96k, `general_meeting_minutes` 40k, per-test override via the `rules` column); previously the provider default applied.

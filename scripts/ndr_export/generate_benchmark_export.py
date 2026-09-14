@@ -80,8 +80,8 @@ def generate_benchmark_export():
         available_prompts = get_available_prompts(benchmark)
 
         # Collect unique providers and models used in test runs
-        used_providers = list(set(run.get("provider") for run in test_runs if run.get("provider")))
-        used_models = list(set(run.get("model") for run in test_runs if run.get("model")))
+        used_providers = sorted(set(run.get("provider") for run in test_runs if run.get("provider")))
+        used_models = sorted(set(run.get("model") for run in test_runs if run.get("model")))
 
         benchmark_entry = meta.copy()
         benchmark_entry["name"] = benchmark
