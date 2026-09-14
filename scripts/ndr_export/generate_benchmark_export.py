@@ -1,7 +1,8 @@
 import json
 import os
 
-from scripts.ndr_export import BENCHMARKS_PATH, EXPORT_PATH, RESULTS_PATH
+from scripts.ndr_export import BENCHMARKS_PATH, EXPORT_PATH
+from scripts.results_index import iter_run_dirs
 from scripts.ndr_export.meta_utils import calculate_normalized_score, get_benchmarks, get_meta, load_json
 from scripts.ndr_export.test_utils import get_all_tests
 
@@ -111,49 +112,31 @@ def get_benchmark_test_runs(benchmark_name, all_tests):
 
     test_runs = []
 
-    if not RESULTS_PATH.exists():
-        return test_runs
-
-    # Iterate through all date folders
-    date_folders = sorted(RESULTS_PATH.iterdir())
-
-    for date_folder in date_folders:
-        if not date_folder.is_dir():
+    for run in iter_run_dirs():
+        # Get test configuration
+        test_config = tests_by_id.get(run.test_id)
+        if not test_config or test_config.get("name") != benchmark_name:
             continue
 
-        date_str = date_folder.name
+        # Load scoring data
+        scoring_path = run.path / "scoring.json"
+        scoring_data = load_json(scoring_path) if scoring_path.exists() else None
 
-        # Iterate through all test_id folders in this date
-        for test_folder in date_folder.iterdir():
-            if not test_folder.is_dir():
-                continue
+        # Calculate normalized score
+        normalized_score = calculate_normalized_score(scoring_data, benchmark_name)
 
-            test_id = test_folder.name
+        # Build test run entry
+        test_run = {
+            "test_id": run.test_id,
+            "date": run.date,
+            "provider": test_config.get("provider"),
+            "model": test_config.get("model"),
+            "normalized_score": normalized_score
+        }
 
-            # Get test configuration
-            test_config = tests_by_id.get(test_id)
-            if not test_config or test_config.get("name") != benchmark_name:
-                continue
-
-            # Load scoring data
-            scoring_path = test_folder / "scoring.json"
-            scoring_data = load_json(scoring_path) if scoring_path.exists() else None
-
-            # Calculate normalized score
-            normalized_score = calculate_normalized_score(scoring_data, benchmark_name)
-
-            # Build test run entry
-            test_run = {
-                "test_id": test_id,
-                "date": date_str,
-                "provider": test_config.get("provider"),
-                "model": test_config.get("model"),
-                "normalized_score": normalized_score
-            }
-
-            # Remove None values to keep it clean
-            test_run = {k: v for k, v in test_run.items() if v is not None}
-            test_runs.append(test_run)
+        # Remove None values to keep it clean
+        test_run = {k: v for k, v in test_run.items() if v is not None}
+        test_runs.append(test_run)
 
     return test_runs
 

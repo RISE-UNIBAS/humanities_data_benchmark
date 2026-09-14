@@ -2,7 +2,8 @@ import json
 import os
 from datetime import date
 
-from scripts.ndr_export import RESULTS_PATH, EXPORT_PATH, BENCHMARKS_PATH
+from scripts.ndr_export import EXPORT_PATH, BENCHMARKS_PATH
+from scripts.results_index import iter_request_records, iter_run_dirs, read_scoring
 from scripts.ndr_export.meta_utils import get_benchmarks, get_meta
 from scripts.ndr_export.test_utils import get_all_tests
 
@@ -88,55 +89,39 @@ def generate_vars():
     used_providers = set()
     used_models = set()
 
-    if RESULTS_PATH.exists():
-        for date_folder in sorted(RESULTS_PATH.iterdir()):
-            if not date_folder.is_dir():
-                continue
-            date_str = date_folder.name
-            has_runs = False
+    dates_with_runs = set()
 
-            for test_folder in date_folder.iterdir():
-                if not test_folder.is_dir():
-                    continue
-                has_runs = True
-                number_of_runs += 1
+    for run in iter_run_dirs():
+        dates_with_runs.add(run.date)
+        number_of_runs += 1
 
-                # Count individual LLM request files and sum duration
-                for req_file in test_folder.glob("request_*.json"):
-                    number_of_llm_requests += 1
-                    try:
-                        with req_file.open("r", encoding="utf-8") as f:
-                            req = json.load(f)
-                        total_duration_seconds += req.get("duration", 0) or 0
-                    except (json.JSONDecodeError, IOError):
-                        pass
+        # Count individual LLM request files and sum duration. A file that will not
+        # parse still counts as a request that was made, which is why this reads every
+        # record rather than only the readable ones.
+        for _request, read in iter_request_records(run):
+            number_of_llm_requests += 1
+            if read.status == "ok":
+                total_duration_seconds += read.value.get("duration", 0) or 0
 
-                # Sum cost and token counts from scoring.json cost_summary
-                scoring_path = test_folder / "scoring.json"
-                if scoring_path.exists():
-                    try:
-                        with scoring_path.open("r", encoding="utf-8") as f:
-                            scoring = json.load(f)
-                        cost = scoring.get("cost_summary") or {}
-                        total_cost_usd += cost.get("total_cost_usd", 0) or 0
-                        total_input_tokens += cost.get("total_input_tokens", 0) or 0
-                        total_output_tokens += cost.get("total_output_tokens", 0) or 0
-                    except (json.JSONDecodeError, IOError):
-                        pass
+        # Sum cost and token counts from scoring.json cost_summary
+        scoring = read_scoring(run)
+        if scoring.status == "ok":
+            cost = scoring.value.get("cost_summary") or {}
+            total_cost_usd += cost.get("total_cost_usd", 0) or 0
+            total_input_tokens += cost.get("total_input_tokens", 0) or 0
+            total_output_tokens += cost.get("total_output_tokens", 0) or 0
 
-                # Collect providers/models from test configurations
-                test_config = tests_by_id.get(test_folder.name)
-                if test_config:
-                    if test_config.get("provider"):
-                        used_providers.add(test_config["provider"])
-                    if test_config.get("model"):
-                        used_models.add(test_config["model"])
+        # Collect providers/models from test configurations
+        test_config = tests_by_id.get(run.test_id)
+        if test_config:
+            if test_config.get("provider"):
+                used_providers.add(test_config["provider"])
+            if test_config.get("model"):
+                used_models.add(test_config["model"])
 
-            if has_runs:
-                if first_test_run_date is None or date_str < first_test_run_date:
-                    first_test_run_date = date_str
-                if last_test_run_date is None or date_str > last_test_run_date:
-                    last_test_run_date = date_str
+    if dates_with_runs:
+        first_test_run_date = min(dates_with_runs)
+        last_test_run_date = max(dates_with_runs)
 
     # Count input files (images and texts) across all benchmark datasets
     number_of_input_files = 0

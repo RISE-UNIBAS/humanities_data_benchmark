@@ -3,6 +3,7 @@ import os
 from datetime import datetime
 
 from scripts.ndr_export import BENCHMARKS_PATH, RESULTS_PATH, EXPORT_PATH
+from scripts.results_index import iter_run_dirs, read_run
 from scripts.ndr_export.meta_utils import calculate_normalized_score, get_meta, load_json
 from scripts.ndr_export.pricing_resolver import resolve_pricing
 from scripts.ndr_export.test_utils import get_all_tests
@@ -133,97 +134,82 @@ def generate_test_runs_export():
         print(f"Results path not found: {RESULTS_PATH}")
         return
 
-    # Iterate through all date folders
-    date_folders = sorted(RESULTS_PATH.iterdir())
-
-    for date_folder in date_folders:
-        if not date_folder.is_dir():
+    for run in iter_run_dirs():
+        # Get test configuration
+        test_config = tests_by_id.get(run.test_id)
+        if not test_config:
+            print(f"Warning: No test config found for {run.test_id}")
             continue
 
-        date_str = date_folder.name
+        # Load prompt content
+        benchmark_name = test_config.get("name")
+        prompt_file = test_config.get("prompt_file")
+        prompt_content = load_prompt(benchmark_name, prompt_file)
 
-        # Iterate through all test_id folders in this date
-        for test_folder in date_folder.iterdir():
-            if not test_folder.is_dir():
-                continue
+        # Load scoring data
+        scoring_path = run.path / "scoring.json"
+        scoring_data = load_json(scoring_path) if scoring_path.exists() else None
 
-            test_id = test_folder.name
+        # Load request/response data (find the request_*.json file)
+        request_files = [request.path for request in read_run(run).requests]
+        request_data = None
+        if request_files:
+            request_data = load_json(request_files[0])
+        # Note that `results` above is one arbitrary input, so its `duration` is that
+        # input's, never the run's. The run-level figures come from every file.
+        timing = run_timing(request_files)
 
-            # Get test configuration
-            test_config = tests_by_id.get(test_id)
-            if not test_config:
-                print(f"Warning: No test config found for {test_id}")
-                continue
+        # Calculate normalized score
+        normalized_score = calculate_normalized_score(scoring_data, benchmark_name)
 
-            # Load prompt content
-            benchmark_name = test_config.get("name")
-            prompt_file = test_config.get("prompt_file")
-            prompt_content = load_prompt(benchmark_name, prompt_file)
+        # Get benchmark metadata
+        meta = get_meta(benchmark_name)
 
-            # Load scoring data
-            scoring_path = test_folder / "scoring.json"
-            scoring_data = load_json(scoring_path) if scoring_path.exists() else None
+        # Extract tags from benchmark
+        tags = meta.get("tags", [])
 
-            # Load request/response data (find the request_*.json file)
-            request_files = sorted(test_folder.glob("request_*.json"))
-            request_data = None
-            if request_files:
-                request_data = load_json(request_files[0])
-            # Note that `results` above is one arbitrary input, so its `duration` is that
-            # input's, never the run's. The run-level figures come from every file.
-            timing = run_timing(request_files)
+        # Extract contributors (flat list, no roles)
+        contributors = []
+        for role_group in meta.get("contributors", []):
+            contributors.extend(role_group.get("contributors", []))
+        # Remove duplicates while preserving order
+        contributors = list(dict.fromkeys(contributors))
 
-            # Calculate normalized score
-            normalized_score = calculate_normalized_score(scoring_data, benchmark_name)
+        # Determine if test run is hidden
+        is_legacy = test_config.get("legacy_test", False)
+        is_display_false = not meta.get("display", True)
+        hidden = is_legacy or is_display_false
 
-            # Get benchmark metadata
-            meta = get_meta(benchmark_name)
+        # Build the test run entry
+        test_run = {
+            "test_id": run.test_id,
+            "benchmark": benchmark_name,
+            "date": run.date,
+            "tags": tags,
+            "contributors": contributors,
+            "hidden": hidden,
+            "config": {
+                "provider": test_config.get("provider"),
+                "model": test_config.get("model"),
+                "dataclass": test_config.get("dataclass"),
+                "temperature": test_config.get("temperature"),
+                "role_description": test_config.get("role_description"),
+                "prompt_file": prompt_file,
+                "rules": test_config.get("rules"),
+                "legacy_test": test_config.get("legacy_test", False)
+            },
+            "prompt": prompt_content,
+            "results": request_data,
+            "scoring": scoring_data,
+            "pricing": pricing_provenance(request_data, test_config, run.date),
+            "timing": timing,
+            "normalized_score": normalized_score
+        }
 
-            # Extract tags from benchmark
-            tags = meta.get("tags", [])
+        # Remove None values from config to keep it clean
+        test_run["config"] = {k: v for k, v in test_run["config"].items() if v is not None}
 
-            # Extract contributors (flat list, no roles)
-            contributors = []
-            for role_group in meta.get("contributors", []):
-                contributors.extend(role_group.get("contributors", []))
-            # Remove duplicates while preserving order
-            contributors = list(dict.fromkeys(contributors))
-
-            # Determine if test run is hidden
-            is_legacy = test_config.get("legacy_test", False)
-            is_display_false = not meta.get("display", True)
-            hidden = is_legacy or is_display_false
-
-            # Build the test run entry
-            test_run = {
-                "test_id": test_id,
-                "benchmark": benchmark_name,
-                "date": date_str,
-                "tags": tags,
-                "contributors": contributors,
-                "hidden": hidden,
-                "config": {
-                    "provider": test_config.get("provider"),
-                    "model": test_config.get("model"),
-                    "dataclass": test_config.get("dataclass"),
-                    "temperature": test_config.get("temperature"),
-                    "role_description": test_config.get("role_description"),
-                    "prompt_file": prompt_file,
-                    "rules": test_config.get("rules"),
-                    "legacy_test": test_config.get("legacy_test", False)
-                },
-                "prompt": prompt_content,
-                "results": request_data,
-                "scoring": scoring_data,
-                "pricing": pricing_provenance(request_data, test_config, date_str),
-                "timing": timing,
-                "normalized_score": normalized_score
-            }
-
-            # Remove None values from config to keep it clean
-            test_run["config"] = {k: v for k, v in test_run["config"].items() if v is not None}
-
-            test_runs_export.append(test_run)
+        test_runs_export.append(test_run)
 
     # Save the export data to a JSON file
     os.makedirs(EXPORT_PATH, exist_ok=True)
