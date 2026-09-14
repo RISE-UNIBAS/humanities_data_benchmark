@@ -31,10 +31,13 @@ import re
 import sys
 from pathlib import Path
 
-PROJECT_ROOT = Path(__file__).parent.parent.resolve()
-RESULTS_PATH = PROJECT_ROOT / "results"
-BENCHMARKS_PATH = PROJECT_ROOT / "benchmarks"
-TESTS_CSV = BENCHMARKS_PATH / "benchmarks_tests.csv"
+# Re-exported rather than redefined: rescore.py imports RESULTS_PATH from this module,
+# and generate_compare_detail.py and the integrity tests import other names from it. Every
+# entry point puts the project root on sys.path before importing this module -- rescore.py
+# does it explicitly, tests/conftest.py does it for the suite -- so the dotted form
+# resolves in all of them.
+from scripts.results_index import (BENCHMARKS_PATH, PROJECT_ROOT,  # noqa: F401
+                                   RESULTS_PATH, TESTS_CSV)
 
 for _path in (PROJECT_ROOT, PROJECT_ROOT / "scripts"):
     if str(_path) not in sys.path:
