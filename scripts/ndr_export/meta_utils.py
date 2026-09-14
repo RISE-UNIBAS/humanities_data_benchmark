@@ -1,16 +1,13 @@
-import os
-import json
 import logging
 from pathlib import Path
 
 from scripts.ndr_export import BENCHMARKS_PATH
+from scripts.results_index import benchmark_meta, benchmark_names, read_json
 
 
 def get_benchmarks():
     """Return benchmark folder names; folders without a meta.json are not benchmarks."""
-    return [name for name in os.listdir(BENCHMARKS_PATH)
-            if os.path.isdir(os.path.join(BENCHMARKS_PATH, name)) and not name.startswith('.')
-            and os.path.isfile(os.path.join(BENCHMARKS_PATH, name, "meta.json"))]
+    return benchmark_names()
 
 def get_benchmarks_with_meta_key(key):
     benchmarks = get_benchmarks()
@@ -22,15 +19,18 @@ def get_benchmarks_with_meta_key(key):
     return benchmarks_with_key
 
 def get_meta(benchmark):
-    benchmark_meta_path = os.path.join(BENCHMARKS_PATH, benchmark, "meta.json")
-    if os.path.isfile(benchmark_meta_path):
-        meta_data = load_json(benchmark_meta_path)
-        if meta_data is None:
-            logging.error("Could not decode JSON from meta.json for benchmark %s", benchmark)
-            return {}
-        return meta_data
-    logging.error("Could not find meta.json for benchmark %s", benchmark)
-    return {}
+    read = benchmark_meta(benchmark)
+    if read.status == "missing":
+        logging.error("Could not find meta.json for benchmark %s", benchmark)
+        return {}
+    if read.status == "invalid":
+        print(f"Failed to parse {BENCHMARKS_PATH / benchmark / 'meta.json'}")
+    if read.value is None:
+        # Unparseable, unreadable, or a file holding a literal null: all three left
+        # meta_data None before, and all three log and fall back to {}.
+        logging.error("Could not decode JSON from meta.json for benchmark %s", benchmark)
+        return {}
+    return read.value
 
 def get_meta_value(benchmark, key):
     meta = get_meta(benchmark)
@@ -41,18 +41,18 @@ def get_meta_value(benchmark, key):
         return None
 
 def load_json(path):
-    """Safely load a JSON file, return None if missing or broken."""
-    if isinstance(path, str):
-        path = Path(path)
+    """Safely load a JSON file, return None if missing or broken.
 
-    if not path.exists():
-        return None
-    try:
-        with path.open("r", encoding="utf-8") as f:
-            return json.load(f)
-    except json.JSONDecodeError:
+    One widening over the version this replaces: an unreadable file used to propagate the
+    OSError and now returns None, silently, because the shared reader classifies it as
+    "unreadable" rather than "invalid". Inert on this corpus -- a full export opens every
+    file -- but it is a real change, not a no-op.
+    """
+    path = Path(path)
+    read = read_json(path)
+    if read.status == "invalid":
         print(f"Failed to parse {path}")
-        return None
+    return read.value
 
 def calculate_normalized_score(scoring_data, benchmark_name):
     """Calculate a normalized score (0-100) based on benchmark ranking configuration.
