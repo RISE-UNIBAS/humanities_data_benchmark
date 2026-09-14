@@ -15,6 +15,7 @@ import shutil
 import subprocess
 import sys
 from datetime import datetime, timezone
+from pathlib import Path
 
 from scripts.export_dataset import DATASET_PATH, SCHEMA_VERSION, STAGING_SUFFIX
 from scripts.export_dataset import inventory, metrics, writers
@@ -107,6 +108,15 @@ def build(source=RESULTS_PATH, out=DATASET_PATH, date=None, benchmark=None, limi
         target.parent.mkdir(parents=True, exist_ok=True)
         shutil.copyfile(path, target)
 
+    print("Copy examples ...")
+    examples_src = Path(__file__).parent / "examples"
+    if examples_src.is_dir():
+        examples_dst = staging / "examples"
+        examples_dst.mkdir(parents=True, exist_ok=True)
+        for script in sorted(examples_src.glob("*.py")):
+            shutil.copyfile(script, examples_dst / script.name)
+            print("  %s" % script.name)
+
     print("Write manifests ...")
     with open(staging / "source_manifest.jsonl", "w", encoding="utf-8", newline="\n") as f:
         for row in manifest_rows:
@@ -170,7 +180,6 @@ def main(argv=None):
     parser.add_argument("--limit", type=int, help="first N runs (development only)")
     args = parser.parse_args(argv)
 
-    from pathlib import Path
     build(source=Path(args.source), out=Path(args.out), date=args.date,
           benchmark=args.benchmark, limit=args.limit)
     return 0
