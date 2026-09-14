@@ -192,6 +192,22 @@ def write_table(out_dir, name, rows, schema, sort_keys, unique_keys):
     return table.num_rows
 
 
+def write_coverage(path, rows):
+    """coverage.csv, sorted and written under the same CSV contract as the tables.
+
+    Not a pyarrow table: it is derived from the others rather than extracted, and giving
+    it a schema would imply it is part of the data model.
+    """
+    from scripts.export_dataset.coverage import COLUMNS
+    rows = sorted(rows, key=lambda r: (r["table"], r["column"], r["group_dimension"],
+                                       str(r["group_value"])))
+    with open(path, "w", encoding="utf-8", newline="") as handle:
+        writer = csv.writer(handle, **CSV_DIALECT)
+        writer.writerow(COLUMNS)
+        for row in rows:
+            writer.writerow([_csv_value(row[c]) for c in COLUMNS])
+
+
 class JsonlGz:
     """A gzip JSONL sidecar with a pinned header, so two builds give the same bytes."""
 
@@ -227,7 +243,31 @@ def publish(staging, final):
     if previous.exists():
         shutil.rmtree(previous)
     if final.exists():
-        os.rename(final, previous)
-    os.rename(staging, final)
+        _rename_or_explain(final, previous, staging)
+    _rename_or_explain(staging, final, staging)
     if previous.exists():
         shutil.rmtree(previous)
+
+
+def _rename_or_explain(source, target, staging):
+    """Rename, or fail with the reason and the reassurance.
+
+    Windows refuses to rename a directory while any process has it, or anything under it,
+    as a working directory -- a shell left sitting in `dataset/examples` is enough, and it
+    is a natural place to be sitting, since that is where the example script lives. The
+    bare PermissionError says none of that, and worse, it arrives after a four-minute build
+    and looks like the build was lost. It was not: the completed output is in staging.
+    """
+    try:
+        os.rename(source, target)
+    except OSError as error:
+        raise RuntimeError(
+            "Could not move %s into place: %s\n\n"
+            "On Windows this usually means a shell, editor or file manager is sitting "
+            "inside that directory. Close it or change directory, then publish the "
+            "finished build with:\n"
+            "    python -c \"from scripts.export_dataset import writers; "
+            "writers.publish(r'%s', r'%s')\"\n\n"
+            "Nothing was lost: the complete build is at %s and the previous one is "
+            "untouched." % (source, error, staging, staging.with_name(
+                staging.name.replace(".staging", "")), staging))

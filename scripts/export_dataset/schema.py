@@ -186,6 +186,10 @@ TABLES = {
     "metrics": METRICS,
 }
 
+SCHEMAS_FOR_DOCS = dict(TABLES)
+"""The tables `columns.py` must describe. `coverage` is described there too but has no
+pyarrow schema, since it is generated rather than extracted."""
+
 SORT_KEYS = {
     "runs": ("run_id",),
     "requests": ("run_id", "object_id"),

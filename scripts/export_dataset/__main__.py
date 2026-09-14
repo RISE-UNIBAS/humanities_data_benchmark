@@ -18,9 +18,9 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 from scripts.export_dataset import DATASET_PATH, SCHEMA_VERSION, STAGING_SUFFIX
-from scripts.export_dataset import inventory, metrics, writers
+from scripts.export_dataset import columns, coverage, docs, inventory, metrics, writers
 from scripts.export_dataset.extract import Extractor
-from scripts.export_dataset.schema import SORT_KEYS, TABLES, UNIQUE_KEYS
+from scripts.export_dataset.schema import SCHEMAS_FOR_DOCS, SORT_KEYS, TABLES, UNIQUE_KEYS
 from scripts.ndr_export.pricing_resolver import pricing_table_version
 from scripts.results_index import PROJECT_ROOT, RESULTS_PATH, TestCatalog, iter_run_dirs
 
@@ -54,6 +54,8 @@ def build(source=RESULTS_PATH, out=DATASET_PATH, date=None, benchmark=None, limi
     if staging.exists():
         shutil.rmtree(staging)
     (staging / "payloads").mkdir(parents=True)
+
+    columns.check_complete(SCHEMAS_FOR_DOCS)
 
     print("Inventory ...")
     manifest_rows, summary, inv_diagnostics = inventory.build(source)
@@ -108,6 +110,15 @@ def build(source=RESULTS_PATH, out=DATASET_PATH, date=None, benchmark=None, limi
         target.parent.mkdir(parents=True, exist_ok=True)
         shutil.copyfile(path, target)
 
+    print("Coverage ...")
+    coverage_rows = coverage.build({
+        "runs": (extractor.runs, TABLES["runs"]),
+        "requests": (extractor.requests, TABLES["requests"]),
+        "scores_long": (extractor.scores, TABLES["scores_long"]),
+    })
+    writers.write_coverage(staging / "coverage.csv", coverage_rows)
+    print("  %d rows" % len(coverage_rows))
+
     print("Copy examples ...")
     examples_src = Path(__file__).parent / "examples"
     if examples_src.is_dir():
@@ -156,11 +167,53 @@ def build(source=RESULTS_PATH, out=DATASET_PATH, date=None, benchmark=None, limi
         json.dump(manifest, f, indent=2, sort_keys=True)
         f.write("\n")
 
+    print("Documentation ...")
+    software_citation = _software_citation()
+    written = {
+        "datapackage.json": json.dumps(docs.datapackage(manifest), indent=2,
+                                       sort_keys=True) + "\n",
+        "README.md": docs.readme(manifest),
+        "CHANGELOG.md": docs.changelog(manifest),
+        "CITATION.cff": docs.citation(manifest, software_citation),
+    }
+    for name, text in written.items():
+        (staging / name).write_text(text, encoding="utf-8", newline="\n")
+        print("  %s" % name)
+
+    # These are written after the manifest, so hash them into it separately rather than
+    # leaving five release files outside the integrity record.
+    for name in ["coverage.csv"] + list(written):
+        manifest["output_sha256"][name] = inventory.sha256_of(staging / name)
+    with open(staging / "manifest.json", "w", encoding="utf-8", newline="\n") as f:
+        json.dump(manifest, f, indent=2, sort_keys=True)
+        f.write("\n")
+
     writers.publish(staging, out)
     print("\nPublished %s" % out)
     if diagnostics:
         print("Diagnostics: %s" % manifest["diagnostic_counts"])
     return manifest
+
+
+def _software_citation():
+    """The repository's CITATION.cff authors, so the dataset credits the same people.
+
+    Parsed with PyYAML when it is available and skipped otherwise: the dataset should
+    still build without it, with the authors simply absent rather than the build failing.
+    """
+    path = PROJECT_ROOT / "CITATION.cff"
+    if not path.is_file():
+        return None
+    try:
+        import yaml
+    except ImportError:
+        print("  (PyYAML not installed: dataset CITATION.cff will list no authors)")
+        return None
+    try:
+        return yaml.safe_load(path.read_text(encoding="utf-8"))
+    except Exception as error:
+        print("  (could not read CITATION.cff: %s)" % error)
+        return None
 
 
 def _tally(diagnostics):
