@@ -21,18 +21,33 @@ from scripts.export_dataset import (DATASET_PATH, SCHEMA_VERSION, STAGING_SUFFIX
                                     default_dataset_version)
 from scripts.export_dataset import columns, coverage, docs, inventory, metrics, writers
 from scripts.export_dataset.extract import Extractor
+from scripts.export_dataset.paths import check as check_paths
 from scripts.export_dataset.schema import SCHEMAS_FOR_DOCS, SORT_KEYS, TABLES, UNIQUE_KEYS
 from scripts.ndr_export.pricing_resolver import pricing_table_version
 from scripts.results_index import PROJECT_ROOT, RESULTS_PATH, TestCatalog, iter_run_dirs
 
 
 def _git(*args):
+    """(output, error). `output` is None whenever the command did not succeed.
+
+    The previous version returned `out.stdout.strip() or None` and ignored the exit code,
+    so `bool(_git("status", "--porcelain"))` read a *failed* git as a clean worktree. The
+    audit hit exactly that: git refused the checkout on ownership grounds, the commit came
+    back null, and the artifact recorded `source_worktree_dirty: false` -- a provenance
+    claim manufactured out of an error. Unknown has to stay unknown.
+    """
     try:
         out = subprocess.run(("git",) + args, cwd=str(PROJECT_ROOT),
                              capture_output=True, text=True, timeout=30)
-        return out.stdout.strip() or None
-    except (OSError, subprocess.SubprocessError):
-        return None
+    except FileNotFoundError:
+        return None, "git executable not found"
+    except subprocess.TimeoutExpired:
+        return None, "git timed out"
+    except (OSError, subprocess.SubprocessError) as error:
+        return None, str(error)
+    if out.returncode != 0:
+        return None, (out.stderr or "").strip() or "git exited %d" % out.returncode
+    return out.stdout.strip(), None
 
 
 def _selected_runs(results_path, date, benchmark, limit, catalog):
@@ -53,6 +68,10 @@ def build(source=RESULTS_PATH, out=DATASET_PATH, date=None, benchmark=None, limi
     catalog = TestCatalog.load()
 
     staging = out.with_name(out.name + STAGING_SUFFIX)
+    previous = out.with_name(out.name + ".previous")
+    # Before any mkdir or rmtree: a refusal must leave the filesystem untouched.
+    check_paths(source=source, out=out, staging=staging, previous=previous)
+
     if staging.exists():
         shutil.rmtree(staging)
     (staging / "payloads").mkdir(parents=True)
@@ -107,7 +126,9 @@ def build(source=RESULTS_PATH, out=DATASET_PATH, date=None, benchmark=None, limi
     payload_counts["run_scoring"] = run_sidecar.count
 
     for path in extractor.invalid_sources:
-        relative = path.relative_to(PROJECT_ROOT)
+        # The same namespace the tables and manifests use. relative_to(PROJECT_ROOT)
+        # raised outright for a build whose --source lies outside the repository.
+        relative = inventory.relative_path(path, source)
         target = staging / "payloads" / "invalid" / relative
         target.parent.mkdir(parents=True, exist_ok=True)
         shutil.copyfile(path, target)
@@ -145,6 +166,14 @@ def build(source=RESULTS_PATH, out=DATASET_PATH, date=None, benchmark=None, limi
         if path.is_file() and path.name != "manifest.json":
             outputs[path.relative_to(staging).as_posix()] = inventory.sha256_of(path)
 
+    commit, commit_error = _git("rev-parse", "HEAD")
+    status, status_error = _git("status", "--porcelain")
+    dirty = None if status_error is not None else bool(status)
+    provenance = "verified" if commit and status_error is None else "unknown"
+    if provenance == "unknown":
+        print("  WARNING: git provenance unavailable (%s); source_worktree_dirty is null"
+              % (commit_error or status_error))
+
     manifest = {
         "schema_version": SCHEMA_VERSION,
         "dataset_version": dataset_version or default_dataset_version(
@@ -153,8 +182,10 @@ def build(source=RESULTS_PATH, out=DATASET_PATH, date=None, benchmark=None, limi
         "build_filters": {"date": date, "benchmark": benchmark, "limit": limit},
         "data_cutoff": summary["data_cutoff"],
         "first_date": summary["first_date"],
-        "source_commit": _git("rev-parse", "HEAD"),
-        "source_worktree_dirty": bool(_git("status", "--porcelain")),
+        "source_commit": commit,
+        # Nullable: false means git said so, not that git failed to say otherwise.
+        "source_worktree_dirty": dirty,
+        "source_provenance": provenance,
         "pricing_table_version": pricing_table_version(),
         "python": platform.python_version(),
         "pyarrow": __import__("pyarrow").__version__,

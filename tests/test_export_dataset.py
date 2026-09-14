@@ -517,13 +517,21 @@ def test_relative_path_strips_the_repository_root():
     assert relative_path(PROJECT_ROOT) == "."
 
 
-def test_relative_path_falls_back_for_a_path_outside_the_repository(tmp_path):
+def test_relative_path_falls_back_for_a_path_outside_the_repository():
     """Documented, not silent: a build whose --source lies elsewhere keeps absolute paths.
 
     Acceptable because such a build is a development one, and the release condition is
     asserted over the real corpus instead. Stated here so the fallback is a decision
     rather than a surprise.
+
+    The path is constructed rather than taken from `tmp_path`: pytest's temp root can be
+    pointed inside the repository with `--basetemp`, and this test then asserted the
+    opposite of what it meant. It failed in exactly that configuration during review.
     """
+    from pathlib import Path
     from scripts.export_dataset.inventory import relative_path
-    outside = tmp_path / "elsewhere" / "runs"
+    from scripts.results_index import PROJECT_ROOT
+
+    outside = Path(PROJECT_ROOT.anchor) / "definitely-not-the-repo" / "runs"
+    assert not str(outside).startswith(str(PROJECT_ROOT))
     assert relative_path(outside) == outside.as_posix()

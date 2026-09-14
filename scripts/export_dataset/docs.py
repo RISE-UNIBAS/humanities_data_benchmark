@@ -13,7 +13,6 @@ the ground truths it maintains, and stored responses returned by third-party mod
 a single licence line over all of them would overstate what is being granted.
 """
 import json
-from datetime import date
 
 from scripts.export_dataset import SCHEMA_VERSION
 from scripts.export_dataset import columns as C
@@ -382,8 +381,16 @@ def citation(manifest, software_citation):
         "  status rather than omissions.",
         "version: %s" % (manifest.get("dataset_version") or SCHEMA_VERSION),
         "license: %s" % LICENSE_ID,
-        "date-released: '%s'" % date.today().isoformat(),
     ]
+
+    # `date-released` only when the release date is supplied as explicit metadata. It used
+    # to be date.today(), and this file is hashed into the manifest, so two identical
+    # builds on different days produced different deterministic content -- invisible to a
+    # same-day rebuild comparison, which is how it survived B-D5. The data cutoff is not a
+    # substitute: it is when the data ends, not when the release was published.
+    released = manifest.get("release_date")
+    if released:
+        lines.append("date-released: '%s'" % released)
 
     authors = (software_citation or {}).get("authors")
     if authors:
@@ -410,3 +417,151 @@ def citation(manifest, software_citation):
         "    notes: the software that produced these results",
     ])
     return "\n".join(lines) + "\n"
+
+
+# --- the packaged release describes itself, not the build ------------------------
+#
+# The build directory and the release tree are not the same artifact: the release ships
+# Parquet only, gzips the text files and leaves the payloads out. Copying the build's
+# datapackage and README into it produced a package whose five declared CSV resources did
+# not exist at those paths and whose README promised `payloads/`, an uncompressed source
+# manifest and uncompressed diagnostics -- none of them present. A consumer following the
+# documentation could not load the thing they had.
+
+def release_datapackage(manifest, packaged_paths, payload_archive=None):
+    """A descriptor for what the release tree actually contains.
+
+    `packaged_paths` is the set of paths present after packaging, so every declared
+    resource is checked against reality rather than against what the build produced.
+    """
+    resources = []
+    for name in sorted(TABLES):
+        path = "%s.parquet" % name
+        if path not in packaged_paths:
+            continue
+        resources.append({
+            "name": name,
+            "path": path,
+            "format": "parquet",
+            "mediatype": "application/vnd.apache.parquet",
+            "schema": {
+                "fields": [_field(name, f.name, f.type) for f in TABLES[name]],
+                "primaryKey": list(UNIQUE_KEYS[name]),
+            },
+        })
+
+    if "coverage.csv.gz" in packaged_paths:
+        resources.append({
+            "name": "coverage",
+            "path": "coverage.csv.gz",
+            "format": "csv",
+            "mediatype": "text/csv",
+            "compression": "gz",
+            "encoding": "utf-8",
+            "schema": {"fields": [
+                {"name": c,
+                 "type": "string" if c in ("table", "column", "group_dimension",
+                                           "group_value") else "number",
+                 "description": C.COVERAGE[c]}
+                for c in COVERAGE_COLUMNS]},
+        })
+
+    package = {
+        "profile": "tabular-data-package",
+        "name": DATASET_NAME,
+        "title": DATASET_TITLE,
+        "description": (
+            "Every stored result of the Humanities Data Benchmark, as joinable Parquet "
+            "tables with a metric dictionary. Nothing is filtered: runs that failed, were "
+            "never scored, or whose configuration is no longer known are rows carrying a "
+            "status, not omissions."),
+        "version": manifest.get("dataset_version") or SCHEMA_VERSION,
+        "schema_version": SCHEMA_VERSION,
+        "created": manifest["data_cutoff"],
+        "licenses": [{"name": LICENSE_ID, "title": LICENSE_TITLE, "path": LICENSE_URL}],
+        "resources": resources,
+        "keywords": ["benchmark", "LLM", "digital humanities", "OCR", "HTR",
+                     "information extraction"],
+        "relatedIdentifiers": [{
+            "relationType": "isSupplementTo",
+            "relatedIdentifier": SOFTWARE_CONCEPT_DOI,
+            "relatedIdentifierType": "DOI",
+            "note": "concept DOI of the software that produced these results",
+        }],
+        "sources": [{
+            "title": "Humanities Data Benchmark stored results",
+            "path": "results/",
+            "note": ("source commit %s; source_manifest.jsonl.gz carries a SHA-256 of "
+                     "every file consumed"
+                     % (manifest.get("source_commit") or "unknown")),
+        }],
+    }
+    if payload_archive:
+        package["relatedIdentifiers"].append({
+            "relationType": "hasPart",
+            "relatedIdentifier": payload_archive,
+            "relatedIdentifierType": "other",
+            "note": "complete stored request and scoring JSON, distributed separately",
+        })
+    return package
+
+
+def release_readme(manifest, packaged_paths, payload_archive=None):
+    """The README that ships with the release tree.
+
+    Differs from the build's in what it can promise: Parquet only, text files gzipped,
+    payloads elsewhere. The analytical guidance is the same, because the data is.
+    """
+    full = readme(manifest)
+    guidance = full[full.index("## The one thing to understand first"):]
+    guidance = guidance[:guidance.index("## Loading the CSV")] + \
+        guidance[guidance.index("## Coverage and diagnostics"):]
+
+    payload_line = (
+        "The payload sidecars -- the complete original request and scoring JSON -- are "
+        "**not** in this package. They are %s, distributed separately because they are "
+        "four fifths of the artifact by volume and are mostly third-party model output."
+        % (("`%s`" % payload_archive) if payload_archive else
+           "a separate archive named in the deposit"))
+
+    listing = "\n".join("- `%s`" % p for p in sorted(packaged_paths))
+
+    return """# {title}
+
+Release `{version}` · schema `{schema}` · data through {cutoff} · source commit `{commit}`
+
+Every stored result of the Humanities Data Benchmark, as joinable **Parquet** tables.
+
+{summary}
+
+## What is in this package
+
+{listing}
+
+Text files are gzipped so that every file clears the size limits of the repository this
+release is committed to; `packaging.json` maps each one back to the name and SHA-256 the
+build recorded, so it can be reconciled with `manifest.json`.
+
+{payload_line}
+
+## Reading it
+
+```python
+import pyarrow.parquet as pq
+runs = pq.read_table("runs.parquet").to_pylist()
+```
+
+`pyarrow` is the only dependency. `examples/business_letters_cost.py` is a worked analysis
+that runs against this directory as it stands.
+
+{guidance}""".format(
+        title=DATASET_TITLE,
+        version=manifest.get("dataset_version") or SCHEMA_VERSION,
+        schema=SCHEMA_VERSION,
+        cutoff=manifest["data_cutoff"],
+        commit=(manifest.get("source_commit") or "unknown")[:9],
+        summary=_table_summary(manifest),
+        listing=listing,
+        payload_line=payload_line,
+        guidance=guidance,
+    )

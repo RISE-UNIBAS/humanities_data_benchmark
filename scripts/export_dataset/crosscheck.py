@@ -138,21 +138,51 @@ def compare(runs, requests, scores, frontend):
     # Both call the same resolver, so a disagreement means they fed it different
     # provider/model identities -- which is exactly the aliasing question the dataset
     # exports two columns for.
+    #
+    # This compared only (bucket_date, input_price), which made "same resolved price" a
+    # far weaker claim than it read as: adding 999 to every output rate in the dataset
+    # produced no finding at all. Both rates are compared now, and a run where only one
+    # side resolved a price is reported rather than skipped -- one pipeline finding a
+    # price where the other found none is exactly the disagreement worth seeing.
     prices = {}
     for row in requests:
         if row["pricing_bucket_date"]:
-            prices.setdefault(row["run_id"], set()).add(
-                (row["pricing_bucket_date"], row["pricing_input_price_per_million"]))
+            prices.setdefault(row["run_id"], set()).add((
+                row["pricing_bucket_date"],
+                row["pricing_input_price_per_million"],
+                row["pricing_output_price_per_million"],
+            ))
 
     for run_id in shared:
         theirs = frontend[run_id].get("pricing")
         mine = prices.get(run_id)
-        if not theirs or not mine:
+
+        if theirs and not mine:
+            note("pricing_missing",
+                 "%s: the frontend resolved %s/%s at %s, the dataset resolved no price"
+                 % (run_id, theirs["input_price_per_million"],
+                    theirs["output_price_per_million"], theirs["bucket_date"]))
             continue
-        expected = (theirs["bucket_date"], theirs["input_price_per_million"])
+        if mine and not theirs:
+            note("pricing_missing",
+                 "%s: the dataset resolved %s, the frontend resolved no price"
+                 % (run_id, sorted(mine)[:1]))
+            continue
+        if not theirs:
+            continue
+
+        expected = (theirs["bucket_date"], theirs["input_price_per_million"],
+                    theirs["output_price_per_million"])
         if expected not in mine:
             note("pricing", "%s: frontend resolved %r, dataset resolved %s"
                  % (run_id, expected, sorted(mine)[:2]))
+        if len(mine) > 1:
+            # The frontend prices one selected request per run; the dataset prices each.
+            # More than one resolved price in a run means the requests disagree about who
+            # served them, and a single frontend figure cannot represent the run.
+            note("pricing_identity_split",
+                 "%s: requests in this run resolved %d different prices: %s"
+                 % (run_id, len(mine), sorted(mine)[:3]))
 
     return findings, len(shared)
 

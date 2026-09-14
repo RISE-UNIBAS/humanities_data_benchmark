@@ -23,7 +23,6 @@ from scripts.export_dataset.schema import SCHEMAS_FOR_DOCS, TABLES
 @pytest.fixture
 def manifest():
     return {
-        "schema_version": "1.0.0",
         "partial": False,
         "data_cutoff": "2026-09-09",
         "source_commit": "0a74b1592cd65fa34c31d24e26db5eeff9aa8e01",
@@ -218,12 +217,13 @@ def test_citation_parses_as_yaml(manifest):
 
 def test_the_citable_version_is_the_dataset_version_not_the_schema(manifest):
     """Three versions answer three questions; the one an analysis cites is the release."""
+    from scripts.export_dataset import SCHEMA_VERSION
     manifest["dataset_version"] = "2026-09-09.1"
     assert docs.datapackage(manifest)["version"] == "2026-09-09.1"
-    assert docs.datapackage(manifest)["schema_version"] == "1.0.0"
+    assert docs.datapackage(manifest)["schema_version"] == SCHEMA_VERSION
     assert "version: 2026-09-09.1" in docs.citation(manifest, None)
     assert "Release `2026-09-09.1`" in docs.readme(manifest)
-    assert "schema `1.0.0`" in docs.readme(manifest)
+    assert "schema `%s`" % SCHEMA_VERSION in docs.readme(manifest)
 
 
 def test_datapackage_carries_no_build_timestamp(manifest):

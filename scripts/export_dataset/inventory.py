@@ -24,6 +24,7 @@ METADATA_FILES = (
     PROJECT_ROOT / "scripts" / "data" / "pricing.json",
     PROJECT_ROOT / "scripts" / "data" / "model_aliases.json",
     PROJECT_ROOT / "scripts" / "data" / "contributors.json",
+    PROJECT_ROOT / "CITATION.cff",
 )
 
 CHUNK = 1 << 20
@@ -37,17 +38,25 @@ def sha256_of(path):
     return digest.hexdigest()
 
 
-def relative_path(path):
-    """A path as it will appear in the release: relative to the repository root, posix.
+def relative_path(path, *roots):
+    """A path as it will appear in the release: relative to a root, posix.
 
     An absolute path would carry the build machine's username and directory layout into a
-    published artifact, and would mean nothing to anyone reading it. Falls back to the
-    absolute form only for a path outside the repository, which the export does not read.
+    published artifact, and would mean nothing to anyone reading it.
+
+    The repository root is tried first, so an ordinary build keeps `results/<date>/...`.
+    Extra roots let a build with `--source` elsewhere still name its files relatively,
+    which matters because the same string has to work in the tables, the manifests and the
+    invalid-byte sidecars; using different namespaces in different places is how a source
+    stops reconciling to its row.
     """
-    try:
-        return Path(path).relative_to(PROJECT_ROOT).as_posix()
-    except ValueError:
-        return Path(path).as_posix()
+    path = Path(path)
+    for root in (PROJECT_ROOT,) + tuple(r for r in roots if r is not None):
+        try:
+            return path.relative_to(Path(root)).as_posix()
+        except ValueError:
+            continue
+    return path.as_posix()
 
 
 _relative = relative_path

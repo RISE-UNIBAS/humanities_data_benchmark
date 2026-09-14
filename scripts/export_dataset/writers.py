@@ -235,16 +235,52 @@ class JsonlGz:
 
 
 def publish(staging, final):
-    """Move a finished build into place, replacing any previous one only on success."""
+    """Move a finished build into place, replacing any previous one only on success.
+
+    Two renames, and the second can fail. It used to fail with no rollback: `final` had
+    already become `.previous`, so the old build was still on disk but no longer where
+    anything looks for it, while the error said it was untouched. Worse, the suggested
+    retry re-entered here and deleted `.previous` *before* trying again -- so a second
+    failure destroyed the only surviving copy.
+
+    Now the previous build is restored on failure, and it is never deleted until the new
+    one is actually in place.
+    """
     staging, final = Path(staging), Path(final)
     if not staging.is_dir():
         raise RuntimeError("nothing staged at %s" % staging)
     previous = final.with_name(final.name + ".previous")
-    if previous.exists():
+
+    if previous.exists() and final.exists():
+        # A leftover from an interrupted publish. The live build is present, so this copy
+        # is genuinely stale -- but only that combination makes it safe to remove.
         shutil.rmtree(previous)
+
+    stepped_aside = False
     if final.exists():
+        if previous.exists():
+            raise RuntimeError(
+                "Both %s and %s exist and %s does not. A previous publish was interrupted "
+                "and one of them is the build you want; inspect them and rename by hand "
+                "rather than letting this overwrite either." % (final, previous, final))
         _rename_or_explain(final, previous, staging)
-    _rename_or_explain(staging, final, staging)
+        stepped_aside = True
+
+    try:
+        _rename_or_explain(staging, final, staging)
+    except RuntimeError:
+        if stepped_aside:
+            try:
+                os.rename(previous, final)
+            except OSError as rollback_error:
+                raise RuntimeError(
+                    "Publishing failed and the previous build could not be put back.\n"
+                    "  previous build: %s\n"
+                    "  new build:      %s\n"
+                    "Both are intact; rename one into %s by hand. (%s)"
+                    % (previous, staging, final, rollback_error))
+        raise
+
     if previous.exists():
         shutil.rmtree(previous)
 
