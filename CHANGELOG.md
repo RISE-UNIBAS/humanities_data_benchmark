@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - `scripts/results_index.py`: one read-only walk of `results/` and one reader for `benchmarks_tests.csv`, replacing six walks and two readers across the export and scoring path; `collected_results/` is byte-identical. `generate_date_report.py`, `generate_test_report.py` and `inject_costs.py` keep their own.
+- `scripts/export_dataset/`: builds `dataset/` — typed `runs`, `requests` and `scores_long` tables in Parquet and CSV, a 114-entry metric dictionary, lossless JSONL payload sidecars, source and output manifests and diagnostics. Every run directory and request file becomes exactly one row; nothing is filtered.
+- Per-request cost is also derived from the recorded tokens and the price in force on the run's date, beside the stored figure rather than replacing it: 92,508 requests get a derived cost against 72,544 with a stored one.
 
 ### Fixed
 - `benchmark_export.json` and `test_runs_export.json`: run order no longer depends on filesystem order.

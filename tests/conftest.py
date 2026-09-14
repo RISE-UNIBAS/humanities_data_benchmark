@@ -114,3 +114,49 @@ def _write(path, payload):
     import json as _json
     text = payload if isinstance(payload, str) else _json.dumps(payload)
     path.write_text(text, encoding="utf-8")
+
+
+@pytest.fixture
+def make_pricing(tmp_path, monkeypatch):
+    """Point the pricing resolver at a table with prices a test can do arithmetic on.
+
+    The live table moves whenever a model is added, so a test that asserted a real cost
+    would break for reasons unrelated to the code under test. The resolver caches the
+    file at module level, so the caches are cleared as well as the paths.
+    """
+    import json as _json
+
+    def _make(buckets, aliases=None):
+        pricing = tmp_path / "pricing.json"
+        pricing.write_text(_json.dumps({"metadata": {"version": "test"},
+                                        "pricing": buckets}), encoding="utf-8")
+        alias_file = tmp_path / "model_aliases.json"
+        alias_file.write_text(_json.dumps({"aliases": aliases or {}}), encoding="utf-8")
+
+        from scripts.ndr_export import pricing_resolver
+        monkeypatch.setattr(pricing_resolver, "PRICING_FILE", pricing)
+        monkeypatch.setattr(pricing_resolver, "ALIAS_FILE", alias_file)
+        monkeypatch.setattr(pricing_resolver, "_pricing_cache", None)
+        monkeypatch.setattr(pricing_resolver, "_alias_cache", None)
+        return pricing
+    return _make
+
+
+@pytest.fixture
+def make_benchmarks(tmp_path, monkeypatch):
+    """A benchmarks/ tree with meta.json files, for the metadata joins."""
+    import json as _json
+
+    root = tmp_path / "benchmarks"
+
+    def _make(metas):
+        root.mkdir(exist_ok=True)
+        for name, meta in metas.items():
+            (root / name).mkdir(parents=True, exist_ok=True)
+            if meta is not None:
+                (root / name / "meta.json").write_text(
+                    _json.dumps(meta) if not isinstance(meta, str) else meta,
+                    encoding="utf-8")
+        monkeypatch.setattr("scripts.results_index.BENCHMARKS_PATH", root)
+        return root
+    return _make
