@@ -38,6 +38,7 @@ corpus. `--cost stored` uses what each run actually recorded instead.
 import argparse
 import collections
 import json
+import os
 import sys
 from pathlib import Path
 
@@ -61,9 +62,44 @@ reported. This is an analyst's threshold, not a property of the data: the covera
 is always shown so a different choice can be made."""
 
 
+TABLES = ("runs.parquet", "requests.parquet", "scores_long.parquet")
+
+
+def resolve_dataset_dir(dataset_dir):
+    """The directory holding the parquet files, or a message saying where to look.
+
+    Worth the lines: the natural mistake is to run this from inside `examples/` and pass
+    the dataset's own name, and pyarrow answers that with a dozen frames of internals
+    ending in a bare FileNotFoundError. Whoever reads this has the data but not the
+    repository, so the error has to carry the fix.
+    """
+    path = Path(dataset_dir)
+    missing = [name for name in TABLES if not (path / name).is_file()]
+    if not missing:
+        return path
+
+    hints = []
+    for candidate in (Path.cwd(), Path.cwd().parent, Path(__file__).resolve().parent.parent):
+        if all((candidate / name).is_file() for name in TABLES):
+            hints.append(candidate)
+    hint = ""
+    if hints:
+        try:
+            shown = Path(os.path.relpath(hints[0], Path.cwd()))
+        except ValueError:
+            shown = hints[0]
+        hint = "\n\nTry:  --dataset %s" % (shown if str(shown) != "." else ".")
+
+    raise SystemExit(
+        "No dataset at %s: %s not found there.\n"
+        "--dataset must point at the directory holding the parquet files, which is the "
+        "dataset root, not the examples/ folder beside it.%s"
+        % (path.resolve(), ", ".join(missing), hint))
+
+
 def load(dataset_dir, cost_column):
     """runs, requests and per-request TP totals, restricted to this benchmark."""
-    dataset_dir = Path(dataset_dir)
+    dataset_dir = resolve_dataset_dir(dataset_dir)
     runs = [r for r in pq.read_table(dataset_dir / "runs.parquet").to_pylist()
             if r["benchmark"] == BENCHMARK]
     run_ids = set(r["run_id"] for r in runs)
