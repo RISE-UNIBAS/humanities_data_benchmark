@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Unreleased
 
 ### Added
-- `scripts/results_index.py`: one read-only walk of `results/` and one reader for `benchmarks_tests.csv`, replacing seven private walks and three readers; `collected_results/` is byte-identical.
+- `scripts/results_index.py`: one read-only walk of `results/` and one reader for `benchmarks_tests.csv`, replacing six walks and two readers across the export and scoring path; `collected_results/` is byte-identical. `generate_date_report.py`, `generate_test_report.py` and `inject_costs.py` keep their own.
 
 ### Fixed
 - `benchmark_export.json` and `test_runs_export.json`: run order no longer depends on filesystem order.

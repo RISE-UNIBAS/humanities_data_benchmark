@@ -1,11 +1,16 @@
 """Read-only access to the result tree, the test CSV and the benchmark metadata.
 
-Seven places walked `results/` and three read `benchmarks_tests.csv`, each with its own
-idea of what to skip. That was tolerable while every caller was the frontend export, which
-may legitimately drop what it cannot chart. It stops being tolerable with a dataset export
-in the tree, because that one is required to drop nothing: a run whose test id is not in
-the CSV, a request file that will not parse and a run with no `scoring.json` are all rows
-it must emit, with a diagnostic, rather than silences it must explain later.
+The export and scoring path walked `results/` in six places and read
+`benchmarks_tests.csv` in two, each with its own idea of what to skip. That was tolerable
+while every caller was the frontend export, which may legitimately drop what it cannot
+chart. It stops being tolerable with a dataset export in the tree, because that one is
+required to drop nothing: a run whose test id is not in the CSV, a request file that will
+not parse and a run with no `scoring.json` are all rows it must emit, with a diagnostic,
+rather than silences it must explain later.
+
+`generate_date_report.py`, `generate_test_report.py` and `inject_costs.py` still keep their
+own iteration and are deliberately untouched: the first two only ever read one date or one
+run, and the third writes back into `results/`, which is not this module's business.
 
 So the walk here is complete and the filtering is explicit. `iter_run_dirs` yields every
 run directory and `iter_request_records` yields every request file, malformed included;
