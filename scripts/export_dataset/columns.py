@@ -44,8 +44,10 @@ RUNS = {
                          "loaded and did not set it to false; null when metadata could not "
                          "be read.",
     "hidden": "The default analytical view excludes these. True when the test is legacy or "
-              "the benchmark sets `display: false`. Null when visibility could not be "
-              "resolved -- filter on `hidden = false` rather than `hidden != true`.",
+              "the benchmark sets `display: false`; false only when both inputs are known "
+              "and neither hides the run; null when either is unresolved. Filter on "
+              "`hidden = false` rather than `hidden != true`: null is not a licence to "
+              "include.",
     "n_requests": "Request files discovered in the run directory. The denominator for the "
                   "coverage fractions below.",
     "n_valid_requests": "Request files that parsed as JSON. Lower than `n_requests` when a "
@@ -53,9 +55,10 @@ RUNS = {
     "n_explicit_errors": "Requests whose stored record carries a truthy `error` or "
                          "`error_message`. Not a general failure count: a request can fail "
                          "without recording either.",
-    "n_scored": "Requests whose stored score contains at least one numeric metric. This is "
-                "the exporter's coverage measure, not the scorer's own `n`, and it does "
-                "not certify that every expected document was scored.",
+    "n_scored": "Requests where `requests.is_scored` is true -- a performance metric, or "
+                "the complete counts a counting scorer uses. Not the scorer's own `n`, "
+                "and it does not certify that every expected document was scored: it "
+                "counts observations that exist, not observations that should.",
     "has_scoring": "Whether a `scoring.json` file exists. True even when that file only "
                    "records that scoring is not implemented.",
     "scoring_status": "One of `missing`, `invalid`, `not_implemented` (the scorer wrote "
@@ -129,6 +132,13 @@ REQUESTS = {
     "error_message": "The recorded error text, where present.",
     "scoring_status": "Same vocabulary as `runs.scoring_status`, applied to this request's "
                       "own stored score.",
+    "is_scored": "Whether this request carries a real scoring observation, by its "
+                 "benchmark's own rule: a performance metric, or the complete set of "
+                 "counts a counting scorer uses. `business_letters` needs all three "
+                 "true-positive categories, since one is a partial observation. A "
+                 "parameter such as `iou_threshold` does not qualify, nor do the fixed "
+                 "placeholders the scaffold benchmarks emit. This is the column "
+                 "`runs.n_scored` counts.",
     "input_tokens": "Prompt tokens as recorded. Null when no usage block was stored, which "
                     "is not the same as zero.",
     "output_tokens": "Completion tokens as recorded.",
@@ -144,12 +154,16 @@ REQUESTS = {
     "derived_input_cost_usd": "Recomputed here: `input_tokens / 1e6 × the input price in "
                               "force on the run's date`.",
     "derived_output_cost_usd": "Recomputed here, from output tokens and the output price.",
-    "derived_total_cost_usd": "Sum of the two derived costs. Uniform across the corpus and "
-                              "reproducible from the price table, but it is what the run "
-                              "would have cost at that date's prices -- not what was "
-                              "charged.",
-    "cost_provenance": "`derived`, or why no cost could be derived: `no_price_in_table`, "
-                       "`no_tokens`, `no_model_identity`.",
+    "derived_total_cost_usd": "Sum of the two derived costs, and null unless both were "
+                              "derivable -- see `cost_provenance`. Uniform across the "
+                              "corpus and reproducible from the price table, but it is "
+                              "what the run would have cost at that date's prices, not "
+                              "what was charged.",
+    "cost_provenance": "`derived` when both token counts were recorded and priced. "
+                       "`partial_tokens` when only one was: the known component is "
+                       "exported, the total is null, and the missing side is never "
+                       "assumed to be zero. Otherwise why no cost could be derived at "
+                       "all: `no_price_in_table`, `no_tokens`, `no_model_identity`.",
     "pricing_bucket_date": "Which dated entry in the price table was used. Not the run's "
                            "date: the nearest entry at or before it.",
     "pricing_age_days": "How stale that entry was at the run's date. Large values mean the "

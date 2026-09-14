@@ -21,7 +21,7 @@ export keeps both rather than picking a winner.
 import json
 import math
 import re
-from datetime import datetime
+from datetime import datetime, timezone
 
 from scripts.export_dataset import metrics as M
 from scripts.export_dataset.inventory import relative_path
@@ -44,15 +44,8 @@ def _clean(value, table="", column=""):
     return value
 
 
-def _number(value):
-    """A finite int or float, or None. Booleans are not numbers here.
-
-    `isinstance(True, int)` is the trap: without this guard a boolean field would export
-    as 1.0 and be averaged with real measurements.
-    """
-    if isinstance(value, bool) or not isinstance(value, (int, float)):
-        return None
-    return value if math.isfinite(value) else None
+_number = M.numeric
+"""One definition of "is this a number", in the module that defines what a metric is."""
 
 
 def _int(value):
@@ -82,7 +75,7 @@ def parse_timestamp(raw):
         return None, "unparseable_timestamp"
     if parsed.tzinfo is None:
         return None, None
-    return parsed.astimezone(tz=None).isoformat(), None
+    return parsed.astimezone(timezone.utc).isoformat(), None
 
 
 def scoring_status_of(read_status, value):
@@ -254,13 +247,23 @@ class Extractor:
                                         str(path), benchmark, "score",
                                         entry.get("score"))
 
-        if record is not None:
+        # Every decoded value is preserved, not only objects. A request holding `[1, 2]`
+        # is valid JSON that the tables cannot describe, and dropping it from the sidecar
+        # would make it the one discovered file with no preserved content -- the single
+        # thing the payloads exist to prevent. Its object-derived columns stay null and a
+        # diagnostic names the shape.
+        if read.status == "ok":
             self.payloads.setdefault(benchmark or "_unresolved_benchmark", []).append({
                 "run_id": run.run_id,
                 "object_id": request.object_id,
                 "source_path": source,
-                "source_record": record,
+                "source_record": read.value,
             })
+            if record is None:
+                self._diag(source, "unsupported_record_shape", "warning",
+                           "value preserved in the payload sidecar; the request row's "
+                           "payload-derived columns are null because the value is a %s, "
+                           "not an object" % type(read.value).__name__)
 
         error = record.get("error") if record else None
         error_message = record.get("error_message") if record else None
@@ -297,6 +300,7 @@ class Extractor:
             "is_error": is_error,
             "error_message": _text(error_message) if record else None,
             "scoring_status": self._request_scoring_status(record, score),
+            "is_scored": M.is_scored(benchmark, score),
             "stored_input_cost_usd": _number(usage.get("input_cost_usd")),
             "stored_output_cost_usd": _number(usage.get("output_cost_usd")),
             "stored_estimated_cost_usd": _number(usage.get("estimated_cost_usd")),
@@ -353,37 +357,55 @@ class Extractor:
         if not (provider and model):
             return dict(blank, cost_provenance="no_model_identity")
 
-        if tokens["input_tokens"] is None and tokens["output_tokens"] is None:
-            return dict(blank, cost_provenance="no_tokens",
-                        pricing_identity_source=origin)
-
+        # Resolve the price first, and export it even when no cost can be derived from it.
+        # What a model cost on a given date is a fact about the run, not a by-product of
+        # having token counts: four runs record no tokens at all, and reporting "no price"
+        # for them was both less informative than the frontend and a disagreement the
+        # crosscheck could not explain.
         price = resolve_pricing(provider, model, date, max_age_days=None)
-        if price is None:
-            return dict(blank, cost_provenance="no_price_in_table",
-                        pricing_identity_source=origin)
-
-        input_cost = (tokens["input_tokens"] or 0) / 1e6 * price.input_price
-        output_cost = (tokens["output_tokens"] or 0) / 1e6 * price.output_price
-        return {
-            "derived_input_cost_usd": input_cost,
-            "derived_output_cost_usd": output_cost,
-            "derived_total_cost_usd": input_cost + output_cost,
-            "cost_provenance": "derived",
+        resolved = {} if price is None else {
             "pricing_bucket_date": price.bucket_date,
             "pricing_age_days": price.age_days,
             "pricing_input_price_per_million": price.input_price,
             "pricing_output_price_per_million": price.output_price,
             "pricing_model_key": getattr(price, "model_key", None) or model,
-            "pricing_identity_source": origin,
         }
+
+        if tokens["input_tokens"] is None and tokens["output_tokens"] is None:
+            return dict(blank, **dict(resolved, cost_provenance="no_tokens",
+                                      pricing_identity_source=origin))
+
+        if price is None:
+            return dict(blank, cost_provenance="no_price_in_table",
+                        pricing_identity_source=origin)
+
+        # Each component only where its own count was recorded. `or 0` here would turn an
+        # unrecorded count into a measured-looking zero and make the total non-null: one
+        # stored request has input_tokens 523, output_tokens null and total_tokens 66,058,
+        # so the output cost it would claim as zero is in fact the larger half. Nothing is
+        # inferred from total_tokens either -- the split between input and output is not
+        # recoverable from the sum without a provider-specific rule this export does not
+        # have.
+        input_cost = (None if tokens["input_tokens"] is None
+                      else tokens["input_tokens"] / 1e6 * price.input_price)
+        output_cost = (None if tokens["output_tokens"] is None
+                       else tokens["output_tokens"] / 1e6 * price.output_price)
+        complete = input_cost is not None and output_cost is not None
+
+        return dict(resolved, **{
+            "derived_input_cost_usd": input_cost,
+            "derived_output_cost_usd": output_cost,
+            "derived_total_cost_usd": (input_cost + output_cost) if complete else None,
+            "cost_provenance": "derived" if complete else "partial_tokens",
+            "pricing_identity_source": origin,
+        })
 
     def _run_row(self, run, source, config, typed, benchmark, meta, request_rows,
                  scoring, status, cost):
         n_requests = len(request_rows)
         n_valid = sum(1 for r in request_rows if r["parse_status"] == "ok")
         n_errors = sum(1 for r in request_rows if r["is_error"])
-        n_scored = sum(1 for r in request_rows
-                       if r["scoring_status"] == "numeric_metrics_present")
+        n_scored = sum(1 for r in request_rows if r["is_scored"])
 
         stored = [r["stored_estimated_cost_usd"] for r in request_rows
                   if r["stored_estimated_cost_usd"] is not None]
@@ -394,9 +416,18 @@ class Extractor:
         display = None
         if meta is not None:
             display = bool(meta.get("display", True))
-        hidden = None
-        if legacy is not None or display is not None:
-            hidden = bool(legacy) or (display is False)
+
+        # Nullable OR. True as soon as either input positively requires hiding; false only
+        # when both are known and neither does; otherwise unknown. The previous form was
+        # `legacy is not None or display is not None`, which turned (legacy=False,
+        # display=unknown) into hidden=False and admitted runs with unreadable benchmark
+        # metadata straight into the default analytical view.
+        if legacy is True or display is False:
+            hidden = True
+        elif legacy is False and display is True:
+            hidden = False
+        else:
+            hidden = None
 
         rules = config.get("rules") if config else None
 

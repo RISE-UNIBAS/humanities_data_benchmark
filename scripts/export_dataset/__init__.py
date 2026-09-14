@@ -26,7 +26,7 @@ DATASET_PATH = PROJECT_ROOT / "dataset"
 
 STAGING_SUFFIX = ".staging"
 
-SCHEMA_VERSION = "1.0.0"
+SCHEMA_VERSION = "1.1.0"
 """Semver over the table and column contract. A new column is a minor bump; a changed
 meaning for an existing one is a major bump, because it silently breaks an analysis that
 already ran."""

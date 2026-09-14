@@ -33,8 +33,11 @@ SCORING_STATUSES = ("missing", "invalid", "not_implemented", "no_numeric_metrics
 express as a number -- a message, say. Neither certifies that every expected document in
 the run was scored: that is coverage, and it is not knowable from the file."""
 
-COST_PROVENANCES = ("derived", "no_price_in_table", "no_tokens", "no_model_identity")
-"""How `derived_total_cost_usd` came about, or why it did not."""
+COST_PROVENANCES = ("derived", "partial_tokens", "no_price_in_table", "no_tokens",
+                    "no_model_identity")
+"""How `derived_total_cost_usd` came about, or why it did not. `partial_tokens` is one
+count recorded and the other not: the known component is exported, the total is null, and
+the missing side is never assumed to be zero."""
 
 PRICING_IDENTITY_SOURCES = ("response", "config")
 """Whether the provider/model priced came from the stored response or from the test
@@ -125,6 +128,7 @@ REQUESTS = pa.schema([
     ("is_error", pa.bool_()),
     ("error_message", pa.string()),
     ("scoring_status", pa.string()),
+    ("is_scored", pa.bool_()),
 
     ("input_tokens", pa.int64()),
     ("output_tokens", pa.int64()),

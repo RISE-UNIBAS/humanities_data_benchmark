@@ -18,6 +18,8 @@ Entries below were derived from a full scan of the corpus -- all 2,362 scoring f
 all 104,395 request records -- cross-checked against the scorers in
 `benchmarks/*/benchmark.py`, not from a sample.
 """
+import math
+
 from scripts.export_dataset.schema import METRIC_ROLES
 
 FUZZY_BENCHMARKS = ("bibliographic_data", "blacklist_cards", "general_meeting_minutes",
@@ -204,3 +206,55 @@ level; `__error` is a scorer's own marker."""
 NOT_IMPLEMENTED = "niy"
 """What a scorer writes instead of a score when it has none. A string, and never to be
 coerced to zero -- a benchmark with no scorer is not a benchmark that scored zero."""
+
+
+SUFFICIENT_STATISTICS = {
+    "business_letters": frozenset("%s_tp" % c for c in BUSINESS_LETTER_CATEGORIES),
+}
+"""Benchmarks whose request-level scoring is a set of counts rather than a score.
+
+`business_letters` assigns no per-request similarity at all -- its scorer emits nine
+TP/FP/FN counts and nothing else -- so "was this request scored" cannot be answered by
+looking for a performance metric. All three categories must be present: one category
+alone is a partial observation, and treating it as a complete denominator understates the
+work the request represents.
+"""
+
+
+def numeric(value):
+    """A finite int or float, or None. Booleans are not numbers.
+
+    `isinstance(True, int)` is the trap: without this guard a boolean field would count as
+    a measurement and be averaged with real ones.
+    """
+    if isinstance(value, bool) or not isinstance(value, (int, float)):
+        return None
+    return value if math.isfinite(value) else None
+
+
+def is_scored(benchmark, score):
+    """Whether a stored request score is a real scoring observation.
+
+    Plan §3.1 asks for "a valid performance observation or the complete sufficient
+    statistics used by that scorer". The looser rule this replaces -- any numeric key --
+    counted `test_benchmark2`'s three hard-coded placeholders as scored requests, and
+    counted a `business_letters` request with one of three categories as fully scored.
+
+    A parameter is not a result: `magazine_pages` records `iou_threshold`, the overlap its
+    scorer was configured to require, and a request carrying only that has been configured,
+    not measured.
+    """
+    if not isinstance(score, dict) or not benchmark:
+        return False
+
+    required = SUFFICIENT_STATISTICS.get(benchmark)
+    if required is not None:
+        return all(numeric(score.get(key)) is not None for key in required)
+
+    for key, value in score.items():
+        if key in NON_METRIC_KEYS:
+            continue
+        entry = BY_ID.get(metric_id(benchmark, "request", key))
+        if entry and entry["metric_role"] == "performance" and numeric(value) is not None:
+            return True
+    return False

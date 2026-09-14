@@ -98,7 +98,7 @@ def resolve_dataset_dir(dataset_dir):
 
 
 def load(dataset_dir, cost_column):
-    """runs, requests and per-request TP totals, restricted to this benchmark."""
+    """runs, requests, per-request TP totals, and how many requests were partly scored."""
     dataset_dir = resolve_dataset_dir(dataset_dir)
     runs = [r for r in pq.read_table(dataset_dir / "runs.parquet").to_pylist()
             if r["benchmark"] == BENCHMARK]
@@ -107,12 +107,20 @@ def load(dataset_dir, cost_column):
     requests = [r for r in pq.read_table(dataset_dir / "requests.parquet").to_pylist()
                 if r["run_id"] in run_ids]
 
-    tp_totals = collections.defaultdict(float)
+    # All three categories, or none. A request with only `send_date_tp` has been partly
+    # scored, and summing what happens to be present would put a partial numerator over a
+    # whole request's cost -- overstating how much that money bought. The dataset applies
+    # the same rule in `requests.is_scored`.
+    seen = collections.defaultdict(dict)
     for row in pq.read_table(dataset_dir / "scores_long.parquet").to_pylist():
         if row["run_id"] in run_ids and row["metric_id"] in TP_METRICS:
-            tp_totals[(row["run_id"], row["object_id"])] += row["value"]
+            seen[(row["run_id"], row["object_id"])][row["metric_id"]] = row["value"]
 
-    return runs, requests, dict(tp_totals)
+    tp_totals = dict((key, sum(values.values()))
+                     for key, values in seen.items() if len(values) == len(TP_METRICS))
+    partial = len(seen) - len(tp_totals)
+
+    return runs, requests, tp_totals, partial
 
 
 def analyse(runs, requests, tp_totals, cost_column, by_model=False,
@@ -215,7 +223,9 @@ How to read this
     one, so this is not a complete record of what was spent.
   * A matched-subset ratio uses exactly the requests that have both a cost and TP counts
     for its numerator and its denominator. It is not the cell's total spend per extraction.
-  * Unscored requests are excluded, never counted as zero correct extractions.
+  * Unscored requests are excluded, never counted as zero correct extractions. A
+    request scored in only some of the three categories counts as unscored: a partial
+    numerator over a whole request's cost would overstate what the money bought.
   * Moving along the date axis changes more than the date: which models were run, the
     prompts, the documents, the scorer and the price table all changed over this span.
     These records show what happened; they do not isolate a cause.
@@ -269,6 +279,9 @@ def render_text(results, meta, handle=sys.stdout):
     print("cost column: %s | hidden runs excluded: %d | coverage threshold: %.0f%%"
           % (meta["cost_column"], meta["runs_excluded_as_hidden"],
              100 * meta["min_coverage"]), file=handle)
+    if meta.get("requests_with_incomplete_tp_categories"):
+        print("%d request(s) carried some but not all three TP categories and are counted "
+              "as unscored" % meta["requests_with_incomplete_tp_categories"], file=handle)
     if flagged:
         print("", file=handle)
         print("!zero_priced (%d cells): every eligible request cost $0.00, which means the"
@@ -292,11 +305,13 @@ def main(argv=None):
     args = parser.parse_args(argv)
 
     cost_column = COST_COLUMNS[args.cost]
-    runs, requests, tp_totals = load(args.dataset, cost_column)
+    runs, requests, tp_totals, partial = load(args.dataset, cost_column)
     results, meta = analyse(runs, requests, tp_totals, cost_column,
                             by_model=args.by_model,
                             include_hidden=args.include_hidden,
                             min_coverage=args.min_coverage)
+
+    meta["requests_with_incomplete_tp_categories"] = partial
 
     if args.format == "json":
         json.dump({"meta": meta, "cells": results, "caveats": CAVEATS.strip().split("\n")},

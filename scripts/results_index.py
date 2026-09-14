@@ -86,6 +86,11 @@ def read_json(path):
         return JsonRead(None, "missing", None)
     except json.JSONDecodeError as error:
         return JsonRead(None, "invalid", str(error))
+    except UnicodeDecodeError as error:
+        # Not decodable as UTF-8. Previously this escaped and aborted the whole
+        # extraction; it is an unreadable file like any other, and the export's job is to
+        # record it and keep its bytes rather than stop.
+        return JsonRead(None, "invalid", str(error))
     except OSError as error:
         return JsonRead(None, "unreadable", str(error))
 
