@@ -85,8 +85,14 @@ def datapackage(manifest):
             "tables with a metric dictionary and lossless payload sidecars. Nothing is "
             "filtered: runs that failed, were never scored, or whose configuration is no "
             "longer known are rows carrying a status, not omissions."),
-        "version": SCHEMA_VERSION,
-        "created": manifest["build_started_utc"],
+        "version": manifest.get("dataset_version") or SCHEMA_VERSION,
+        "schema_version": SCHEMA_VERSION,
+        # Deliberately not the build time. datapackage.json is hashed into manifest.json,
+        # so a wall-clock stamp here would make two builds of identical data differ and
+        # destroy the reproducibility claim. The build time lives in manifest.json, which
+        # is excluded from its own hash list. Plan §5: keep build time outside the
+        # deterministic content identity.
+        "created": manifest["data_cutoff"],
         "licenses": [{"name": LICENSE_ID, "title": LICENSE_TITLE, "path": LICENSE_URL}],
         "resources": resources,
         "keywords": ["benchmark", "LLM", "digital humanities", "OCR", "HTR",
@@ -135,7 +141,7 @@ def readme(manifest):
 {partial}
 Every stored result of the Humanities Data Benchmark, as joinable tables.
 
-Release `{version}` · data through {cutoff} · built from source commit `{commit}`
+Release `{version}` · schema `{schema}` · data through {cutoff} · built from source commit `{commit}`
 
 {summary}
 
@@ -309,7 +315,8 @@ See `CITATION.cff`. This dataset has no DOI yet; it is minted at deposit. Cite t
 version — figures change between releases as results are added and as corrections are made.
 """.format(
         title=DATASET_TITLE,
-        version=SCHEMA_VERSION,
+        version=manifest.get("dataset_version") or SCHEMA_VERSION,
+        schema=SCHEMA_VERSION,
         cutoff=manifest["data_cutoff"],
         commit=(manifest.get("source_commit") or "unknown")[:9],
         summary=_table_summary(manifest),
@@ -331,7 +338,7 @@ cite the exact version it used.
 
 ## {version} — unreleased
 
-Initial export. Data through {cutoff}, built from source commit `{commit}`.
+Initial export. Schema {schema}. Data through {cutoff}, built from source commit `{commit}`.
 
 - {runs:,} runs, {requests:,} requests, {scores:,} metric observations, {metrics} metric
   definitions.
@@ -342,7 +349,8 @@ Initial export. Data through {cutoff}, built from source commit `{commit}`.
 - Licensed CC BY 4.0, separately from the software's GPL-3.0. The payload
   sidecars additionally contain third-party model output; see the README.
 """.format(
-        version=SCHEMA_VERSION,
+        version=manifest.get("dataset_version") or SCHEMA_VERSION,
+        schema=SCHEMA_VERSION,
         cutoff=manifest["data_cutoff"],
         commit=(manifest.get("source_commit") or "unknown")[:9],
         runs=manifest["row_counts"]["runs"],
@@ -372,7 +380,7 @@ def citation(manifest, software_citation):
            manifest["data_cutoff"]),
         "  Nothing is filtered: unscored, failed and unresolved runs are rows carrying a",
         "  status rather than omissions.",
-        "version: %s" % SCHEMA_VERSION,
+        "version: %s" % (manifest.get("dataset_version") or SCHEMA_VERSION),
         "license: %s" % LICENSE_ID,
         "date-released: '%s'" % date.today().isoformat(),
     ]

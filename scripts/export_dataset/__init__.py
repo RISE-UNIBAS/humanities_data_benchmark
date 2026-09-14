@@ -30,3 +30,20 @@ SCHEMA_VERSION = "1.0.0"
 """Semver over the table and column contract. A new column is a minor bump; a changed
 meaning for an existing one is a major bump, because it silently breaks an analysis that
 already ran."""
+
+
+def default_dataset_version(data_cutoff, serial=1):
+    """`<data_cutoff>.<serial>` -- the identifier an analysis cites.
+
+    Three versions travel with a release and they answer different questions.
+    `SCHEMA_VERSION` says whether your code still reads it. `data_cutoff` says how much
+    data it covers. `dataset_version` says *which build* -- and it is the one that must
+    change when a correction is made to records the previous release already contained,
+    even though neither the schema nor the cutoff moved. Without it two releases of
+    corrected 2026-09-09 data would be indistinguishable in a citation.
+
+    The serial is passed, not inferred: the builder cannot know whether this is a
+    correction of the last release or the first build of new data, and guessing wrong
+    produces a duplicate identifier for different bytes.
+    """
+    return "%s.%d" % (data_cutoff or "unknown", serial)

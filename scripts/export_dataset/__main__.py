@@ -17,7 +17,8 @@ import sys
 from datetime import datetime, timezone
 from pathlib import Path
 
-from scripts.export_dataset import DATASET_PATH, SCHEMA_VERSION, STAGING_SUFFIX
+from scripts.export_dataset import (DATASET_PATH, SCHEMA_VERSION, STAGING_SUFFIX,
+                                    default_dataset_version)
 from scripts.export_dataset import columns, coverage, docs, inventory, metrics, writers
 from scripts.export_dataset.extract import Extractor
 from scripts.export_dataset.schema import SCHEMAS_FOR_DOCS, SORT_KEYS, TABLES, UNIQUE_KEYS
@@ -45,7 +46,8 @@ def _selected_runs(results_path, date, benchmark, limit, catalog):
     return runs
 
 
-def build(source=RESULTS_PATH, out=DATASET_PATH, date=None, benchmark=None, limit=None):
+def build(source=RESULTS_PATH, out=DATASET_PATH, date=None, benchmark=None, limit=None,
+          dataset_version=None, serial=1):
     started = datetime.now(timezone.utc)
     partial = bool(date or benchmark or limit)
     catalog = TestCatalog.load()
@@ -145,6 +147,8 @@ def build(source=RESULTS_PATH, out=DATASET_PATH, date=None, benchmark=None, limi
 
     manifest = {
         "schema_version": SCHEMA_VERSION,
+        "dataset_version": dataset_version or default_dataset_version(
+            summary["data_cutoff"], serial),
         "partial": partial,
         "build_filters": {"date": date, "benchmark": benchmark, "limit": limit},
         "data_cutoff": summary["data_cutoff"],
@@ -231,10 +235,15 @@ def main(argv=None):
     parser.add_argument("--date", help="one date folder (development only)")
     parser.add_argument("--benchmark", help="one benchmark (development only)")
     parser.add_argument("--limit", type=int, help="first N runs (development only)")
+    parser.add_argument("--dataset-version",
+                        help="release identifier; defaults to <data_cutoff>.<serial>")
+    parser.add_argument("--serial", type=int, default=1,
+                        help="bump when re-releasing corrected data at the same cutoff")
     args = parser.parse_args(argv)
 
     build(source=Path(args.source), out=Path(args.out), date=args.date,
-          benchmark=args.benchmark, limit=args.limit)
+          benchmark=args.benchmark, limit=args.limit,
+          dataset_version=args.dataset_version, serial=args.serial)
     return 0
 
 

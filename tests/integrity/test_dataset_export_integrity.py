@@ -197,3 +197,55 @@ def test_no_exported_path_is_absolute(extracted):
         "%d of %d exported paths are absolute, so a published artifact would carry this "
         "machine's username and directory layout. Record paths through "
         "inventory.relative_path. First: %r" % (len(absolute), len(paths), absolute[0]))
+
+
+def test_every_payload_record_still_equals_its_source_file(extracted):
+    """B·D6: the sidecars preserve the originals, checked against the files themselves.
+
+    Equality is **semantic**, not byte-for-byte. A JSON round trip normalises whitespace
+    and may reorder keys, and plan §3.4 is explicit that the claim is preservation of the
+    decoded value rather than of the formatting -- `source_manifest.jsonl` hashes the
+    bytes, and that is where byte-identity is recorded. Asserting byte-identity here would
+    fail for a reason that is not a defect.
+
+    This reads all 104,395 source files a second time, so it is the slowest test here.
+    It exists because "the payload is the same object the tables were built from" was
+    previously an argument from construction, and an archive's central promise deserves
+    a measurement.
+    """
+    from scripts.results_index import PROJECT_ROOT, read_json
+
+    checked = mismatched = 0
+    examples = []
+    for records in extracted.payloads.values():
+        for record in records:
+            source = PROJECT_ROOT / record["source_path"]
+            read = read_json(source)
+            if read.status != "ok":
+                mismatched += 1
+                examples.append("%s: could not re-read (%s)"
+                                % (record["source_path"], read.status))
+                continue
+            checked += 1
+            if read.value != record["source_record"]:
+                mismatched += 1
+                if len(examples) < 5:
+                    examples.append(record["source_path"])
+
+    assert checked, "no payload record was checked"
+    assert not mismatched, (
+        "%d of %d payload records no longer equal their source file:\n  %s"
+        % (mismatched, checked + mismatched, "\n  ".join(examples)))
+
+
+def test_every_run_scoring_payload_still_equals_its_source_file(extracted):
+    from scripts.results_index import PROJECT_ROOT, read_json
+
+    mismatched = []
+    for record in extracted.run_payloads:
+        read = read_json(PROJECT_ROOT / record["source_path"])
+        if read.status != "ok" or read.value != record["source_record"]:
+            mismatched.append(record["source_path"])
+    assert extracted.run_payloads and not mismatched, (
+        "%d run-scoring payloads differ from their source: %s"
+        % (len(mismatched), mismatched[:5]))

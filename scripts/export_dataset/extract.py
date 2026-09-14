@@ -187,7 +187,11 @@ class Extractor:
         if scoring.status == "ok" and isinstance(scoring.value, dict):
             self.run_payloads.append({
                 "run_id": run.run_id,
-                "source_path": source,
+                # The scoring file, not the run directory. `source` is the directory,
+                # which is right for the runs row -- a run *is* a directory -- but this
+                # record is about one file inside it, and its source_path is the only
+                # pointer a reader has back to the bytes it came from.
+                "source_path": relative_path(files.scoring_path),
                 "source_record": scoring.value,
             })
             raw_cost = scoring.value.get(COST_SUMMARY_KEY)

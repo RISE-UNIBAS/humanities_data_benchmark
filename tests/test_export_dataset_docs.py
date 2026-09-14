@@ -212,3 +212,31 @@ def test_citation_parses_as_yaml(manifest):
     assert parsed["type"] == "dataset"
     assert parsed["identifiers"] == []
     assert parsed["license"] == "CC-BY-4.0"
+
+
+# --- versions -------------------------------------------------------------------
+
+def test_the_citable_version_is_the_dataset_version_not_the_schema(manifest):
+    """Three versions answer three questions; the one an analysis cites is the release."""
+    manifest["dataset_version"] = "2026-09-09.1"
+    assert docs.datapackage(manifest)["version"] == "2026-09-09.1"
+    assert docs.datapackage(manifest)["schema_version"] == "1.0.0"
+    assert "version: 2026-09-09.1" in docs.citation(manifest, None)
+    assert "Release `2026-09-09.1`" in docs.readme(manifest)
+    assert "schema `1.0.0`" in docs.readme(manifest)
+
+
+def test_datapackage_carries_no_build_timestamp(manifest):
+    """It is hashed into manifest.json, so a wall-clock stamp would break determinism."""
+    manifest["dataset_version"] = "2026-09-09.1"
+    package = docs.datapackage(manifest)
+    assert package["created"] == manifest["data_cutoff"]
+    assert manifest["build_started_utc"] not in json.dumps(package)
+
+
+def test_default_dataset_version_pairs_the_cutoff_with_a_serial():
+    from scripts.export_dataset import default_dataset_version
+    assert default_dataset_version("2026-09-09") == "2026-09-09.1"
+    assert default_dataset_version("2026-09-09", 2) == "2026-09-09.2", (
+        "a correction to data at the same cutoff needs a distinct identifier")
+    assert default_dataset_version(None) == "unknown.1"
