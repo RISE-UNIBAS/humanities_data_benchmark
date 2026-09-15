@@ -155,17 +155,18 @@ def test_datapackage_is_json_serialisable(manifest):
 def test_readme_states_the_things_an_analyst_will_get_wrong(manifest):
     text = docs.readme(manifest)
     for expected in (
-        "null means \"not recorded\" and never zero",   # missingness
-        "not what was charged",                          # derived cost
-        "null for every row in this release",            # timestamp_utc
+        "missing or unavailable information, not zero",  # missingness
+        "not verified billing amounts",                 # derived cost
+        "null for every row in this release",           # timestamp_utc
         "independent replicates",                        # repeated runs
         "hidden = false",                                # default view
-        "cannot tell a null from an empty string",       # CSV loading
-        "type inference can undo that when you subset",  # the real leading-zero hazard
+        "Nulls and empty strings",                      # CSV loading
+        "removing significant leading zeros",           # the real leading-zero hazard
         "CC-BY-4.0",                                     # licence
         "does not claim authorship",                     # limit of the grant
+        "does not reconstruct the evaluation methods",   # historical pricing vs. scoring
     ):
-        assert expected in text, "README no longer explains: %s" % expected
+        assert expected in " ".join(text.split()), "README no longer explains: %s" % expected
 
 
 def test_readme_reports_the_actual_row_counts(manifest):

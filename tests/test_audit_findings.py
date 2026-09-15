@@ -274,7 +274,7 @@ def test_f05_the_release_readme_does_not_promise_absent_files(tmp_path):
     release = tmp_path / "dist" / "release"
     PD.build_release_tree(d, release, payload_archive="payloads-2026-09-09.2.tar.gz")
     text = (release / "README.md").read_text(encoding="utf-8")
-    assert "Loading the CSV" not in text
+    assert "Loading CSV files" not in text
     assert "payloads-2026-09-09.2.tar.gz" in text
 
 

@@ -169,6 +169,21 @@ SCORES_LONG = pa.schema([
     ("value", pa.float64()),
 ])
 
+RESCORED_FIELDS = pa.schema([
+    ("run_id", pa.string()),
+    ("object_id", pa.string()),
+    ("benchmark", pa.string()),
+    ("field_path", pa.string()),
+    ("score", pa.float64()),
+    ("reproduces_stored_score", pa.bool_()),
+    ("rescored_date", pa.string()),
+    ("scorer_revision", pa.string()),
+    ("ground_truth_revision", pa.string()),
+    ("scorer_dirty", pa.bool_()),
+])
+"""Deliberately not part of `scores_long`. These are today's readings of stored responses,
+not what the runs recorded, and they carry provenance the stored scores cannot have."""
+
 METRICS = pa.schema([
     ("metric_id", pa.string()),
     ("benchmark", pa.string()),
@@ -187,6 +202,7 @@ TABLES = {
     "runs": RUNS,
     "requests": REQUESTS,
     "scores_long": SCORES_LONG,
+    "rescored_fields": RESCORED_FIELDS,
     "metrics": METRICS,
 }
 
@@ -198,6 +214,7 @@ SORT_KEYS = {
     "runs": ("run_id",),
     "requests": ("run_id", "object_id"),
     "scores_long": ("run_id", "object_id", "level", "field_path", "metric_id"),
+    "rescored_fields": ("run_id", "object_id", "field_path"),
     "metrics": ("metric_id",),
 }
 
@@ -205,6 +222,7 @@ UNIQUE_KEYS = {
     "runs": ("run_id",),
     "requests": ("run_id", "object_id"),
     "scores_long": ("run_id", "object_id", "level", "field_path", "metric_id"),
+    "rescored_fields": ("run_id", "object_id", "field_path"),
     "metrics": ("metric_id",),
 }
 
@@ -217,4 +235,4 @@ def empty_string_is_null(table, column):
     collapsing it to null would merge it with the run- and request-level rows that
     legitimately have no field path, breaking the table's uniqueness key.
     """
-    return not (table == "scores_long" and column == "field_path")
+    return column != "field_path" or table not in ("scores_long", "rescored_fields")

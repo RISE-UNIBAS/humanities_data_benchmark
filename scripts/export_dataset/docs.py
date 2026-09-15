@@ -112,16 +112,23 @@ def datapackage(manifest):
 
 
 def _table_summary(manifest):
-    lines = ["| Table | Rows | Grain |", "|---|---|---|"]
+    lines = ["| Table | Rows | Unit of observation |", "|---|---|---|"]
     grain = {
         "runs": "one stored run directory",
         "requests": "one stored request file",
-        "scores_long": "one numeric metric observation",
+        "scores_long": "one numeric metric observation, as recorded",
+        "rescored_fields": "one field observation from a subsequent scoring pass",
         "metrics": "one metric definition",
     }
-    for name in ("runs", "requests", "scores_long", "metrics"):
+    # Only what the manifest reports. A build that found no compare_detail writes no
+    # rescored_fields count, and an older manifest may predate a table entirely; neither
+    # should stop the documentation being generated.
+    for name in ("runs", "requests", "scores_long", "rescored_fields", "metrics"):
+        count = manifest["row_counts"].get(name)
+        if count is None:
+            continue
         lines.append("| `%s` | %s | %s |"
-                     % (name, "{:,}".format(manifest["row_counts"][name]), grain[name]))
+                     % (name, "{:,}".format(count), grain[name]))
     return "\n".join(lines)
 
 
@@ -138,180 +145,271 @@ def readme(manifest):
     inv = manifest["inventory"]
     return """# {title}
 {partial}
-Every stored result of the Humanities Data Benchmark, as joinable tables.
+This dataset provides the stored results of the RISE Humanities Data Benchmark as
+relational tables for analysis of model performance, token usage, and estimated costs
+on humanities tasks. It includes run metadata, request records, recorded scores,
+supplementary field-level evaluations, and JSON payloads documenting both sources.
 
 Release `{version}` · schema `{schema}` · data through {cutoff} · built from source commit `{commit}`
 
 {summary}
 
-Alongside them: `metrics.csv` defining every number, `payloads/` holding the complete
-original JSON, `coverage.csv` measuring how much of each column is populated,
-`source_manifest.jsonl` hashing every one of the {files:,} files consumed,
-`diagnostics.jsonl` listing anything the exporter could not handle, and `manifest.json`
-recording versions and output hashes.
+## Files and formats
 
-Each table is written twice, as Parquet and as CSV, from the same typed rows. **Parquet is
-the lossless copy** — read that one unless you have a reason not to, for the reason given
-under "Loading the CSV" below.
+Each table is available in Parquet and CSV, generated from the same typed records.
+**Parquet is recommended** because it preserves column types and distinguishes null
+values from empty strings without additional parsing rules.
 
-## The one thing to understand first
+| File or directory | Contents |
+|---|---|
+| [datapackage.json](datapackage.json) | Table schemas, column definitions, and primary keys |
+| [payloads/](payloads/) | Original request and scoring JSON, plus supplementary re-scoring records, in compressed sidecar files |
+| [coverage.csv](coverage.csv) | Column completeness and validity statistics |
+| [source_manifest.jsonl](source_manifest.jsonl) | Source paths and SHA-256 hashes for the {files:,} files consumed |
+| [diagnostics.jsonl](diagnostics.jsonl) | Export issues, severity levels, and handling decisions |
+| [manifest.json](manifest.json) | Release and schema versions, build provenance, row counts, and output hashes |
+| [examples/](examples/) | Example analysis scripts |
+| [CITATION.cff](CITATION.cff) | Dataset citation metadata |
+| [CHANGELOG.md](CHANGELOG.md) | Dataset release history |
 
-Nothing is filtered. A run whose configuration is no longer known, a run that was never
-scored, a request that failed — all are rows, each carrying a status column saying which.
-This is deliberate: an analyst cannot tell a filtered-out row from a row that never
-existed, so an archive that filters is an archive that misleads.
+## Loading Parquet files
 
-The corollary is that **null means "not recorded" and never zero**. A request with no
-`input_tokens` did not use zero tokens; nothing was written down. Aggregate accordingly.
+The following example uses `pyarrow` and assumes the dataset directory is the working
+directory:
+
+```python
+import pyarrow.parquet as pq
+
+runs = pq.read_table("runs.parquet")
+requests = pq.read_table("requests.parquet")
+```
+
+The [Business Letters cost example](examples/business_letters_cost.py) also requires only
+`pyarrow`. It estimates cost per correct extraction and reports the coverage supporting
+each estimate.
+
+## Scope and missing values
+
+The full export retains every stored run directory and request file, including failed
+requests, unscored runs, and runs whose test configuration cannot be resolved. Status
+columns distinguish these cases so that inclusion criteria can be applied explicitly.
+Completeness refers to the stored archive; attempts that were not saved cannot be recovered.
+
+**Null values represent missing or unavailable information, not zero.** For example, a null
+`input_tokens` value indicates that no usable input-token count was recorded. Missing values
+should remain distinct from measured zeros when calculating aggregates.
 
 ## Keys and joins
 
 - `runs.run_id` is `<test_id>@<date>`. A test run on another date is a different run.
 - `requests` joins to `runs` on `run_id`, and its own key is `(run_id, object_id)`.
 - `scores_long` joins on `run_id` and, for request- and field-level rows, `object_id`.
-  Its `metric_id` joins to `metrics`.
+  Its `metric_id` joins to `metrics.metric_id`. Select the appropriate `level` before
+  joining or aggregating to avoid counting both summary and component observations.
+- `rescored_fields` joins to `requests` on `(run_id, object_id)` and is keyed by
+  `(run_id, object_id, field_path)`. It has no `metric_id`; its `score` column contains
+  the per-field value supplied by the benchmark's scorer.
 - `object_id` is a **string**. Leading zeros are significant (`00414956` is an identifier,
   not a number) and some ids contain non-ASCII characters.
 - `line` is populated only when an object id is exactly `line_<digits>`. It is presentation
   metadata and never a join key.
 
-## Reading the metrics
+## Recorded and recomputed evaluations
 
-`scores_long` is deliberately shapeless — six columns, one row per observation — which
-makes every number look alike. `metrics.csv` is what stops you averaging a true-positive
-count with an F1 score. Consult it before aggregating anything.
+`scores_long` preserves numeric observations from the original run records.
+`rescored_fields` provides supplementary field-level evaluations produced by a subsequent
+scoring pass over stored responses, using the scoring code and ground truths available
+at that time. The dataset exporter imports these evaluations from the comparison-detail
+files; it does not execute scorers or modify the original results.
+
+In this release, the original records contain field-level detail for four benchmarks.
+The supplementary evaluations extend field-level coverage to twelve benchmarks by
+processing inputs without stored field detail. This coverage does not imply that every
+request has a field-level evaluation. If the comparison-detail files are unavailable,
+`rescored_fields` is empty.
+
+The following columns describe the supplementary evaluations:
+
+| Column | Interpretation |
+|---|---|
+| `score` | Per-field value returned by the scorer; null where no numeric similarity is assigned, including evaluations based on counts |
+| `rescored_date` | Date of the subsequent scoring pass, distinct from the original run date and export date |
+| `scorer_revision` | Recorded commit that last changed the benchmark's scorer file |
+| `ground_truth_revision` | Recorded commit that last changed the benchmark's ground truths |
+| `scorer_dirty` | Whether uncommitted scorer or ground-truth changes were reported; true means the revision identifiers do not fully describe the evaluated state |
+| `reproduces_stored_score` | Whether the recomputed numeric metrics for the input equal its stored numeric metrics; null when no comparison result is available |
+
+A false `reproduces_stored_score` value identifies a discrepancy, but does not by itself
+establish its cause. A true value indicates agreement in the compared metrics, not that
+the scorer or ground truths are unchanged. This input-level flag is repeated for each
+field belonging to the input.
+
+Recorded and recomputed evaluations represent different evaluation contexts. Analyse them
+separately unless the methods and reference data have been shown to be comparable.
+
+## Metrics and aggregation
+
+`scores_long` stores one numeric observation per row at the run, request, or field level.
+The `metrics` table defines each observation's meaning, unit, direction, and aggregation
+rule. Consult these definitions before comparing or combining values.
 
 - `metric_role` separates a `performance` measurement from a `count` and from a
   `parameter`. `iou_threshold` is a setting the scorer was given; `mean_iou` is what it
   measured. They are not comparable.
-- `aggregation` says what combining is legitimate: `sum` for counts, `not_summable` for a
-  ratio the scorer already averaged, `not_aggregatable` for a parameter.
-- `direction` matters: `cer` is an error rate, so lower is better, and pooling it with
-  similarity scores without inverting it produces nonsense.
+- `aggregation` specifies the supported operation: `sum` for counts,
+  `mean_over_requests` for applicable performance metrics, `not_summable` for ratios,
+  and `not_aggregatable` for parameters.
+- `direction` indicates whether higher or lower values represent better performance.
+  Character error rate (`cer`) is lower-is-better; it should not be pooled directly with
+  higher-is-better similarity scores.
 - Metric ids are **scoped by benchmark** because the same name means different things.
-  `book_advert_xml` records `fuzzy` on a 0–100 scale; every other benchmark records 0–1.
+  `book_advert_xml` records `fuzzy` on a 0–100 scale; other benchmarks that report `fuzzy`
+  use 0–1. Rescaling alone does not establish comparability across different tasks.
 
-An F1 score is not a count of correct extractions. If you need a count, use the
-true-positive metrics — see `examples/business_letters_cost.py`, which does exactly that.
+F1 scores measure performance rather than the number of correct extractions. Analyses
+requiring counts should use the corresponding true-positive metrics where available.
 
-## Costs
+## Cost estimates
 
-Two column families, answering different questions, and neither overwrites the other.
+Request-level costs are provided in two separate column families:
 
-- `stored_*` is what the run recorded at the time, verbatim. Costed against whatever price
-  table was live then, which varied across the corpus, and absent for many requests.
-- `derived_*` is recomputed here from the recorded tokens and the price in force on the
-  run's own date. Uniform and reproducible, and it covers more requests.
+| Columns | Interpretation |
+|---|---|
+| `stored_*` | Cost estimates copied from the original request record, using the pricing information available to the runner at the time; absent for many requests |
+| `derived_*` | Cost estimates recalculated during export from recorded token counts and dated pricing entries, using a consistent method across the archive |
 
-**A derived cost is not what was charged.** It is what the price table says the run would
-have cost at that date. It changes if the table is corrected, which is why the table's
-version and hash are recorded in `manifest.json` and `source_manifest.jsonl`.
+**Derived costs are estimates, not verified billing amounts.** The exporter selects the
+most recent matching price-table entry on or before the run date, with no maximum age.
+`pricing_bucket_date` identifies the entry and `pricing_age_days` reports its age at the
+time of the run. Gaps in the pricing history therefore affect the reliability of estimates.
+The pricing-table version and source hash are recorded in `manifest.json` and
+`source_manifest.jsonl` so that calculations can be reproduced.
 
-Where a model has no real price in the table, the derived cost is null and
-`cost_provenance` says why. Note the converse trap: at least one model resolves to a price
-of exactly zero because of a bad source, so a derived cost of `0.0` may mean "unpriced"
-rather than "free". Check `pricing_input_price_per_million` before concluding a model is
-cheap.
+Historical reconstruction uses dated pricing entries; it does not reconstruct the
+evaluation methods used for the original scores. A derived cost reflects the available
+price history rather than a verified historical charge, and it may change if that history
+is corrected. Supplementary evaluations carry the provenance described in
+[Recorded and recomputed evaluations](#recorded-and-recomputed-evaluations).
 
-Spend figures are **observed subtotals**, never totals. The runner saves no request when an
-answer is empty, and a same-day re-run overwrites the earlier one, so the stored requests
-are observations rather than a complete log of attempts. Failed requests cost money and are
-included; excluding them would understate spend.
+`cost_provenance` records whether a cost was derived or why it is unavailable. If only
+one token count is available, the corresponding cost component is retained and the total
+remains null. Missing prices are also represented as null. Some source pricing entries
+contain erroneous zeros; a derived cost of `0.0` does not establish that a model was free
+to use. Review the recorded input and output prices before interpreting zero costs.
 
-## Time
+Cost aggregates are **observed subtotals over saved requests**, not a complete record of
+expenditure. The runner does not save a request when no answer is returned, and a same-day
+rerun may overwrite an earlier result. Saved failures remain included because failed
+attempts can incur costs. Report cost coverage alongside any subtotal or efficiency ratio.
 
-`date` is the directory a run was stored under, not a timestamp.
+## Dates and repeated runs
 
-`timestamp_utc` is **null for every row in this release**. Every stored timestamp is naive
-local time with no offset, and the machine that produced it is not recorded, so converting
-would mean inventing a timezone. Use `timestamp_raw` and `date`, and treat sub-day ordering
-across machines as unknown.
+`date` is the name of the directory in which a run was stored, not an execution timestamp.
+`timestamp_raw` preserves the recorded timestamp. `timestamp_utc` is **null for every row
+in this release** because the stored timestamps lack UTC offsets and the source machine's
+timezone is unknown. Sub-day ordering across machines cannot be established reliably.
 
-Runs repeat: the same test appears on several dates, and a same-day re-run may have
-overwritten an earlier one. Rows are **not** independent replicates. Decide explicitly
-whether you want the latest run, a mean, or all of them.
+The same test can occur on multiple dates, and same-day reruns may have overwritten earlier
+results. These observations should not be treated as independent replicates without
+further justification. State how repeated runs are selected or combined in an analysis.
 
-## Which rows to analyse
+## Selection and comparability
 
-The default analytical view is `hidden = false`. Filter on that rather than `hidden != true`
-— `hidden` is null where visibility could not be resolved, and null is not a licence to
-include. Hidden and unknown rows stay in the export; report what you excluded.
+The default analytical view selects runs with `hidden = false`. Require an explicit false
+value: visibility is null where it could not be resolved, and the treatment of nulls in
+inequality filters varies between tools. Hidden and unresolved runs remain in the export;
+report their exclusion when presenting results.
 
-`configured_provider`/`configured_model` come from the test configuration; `response_provider`/
-`response_model` come from what the stored response says actually served the request. They
-disagree for aliased and routed models. Group by whichever you mean, and say which.
+`configured_provider` and `configured_model` identify the test configuration.
+`response_provider` and `response_model` preserve the identity reported in the stored
+response. These values can differ for aliased or routed models. Specify which identity
+is used for grouping and comparison.
 
-All configuration and benchmark metadata describes the **export snapshot**, not necessarily
-the state at run time. Prompts, ground truths and scorers changed over the corpus. This
-export does not recover their historical state, and comparisons across distant dates mix
-those changes with whatever else you are measuring.
+Configuration and benchmark metadata describe the **export snapshot**, which may differ
+from the configuration at execution time. Prompts, ground truths, and scoring code changed
+over the archive's history. Stored scores are preserved as recorded; the export does not
+reconstruct the historical versions of those evaluation components.
 
-## Loading the CSV
+Derived costs use dated pricing entries, as described above, whereas scores retain their
+original evaluation context. Historical cost reconstruction does not resolve changes in
+models, prompts, or source documents. Comparisons of scores across dates additionally
+require attention to changes in ground truths and scoring methods that are not versioned
+in the exported records.
 
-Use Parquet if you can. Two things to know if you use the CSV.
+## Loading CSV files
 
-**`pandas.read_csv` cannot tell a null from an empty string.** On disk they are different —
-a null is a bare field, an empty string is a quoted `""` — but pandas returns `NaN` for both
-by default, and `''` for both with `keep_default_na=False`. This matters in exactly one
-place: `scores_long.field_path` is legitimately the empty string for several thousand field
-observations. The rule that recovers it is that **`field_path` is non-null exactly when
-`level` is `field`**, and that invariant is asserted over the whole corpus at build time.
+CSV readers require explicit handling of missing values and identifier types.
 
-**`object_id` is a string, and type inference can undo that when you subset.** In the files
-as shipped the column is mixed — `letter01`, `page_10`, `00414956` — so pandas infers a
-string column and leaves the values alone. Filter to a benchmark whose ids are all
-numeric-looking (`library_cards` has `00414956`, `duty_rosters` has `100`), write that out
-and read it back, and they become integers. Quoting does not prevent this. Pass the dtype:
+**Nulls and empty strings:** the exported CSV distinguishes an unquoted empty field (null)
+from a quoted empty string (`""`). By default, `pandas.read_csv` maps both to `NaN`;
+`keep_default_na=False` maps both to an empty string unless additional rules are supplied.
+For `scores_long.field_path`, an empty string is a valid field identifier. The build checks
+that `field_path` is non-null exactly when `level` is `field`; this rule can be used to
+restore empty field identifiers after loading CSV.
+Empty strings are also valid in `rescored_fields.field_path`. All rows in that table
+represent fields, so empty field identifiers should be preserved when reading its CSV.
+
+**Identifier types:** always load `object_id` as a string. A subset containing only
+numeric-looking identifiers can otherwise be inferred as integers, removing significant
+leading zeros such as those in `00414956`. CSV quoting does not prevent type inference.
+
+For example, from the dataset directory:
 
 ```python
 import pandas as pd
-requests = pd.read_csv("requests.csv", dtype={{"object_id": "string"}},
-                       keep_default_na=False, na_values=[""])
-```
 
-`examples/business_letters_cost.py` reads Parquet and needs only `pyarrow`.
+requests = pd.read_csv(
+    "requests.csv",
+    dtype={{"object_id": "string"}},
+    keep_default_na=False,
+    na_values=[""],
+)
+```
 
 ## Coverage and diagnostics
 
-`coverage.csv` gives, for every table and column, the non-null count and its denominator —
-globally, per benchmark, per provider, per date, and per benchmark/provider/date triple.
-Groups whose grouping value is itself null are kept under `<null>` rather than dropped.
+`coverage.csv` reports row counts, non-null counts, null counts, invalid-value counts, and
+the fraction of non-null values for each column in `runs`, `requests`, `scores_long`,
+and `rescored_fields`.
+Coverage is reported globally and, where the table contains the relevant columns, by
+benchmark, configured provider, date, and their combination. `scores_long` has global
+coverage only. Null grouping values are retained under the label `<null>`.
+`rescored_fields` has global and per-benchmark coverage; its scoring date is recorded
+as `rescored_date`, which is not a coverage grouping dimension.
 
-`diagnostics.jsonl` lists everything the exporter could not handle, with a severity and what
-it did instead. An empty file means nothing was encountered, not that nothing was checked.
+`diagnostics.jsonl` records issues detected during export, including their severity and
+the action taken. An empty file indicates that no diagnostic entries were generated.
 
-## Reproducing this
+## Reproducibility
 
+To rebuild this dataset, use the source repository at the commit recorded in
+`manifest.json`, with the recorded inputs and dependencies. Run from the repository root:
+
+```console
+python -m scripts.export_dataset --dataset-version {version}
 ```
-python -m scripts.export_dataset
-```
 
-from the source repository at the commit recorded in `manifest.json`. The build hashes every
-input into `source_manifest.jsonl` and every output into `manifest.json`, so a rebuild that
-differs can be traced to an input or to the exporter.
+`source_manifest.jsonl` records a SHA-256 hash for each consumed input. `manifest.json`
+records output hashes and build metadata; the manifest itself is excluded from the output
+hash list. These records support verification of the files and identification of changes
+between builds. Builds using selection filters are marked as partial and are not releases.
 
 ## Licence
 
-**{license_title} ({license_id})** — {license_url}
+The project-authored tables, metric dictionary, coverage and manifest files, documentation,
+and ground truths are released under [{license_title} ({license_id})]({license_url}).
+This licence is separate from the GPL-3.0 licence of the benchmark software.
 
-You may share and adapt this material for any purpose, including commercially, provided you
-give attribution. Cite the dataset as set out in `CITATION.cff`.
-
-This is a separate grant from the software that produced the results, which is GPL-3.0. A
-dataset is not software, and the licence here is stated rather than inherited.
-
-What it covers, and what it cannot: the tables, the metric dictionary, the coverage and
-manifest files and the documentation are the work of this project and are offered under the
-licence above, as are the ground truths. The payload sidecars additionally contain
-**responses returned by third-party models**, reproduced here as evidence of what those
-models did. This project does not claim authorship of that text and cannot grant rights it
-does not hold; if your use depends on the status of generated output, check the terms of
-the provider concerned. Benchmark input documents are **not** included in this export.
+The payload sidecars also contain responses returned by third-party models, retained as
+evidence of model behaviour. The project does not claim authorship of these responses or
+grant rights beyond those it holds; reuse may depend on the relevant provider's terms.
+Benchmark input documents are not included in this export.
 
 ## Citation
 
-See `CITATION.cff`. This dataset has no DOI yet; it is minted at deposit. Cite the exact
-version — figures change between releases as results are added and as corrections are made.
+Use the citation metadata in [CITATION.cff](CITATION.cff) and identify the dataset version
+used in the analysis. Results may change between releases as records are added or corrected.
+A dataset DOI has not yet been assigned; it will be added when the dataset is deposited.
 """.format(
         title=DATASET_TITLE,
         version=manifest.get("dataset_version") or SCHEMA_VERSION,
@@ -513,8 +611,8 @@ def release_readme(manifest, packaged_paths, payload_archive=None):
     payloads elsewhere. The analytical guidance is the same, because the data is.
     """
     full = readme(manifest)
-    guidance = full[full.index("## The one thing to understand first"):]
-    guidance = guidance[:guidance.index("## Loading the CSV")] + \
+    guidance = full[full.index("## Scope and missing values"):]
+    guidance = guidance[:guidance.index("## Loading CSV files")] + \
         guidance[guidance.index("## Coverage and diagnostics"):]
 
     payload_line = (

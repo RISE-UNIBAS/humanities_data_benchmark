@@ -9,9 +9,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - `scripts/results_index.py`: one read-only walk of `results/` and one reader for `benchmarks_tests.csv`, replacing six walks and two readers; `collected_results/` is byte-identical.
-- `scripts/export_dataset/`: builds `dataset/` — typed `runs`, `requests` and `scores_long` tables in Parquet and CSV, a metric dictionary, lossless payload sidecars, coverage, manifests and diagnostics. Every run directory and request file becomes exactly one row.
+- `scripts/export_dataset/`: builds `dataset/` — typed `runs`, `requests`, `scores_long` and `rescored_fields` tables in Parquet and CSV, a metric dictionary, lossless payload sidecars, coverage, manifests and diagnostics. Every run directory and request file becomes exactly one row.
 - Per-request cost derived from recorded tokens and the price in force on the run's date, exported beside the stored figure rather than replacing it.
-- `dataset/` ships `datapackage.json`, a README, a dataset changelog and `CITATION.cff`, generated from the schema and a column dictionary; licensed CC BY 4.0, separately from the software.
+- `dataset/` ships `datapackage.json`, a README, a dataset changelog and `CITATION.cff`, generated from the schema and a column dictionary; licensed CC BY 4.0, separately from the software. The README documents file formats, loading examples, missing values, metric aggregation, historical pricing, and comparison limits in a formal research-data style, including the provenance, joins, and coverage of supplementary field-level evaluations.
 - `dataset/examples/business_letters_cost.py`: cost per correct extraction by provider and date, withholding a ratio with a reason where the data cannot support one.
 - `scripts/package_dataset.py`: the release tree, a separate payload archive and `SHA256SUMS`, refusing anything that is not releasable.
 - `scripts/export_dataset/crosscheck.py`: reconciles the dataset export against `test_runs_export.json`.

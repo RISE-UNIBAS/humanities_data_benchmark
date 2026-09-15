@@ -196,6 +196,25 @@ SCORES_LONG = {
              "here at all, and its absence is recorded in `scoring_status` instead.",
 }
 
+RESCORED_FIELDS = {
+    "run_id": "Foreign key to `runs.run_id`.",
+    "object_id": "Foreign key component to `requests`.",
+    "benchmark": "Which benchmark scored this, from the test configuration.",
+    "field_path": "The field compared, exactly as the scorer keyed it.",
+    "score": "Per-field similarity as the scorer computes it **today**. Null where the "
+             "scorer assigns no similarity, as the counting scorers do.",
+    "reproduces_stored_score": "Whether re-scoring this input reproduces the score its run "
+                               "stored. Null when the run stored none to compare against. "
+                               "False means the ground truth or the scorer has changed "
+                               "since -- 12 inputs in this release.",
+    "rescored_date": "When the re-scoring ran. Not when the benchmark ran.",
+    "scorer_revision": "Commit that last touched the benchmark's scorer at that point.",
+    "ground_truth_revision": "Commit that last touched the benchmark's ground truths.",
+    "scorer_dirty": "Whether the scorer or ground truths had uncommitted changes when the "
+                    "re-scoring ran, which makes the two revisions above incomplete "
+                    "descriptions of the code that produced these numbers.",
+}
+
 METRICS = {
     "metric_id": "Primary key: `<benchmark>.<level>.<source_metric>`.",
     "benchmark": "Which benchmark defines this metric.",
@@ -234,6 +253,7 @@ BY_TABLE = {
     "runs": RUNS,
     "requests": REQUESTS,
     "scores_long": SCORES_LONG,
+    "rescored_fields": RESCORED_FIELDS,
     "metrics": METRICS,
     "coverage": COVERAGE,
 }

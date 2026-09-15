@@ -118,8 +118,13 @@ def read_csv(path, schema, table=None):
             row = {}
             for name, cell in zip(names, raw):
                 row[name] = _parse_cell(cell, types[name])
-            if (table == "scores_long" and row.get("level") == "field"
-                    and row.get("field_path") is None):
+            # An empty `field_path` on disk is the empty string, not a null, wherever a
+            # row is known to be a field observation. In `scores_long` that is the rows
+            # with `level == "field"`; in `rescored_fields` it is every row, since the
+            # table holds nothing else.
+            if row.get("field_path") is None and (
+                    table == "rescored_fields"
+                    or (table == "scores_long" and row.get("level") == "field")):
                 row["field_path"] = ""
             rows.append(row)
     return rows

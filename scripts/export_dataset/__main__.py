@@ -19,7 +19,8 @@ from pathlib import Path
 
 from scripts.export_dataset import (DATASET_PATH, SCHEMA_VERSION, STAGING_SUFFIX,
                                     default_dataset_version)
-from scripts.export_dataset import columns, coverage, docs, inventory, metrics, writers
+from scripts.export_dataset import (columns, coverage, docs, inventory, metrics,
+                                    rescored, writers)
 from scripts.export_dataset.extract import Extractor
 from scripts.export_dataset.paths import check as check_paths
 from scripts.export_dataset.schema import SCHEMAS_FOR_DOCS, SORT_KEYS, TABLES, UNIQUE_KEYS
@@ -99,11 +100,22 @@ def build(source=RESULTS_PATH, out=DATASET_PATH, date=None, benchmark=None, limi
     print("  %d runs, %d requests, %d score observations"
           % (len(extractor.runs), len(extractor.requests), len(extractor.scores)))
 
+    print("Rescored field detail ...")
+    rescored_rows, rescored_payloads, rescored_diagnostics = rescored.extract(
+        benchmark_of=catalog.benchmark_map())
+    if rescored_rows:
+        print("  %d observations from %d inputs, produced by the frontend pipeline"
+              % (len(rescored_rows), len(rescored_payloads)))
+    else:
+        print("  none: collected_results/compare_detail/ is absent, so the dataset's "
+              "field detail covers only the benchmarks that recorded it at run time")
+
     print("Write tables ...")
     counts = {}
     for name, rows in (("runs", extractor.runs),
                        ("requests", extractor.requests),
                        ("scores_long", extractor.scores),
+                       ("rescored_fields", rescored_rows),
                        ("metrics", metrics.DICTIONARY)):
         counts[name] = writers.write_table(staging, name, rows, TABLES[name],
                                            SORT_KEYS[name], UNIQUE_KEYS[name])
@@ -118,6 +130,14 @@ def build(source=RESULTS_PATH, out=DATASET_PATH, date=None, benchmark=None, limi
             sidecar.write(record)
         sidecar.close()
         payload_counts[bench] = sidecar.count
+
+    if rescored_payloads:
+        detail_sidecar = writers.JsonlGz(staging / "payloads" / "rescored_detail.jsonl.gz")
+        for record in sorted(rescored_payloads,
+                             key=lambda r: (r["run_id"], r["object_id"] or "")):
+            detail_sidecar.write(record)
+        detail_sidecar.close()
+        payload_counts["rescored_detail"] = detail_sidecar.count
 
     run_sidecar = writers.JsonlGz(staging / "payloads" / "run_scoring.jsonl.gz")
     for record in sorted(extractor.run_payloads, key=lambda r: r["run_id"]):
@@ -138,6 +158,7 @@ def build(source=RESULTS_PATH, out=DATASET_PATH, date=None, benchmark=None, limi
         "runs": (extractor.runs, TABLES["runs"]),
         "requests": (extractor.requests, TABLES["requests"]),
         "scores_long": (extractor.scores, TABLES["scores_long"]),
+        "rescored_fields": (rescored_rows, TABLES["rescored_fields"]),
     })
     writers.write_coverage(staging / "coverage.csv", coverage_rows)
     print("  %d rows" % len(coverage_rows))
@@ -156,7 +177,7 @@ def build(source=RESULTS_PATH, out=DATASET_PATH, date=None, benchmark=None, limi
         for row in manifest_rows:
             f.write(json.dumps(row, sort_keys=True) + "\n")
 
-    diagnostics = inv_diagnostics + extractor.diagnostics
+    diagnostics = inv_diagnostics + extractor.diagnostics + rescored_diagnostics
     with open(staging / "diagnostics.jsonl", "w", encoding="utf-8", newline="\n") as f:
         for row in sorted(diagnostics, key=lambda d: (d["source_path"], d["issue"])):
             f.write(json.dumps(row, sort_keys=True) + "\n")

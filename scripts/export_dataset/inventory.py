@@ -74,6 +74,10 @@ def consumed_files(results_path=RESULTS_PATH):
     for path in METADATA_FILES:
         if path.is_file():
             paths.append(path)
+    # The frontend's re-scored field detail is an input now, so it is hashed like any
+    # other. Absent in a checkout where the frontend pipeline has not run, which is fine.
+    paths.extend(sorted((PROJECT_ROOT / "collected_results" / "compare_detail")
+                        .glob("*/*.json")))
     return sorted(set(p for p in paths if p.is_file()), key=_relative)
 
 
