@@ -438,7 +438,7 @@ cite the exact version it used.
 Initial export. Schema {schema}. Data through {cutoff}, built from source commit `{commit}`.
 
 - {runs:,} runs, {requests:,} requests, {scores:,} metric observations, {metrics} metric
-  definitions.
+  definitions.{rescored}
 - Per-request cost is exported twice: as the run recorded it, and as derived from recorded
   tokens and the price in force on the run's date.
 - `timestamp_utc` is null throughout: every stored timestamp is naive and no source
@@ -454,7 +454,20 @@ Initial export. Schema {schema}. Data through {cutoff}, built from source commit
         requests=manifest["row_counts"]["requests"],
         scores=manifest["row_counts"]["scores_long"],
         metrics=manifest["row_counts"]["metrics"],
+        rescored=_rescored_line(manifest),
     )
+
+
+def _rescored_line(manifest):
+    """The re-scored table is optional: it is empty where the comparison artifact is
+    absent, and a bullet claiming zero observations would read as a loss rather than an
+    absence."""
+    count = manifest.get("row_counts", {}).get("rescored_fields") or 0
+    if not count:
+        return ""
+    return ("\n- {:,} re-scored field observations in `rescored_fields`, produced by "
+            "today's\n  scorers over the stored responses and kept apart from the scores "
+            "the runs\n  recorded; see the README.".format(count))
 
 
 def citation(manifest, software_citation):
