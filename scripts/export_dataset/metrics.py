@@ -1,22 +1,12 @@
-"""What each exported number means.
+"""Define and validate numeric metrics exported in scores_long.
 
-A long table makes every metric look alike: six columns, one row per observation, and
-nothing in the shape to stop someone averaging a true-positive count with an F1. This
-dictionary is what stops it. Each entry fixes a metric's role, unit, direction and whether
-aggregating it means anything.
+Each metric definition specifies its role, unit, direction, range, and aggregation
+rule. Identifiers use ``<benchmark>.<level>.<source_metric>`` so similarly named
+metrics remain distinguishable across tasks and evaluation levels.
 
-Metric ids are scoped `<benchmark>.<level>.<source_metric>` because the same spelling is
-not the same measure across benchmarks. `fuzzy` is the clearest case: `book_advert_xml`
-records `rapidfuzz.fuzz.ratio` on 0-100 while every other benchmark records a 0-1
-similarity, and an unscoped `fuzzy` would put both in one column.
-
-The dictionary is closed and the build enforces it: `extract.py` raises on any numeric
-value whose metric id is not listed here. That is deliberate. A new scorer key should stop
-a release and get a definition, not flow into the tables as an unexplained float.
-
-Entries below were derived from a full scan of the corpus -- all 2,362 scoring files and
-all 104,395 request records -- cross-checked against the scorers in
-`benchmarks/*/benchmark.py`, not from a sample.
+For example, book_advert_xml reports fuzzy similarity on a 0-100 scale, while
+other registered fuzzy metrics use 0-1. Definitions are based on stored scoring
+records and benchmark scorers. Extraction rejects unregistered numeric metrics.
 """
 import math
 
@@ -24,16 +14,15 @@ from scripts.export_dataset.schema import METRIC_ROLES
 
 FUZZY_BENCHMARKS = ("bibliographic_data", "blacklist_cards", "general_meeting_minutes",
                     "fraktur_adverts", "medieval_manuscripts", "test_benchmark")
-"""Emit `calculate_fuzzy_score`, which is 0-1. `book_advert_xml` is deliberately absent."""
+"""Benchmarks with registered fuzzy similarity metrics on a 0-1 scale."""
 
 CER_BENCHMARKS = ("fraktur_adverts", "medieval_manuscripts")
 
 F1_COUNT_BENCHMARKS = ("company_lists", "duty_rosters", "library_cards", "personnel_cards")
-"""Share a scorer shape: micro/macro F1 at run level, per-request F1 with TP/FP/FN."""
+"""Benchmarks with run-level micro/macro F1 and request-level F1 and TP/FP/FN counts."""
 
 FIELD_SCORE_BENCHMARKS = F1_COUNT_BENCHMARKS
-"""The only four with `field_scores` in *stored* records. Eight more benchmarks gained the
-key in v0.5.5, but no run has been re-executed since, so the corpus has none of theirs."""
+"""Benchmarks with registered field-level metrics in the stored-score dictionary."""
 
 BUSINESS_LETTER_CATEGORIES = ("send_date", "sender_persons", "receiver_persons")
 
@@ -199,50 +188,38 @@ def is_known(benchmark, level, source_metric):
 
 
 NON_METRIC_KEYS = frozenset(("field_scores", "message", "__error"))
-"""Keys that carry no numeric observation. `message` is the text beside
-`book_advert_xml`'s failure score; `field_scores` is nested detail exported at field
-level; `__error` is a scorer's own marker."""
+"""Keys excluded from top-level numeric metric extraction.
+
+Field detail is processed separately; messages and error markers are metadata.
+"""
 
 NOT_IMPLEMENTED = "niy"
-"""What a scorer writes instead of a score when it has none. A string, and never to be
-coerced to zero -- a benchmark with no scorer is not a benchmark that scored zero."""
+"""Stored marker for unimplemented scoring; it is not a numeric zero."""
 
 
 SUFFICIENT_STATISTICS = {
     "business_letters": frozenset("%s_tp" % c for c in BUSINESS_LETTER_CATEGORIES),
 }
-"""Benchmarks whose request-level scoring is a set of counts rather than a score.
+"""Required request-level counts for benchmarks without a performance metric.
 
-`business_letters` assigns no per-request similarity at all -- its scorer emits nine
-TP/FP/FN counts and nothing else -- so "was this request scored" cannot be answered by
-looking for a performance metric. All three categories must be present: one category
-alone is a partial observation, and treating it as a complete denominator understates the
-work the request represents.
+Business Letters requires a finite true-positive count for each scored category
+before a request is classified as scored.
 """
 
 
 def numeric(value):
-    """A finite int or float, or None. Booleans are not numbers.
-
-    `isinstance(True, int)` is the trap: without this guard a boolean field would count as
-    a measurement and be averaged with real ones.
-    """
+    """Return a finite int or float, or None for booleans and other invalid values."""
     if isinstance(value, bool) or not isinstance(value, (int, float)):
         return None
     return value if math.isfinite(value) else None
 
 
 def is_scored(benchmark, score):
-    """Whether a stored request score is a real scoring observation.
+    """Return whether a request contains the benchmark's required scoring data.
 
-    Plan §3.1 asks for "a valid performance observation or the complete sufficient
-    statistics used by that scorer". The looser rule this replaces -- any numeric key --
-    counted `test_benchmark2`'s three hard-coded placeholders as scored requests, and
-    counted a `business_letters` request with one of three categories as fully scored.
-
-    A parameter is not a result: `magazine_pages` records `iou_threshold`, the overlap its
-    scorer was configured to require, and a request carrying only that has been configured,
-    not measured.
+    For benchmarks in SUFFICIENT_STATISTICS, require every listed count to be finite.
+    Otherwise require at least one finite, registered request-level performance
+    metric. Parameters, placeholders, and field-detail containers do not qualify.
     """
     if not isinstance(score, dict) or not benchmark:
         return False

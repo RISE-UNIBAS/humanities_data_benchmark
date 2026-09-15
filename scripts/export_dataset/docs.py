@@ -1,16 +1,12 @@
-"""The files that let the dataset travel without the repository.
+"""Generate dataset documentation and machine-readable metadata.
 
-`datapackage.json` describes the tables to a machine, the README to a person, and
-`CITATION.cff` to a citation tool. All three are generated from the schema and the column
-dictionary rather than written by hand, so a column cannot be renamed in one place and
-documented in another.
+Build data-package descriptors from the table schemas and column dictionary.
+Generate README and changelog text from templates and build metadata, and reuse
+the software citation's author metadata in the dataset's CITATION.cff.
 
-The dataset is CC BY 4.0, which is a separate decision from the software's GPL-3.0: a
-dataset is not software, and the plan's §6 requires the terms to be stated rather than
-inherited by assumption. The README says what the licence covers and what it does not,
-because the export bundles three kinds of content -- the tables this repository derives,
-the ground truths it maintains, and stored responses returned by third-party models -- and
-a single licence line over all of them would overstate what is being granted.
+Documentation states the dataset's CC BY 4.0 licence separately from the
+software's GPL-3.0 licence and identifies the limits of the grant for third-party
+model output. Release-specific generators describe packaged paths and formats.
 """
 import json
 
@@ -89,8 +85,8 @@ def datapackage(manifest):
         # Deliberately not the build time. datapackage.json is hashed into manifest.json,
         # so a wall-clock stamp here would make two builds of identical data differ and
         # destroy the reproducibility claim. The build time lives in manifest.json, which
-        # is excluded from its own hash list. Plan §5: keep build time outside the
-        # deterministic content identity.
+        # is excluded from its own hash list. Build time stays outside the content
+        # identity.
         "created": manifest["data_cutoff"],
         "licenses": [{"name": LICENSE_ID, "title": LICENSE_TITLE, "path": LICENSE_URL}],
         "resources": resources,
@@ -459,9 +455,10 @@ Initial export. Schema {schema}. Data through {cutoff}, built from source commit
 
 
 def _rescored_line(manifest):
-    """The re-scored table is optional: it is empty where the comparison artifact is
-    absent, and a bullet claiming zero observations would read as a loss rather than an
-    absence."""
+    """Return a changelog bullet when the manifest reports re-scored rows.
+
+    Return an empty string when the count is absent or zero.
+    """
     count = manifest.get("row_counts", {}).get("rescored_fields") or 0
     if not count:
         return ""
@@ -471,10 +468,11 @@ def _rescored_line(manifest):
 
 
 def citation(manifest, software_citation):
-    """Dataset CITATION.cff, reusing the software's authors.
+    """Return dataset CITATION.cff text using the supplied author metadata.
 
-    No DOI: one is minted at deposit, and inventing a placeholder that looks like an
-    identifier is worse than having none. No licence either -- see the module docstring.
+    Include the dataset version and licence. Include a release date only when
+    provided in the manifest. Leave the dataset identifier list empty until a DOI
+    is assigned at deposit; retain the related software DOI as a reference.
     """
     lines = [
         "cff-version: 1.2.0",
@@ -540,10 +538,10 @@ def citation(manifest, software_citation):
 # documentation could not load the thing they had.
 
 def release_datapackage(manifest, packaged_paths, payload_archive=None):
-    """A descriptor for what the release tree actually contains.
+    """Describe table and coverage resources present in ``packaged_paths``.
 
-    `packaged_paths` is the set of paths present after packaging, so every declared
-    resource is checked against reality rather than against what the build produced.
+    Use packaged Parquet and compressed coverage paths. When supplied, record the
+    separate payload archive as a related resource.
     """
     resources = []
     for name in sorted(TABLES):
@@ -618,10 +616,10 @@ def release_datapackage(manifest, packaged_paths, payload_archive=None):
 
 
 def release_readme(manifest, packaged_paths, payload_archive=None):
-    """The README that ships with the release tree.
+    """Return README text for the packaged release.
 
-    Differs from the build's in what it can promise: Parquet only, text files gzipped,
-    payloads elsewhere. The analytical guidance is the same, because the data is.
+    Describe Parquet tables, compressed text files, and the separate payload archive.
+    Reuse the build README's analytical guidance, excluding its CSV-loading section.
     """
     full = readme(manifest)
     guidance = full[full.index("## Scope and missing values"):]

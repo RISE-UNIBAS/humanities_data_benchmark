@@ -1,12 +1,11 @@
-"""Build the dataset: `python -m scripts.export_dataset`.
+"""Build the dataset with ``python -m scripts.export_dataset``.
 
-Writes into a staging directory and moves it into place only after every table has been
-written, checked for duplicate keys and read back from CSV. A build that fails leaves the
-previous one exactly as it was, which matters because the alternative -- a half-written
-`dataset/` that still looks like a release -- is worse than no build at all.
+Write tables and supporting files to a staging directory, validate unique keys
+and CSV round trips, and then publish the completed build. Publication attempts
+to restore the previous dataset if the staging-directory rename fails.
 
-`--date`, `--benchmark` and `--limit` exist for development. Any of them stamps
-`partial: true` in the manifest, because a subset must never be mistaken for a release.
+The ``--date``, ``--benchmark``, and ``--limit`` options select development
+subsets and mark the resulting manifest with ``partial: true``.
 """
 import argparse
 import json
@@ -29,13 +28,11 @@ from scripts.results_index import PROJECT_ROOT, RESULTS_PATH, TestCatalog, iter_
 
 
 def _git(*args):
-    """(output, error). `output` is None whenever the command did not succeed.
+    """Run Git in the repository root and return ``(output, error)``.
 
-    The previous version returned `out.stdout.strip() or None` and ignored the exit code,
-    so `bool(_git("status", "--porcelain"))` read a *failed* git as a clean worktree. The
-    audit hit exactly that: git refused the checkout on ownership grounds, the commit came
-    back null, and the artifact recorded `source_worktree_dirty: false` -- a provenance
-    claim manufactured out of an error. Unknown has to stay unknown.
+    On success, return stripped standard output and a null error. On failure,
+    return a null output and an error message. A failed status query must remain
+    distinct from a successful query reporting a clean working tree.
     """
     try:
         out = subprocess.run(("git",) + args, cwd=str(PROJECT_ROOT),
@@ -252,10 +249,10 @@ def build(source=RESULTS_PATH, out=DATASET_PATH, date=None, benchmark=None, limi
 
 
 def _software_citation():
-    """The repository's CITATION.cff authors, so the dataset credits the same people.
+    """Load the repository's CITATION.cff for reuse in dataset citation metadata.
 
-    Parsed with PyYAML when it is available and skipped otherwise: the dataset should
-    still build without it, with the authors simply absent rather than the build failing.
+    Return the YAML contents when parsing succeeds, or None if the file or PyYAML
+    is unavailable or parsing fails.
     """
     path = PROJECT_ROOT / "CITATION.cff"
     if not path.is_file():

@@ -1,30 +1,15 @@
-"""Field-level detail that today's scorer produces from the stored responses.
+"""Import supplementary field evaluations from comparison-detail artifacts.
 
-The corpus records `field_scores` for only four benchmarks: the other eight gained the key
-after their runs had already executed, and this project does not re-score
-`results/`. So the dataset's own field-level detail covers four benchmarks and
-1,483,079 observations, and there it stops.
+The comparison pipeline re-scores stored responses that lack original field
+detail. This module reads those artifacts into rescored_fields and payload
+records without executing scorers or modifying the original results.
 
-`scripts/ndr_export/generate_compare_detail.py` fills that gap for the comparison widget by
-running each benchmark's scorer again over the stored responses, and only for inputs whose
-stored answer has no `field_scores` -- detail recorded at run time is always preferred. The
-result is 619,108 observations across twelve benchmarks with **zero overlap** with the
-stored ones. Strictly complementary.
+Keep supplementary evaluations separate from scores_long and preserve the
+recorded scoring date, scorer and ground-truth revisions, dirty-state indicator,
+and agreement with stored metrics where available. Inventory includes these
+artifacts as hashed inputs.
 
-Two reasons this is a separate table rather than more rows in `scores_long`:
-
-  * It is not what the run recorded. It is what the scorer says *now*, against the ground
-    truths as they stand now, and 12 inputs already disagree with the score their run
-    stored. Mixing the two in one column would let an aggregate silently average a
-    historical observation with a present-day re-reading of it.
-  * It carries provenance the stored scores cannot have -- which scorer commit, which
-    ground-truth commit, which day -- because it was produced by a specific version of code
-    that will keep changing.
-
-The exporter still never runs a scorer. It reads the artifact the frontend pipeline
-already produced, which becomes a hashed input like `pricing.json`. Where that artifact is
-absent the table is simply empty: the dataset must not require the frontend pipeline to
-have run.
+Missing artifacts yield no supplementary rows.
 """
 import json
 
@@ -35,7 +20,7 @@ DETAIL_DIR = COLLECTED_RESULTS_PATH / "compare_detail"
 
 
 def detail_files(root=None):
-    """Every `compare_detail/<date>/<test_id>.json`, sorted, or nothing if absent."""
+    """Return sorted comparison-detail JSON paths, or an empty list if absent."""
     root = DETAIL_DIR if root is None else root
     if not root.is_dir():
         return []
@@ -43,12 +28,13 @@ def detail_files(root=None):
 
 
 def extract(root=None, benchmark_of=None):
-    """Returns (rows, payload records, diagnostics).
+    """Return ``(rows, payload_records, diagnostics)`` from comparison-detail files.
 
-    `benchmark_of` maps a test id to its benchmark, used only to cross-check the benchmark
-    the detail file names for itself. They should agree; a disagreement means one of the
-    two pipelines resolved the run differently and is worth a diagnostic rather than a
-    silent preference.
+    Emit one row per field, retaining null scores and available provenance.
+    Malformed files or missing run identities produce warnings and no rows.
+
+    If benchmark_of is provided, use its test-to-benchmark mapping to check artifact
+    identities. Prefer the mapped benchmark on disagreement and emit a diagnostic.
     """
     rows, payloads, diagnostics = [], [], []
 

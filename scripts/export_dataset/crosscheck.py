@@ -1,21 +1,15 @@
 """Reconcile the dataset export against the frontend export.
 
-Two pipelines read the same result tree and disagree about what to do with it. The frontend
-may skip what it cannot chart, keeps one request per run, and normalises scores onto a
-common scale; the dataset export keeps everything, flattens every request, and refuses to
-normalise. Those are design differences, not defects, and this compares the two anyway --
-because a difference that is *not* on that list is a defect, and there is no other way to
-find it.
+Compare run membership, benchmark and configured model identity, visibility,
+stored numeric run scores, and resolved prices. Account for representation
+differences: the dataset retains request-level records and original score scales,
+while the frontend includes normalized scores and selected request metadata.
 
-Plan §9 step 7. It is a diagnostic, not a gate: the frontend export is not an independent
-oracle, since both pipelines now read the corpus through `scripts/results_index.py`. What
-it can still catch is the two of them disagreeing about a run's identity, its visibility,
-its recorded scores or its prices -- places where one of them has misread a file the other
-read correctly.
+Both pipelines use scripts.results_index, so this comparison cannot detect
+errors shared by that reader. The packager runs the cross-check before release.
 
-    python -m scripts.export_dataset.crosscheck [--dataset dataset]
-
-Exits non-zero when a difference falls outside the expected set.
+Run ``python -m scripts.export_dataset.crosscheck --dataset dataset``.
+Return a nonzero exit status when the comparison reports findings.
 """
 import argparse
 import json
@@ -30,8 +24,8 @@ FRONTEND_EXPORT = COLLECTED_RESULTS_PATH / "test_runs_export.json"
 
 EXPECTED_DIFFERENCES = """Expected, by design:
   * normalized_score        frontend only -- a value-based scale heuristic, deliberately
-                            not a metric definition (plan §8), so the dataset keeps raw
-                            metrics and exports no normalised view.
+                            not a metric definition, so the dataset keeps raw metrics and
+                            exports no normalised view.
   * prompt, results, timing frontend only -- the prompt text, one selected request, and
                             run-level timing. The dataset exports every request instead,
                             and the payload sidecars carry the full records.

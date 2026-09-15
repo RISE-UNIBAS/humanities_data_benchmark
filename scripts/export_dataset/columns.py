@@ -1,13 +1,11 @@
-"""What every exported column means.
+"""Define descriptions for exported table and coverage columns.
 
-This is the data dictionary. `datapackage.json` and the README are both generated from it,
-so a column cannot acquire a description in one and lack it in the other, and a column
-added to `schema.py` without a description here fails the build.
+The data-package generator uses this dictionary with the declared schemas to
+document each column. Descriptions include the interpretation and provenance
+needed to use the dataset independently of the source repository.
 
-The descriptions are written for someone holding the files and nothing else -- no
-repository, no access to the people who ran the benchmarks. That rules out shorthand like
-"see the scorer": if a column's meaning depends on a fact about how the corpus was
-produced, the fact belongs here.
+check_complete rejects missing descriptions and descriptions without a matching
+schema column.
 """
 
 RUNS = {
@@ -260,7 +258,7 @@ BY_TABLE = {
 
 
 def check_complete(schemas):
-    """Fail the build when a column has no description, or a description no column."""
+    """Raise ValueError if supplied schemas and column descriptions disagree."""
     problems = []
     for name, schema in schemas.items():
         described = set(BY_TABLE.get(name, {}))

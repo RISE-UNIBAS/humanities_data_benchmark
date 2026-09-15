@@ -1,17 +1,11 @@
-"""Step 1: freeze the inputs and record exactly what was read.
+"""Inventory source files and compute hashes for dataset provenance.
 
-A dataset release has to be traceable to the bytes it came from. Two builds that disagree
-must be explainable by an input that changed or an exporter that changed, and neither is
-answerable without a hash of every file consumed.
+Include files immediately within recognized run directories, benchmark metadata,
+shared configuration and pricing files, citation metadata, and comparison-detail
+artifacts. Record source paths, file sizes, SHA-256 hashes, counts, and date bounds.
 
-So this hashes `results/` and every metadata file the export joins against -- the test
-CSV, each benchmark's `meta.json`, the pricing table and the alias map -- not just the
-results. Pricing now feeds a derived cost column, which makes `pricing.json` part of the
-dataset's identity rather than a detail of how it was built.
-
-Counts are measured and recorded, never asserted against a figure written in a plan
-document. `dev/DATASET_EXPORT_PLAN.md` §9.1 is explicit about this: the corpus grows, and
-a hard-coded expectation turns an ordinary new run into a failed build.
+Report unexpected run contents as blocking diagnostics. Hashing records file
+contents at read time; it does not lock inputs or create an immutable snapshot.
 """
 import hashlib
 from pathlib import Path
@@ -39,16 +33,10 @@ def sha256_of(path):
 
 
 def relative_path(path, *roots):
-    """A path as it will appear in the release: relative to a root, posix.
+    """Return a POSIX path relative to the repository or an additional root.
 
-    An absolute path would carry the build machine's username and directory layout into a
-    published artifact, and would mean nothing to anyone reading it.
-
-    The repository root is tried first, so an ordinary build keeps `results/<date>/...`.
-    Extra roots let a build with `--source` elsewhere still name its files relatively,
-    which matters because the same string has to work in the tables, the manifests and the
-    invalid-byte sidecars; using different namespaces in different places is how a source
-    stops reconciling to its row.
+    Try the repository root first, then supplied roots in order. If none contains
+    the path, return its POSIX representation without removing the leading path.
     """
     path = Path(path)
     for root in (PROJECT_ROOT,) + tuple(r for r in roots if r is not None):
@@ -63,7 +51,7 @@ _relative = relative_path
 
 
 def consumed_files(results_path=RESULTS_PATH):
-    """Every file the export reads, results and metadata alike, sorted by path."""
+    """Return existing inventoried input files, deduplicated and sorted by path."""
     paths = []
     for run in iter_run_dirs(results_path):
         paths.extend(sorted(run.path.iterdir()))
@@ -82,12 +70,11 @@ def consumed_files(results_path=RESULTS_PATH):
 
 
 def build(results_path=RESULTS_PATH):
-    """Returns (manifest rows, summary, diagnostics).
+    """Return ``(manifest_rows, summary, diagnostics)`` for the source archive.
 
-    A diagnostic here is a shape the extractor was not written for -- a directory nested
-    inside a run, a file that is neither a request nor a scoring file. Recording it beats
-    skipping it: the release decision is a human's, and it cannot be made about something
-    that never appeared in the output.
+    Count run directories and their immediate contents, compute date bounds, and
+    hash inventoried files. Nested directories and unexpected filenames within a
+    run produce blocking diagnostics because they are not supported export inputs.
     """
     rows = []
     diagnostics = []

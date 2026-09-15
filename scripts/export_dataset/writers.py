@@ -1,27 +1,16 @@
-"""Writing the tables so that the same inputs always produce the same bytes.
+"""Serialize dataset tables and payloads with reproducible ordering and formats.
 
-Three things break byte-identical rebuilds and all three are handled here: gzip stamps the
-current time into its header, Parquet records the writer version, and any iteration over a
-set or a directory can reorder rows. Rows are sorted on their declared key before writing,
-gzip mtime is pinned to 0, and the Parquet writer version is pinned and recorded in the
-manifest.
+Sort rows by declared keys, write Parquet with explicit format and compression
+settings, and omit variable filenames and timestamps from gzip headers. Byte
+reproducibility also depends on the library versions used for serialization.
 
-The CSV is generated from the same typed rows as the Parquet, not written independently,
-and `check_round_trip` reads both back and compares them. That is the only way to know the
-two agree: sharing a source frame does not prevent a serialisation difference.
+Generate CSV and Parquet from the same typed Arrow table. Validate CSV read-back
+against that table, including exact floating-point representations and nulls.
 
-CSV null encoding is `csv.QUOTE_NOTNULL` (Python 3.12+): on disk a null is a bare empty
-field and an empty string is a quoted `""`, so the bytes are unambiguous. Python's own
-`csv.reader` does not honour that distinction on the way back in -- it returns `''` for
-both, whatever `quoting` is set to -- and a hand-rolled quote-aware parser is not worth
-the risk, because `error_message`, `role_description` and `rules_json` can all contain
-newlines inside a quoted field.
-
-So the one column where an empty string is real data is disambiguated by a second column
-instead. `scores_long.field_path` is non-null exactly when `level == "field"`; run- and
-request-level rows have no field path at all. `read_csv` applies that rule, the extractor
-maintains it, and an integrity test asserts it over the whole corpus. Parquet carries the
-distinction natively and remains the lossless copy.
+CSV uses QUOTE_NOTNULL: nulls are unquoted empty fields, while empty strings are
+quoted. The reader restores empty field identifiers using table semantics:
+scores_long rows with level='field', and all rescored_fields rows. Parquet
+preserves the distinction directly.
 """
 import csv
 import gzip
@@ -43,8 +32,7 @@ CSV_DIALECT = {
 }
 
 _SENTINEL_SORT = ""
-"""Nulls sort first, explicitly, rather than however the runtime happens to compare
-None with a string. `scores_long` mixes null and non-null object ids in one key."""
+"""Placeholder for null key components, ordered before non-null values by sort_rows."""
 
 
 def sort_rows(rows, keys):
@@ -73,11 +61,10 @@ def to_table(rows, schema):
 
 
 def _csv_value(value):
-    """Serialise one cell so it reads back as the same Python object.
+    """Convert a value to its CSV representation, preserving None.
 
-    Floats go through `repr`, which in Python 3 is the shortest string that round-trips
-    exactly; `%f` would quietly truncate. Booleans are spelled out rather than written as
-    0/1, which a reader cannot tell from an integer column.
+    Use repr for finite floats, explicit spellings for non-finite floats, and
+    lowercase true/false for booleans.
     """
     if value is None:
         return None
@@ -103,11 +90,11 @@ def write_csv(path, table):
 
 
 def read_csv(path, schema, table=None):
-    """Read a table back under its declared schema.
+    """Return CSV records parsed according to the supplied Arrow schema.
 
-    Ship this with the dataset. `pandas.read_csv` will not reproduce it: it turns a
-    leading-zero object id like `00414956` into an integer, and it cannot rebuild the
-    empty `field_path` described above.
+    Preserve string identifiers through schema-based conversion. Set table to
+    scores_long or rescored_fields to restore empty field identifiers according
+    to that table's rules; other empty cells become null.
     """
     types = dict((f.name, f.type) for f in schema)
     rows = []
@@ -149,10 +136,10 @@ def write_parquet(path, table):
 
 
 def check_round_trip(csv_path, table, table_name=None):
-    """Assert the CSV reads back equal to the Parquet source, column by column.
+    """Raise AssertionError if CSV records differ from the supplied Arrow table.
 
-    Floats are compared by their repr so that a value which serialised differently is a
-    failure rather than something an epsilon comparison hides.
+    Check row counts, nulls, and column values. Compare floating-point repr strings
+    exactly, without a numerical tolerance.
     """
     got = read_csv(csv_path, table.schema, table_name)
     expected = table.to_pylist()
@@ -198,11 +185,7 @@ def write_table(out_dir, name, rows, schema, sort_keys, unique_keys):
 
 
 def write_coverage(path, rows):
-    """coverage.csv, sorted and written under the same CSV contract as the tables.
-
-    Not a pyarrow table: it is derived from the others rather than extracted, and giving
-    it a schema would imply it is part of the data model.
-    """
+    """Sort coverage records and write CSV using the declared coverage columns."""
     from scripts.export_dataset.coverage import COLUMNS
     rows = sorted(rows, key=lambda r: (r["table"], r["column"], r["group_dimension"],
                                        str(r["group_value"])))
@@ -214,7 +197,7 @@ def write_coverage(path, rows):
 
 
 class JsonlGz:
-    """A gzip JSONL sidecar with a pinned header, so two builds give the same bytes."""
+    """Write UTF-8 JSONL with sorted object keys and fixed gzip header metadata."""
 
     def __init__(self, path):
         self.path = Path(path)
@@ -240,16 +223,12 @@ class JsonlGz:
 
 
 def publish(staging, final):
-    """Move a finished build into place, replacing any previous one only on success.
+    """Publish a staged dataset, retaining the previous build during replacement.
 
-    Two renames, and the second can fail. It used to fail with no rollback: `final` had
-    already become `.previous`, so the old build was still on disk but no longer where
-    anything looks for it, while the error said it was untouched. Worse, the suggested
-    retry re-entered here and deleted `.previous` *before* trying again -- so a second
-    failure destroyed the only surviving copy.
-
-    Now the previous build is restored on failure, and it is never deleted until the new
-    one is actually in place.
+    Move the existing final directory to a backup before renaming staging to final.
+    If that rename fails, attempt to restore the backup. If restoration also fails,
+    raise RuntimeError identifying the intact backup and staging directories.
+    Remove the backup after successful publication.
     """
     staging, final = Path(staging), Path(final)
     if not staging.is_dir():
@@ -291,13 +270,11 @@ def publish(staging, final):
 
 
 def _rename_or_explain(source, target, staging):
-    """Rename, or fail with the reason and the reassurance.
+    """Rename a directory or raise RuntimeError with recovery instructions.
 
-    Windows refuses to rename a directory while any process has it, or anything under it,
-    as a working directory -- a shell left sitting in `dataset/examples` is enough, and it
-    is a natural place to be sitting, since that is where the example script lives. The
-    bare PermissionError says none of that, and worse, it arrives after a four-minute build
-    and looks like the build was lost. It was not: the completed output is in staging.
+    On failure, report the operating-system error, the staging location, and a
+    publication retry command. The message includes guidance for Windows directory
+    locks; publish handles restoration of any previous build.
     """
     try:
         os.rename(source, target)

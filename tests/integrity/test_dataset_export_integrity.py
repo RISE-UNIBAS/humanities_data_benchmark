@@ -200,13 +200,13 @@ def test_no_exported_path_is_absolute(extracted):
 
 
 def test_every_payload_record_still_equals_its_source_file(extracted):
-    """B·D6: the sidecars preserve the originals, checked against the files themselves.
+    """The sidecars preserve the originals, checked against the files themselves.
 
     Equality is **semantic**, not byte-for-byte. A JSON round trip normalises whitespace
-    and may reorder keys, and plan §3.4 is explicit that the claim is preservation of the
-    decoded value rather than of the formatting -- `source_manifest.jsonl` hashes the
-    bytes, and that is where byte-identity is recorded. Asserting byte-identity here would
-    fail for a reason that is not a defect.
+    and may reorder keys. The claim the sidecars make is preservation of the decoded value,
+    not of the formatting -- `source_manifest.jsonl` hashes the bytes, and that is where
+    byte-identity is recorded. Asserting byte-identity here would fail for a reason that is
+    not a defect.
 
     This reads all 104,395 source files a second time, so it is the slowest test here.
     It exists because "the payload is the same object the tables were built from" was

@@ -8,10 +8,9 @@ scorer offline (see `scripts/offline_scoring.py`); no model call is involved.
 
 Two rules keep the result honest.
 
-**The archive is not rewritten.** `dev/DATASET_EXPORT_PLAN.md` §6 keeps `results/` as the
-source archive, and a recomputed value written back into a request file would sit in the
-same object as metrics computed at run time, with nothing marking the seam. The detail
-goes here instead.
+**The archive is not rewritten.** `results/` is the source archive, and a recomputed
+value written back into a request file would sit in the same object as metrics computed at
+run time, with nothing marking the seam. The detail goes here instead.
 
 **Run-time detail wins.** Where the stored answer already carries `field_scores`, it was
 computed against the ground truth as it stood that day, so it is strictly more faithful
@@ -20,7 +19,7 @@ request file. Only what is genuinely absent is computed here, and it is labelled
 truths are revised (568 stored scores no longer reproduce), so re-scored detail reflects
 today's truth, not the run's. `reproduces_stored_score` records that per input, and where
 it is false both metric sets are kept -- that divergence is a measurement of ground-truth
-revision, which §7.5 requires the documentation to explain.
+revision, and the dataset's README explains it to anyone reading the exported table.
 
 Output: collected_results/compare_detail/<date>/<test_id>.json, one file per run that
 needs any, so the view fetches only the run it is showing.
@@ -88,10 +87,9 @@ def revisions_for(benchmark, cache):
     """Provenance for one benchmark, resolved once.
 
     The commit that last touched the scorer does not describe the scorer that ran if the
-    working tree is dirty, and DATASET_EXPORT_PLAN.md §6 is explicit that a working-tree
-    build is not releasable as a commit-only provenance claim. So the dirty state is
-    recorded rather than silently implied. A deploy builds from a clean checkout, which
-    clears it.
+    working tree is dirty, so a commit-only provenance claim from a dirty tree is not one.
+    The dirty state is recorded rather than silently implied. A deploy builds from a clean
+    checkout, which clears it.
     """
     if benchmark not in cache:
         scorer_path = BENCHMARKS_PATH / benchmark / "benchmark.py"

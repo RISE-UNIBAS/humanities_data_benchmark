@@ -164,6 +164,7 @@ def test_readme_states_the_things_an_analyst_will_get_wrong(manifest):
         "removing significant leading zeros",           # the real leading-zero hazard
         "CC-BY-4.0",                                     # licence
         "does not claim authorship",                     # limit of the grant
+        "does not reconstruct the evaluation methods",   # what is reconstructed, and what is not
         "does not reconstruct the evaluation methods",   # historical pricing vs. scoring
     ):
         assert expected in " ".join(text.split()), "README no longer explains: %s" % expected

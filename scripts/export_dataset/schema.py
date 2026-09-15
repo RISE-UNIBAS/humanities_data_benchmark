@@ -1,55 +1,53 @@
-"""Column types and status vocabularies for the three tables.
+"""Declare dataset table schemas, keys, and status vocabularies.
 
-The pyarrow schema is the single source of truth. CSV is generated from the same typed
-rows rather than written independently, so the two cannot drift; `writers.py` asserts they
-read back equal.
+PyArrow schemas define column types for the exported tables. Writers generate
+Parquet and CSV from the same typed records and validate CSV round trips.
+Columns are nullable, with counts represented as int64 and missing quantities
+kept distinct from zero.
 
-Every column is nullable and integer columns stay `int64`. That matters more than it
-looks: a token count that is absent must not arrive as `0`, and a float column holding
-integers silently rounds large ones. Null means "not recorded", always, and is never an
-inferred zero.
-
-The status vocabularies exist because the alternative is a boolean that cannot say why.
-`has_scoring` is true for a `scoring.json` that exists and is a `{"score": "niy"}`
-placeholder; only `scoring_status` separates that from a run that was really scored.
+Status values distinguish file presence, parsing, configuration resolution,
+scoring, and cost derivation. For example, has_scoring records file presence,
+while scoring_status distinguishes numeric metrics from placeholders.
 """
 import pyarrow as pa
 
 # --- status vocabularies ----------------------------------------------------------
 
 CONFIG_STATUSES = ("matched", "unknown_test_id")
-"""Whether the run directory's test id resolves in `benchmarks_tests.csv`. An unknown id
-keeps its exact spelling and its benchmark-derived columns stay null; it is never mapped
-onto a base test, because a variant id is evidence about what was run."""
+"""Resolution of a run's test identifier against benchmarks_tests.csv.
+
+Unresolved identifiers are preserved without substituting a different test.
+"""
 
 PARSE_STATUSES = ("ok", "missing", "unreadable", "invalid")
-"""Reading the stored JSON -- not whether the model's own output parsed. A response that
-the model returned as prose sits in a perfectly valid request file."""
+"""Read and parse status of the stored JSON file, independent of model-output validity."""
 
 SCORING_STATUSES = ("missing", "invalid", "not_implemented", "no_numeric_metrics",
                     "numeric_metrics_present")
-"""`not_implemented` is the literal `{"score": "niy"}` a scorer writes when it has none.
-`no_numeric_metrics` is a scoring file that parsed and carried nothing this export can
-express as a number -- a message, say. Neither certifies that every expected document in
-the run was scored: that is coverage, and it is not knowable from the file."""
+"""Availability and content of a stored scoring record.
+
+The ``niy`` marker denotes unimplemented scoring; no_numeric_metrics denotes a
+parsed record without numeric metrics. These statuses do not measure coverage
+of the expected benchmark inputs.
+"""
 
 COST_PROVENANCES = ("derived", "partial_tokens", "no_price_in_table", "no_tokens",
                     "no_model_identity")
-"""How `derived_total_cost_usd` came about, or why it did not. `partial_tokens` is one
-count recorded and the other not: the known component is exported, the total is null, and
-the missing side is never assumed to be zero."""
+"""Outcome of deriving request costs from recorded tokens and pricing.
+
+With partial_tokens, retain the available cost component and leave the total null.
+"""
 
 PRICING_IDENTITY_SOURCES = ("response", "config")
-"""Whether the provider/model priced came from the stored response or from the test
-configuration. They disagree for aliased and routed models, and the difference is the
-reason both are exported."""
+"""Source of the provider/model identity used for pricing: response or configuration."""
 
 LEVELS = ("run", "request", "field")
 
 METRIC_ROLES = ("performance", "count", "parameter")
-"""A count is not a score and a parameter is not a measurement. `iou_threshold` is a knob
-the scorer was given; `mean_iou` is what it measured. Averaging the two together is the
-mistake this column exists to prevent."""
+"""Distinguish performance measurements, counts, and scorer parameters.
+
+For example, mean_iou is a measurement and iou_threshold is a parameter.
+"""
 
 
 # --- tables -----------------------------------------------------------------------
@@ -181,8 +179,7 @@ RESCORED_FIELDS = pa.schema([
     ("ground_truth_revision", pa.string()),
     ("scorer_dirty", pa.bool_()),
 ])
-"""Deliberately not part of `scores_long`. These are today's readings of stored responses,
-not what the runs recorded, and they carry provenance the stored scores cannot have."""
+"""Supplementary field evaluations with provenance from the subsequent scoring pass."""
 
 METRICS = pa.schema([
     ("metric_id", pa.string()),
@@ -207,8 +204,10 @@ TABLES = {
 }
 
 SCHEMAS_FOR_DOCS = dict(TABLES)
-"""The tables `columns.py` must describe. `coverage` is described there too but has no
-pyarrow schema, since it is generated rather than extracted."""
+"""Table schemas validated against the column dictionary.
+
+Coverage has separate column definitions and is written directly as CSV.
+"""
 
 SORT_KEYS = {
     "runs": ("run_id",),
@@ -228,11 +227,9 @@ UNIQUE_KEYS = {
 
 
 def empty_string_is_null(table, column):
-    """Whether an empty source string should be normalised to null in this column.
+    """Return whether empty strings should become null for a table column.
 
-    Everywhere except `scores_long.field_path`, where `""` is a real key: four benchmarks
-    store a `field_scores` entry under the empty string -- 6,080 request records do -- and
-    collapsing it to null would merge it with the run- and request-level rows that
-    legitimately have no field path, breaking the table's uniqueness key.
+    Preserve empty field identifiers in scores_long and rescored_fields. Empty
+    strings in all other table columns are normalized to null.
     """
     return column != "field_path" or table not in ("scores_long", "rescored_fields")

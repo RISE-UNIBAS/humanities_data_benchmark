@@ -1,25 +1,11 @@
-"""Refuse a build whose output would destroy its input.
+"""Validate source and output paths before dataset filesystem operations.
 
-`build_release_tree` and `build` both `rmtree` their destination before writing it, and
-`publish` renames directories around. None of that checked whether the destination *was*
-the source. `--dataset <p>/release --out <p>` makes both resolve to `<p>/release`, and the
-source is deleted before the copy loop starts; `--out results` lets publication replace the
-raw archive with the generated dataset and then drop the original through `.previous`.
+Reject identical or nested paths assigned to different roles, including source,
+output, staging, and backup. Reject writable destinations inside the protected
+results, benchmark, and shared-data directories.
 
-The audit reproduced the first of those in an isolated fixture by intercepting the deletion.
-Nothing real was lost, and nothing should be able to be.
-
-Two rules, checked against resolved paths so a Windows case alias or a junction cannot slip
-past a string comparison:
-
-  * No two of source, destination, staging and backup may be the same directory, and none
-    may contain another. A destination inside the source is how a packager comes to consume
-    its own output.
-  * The directories the build reads -- `results/`, `benchmarks/`, `scripts/data/` -- are
-    never writable destinations, whatever the arguments say.
-
-Checked before any `mkdir`, `rmtree` or rename, so a refusal leaves the filesystem as it
-was.
+Resolve paths before comparison to account for relative paths and filesystem
+links. Builders call these checks before creating or replacing output directories.
 """
 from pathlib import Path
 
@@ -30,35 +16,32 @@ PROTECTED_INPUTS = (
     BENCHMARKS_PATH,
     PROJECT_ROOT / "scripts" / "data",
 )
-"""Read by every build. Writing a generated artifact over any of them destroys the corpus
-this project exists to preserve, and `results/` cannot be regenerated at all."""
+"""Repository input directories that cannot contain generated output destinations."""
 
 
 class UnsafePaths(RuntimeError):
-    """Raised before anything is created, deleted or renamed."""
+    """Raised when source or output paths violate the separation rules."""
 
 
 def _resolved(path):
-    """An absolute path that compares correctly on Windows.
+    """Expand the home directory and resolve the path to an absolute Path.
 
-    `Path.resolve()` follows junctions and normalises case for a path that exists, which is
-    what makes `DATASET` and `dataset` compare equal here. For a path that does not exist
-    yet it still absolutises and normalises separators, which is enough: the dangerous
-    comparisons are all against directories that do exist.
+    Resolve existing filesystem links and allow nonexistent path components.
+    Subsequent comparisons use the host platform's Path semantics.
     """
     return Path(path).expanduser().resolve()
 
 
 def _contains(parent, child):
-    """Whether `child` is `parent` or sits underneath it."""
+    """Return whether child equals parent or is nested beneath it."""
     return parent == child or parent in child.parents
 
 
 def check(**paths):
-    """Reject overlapping roles. Pass any of source=, out=, staging=, previous=.
+    """Validate the supplied source, out, staging, and previous path roles.
 
-    Keyword names are used in the message, so the caller's own vocabulary reaches the
-    operator rather than this module's.
+    Ignore None values. Treat every role except source as writable, and use keyword
+    names in error messages. Return True on success or raise UnsafePaths.
     """
     named = [(name, _resolved(path)) for name, path in paths.items() if path is not None]
 

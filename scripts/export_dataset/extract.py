@@ -1,22 +1,13 @@
-"""Step 3: turn the stored result tree into rows.
+"""Extract run, request, score, and payload records from stored results.
 
-One pass over the corpus produces every table at once, because they share a key and a
-second pass could disagree with the first. Reading is direct `json.load` through
-`results_index`; no scorer runs, no cost is recalculated behind the caller's back, no
-timestamp is invented.
+Read source JSON through scripts.results_index without invoking scorers. Retain
+run and request identities when configuration, scoring, or payload information
+is missing or invalid, and record the relevant status and diagnostics.
 
-The discipline throughout is that a fact and the absence of a fact are different values.
-A token count that was never recorded is null, not zero. A run with no `scoring.json` is a
-row with `scoring_status = "missing"`, not a missing row. A request file that will not
-parse keeps its key, its source path and a diagnostic, and its payload-derived columns are
-null. The dataset is meant to be able to say "this is not known", which a table built by
-skipping cannot.
-
-Costs are the one place where this export computes rather than copies, and it does both.
-`stored_*` is what the run recorded, untouched. `derived_*` is recomputed from the
-recorded tokens and the price in force on the run's date, via the same resolver the
-frontend uses. They can disagree -- a run costed against a stale table will -- and the
-export keeps both rather than picking a winner.
+Preserve recorded costs and export derived estimates in separate columns. Derived
+costs use recorded token counts and dated entries selected by the shared pricing
+resolver. Missing quantities remain null; timestamps are converted to UTC only
+when their source value contains a timezone offset.
 """
 import json
 import math
@@ -31,21 +22,23 @@ from scripts.results_index import (TestCatalog, benchmark_meta, iter_request_rec
                                    iter_run_dirs, read_run, read_scoring)
 
 LINE_OBJECT_ID = re.compile(r"^line_(\d+)$")
-"""`line` is optional presentation metadata and never a join key. It is populated only
-when the whole object id is `line_<digits>`: `line_10a` and `0002_p002` are not lines."""
+"""Pattern for optional line-number metadata, independent of join keys.
+
+Only a complete ``line_<digits>`` identifier supplies a line number.
+"""
 
 COST_SUMMARY_KEY = "cost_summary"
 
 
 def _clean(value, table="", column=""):
-    """Empty strings become null, except where the empty string is real data."""
+    """Convert empty strings to null unless the table's column preserves them."""
     if isinstance(value, str) and value == "" and empty_string_is_null(table, column):
         return None
     return value
 
 
 _number = M.numeric
-"""One definition of "is this a number", in the module that defines what a metric is."""
+"""Shared validator for finite numeric metric values."""
 
 
 def _int(value):
@@ -60,12 +53,11 @@ def _text(value):
 
 
 def parse_timestamp(raw):
-    """(timestamp_utc, diagnostic-or-None).
+    """Return ``(UTC timestamp, diagnostic)`` for a stored timestamp.
 
-    Every timestamp in this corpus is naive -- no offset, no Z -- so this returns None for
-    all of them. That is the point: converting a naive local time to UTC means inventing
-    a timezone, and the run's own machine is not recorded anywhere. The column exists,
-    stays null, and the README says so rather than the export guessing an offset.
+    Convert timezone-aware ISO timestamps to UTC. Return ``(None, None)`` for
+    missing or timezone-naive values, and ``(None, "unparseable_timestamp")`` when
+    ISO parsing fails. No source timezone is inferred.
     """
     if not raw:
         return None, None
@@ -333,12 +325,14 @@ class Extractor:
 
     @staticmethod
     def _derive_cost(date, response_provider, response_model, typed, tokens):
-        """Recompute cost from recorded tokens and the price in force on the run's date.
+        """Derive cost components from recorded tokens and dated pricing entries.
 
-        The response's own provider/model is preferred over the configured pair, because
-        that is what the alias map is keyed on and what actually served the request. The
-        window is unbounded: the pricing table has gaps longer than 30 days in the past,
-        and a price with an explicit age attached is more useful than no price at all.
+        Prefer the response's provider and model, falling back to the configuration
+        when either response identity component is absent. Select the latest matching
+        price on or before the run date, with no maximum age, and report its date and age.
+
+        Retain each cost component only when its token count is available. A total
+        requires both components. Return provenance explaining the result or its absence.
         """
         blank = {
             "derived_input_cost_usd": None,

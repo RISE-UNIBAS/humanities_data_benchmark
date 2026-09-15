@@ -1,6 +1,6 @@
 """The dataset export and the frontend export must agree about what they both describe.
 
-Plan §9 step 7. Two pipelines read the same tree and keep different things: the frontend
+Two pipelines read the same tree and keep different things: the frontend
 skips what it cannot chart, keeps one request per run and normalises scores; the dataset
 keeps everything and refuses to normalise. Those differences are the design. Anything else
 is one of them having misread a file the other read correctly.

@@ -1,9 +1,9 @@
 """Packaging a built dataset for the release repository.
 
-Plan §6.1 chose to commit the artifact to a release repository rather than attach it to a
-release, because the GitHub-Zenodo webhook deposits the repository's source zipball and
-ignores attached assets. That makes GitHub's 100 MB per-file limit a release-blocking
-constraint rather than a nuisance.
+The artifact is committed to a release repository rather than attached to a release,
+because the GitHub-Zenodo webhook deposits the repository's source zipball and ignores
+attached assets. That makes GitHub's 100 MB per-file limit a release-blocking constraint
+rather than a nuisance.
 
 The findings-level tests -- verification, preflight, described paths -- live in
 `test_audit_findings.py` beside the audit entries they close. What stays here is the
@@ -79,7 +79,7 @@ def test_payloads_are_left_out_of_the_release_tree(built, tmp_path):
     P.build_release_tree(built, out)
     assert not (out / "payloads").exists(), (
         "the sidecars are four fifths of the artifact and mostly third-party model "
-        "output; §6.1 keeps them out of the release repository")
+        "output; they are kept out of the release repository")
 
 
 def test_a_compressed_file_still_unpacks_to_the_original(built, tmp_path):

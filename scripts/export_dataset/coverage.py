@@ -1,22 +1,12 @@
-"""How much of each column is actually populated, grouped several ways.
+"""Calculate column completeness and validity statistics.
 
-Every disclosure this export makes about missing data is a claim an analyst has to take on
-trust unless they can measure it themselves. `coverage.csv` is that measurement: one row per
-table, column and group, with the non-null count and the denominator it was taken over.
+Produce one record per table, column, and supported group, with row, non-null,
+null, and invalid-value counts and the non-null fraction. Numeric non-finite
+values count as present and invalid; this is not a general schema validator.
 
-Grouping matters more than the global figure. "79% of requests have a derived cost" is not
-usable; "this provider on this date has 0% and that is why the ratio is missing" is. So the
-same columns are counted globally, per benchmark, per configured provider, per date, and
-per benchmark/provider/date triple.
-
-Two rules, both from the plan's §4.1:
-
-  * Rows whose grouping value is itself null are kept, under the label `<null>`, rather
-    than dropped. A column that is unpopulated precisely where the benchmark is unknown is
-    exactly the pattern worth seeing.
-  * Presence and validity are counted separately. `n_invalid` is zero throughout this
-    release because the extractor rejects non-finite numbers, and it is reported anyway so
-    that a future regression shows up as a number rather than as silence.
+Groups include the whole table and, where the required columns exist, benchmark,
+configured provider, date, and their combination. Null grouping values are
+retained under the label ``<null>``.
 """
 import math
 
@@ -44,7 +34,11 @@ def _is_invalid(value):
 
 
 def build(tables):
-    """tables: {name: (rows, schema)}. Returns coverage rows, sorted by the writer later."""
+    """Return coverage records for ``{table_name: (rows, schema)}``.
+
+    Skip grouping dimensions whose columns are absent from a table. The coverage
+    writer applies the final output ordering.
+    """
     out = []
     for name in sorted(tables):
         rows, schema = tables[name]

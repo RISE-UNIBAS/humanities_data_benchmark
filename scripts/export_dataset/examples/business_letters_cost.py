@@ -1,39 +1,25 @@
-"""Cost per correct extraction on `business_letters`, by provider and over time.
+"""Estimate cost per correct extraction for the Business Letters benchmark.
 
-This is the question the dataset was built to answer, and it is here because answering it
-takes more care than it looks. Four traps, in the order an analyst hits them:
+A correct extraction is one true positive in send_date, sender_persons, or
+receiver_persons. Request-level counts for all three categories are required;
+run-level F1 scores cannot supply this denominator.
 
-**The denominator is not F1.** A correct extraction is one true positive in one of the three
-categories this benchmark scores -- `send_date`, `sender_persons`, `receiver_persons`. The
-unit is a category-level extraction, not a fully correct letter, and an F1 score is not a
-count of anything. The per-category counts live only on request rows: `scoring.json` for
-this benchmark records `f1_macro` and `f1_micro` and nothing else, so a run-level analysis
-cannot answer this at all.
+Group saved requests by configured provider and date, optionally also by model.
+Calculate each ratio over requests with both a cost and all required counts.
+Report the eligible subset's coverage and distinguish it from the full group.
+Withhold ratios when eligibility, positive counts, or minimum coverage are
+insufficient. Missing counts are not treated as zero correct extractions.
 
-**An unscored request is not a wrong one.** Roughly two in five saved requests carry no TP
-counts -- the scorer returns nothing when a ground truth is unusable, and the older runs
-predate the current scorer. Treating those as zero correct extractions would inflate every
-ratio. They are excluded from the ratio and counted in the coverage figure instead.
+Observed costs include saved failures where a cost is available. They exclude
+attempts that were not saved and results overwritten by same-day reruns.
 
-**Observed spend is not total spend.** The runner does not save a request when the answer
-is `None`, and a same-day re-run overwrites the earlier one, so the stored requests are
-observations rather than a complete attempt log. What this reports is spend over the
-requests that were saved, failures included, and it says so.
+From the examples directory, run:
 
-**A ratio over a subset is not a ratio over the cohort.** Where some saved requests lack a
-cost or a TP count, numerator and denominator are both taken from exactly the requests that
-have both, and the result is labelled a matched subset with its coverage beside it. A
-complete-cohort ratio is reported only when every saved request in the cell qualifies.
+    python business_letters_cost.py --dataset ../ --format text
+    python business_letters_cost.py --dataset ../ --format json --by-model
 
-Run it against a built dataset:
-
-    python business_letters_cost.py --dataset ../  --format text
-    python business_letters_cost.py --dataset ../  --format json --by-model
-
-Reads Parquet, so it needs `pyarrow` and nothing else. Costs are the `derived_*` column
-family by default -- recomputed from recorded tokens and the price in force on the run's
-date -- because it covers more requests than the stored figures and is uniform across the
-corpus. `--cost stored` uses what each run actually recorded instead.
+The script reads Parquet and requires pyarrow. It uses derived costs based on
+dated pricing entries by default; ``--cost stored`` selects recorded estimates.
 """
 import argparse
 import collections
@@ -47,7 +33,7 @@ import pyarrow.parquet as pq
 BENCHMARK = "business_letters"
 
 CATEGORIES = ("send_date", "sender_persons", "receiver_persons")
-"""The only categories this benchmark scores. Hard-coded in its scorer, not configurable."""
+"""Scored categories whose true-positive counts define a correct extraction."""
 
 TP_METRICS = frozenset("%s.request.%s_tp" % (BENCHMARK, c) for c in CATEGORIES)
 
@@ -57,21 +43,21 @@ COST_COLUMNS = {
 }
 
 DEFAULT_MIN_COVERAGE = 0.5
-"""Below this share of saved requests carrying both a cost and TP counts, no ratio is
-reported. This is an analyst's threshold, not a property of the data: the coverage figure
-is always shown so a different choice can be made."""
+"""Minimum fraction of saved requests with both a cost and all required counts.
+
+The analysis withholds ratios below this configurable threshold and reports
+coverage alongside each result.
+"""
 
 
 TABLES = ("runs.parquet", "requests.parquet", "scores_long.parquet")
 
 
 def resolve_dataset_dir(dataset_dir):
-    """The directory holding the parquet files, or a message saying where to look.
+    """Return the dataset path after checking the required Parquet files.
 
-    Worth the lines: the natural mistake is to run this from inside `examples/` and pass
-    the dataset's own name, and pyarrow answers that with a dozen frames of internals
-    ending in a bare FileNotFoundError. Whoever reads this has the data but not the
-    repository, so the error has to carry the fix.
+    Raise SystemExit with the missing filenames and, when found, a suggested dataset
+    location.
     """
     path = Path(dataset_dir)
     missing = [name for name in TABLES if not (path / name).is_file()]
@@ -98,7 +84,12 @@ def resolve_dataset_dir(dataset_dir):
 
 
 def load(dataset_dir, cost_column):
-    """runs, requests, per-request TP totals, and how many requests were partly scored."""
+    """Load benchmark runs, requests, complete TP totals, and a partial-count tally.
+
+    Key true-positive totals by ``(run_id, object_id)`` and include only requests
+    with counts for all required categories. The final return value counts requests
+    with some, but not all, required counts.
+    """
     dataset_dir = resolve_dataset_dir(dataset_dir)
     runs = [r for r in pq.read_table(dataset_dir / "runs.parquet").to_pylist()
             if r["benchmark"] == BENCHMARK]
@@ -233,9 +224,7 @@ How to read this
 
 
 def render_text(results, meta, handle=sys.stdout):
-    """A fixed-width table. The label column is sized to the data rather than clipped:
-    truncating `qwen3.5-plus` and `qwen3.5-max` to the same string would silently merge
-    two models into one apparent row."""
+    """Write a fixed-width results table with untruncated provider and model labels."""
     labels = []
     for row in results:
         label = row["provider"] or "<none>"

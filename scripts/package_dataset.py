@@ -1,29 +1,22 @@
 """Package a built dataset for the release repository and for Zenodo.
 
-Plan §6.1. The GitHub-Zenodo webhook deposits the repository's source zipball at the tag,
-not the files attached to the release, so whatever should reach Zenodo has to be committed.
-That plus GitHub's hard 100 MB per-file limit is what this script exists to satisfy.
+The GitHub-Zenodo webhook deposits the repository's source zipball at the tag rather than
+the files attached to a release, so anything that must reach Zenodo has to be committed.
+That constraint, with GitHub's 100 MB per-file limit, determines what this script produces
+from a finished ``dataset/``:
 
-It produces, from a finished `dataset/`:
+  * ``release/`` -- the tree to commit. Parquet tables only, text files gzipped, payloads
+    excluded. ``datapackage.json`` and the README are regenerated for this tree, because
+    the build's copies describe files that packaging renames or omits.
+  * ``payloads-<version>.tar.gz`` -- the sidecars, kept out of the release repository.
+    They are most of the artifact by volume and largely third-party model output, and are
+    deposited as a separate record related with ``isPartOf``.
+  * ``SHA256SUMS``, written beside the output rather than inside it.
 
-  * `release/` -- the tree to commit. **Parquet tables only.** Text files gzipped, payloads
-    left out, and a `datapackage.json` and README written for this tree rather than copied
-    from the build, because the build's describe files that packaging renames or omits.
-  * `payloads-<version>.tar.gz` -- the sidecars, kept out of the release repository. Four
-    fifths of the artifact and mostly third-party model output, so they are their own
-    Zenodo record related with `isPartOf`.
-  * `SHA256SUMS`, beside the output rather than inside it: a checksum sealed inside the
-    thing it verifies proves nothing.
-
-Three things it refuses to do, each because the earlier version did them:
-
-  * Package inputs it has not verified. `manifest.output_sha256` was copied into
-    `packaging.json` as provenance without ever being compared against the bytes on disk,
-    so a changed, missing or extra file packaged successfully and the new checksums
-    authenticated whatever was there.
-  * Hand a partial build or one with blocking diagnostics to an operator with instructions
-    to commit, tag and deposit it. "Blocking" was a label, not a blocker.
-  * Delete or overwrite its own input. See `export_dataset/paths.py`.
+Packaging stops before writing anything when the inputs do not match
+``manifest.output_sha256``, when an output path would overwrite an input, or, unless
+``--development`` is given, when the build is partial or carries a blocking
+diagnostic.
 
     python -m scripts.package_dataset [--dataset dataset] [--out dist] [--development]
 """
@@ -77,7 +70,7 @@ def _gzip_to(source, target):
             shutil.copyfileobj(raw, gz)
 
 
-# --- F03: verify before packaging -------------------------------------------------
+# --- verification ----------------------------------------------------------------
 
 def verify_inputs(dataset, manifest):
     """Every file the build recorded is present and still hashes to what it recorded.
@@ -111,10 +104,10 @@ def verify_inputs(dataset, manifest):
     return problems
 
 
-# --- F04: a release blocker must block --------------------------------------------
+# --- release preflight -----------------------------------------------------------
 
 def release_preflight(dataset, manifest):
-    """Reasons this build must not be released. Empty means it may be."""
+    """Return the reasons this build must not be released. An empty list permits it."""
     blockers = []
     if manifest.get("partial"):
         blockers.append("the build is partial (%s); it covers a filtered subset of runs"
