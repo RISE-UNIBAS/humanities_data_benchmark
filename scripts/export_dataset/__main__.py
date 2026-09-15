@@ -106,6 +106,12 @@ def build(source=RESULTS_PATH, out=DATASET_PATH, date=None, benchmark=None, limi
     else:
         print("  none: collected_results/compare_detail/ is absent, so the dataset's "
               "field detail covers only the benchmarks that recorded it at run time")
+    rescored_diagnostics += rescored.coverage_diagnostics(
+        rescored_rows, extractor.runs,
+        set(s["run_id"] for s in extractor.scores if s.get("level") == "field"))
+    for row in rescored_diagnostics:
+        if row["issue"].startswith("rescored_detail_"):
+            print("  %s: %s" % (row["severity"], row["handling"]))
 
     print("Write tables ...")
     counts = {}

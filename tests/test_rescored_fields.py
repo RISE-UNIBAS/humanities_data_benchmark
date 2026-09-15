@@ -161,3 +161,69 @@ def test_the_table_is_separate_from_scores_long():
         "these are not dictionary-defined metrics; they are one scorer's per-field "
         "similarity as of a given commit")
     assert "reproduces_stored_score" in RESCORED_FIELDS.names
+
+
+# --- staleness: has the detail fallen behind the corpus? ----------------------------
+
+def _run(test_id, date, benchmark="library_cards"):
+    return {"run_id": "%s@%s" % (test_id, date), "date": date, "benchmark": benchmark}
+
+
+def _row(run_id, rescored_date="2026-09-14"):
+    return {"run_id": run_id, "rescored_date": rescored_date}
+
+
+def _issues(diagnostics):
+    return dict((d["issue"], d) for d in diagnostics)
+
+
+def test_a_run_newer_than_the_last_regeneration_blocks():
+    """The drift this exists to catch: results landed, the detail was not regenerated,
+    and every count in the README still adds up."""
+    diagnostics = rescored.coverage_diagnostics(
+        [_row("T0001@2026-01-01")],
+        [_run("T0001", "2026-01-01"), _run("T0002", "2026-09-20")],
+        stored_field_run_ids=set())
+    stale = _issues(diagnostics)["rescored_detail_stale"]
+    assert stale["severity"] == "blocking", "release preflight refuses on blocking"
+    assert "2026-09-20" in stale["handling"] and "generate_compare_detail" in stale["handling"]
+
+
+def test_a_run_the_generator_already_saw_is_only_a_warning():
+    """A failed run has no answer to score, and some scorers report no per-field
+    similarity. Uncovered and older than the regeneration is not staleness."""
+    diagnostics = rescored.coverage_diagnostics(
+        [_row("T0001@2026-01-01")],
+        [_run("T0001", "2026-01-01"), _run("T0002", "2026-08-01", "book_advert_xml")],
+        stored_field_run_ids=set())
+    issues = _issues(diagnostics)
+    assert "rescored_detail_stale" not in issues
+    assert issues["rescored_detail_incomplete"]["severity"] == "warning"
+    assert "book_advert_xml 1" in issues["rescored_detail_incomplete"]["handling"]
+
+
+def test_detail_recorded_at_run_time_counts_as_coverage():
+    """The two sources are complementary, so a run covered by either is covered."""
+    assert rescored.coverage_diagnostics(
+        [_row("T0001@2026-01-01")],
+        [_run("T0001", "2026-01-01"), _run("T0002", "2026-09-20")],
+        stored_field_run_ids={"T0002@2026-09-20"}) == []
+
+
+def test_an_absent_detail_tree_is_reported_without_blocking():
+    """A build without the frontend pipeline is legitimate; a silent one is not."""
+    diagnostics = rescored.coverage_diagnostics(
+        [], [_run("T0001", "2026-01-01")], stored_field_run_ids=set())
+    assert [d["issue"] for d in diagnostics] == ["rescored_detail_absent"]
+    assert diagnostics[0]["severity"] == "warning"
+
+
+def test_undated_detail_cannot_be_judged_and_says_so():
+    diagnostics = rescored.coverage_diagnostics(
+        [_row("T0001@2026-01-01", rescored_date=None)],
+        [_run("T0001", "2026-01-01"), _run("T0002", "2026-09-20")],
+        stored_field_run_ids=set())
+    issues = _issues(diagnostics)
+    assert "rescored_detail_undated" in issues
+    assert "rescored_detail_stale" not in issues, (
+        "without a generation date there is nothing to compare the run date against")

@@ -216,7 +216,7 @@ def test_f04_a_partial_build_is_not_releasable(tmp_path):
     d = _mini_dataset(tmp_path)
     manifest = json.loads((d / "manifest.json").read_text())
     manifest["partial"] = True
-    assert any("partial" in b for b in PD.release_preflight(d, manifest))
+    assert any("partial" in b for b in PD.release_preflight(d, manifest, reconcile=False))
 
 
 def test_f04_a_blocking_diagnostic_is_not_releasable(tmp_path):
@@ -227,7 +227,8 @@ def test_f04_a_blocking_diagnostic_is_not_releasable(tmp_path):
                     "severity": "blocking", "handling": "kept"}) + "\n",
         encoding="utf-8")
     manifest = json.loads((d / "manifest.json").read_text())
-    assert any("blocking diagnostic" in b for b in PD.release_preflight(d, manifest))
+    assert any("blocking diagnostic" in b
+               for b in PD.release_preflight(d, manifest, reconcile=False))
 
 
 def test_f04_unknown_git_provenance_is_not_releasable(tmp_path):
@@ -235,14 +236,15 @@ def test_f04_unknown_git_provenance_is_not_releasable(tmp_path):
     d = _mini_dataset(tmp_path)
     manifest = json.loads((d / "manifest.json").read_text())
     manifest["source_worktree_dirty"] = None
-    assert any("provenance is unknown" in b for b in PD.release_preflight(d, manifest))
+    assert any("provenance is unknown" in b
+               for b in PD.release_preflight(d, manifest, reconcile=False))
 
 
 def test_f04_a_clean_build_is_releasable(tmp_path):
     from scripts import package_dataset as PD
     d = _mini_dataset(tmp_path)
     manifest = json.loads((d / "manifest.json").read_text())
-    assert PD.release_preflight(d, manifest) == []
+    assert PD.release_preflight(d, manifest, reconcile=False) == []
 
 
 def test_f04_the_cli_exits_nonzero_and_gives_no_deposit_instruction(tmp_path, capsys):

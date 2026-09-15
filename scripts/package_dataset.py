@@ -15,8 +15,8 @@ from a finished ``dataset/``:
 
 Packaging stops before writing anything when the inputs do not match
 ``manifest.output_sha256``, when an output path would overwrite an input, or, unless
-``--development`` is given, when the build is partial or carries a blocking
-diagnostic.
+``--development`` is given, when the build is partial, carries a blocking diagnostic, or
+does not reconcile against the frontend export.
 
     python -m scripts.package_dataset [--dataset dataset] [--out dist] [--development]
 """
@@ -106,8 +106,13 @@ def verify_inputs(dataset, manifest):
 
 # --- release preflight -----------------------------------------------------------
 
-def release_preflight(dataset, manifest):
-    """Return the reasons this build must not be released. An empty list permits it."""
+def release_preflight(dataset, manifest, reconcile=True):
+    """Return the reasons this build must not be released. An empty list permits it.
+
+    Set reconcile to false to skip the crosscheck against the frontend export. A release
+    always reconciles; the parameter exists so that tests of the other blockers need not
+    construct a frontend export.
+    """
     blockers = []
     if manifest.get("partial"):
         blockers.append("the build is partial (%s); it covers a filtered subset of runs"
@@ -129,7 +134,47 @@ def release_preflight(dataset, manifest):
         if blocking:
             blockers.append("%d blocking diagnostic(s), first: %s"
                             % (len(blocking), blocking[0]))
+    if reconcile:
+        blockers.extend(_reconciliation_blockers(dataset))
     return blockers
+
+
+def _reconciliation_blockers(dataset):
+    """Return blockers from reconciling the dataset against the frontend export.
+
+    Both pipelines read the same corpus and the dataset embeds one of the frontend's
+    artifacts, so the two can disagree about a run's identity, visibility, recorded scores
+    or resolved prices. Reconciliation runs as part of the release decision rather than as
+    a separate command.
+
+    An absent frontend export is itself a blocker: it records that no reconciliation took
+    place, not that none was needed.
+    """
+    from scripts.export_dataset import crosscheck
+
+    if not crosscheck.FRONTEND_EXPORT.is_file():
+        return ["no frontend export at %s, so nothing reconciled this build; run "
+                "python -m scripts.ndr_export.generate_all"
+                % _relative_to_project(crosscheck.FRONTEND_EXPORT)]
+    try:
+        frontend = crosscheck.load_frontend()
+        runs, requests, scores = crosscheck.load_dataset(dataset)
+    except Exception as error:
+        return ["the crosscheck against the frontend export could not run (%s)" % error]
+
+    findings, shared = crosscheck.compare(runs, requests, scores, frontend)
+    if findings:
+        return ["%d crosscheck finding(s) over %d runs shared with the frontend export, "
+                "first: %s -- %s. Run python -m scripts.export_dataset.crosscheck for the "
+                "full report" % (len(findings), shared, findings[0]["check"],
+                                 findings[0]["detail"])]
+    print("  crosscheck: no unexpected differences over %d shared runs" % shared)
+    return []
+
+
+def _relative_to_project(path):
+    from scripts.export_dataset.inventory import relative_path
+    return relative_path(path)
 
 
 def build_release_tree(dataset, out, payload_archive=None):

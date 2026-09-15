@@ -24,6 +24,16 @@ import pytest
 from scripts import package_dataset as P
 
 
+@pytest.fixture(autouse=True)
+def reconciliation_tested_separately(monkeypatch):
+    """Preflight now reconciles against the frontend export, which is a real file in the
+    repository covering 2,371 runs. Every fixture here is a miniature dataset of two or
+    three rows, so a genuine reconciliation would report the whole corpus as missing and
+    say nothing about the mechanics these tests are for. The reconciliation itself is
+    tested below against a stubbed crosscheck."""
+    monkeypatch.setattr(P, "_reconciliation_blockers", lambda dataset: [])
+
+
 @pytest.fixture
 def built(tmp_path):
     """A miniature `dataset/`: one of each kind of file the packager must handle."""
@@ -166,3 +176,73 @@ def test_a_development_package_is_labelled_and_not_told_to_deposit(built, tmp_pa
 def test_a_missing_dataset_is_refused_with_a_usable_message(tmp_path):
     with pytest.raises(SystemExit, match="No built dataset"):
         P.main(["--dataset", str(tmp_path / "absent"), "--out", str(tmp_path / "dist")])
+
+
+# --- reconciliation is part of the release decision ---------------------------------
+
+REAL_RECONCILIATION = P._reconciliation_blockers
+"""Captured at import, before the autouse fixture stubs it out."""
+
+
+class _Crosscheck:
+    """Enough of `crosscheck` to exercise the preflight branch without a corpus."""
+
+    def __init__(self, exists=True, findings=(), raises=None):
+        self.FRONTEND_EXPORT = _Export(exists)
+        self._findings = list(findings)
+        self._raises = raises
+
+    def load_frontend(self):
+        if self._raises:
+            raise self._raises
+        return {}
+
+    def load_dataset(self, dataset_dir):
+        return [], [], []
+
+    def compare(self, runs, requests, scores, frontend):
+        return self._findings, 2371
+
+
+class _Export:
+    def __init__(self, exists):
+        self._exists = exists
+
+    def is_file(self):
+        return self._exists
+
+    def __str__(self):
+        return "collected_results/test_runs_export.json"
+
+    def __fspath__(self):
+        return str(self)
+
+
+def _blockers(monkeypatch, stub):
+    import scripts.export_dataset as pkg
+    monkeypatch.setattr(pkg, "crosscheck", stub, raising=False)
+    return REAL_RECONCILIATION("dataset")
+
+
+def test_an_unreconciled_build_is_not_releasable(monkeypatch):
+    """Absent is not clean. Nothing compared the two pipelines."""
+    blockers = _blockers(monkeypatch, _Crosscheck(exists=False))
+    assert len(blockers) == 1 and "nothing reconciled this build" in blockers[0]
+    assert "generate_all" in blockers[0], "say how to fix it"
+
+
+def test_a_crosscheck_finding_blocks_the_release(monkeypatch):
+    blockers = _blockers(monkeypatch, _Crosscheck(findings=[
+        {"check": "pricing", "detail": "T0001@2026-01-01: frontend resolved 2.0"}]))
+    assert len(blockers) == 1
+    assert "pricing" in blockers[0] and "T0001@2026-01-01" in blockers[0]
+
+
+def test_a_reconciled_build_carries_no_blocker(monkeypatch):
+    assert _blockers(monkeypatch, _Crosscheck()) == []
+
+
+def test_a_crosscheck_that_cannot_run_blocks_rather_than_crashes(monkeypatch):
+    blockers = _blockers(monkeypatch, _Crosscheck(raises=ValueError("truncated json")))
+    assert len(blockers) == 1 and "could not run" in blockers[0]
+    assert "truncated json" in blockers[0], "keep the reason"
