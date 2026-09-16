@@ -5,10 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased
+## v0.5.6-pre1 - Unreleased
 
 ### Changed
 - `README.md`: task-oriented sections, with the results dashboard up front, metrics rewritten around what each benchmark records, and reference material in collapsed blocks.
+- `CITATION.cff`: expanded keywords for Zenodo discovery.
 
 ## [v0.5.5] - 2026-09-14
 
