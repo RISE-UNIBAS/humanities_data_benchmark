@@ -31,7 +31,7 @@ def non_legacy_rows():
 
 # DeepSeek models the benchmark runs *for* their vision capability. Text-only
 # DeepSeek models are excluded: the client drops their images by design.
-DEEPSEEK_VISION_MODELS = {"deepseek-v4-flash-vision-exp"}
+DEEPSEEK_VISION_MODELS = {"deepseek-v4-flash-vision-exp", "deepseek-flash"}
 
 
 def test_deepseek_vision_models_pass_the_client_image_gate(non_legacy_rows):
@@ -40,9 +40,9 @@ def test_deepseek_vision_models_pass_the_client_image_gate(non_legacy_rows):
     ai_client.deepseek_client._VISION_MODEL_KEYWORDS gates image input on a
     substring of the model name. A model that fails the gate still runs: the
     images are dropped with a warning and the model is scored on the prompt
-    alone. Released 0.4.5 ships ("vl",), which excludes
-    deepseek-v4-flash-vision-exp, so that entry is a local patch to
-    site-packages and does not survive a venv rebuild -- see
+    alone. Released 0.4.5 ships ("vl",), which excludes both
+    deepseek-v4-flash-vision-exp and deepseek-flash, so those entries are a
+    local patch to site-packages and do not survive a venv rebuild -- see
     dev/DEPENDENCY_PATCHES.md. This asserts it is still in place.
     """
     from ai_client.deepseek_client import _VISION_MODEL_KEYWORDS

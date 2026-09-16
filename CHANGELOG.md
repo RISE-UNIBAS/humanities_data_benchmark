@@ -7,7 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## v0.5.6-pre1 - Unreleased
 
+### Added
+- 2 new models replacing retired ones: `deepseek-flash` (DeepSeek's V4.1-Flash, with vision) and `qwen/qwen3.8-max-0902` (OpenRouter), with 30 benchmark test configurations (T1765-T1794, 15 each).
+- Pricing data for 2026-09-16: 85 priced models across 12 providers, `contour_local` unpriced as before; `pricing.json` metadata bumped to version 1.49.
+
+### Fixed
+- `update_pricing.py`: reads every text block of the parser's reply, so a leading thinking block no longer raises `KeyError: 'text'` and blanks a provider's models.
+- `update_pricing.py`: Alibaba scraped from `model-studio/model-pricing`; the old page carries no prices.
+
 ### Changed
+- `legacy_test=true` for five models their providers no longer serve: `deepseek-chat`, `deepseek-reasoner`, `deepseek-v4-flash`, `deepseek-v4-flash-vision-exp` (DeepSeek now serves `deepseek-flash` and `deepseek-v4-pro` only) and `qwen/qwen3.8-max` (OpenRouter now lists `qwen/qwen3.8-max-0902`).
 - `README.md`: task-oriented sections, with the results dashboard up front, metrics rewritten around what each benchmark records, and reference material in collapsed blocks.
 - `CITATION.cff`: expanded keywords for Zenodo discovery.
 

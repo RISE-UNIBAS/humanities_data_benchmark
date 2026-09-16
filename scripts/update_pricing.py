@@ -84,6 +84,7 @@ class PricingUpdater:
     }
 
     DEEPSEEK_MODEL_URLS = {
+        'deepseek-flash':    'https://api-docs.deepseek.com/quick_start/pricing',
         'deepseek-chat':     'https://api-docs.deepseek.com/quick_start/pricing',
         'deepseek-reasoner': 'https://api-docs.deepseek.com/quick_start/pricing',
         'deepseek-v4-flash': 'https://api-docs.deepseek.com/quick_start/pricing',
@@ -114,7 +115,7 @@ class PricingUpdater:
         self._csv_models_cache: Optional[Dict[str, List[str]]] = None
 
         # LLM configuration for parsing pricing pages
-        self.parsing_model = "claude-sonnet-4-6"
+        self.parsing_model = "claude-opus-5"
         self.parsing_api_key = self._get_api_key()
 
     def _get_api_key(self) -> Optional[str]:
@@ -375,7 +376,7 @@ Return only JSON:"""
                     "messages": [
                         {"role": "user", "content": prompt}
                     ],
-                    "temperature": 0
+                    "temperature": 1
                 },
                 timeout=60
             )
@@ -386,7 +387,13 @@ Return only JSON:"""
 
             # Extract and parse response
             response_json = api_response.json()
-            content = response_json['content'][0]['text']
+            # A non-text block (e.g. thinking) can lead the list, so read every text
+            # block rather than assuming the first one carries the answer.
+            content = ''.join(block.get('text', '') for block in response_json['content']
+                              if block.get('type') == 'text')
+            if not content:
+                print("  ✗ LLM returned no text block")
+                return {}
 
             # Strip markdown code fences if present (e.g. ```json ... ```)
             content = content.strip()
@@ -652,19 +659,22 @@ Return only JSON:"""
             provider="deepseek",
             models=models,
             additional_instructions=(
-                "IMPORTANT: Use the standard (cache miss) input and output prices. "
-                "Ignore cache hit rates and batch rates."
+                "IMPORTANT: Use the peak (undiscounted) cache-miss input and output prices. "
+                "Ignore off-peak rates, cache hit rates and batch rates."
             )
         )
 
     def scrape_alibaba_pricing(self, models: Optional[List[str]] = None) -> Dict[str, Dict]:
         """Scrape Alibaba Model Studio pricing page"""
         return self._scrape_single_page(
-            url="https://www.alibabacloud.com/help/en/model-studio/getting-started/models",
+            url="https://www.alibabacloud.com/help/en/model-studio/model-pricing",
             provider="alibaba",
             models=models,
             additional_instructions=(
-                "IMPORTANT: Use the standard API input and output prices in USD per million tokens. "
+                "IMPORTANT: Use the International (Singapore) deployment prices in USD per "
+                "million tokens, at the smallest context tier, and the non-thinking output rate "
+                "where thinking and non-thinking differ. Ignore the Global, Hong Kong and EU "
+                "tables, and batch and caching discounts. "
                 "Model names in the pricing table may differ slightly from the requested names "
                 "(e.g. 'qwen3.5-plus' vs 'qwen3.5-plus-2026-02-15'). Match by prefix."
             )
@@ -949,13 +959,13 @@ Return only JSON:"""
     }
 
     ALIBABA_MODEL_URLS = {
-        'qwen3.5-plus': 'https://www.alibabacloud.com/help/en/model-studio/getting-started/models',
-        'qwen3.5-plus-2026-02-15': 'https://www.alibabacloud.com/help/en/model-studio/getting-started/models',
-        'qwen3.5-35b-a3b': 'https://www.alibabacloud.com/help/en/model-studio/getting-started/models',
-        'qwen3.5-27b': 'https://www.alibabacloud.com/help/en/model-studio/getting-started/models',
-        'qwen3.5-122b-a10b': 'https://www.alibabacloud.com/help/en/model-studio/getting-started/models',
-        'qwen3.5-397b-a17b': 'https://www.alibabacloud.com/help/en/model-studio/getting-started/models',
-        'qwen3.5-flash-2026-02-23': 'https://www.alibabacloud.com/help/en/model-studio/getting-started/models',
+        'qwen3.5-plus': 'https://www.alibabacloud.com/help/en/model-studio/model-pricing',
+        'qwen3.5-plus-2026-02-15': 'https://www.alibabacloud.com/help/en/model-studio/model-pricing',
+        'qwen3.5-35b-a3b': 'https://www.alibabacloud.com/help/en/model-studio/model-pricing',
+        'qwen3.5-27b': 'https://www.alibabacloud.com/help/en/model-studio/model-pricing',
+        'qwen3.5-122b-a10b': 'https://www.alibabacloud.com/help/en/model-studio/model-pricing',
+        'qwen3.5-397b-a17b': 'https://www.alibabacloud.com/help/en/model-studio/model-pricing',
+        'qwen3.5-flash-2026-02-23': 'https://www.alibabacloud.com/help/en/model-studio/model-pricing',
     }
 
     GENAI_MODEL_URLS = {
@@ -1098,6 +1108,64 @@ Return only JSON:"""
             pass
         return None
 
+    def _spn2_credentials(self):
+        """Return the archive.org S3 keys, or None when the account is not configured.
+
+        Anonymous Save Page Now is rate limited to the point of refusing everything
+        under load: on 2026-09-16 it answered HTTP 500 to 52 consecutive saves while
+        reads were fine. An account's keys (archive.org > Account Settings > S3 keys)
+        raise the quota and make saving deterministic.
+        """
+        access = os.environ.get('ARCHIVE_ACCESS_KEY')
+        secret = os.environ.get('ARCHIVE_SECRET_KEY')
+        return (access, secret) if access and secret else None
+
+    def _save_with_credentials(self, url: str, credentials) -> Optional[str]:
+        """Save url through the SPN2 API and wait for the capture to finish."""
+        access, secret = credentials
+        headers = {
+            'Accept': 'application/json',
+            'Authorization': f'LOW {access}:{secret}',
+            'User-Agent': self._get_browser_headers()['User-Agent'],
+        }
+        # Submission fails transiently often enough to be worth retrying: the host
+        # refuses connections outright under load rather than answering 429.
+        job, response = {}, None
+        for attempt in range(3):
+            try:
+                response = requests.post('https://web.archive.org/save',
+                                         headers=headers, data={'url': url}, timeout=60)
+                job = response.json() if response.status_code == 200 else {}
+                if job.get('job_id'):
+                    break
+            except Exception as e:
+                print(f"  SPN2 submit failed: {e}")
+            if attempt < 2:
+                time.sleep(15 * (attempt + 1))
+
+        job_id = job.get('job_id')
+        if not job_id:
+            detail = job.get('message') or (response.status_code if response else 'no response')
+            print(f"  SPN2 refused {url}: {detail}")
+            return None
+
+        # The capture runs asynchronously; poll until it reports a terminal status.
+        for _ in range(30):
+            time.sleep(5)
+            try:
+                status = requests.get(f'https://web.archive.org/save/status/{job_id}',
+                                      headers=headers, timeout=60).json()
+            except Exception:
+                continue
+            if status.get('status') == 'success':
+                return (f"https://web.archive.org/web/{status['timestamp']}/"
+                        f"{status.get('original_url', url)}")
+            if status.get('status') == 'error':
+                print(f"  SPN2 error for {url}: {status.get('message')}")
+                return None
+        print(f"  SPN2 capture of {url} did not finish in time")
+        return None
+
     def archive_url(self, url: str) -> Optional[str]:
         """Return an archive.org URL for url, using an existing snapshot or saving a new one"""
         if not SCRAPING_AVAILABLE:
@@ -1109,7 +1177,11 @@ Return only JSON:"""
             print(f"  Using today's snapshot: {today}")
             return today
 
-        # No recent snapshot — try to save a new one
+        credentials = self._spn2_credentials()
+        if credentials:
+            return self._save_with_credentials(url, credentials)
+
+        # No account configured — fall back to the anonymous endpoint
         save_url = f"https://web.archive.org/save/{url}"
         max_retries = 3
 

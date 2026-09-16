@@ -251,11 +251,12 @@ This benchmark suite currently tests models from the following providers:
 | | command-r-08-2024                         | Command R (Aug 2024)                                       |
 | | command-r-plus-08-2024                    | Command R+ (Aug 2024)                                      |
 | | command-r7b-12-2024                       | Command R 7B (Dec 2024)                                    |
-| **DeepSeek** | deepseek-chat                             | DeepSeek V3 (chat)                                         |
-| | deepseek-reasoner                         | DeepSeek R1; reasoning                                     |
-| | deepseek-v4-flash                         | DeepSeek V4 Flash                                          |
+| **DeepSeek** | ~~deepseek-chat~~                         | ~~DeepSeek V3 (chat)~~ (legacy)                            |
+| | ~~deepseek-reasoner~~                     | ~~DeepSeek R1; reasoning~~ (legacy)                        |
+| | ~~deepseek-v4-flash~~                     | ~~DeepSeek V4 Flash~~ (legacy)                             |
 | | deepseek-v4-pro                           | DeepSeek V4 Pro                                            |
-| | deepseek-v4-flash-vision-exp              | DeepSeek V4 Flash Vision (experimental); multimodal        |
+| | ~~deepseek-v4-flash-vision-exp~~          | ~~DeepSeek V4 Flash Vision (experimental); multimodal~~ (legacy) |
+| | deepseek-flash                            | DeepSeek V4.1 Flash; multimodal                            |
 | **Google/Gemini** | ~~gemini-1.5-flash~~                      | ~~Gemini 1.5 Flash~~ (legacy)                              |
 | | ~~gemini-1.5-pro~~                        | ~~Gemini 1.5 Pro~~ (legacy)                                |
 | | ~~gemini-2.0-flash~~                      | ~~Gemini 2.0 Flash~~ (legacy)                              |
@@ -324,7 +325,8 @@ This benchmark suite currently tests models from the following providers:
 | | qwen/qwen3-vl-30b-a3b-instruct            | Qwen3-VL, 30B MoE (3B active), instruction-tuned; multimodal |
 | | qwen/qwen3-vl-8b-instruct                 | Qwen3-VL 8B, instruction-tuned; multimodal                 |
 | | qwen/qwen3-vl-8b-thinking                 | Qwen3-VL 8B, reasoning; multimodal                         |
-| | qwen/qwen3.8-max                          | Qwen 3.8 Max; multimodal                                   |
+| | ~~qwen/qwen3.8-max~~                      | ~~Qwen 3.8 Max; multimodal~~ (legacy)                      |
+| | qwen/qwen3.8-max-0902                     | Qwen 3.8 Max (0902 build); multimodal                      |
 | | qwen/qwen3.8-flash                        | Qwen 3.8 Flash; multimodal                                 |
 | | qwen/qwen3.8-27b                          | Qwen 3.8, 27B dense; multimodal                            |
 | | qwen/qwen3.7-plus                         | Qwen 3.7 Plus                                              |
