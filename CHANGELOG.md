@@ -8,10 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Unreleased
 
 ### Changed
-- `README.md`: task-oriented sections, with the results dashboard up front and reference material in collapsed blocks.
-
-### Fixed
-- `README.md`: the `generate_date_report.py` example passed a path instead of `--date`, and the Hugging Face key and provider were missing.
+- `README.md`: task-oriented sections, with the results dashboard up front, metrics rewritten around what each benchmark records, and reference material in collapsed blocks.
 
 ## [v0.5.5] - 2026-09-14
 
@@ -316,3 +313,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [v0.5.2]: https://github.com/RISE-UNIBAS/humanities_data_benchmark/releases/tag/v0.5.2
 [v0.5.3]: https://github.com/RISE-UNIBAS/humanities_data_benchmark/releases/tag/v0.5.3
 [v0.5.4]: https://github.com/RISE-UNIBAS/humanities_data_benchmark/releases/tag/v0.5.4
+[v0.5.5]: https://github.com/RISE-UNIBAS/humanities_data_benchmark/releases/tag/v0.5.5

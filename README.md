@@ -14,7 +14,7 @@ against ground truths and recorded together with its cost and runtime.
 
 [Why benchmark?](#what-is-benchmarking-and-why-should-you-care) · [Results](#results) ·
 [Available benchmarks](#available-benchmarks) · [Quick start](#quick-start) ·
-[Methodology and limitations](#methodology-and-limitations) · [Contributing](#contributing) ·
+[Methodology](#methodology) · [Contributing](#contributing) ·
 [Citation and licensing](#citation-and-licensing) · [Contributors](#contributors)
 
 ## What is benchmarking and why should you care?
@@ -356,7 +356,7 @@ This benchmark suite currently tests models from the following providers:
 
 </details>
 
-## Methodology and limitations
+## Methodology
 
 ### How it works
 
@@ -370,39 +370,39 @@ The framework, datasets, and recorded results are included in this repository.
 Model outputs are compared with the ground truth for the same inputs. Consult each benchmark's documentation for its sources, annotation process, and scoring rules. Interpret results in light of the sample size, source selection, and task definition.
 
 ### Metrics
-Evaluation covers task performance, cost, and runtime:
+
+Each benchmark defines its own scoring function, so a metric name belongs to a benchmark rather than
+to the suite as a whole.
 
 #### Task performance
-These metrics evaluate how well the model performs the specific task. Examples include:
 
-- **F1 Score**: The harmonic mean of precision and recall, balancing both metrics
-- **Precision**: The ratio of correctly predicted positive observations to all predicted positives
-- **Recall**: The ratio of correctly predicted positive observations to all actual positives
-- **Character/Word Error Rate**: Used for evaluating text generation and transcription accuracy
+Before comparing or combining two scores, check three things about them.
+
+- **What kind of number it is.** A measurement, a count and a setting are not interchangeable.
+  `magazine_pages` records `mean_iou`, the overlap its matched boxes actually achieved, next to
+  `iou_threshold`, the overlap they were required to reach; averaging the two together means nothing.
+- **Which direction is better.** Character error rate is lower-is-better, while fuzzy similarity, F1,
+  precision and recall are higher-is-better. They cannot be pooled without inverting one of them.
+- **Whether it aggregates at all.** Counts sum; ratios do not. Where a benchmark records true and
+  false positives beside its F1, those counts are the sufficient statistic — `library_cards` rebuilds
+  micro precision, recall and F1 from summed counts, which averaging per-request F1 scores would not
+  give.
+
+The same name can also mean different things across benchmarks. `book_advert_xml` records `fuzzy` on
+a 0–100 scale, while every other benchmark reporting `fuzzy` uses 0–1. Rescaling alone does not make
+two tasks comparable.
 
 #### Cost and runtime
-These metrics evaluate factors beyond task performance that impact usability:
 
-- **Compute Cost**: Automatically tracked based on token usage and date-based pricing data (`scripts/data/pricing.json`). Each run includes cost breakdown and historical pricing via Wayback Machine snapshots.
-- **Cost per Performance Point**: Efficiency metric ($/performance point) calculated per test, averaged per benchmark, then globally. Uses multi-level normalization across test configurations and benchmark scales; interpretation depends on the metric and aggregation assumptions.
-- **Test Time**: Automatically tracked for each API call.
-- **Time per Performance Point**: Efficiency metric (seconds/point per item) using the same multi-level normalization as cost calculation.
+- **Compute cost** is estimated per run from recorded token counts and the pricing entry in force on
+  the run date (`scripts/data/pricing.json`), each entry archived as a Wayback Machine snapshot.
+- **Test time** is recorded for each API call.
+- **Cost and time per performance point** ($/point, seconds/point per item) are efficiency ratios,
+  normalised per test, then per benchmark, then globally. What they mean depends on the metric being
+  normalised and on the aggregation rules above.
 
-### Current limitations
-
-The benchmark suite currently has several limitations that could be addressed in future iterations:
-
-| Category | Limitation | Description |
-|----------|------------|-------------|
-| **Models** | Local/self-hosted models | Local backends exist for vision tasks (see the local backend reference under [Quick start](#quick-start)), but no locally run generative LLMs are covered yet |
-| **Capabilities** | Domain-specific fine-tuned models | Models specifically optimized for historical research not included |
-| | OCR-specialized models | Models with particular strength in document processing/OCR not included |
-| | Multilingual capabilities | Systematic testing across different languages not covered |
-| **Benchmark Coverage** | Limited benchmark diversity | Currently focused on document analysis; missing art history, archaeology, musicology domains |
-| | Language coverage | Primarily German and English; limited coverage of other European languages and non-Western scripts |
-| | Historical period coverage | Concentrated on 19th-20th century; limited medieval, early modern, or contemporary sources |
-| **Evaluation** | Context window testing | Evaluation across different context window sizes and document lengths not implemented |
-| | Standardized error analysis | More granular error categorization and failure mode analysis needed |
+A blank is not a zero. A missing cost, an unscored run or a failed request records the absence
+of a measurement, and counting it as zero moves any average that includes it.
 
 <details>
 <summary>Practical considerations</summary>
