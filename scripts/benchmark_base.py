@@ -11,12 +11,18 @@ from datetime import datetime
 from pathlib import Path
 from typing import Dict, List, Union, Pattern, Optional, Iterable, Set
 from data_loader import read_file, write_file
-from ai_client import create_ai_client, LLMResponse, Usage
+from ai_client import create_ai_client, LLMResponse, Usage, deepseek_client
 from ai_client.pricing import calculate_cost, set_pricing_file
 from local import is_local_provider, get_backend
 from local.backends.base import LocalRequest
 
 logger = logging.getLogger(__name__)
+
+# TODO: hotfix, to be fixed in generic-llm-api-client
+# 0.4.6 ships ("vl", "vision"), which misses deepseek-flash.
+DEEPSEEK_VISION_MODEL_KEYWORDS = ("deepseek-flash",)
+deepseek_client._VISION_MODEL_KEYWORDS = tuple(dict.fromkeys(
+    deepseek_client._VISION_MODEL_KEYWORDS + DEEPSEEK_VISION_MODEL_KEYWORDS))
 
 _PRICING_FILE = Path(__file__).parent / "data" / "pricing.json"
 if _PRICING_FILE.exists():
