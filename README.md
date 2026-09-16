@@ -12,12 +12,12 @@ against ground truths and recorded together with its cost and runtime.
 
 **[Explore the results dashboard](https://rise-services.rise.unibas.ch/benchmarks/)**
 
-[Why benchmark?](#what-is-benchmarking-and-why-should-you-care) · [Results](#results) ·
+[Why benchmark?](#why-benchmark) · [Results](#results) ·
 [Available benchmarks](#available-benchmarks) · [Quick start](#quick-start) ·
 [Methodology](#methodology) · [Contributing](#contributing) ·
 [Citation and licensing](#citation-and-licensing) · [Contributors](#contributors)
 
-## What is benchmarking and why should you care?
+## Why benchmark?
 
 Benchmarking is the process of systematically evaluating and ranking various models for specific tasks using
 well-defined ground truths and metrics. For humanities research, benchmarking provides:
