@@ -289,9 +289,10 @@ is corrected. Supplementary evaluations carry the provenance described in
 
 `cost_provenance` records whether a cost was derived or why it is unavailable. If only
 one token count is available, the corresponding cost component is retained and the total
-remains null. Missing prices are also represented as null. Some source pricing entries
-contain erroneous zeros; a derived cost of `0.0` does not establish that a model was free
-to use. Review the recorded input and output prices before interpreting zero costs.
+remains null. Missing prices are also represented as null, which a derived cost of
+`0.0` is not: a zero is a recorded price of zero. Some models carry no per-token charge,
+whether because they run on institutional hardware or because the provider serves them
+free within rate limits. Distinguish the two before excluding zero-cost records.
 
 Cost aggregates are **observed subtotals over saved requests**, not a complete record of
 expenditure. The runner does not save a request when no answer is returned, and a same-day
