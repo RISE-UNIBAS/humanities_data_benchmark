@@ -32,7 +32,83 @@ else:
                    "table, which may not price newer models at all.", _PRICING_FILE)
 
 
-DEFAULT_MAX_OUTPUT_TOKENS = 32768
+# TODO: hotfix, to be fixed in generic-llm-api-client
+def _send_cap_as_max_completion_tokens(client):
+    """Rename max_tokens to max_completion_tokens on OpenAI's chat endpoints.
+
+    gpt-5 and newer 400 on max_tokens; ai_client 0.4.6 hard-codes the name. See
+    dev/DEPENDENCY_PATCHES.md section 8.
+    """
+    api_client = getattr(client, "api_client", None)
+    if api_client is None:
+        return
+    endpoints = []
+    for attribute in ("chat", "beta"):
+        section = getattr(api_client, attribute, None)
+        completions = getattr(getattr(section, "chat", section), "completions", None)
+        if completions is not None:
+            endpoints.append(completions)
+
+    for endpoint in endpoints:
+        for method_name in ("create", "parse"):
+            original = getattr(endpoint, method_name, None)
+            if original is None or getattr(original, "_renames_token_cap", False):
+                continue
+
+            def renaming(*args, _original=original, **kwargs):
+                if "max_tokens" in kwargs:
+                    kwargs["max_completion_tokens"] = kwargs.pop("max_tokens")
+                return _original(*args, **kwargs)
+
+            renaming._renames_token_cap = True
+            try:
+                setattr(endpoint, method_name, renaming)
+            except AttributeError:
+                logger.warning("Could not rename max_tokens on %s.%s; gpt-5 class models "
+                               "will fail with 400 Unsupported parameter",
+                               type(endpoint).__name__, method_name)
+
+
+DEFAULT_MAX_OUTPUT_TOKENS = 16384
+"""Output ceiling when nothing else asks for more; caps the cost of a repetition loop."""
+
+MODEL_LONG_OUTPUT = {
+    # Raises the default for models whose long answers finish `stop` and score.
+    "deepseek-flash": 32768,
+}
+
+# Per-model ceiling, clamping whatever cap the default, MODEL_LONG_OUTPUT or the rules produce.
+# Above it a provider refuses the request outright. Listed only where it binds.
+MODEL_MAX_OUTPUT_TOKENS = {
+    "gpt-4o": 16384,
+    "gpt-4o-mini": 16384,
+    "gpt-4.1": 32768,
+    "gpt-4.1-mini": 32768,
+    "gpt-4.1-nano": 32768,
+    # publicai counts the cap against its capacity budget; largest answer on record is 3,560.
+    "swiss-ai/Apertus-v1.5-70B:publicai": 4096,
+    "swiss-ai/Apertus-v1.5-8B:publicai": 4096,
+    # Cohere: 400 TOO_MANY_TOKENS above these.
+    "command-r-08-2024": 4096,
+    "command-r-plus-08-2024": 4096,
+    "command-r7b-12-2024": 4096,
+    "command-a-03-2025": 8192,
+    "command-a-vision-07-2025": 8192,
+    # Anthropic: 400 above 64,000 on these three; later Claude models allow 128,000.
+    "claude-haiku-4-5-20251001": 64000,
+    "claude-opus-4-5-20251101": 64000,
+    "claude-sonnet-4-5-20250929": 64000,
+    # Loop to whatever cap they get, so they stay clamped when a benchmark raises it.
+    "qwen/qwen3.5-9b": 16384,
+    "qwen/qwen3.5-27b": 16384,
+    "qwen/qwen3.5-35b-a3b": 16384,
+    "qwen/qwen3.5-122b-a10b": 16384,
+    "qwen/qwen3.5-397b-a17b": 16384,
+    "qwen/qwen3.5-flash-02-23": 16384,
+    "qwen/qwen3.5-plus-02-15": 16384,
+    "meta/muse-spark-1.2": 16384,
+    "meta/muse-spark-1.3": 16384,
+}
 
 # Provider errors that no amount of retrying will fix. Matched against the message
 # stored in LLMResponse.raw_response['error'] by the client's error path.
@@ -56,6 +132,8 @@ class Benchmark(ABC):
     multi_text_support = False
     use_shared_context = False  # Enable multi-stage requests with shared context (conversation-based)
     cache_context_per_request = False  # Enable per-request caching of context files/images
+    # Score an unparseable answer as a miss instead of dropping it from the denominator.
+    score_unparseable_as_miss = False
     max_output_tokens = DEFAULT_MAX_OUTPUT_TOKENS  # Per-request output ceiling; raise per benchmark if needed
 
     def __init__(self, config, api_key, benchmark_directory):
@@ -69,7 +147,9 @@ class Benchmark(ABC):
         self.api_key = api_key                              # API key for the provider
         self.role_description = config.get('role_description')  # Role description for the system prompt
         self.prompt_file = config['prompt_file']            # Prompt file name
-        self.date = datetime.now().strftime('%Y-%m-%d')     # Date of the benchmark run
+        # Results folder to read and write; BENCHMARK_RUN_DATE pins it across midnight.
+        self.date = os.environ.get('BENCHMARK_RUN_DATE') \
+            or datetime.now().strftime('%Y-%m-%d')
         try:                                                # Temperature setting for the model
             self.temperature = float(config.get('temperature', 0.5))
         except (ValueError, TypeError):
@@ -112,16 +192,24 @@ class Benchmark(ABC):
             if self.rules and "api_style" in self.rules and self.rules["api_style"]:
                 kwargs["api_style"] = self.rules["api_style"]
             base_url = self.rules.get("base_url") if self.rules else None
-            # Bound the output of every request. Without this the provider default applies,
-            # which for reasoning models is the full context window: a single runaway
-            # generation cost ~$0.34 and 9 minutes before this cap existed.
+            # Without a cap the provider default applies: for reasoning models, the whole
+            # context window. A rules override or the benchmark's own value takes precedence.
             cap = (self.rules or {}).get("max_tokens") or self.max_output_tokens
+            if cap == DEFAULT_MAX_OUTPUT_TOKENS and self.model in MODEL_LONG_OUTPUT:
+                cap = MODEL_LONG_OUTPUT[self.model]
+            ceiling = MODEL_MAX_OUTPUT_TOKENS.get(self.model)
+            if ceiling is not None and cap > ceiling:
+                logger.info("Clamping the output cap for %s from %d to its ceiling of %d",
+                            self.model, cap, ceiling)
+                cap = ceiling
             kwargs["max_output_tokens" if self.provider == "genai" else "max_tokens"] = cap
             self.client = create_ai_client(self.provider,
                                            self.api_key,
                                            system_prompt=self.role_description,
                                            base_url=base_url,
                                            **kwargs)
+            if self.provider == "openai":
+                _send_cap_as_max_completion_tokens(self.client)
 
         # Shared context support (for multi-stage requests)
         self.conversation_id = None  # Track conversation for subsequent requests
@@ -621,8 +709,7 @@ class Benchmark(ABC):
             logging.info(f"{prefix} Processing {self.id}, {object_basename}...")
             answer = self.ask_llm(object_basename)
             if self._is_fatal_provider_error(answer):
-                # Deliberately not saved: an error file counts as a finished object in
-                # should_process above, so saving it would make a later resume skip it.
+                # Not saved: an error file would count as finished and be skipped on resume.
                 logging.critical(f"{prefix} Fatal provider error for {self.id}, aborting run: "
                                  f"{(answer.raw_response or {}).get('error', '')}")
                 self._abort.set()
@@ -630,7 +717,7 @@ class Benchmark(ABC):
             if answer is None:
                 logging.error(f"{prefix} LLM returned None for {self.id}, {object_basename}")
                 score = None
-            elif self.dataclass and answer.parsed is None:
+            elif self.dataclass and answer.parsed is None and not self.score_unparseable_as_miss:
                 logging.error(f"{prefix} No parseable JSON for {self.id}, {object_basename} "
                               f"(truncated, empty or non-JSON completion); scoring skipped")
                 score = None

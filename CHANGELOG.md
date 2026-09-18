@@ -8,15 +8,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## v0.5.6-pre1 - Unreleased
 
 ### Added
+- `scripts/analyse_reasoning_gap.py`: reports reasoning tokens billed but absent from `output_tokens`, priced at the run date's rate via the export's `resolve_pricing`. Read-only.
 - 2 new models replacing retired ones: `deepseek-flash` (DeepSeek's V4.1-Flash, with vision) and `qwen/qwen3.8-max-0902` (OpenRouter), with 30 benchmark test configurations (T1765-T1794, 15 each).
-- Pricing data for 2026-09-16: 85 priced models across 12 providers, `contour_local` unpriced as before; `pricing.json` metadata bumped to version 1.49.
+- Pricing data for 2026-09-16: 85 priced models across 12 providers, `contour_local` unpriced as before, and for 2026-09-18 (`qwen/qwen3.8-27b` down to $0.214/$2.55 from $0.42/$3.00); `pricing.json` metadata bumped to version 1.50.
 
 ### Fixed
+- `library_cards`: `Publication.year` is optional and accepts a numeric year, coerced to string.
+- `company_lists`: `Entry.location` is optional.
+- `business_letters`: null and blank entries are dropped from the `Metadata` lists; the keys stay required.
+- `magazine_pages`: new `prompt_explicit-json.txt` prompt variant stating the JSON format and the `box` key. An unparseable answer scores as a miss instead of being skipped, via the new `score_unparseable_as_miss` opt-in.
+- `publicai` Apertus output ceiling lowered to 4,096.
+- `benchmark_base.py`: output ceilings for `claude-haiku-4-5`, `claude-opus-4-5` and `claude-sonnet-4-5` (64,000).
 - `update_pricing.py`: reads every text block of the parser's reply, so a leading thinking block no longer raises `KeyError: 'text'` and blanks a provider's models.
-- `update_pricing.py`: Alibaba scraped from `model-studio/model-pricing`; the old page carries no prices.
+- `update_pricing.py`: Alibaba scraped from `model-studio/model-pricing`.
 
 ### Changed
-- `legacy_test=true` for five models their providers no longer serve: `deepseek-chat`, `deepseek-reasoner`, `deepseek-v4-flash`, `deepseek-v4-flash-vision-exp` (DeepSeek now serves `deepseek-flash` and `deepseek-v4-pro` only) and `qwen/qwen3.8-max` (OpenRouter now lists `qwen/qwen3.8-max-0902`).
+- `DEFAULT_MAX_OUTPUT_TOKENS` lowered from 32,768 to 16,384.
+- `deepseek-flash` keeps 32,768 via the new `MODEL_LONG_OUTPUT`.
+- Output ceiling of 16,384 for the seven `qwen/qwen3.5-*` and both `meta/muse-spark` models, which binds when a benchmark raises its own cap.
+- `legacy_test=true` for six models their providers no longer serve: `deepseek-chat`, `deepseek-reasoner`, `deepseek-v4-flash`, `deepseek-v4-flash-vision-exp` (DeepSeek now serves `deepseek-flash` and `deepseek-v4-pro` only), `qwen/qwen3.8-max` (OpenRouter now lists `qwen/qwen3.8-max-0902`) and `claude-opus-4-1-20250805` (Anthropic).
 - `README.md`: task-oriented sections, with the results dashboard up front, metrics rewritten around what each benchmark records, and reference material in collapsed blocks.
 - `CITATION.cff`: expanded keywords for Zenodo discovery.
 
@@ -28,7 +38,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Tests on 2026-08-18: T1585-T1644 (60 tests) for the 4 new models across all benchmarks — gemini-3.7-flash (T1585-T1599) (GenAI), grok-4.6 (T1600-T1614) (x-ai), meta/muse-spark-1.2 (T1615-T1629) and z-ai/glm-5v-turbo (T1630-T1644) (OpenRouter)
 - Tests on 2026-09-03: T1645-T1659 (15 tests) for gemini-3.8-flash (GenAI) across all benchmarks
 - Tests on 2026-09-04: T1660-T1674 (15 tests) for gpt-6-astra (OpenAI) across all benchmarks
-- Tests on 2026-09-08: T1690-T1739 and T1750-T1764 (50 tests) — meta/muse-spark-1.3 (T1690-T1704), z-ai/glm-5.3-flash (T1705-T1719), qwen/qwen3.8-flash (T1720-T1734) (OpenRouter), deepseek-v4-flash-vision-exp (T1750-T1764) (DeepSeek) across all benchmarks, and qwen/qwen3.8-27b on 5 of 15 (T1735-T1739) (OpenRouter)
+- Tests on 2026-09-08: T1690-T1739 and T1750-T1764 (65 tests) — meta/muse-spark-1.3 (T1690-T1704), z-ai/glm-5.3-flash (T1705-T1719), qwen/qwen3.8-flash (T1720-T1734) (OpenRouter), deepseek-v4-flash-vision-exp (T1750-T1764) (DeepSeek) across all benchmarks, and qwen/qwen3.8-27b on 5 of 15 (T1735-T1739) (OpenRouter)
 - Tests on 2026-09-09: T1740-T1749 (10 tests) completing qwen/qwen3.8-27b (OpenRouter).
 - `tests/integrity/test_client_capability_integrity.py`: fails when the installed `ai_client` would silently drop images from a DeepSeek vision model; `dev/DEPENDENCY_PATCHES.md` records the patch to re-apply after a venv rebuild.
 - `FatalProviderError`: a 402, 401 or 403 now aborts the run instead of being retried per object for every remaining test.
