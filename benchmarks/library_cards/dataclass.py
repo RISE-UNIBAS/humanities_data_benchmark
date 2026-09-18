@@ -1,6 +1,6 @@
 from __future__ import annotations
 from typing import List, Optional, Literal, Any
-from pydantic import BaseModel
+from pydantic import BaseModel, field_validator
 
 
 class WorkType(BaseModel):
@@ -36,12 +36,24 @@ class Publication(BaseModel):
         editor: Editor name if applicable
     """
     title: str
-    year: str
+    year: Optional[str] = None
     place: Optional[str] = None
     pages: Optional[str] = None
     publisher: Optional[str] = None
     format: Optional[str] = None
     editor: Optional[str] = None
+
+    @field_validator("year", mode="before")
+    @classmethod
+    def _year_as_string(cls, value):
+        """Accept a year the model sent as a number and keep it a string.
+
+        Coerced rather than annotated `str | int` because ground truths hold years as strings, so
+        a stored int would compare unequal.
+        """
+        if isinstance(value, (int, float)):
+            return str(int(value))
+        return value
 
 
 class LibraryReference(BaseModel):

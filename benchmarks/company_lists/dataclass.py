@@ -5,7 +5,7 @@ from pydantic import BaseModel
 class Entry(BaseModel):
     entry_id: str
     company_name: str
-    location: str
+    location: Optional[str] = None
 
 class ListPage(BaseModel):
     page_id: str
