@@ -233,7 +233,7 @@ This benchmark suite currently tests models from the following providers:
 | | ~~claude-3-opus-20240229~~                | ~~Claude 3 Opus~~ (legacy)                                 |
 | | ~~claude-3-5-haiku-20241022~~             | ~~Claude 3.5 Haiku~~ (legacy)                              |
 | | claude-haiku-4-5-20251001                 | Claude Haiku 4.5                                           |
-| | claude-opus-4-1-20250805                  | Claude Opus 4.1                                            |
+| | ~~claude-opus-4-1-20250805~~              | ~~Claude Opus 4.1~~ (legacy)                               |
 | | ~~claude-opus-4-20250514~~                | ~~Claude Opus 4~~ (legacy)                                 |
 | | claude-opus-4-5-20251101                  | Claude Opus 4.5                                            |
 | | ~~claude-sonnet-4-20250514~~              | ~~Claude Sonnet 4~~ (legacy)                               |
