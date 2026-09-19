@@ -30,6 +30,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `README.md`: task-oriented sections, with the results dashboard up front, metrics rewritten around what each benchmark records, and reference material in collapsed blocks.
 - `CITATION.cff`: expanded keywords for Zenodo discovery.
 
+### Removed
+- 4 `magazine_pages` tests configured on text-only cohere models (T0798-T0801: `command-r-08-2024`, `command-r-plus-08-2024`, `command-r7b-12-2024`, `command-a-03-2025`); none could ever produce a result. `command-a-vision-07-2025` (T0802) is unaffected.
+
 ## [v0.5.5] - 2026-09-14
 
 ### Added
