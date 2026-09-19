@@ -1,0 +1,83 @@
+{
+    "text": "{\"metadata\":{\"send_date\":[\"1928-03-01\"],\"letter_title\":null,\"sender_persons\":[\"Basler Rheinschiffahrt-Aktiengesellschaft\"],\"receiver_persons\":[\"Basler Personenschiffahrtsgesellschaft\"]}}",
+    "model": "thinkingmachines/Inkling",
+    "provider": "huggingface",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 4180,
+        "output_tokens": 1394,
+        "total_tokens": 5574
+    },
+    "duration": 28.175340175628662,
+    "timestamp": "2026-09-17T11:37:21.272976",
+    "parsed": {
+        "metadata": {
+            "send_date": [
+                "1928-03-01"
+            ],
+            "letter_title": null,
+            "sender_persons": [
+                "Basler Rheinschiffahrt-Aktiengesellschaft"
+            ],
+            "receiver_persons": [
+                "Basler Personenschiffahrtsgesellschaft"
+            ]
+        }
+    },
+    "conversation_id": "17abd557-6c66-45c0-8d13-4394812a3ee9",
+    "score": {
+        "send_date_tp": 1,
+        "send_date_fp": 0,
+        "send_date_fn": 0,
+        "sender_persons_tp": 0,
+        "sender_persons_fp": 1,
+        "sender_persons_fn": 2,
+        "receiver_persons_tp": 0,
+        "receiver_persons_fp": 1,
+        "receiver_persons_fn": 0,
+        "field_scores": {
+            "send_date": {
+                "response": [
+                    "1928-03-01"
+                ],
+                "ground_truth": [
+                    "1928-03-01"
+                ],
+                "score": null,
+                "counts": {
+                    "send_date_tp": 1,
+                    "send_date_fp": 0,
+                    "send_date_fn": 0
+                }
+            },
+            "sender_persons": {
+                "response": [
+                    "Basler Rheinschiffahrt-Aktiengesellschaft"
+                ],
+                "ground_truth": [
+                    "Groschupf-Jaeger, Louis",
+                    "Speich, Rudolf"
+                ],
+                "score": null,
+                "counts": {
+                    "sender_persons_tp": 0,
+                    "sender_persons_fp": 1,
+                    "sender_persons_fn": 2
+                }
+            },
+            "receiver_persons": {
+                "response": [
+                    "Basler Personenschiffahrtsgesellschaft"
+                ],
+                "ground_truth": [],
+                "score": null,
+                "counts": {
+                    "receiver_persons_tp": 0,
+                    "receiver_persons_fp": 1,
+                    "receiver_persons_fn": 0
+                }
+            }
+        }
+    },
+    "raw_response": "{\"id\":\"p1dAaxY-6z2FuN-a3c7210ebb900a52\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\n  \\\"metadata\\\": {\\n    \\\"send_date\\\": [\\\"1928-03-01\\\"],\\n    \\\"letter_title\\\": null,\\n    \\\"sender_persons\\\": [\\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"],\\n    \\\"receiver_persons\\\": [\\\"Basler Personenschiffahrtsgesellschaft\\\"]\\n  }\\n}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"metadata\":{\"send_date\":[\"1928-03-01\"],\"letter_title\":null,\"sender_persons\":[\"Basler Rheinschiffahrt-Aktiengesellschaft\"],\"receiver_persons\":[\"Basler Personenschiffahrtsgesellschaft\"]}},\"reasoning\":\"We need parse letter images. Need extract letter_title, sender_persons, send_date, receiver_persons. Let's analyze image content.\\n\\nImage 1: Header \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\" with address. Date top right: \\\"Basel, den 1. M\u00e4rz 1928.\\\" Then address block right: \\\"Basler Personenschiffahrtsgesellschaft, Basel.\\\" Then reference \\\"Betrifft Ihr Schreiben vom 27. Februar.\\\" Then body. So sender is Basler Rheinschiffahrt-Aktiengesellschaft? Or specific persons? At bottom of image 2 there is signature block: \\\"BASLER RHEINSCHIFFAHRT-AKTIENGESELLSCHAFT\\\" with signatures, maybe \\\"Ulrich\\\" and \\\"Gubring\\\"? But sender_persons likely the company? The prompt asks \\\"Name(s) of the person(s) who wrote the letter.\\\" Could be company name? But \\\"persons\\\" implies individuals. However in example they used \\\"Lisa Simpson\\\". Here signatures are present but hard to read exactly. Let's examine image 2 bottom right: printed \\\"BASLER RHEINSCHIFFAHRT-AKTIENGESELLSCHAFT\\\" then two handwritten signatures. One looks like \\\"Ulrich\\\" maybe \\\"Ulrich\\\"? The other \\\"Gubring\\\"? Or \\\"Gubser\\\"? Let's not over-specify if unclear? But need extract values. Let's determine receiver: \\\"Basler Personenschiffahrtsgesellschaft, Basel.\\\" So receiver_persons maybe that organization, but again \\\"persons\\\". We'll list the entity.\\n\\nLetter title? Maybe none explicit, but there is subject line \\\"Betrifft Ihr Schreiben vom 27. Februar.\\\" Not a title. Could set null? Or maybe \\\"Betrifft Ihr Schreiben vom 27. Februar\\\" is not title. The key \\\"letter_title\\\" might be absent, so null.\\n\\nSend date: 1928-03-01.\\n\\nSender persons: The letter is from Basler Rheinschiffahrt-Aktiengesellschaft, signed perhaps by representatives. But since signatures are present, maybe list the company? Let's think about instructions: \\\"sender_persons: Name(s) of the person(s) who wrote the letter.\\\" In formal letters, the sender is the organization, but signatures are individuals. Given image 2 signatures are somewhat legible: first signature maybe \\\"A. Ulrich\\\"? Actually printed name might be absent. Let's examine mental image: There is handwritten \\\"Ulrich\\\" and then another \\\"Gubring\\\"? Hmm.\\n\\nBut also on image 1 left top there is \\\"G/M\\\" maybe not relevant.\\n\\nWe need return JSON only.\\n\\nLet's decide:\\nletter_title: null? Or maybe \\\"Betrifft Ihr Schreiben vom 27. Februar\\\" could be considered subject/title? Usually not title. We'll put null.\\n\\nsend_date: [\\\"1928-03-01\\\"]\\n\\nsender_persons: [\\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"]? Or signatures? Given they ask \\\"person(s)\\\" but in historical letters often organization sends. However the header lists company as sender. The signature block confirms company. I think include company name. But maybe also signatories? Let's include company as sender, since that's clear. Or maybe both? Let's provide [\\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"].\\n\\nreceiver_persons: [\\\"Basler Personenschiffahrtsgesellschaft\\\"]\\n\\nBut wait in image 1 right address: \\\"Basler Personenschiffahrtsgesellschaft, Basel.\\\" Yes.\\n\\nThus JSON:\\n{\\n\\\"letter_title\\\": [null? No, value should be stored as list, even if null? The instruction: \\\"If a piece of information is not included in the letter, set the value for the corresponding key to 'null'.\\\" So \\\"letter_title\\\": [\\\"null\\\"]? Actually they said set the value for the corresponding key to \\\"null\\\". In example values are lists. So likely \\\"letter_title\\\": null? But they said values corresponding to each key should be stored as a list, even if there is only a single value. So probably \\\"letter_title\\\": [null]? That seems odd. Usually you'd do \\\"letter_title\\\": null if missing, but they said store as list. Let's check example: all values are lists of strings. For missing, maybe [\\\"null\\\"]? No, they said set the value ... to \\\"null\\\". That could mean the list contains the string \\\"null\\\"? Or the JSON value is null? Given consistency, maybe \\\"letter_title\\\": null is okay despite list rule? But they explicitly said \\\"where the values corresponding to each key should be stored as a list, even if there is only a single value for a key\\\". So value should be a list. If information missing, set value to \\\"null\\\" - likely meaning the list is [null]? Or maybe they allow null not in list. Let's examine typical prompts: They often want {\\\"key\\\": [value]} and if missing {\\\"key\\\": null}. But they said \\\"stored as a list, even if there is only a single value\\\". That applies when present. For missing, \\\"set the value ... to 'null'\\\" - likely means JSON null, not inside list. But to be safe? Let's see other similar extraction prompts. Usually they want:\\n{\\n\\\"letter_title\\\": [...],\\n...\\n}\\nIf missing: \\\"letter_title\\\": null.\\nBut they said values should be stored as a list. Hmm conflict. I think it's acceptable to have null not in list for missing. Let's do \\\"letter_title\\\": null.\\n\\nBut wait there might be a title: The document is a letter with subject \\\"Betrifft Ihr Schreiben vom 27. Februar.\\\" Not a title. So null.\\n\\nLet's refine sender_persons: Could be individuals signing. Let's try to read signatures in image 2: One is \\\"Ulrich\\\" with first initial maybe \\\"J.\\\"? The other might be \\\"Gubser\\\"? Actually printed below signatures? No printed names except company. Given ambiguity, using company is safer.\\n\\nBut also in image 1 there is \\\"G/M\\\" on left, maybe initials of sender? Not clear.\\n\\nThus final:\\n{\\n\\\"letter_title\\\": null,\\n\\\"send_date\\\": [\\\"1928-03-01\\\"],\\n\\\"sender_persons\\\": [\\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"],\\n\\\"receiver_persons\\\": [\\\"Basler Personenschiffahrtsgesellschaft\\\"]\\n}\\n\\nCheck date format ISO: 1928-03-01 correct.\\n\\nNeed only JSON.\"},\"seed\":null}],\"created\":1789637814,\"model\":\"thinkingmachines/Inkling\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":\"default\",\"usage\":{\"completion_tokens\":1394,\"prompt_tokens\":4180,\"total_tokens\":5574,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":null,\"reasoning_tokens\":1324,\"rejected_prediction_tokens\":null},\"prompt_tokens_details\":{\"audio_tokens\":null,\"cached_tokens\":0}},\"prompt\":[]}"
+}

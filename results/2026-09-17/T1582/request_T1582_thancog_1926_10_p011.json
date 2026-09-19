@@ -1,0 +1,88 @@
+{
+    "text": "{\"advertisements\":[{\"box\":[70.0,630.0,2400.0,740.0]},{\"box\":[70.0,750.0,2400.0,850.0]}]}",
+    "model": "meta-models/Muse-Glimmer-30B",
+    "provider": "huggingface",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 3916,
+        "output_tokens": 923,
+        "total_tokens": 4839,
+        "cached_tokens": 48
+    },
+    "duration": 33.73749923706055,
+    "timestamp": "2026-09-18T21:39:34.512473",
+    "parsed": {
+        "advertisements": [
+            {
+                "box": [
+                    70.0,
+                    630.0,
+                    2400.0,
+                    740.0
+                ]
+            },
+            {
+                "box": [
+                    70.0,
+                    750.0,
+                    2400.0,
+                    850.0
+                ]
+            }
+        ]
+    },
+    "conversation_id": "0af6c325-5515-43b1-8d57-b483dfd56080",
+    "score": {
+        "field_scores": {
+            "box 0": {
+                "response": null,
+                "ground_truth": [
+                    175,
+                    2602,
+                    2149,
+                    2988
+                ],
+                "score": 0.0
+            },
+            "box 1": {
+                "response": null,
+                "ground_truth": [
+                    175,
+                    2216,
+                    2151,
+                    2600
+                ],
+                "score": 0.0
+            },
+            "unmatched prediction 0": {
+                "response": [
+                    70.0,
+                    630.0,
+                    2400.0,
+                    740.0
+                ],
+                "ground_truth": null,
+                "score": 0.0
+            },
+            "unmatched prediction 1": {
+                "response": [
+                    70.0,
+                    750.0,
+                    2400.0,
+                    850.0
+                ],
+                "ground_truth": null,
+                "score": 0.0
+            }
+        },
+        "f1": 0.0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "mean_iou": 0.0,
+        "true_positives": 0,
+        "false_positives": 2,
+        "false_negatives": 2,
+        "iou_threshold": 0.5
+    },
+    "raw_response": "{\"id\":\"p1ozaDT-7ArivV-a3d2d07569a26cc7\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\\"advertisements\\\": [\\n  {\\n    \\\"box\\\": [70, 630, 2400, 740]\\n  },\\n  {\\n    \\\"box\\\": [70, 750, 2400, 850]\\n  }\\n]}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"advertisements\":[{\"box\":[70.0,630.0,2400.0,740.0]},{\"box\":[70.0,750.0,2400.0,850.0]}]},\"reasoning\":\"Extract all advertisements and return their bounding boxes.\\nThe original size of the page is 2479 x 3508 pixels.\\n\\nWe need find advertisements. The page has \\\"HOTELS SPECIALLY RECOMMENDED\\\" list, then two boxed ads: Hotel-Pension Florhof Z\u00fcrich, and Basle / Parkhotel Bernerhof. Possibly the hotels list is not advertisement? Might be a listing. The ads are the two boxed ones at bottom.\\n\\nAlso maybe the header? No.\\n\\nSo extract bounding boxes. Need coordinates. Probably normalized? Usually bounding box as [x_min, y_min, x_max, y_max] in pixels. Original size 2479 x 3508.\\n\\nWe need estimate. Let's approximate.\\n\\nPage image: left margin ~ 70px? The content starts around x ~ 150? Let's assume coordinates relative to image. The first ad: Hotel-Pension Florhof Z\u00fcrich. Box starts around y ~ 630? Let's estimate.\\n\\nBetter approximate: The page height 3508. Top header at ~ 70. HOTELS SPECIALLY RECOMMENDED box ends around y ~ 620? Then first ad box starts around y ~ 630. The box spans from about y=630 to y=740? Wait the box includes text. Let's see: The box is a rectangular border. Top of box maybe y= 630 (approx). Bottom maybe y= 740? Actually the box is tall. Let's estimate: The ad occupies about 1/6 of page. Might be y 630 to 740? Hmm.\\n\\nAlternative: Could provide relative coordinates 0-1. Might be expected as pixel values.\\n\\nGiven uncertainty, we can give approximate bounding boxes.\\n\\nFirst ad: Hotel-Pension Florhof Z\u00fcrich\\n\\nx_min ~ 70? The box left edge about 70? Actually page left margin ~ 70. The box spans almost full width. Left ~ 70, right ~ 2400? Let's say x_min=70, x_max=2400. y_min=630, y_max=740? Wait the box includes text lines. Let's look: The box top is below the hotels list. The hotels list ends around y ~ 620. The box top maybe y= 630. Bottom maybe y= 740? Actually the box height maybe ~ 120 px? Might be more. Let's assume y_min= 630, y_max= 740? Hmm.\\n\\nSecond ad: Basle / Parkhotel Bernerhof\\n\\nBelow first. y_min ~ 750, y_max ~ 850? Actually maybe 750 to 850.\\n\\nLet's refine: The page is 3508 tall. The bottom text starts around y ~ 860. So second ad ends around y ~ 850.\\n\\nLet's propose:\\n\\nAd 1: [70, 630, 2400, 740] maybe 630-740.\\n\\nAd 2: [70, 750, 2400, 850]\\n\\nCould also include the \\\"HOTELS SPECIALLY RECOMMENDED\\\" as a section not ad.\\n\\nMaybe the hotels list itself is an advertisement? Might be a listing of recommended hotels, not ads.\\n\\nThus output two boxes.\\n\\nI'll give approximate coordinates.\\n\\nMaybe use normalized 0-1000? Usually bounding boxes in pixels.\\n\\nI'll give:\\n\\nHotel-Pension Florhof Z\u00fcrich: x_min= 70, y_min= 630, x_max= 2400, y_max= 740\\n\\nBasle / Parkhotel Bernerhof: x_min= 70, y_min= 750, x_max= 2400, y_max= 850\\n\\nIf need more precise: Let's estimate using image proportions. The top margin ~ 70px. The header \\\"October, 1926.\\\" at y ~ 80. The HOTELS box top at y ~ 100. Bottom of list at y ~ 620. So first ad top at y ~ 630. The ad height maybe ~ 110 px. So y_max ~ 740. Second ad top ~ 750, height ~ 100, y_max ~ 850.\\n\\nI'll output.\\n\\nMaybe also the \\\"HOTELS SPECIALLY RECOMMENDED\\\" heading is not ad.\\n\\nThus final answer with two bounding boxes.\\n\\nProvide as JSON list.\\n\\nLet's output.\"},\"token_ids\":null,\"routed_experts\":null,\"seed\":null}],\"created\":1789760341,\"model\":\"meta-models/Muse-Glimmer-30B\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":\"vllm-0.1.dev19059+g66826a22d-tp2-46311a71\",\"usage\":{\"completion_tokens\":923,\"prompt_tokens\":3916,\"total_tokens\":4839,\"completion_tokens_details\":null,\"prompt_tokens_details\":{\"audio_tokens\":null,\"cached_tokens\":48,\"created_cache_tokens\":3856,\"multimodal_tokens\":{\"image\":3850}}},\"prompt_token_ids\":null,\"prompt_text\":null,\"kv_transfer_params\":null,\"ec_transfer_params\":null,\"metrics\":null,\"prompt\":[]}"
+}

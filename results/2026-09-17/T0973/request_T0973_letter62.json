@@ -1,0 +1,92 @@
+{
+    "text": "{\"metadata\":{\"send_date\":[\"1933-07-04\"],\"letter_title\":[\"Letter regarding complaints from the General Assembly of Basel Passenger Shipping Company\"],\"sender_persons\":[\"Basler Personenschiffahrtsgesellschaft\",\"Dr. A. Vischer\",\"Arthur Oetlinger\"],\"receiver_persons\":[\"Basler Rheinschifffahrts A.-G.\"]}}",
+    "model": "qwen/qwen3.5-flash-02-23",
+    "provider": "openrouter",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 5651,
+        "output_tokens": 819,
+        "total_tokens": 6470,
+        "input_cost_usd": 0.000367315,
+        "output_cost_usd": 0.00021294,
+        "estimated_cost_usd": 0.000580255
+    },
+    "duration": 9.579532861709595,
+    "timestamp": "2026-09-17T19:56:00.825535",
+    "parsed": {
+        "metadata": {
+            "send_date": [
+                "1933-07-04"
+            ],
+            "letter_title": [
+                "Letter regarding complaints from the General Assembly of Basel Passenger Shipping Company"
+            ],
+            "sender_persons": [
+                "Basler Personenschiffahrtsgesellschaft",
+                "Dr. A. Vischer",
+                "Arthur Oetlinger"
+            ],
+            "receiver_persons": [
+                "Basler Rheinschifffahrts A.-G."
+            ]
+        }
+    },
+    "conversation_id": "0e64f3c2-5edb-431d-b9c7-fbfb9cc7ba4f",
+    "score": {
+        "send_date_tp": 1,
+        "send_date_fp": 0,
+        "send_date_fn": 0,
+        "sender_persons_tp": 0,
+        "sender_persons_fp": 3,
+        "sender_persons_fn": 2,
+        "receiver_persons_tp": 0,
+        "receiver_persons_fp": 1,
+        "receiver_persons_fn": 0,
+        "field_scores": {
+            "send_date": {
+                "response": [
+                    "1933-07-04"
+                ],
+                "ground_truth": [
+                    "1933-07-04"
+                ],
+                "score": null,
+                "counts": {
+                    "send_date_tp": 1,
+                    "send_date_fp": 0,
+                    "send_date_fn": 0
+                }
+            },
+            "sender_persons": {
+                "response": [
+                    "Arthur Oetlinger",
+                    "Basler Personenschiffahrtsgesellschaft",
+                    "Dr. A. Vischer"
+                ],
+                "ground_truth": [
+                    "Oettinger-Meili, Artur",
+                    "Vischer-von Planta, Max"
+                ],
+                "score": null,
+                "counts": {
+                    "sender_persons_tp": 0,
+                    "sender_persons_fp": 3,
+                    "sender_persons_fn": 2
+                }
+            },
+            "receiver_persons": {
+                "response": [
+                    "Basler Rheinschifffahrts A.-G."
+                ],
+                "ground_truth": [],
+                "score": null,
+                "counts": {
+                    "receiver_persons_tp": 0,
+                    "receiver_persons_fp": 1,
+                    "receiver_persons_fn": 0
+                }
+            }
+        }
+    },
+    "raw_response": "{\"id\":\"gen-1789667752-pFNpRLVmVwKPDwFT5Cum\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\n   \\\"metadata\\\": {\\n\\\"send_date\\\": [\\n\\\"1933-07-04\\\"\\n],\\n\\\"letter_title\\\": [\\n\\\"Letter regarding complaints from the General Assembly of Basel Passenger Shipping Company\\\"\\n],\\n\\\"sender_persons\\\": [\\n\\\"Basler Personenschiffahrtsgesellschaft\\\",\\n\\\"Dr. A. Vischer\\\",\\n\\\"Arthur Oetlinger\\\"\\n],\\n\\\"receiver_persons\\\": [\\n\\\"Basler Rheinschifffahrts A.-G.\\\"\\n]\\n}\\n}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"metadata\":{\"send_date\":[\"1933-07-04\"],\"letter_title\":[\"Letter regarding complaints from the General Assembly of Basel Passenger Shipping Company\"],\"sender_persons\":[\"Basler Personenschiffahrtsgesellschaft\",\"Dr. A. Vischer\",\"Arthur Oetlinger\"],\"receiver_persons\":[\"Basler Rheinschifffahrts A.-G.\"]}},\"reasoning\":\"The user wants me to extract specific metadata from a provided image of a historical letter.\\nI need to identify:\\n1.  **letter_title**: The title or subject of the letter. Looking at the document, there isn't a specific \\\"Subject:\\\" line like in modern emails, but it's a formal business letter. Often, the header or the first paragraph indicates the purpose. However, looking closely at the top, it says \\\"Copie.\\\" (Copy). There isn't a clear title like \\\"Re: Complaint\\\". I will look for a descriptive title based on the content or leave it null if none exists explicitly. Wait, looking at the very top, it just says \\\"Copie.\\\". The letter itself is a response to complaints raised at a general meeting. It doesn't have a formal title like \\\"Letter regarding...\\\". I will set this to null as there is no explicit title field.\\n2.  **sender_persons**: Who wrote it? At the bottom right, there are signatures.\\n    -   \\\"Dr. M. Vischer\\\" (President)\\n    -   \\\"Arthur Oetlinger-Steidl\\\" (Managing Director / Gesch\u00e4ftsf\u00fchrer)\\n    -   The letterhead says \\\"BASLER PERSONENSCHIFFAHRTSGESELLSCHAFT\\\". So the senders are the representatives of this company. I should list the names found in the signature block.\\n3.  **send_date**: Where is the date? Top right corner: \\\"Basel, den 4. Juli 1933.\\\" -> 1933-07-04.\\n4.  **receiver_persons**: Who is it addressed to? Top left under the date: \\\"An die Basler Rheinschiffahrts A.-G.\\\" (To the Basel Rhine Shipping Co.).\\n\\nLet's refine the extraction.\\n-   **Date**: \\\"Basel, den 4. Juli 1933.\\\" -> `[\\\"1933-07-04\\\"]`\\n-   **Sender**: The letter is signed by \\\"Dr. M. Vischer\\\" and \\\"Arthur Oetlinger-Steidl\\\". The entity is \\\"Basler Personenschiffahrtsgesellschaft\\\". The prompt asks for \\\"Name(s) of the person(s)\\\". I will use the names in the signature.\\n-   **Receiver**: \\\"Basler Rheinschiffahrts A.-G.\\\" This is a company name, not a specific person, but it fits the \\\"Receiver Persons\\\" key in the context of business correspondence where the recipient is an organization. I will include the full name.\\n-   **Title**: There is no explicit title. The text starts with \\\"Sehr geehrte Herren,\\\". I will set this to `null`.\\n\\nWait, let me double check the sender names.\\nSignature 1: \\\"sig. Dr. M. Vischer\\\"\\nSignature 2: \\\"sig Arthur Oetlinger-Steidl\\\"\\nSo sender persons are [\\\"Dr. M. Vischer\\\", \\\"Arthur Oetlinger-Steidl\\\"].\\n\\nReceiver: \\\"An die Basler Rheinschiffahrts A.-G.\\\" -> [\\\"Basler Rheinschiffahrts A.-G.\\\"]\\n\\nDate: 1933-07-04.\\n\\nTitle: Null.\\n\\nLet's format the JSON.\",\"reasoning_details\":[{\"type\":\"reasoning.text\",\"text\":\"The user wants me to extract specific metadata from a provided image of a historical letter.\\nI need to identify:\\n1.  **letter_title**: The title or subject of the letter. Looking at the document, there isn't a specific \\\"Subject:\\\" line like in modern emails, but it's a formal business letter. Often, the header or the first paragraph indicates the purpose. However, looking closely at the top, it says \\\"Copie.\\\" (Copy). There isn't a clear title like \\\"Re: Complaint\\\". I will look for a descriptive title based on the content or leave it null if none exists explicitly. Wait, looking at the very top, it just says \\\"Copie.\\\". The letter itself is a response to complaints raised at a general meeting. It doesn't have a formal title like \\\"Letter regarding...\\\". I will set this to null as there is no explicit title field.\\n2.  **sender_persons**: Who wrote it? At the bottom right, there are signatures.\\n    -   \\\"Dr. M. Vischer\\\" (President)\\n    -   \\\"Arthur Oetlinger-Steidl\\\" (Managing Director / Gesch\u00e4ftsf\u00fchrer)\\n    -   The letterhead says \\\"BASLER PERSONENSCHIFFAHRTSGESELLSCHAFT\\\". So the senders are the representatives of this company. I should list the names found in the signature block.\\n3.  **send_date**: Where is the date? Top right corner: \\\"Basel, den 4. Juli 1933.\\\" -> 1933-07-04.\\n4.  **receiver_persons**: Who is it addressed to? Top left under the date: \\\"An die Basler Rheinschiffahrts A.-G.\\\" (To the Basel Rhine Shipping Co.).\\n\\nLet's refine the extraction.\\n-   **Date**: \\\"Basel, den 4. Juli 1933.\\\" -> `[\\\"1933-07-04\\\"]`\\n-   **Sender**: The letter is signed by \\\"Dr. M. Vischer\\\" and \\\"Arthur Oetlinger-Steidl\\\". The entity is \\\"Basler Personenschiffahrtsgesellschaft\\\". The prompt asks for \\\"Name(s) of the person(s)\\\". I will use the names in the signature.\\n-   **Receiver**: \\\"Basler Rheinschiffahrts A.-G.\\\" This is a company name, not a specific person, but it fits the \\\"Receiver Persons\\\" key in the context of business correspondence where the recipient is an organization. I will include the full name.\\n-   **Title**: There is no explicit title. The text starts with \\\"Sehr geehrte Herren,\\\". I will set this to `null`.\\n\\nWait, let me double check the sender names.\\nSignature 1: \\\"sig. Dr. M. Vischer\\\"\\nSignature 2: \\\"sig Arthur Oetlinger-Steidl\\\"\\nSo sender persons are [\\\"Dr. M. Vischer\\\", \\\"Arthur Oetlinger-Steidl\\\"].\\n\\nReceiver: \\\"An die Basler Rheinschiffahrts A.-G.\\\" -> [\\\"Basler Rheinschiffahrts A.-G.\\\"]\\n\\nDate: 1933-07-04.\\n\\nTitle: Null.\\n\\nLet's format the JSON.\",\"format\":\"unknown\",\"index\":0}]},\"native_finish_reason\":\"stop\"}],\"created\":1789667752,\"model\":\"qwen/qwen3.5-flash-02-23\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":null,\"usage\":{\"completion_tokens\":819,\"prompt_tokens\":5651,\"total_tokens\":6470,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":0,\"reasoning_tokens\":700,\"rejected_prediction_tokens\":null,\"image_tokens\":0},\"prompt_tokens_details\":{\"audio_tokens\":0,\"cached_tokens\":0,\"cache_write_tokens\":0,\"video_tokens\":0},\"cost\":0.000580255,\"is_byok\":false,\"cost_details\":{\"upstream_inference_cost\":0.000580255,\"upstream_inference_prompt_cost\":0.000367315,\"upstream_inference_completions_cost\":0.00021294}},\"provider\":\"Alibaba\"}"
+}

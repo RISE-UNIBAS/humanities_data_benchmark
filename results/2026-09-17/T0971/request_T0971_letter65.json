@@ -1,0 +1,87 @@
+{
+    "text": "{\"metadata\":{\"send_date\":[\"1935-08-17\"],\"letter_title\":[\"Letter from Basler Personenschifffahrtsgesellschaft to Fritz Ritter\"],\"sender_persons\":[\"Basler Personenschifffahrtsgesellschaft\"],\"receiver_persons\":[\"Fritz Ritter\"]}}",
+    "model": "qwen/qwen3.5-flash-02-23",
+    "provider": "openrouter",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 3129,
+        "output_tokens": 1541,
+        "total_tokens": 4670,
+        "input_cost_usd": 0.000203385,
+        "output_cost_usd": 0.00040066,
+        "estimated_cost_usd": 0.000604045
+    },
+    "duration": 34.57926416397095,
+    "timestamp": "2026-09-17T19:48:50.964142",
+    "parsed": {
+        "metadata": {
+            "send_date": [
+                "1935-08-17"
+            ],
+            "letter_title": [
+                "Letter from Basler Personenschifffahrtsgesellschaft to Fritz Ritter"
+            ],
+            "sender_persons": [
+                "Basler Personenschifffahrtsgesellschaft"
+            ],
+            "receiver_persons": [
+                "Fritz Ritter"
+            ]
+        }
+    },
+    "conversation_id": "07eed14e-f596-4a21-9cc3-a4c986626794",
+    "score": {
+        "send_date_tp": 1,
+        "send_date_fp": 0,
+        "send_date_fn": 0,
+        "sender_persons_tp": 0,
+        "sender_persons_fp": 1,
+        "sender_persons_fn": 0,
+        "receiver_persons_tp": 1,
+        "receiver_persons_fp": 0,
+        "receiver_persons_fn": 0,
+        "field_scores": {
+            "send_date": {
+                "response": [
+                    "1935-08-17"
+                ],
+                "ground_truth": [
+                    "1935-08-17"
+                ],
+                "score": null,
+                "counts": {
+                    "send_date_tp": 1,
+                    "send_date_fp": 0,
+                    "send_date_fn": 0
+                }
+            },
+            "sender_persons": {
+                "response": [
+                    "Basler Personenschifffahrtsgesellschaft"
+                ],
+                "ground_truth": [],
+                "score": null,
+                "counts": {
+                    "sender_persons_tp": 0,
+                    "sender_persons_fp": 1,
+                    "sender_persons_fn": 0
+                }
+            },
+            "receiver_persons": {
+                "response": [
+                    "Ritter-Dreier, Fritz"
+                ],
+                "ground_truth": [
+                    "Ritter-Dreier, Fritz"
+                ],
+                "score": null,
+                "counts": {
+                    "receiver_persons_tp": 1,
+                    "receiver_persons_fp": 0,
+                    "receiver_persons_fn": 0
+                }
+            }
+        }
+    },
+    "raw_response": "{\"id\":\"gen-1789667296-LGoOInjG7iFCQH96YqIq\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\n   \\\"metadata\\\": {\\n\\\"send_date\\\": [\\n\\\"1935-08-17\\\"\\n],\\n\\\"letter_title\\\": [\\n\\\"Letter from Basler Personenschifffahrtsgesellschaft to Fritz Ritter\\\"\\n],\\n\\\"sender_persons\\\": [\\n\\\"Basler Personenschifffahrtsgesellschaft\\\"\\n],\\n\\\"receiver_persons\\\": [\\n\\\"Fritz Ritter\\\"\\n]\\n}\\n}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"metadata\":{\"send_date\":[\"1935-08-17\"],\"letter_title\":[\"Letter from Basler Personenschifffahrtsgesellschaft to Fritz Ritter\"],\"sender_persons\":[\"Basler Personenschifffahrtsgesellschaft\"],\"receiver_persons\":[\"Fritz Ritter\"]}},\"reasoning\":\"The user wants me to extract specific metadata from a historical letter image and return it in a JSON format.\\nI need to identify:\\n1.  **letter_title**: The document doesn't have an explicit title like \\\"Letter regarding...\\\", but the context suggests it's a formal business letter. Often, if there isn't a clear title, I might leave it null or infer something generic, but looking at the prompt instructions, it asks for \\\"Title of the letter\\\". There is no specific subject line. However, usually, the header acts as the sender. Let's look closer. There is no subject line. I will set this to null as there is no explicit title provided on the page itself, other than the company name which is the sender. Wait, looking at the example, \\\"Petition for Environmental Protection\\\" is a title. This document is just a letter. I will check if there's any text that could serve as a title. No. So `null`.\\n2.  **sender_persons**: The letterhead says \\\"BASLER PERSONENSCHIFFAHRTSGESELLSCHAFT\\\". At the bottom, it says \\\"Basler Personenschiffahrtsgesellschaft\\\" and \\\"Der Gesch\u00e4ftsf\u00fchrer\\\" (The Managing Director). It doesn't name a specific individual person as the sender, just the organization and the role. So the sender is the company.\\n3.  **send_date**: Top right corner says \\\"Basel, den 17. August 1935.\\\" This translates to Basel, dated 17th August 1935. Format needs to be YYYY-MM-DD. So \\\"1935-08-17\\\".\\n4.  **receiver_persons**: The address block says \\\"Herrn Fritz Ritter / Basler Rheinschifffahrt A.-G. / Basel 19\\\". So the receiver is Fritz Ritter.\\n\\nLet's refine the values.\\n-   **letter_title**: There is no specific title. I will use `null`.\\n-   **sender_persons**: The entity is \\\"Basler Personenschiffahrtsgesellschaft\\\". The signature block says \\\"Der Gesch\u00e4ftsf\u00fchrer\\\" (The Managing Director) but doesn't print a name. So the sender is the company.\\n-   **send_date**: \\\"1935-08-17\\\".\\n-   **receiver_persons**: \\\"Fritz Ritter\\\".\\n\\nWait, let's re-read the sender part. The letterhead is \\\"BASLER PERSONENSCHIFFAHRTSGESELLSCHAFT\\\". The closing is \\\"Mit vorz\u00fcglicher Hochachtung / Basler Personenschiffahrtsgesellschaft / Der Gesch\u00e4ftsf\u00fchrer\\\". So the sender is the organization.\\nReceiver: \\\"Herrn Fritz Ritter\\\".\\n\\nLet's construct the JSON.\\n`metadata`:\\n`send_date`: [\\\"1935-08-17\\\"]\\n`letter_title`: [null] -> Actually, the schema requires a list of strings or null. If the value is null, the whole field should probably be null or a list containing null? The example shows `\\\"send_date\\\": [\\\"1993-03-12\\\"]`. The schema definition says `anyOf`: `[{\\\"items\\\": {\\\"type\\\": \\\"string\\\"}, \\\"type\\\": \\\"array\\\"}, {\\\"type\\\": \\\"null\\\"}]`. This means the value can be an array of strings OR null. If information is missing, set to \\\"null\\\". Wait, the instruction says \\\"If a piece of information is not included in the letter, set the value for the corresponding key to 'null'\\\". But the schema says the value must be an array of strings OR null. So if I put `null`, it satisfies the schema. If I put `[\\\"null\\\"]`, that's a string. I will interpret \\\"set the value... to 'null'\\\" as the JSON value `null`.\\n\\nLet's check the keys again.\\n-   `letter_title`: Not present. Value: `null`.\\n-   `sender_persons`: \\\"Basler Personenschiffahrtsgesellschaft\\\". Value: `[\\\"Basler Personenschiffahrtsgesellschaft\\\"]`.\\n-   `send_date`: \\\"17. August 1935\\\". Value: `[\\\"1935-08-17\\\"]`.\\n-   `receiver_persons`: \\\"Fritz Ritter\\\". Value: `[\\\"Fritz Ritter\\\"]`.\\n\\nOne detail: The prompt says \\\"values corresponding to each key should be stored as a list, even if there is only a single value\\\". And \\\"If a piece of information is not included... set the value... to 'null'\\\".\\nSo for `letter_title`, since there is no title, I will output `null`.\\nFor `sender_persons`, the sender is the company.\\nFor `receiver_persons`, it is Fritz Ritter.\\n\\nLet's double check the date. \\\"Basel, den 17. August 1935.\\\" -> 1935-08-17.\\nSender: \\\"Basler Personenschiffahrtsgesellschaft\\\".\\nReceiver: \\\"Herrn Fritz Ritter\\\".\\n\\nFinal JSON structure:\\n```json\\n{\\n    \\\"metadata\\\": {\\n        \\\"send_date\\\": [\\\"1935-08-17\\\"],\\n        \\\"letter_title\\\": null,\\n        \\\"sender_persons\\\": [\\\"Basler Personenschiffahrtsgesellschaft\\\"],\\n        \\\"receiver_persons\\\": [\\\"Fritz Ritter\\\"]\\n    }\\n}\\n```\\nWait, looking at the schema again:\\n`\\\"send_date\\\": {\\\"anyOf\\\": [{\\\"items\\\": {\\\"type\\\": \\\"string\\\"}, \\\"type\\\": \\\"array\\\"}, {\\\"type\\\": \\\"null\\\"}], ...}`\\nThis confirms `null` is allowed for the whole field.\\n\\nOne small correction: The prompt asks for \\\"sender_persons\\\". Is the company a \\\"person\\\"? In historical contexts, organizations are often treated as the sender entity. I will include the company name.\\nAlso, the receiver is \\\"Herrn Fritz Ritter\\\". I will strip the honorific \\\"Herrn\\\" or keep it? Usually, names are extracted without titles unless specified. \\\"Fritz Ritter\\\" is the name.\\n\\nLet's verify the text content to ensure no other sender name is hidden.\\n\\\"Wir danken Ihnen...\\\" (We thank you...).\\n\\\"Mit vorz\u00fcglicher Hochachtung / Basler Personenschiffahrtsgesellschaft / Der Gesch\u00e4ftsf\u00fchrer\\\".\\nNo specific name of the managing director is typed. So the sender is the organization.\\n\\nFinal check on the schema requirements.\\nThe output must be a JSON file.\\nThe root object has a key \\\"metadata\\\".\\nInside \\\"metadata\\\", there are keys: \\\"send_date\\\", \\\"letter_title\\\", \\\"sender_persons\\\", \\\"receiver_persons\\\".\\nAll values must be lists of strings OR null.\\n\\nLet's write the JSON.\",\"reasoning_details\":[{\"type\":\"reasoning.text\",\"text\":\"The user wants me to extract specific metadata from a historical letter image and return it in a JSON format.\\nI need to identify:\\n1.  **letter_title**: The document doesn't have an explicit title like \\\"Letter regarding...\\\", but the context suggests it's a formal business letter. Often, if there isn't a clear title, I might leave it null or infer something generic, but looking at the prompt instructions, it asks for \\\"Title of the letter\\\". There is no specific subject line. However, usually, the header acts as the sender. Let's look closer. There is no subject line. I will set this to null as there is no explicit title provided on the page itself, other than the company name which is the sender. Wait, looking at the example, \\\"Petition for Environmental Protection\\\" is a title. This document is just a letter. I will check if there's any text that could serve as a title. No. So `null`.\\n2.  **sender_persons**: The letterhead says \\\"BASLER PERSONENSCHIFFAHRTSGESELLSCHAFT\\\". At the bottom, it says \\\"Basler Personenschiffahrtsgesellschaft\\\" and \\\"Der Gesch\u00e4ftsf\u00fchrer\\\" (The Managing Director). It doesn't name a specific individual person as the sender, just the organization and the role. So the sender is the company.\\n3.  **send_date**: Top right corner says \\\"Basel, den 17. August 1935.\\\" This translates to Basel, dated 17th August 1935. Format needs to be YYYY-MM-DD. So \\\"1935-08-17\\\".\\n4.  **receiver_persons**: The address block says \\\"Herrn Fritz Ritter / Basler Rheinschifffahrt A.-G. / Basel 19\\\". So the receiver is Fritz Ritter.\\n\\nLet's refine the values.\\n-   **letter_title**: There is no specific title. I will use `null`.\\n-   **sender_persons**: The entity is \\\"Basler Personenschiffahrtsgesellschaft\\\". The signature block says \\\"Der Gesch\u00e4ftsf\u00fchrer\\\" (The Managing Director) but doesn't print a name. So the sender is the company.\\n-   **send_date**: \\\"1935-08-17\\\".\\n-   **receiver_persons**: \\\"Fritz Ritter\\\".\\n\\nWait, let's re-read the sender part. The letterhead is \\\"BASLER PERSONENSCHIFFAHRTSGESELLSCHAFT\\\". The closing is \\\"Mit vorz\u00fcglicher Hochachtung / Basler Personenschiffahrtsgesellschaft / Der Gesch\u00e4ftsf\u00fchrer\\\". So the sender is the organization.\\nReceiver: \\\"Herrn Fritz Ritter\\\".\\n\\nLet's construct the JSON.\\n`metadata`:\\n`send_date`: [\\\"1935-08-17\\\"]\\n`letter_title`: [null] -> Actually, the schema requires a list of strings or null. If the value is null, the whole field should probably be null or a list containing null? The example shows `\\\"send_date\\\": [\\\"1993-03-12\\\"]`. The schema definition says `anyOf`: `[{\\\"items\\\": {\\\"type\\\": \\\"string\\\"}, \\\"type\\\": \\\"array\\\"}, {\\\"type\\\": \\\"null\\\"}]`. This means the value can be an array of strings OR null. If information is missing, set to \\\"null\\\". Wait, the instruction says \\\"If a piece of information is not included in the letter, set the value for the corresponding key to 'null'\\\". But the schema says the value must be an array of strings OR null. So if I put `null`, it satisfies the schema. If I put `[\\\"null\\\"]`, that's a string. I will interpret \\\"set the value... to 'null'\\\" as the JSON value `null`.\\n\\nLet's check the keys again.\\n-   `letter_title`: Not present. Value: `null`.\\n-   `sender_persons`: \\\"Basler Personenschiffahrtsgesellschaft\\\". Value: `[\\\"Basler Personenschiffahrtsgesellschaft\\\"]`.\\n-   `send_date`: \\\"17. August 1935\\\". Value: `[\\\"1935-08-17\\\"]`.\\n-   `receiver_persons`: \\\"Fritz Ritter\\\". Value: `[\\\"Fritz Ritter\\\"]`.\\n\\nOne detail: The prompt says \\\"values corresponding to each key should be stored as a list, even if there is only a single value\\\". And \\\"If a piece of information is not included... set the value... to 'null'\\\".\\nSo for `letter_title`, since there is no title, I will output `null`.\\nFor `sender_persons`, the sender is the company.\\nFor `receiver_persons`, it is Fritz Ritter.\\n\\nLet's double check the date. \\\"Basel, den 17. August 1935.\\\" -> 1935-08-17.\\nSender: \\\"Basler Personenschiffahrtsgesellschaft\\\".\\nReceiver: \\\"Herrn Fritz Ritter\\\".\\n\\nFinal JSON structure:\\n```json\\n{\\n    \\\"metadata\\\": {\\n        \\\"send_date\\\": [\\\"1935-08-17\\\"],\\n        \\\"letter_title\\\": null,\\n        \\\"sender_persons\\\": [\\\"Basler Personenschiffahrtsgesellschaft\\\"],\\n        \\\"receiver_persons\\\": [\\\"Fritz Ritter\\\"]\\n    }\\n}\\n```\\nWait, looking at the schema again:\\n`\\\"send_date\\\": {\\\"anyOf\\\": [{\\\"items\\\": {\\\"type\\\": \\\"string\\\"}, \\\"type\\\": \\\"array\\\"}, {\\\"type\\\": \\\"null\\\"}], ...}`\\nThis confirms `null` is allowed for the whole field.\\n\\nOne small correction: The prompt asks for \\\"sender_persons\\\". Is the company a \\\"person\\\"? In historical contexts, organizations are often treated as the sender entity. I will include the company name.\\nAlso, the receiver is \\\"Herrn Fritz Ritter\\\". I will strip the honorific \\\"Herrn\\\" or keep it? Usually, names are extracted without titles unless specified. \\\"Fritz Ritter\\\" is the name.\\n\\nLet's verify the text content to ensure no other sender name is hidden.\\n\\\"Wir danken Ihnen...\\\" (We thank you...).\\n\\\"Mit vorz\u00fcglicher Hochachtung / Basler Personenschiffahrtsgesellschaft / Der Gesch\u00e4ftsf\u00fchrer\\\".\\nNo specific name of the managing director is typed. So the sender is the organization.\\n\\nFinal check on the schema requirements.\\nThe output must be a JSON file.\\nThe root object has a key \\\"metadata\\\".\\nInside \\\"metadata\\\", there are keys: \\\"send_date\\\", \\\"letter_title\\\", \\\"sender_persons\\\", \\\"receiver_persons\\\".\\nAll values must be lists of strings OR null.\\n\\nLet's write the JSON.\",\"format\":\"unknown\",\"index\":0}]},\"native_finish_reason\":\"stop\"}],\"created\":1789667296,\"model\":\"qwen/qwen3.5-flash-02-23\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":null,\"usage\":{\"completion_tokens\":1541,\"prompt_tokens\":3129,\"total_tokens\":4670,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":0,\"reasoning_tokens\":1444,\"rejected_prediction_tokens\":null,\"image_tokens\":0},\"prompt_tokens_details\":{\"audio_tokens\":0,\"cached_tokens\":0,\"cache_write_tokens\":0,\"video_tokens\":0},\"cost\":0.000604045,\"is_byok\":false,\"cost_details\":{\"upstream_inference_cost\":0.000604045,\"upstream_inference_prompt_cost\":0.000203385,\"upstream_inference_completions_cost\":0.00040066}},\"provider\":\"Alibaba\"}"
+}

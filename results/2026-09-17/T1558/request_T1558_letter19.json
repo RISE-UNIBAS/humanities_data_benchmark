@@ -1,0 +1,86 @@
+{
+    "text": "{\"metadata\":{\"send_date\":[\"1928-03-22\"],\"letter_title\":[\"\"],\"sender_persons\":[\"Basler Rheinschiffahrt-Aktiengesellschaft\"],\"receiver_persons\":[\"Vorstand der Basler Personenschiffahrtsgesellschaft\"]}}",
+    "model": "thinkingmachines/Inkling",
+    "provider": "huggingface",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 8032,
+        "output_tokens": 2481,
+        "total_tokens": 10513,
+        "cached_tokens": 256
+    },
+    "duration": 53.667840003967285,
+    "timestamp": "2026-09-17T11:41:37.800219",
+    "parsed": {
+        "metadata": {
+            "send_date": [
+                "1928-03-22"
+            ],
+            "letter_title": [
+                ""
+            ],
+            "sender_persons": [
+                "Basler Rheinschiffahrt-Aktiengesellschaft"
+            ],
+            "receiver_persons": [
+                "Vorstand der Basler Personenschiffahrtsgesellschaft"
+            ]
+        }
+    },
+    "conversation_id": "e6e502b2-ae45-4185-a699-e4da53c1b9ec",
+    "score": {
+        "send_date_tp": 1,
+        "send_date_fp": 0,
+        "send_date_fn": 0,
+        "sender_persons_tp": 0,
+        "sender_persons_fp": 1,
+        "sender_persons_fn": 2,
+        "receiver_persons_tp": 0,
+        "receiver_persons_fp": 1,
+        "receiver_persons_fn": 0,
+        "field_scores": {
+            "send_date": {
+                "response": [
+                    "1928-03-22"
+                ],
+                "ground_truth": [
+                    "1928-03-22"
+                ],
+                "score": null,
+                "counts": {
+                    "send_date_tp": 1,
+                    "send_date_fp": 0,
+                    "send_date_fn": 0
+                }
+            },
+            "sender_persons": {
+                "response": [
+                    "Basler Rheinschiffahrt-Aktiengesellschaft"
+                ],
+                "ground_truth": [
+                    "Groschupf-Jaeger, Louis",
+                    "Speich, Rudolf"
+                ],
+                "score": null,
+                "counts": {
+                    "sender_persons_tp": 0,
+                    "sender_persons_fp": 1,
+                    "sender_persons_fn": 2
+                }
+            },
+            "receiver_persons": {
+                "response": [
+                    "Vorstand der Basler Personenschiffahrtsgesellschaft"
+                ],
+                "ground_truth": [],
+                "score": null,
+                "counts": {
+                    "receiver_persons_tp": 0,
+                    "receiver_persons_fp": 1,
+                    "receiver_persons_fn": 0
+                }
+            }
+        }
+    },
+    "raw_response": "{\"id\":\"p1dBmsc-6z2FuN-a3c726b79a20d703\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\n  \\\"metadata\\\": {\\n    \\\"send_date\\\": [\\\"1928-03-22\\\"],\\n    \\\"letter_title\\\": [\\\"\\\"],\\n    \\\"sender_persons\\\": [\\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"],\\n    \\\"receiver_persons\\\": [\\\"Vorstand der Basler Personenschiffahrtsgesellschaft\\\"]\\n  }\\n}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"metadata\":{\"send_date\":[\"1928-03-22\"],\"letter_title\":[\"\"],\"sender_persons\":[\"Basler Rheinschiffahrt-Aktiengesellschaft\"],\"receiver_persons\":[\"Vorstand der Basler Personenschiffahrtsgesellschaft\"]}},\"reasoning\":\"We need extract values from images of historical letter. Need identify letter_title, sender_persons, send_date, receiver_persons. Let's analyze images.\\n\\nImage 1: Header \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\" address etc. Date \\\"Basel, den 22. M\u00e4rz 1928.\\\" Addressee \\\"An den Vorstand der Basler Personenschiffahrtsgesellschaft, Basel.\\\" Then body mentions delegation etc. So send_date is 1928-03-22. Sender is Basler Rheinschiffahrt-Aktiengesellschaft? Or persons? At bottom page 4 there are signatures \\\"hochachtend BASLER RHEINSCHIFFAHRT-AKTIENGESELLSCHAFT\\\" with signatures maybe \\\"Guili\\\" and \\\"Gund\\\"? But need sender_persons: name(s) of person(s) who wrote the letter. The letter is from the company, but signatures might be individuals. Let's inspect page 4: signatures appear handwritten, maybe \\\"Julius\\\" and \\\"Gund\\\"? Actually need determine exact names if visible. But likely sender organization rather than named persons? The prompt asks \\\"Name(s) of the person(s) who wrote the letter.\\\" In formal letters often signed by representatives. Let's examine image 4 closely: Under \\\"hochachtend BASLER RHEINSCHIFFAHRT-AKTIENGESELLSCHAFT\\\" there are two signatures. One looks like \\\"S. Gilli\\\"? Or \\\"Julius Grun\\\"? Hmm hard to tell precisely. But maybe we should list the company? No, that's not a person. However example lists \\\"Lisa Simpson\\\". Need be accurate based on visible text.\\n\\nLet's parse all pages for explicit sender names. Page 1 mentions \\\"Unterzeichneten und Ihrer Delegation, bestehend aus Herrn Dr. Vischer, Pr\u00e4sident, Herrn Christ, Vicepr\u00e4sident und Herrn Oettinger...\\\" That's the delegation of receiver? Actually \\\"In der heutigen Besprechung zwischen den Unterzeichneten und Ihrer Delegation...\\\" So \\\"Unterzeichneten\\\" refers to the writers/signatories of this letter. Then they list the other side's delegation: Dr. Vischer, President, Herr Christ, Vice President and Herr Oettinger. So the writers are not named there except \\\"Unterzeichneten\\\". At end page 4 signatures are present but illegible? Let's try to read: Left signature might be \\\"Julius Gund\\\"? Right one maybe \\\"G. Gruner\\\"? Not clear.\\n\\nBut also header lists company name \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\". So sender_persons might be null if not clearly named? Or we can put the company? The key says \\\"sender_persons\\\" implying persons. If not included, set null. But there are signatures, though unreadable. Given task likely expects extracting visible named senders. Let's check if any names appear in signature block readable: Maybe \\\"G. Grunder\\\"? Actually in Swiss history, Basler Rheinschiffahrt-Aktiengesellschaft directors? Not necessary.\\n\\nLet's determine receiver_persons: \\\"An den Vorstand der Basler Personenschiffahrtsgesellschaft, Basel.\\\" So receiver is the board of Basler Personenschiffahrtsgesellschaft, Basel. Could list as \\\"Vorstand der Basler Personenschiffahrtsgesellschaft\\\" or \\\"Basler Personenschiffahrtsgesellschaft\\\". The example lists specific names if present, but here it's an organization/board. We'll include \\\"Vorstand der Basler Personenschiffahrtsgesellschaft\\\" maybe.\\n\\nLetter title: Not explicit. Could be null? Or maybe inferred from subject? The letter discusses offer for purchase of ship \\\"Rheinfelden\\\" and cooperation. But there is no title like \\\"Betreff\\\". Actually there might be a subject line? Let's check images: Page 1 has \\\"G/M\\\" maybe reference. No explicit title. So letter_title should be null? Or maybe \\\"Angebot zum Kauf des Schiffes Rheinfelden\\\"? But the prompt says \\\"Title of the letter.\\\" If not included, null. However sometimes letters have header that serves as title? The company letterhead is not title. So likely null.\\n\\nSend date: 1928-03-22 (from \\\"Basel, den 22. M\u00e4rz 1928.\\\") Also page 2 and 3 have date \\\"22.3.28.\\\" So correct.\\n\\nNow need return JSON only.\\n\\nBut need be precise about sender_persons. Let's examine image 4 signatures more. The left signature looks like \\\"Julius\\\" then \\\"Gund\\\"? The right looks like \\\"Gund\\\"? Wait there are two signatures, one might be \\\"Julius Gruner\\\" and other \\\"G. Gruner\\\"? Actually not readable. Given instructions \\\"If a piece of information is not included in the letter, set the value... to null\\\". The names of signatories are technically included but illegible in image. However as an AI with image understanding, I might still approximate? But should avoid guessing. Let's see if there are printed names near signatures? No, just \\\"hochachtend BASLER RHEINSCHIFFAHRT-AKTIENGESELLSCHAFT\\\" then signatures. So specific person names are not printed, only signatures. Thus sender_persons might be null, or we could list the company? But key is persons. I think null is safer, but maybe they want the company representatives mentioned in body? Let's read page 1: \\\"In der heutigen Besprechung zwischen den Unterzeichneten und Ihrer Delegation, bestehend aus Herrn Dr. Vischer...\\\" That lists the receiver's delegation, not senders.\\n\\nThus I will set sender_persons to null? Or maybe include \\\"Dr. Vischer\\\"? No that's receiver side.\\n\\nWait check page 3 mentions \\\"Ihr Pr\u00e4sident Herr Dr. Vischer sehr richtig ausf\u00fchrte...\\\" So Dr. Vischer is president of receiver company.\\n\\nThus senders are unnamed except signatures. So null.\\n\\nBut also there is reference \\\"G/M\\\" maybe initials? Not clear.\\n\\nThus JSON:\\n{\\n\\\"letter_title\\\": [null? Or empty? The instruction says set value to \\\"null\\\". But they want values stored as list, even if single value. So [\\\"null\\\"]? Actually in example they have lists of strings. If information not included, set value for corresponding key to \\\"null\\\". That likely means the JSON value should be null, not a list containing \\\"null\\\"? Let's read carefully: \\\"return them in a JSON file where the values corresponding to each key should be stored as a list, even if there is only a single value for a key\\\" and \\\"If a piece of information is not included in the letter, set the value for the corresponding key to 'null'.\\\" This is ambiguous: should it be [null] or null? Usually they want the value to be null (not in list?). But they said values should be stored as a list. So probably [\\\"null\\\"]? Let's check example: all values are lists of strings. For missing, likely [null] or null? The phrase \\\"set the value for the corresponding key to 'null'\\\" suggests the value is the null literal, but that conflicts with list requirement. However they might accept null without list. But to be consistent, maybe use [null]. Let's think: If they parse automatically expecting list, giving null might break. But they said \\\"stored as a list, even if there is only a single value\\\". So for missing, maybe an empty list? No, they specifically said set to \\\"null\\\". I think they mean the list contains the string \\\"null\\\"? Actually in many extraction prompts, they say set to null (JSON null). Given they want list for values, maybe they want [null]. Let's decide: use [null] for missing? Or null? Let's examine wording: \\\"where the values corresponding to each key should be stored as a list, even if there is only a single value for a key\\\" -> so value is a list. Then \\\"If a piece of information is not included in the letter, set the value for the corresponding key to 'null'.\\\" This could mean the list should be replaced by null? Or the element should be null? Usually in these prompts, they want e.g., \\\"letter_title\\\": null. But they just said store as list. Hmm.\\n\\nLet's check similar prompts: Often they ask \\\"return them in a JSON file where the values corresponding to each key should be stored as a list...\\\" and \\\"If a piece of information is not included... set the value... to null\\\". In practice, people return \\\"key\\\": [null] or \\\"key\\\": null? I think they intend \\\"key\\\": null despite list instruction, but it's ambiguous. However to be safe with list instruction, I could do \\\"letter_title\\\": [null]. But that stores null inside list. Let's do that for consistency? Actually no, they said values should be stored as a list. So value is list. If missing, the list might be empty? But they said set to \\\"null\\\". So maybe value is null (not a list). I think it's okay to break list rule for missing values. But I want to be consistent. Let's provide lists for present ones, and null (not in list) for missing? Or [null]? Let's decide on [null] for missing? That is a list containing null. That satisfies both: it's a list, and contains null indicating missing. Yes, that sounds right.\\n\\nBut wait for sender_persons, maybe not missing, but unknown. Let's include null inside list? Actually if there are signatures but unreadable, maybe still missing explicit names. So [null].\\n\\nHowever, receiver_persons is present: [\\\"Vorstand der Basler Personenschiffahrtsgesellschaft\\\", \\\"Basel\\\"]? Or just [\\\"Vorstand der Basler Personenschiffahrtsgesellschaft\\\"]. Let's include the board.\\n\\nSend_date: [\\\"1928-03-22\\\"].\\n\\nLetter_title: Maybe there is an implicit title? The letter is about an offer. But not explicit. So [null].\\n\\nBut wait page 1 has \\\"G/M\\\" in left margin, maybe \\\"Gegenstand/Matter\\\"? Not title.\\n\\nThus final:\\n{\\n\\\"letter_title\\\": [null],\\n\\\"sender_persons\\\": [null],\\n\\\"send_date\\\": [\\\"1928-03-22\\\"],\\n\\\"receiver_persons\\\": [\\\"Vorstand der Basler Personenschiffahrtsgesellschaft\\\"]\\n}\\n\\nBut I feel uneasy about sender_persons being null. Let's check if the signatures can be deciphered. Image 4 bottom right: signatures. Left one: starts with capital \\\"J\\\" then \\\"ulius\\\"? Actually \\\"Julius\\\" is plausible. Then last name maybe \\\"Gund\\\"? Or \\\"Grund\\\"? The right signature: maybe \\\"G. Grund\\\"? Hmm. But without certainty, avoid.\\n\\nAlso the letterhead includes \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\" and they sign \\\"hochachtend BASLER RHEINSCHIFFAHRT-AKTIENGESELLSCHAFT\\\". So the sender entity is clear, but not persons.\\n\\nThus I will output with sender_persons as [null]. But maybe they want [\\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"]? The key says persons, but sometimes they accept organization. Let's examine the prompt: \\\"sender_persons: Name(s) of the person(s) who wrote the letter.\\\" If it's a company letter, the writers are representatives, but not named except signatures. Given they ask for persons, and signatures are present but unreadable, null is appropriate.\\n\\nOne more check: Page 2 header \\\"An den Vorstand der Basler Personenschiffahrtsgesellschaft, Basel. 22.3.28.\\\" So date also on page 2.\\n\\nThus answer.\"},\"seed\":null}],\"created\":1789638047,\"model\":\"thinkingmachines/Inkling\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":\"default\",\"usage\":{\"completion_tokens\":2481,\"prompt_tokens\":8032,\"total_tokens\":10513,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":null,\"reasoning_tokens\":2405,\"rejected_prediction_tokens\":null},\"prompt_tokens_details\":{\"audio_tokens\":null,\"cached_tokens\":256}},\"prompt\":[]}"
+}

@@ -1,0 +1,87 @@
+{
+    "text": "{\"metadata\":{\"send_date\":[\"1928-09-28\"],\"letter_title\":null,\"sender_persons\":[\"Verein f\u00fcr die Schiffahrt auf dem Oberrhein\"],\"receiver_persons\":[\"Max Vischer\"]}}",
+    "model": "qwen/qwen3.7-plus",
+    "provider": "openrouter",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 3127,
+        "output_tokens": 1369,
+        "total_tokens": 4496,
+        "input_cost_usd": 0.0010006400000000001,
+        "output_cost_usd": 0.00175232,
+        "estimated_cost_usd": 0.00275296
+    },
+    "duration": 27.157912254333496,
+    "timestamp": "2026-09-18T09:48:53.988503",
+    "parsed": {
+        "metadata": {
+            "send_date": [
+                "1928-09-28"
+            ],
+            "letter_title": null,
+            "sender_persons": [
+                "Verein f\u00fcr die Schiffahrt auf dem Oberrhein"
+            ],
+            "receiver_persons": [
+                "Max Vischer"
+            ]
+        }
+    },
+    "conversation_id": "49d00773-961e-4925-9201-199d5539284c",
+    "score": {
+        "send_date_tp": 1,
+        "send_date_fp": 0,
+        "send_date_fn": 0,
+        "sender_persons_tp": 0,
+        "sender_persons_fp": 1,
+        "sender_persons_fn": 1,
+        "receiver_persons_tp": 1,
+        "receiver_persons_fp": 0,
+        "receiver_persons_fn": 0,
+        "field_scores": {
+            "send_date": {
+                "response": [
+                    "1928-09-28"
+                ],
+                "ground_truth": [
+                    "1928-09-28"
+                ],
+                "score": null,
+                "counts": {
+                    "send_date_tp": 1,
+                    "send_date_fp": 0,
+                    "send_date_fn": 0
+                }
+            },
+            "sender_persons": {
+                "response": [
+                    "Verein f\u00fcr die Schiffahrt auf dem Oberrhein"
+                ],
+                "ground_truth": [
+                    "Frey-Weber, Jean Richard"
+                ],
+                "score": null,
+                "counts": {
+                    "sender_persons_tp": 0,
+                    "sender_persons_fp": 1,
+                    "sender_persons_fn": 1
+                }
+            },
+            "receiver_persons": {
+                "response": [
+                    "Vischer-von Planta, Max"
+                ],
+                "ground_truth": [
+                    "Vischer-von Planta, Max"
+                ],
+                "score": null,
+                "counts": {
+                    "receiver_persons_tp": 1,
+                    "receiver_persons_fp": 0,
+                    "receiver_persons_fn": 0
+                }
+            }
+        }
+    },
+    "raw_response": "{\"id\":\"gen-1789717707-S2GrFfmKyKHklGDoIXGl\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\n  \\\"metadata\\\": {\\n    \\\"send_date\\\": [\\n      \\\"1928-09-28\\\"\\n    ],\\n    \\\"letter_title\\\": null,\\n    \\\"sender_persons\\\": [\\n      \\\"Verein f\u00fcr die Schiffahrt auf dem Oberrhein\\\"\\n    ],\\n    \\\"receiver_persons\\\": [\\n      \\\"Max Vischer\\\"\\n    ]\\n  }\\n}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"metadata\":{\"send_date\":[\"1928-09-28\"],\"letter_title\":null,\"sender_persons\":[\"Verein f\u00fcr die Schiffahrt auf dem Oberrhein\"],\"receiver_persons\":[\"Max Vischer\"]}},\"reasoning\":\"The user wants me to extract metadata from a historical letter image and format it as JSON.\\nThe JSON schema requires:\\n- `metadata`: an object containing:\\n    - `send_date`: list of strings or null\\n    - `letter_title`: list of strings or null\\n    - `sender_persons`: list of strings or null\\n    - `receiver_persons`: list of strings or null\\n\\nLet's analyze the image:\\n- **Header**: \\\"VEREIN F\u00dcR DIE SCHIFFAHRT AUF DEM OBERRHEIN\\\"\\n- **Date**: \\\"BASEL, DEN 28 Sept. 1928.\\\" -> `send_date`: [\\\"1928-09-28\\\"]\\n- **Receiver**: \\\"Herrn Dr. Max Vischer, Advokat & Notar Basel.\\\" -> `receiver_persons`: [\\\"Max Vischer\\\"]\\n- **Sender**: The letter is from \\\"Verein f\u00fcr die Schiffahrt auf dem Oberrhein - BASEL\\\" (stamped). There is a signature that looks like \\\"Jeandrey\\\" or similar, but the sender is primarily the organization. Wait, the prompt asks for \\\"sender_persons\\\". The signature is hard to read, maybe \\\"Jeandrey\\\"? Let's look closely at the signature. It looks like \\\"Jeandrey\\\". However, usually, if it's an organization, we might put the organization or the signer. Let's look at the stamp: \\\"Verein f\u00fcr die Schiffahrt auf dem Oberrhein - BASEL\\\". The signature is below it. Let's extract the signer if possible, or the organization. The prompt asks for \\\"sender_persons\\\". I will put the organization name or the signer. Let's look at the signature: \\\"Jeandrey\\\"? Actually, it looks like \\\"Jeandrey\\\". Let's use the organization name as the sender if no clear person, or the person. \\\"Verein f\u00fcr die Schiffahrt auf dem Oberrhein\\\" is an organization. The signature looks like \\\"Jeandrey\\\". Let's just use the organization name as it's the main sender, or maybe null for persons if it's strictly an org? The schema says \\\"sender_persons\\\". I'll put \\\"Verein f\u00fcr die Schiffahrt auf dem Oberrhein\\\" or the signer. Let's look at the signature again. It looks like \\\"Jeandrey\\\". Let's use \\\"Verein f\u00fcr die Schiffahrt auf dem Oberrhein\\\" as the sender entity, but the key is `sender_persons`. I will include the organization name as it acts as the sender. Wait, \\\"Herrn Dr. Max Vischer\\\" is the receiver.\\n- **Letter Title**: There is no explicit title like \\\"Subject: ...\\\". So `letter_title`: null.\\n\\nLet's refine the fields:\\n- `send_date`: [\\\"1928-09-28\\\"]\\n- `letter_title`: null (no specific title)\\n- `sender_persons`: [\\\"Verein f\u00fcr die Schiffahrt auf dem Oberrhein\\\"] (or the signer, but the org is prominent). Actually, the signature looks like \\\"Jeandrey\\\". Let's use the organization name as it's the letterhead. Wait, the key is `sender_persons`. I'll put the organization name.\\n- `receiver_persons`: [\\\"Max Vischer\\\"]\\n\\nLet's check the schema again.\\n`send_date`: list of strings or null.\\n`letter_title`: list of strings or null.\\n`sender_persons`: list of strings or null.\\n`receiver_persons`: list of strings or null.\\n\\nDate: 28 Sept. 1928 -> 1928-09-28.\\nReceiver: Dr. Max Vischer.\\nSender: Verein f\u00fcr die Schiffahrt auf dem Oberrhein.\\nTitle: null.\\n\\nWait, the signature looks like \\\"Jeandrey\\\". I will include the organization.\\nLet's just use the organization name for sender_persons as it's the entity sending it.\\nActually, let's look at the signature. It looks like \\\"Jeandrey\\\". I'll put \\\"Verein f\u00fcr die Schiffahrt auf dem Oberrhein\\\".\\n\\nLet's construct the JSON.\\n```json\\n{\\n  \\\"metadata\\\": {\\n    \\\"send_date\\\": [\\\"1928-09-28\\\"],\\n    \\\"letter_title\\\": null,\\n    \\\"sender_persons\\\": [\\\"Verein f\u00fcr die Schiffahrt auf dem Oberrhein\\\"],\\n    \\\"receiver_persons\\\": [\\\"Max Vischer\\\"]\\n  }\\n}\\n```\\nWait, the schema says `sender_persons` and `receiver_persons`. \\\"Verein...\\\" is an organization. Is there a person? The signature is there. It looks like \\\"Jeandrey\\\". I'll add \\\"Jeandrey\\\" or just the org. Let's use the org.\\nActually, often in these tasks, the letterhead entity is considered the sender.\\nLet's use \\\"Verein f\u00fcr die Schiffahrt auf dem Oberrhein\\\".\\n\\nRe-evaluating the signature: It looks like \\\"Jeandrey\\\".\\nI will use \\\"Verein f\u00fcr die Schiffahrt auf dem Oberrhein\\\" as the sender.\\n\\nOne more check on the date: \\\"28 Sept. 1928.\\\" -> \\\"1928-09-28\\\".\\nReceiver: \\\"Herrn Dr. Max Vischer\\\" -> \\\"Max Vischer\\\".\\nTitle: None.\\n\\nFinal JSON structure:\\n{\\n  \\\"metadata\\\": {\\n    \\\"send_date\\\": [\\\"1928-09-28\\\"],\\n    \\\"letter_title\\\": null,\\n    \\\"sender_persons\\\": [\\\"Verein f\u00fcr die Schiffahrt auf dem Oberrhein\\\"],\\n    \\\"receiver_persons\\\": [\\\"Max Vischer\\\"]\\n  }\\n}\\nWait, the schema requires `letter_title` to be a list or null.\\n`sender_persons` list or null.\\n`receiver_persons` list or null.\\n`send_date` list or null.\\n\\nI will formulate the response.\",\"reasoning_details\":[{\"type\":\"reasoning.text\",\"text\":\"The user wants me to extract metadata from a historical letter image and format it as JSON.\\nThe JSON schema requires:\\n- `metadata`: an object containing:\\n    - `send_date`: list of strings or null\\n    - `letter_title`: list of strings or null\\n    - `sender_persons`: list of strings or null\\n    - `receiver_persons`: list of strings or null\\n\\nLet's analyze the image:\\n- **Header**: \\\"VEREIN F\u00dcR DIE SCHIFFAHRT AUF DEM OBERRHEIN\\\"\\n- **Date**: \\\"BASEL, DEN 28 Sept. 1928.\\\" -> `send_date`: [\\\"1928-09-28\\\"]\\n- **Receiver**: \\\"Herrn Dr. Max Vischer, Advokat & Notar Basel.\\\" -> `receiver_persons`: [\\\"Max Vischer\\\"]\\n- **Sender**: The letter is from \\\"Verein f\u00fcr die Schiffahrt auf dem Oberrhein - BASEL\\\" (stamped). There is a signature that looks like \\\"Jeandrey\\\" or similar, but the sender is primarily the organization. Wait, the prompt asks for \\\"sender_persons\\\". The signature is hard to read, maybe \\\"Jeandrey\\\"? Let's look closely at the signature. It looks like \\\"Jeandrey\\\". However, usually, if it's an organization, we might put the organization or the signer. Let's look at the stamp: \\\"Verein f\u00fcr die Schiffahrt auf dem Oberrhein - BASEL\\\". The signature is below it. Let's extract the signer if possible, or the organization. The prompt asks for \\\"sender_persons\\\". I will put the organization name or the signer. Let's look at the signature: \\\"Jeandrey\\\"? Actually, it looks like \\\"Jeandrey\\\". Let's use the organization name as the sender if no clear person, or the person. \\\"Verein f\u00fcr die Schiffahrt auf dem Oberrhein\\\" is an organization. The signature looks like \\\"Jeandrey\\\". Let's just use the organization name as it's the main sender, or maybe null for persons if it's strictly an org? The schema says \\\"sender_persons\\\". I'll put \\\"Verein f\u00fcr die Schiffahrt auf dem Oberrhein\\\" or the signer. Let's look at the signature again. It looks like \\\"Jeandrey\\\". Let's use \\\"Verein f\u00fcr die Schiffahrt auf dem Oberrhein\\\" as the sender entity, but the key is `sender_persons`. I will include the organization name as it acts as the sender. Wait, \\\"Herrn Dr. Max Vischer\\\" is the receiver.\\n- **Letter Title**: There is no explicit title like \\\"Subject: ...\\\". So `letter_title`: null.\\n\\nLet's refine the fields:\\n- `send_date`: [\\\"1928-09-28\\\"]\\n- `letter_title`: null (no specific title)\\n- `sender_persons`: [\\\"Verein f\u00fcr die Schiffahrt auf dem Oberrhein\\\"] (or the signer, but the org is prominent). Actually, the signature looks like \\\"Jeandrey\\\". Let's use the organization name as it's the letterhead. Wait, the key is `sender_persons`. I'll put the organization name.\\n- `receiver_persons`: [\\\"Max Vischer\\\"]\\n\\nLet's check the schema again.\\n`send_date`: list of strings or null.\\n`letter_title`: list of strings or null.\\n`sender_persons`: list of strings or null.\\n`receiver_persons`: list of strings or null.\\n\\nDate: 28 Sept. 1928 -> 1928-09-28.\\nReceiver: Dr. Max Vischer.\\nSender: Verein f\u00fcr die Schiffahrt auf dem Oberrhein.\\nTitle: null.\\n\\nWait, the signature looks like \\\"Jeandrey\\\". I will include the organization.\\nLet's just use the organization name for sender_persons as it's the entity sending it.\\nActually, let's look at the signature. It looks like \\\"Jeandrey\\\". I'll put \\\"Verein f\u00fcr die Schiffahrt auf dem Oberrhein\\\".\\n\\nLet's construct the JSON.\\n```json\\n{\\n  \\\"metadata\\\": {\\n    \\\"send_date\\\": [\\\"1928-09-28\\\"],\\n    \\\"letter_title\\\": null,\\n    \\\"sender_persons\\\": [\\\"Verein f\u00fcr die Schiffahrt auf dem Oberrhein\\\"],\\n    \\\"receiver_persons\\\": [\\\"Max Vischer\\\"]\\n  }\\n}\\n```\\nWait, the schema says `sender_persons` and `receiver_persons`. \\\"Verein...\\\" is an organization. Is there a person? The signature is there. It looks like \\\"Jeandrey\\\". I'll add \\\"Jeandrey\\\" or just the org. Let's use the org.\\nActually, often in these tasks, the letterhead entity is considered the sender.\\nLet's use \\\"Verein f\u00fcr die Schiffahrt auf dem Oberrhein\\\".\\n\\nRe-evaluating the signature: It looks like \\\"Jeandrey\\\".\\nI will use \\\"Verein f\u00fcr die Schiffahrt auf dem Oberrhein\\\" as the sender.\\n\\nOne more check on the date: \\\"28 Sept. 1928.\\\" -> \\\"1928-09-28\\\".\\nReceiver: \\\"Herrn Dr. Max Vischer\\\" -> \\\"Max Vischer\\\".\\nTitle: None.\\n\\nFinal JSON structure:\\n{\\n  \\\"metadata\\\": {\\n    \\\"send_date\\\": [\\\"1928-09-28\\\"],\\n    \\\"letter_title\\\": null,\\n    \\\"sender_persons\\\": [\\\"Verein f\u00fcr die Schiffahrt auf dem Oberrhein\\\"],\\n    \\\"receiver_persons\\\": [\\\"Max Vischer\\\"]\\n  }\\n}\\nWait, the schema requires `letter_title` to be a list or null.\\n`sender_persons` list or null.\\n`receiver_persons` list or null.\\n`send_date` list or null.\\n\\nI will formulate the response.\",\"format\":\"unknown\",\"index\":0}]},\"native_finish_reason\":\"stop\"}],\"created\":1789717707,\"model\":\"qwen/qwen3.7-plus\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":null,\"usage\":{\"completion_tokens\":1369,\"prompt_tokens\":3127,\"total_tokens\":4496,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":0,\"reasoning_tokens\":1277,\"rejected_prediction_tokens\":null,\"image_tokens\":0},\"prompt_tokens_details\":{\"audio_tokens\":0,\"cached_tokens\":0,\"cache_write_tokens\":0,\"video_tokens\":0},\"cost\":0.00275296,\"is_byok\":false,\"cost_details\":{\"upstream_inference_cost\":0.00275296,\"upstream_inference_prompt_cost\":0.00100064,\"upstream_inference_completions_cost\":0.00175232}},\"provider\":\"Alibaba\"}"
+}

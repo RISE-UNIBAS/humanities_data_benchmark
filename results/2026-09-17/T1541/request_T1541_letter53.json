@@ -1,0 +1,85 @@
+{
+    "text": "{\"metadata\":{\"send_date\":[\"1932-10-07\"],\"letter_title\":[\"\"],\"sender_persons\":[\"Basler Personenschifffahrtsgesellschaft\"],\"receiver_persons\":[\"Vorstandsmitglieder der Basler Personenschifffahrtsgesellschaft\"]}}",
+    "model": "thinkingmachines/Inkling-Small",
+    "provider": "huggingface",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 2254,
+        "output_tokens": 846,
+        "total_tokens": 3100,
+        "cached_tokens": 256
+    },
+    "duration": 9.3102285861969,
+    "timestamp": "2026-09-17T09:50:09.016731",
+    "parsed": {
+        "metadata": {
+            "send_date": [
+                "1932-10-07"
+            ],
+            "letter_title": [
+                ""
+            ],
+            "sender_persons": [
+                "Basler Personenschifffahrtsgesellschaft"
+            ],
+            "receiver_persons": [
+                "Vorstandsmitglieder der Basler Personenschifffahrtsgesellschaft"
+            ]
+        }
+    },
+    "conversation_id": "defe5583-1f90-4a06-bdb6-f51a4d49c5b5",
+    "score": {
+        "send_date_tp": 1,
+        "send_date_fp": 0,
+        "send_date_fn": 0,
+        "sender_persons_tp": 0,
+        "sender_persons_fp": 1,
+        "sender_persons_fn": 1,
+        "receiver_persons_tp": 0,
+        "receiver_persons_fp": 1,
+        "receiver_persons_fn": 0,
+        "field_scores": {
+            "send_date": {
+                "response": [
+                    "1932-10-07"
+                ],
+                "ground_truth": [
+                    "1932-10-07"
+                ],
+                "score": null,
+                "counts": {
+                    "send_date_tp": 1,
+                    "send_date_fp": 0,
+                    "send_date_fn": 0
+                }
+            },
+            "sender_persons": {
+                "response": [
+                    "Basler Personenschifffahrtsgesellschaft"
+                ],
+                "ground_truth": [
+                    "Oettinger-Meili, Artur"
+                ],
+                "score": null,
+                "counts": {
+                    "sender_persons_tp": 0,
+                    "sender_persons_fp": 1,
+                    "sender_persons_fn": 1
+                }
+            },
+            "receiver_persons": {
+                "response": [
+                    "Vorstandsmitglieder der Basler Personenschifffahrtsgesellschaft"
+                ],
+                "ground_truth": [],
+                "score": null,
+                "counts": {
+                    "receiver_persons_tp": 0,
+                    "receiver_persons_fp": 1,
+                    "receiver_persons_fn": 0
+                }
+            }
+        }
+    },
+    "raw_response": "{\"id\":\"chatcmpl-RFbrC9K8pv9f32IklxjLfFUo\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\n\\n\\n    \\\"metadata\\\": {\\n        \\\"send_date\\\": [\\\"1932-10-07\\\"],\\n        \\\"letter_title\\\": [\\\"\\\"],\\n        \\\"sender_persons\\\": [\\\"Basler Personenschifffahrtsgesellschaft\\\"],\\n        \\\"receiver_persons\\\": [\\\"Vorstandsmitglieder der Basler Personenschifffahrtsgesellschaft\\\"]\\n    }\\n}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"metadata\":{\"send_date\":[\"1932-10-07\"],\"letter_title\":[\"\"],\"sender_persons\":[\"Basler Personenschifffahrtsgesellschaft\"],\"receiver_persons\":[\"Vorstandsmitglieder der Basler Personenschifffahrtsgesellschaft\"]}},\"reasoning_content\":\"We need parse letter. Identify title? Not explicit title but maybe letter is from Basler Personenschifffahrts-Gesellschaft to Vorstandmitglieder. Need extract keys: letter_title, sender_persons, send_date, receiver_persons.\\n\\nFrom image: Header \\\"BASLER PERSONENSCHIFFAHRTS-GESELLSCHAFT\\\". Date: \\\"Basel, den 7. Oktober 1932.\\\" So send_date 1932-10-07.\\n\\nSender: The letter is signed by \\\"Basler Personenschifffahrtsgesellschaft\\\" and \\\"Der Gesch\u00e4ftsf\u00fchrer:\\\" with signature. So sender_persons likely [\\\"Basler Personenschifffahrtsgesellschaft\\\"] or maybe the Gesch\u00e4ftsf\u00fchrer name unknown. Since no specific person name given, use organization? The instruction: Name(s) of person(s) who wrote the letter. Could be null if not included. But signature is illegible. However letterhead indicates sender is Basler Personenschifffahrts-Gesellschaft. It says \\\"Hochachtungsvoll Basler Personenschifffahrtsgesellschaft Der Gesch\u00e4ftsf\u00fchrer:\\\". So sender is the company, but as persons maybe null. We need decide.\\n\\nReceiver: \\\"An die Vorstandmitglieder der Basler Personenschifffahrtsgesellschaft Basel\\\". So receiver_persons: [\\\"Vorstandmitglieder der Basler Personenschifffahrtsgesellschaft\\\"]? Or list individuals? Not named. Could put [\\\"Vorstandmitglieder der Basler Personenschifffahrtsgesellschaft\\\"].\\n\\nLetter title: Not present. Could be null. But maybe title is \\\"O/J\\\" at top left? That might be reference. Not title. So null.\\n\\nLet's craft JSON with lists. Use null as value? The instruction: \\\"If a piece of information is not included in the letter, set the value for the corresponding key to 'null'.\\\" But they also say values corresponding to each key should be stored as a list, even if single value. So if null, should it be [\\\"null\\\"] or null? Example shows strings in lists. For missing, likely [\\\"null\\\"]? But instruction: \\\"set the value for the corresponding key to 'null'.\\\" That suggests the value is null, not list? But they say \\\"where the values corresponding to each key should be stored as a list, even if there is only a single value\\\". So maybe [\\\"null\\\"]? Let's interpret as list containing null? But JSON can have null inside list. However typical extraction tasks: if missing, value is null (not in list). But contradictory. Let's see: \\\"return them in a JSON file where the values corresponding to each key should be stored as a list, even if there is only a single value for a key\\\". So every value is a list. If missing, maybe [\\\"null\\\"]? But they say \\\"set the value ... to 'null'\\\". Could mean the list contains null: [null]. Let's do that to be safe? Or maybe just null. Let's decide: For letter_title: [null]. For sender_persons: [\\\"Basler Personenschifffahrtsgesellschaft\\\"]? Actually persons: maybe null because no individual names. But organization is sender. Let's include [\\\"Basler Personenschifffahrtsgesellschaft\\\"] as sender entity. For receiver: [\\\"Vorstandmitglieder der Basler Personenschifffahrtsgesellschaft\\\"]. Date: [\\\"1932-10-07\\\"].\\n\\nLet's refine: The addressee is \\\"Vorstandsmitglieder der Basler Personenschifffahrtsgesellschaft\\\". So receiver_persons: [\\\"Vorstandsmitglieder der Basler Personenschifffahrtsgesellschaft\\\"].\\n\\nSender: Since signed by company, [\\\"Basler Personenschifffahrtsgesellschaft\\\"].\\n\\nTitle: none => [null].\\n\\nLet's output.\",\"name\":null}}],\"created\":1789631409,\"model\":\"thinkingmachines/Inkling-Small\",\"object\":\"chat.completion\",\"service_tier\":\"default\",\"system_fingerprint\":null,\"usage\":{\"completion_tokens\":846,\"prompt_tokens\":2254,\"total_tokens\":3100,\"completion_tokens_details\":null,\"prompt_tokens_details\":{\"audio_tokens\":null,\"cached_tokens\":256,\"cache_write_tokens\":null},\"estimated_cost\":0.001939899999744,\"reasoning_tokens\":774}}"
+}

@@ -1,0 +1,103 @@
+{
+    "text": "{\"advertisements\":[{\"box\":[250.0,250.0,2250.0,1700.0]},{\"box\":[280.0,1810.0,1265.0,3300.0]},{\"box\":[1265.0,1810.0,2245.0,3300.0]}]}",
+    "model": "deepseek-flash",
+    "provider": "deepseek",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 1288,
+        "output_tokens": 3935,
+        "total_tokens": 5223,
+        "input_cost_usd": 0.0003864,
+        "output_cost_usd": 0.004722,
+        "estimated_cost_usd": 0.0051084
+    },
+    "duration": 20.833020448684692,
+    "timestamp": "2026-09-16T17:17:13.690851",
+    "parsed": {
+        "advertisements": [
+            {
+                "box": [
+                    250,
+                    250,
+                    2250,
+                    1700
+                ]
+            },
+            {
+                "box": [
+                    280,
+                    1810,
+                    1265,
+                    3300
+                ]
+            },
+            {
+                "box": [
+                    1265,
+                    1810,
+                    2245,
+                    3300
+                ]
+            }
+        ]
+    },
+    "conversation_id": "e83faa3a-934c-4fe4-9a52-b02a21a36a6a",
+    "score": {
+        "field_scores": {
+            "box 0": {
+                "response": [
+                    250,
+                    250,
+                    2250,
+                    1700
+                ],
+                "ground_truth": [
+                    242,
+                    242,
+                    2312,
+                    1735
+                ],
+                "score": 0.938
+            },
+            "box 1": {
+                "response": [
+                    280,
+                    1810,
+                    1265,
+                    3300
+                ],
+                "ground_truth": [
+                    247,
+                    1777,
+                    1265,
+                    3267
+                ],
+                "score": 0.926
+            },
+            "box 2": {
+                "response": [
+                    1265,
+                    1810,
+                    2245,
+                    3300
+                ],
+                "ground_truth": [
+                    1302,
+                    1767,
+                    2314,
+                    3260
+                ],
+                "score": 0.853
+            }
+        },
+        "f1": 1.0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "mean_iou": 0.906,
+        "true_positives": 3,
+        "false_positives": 0,
+        "false_negatives": 0,
+        "iou_threshold": 0.5
+    },
+    "raw_response": "{\"id\":\"01c38d35-6cc0-4e20-b3f3-05a4a9afd058\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\\"advertisements\\\":[{\\\"box\\\":[250,250,2250,1700]},{\\\"box\\\":[280,1810,1265,3300]},{\\\"box\\\":[1265,1810,2245,3300]}]}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"reasoning_content\":\"We need answer only JSON. Need extract all advertisements and bounding boxes. Need inspect image. Page has multiple ads: top large Goth & Co Ltd Basle; bottom left E. Borel, Co Neuchatel; bottom right Standard Marine Insurance Co. Limited Liverpool. Need bounding boxes pixel coordinates original page 2479 x 3508. Need estimate.\\n\\nWe need return {\\\"advertisements\\\":[{\\\"box\\\":[x0,y0,x1,y1]}, ...]}.\\n\\nLet's analyze image dimensions. Page portrait. There are three ads separated by borders.\\n\\nTop ad: from around x=250? y=250? to x=2250? y=1700? Let's determine more precisely.\\n\\nImage displayed maybe width 2479, height 3508. Need bounding boxes.\\n\\nTop border rectangle: left edge at x ~270, top edge at y ~250? right edge ~2265, bottom edge ~1720? Let's estimate.\\n\\nTop ad has outer border box. It starts near left margin around 250? Let's inspect. The page edge black background maybe top left. Top ad frame: left vertical line at maybe x=263? Right vertical line at maybe x=2240? Top horizontal line at y=257? Bottom horizontal line at y=1700? Need within.\\n\\nTop ad content includes text and image. Outer border forms ad box. Box: [252, 258, 2248, 1703]? Let's scale. The page is 2479 wide. The ad border left maybe 10% = 248. Right edge maybe 90.5% = 2243. Top maybe 7% = 246. Bottom maybe 48% = 1684? Let's inspect visually: top ad occupies top half. There is margin around. The outer border top at ~257? bottom at ~1684? Actually the top ad vertical extent from top border to bottom border: It contains text 1870-1945 at top within; top border above it maybe y=235? Let's use relative.\\n\\nPage height 3508. Top ad top border maybe y=235. Bottom border maybe y=1685. The lower ads start around y=1820? Bottom left ad frame from y=1820 to y=3300? Bottom right similar. Page number 20 at bottom left y=3330? Maybe.\\n\\nLet's inspect the image visually: Top ad has border rectangle. It includes all top content. It is roughly a large rectangle. Top border at around 7.5% height? 3508*0.075=263. Bottom border at around 48.5%? 3508*0.485=1701. Left border at around 10% width? 2479*0.10=248. Right border at around 91% width? 2479*0.91=2256. So top ad box [260, 260, 2255, 1700]. But need maybe include border only.\\n\\nBottom left ad: has border rectangle, around x=250 to x=1250? y=1780 to y=3310? It contains E. Borel ad with illustration and text. Bottom left ad frame: left x ~275? right x ~1210? top y ~1785? bottom y ~3300? Actually bottom left box shares horizontal line with right? Let's inspect: There is a thin line between top and bottom ads? Top ad bottom border at ~1685. Then gap. Bottom left ad frame top at ~1840? Bottom left ad bottom at ~3330? Let's estimate more carefully.\\n\\nThe page has three ads arranged: top wide across page. Bottom divided into left and right columns. Bottom left ad includes a framed illustration with border; but also entire ad area is maybe a rectangular frame with text? Actually bottom left ad frame: It has a border around the entire ad? The image shows an illustration with a dark border inside; outside there is a thin border? Yes bottom left has a rectangular frame around whole ad? Let's look: There is a thin border enclosing bottom left ad, from top at y~1820? to bottom at y~3310? left x~270? right x~1250? Inside there's an illustration with its own black border. So ad box could be outer border. Bottom right ad similarly has a thin border around it? The right ad has text \\\"Standard Marine...\\\" with a thin border? It appears there is a border line around the right ad? Actually the right ad is enclosed by a thin line, maybe top at same y as left, bottom same, left at ~1280? right at ~2250? Let's inspect: The right ad has a rectangular border. Yes there is a thin line surrounding Standard Marine text. Top line around y~1820, bottom around y~3310; left ~1280; right ~2250. So bottom right ad box.\\n\\nNeed return all advertisements as list with boxes only. Could include the three ads. Maybe no other ads? Page number \\\"20\\\" not ad. So three.\\n\\nNeed accurate coordinates. Let's attempt better.\\n\\nUse the fact original size 2479 x 3508. Maybe there are known schemas. But we need manually estimate from image.\\n\\nLet's load mentally: The image is a scanned page. Top ad: a rectangular frame. Let's identify pixel coordinates relative.\\n\\nTop ad frame:\\n- Left border: roughly x=250? Let's measure using text alignment. Page width 2479. The top ad frame left line is around 10.3% = 255. The text \\\"1870 - 1945\\\" centered over \\\"INTERNATIONAL...\\\" maybe starts at x=390. The left border might be at x=250. The right border line maybe at x=2250. Top ad frame top line: around y=245. Bottom line: around y=1690. Let's use 250,250,2250,1690.\\n\\nBut maybe need include entire ad with border. The top ad outer border encloses image and text. Box maybe [246, 249, 2256, 1683].\\n\\nBottom left ad: Outer border rectangle? Let's inspect: There is a thin black line around bottom left ad, but it's not very thick. It seems there is a thin line forming a rectangle from x~300? Actually left edge maybe same as top ad left? The bottom left ad frame left line maybe at x=300? It's slightly indented? Let's compare with top ad left line. Top ad left line aligns maybe with bottom left ad left line? The left edge of bottom left ad frame looks aligned with top ad left border? In image, top ad left border at ~10%, bottom left left border maybe at ~11%; bottom right right border at ~90%. It may be aligned. Top ad left border aligns with bottom left ad left border. Bottom left ad right border? There is inner illustration; outer border maybe at x=1220. Bottom right ad left border maybe at x=1280. They don't overlap. Bottom left ad top border maybe at y=1800; bottom border at y=3300. Bottom right ad top border maybe same y=1800; bottom y=3300; left x=1290; right x=2240. The bottom ads might be bounded by a single outer rectangle containing both? No, there is a vertical line separating left and right ads? Actually there is a vertical line maybe at x=1275 separating bottom left and right ads? Yes I see a vertical line between bottom left and right ads, maybe shared border. Bottom left ad right border and bottom right ad left border are same vertical line at x~1265. So there are two ad boxes adjacent.\\n\\nNeed coordinates with tolerance.\\n\\nLet's estimate using proportions.\\n\\nPage dimensions: W=2479, H=3508.\\n\\nTop ad:\\nTop margin maybe 7.0% H = 245.5. Left margin maybe 9.8% W = 243. Bottom maybe 48.3% H = 1694. Right maybe 90.8% W = 2251. So top box [244,245,2251,1694].\\n\\nBut I should inspect top ad: border appears not symmetric; top border y=255, bottom border y=1690. Left border x=250, right border x=2250. Use [250, 250, 2250, 1690].\\n\\nBottom left ad:\\nTop y maybe 52% H = 1824. Bottom y maybe 94% H = 3298. Left x maybe 11% W = 273. Right x maybe 51% W = 1264. So [273,1824,1264,3298]. But let's inspect: Bottom left ad top border maybe y=1820? bottom border maybe y=3300? left maybe x=275, right maybe x=1265. The inner ad illustration maybe from x=320 to x=1215, y=1900 to y=3100? Outer border includes more. There is a thin border around ad. I'd choose [280,1815,1265,3300].\\n\\nBottom right ad:\\nTop same y=1815, bottom y=3300, left x=1265? right x=2240. So [1265,1815,2240,3300]. But if left and right share border at x=1262.\\n\\nNeed maybe include only bounding boxes, no labels. Should we include all three? Yes.\\n\\nBut ensure valid JSON matching schema. Return a JSON object with advertisements array. Each advertisement object has box.\\n\\nMaybe there is a possibility that top ad has two separate boxes? It's one ad. Bottom left and right are separate ads. Good.\\n\\nLet's refine coordinates using visual cues.\\n\\nLet's map from image: The top ad rectangle's top line is just above \\\"1870 - 1945\\\" text. The text \\\"1870 - 1945\\\" baseline around y=365? The top border y maybe 245. Left border is just left of \\\"INTERNATIONAL\\\" text. The text starts at x=300? So left border maybe x=260. Right border is right of image, around x=2250. Top border has some margin.\\n\\nBottom left ad's outer border line: I see a thin line around the whole left ad. It starts just above the illustration, maybe y=1800. The top border line is below top ad bottom border by maybe 100px. The left border line maybe x=300? Actually the left border of bottom left ad seems slightly right of top ad left border; but due to perspective maybe same? Let's compare: Top ad left border at x=250; bottom left ad left border might be at x=290? In the image, the bottom left ad is indented slightly more? It contains a framed picture; the outer border maybe around x=270. The bottom right ad left border might be at x=1280. The right ad has text centered; its border right at x=2250. So I'll use:\\nTop: [248, 252, 2252, 1690]\\nBottom left: [285, 1815, 1260, 3300]\\nBottom right: [1262, 1815, 2250, 3300]\\n\\nNeed maybe include all coordinates as integers? Schema says numbers. Fine.\\n\\nBut maybe the page number \\\"20\\\" is an ad? No.\\n\\nLet's ensure no other advertisement: The top ad is a large ad. Bottom left ad E. Borel, Co. Bottom right ad Standard Marine. Yes.\\n\\nMaybe output:\\n{\\\"advertisements\\\":[{\\\"box\\\":[248,252,2252,1690]},{\\\"box\\\":[285,1815,1260,3300]},{\\\"box\\\":[1262,1815,2250,3300]}]}\\n\\nNeed final only. But we should consider if bounding boxes should include actual ad frame border. Let's adjust.\\n\\nLet's estimate more precisely by using the actual pixel dimensions and known positions from visual features.\\n\\nTop ad:\\n- Outer rectangle: Top left corner maybe (250, 260). Bottom right maybe (2255, 1690). Let's see top border y: There is a thin line. The word \\\"1870-1945\\\" is positioned near top; its top maybe y=280? If top border y=245. Bottom border y maybe 1685. The text \\\"Head Office in Basle...\\\" below image is inside frame. The frame bottom is slightly below that caption? Actually caption \\\"Head Office in Basle 45, Elisabethenstrasse\\\" is inside the frame? It appears below the photograph, within border. The bottom border of frame is below that caption. The caption baseline around y=1650, border bottom around y=1700. So top ad box height from 245 to 1700 = 1455. Top ad maybe square? Width 2000, height 1455. plausible.\\n\\nBottom left:\\n- Outer rectangle: top border maybe y=1810, bottom border y=3300. Left border x=285, right x=1260. The inset illustration maybe from x=320 to 1200, y=1900 to 3100. The outer border around whole ad is visible. E. Borel text at bottom inside border. Top border y maybe 1815. Bottom border around 3300. Height 1485.\\n\\nBottom right:\\n- Outer rectangle: top border y=1810, bottom y=3300. Left border x=1265, right x=2240. Height 1490.\\n\\nNeed maybe align top of bottom ads with each other. yes.\\n\\nMaybe there is a single large outer border around bottom part? Actually bottom left and right ads are separated by vertical line; each has top and bottom borders that might be continuous horizontal lines across both? In image, there is a horizontal line above both bottom ads, and vertical line down between them, and horizontal line below both. So bottom two could be considered separate ads but share a common outer border? The top border of bottom left and right is same line. So bottom left box begins at x= maybe 285 and ends at x=1265; bottom right begins at x=1265 ends x=2240. Good.\\n\\nLet's consider if bottom left and right ads have their own bounding boxes or one combined? User asks extract all advertisements. Each ad independent. So separate.\\n\\nNeed maybe include \\\"advertisements\\\": [] if none, but there are three. Final JSON.\\n\\nLet's ensure schema: {\\\"advertisements\\\":[{\\\"box\\\":[x0,y0,x1,y1]}, ...]}. No extra. Use valid JSON with double quotes.\\n\\nLet's maybe refine coordinates to better match original. Let's attempt to derive from visual grid: The page is a scan with black background at edges, page area maybe x=100 to x=2379? There is white page; left black margin maybe 0-100; right black? Actually the page image includes black background on top/bottom? The page itself is beige, with black background visible on left and top? Let's see: The top ad left border at maybe x=250. The page left edge maybe x=0? But the image includes black border around page. The page content area maybe starts x=200? The top ad left border x=250. Good.\\n\\nCould there be a difference due to scanning? It's likely a full page scan. Original size 2479x3508. The page may have a black background outside? Actually the uploaded image is portrait, with black bands on left and bottom? The top ad box top y=257. Top page edge maybe y=0 black; beige page starts y~70? At top, there is black border until y~70? No, image has a black margin at top maybe 80px? Let's see: The top ad top border is around y=250; above it there is beige paper background; above that maybe black at very top? The black at top is around y=0-50? The top ad border is not at very top. So okay.\\n\\nLet's maybe use image coordinate reference by relative from page corners. If the page beige area starts at x~210? Then top ad left border x=250 is 40px inside. Top ad right border x=2250 is 229px from right edge? Page width 2479, right beige edge maybe 2450? Hmm.\\n\\nLet's verify by looking at bottom ads: Bottom left ad left border x maybe 280; bottom right ad right border x maybe 2245. The right margin from ad to page edge maybe 230px (2479-2245=234). Left margin from ad to page edge maybe 280. So similar. Top ad right border maybe 2250; left 250; symmetrical. Good.\\n\\nLet's decide final boxes:\\nTop: [250, 250, 2250, 1700]\\nBottom left: [280, 1810, 1265, 3300]\\nBottom right: [1265, 1810, 2245, 3300]\\n\\nBut maybe bottom left right border and bottom right left border are at 1260/1265. Fine.\\n\\nLet's see if bottom left ad top border y=1810. The top ad bottom border y=1700; gap 110px. In image, gap between top ad bottom border and bottom ads top border maybe around 100px. yes.\\n\\nBottom left ad bottom border y=3300; page number 20 at left bottom maybe y=3340? The bottom ad bottom border maybe around 3305. If page height 3508, bottom margin ~200px. Good.\\n\\nLet's output with decimals? Use integers. Fine.\\n\\nNeed ensure JSON valid: no trailing commas.\\n\\nFinal:\\n{\\\"advertisements\\\":[{\\\"box\\\":[250,250,2250,1700]},{\\\"box\\\":[280,1810,1265,3300]},{\\\"box\\\":[1265,1810,2245,3300]}]}\\n\\nBut perhaps the top ad box should be [250, 255, 2250, 1685], bottom left [280, 1815, 1260, 3295], bottom right [1260, 1815, 2245, 3295]. I'll keep my estimate.\\n\\nLet's also consider whether top ad contains an image that extends to right border, and right border maybe at x=2260. The image right edge maybe x=2230; border at x=2245. So yes.\\n\\nLet's finalize.\"}}],\"created\":1789571814,\"model\":\"deepseek-flash\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":\"aeb56401ca74e127821c4f9126dcb669\",\"usage\":{\"completion_tokens\":3935,\"prompt_tokens\":1288,\"total_tokens\":5223,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":null,\"reasoning_tokens\":3886,\"rejected_prediction_tokens\":null},\"prompt_tokens_details\":{\"audio_tokens\":null,\"cached_tokens\":0},\"prompt_cache_hit_tokens\":0,\"prompt_cache_miss_tokens\":1288}}"
+}

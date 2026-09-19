@@ -1,0 +1,81 @@
+{
+    "text": "{\"metadata\":{\"send_date\":[\"1928-06-19\"],\"letter_title\":null,\"sender_persons\":[\"Dr. Rudolf Leupold\"],\"receiver_persons\":null}}",
+    "model": "qwen/qwen3.7-plus",
+    "provider": "openrouter",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 3127,
+        "output_tokens": 1450,
+        "total_tokens": 4577,
+        "input_cost_usd": 0.0010006400000000001,
+        "output_cost_usd": 0.001856,
+        "estimated_cost_usd": 0.00285664
+    },
+    "duration": 27.591108798980713,
+    "timestamp": "2026-09-18T09:48:51.346280",
+    "parsed": {
+        "metadata": {
+            "send_date": [
+                "1928-06-19"
+            ],
+            "letter_title": null,
+            "sender_persons": [
+                "Dr. Rudolf Leupold"
+            ],
+            "receiver_persons": null
+        }
+    },
+    "conversation_id": "8767a5b2-3a2b-4334-927e-1a42ee7595da",
+    "score": {
+        "send_date_tp": 1,
+        "send_date_fp": 0,
+        "send_date_fn": 0,
+        "sender_persons_tp": 1,
+        "sender_persons_fp": 0,
+        "sender_persons_fn": 0,
+        "receiver_persons_tp": 0,
+        "receiver_persons_fp": 0,
+        "receiver_persons_fn": 0,
+        "field_scores": {
+            "send_date": {
+                "response": [
+                    "1928-06-19"
+                ],
+                "ground_truth": [
+                    "1928-06-19"
+                ],
+                "score": null,
+                "counts": {
+                    "send_date_tp": 1,
+                    "send_date_fp": 0,
+                    "send_date_fn": 0
+                }
+            },
+            "sender_persons": {
+                "response": [
+                    "Leupold, Rudolf"
+                ],
+                "ground_truth": [
+                    "Leupold, Rudolf"
+                ],
+                "score": null,
+                "counts": {
+                    "sender_persons_tp": 1,
+                    "sender_persons_fp": 0,
+                    "sender_persons_fn": 0
+                }
+            },
+            "receiver_persons": {
+                "response": [],
+                "ground_truth": [],
+                "score": null,
+                "counts": {
+                    "receiver_persons_tp": 0,
+                    "receiver_persons_fp": 0,
+                    "receiver_persons_fn": 0
+                }
+            }
+        }
+    },
+    "raw_response": "{\"id\":\"gen-1789717703-FHPn0lm7wYDjQ5ZeBNqn\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\n  \\\"metadata\\\": {\\n    \\\"send_date\\\": [\\n      \\\"1928-06-19\\\"\\n    ],\\n    \\\"letter_title\\\": null,\\n    \\\"sender_persons\\\": [\\n      \\\"Dr. Rudolf Leupold\\\"\\n    ],\\n    \\\"receiver_persons\\\": null\\n  }\\n}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"metadata\":{\"send_date\":[\"1928-06-19\"],\"letter_title\":null,\"sender_persons\":[\"Dr. Rudolf Leupold\"],\"receiver_persons\":null}},\"reasoning\":\"The user wants me to extract metadata from a historical letter image and format it as JSON.\\nThe JSON schema requires:\\n- `metadata`: an object containing:\\n    - `send_date`: list of strings or null\\n    - `letter_title`: list of strings or null\\n    - `sender_persons`: list of strings or null\\n    - `receiver_persons`: list of strings or null\\n\\nLet's analyze the image:\\n- **Header/Letterhead**:\\n  - Dr. ADOLF BIEDER\\n  - Dr. HANS BURCKHARDT\\n  - Dr. RUDOLF LEUPOLD\\n  - Advokatur & Notariat\\n  - BASEL\\n- **Date**: \\\"Basel, den 19. Juni 1928\\\" -> 1928-06-19\\n- **Recipient**: \\\"An die Basler Personenschiffahrtsgesellschaft\\\" (To the Basel Passenger Shipping Company). This is an organization, not a specific person, but usually, in these tasks, if it's addressed to an entity, we might put null for receiver_persons or the entity name if it fits. The prompt asks for \\\"Name(s) of the person(s) who received the letter\\\". Since it's a company, I'll put null or the company name. Wait, usually \\\"receiver_persons\\\" implies people. Let's look at the signature.\\n- **Body**: \\\"In der Beilage gebe ich Ihnen den Schiffsbrief 'Albatros' nach Gebrauch zur\u00fcck...\\\"\\n- **Closing**: \\\"Hochachtungsvoll\\\"\\n- **Signature**: Looks like \\\"f. R. Leupold\\\" or similar. The letterhead has Dr. Rudolf Leupold. The signature looks like \\\"R. Leupold\\\". So the sender is likely Dr. Rudolf Leupold (or the firm representing him). The letterhead lists three doctors, but the signature is singular. \\\"f. R. Leupold\\\" (for Rudolf Leupold). Let's list the sender as Dr. Rudolf Leupold. Or maybe the firm? The prompt asks for \\\"sender_persons\\\". I will extract \\\"Dr. Rudolf Leupold\\\" or just \\\"Rudolf Leupold\\\". The signature looks like \\\"R. Leupold\\\".\\n- **Letter Title**: There is no explicit title. It's a business letter. So `letter_title` should be null.\\n- **Receiver**: \\\"Basler Personenschiffahrtsgesellschaft\\\". Is this a person? No. So `receiver_persons` should be null. Wait, sometimes entities are accepted. But strictly \\\"persons\\\". I'll set it to null. Or maybe I should include it? Let's check the schema. \\\"receiver_persons\\\". I'll put null.\\n\\nLet's refine the sender. The letterhead lists:\\n- Dr. Adolf Bieder\\n- Dr. Hans Burckhardt\\n- Dr. Rudolf Leupold\\nThe signature is \\\"R. Leupold\\\" (looks like \\\"f. R. Leupold\\\" meaning \\\"for Rudolf Leupold\\\" or just his signature). I will list \\\"Dr. Rudolf Leupold\\\" as the sender. Actually, often in these datasets, the letterhead names are considered senders if it's a firm, but the signature is the actual writer. I'll include \\\"Dr. Rudolf Leupold\\\".\\n\\nLet's re-evaluate the receiver. \\\"An die Basler Personenschiffahrtsgesellschaft\\\". It's an organization. I will set `receiver_persons` to null.\\n\\nLet's re-evaluate the date. \\\"19. Juni 1928\\\" -> \\\"1928-06-19\\\".\\n\\nLet's re-evaluate the title. No title. -> null.\\n\\nWait, looking closely at the signature: \\\"f. R. Leupold\\\". The \\\"f.\\\" usually stands for \\\"f\u00fcr\\\" (for) or it's a flourish. It looks like \\\"R. Leupold\\\".\\n\\nLet's look at the letterhead again. It's a law firm \\\"Advokatur & Notariat\\\". The senders could be the firm members, but usually, the signer is the sender. I'll put \\\"Dr. Rudolf Leupold\\\".\\n\\nActually, looking at the signature, it looks like \\\"R. Leupold\\\".\\n\\nLet's consider if \\\"Basler Personenschiffahrtsgesellschaft\\\" should be in receiver_persons. The prompt says \\\"Name(s) of the person(s)\\\". A company is not a person. So null.\\n\\nFinal check of values:\\n- `send_date`: [\\\"1928-06-19\\\"]\\n- `letter_title`: null (or []? Schema says `anyOf: [array of strings, null]`. The example uses lists. If not included, set to \\\"null\\\" (the string? or JSON null?). The prompt says \\\"set the value for the corresponding key to 'null'\\\". In JSON, this usually means the null value, but the example shows lists. Wait, the prompt says \\\"set the value... to 'null'\\\". In the schema, it allows `null`. I will use `null`.\\n- `sender_persons`: [\\\"Dr. Rudolf Leupold\\\"] (or maybe all three? The letter says \\\"gebe ich\\\" (I give), singular. So it's one person. The signature is R. Leupold. So [\\\"Dr. Rudolf Leupold\\\"].\\n- `receiver_persons`: null.\\n\\nWait, is there a title? No.\\n\\nLet's look at the signature again. It looks like \\\"R. Leupold\\\".\\n\\nOne detail: The prompt says \\\"set the value for the corresponding key to 'null'\\\". In JSON, `null` is a keyword. The schema allows `null`.\\n\\nLet's construct the JSON.\\n```json\\n{\\n  \\\"metadata\\\": {\\n    \\\"send_date\\\": [\\\"1928-06-19\\\"],\\n    \\\"letter_title\\\": null,\\n    \\\"sender_persons\\\": [\\\"Dr. Rudolf Leupold\\\"],\\n    \\\"receiver_persons\\\": null\\n  }\\n}\\n```\\nWait, the schema says `receiver_persons` can be a list of strings or null.\\nThe letterhead has 3 names. The signature is one. \\\"ich\\\" (I) is used. So sender is the signer.\\nThe receiver is a company. \\\"An die Basler Personenschiffahrtsgesellschaft\\\".\\n\\nI will output the JSON.\",\"reasoning_details\":[{\"type\":\"reasoning.text\",\"text\":\"The user wants me to extract metadata from a historical letter image and format it as JSON.\\nThe JSON schema requires:\\n- `metadata`: an object containing:\\n    - `send_date`: list of strings or null\\n    - `letter_title`: list of strings or null\\n    - `sender_persons`: list of strings or null\\n    - `receiver_persons`: list of strings or null\\n\\nLet's analyze the image:\\n- **Header/Letterhead**:\\n  - Dr. ADOLF BIEDER\\n  - Dr. HANS BURCKHARDT\\n  - Dr. RUDOLF LEUPOLD\\n  - Advokatur & Notariat\\n  - BASEL\\n- **Date**: \\\"Basel, den 19. Juni 1928\\\" -> 1928-06-19\\n- **Recipient**: \\\"An die Basler Personenschiffahrtsgesellschaft\\\" (To the Basel Passenger Shipping Company). This is an organization, not a specific person, but usually, in these tasks, if it's addressed to an entity, we might put null for receiver_persons or the entity name if it fits. The prompt asks for \\\"Name(s) of the person(s) who received the letter\\\". Since it's a company, I'll put null or the company name. Wait, usually \\\"receiver_persons\\\" implies people. Let's look at the signature.\\n- **Body**: \\\"In der Beilage gebe ich Ihnen den Schiffsbrief 'Albatros' nach Gebrauch zur\u00fcck...\\\"\\n- **Closing**: \\\"Hochachtungsvoll\\\"\\n- **Signature**: Looks like \\\"f. R. Leupold\\\" or similar. The letterhead has Dr. Rudolf Leupold. The signature looks like \\\"R. Leupold\\\". So the sender is likely Dr. Rudolf Leupold (or the firm representing him). The letterhead lists three doctors, but the signature is singular. \\\"f. R. Leupold\\\" (for Rudolf Leupold). Let's list the sender as Dr. Rudolf Leupold. Or maybe the firm? The prompt asks for \\\"sender_persons\\\". I will extract \\\"Dr. Rudolf Leupold\\\" or just \\\"Rudolf Leupold\\\". The signature looks like \\\"R. Leupold\\\".\\n- **Letter Title**: There is no explicit title. It's a business letter. So `letter_title` should be null.\\n- **Receiver**: \\\"Basler Personenschiffahrtsgesellschaft\\\". Is this a person? No. So `receiver_persons` should be null. Wait, sometimes entities are accepted. But strictly \\\"persons\\\". I'll set it to null. Or maybe I should include it? Let's check the schema. \\\"receiver_persons\\\". I'll put null.\\n\\nLet's refine the sender. The letterhead lists:\\n- Dr. Adolf Bieder\\n- Dr. Hans Burckhardt\\n- Dr. Rudolf Leupold\\nThe signature is \\\"R. Leupold\\\" (looks like \\\"f. R. Leupold\\\" meaning \\\"for Rudolf Leupold\\\" or just his signature). I will list \\\"Dr. Rudolf Leupold\\\" as the sender. Actually, often in these datasets, the letterhead names are considered senders if it's a firm, but the signature is the actual writer. I'll include \\\"Dr. Rudolf Leupold\\\".\\n\\nLet's re-evaluate the receiver. \\\"An die Basler Personenschiffahrtsgesellschaft\\\". It's an organization. I will set `receiver_persons` to null.\\n\\nLet's re-evaluate the date. \\\"19. Juni 1928\\\" -> \\\"1928-06-19\\\".\\n\\nLet's re-evaluate the title. No title. -> null.\\n\\nWait, looking closely at the signature: \\\"f. R. Leupold\\\". The \\\"f.\\\" usually stands for \\\"f\u00fcr\\\" (for) or it's a flourish. It looks like \\\"R. Leupold\\\".\\n\\nLet's look at the letterhead again. It's a law firm \\\"Advokatur & Notariat\\\". The senders could be the firm members, but usually, the signer is the sender. I'll put \\\"Dr. Rudolf Leupold\\\".\\n\\nActually, looking at the signature, it looks like \\\"R. Leupold\\\".\\n\\nLet's consider if \\\"Basler Personenschiffahrtsgesellschaft\\\" should be in receiver_persons. The prompt says \\\"Name(s) of the person(s)\\\". A company is not a person. So null.\\n\\nFinal check of values:\\n- `send_date`: [\\\"1928-06-19\\\"]\\n- `letter_title`: null (or []? Schema says `anyOf: [array of strings, null]`. The example uses lists. If not included, set to \\\"null\\\" (the string? or JSON null?). The prompt says \\\"set the value for the corresponding key to 'null'\\\". In JSON, this usually means the null value, but the example shows lists. Wait, the prompt says \\\"set the value... to 'null'\\\". In the schema, it allows `null`. I will use `null`.\\n- `sender_persons`: [\\\"Dr. Rudolf Leupold\\\"] (or maybe all three? The letter says \\\"gebe ich\\\" (I give), singular. So it's one person. The signature is R. Leupold. So [\\\"Dr. Rudolf Leupold\\\"].\\n- `receiver_persons`: null.\\n\\nWait, is there a title? No.\\n\\nLet's look at the signature again. It looks like \\\"R. Leupold\\\".\\n\\nOne detail: The prompt says \\\"set the value for the corresponding key to 'null'\\\". In JSON, `null` is a keyword. The schema allows `null`.\\n\\nLet's construct the JSON.\\n```json\\n{\\n  \\\"metadata\\\": {\\n    \\\"send_date\\\": [\\\"1928-06-19\\\"],\\n    \\\"letter_title\\\": null,\\n    \\\"sender_persons\\\": [\\\"Dr. Rudolf Leupold\\\"],\\n    \\\"receiver_persons\\\": null\\n  }\\n}\\n```\\nWait, the schema says `receiver_persons` can be a list of strings or null.\\nThe letterhead has 3 names. The signature is one. \\\"ich\\\" (I) is used. So sender is the signer.\\nThe receiver is a company. \\\"An die Basler Personenschiffahrtsgesellschaft\\\".\\n\\nI will output the JSON.\",\"format\":\"unknown\",\"index\":0}]},\"native_finish_reason\":\"stop\"}],\"created\":1789717703,\"model\":\"qwen/qwen3.7-plus\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":null,\"usage\":{\"completion_tokens\":1450,\"prompt_tokens\":3127,\"total_tokens\":4577,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":0,\"reasoning_tokens\":1373,\"rejected_prediction_tokens\":null,\"image_tokens\":0},\"prompt_tokens_details\":{\"audio_tokens\":0,\"cached_tokens\":0,\"cache_write_tokens\":0,\"video_tokens\":0},\"cost\":0.00285664,\"is_byok\":false,\"cost_details\":{\"upstream_inference_cost\":0.00285664,\"upstream_inference_prompt_cost\":0.00100064,\"upstream_inference_completions_cost\":0.001856}},\"provider\":\"Alibaba\"}"
+}

@@ -1,0 +1,88 @@
+{
+    "text": "{\"metadata\":{\"send_date\":[\"1932-10-04\"],\"letter_title\":[\"\"],\"sender_persons\":[\"Basler Rheinschiffahrt Aktiengesellschaft\"],\"receiver_persons\":[\"Dr. Max Vischer\"]}}",
+    "model": "thinkingmachines/Inkling-Small",
+    "provider": "huggingface",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 6108,
+        "output_tokens": 1010,
+        "total_tokens": 7118,
+        "cached_tokens": 256
+    },
+    "duration": 12.437474727630615,
+    "timestamp": "2026-09-17T09:50:12.061003",
+    "parsed": {
+        "metadata": {
+            "send_date": [
+                "1932-10-04"
+            ],
+            "letter_title": [
+                ""
+            ],
+            "sender_persons": [
+                "Basler Rheinschiffahrt Aktiengesellschaft"
+            ],
+            "receiver_persons": [
+                "Dr. Max Vischer"
+            ]
+        }
+    },
+    "conversation_id": "ea0e8056-b931-45bc-80f7-9c1b47afaaef",
+    "score": {
+        "send_date_tp": 1,
+        "send_date_fp": 0,
+        "send_date_fn": 0,
+        "sender_persons_tp": 0,
+        "sender_persons_fp": 1,
+        "sender_persons_fn": 2,
+        "receiver_persons_tp": 1,
+        "receiver_persons_fp": 0,
+        "receiver_persons_fn": 0,
+        "field_scores": {
+            "send_date": {
+                "response": [
+                    "1932-10-04"
+                ],
+                "ground_truth": [
+                    "1932-10-04"
+                ],
+                "score": null,
+                "counts": {
+                    "send_date_tp": 1,
+                    "send_date_fp": 0,
+                    "send_date_fn": 0
+                }
+            },
+            "sender_persons": {
+                "response": [
+                    "Basler Rheinschiffahrt Aktiengesellschaft"
+                ],
+                "ground_truth": [
+                    "Groschupf-Jaeger, Louis",
+                    "Ritter-Dreier, Fritz"
+                ],
+                "score": null,
+                "counts": {
+                    "sender_persons_tp": 0,
+                    "sender_persons_fp": 1,
+                    "sender_persons_fn": 2
+                }
+            },
+            "receiver_persons": {
+                "response": [
+                    "Vischer-von Planta, Max"
+                ],
+                "ground_truth": [
+                    "Vischer-von Planta, Max"
+                ],
+                "score": null,
+                "counts": {
+                    "receiver_persons_tp": 1,
+                    "receiver_persons_fp": 0,
+                    "receiver_persons_fn": 0
+                }
+            }
+        }
+    },
+    "raw_response": "{\"id\":\"chatcmpl-Re4WKuTLhSADriOAdBXgs77m\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\n\\n\\n    \\\"metadata\\\": {\\n        \\\"send_date\\\": [\\\"1932-10-04\\\"],\\n        \\\"letter_title\\\": [\\\"\\\"],\\n        \\\"sender_persons\\\": [\\\"Basler Rheinschiffahrt Aktiengesellschaft\\\"],\\n        \\\"receiver_persons\\\": [\\\"Dr. Max Vischer\\\"]\\n    }\\n}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"metadata\":{\"send_date\":[\"1932-10-04\"],\"letter_title\":[\"\"],\"sender_persons\":[\"Basler Rheinschiffahrt Aktiengesellschaft\"],\"receiver_persons\":[\"Dr. Max Vischer\"]}},\"reasoning_content\":\"We need parse letter. First image: header \\\"BASLER RHEINSCHIFFahrt AKTIENGESELLSCHAFT BASEL * MARKTGASSE 5\\\". Date at top right: \\\"Basel, den 4.Oktober 1932\\\". Receiver: \\\"Herrn Dr. Max Vischer, Advokat und Notar, Basel, St. Albangraben 8.\\\" So sender is Basler Rheinschiffahrt Aktiengesellschaft, likely represented by someone, but letter signed maybe by company. We need sender_persons: Name(s) of person(s) who wrote the letter. Could be the company itself? But likely an individual signatory. At end of first page maybe signature? Third image shows signature and \\\"BASLER RHEINSCHIFFAHRT-AKTIENGESELLSCHAFT\\\". The signatory name is handwritten, hard to read. Could be \\\"Rudolf ...\\\"? Let's inspect: The signature looks like \\\"Rudolf ...\\\"? Actually maybe \\\"Dr. ...\\\"? We need extract from letter. Since not clearly legible, but the letterhead indicates company. The prompt: extract values of keys from letter. If not included, set null. For sender_persons, if only company name appears as sender, maybe list company? But key says person(s). Could be null if no individual named. However on second page header \\\"Herrn Dr. Max Vischer,\\\" and at right \\\"Basel. 4.10.32.\\\" So letter is from company to Dr. Max Vischer. The signatory is likely an officer, but name not typed. Could extract from signature if possible. Let's think: The handwritten signature might be \\\"Willy ...\\\"? Not sure.\\n\\nLet's examine first page text: \\\"Wir best\u00e4tigen den Empfang Ihres Schreibens...\\\" So company writes. At bottom of third page: \\\"Mit vorz\u00fcglicher Hochachtung BASLER RHEINSCHIFFAHRT-AKTIENGESELLSCHAFT\\\" and signature. So sender is the company, but person is unknown. Since key asks for person(s), maybe set to null or infer company? Usually in these tasks, they want \\\"Basler Rheinschiffahrt Aktiengesellschaft\\\" as sender? But key is sender_persons. Let's see example: \\\"Lisa Simpson\\\". So persons. If letter is from organization, maybe list organization? But it says person(s). Could put null because individual not named. However the signature might be readable as \\\"Rudolf Gerber\\\"? Let's try to decipher: The first name seems \\\"Rudolf\\\"? The last name maybe \\\"Meyer\\\"? Actually looking at shape: It starts with capital R, then u, d, o, l, f? Yes \\\"Rudolf\\\". Last name: \\\"Gerber\\\"? Let's not guess too much. Could be \\\"Rudolf Schmid\\\"? Hmm.\\n\\nLet's check if any typed name appears elsewhere. First page no. Third page only signature. So likely sender_persons: null or [\\\"Basler Rheinschiffahrt Aktiengesellschaft\\\"]. But the letterhead is the sender entity. The question: \\\"Name(s) of the person(s) who wrote the letter.\\\" If an organization wrote it, the persons are the signatories. Since not legible, set null.\\n\\nLetter title: Not explicitly titled. Could be null. But maybe \\\"Letter regarding passenger shipping\\\" etc. No title given. So null.\\n\\nSend date: \\\"4. Oktober 1932\\\" => 1932-10-04.\\n\\nReceiver persons: [\\\"Dr. Max Vischer\\\"].\\n\\nLet's craft JSON accordingly.\\n\\nBut maybe sender_persons: [\\\"Basler Rheinschiffahrt Aktiengesellschaft\\\"] because that's who wrote. However to be safe, include both? The instruction: \\\"If a piece of information is not included in the letter, set the value for the corresponding key to 'null'.\\\" The sender's name as a person is not explicitly typed, but the company is. Is company a person? Legal person. Could include. But key says sender_persons. I think best is [\\\"Basler Rheinschiffahrt Aktiengesellschaft\\\"] because it's the sender identified on letterhead and signature block. Actually the signature block says company name, and signature is likely of authorized person. But without name, company is the sender.\\n\\nLet's decide: sender_persons: [\\\"Basler Rheinschiffahrt Aktiengesellschaft\\\"]. letter_title: null. send_date: [\\\"1932-10-04\\\"]. receiver_persons: [\\\"Dr. Max Vischer\\\"].\\n\\nWait receiver address includes \\\"Basel\\\" but person is Dr. Max Vischer.\\n\\nYes.\\n\\nLet's output.\",\"name\":null}}],\"created\":1789631412,\"model\":\"thinkingmachines/Inkling-Small\",\"object\":\"chat.completion\",\"service_tier\":\"default\",\"system_fingerprint\":null,\"usage\":{\"completion_tokens\":1010,\"prompt_tokens\":6108,\"total_tokens\":7118,\"completion_tokens_details\":null,\"prompt_tokens_details\":{\"audio_tokens\":null,\"cached_tokens\":256,\"cache_write_tokens\":null},\"estimated_cost\":0.003870999999744,\"reasoning_tokens\":946}}"
+}

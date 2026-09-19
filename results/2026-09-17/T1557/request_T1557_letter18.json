@@ -1,0 +1,80 @@
+{
+    "text": "{\"metadata\":{\"send_date\":[\"1928-03-12\"],\"letter_title\":null,\"sender_persons\":[\"Basler Rheinschiffahrtsverband\"],\"receiver_persons\":[\"Basler Rheinschiffahrt A.G.\"]}}",
+    "model": "thinkingmachines/Inkling",
+    "provider": "huggingface",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 2254,
+        "output_tokens": 1567,
+        "total_tokens": 3821
+    },
+    "duration": 17.718321800231934,
+    "timestamp": "2026-09-17T11:39:31.448546",
+    "parsed": {
+        "metadata": {
+            "send_date": [
+                "1928-03-12"
+            ],
+            "letter_title": null,
+            "sender_persons": [
+                "Basler Rheinschiffahrtsverband"
+            ],
+            "receiver_persons": [
+                "Basler Rheinschiffahrt A.G."
+            ]
+        }
+    },
+    "conversation_id": "29ea57cb-c36e-4f3b-9802-b562d71e9465",
+    "score": {
+        "send_date_tp": 1,
+        "send_date_fp": 0,
+        "send_date_fn": 0,
+        "sender_persons_tp": 0,
+        "sender_persons_fp": 1,
+        "sender_persons_fn": 0,
+        "receiver_persons_tp": 0,
+        "receiver_persons_fp": 1,
+        "receiver_persons_fn": 0,
+        "field_scores": {
+            "send_date": {
+                "response": [
+                    "1928-03-12"
+                ],
+                "ground_truth": [
+                    "1928-03-12"
+                ],
+                "score": null,
+                "counts": {
+                    "send_date_tp": 1,
+                    "send_date_fp": 0,
+                    "send_date_fn": 0
+                }
+            },
+            "sender_persons": {
+                "response": [
+                    "Basler Rheinschiffahrtsverband"
+                ],
+                "ground_truth": [],
+                "score": null,
+                "counts": {
+                    "sender_persons_tp": 0,
+                    "sender_persons_fp": 1,
+                    "sender_persons_fn": 0
+                }
+            },
+            "receiver_persons": {
+                "response": [
+                    "Basler Rheinschiffahrt A.G."
+                ],
+                "ground_truth": [],
+                "score": null,
+                "counts": {
+                    "receiver_persons_tp": 0,
+                    "receiver_persons_fp": 1,
+                    "receiver_persons_fn": 0
+                }
+            }
+        }
+    },
+    "raw_response": "{\"id\":\"p1dBJpv-4i1VM9-a3c7247f7e3cb967\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\n  \\\"metadata\\\": {\\n    \\\"send_date\\\": [\\\"1928-03-12\\\"],\\n    \\\"letter_title\\\": null,\\n    \\\"sender_persons\\\": [\\\"Basler Rheinschiffahrtsverband\\\"],\\n    \\\"receiver_persons\\\": [\\\"Basler Rheinschiffahrt A.G.\\\"]\\n  }\\n}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"metadata\":{\"send_date\":[\"1928-03-12\"],\"letter_title\":null,\"sender_persons\":[\"Basler Rheinschiffahrtsverband\"],\"receiver_persons\":[\"Basler Rheinschiffahrt A.G.\"]}},\"reasoning\":\"We need parse image of historical letter. Need extract letter_title, sender_persons, send_date, receiver_persons. Let's analyze visible text.\\n\\nImage shows typed letter on yellowish paper. Top right \\\"13\\\" in red. Then \\\"Basel, den 12. M\u00e4rz 1928.\\\" Left \\\"C/M\\\". Then address block: \\\"An die Basler Rheinschiffahrt A.G., Basel.\\\" Then salutation? Actually \\\"Wir bekommen uns zum Empfang Ihres Schreibens vom 1.ds. und teilen Ihnen h\u00f6flich mit, dass dessen Behandlung auf der Traktandenliste der Vorstandssitzung vom 13. M\u00e4rz steht. Wir werden nicht verfehlen Ihnen in K\u00fcrze weitere Mitteilungen zukommen zu lassen und zeichnen hochachtungsvoll:\\\" Then signature block: \\\"Basler Rheinschiffahrtsverband\\\" maybe? \\\"Der Gesch\u00e4ftsf\u00fchrer\\\" or \\\"Der Pr\u00e4sident\\\"? Need determine sender and receiver.\\n\\nLet's understand context: Letter addressed to \\\"Basler Rheinschiffahrt A.G., Basel\\\". The body says \\\"Wir bekommen uns zum Empfang Ihres Schreibens...\\\" meaning \\\"We acknowledge receipt of your letter...\\\" So the writer is responding to a letter from the addressee? Wait \\\"An die Basler Rheinschiffahrt A.G.\\\" is the recipient? Actually in formal letters, \\\"An die ...\\\" can be the addressee. But then \\\"Wir bekommen uns zum Empfang Ihres Schreibens...\\\" If \\\"wir\\\" are the senders, then \\\"Ihres Schreibens\\\" refers to the recipient's letter. So yes, recipient is Basler Rheinschiffahrt A.G., and senders are the ones signing at bottom: \\\"Basler Rheinschiffahrtsverband\\\" maybe with a person? Let's inspect signature area: There is faded text, likely \\\"Basler Rheinschiffahrtsverband\\\" and below \\\"Der Gesch\u00e4ftsf\u00fchrer\\\" but no clear personal name. The prompt asks for name(s) of person(s) who wrote the letter. If only organization, maybe include organization? But key is sender_persons, likely expecting organization or person if visible. Let's examine image closer mental: At bottom right, there might be handwritten signature? Actually it's typed/faded: \\\"Basler Rheinschiffahrtsverband\\\" then \\\"Der Gesch\u00e4ftsf\u00fchrer\\\" maybe \\\"E. Schmidt\\\"? Not readable clearly. But we should extract what's visible.\\n\\nAlso need letter_title: Title of the letter. There might not be explicit title except maybe \\\"C/M\\\" or none. Could be null if not present. But sometimes the subject is implied? The prompt says if not included set null. There's no explicit title like \\\"Betreff\\\". So letter_title likely null.\\n\\nSend date: \\\"Basel, den 12. M\u00e4rz 1928\\\" => 1928-03-12.\\n\\nReceiver persons: \\\"Basler Rheinschiffahrt A.G.\\\" Maybe also \\\"Basel\\\" but that's location. So [\\\"Basler Rheinschiffahrt A.G.\\\"].\\n\\nSender persons: The signing entity appears \\\"Basler Rheinschiffahrtsverband\\\". Let's check consistency: The letter is from Basler Rheinschiffahrtsverband to Basler Rheinschiffahrt A.G. Yes that makes sense: an association writing to a company. So sender_persons: [\\\"Basler Rheinschiffahrtsverband\\\"]. If there's a specific person like \\\"Der Gesch\u00e4ftsf\u00fchrer\\\" without name, we might not include. But maybe there is a name above? Let's think: In the bottom center/right, there might be two lines: \\\"Basler Rheinschiffahrtsverband\\\" and then \\\"Der Pr\u00e4sident\\\" or \\\"Der Sekret\u00e4r\\\". Without readable name, use organization.\\n\\nBut wait the address line \\\"An die Basler Rheinschiffahrt A.G., Basel.\\\" This is indeed the recipient. So receiver_persons = [\\\"Basler Rheinschiffahrt A.G.\\\"].\\n\\nCheck if any other names: In body mention \\\"Vorstandssitzung vom 13. M\u00e4rz\\\" but no persons.\\n\\nThus JSON:\\n{\\n\\\"letter_title\\\": [null]? Wait they said values stored as list, even if single value. If information not included, set value for corresponding key to \\\"null\\\". Does that mean the list contains null? Or the value is null? The example shows lists of strings. The instruction: \\\"return them in a JSON file where the values corresponding to each key should be stored as a list, even if there is only a single value for a key\\\" and \\\"If a piece of information is not included in the letter, set the value for the corresponding key to 'null'.\\\" This is ambiguous: should it be [\\\"null\\\"] or null? Usually they want the value to be null, not in a list? But they said values corresponding to each key should be stored as a list. So likely [\\\"null\\\"]? Let's examine example: all values are lists. For missing info, probably [null] but they said set the value ... to \\\"null\\\". Let's interpret as the list should contain the string \\\"null\\\"? Or the JSON value should be null? Given consistency with lists, maybe \\\"letter_title\\\": [null]. But they said \\\"set the value for the corresponding key to 'null'\\\" which in JSON is null without quotes. However they also said stored as a list. I think best is \\\"letter_title\\\": [null]. But need be careful.\\n\\nActually in many similar prompts, they want:\\n\\\"letter_title\\\": null\\nBut they said values should be stored as a list. Hmm. Let's check wording precisely: \\\"extract the values of the following keys from the letter and return them in a JSON file where the values corresponding to each key should be stored as a list, even if there is only a single value for a key\\\"\\n\\nThen: \\\"If a piece of information is not included in the letter, set the value for the corresponding key to \\\"null\\\".\\\"\\n\\nThis could mean if missing, then the list is replaced by null? Or the list contains \\\"null\\\"? Usually in these extraction tasks, they want lists always, but if missing put null (not in list). But that conflicts with \\\"stored as a list\\\". Let's decide: For present values, list of strings. For missing, null (not list). But to be safe maybe [null]. Let's think about evaluation: They might check JSON schema expecting list for each key. If we put null, it might fail schema expecting array. But they explicitly said set value to \\\"null\\\". That suggests the value itself is null, breaking the list rule for that case. So I will do:\\n\\\"letter_title\\\": null\\nBut wait they said \\\"values corresponding to each key should be stored as a list\\\" - that applies when there is a value. If none, null.\\n\\nHowever, I want to be consistent: maybe letter_title is present? Could be \\\"C/M\\\" is not title. Or maybe the letter has no title. So null.\\n\\nLet's also check sender_persons: Could include both organization and person if readable. The bottom signature might include \\\"Dr. ...\\\" but not readable. Given image quality, likely only organization is readable. So [\\\"Basler Rheinschiffahrtsverband\\\"].\\n\\nSend date: [\\\"1928-03-12\\\"].\\n\\nReceiver: [\\\"Basler Rheinschiffahrt A.G.\\\"].\\n\\nThus output.\"},\"seed\":null}],\"created\":1789637954,\"model\":\"thinkingmachines/Inkling\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":\"default\",\"usage\":{\"completion_tokens\":1567,\"prompt_tokens\":2254,\"total_tokens\":3821,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":null,\"reasoning_tokens\":1497,\"rejected_prediction_tokens\":null},\"prompt_tokens_details\":{\"audio_tokens\":null,\"cached_tokens\":0}},\"prompt\":[]}"
+}

@@ -1,0 +1,78 @@
+{
+    "text": "{\"metadata\":{\"send_date\":[\"1928-04-25\"],\"letter_title\":null,\"sender_persons\":[\"Basler Rheinschiffahrt A.G.\"],\"receiver_persons\":null}}",
+    "model": "z-ai/glm-5v-turbo",
+    "provider": "openrouter",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 4363,
+        "output_tokens": 1242,
+        "total_tokens": 5605,
+        "cached_tokens": 256,
+        "estimated_cost_usd": 0.00995784
+    },
+    "duration": 100.43433165550232,
+    "timestamp": "2026-09-17T22:21:45.024512",
+    "parsed": {
+        "metadata": {
+            "letter_title": null,
+            "sender_persons": [
+                "Basler Rheinschiffahrt A.G."
+            ],
+            "send_date": [
+                "1928-04-25"
+            ],
+            "receiver_persons": null
+        }
+    },
+    "conversation_id": "e875e8e7-912a-4d2b-a7f1-14e100a66316",
+    "score": {
+        "send_date_tp": 1,
+        "send_date_fp": 0,
+        "send_date_fn": 0,
+        "sender_persons_tp": 0,
+        "sender_persons_fp": 1,
+        "sender_persons_fn": 0,
+        "receiver_persons_tp": 0,
+        "receiver_persons_fp": 0,
+        "receiver_persons_fn": 0,
+        "field_scores": {
+            "send_date": {
+                "response": [
+                    "1928-04-25"
+                ],
+                "ground_truth": [
+                    "1928-04-25"
+                ],
+                "score": null,
+                "counts": {
+                    "send_date_tp": 1,
+                    "send_date_fp": 0,
+                    "send_date_fn": 0
+                }
+            },
+            "sender_persons": {
+                "response": [
+                    "Basler Rheinschiffahrt A.G."
+                ],
+                "ground_truth": [],
+                "score": null,
+                "counts": {
+                    "sender_persons_tp": 0,
+                    "sender_persons_fp": 1,
+                    "sender_persons_fn": 0
+                }
+            },
+            "receiver_persons": {
+                "response": [],
+                "ground_truth": [],
+                "score": null,
+                "counts": {
+                    "receiver_persons_tp": 0,
+                    "receiver_persons_fp": 0,
+                    "receiver_persons_fn": 0
+                }
+            }
+        }
+    },
+    "raw_response": "{\"id\":\"gen-1789676456-8drUaiqrFsiARV3De9Cl\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\n    \\\"metadata\\\": {\\n        \\\"letter_title\\\": null,\\n        \\\"sender_persons\\\": [\\n            \\\"Basler Rheinschiffahrt A.G.\\\"\\n        ],\\n        \\\"send_date\\\": [\\n            \\\"1928-04-25\\\"\\n        ],\\n        \\\"receiver_persons\\\": null\\n    }\\n}\\n\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"reasoning\":\"The user wants me to extract specific information from a historical letter image and return it in a JSON format.\\n\\n Let me analyze the image:\\n\\n 1. **Date**: The letter is dated \\\"25.April 1928\\\" (top right)\\n 2. **Sender**: The letterhead shows \\\"Basler Rheinschiffahrt A.G. Basel\\\" and it's signed by \\\"Hochachtungsvoll\\\" with a stamp that looks like \\\"Basler Personenschiffahrtsgesellschaft\\\" or similar. The sender appears to be the company \\\"Basler Rheinschiffahrt A.G.\\\" (Basel Rhine Shipping AG).\\n 3. **Receiver**: The letter mentions \\\"Wir erhielten Ihr Geehrtes vom 23.ct\\\" - so there was previous correspondence, but the specific recipient name isn't explicitly stated in the visible text as a direct address line. However, looking at the context, this seems to be a business correspondence about contract drafts (\\\"Vertragsentwurf\\\"). The recipient isn't clearly named in the visible portion, but given this is a response (\\\"Wir erhielten Ihr...\\\"), the recipient would be whoever sent the letter of April 23rd.\\n \\n Wait, let me look more carefully:\\n - The letter starts with \\\"Wir erhielten Ihr Geehrtes vom 23.ct\\\" which means \\\"We received your esteemed [letter] from the 23rd\\\"\\n - The letter is from \\\"Basler Rheinschiffahrt A.G.\\\"\\n - There's no explicit \\\"To:\\\" or \\\"An:\\\" line visible that names the recipient\\n - However, the content discusses contracts regarding \\\"Rheinfelden\\\" and mentions \\\"Betriebsbewilligung von Basel-Stadt\\\" and \\\"Baselland\\\"\\n\\n Actually, looking at the signature area: \\\"Hochachtungsvoll\\\" (Yours respectfully) followed by what appears to be a stamp for \\\"Basler Personenschiffahrtsgesellschaft\\\".\\n\\n For the **title**: This doesn't have an explicit title like \\\"Contract Proposal\\\". It's a business letter regarding contract drafts (\\\"Vertragsentwurf\\\"). I could describe it based on content or set to null if no clear title exists.\\n\\n For **receiver_persons**: Since the letter says \\\"Wir erhielten Ihr...\\\" (We received your...), it implies a specific recipient, but their name isn't visible in the header. In many historical document extraction tasks, if the recipient isn't explicitly stated in the address block, we might need to infer or mark as null. However, looking at standard business letter formats of the time, the recipient might be on a previous page or implied.\\n\\n But actually, looking carefully at the text: The letter mentions receiving correspondence from the 23rd, and discusses various documents. Without a clear \\\"Sehr geehrter Herr X\\\" salutation visible, I should probably set receiver to null or note that it's not specified.\\n\\n Wait, I should check if there's any indication of who \\\"Ihr\\\" refers to. The context suggests this is about shipping/transport contracts on the Rhine (Rhein).\\n\\n Let me reconsider the fields:\\n\\n 1. **letter_title**: No explicit title. Could be null or descriptive like \\\"Gesch\u00e4ftsbrief betreffend Vertragsentw\u00fcrfe\\\" but since instructions say if not included set to null, I'll use null or perhaps the subject matter if considered a title. Actually, looking at the example, they used \\\"Petition for Environmental Protection\\\" which sounds like a descriptive title. But the instruction says \\\"Title of the letter\\\" - if there's no title line, it should be null.\\n\\n 2. **sender_persons**: \\\"Basler Rheinschiffahrt A.G.\\\" (the company). Or possibly an individual signing on behalf? The signature appears to be just the closing \\\"Hochachtungsvoll\\\" and the company stamp. So the sender is the company.\\n\\n 3. **send_date**: \\\"25.April 1928\\\" \u2192 \\\"1928-04-25\\\"\\n\\n 4. **receiver_persons**: Not explicitly mentioned in the visible text. The letter references \\\"Ihr Geehrtes vom 23.ct\\\" but doesn't name the person/company. So this should be null.\\n\\n Actually, looking one more time at the image to see if I missed any header information... The top has \\\"28\\\" in red (probably a page number), then the date, then the letterhead \\\"Basler Rheinschiffahrt A.G. Basel\\\", then the body starting with \\\"Wir erhielten Ihr Geehrtes...\\\"\\n\\n So my extraction:\\n - letter_title: null (no title visible)\\n - sender_persons: [\\\"Basler Rheinschiffahrt A.G.\\\"] \\n - send_date: [\\\"1928-04-25\\\"]\\n - receiver_persons: null (not specified in visible text)\\n\\n Wait, should I include the stamp text \\\"Basler Personenschiffahrtsgesellschaft\\\" as part of the sender? That appears to be a stamp at the bottom, possibly indicating the department or a related entity. The main letterhead is clearly \\\"Basler Rheinschiffahrt A.G.\\\"\\n\\n Also, checking if \\\"Hochachtungsvoll\\\" is followed by a name... it looks like it's just the closing formula, then the stamp. So no individual name is visible as signer.\\n\\n Final check on date format: ISO format YYYY-MM-DD, so 1928-04-25 is correct.\\n\\n One final thought: Could the \\\"28\\\" be relevant? It's likely a file or page number, not part of the letter content itself.\\n\\n The output must be valid JSON matching the schema provided.\",\"reasoning_details\":[{\"type\":\"reasoning.text\",\"text\":\"The user wants me to extract specific information from a historical letter image and return it in a JSON format.\\n\\n Let me analyze the image:\\n\\n 1. **Date**: The letter is dated \\\"25.April 1928\\\" (top right)\\n 2. **Sender**: The letterhead shows \\\"Basler Rheinschiffahrt A.G. Basel\\\" and it's signed by \\\"Hochachtungsvoll\\\" with a stamp that looks like \\\"Basler Personenschiffahrtsgesellschaft\\\" or similar. The sender appears to be the company \\\"Basler Rheinschiffahrt A.G.\\\" (Basel Rhine Shipping AG).\\n 3. **Receiver**: The letter mentions \\\"Wir erhielten Ihr Geehrtes vom 23.ct\\\" - so there was previous correspondence, but the specific recipient name isn't explicitly stated in the visible text as a direct address line. However, looking at the context, this seems to be a business correspondence about contract drafts (\\\"Vertragsentwurf\\\"). The recipient isn't clearly named in the visible portion, but given this is a response (\\\"Wir erhielten Ihr...\\\"), the recipient would be whoever sent the letter of April 23rd.\\n \\n Wait, let me look more carefully:\\n - The letter starts with \\\"Wir erhielten Ihr Geehrtes vom 23.ct\\\" which means \\\"We received your esteemed [letter] from the 23rd\\\"\\n - The letter is from \\\"Basler Rheinschiffahrt A.G.\\\"\\n - There's no explicit \\\"To:\\\" or \\\"An:\\\" line visible that names the recipient\\n - However, the content discusses contracts regarding \\\"Rheinfelden\\\" and mentions \\\"Betriebsbewilligung von Basel-Stadt\\\" and \\\"Baselland\\\"\\n\\n Actually, looking at the signature area: \\\"Hochachtungsvoll\\\" (Yours respectfully) followed by what appears to be a stamp for \\\"Basler Personenschiffahrtsgesellschaft\\\".\\n\\n For the **title**: This doesn't have an explicit title like \\\"Contract Proposal\\\". It's a business letter regarding contract drafts (\\\"Vertragsentwurf\\\"). I could describe it based on content or set to null if no clear title exists.\\n\\n For **receiver_persons**: Since the letter says \\\"Wir erhielten Ihr...\\\" (We received your...), it implies a specific recipient, but their name isn't visible in the header. In many historical document extraction tasks, if the recipient isn't explicitly stated in the address block, we might need to infer or mark as null. However, looking at standard business letter formats of the time, the recipient might be on a previous page or implied.\\n\\n But actually, looking carefully at the text: The letter mentions receiving correspondence from the 23rd, and discusses various documents. Without a clear \\\"Sehr geehrter Herr X\\\" salutation visible, I should probably set receiver to null or note that it's not specified.\\n\\n Wait, I should check if there's any indication of who \\\"Ihr\\\" refers to. The context suggests this is about shipping/transport contracts on the Rhine (Rhein).\\n\\n Let me reconsider the fields:\\n\\n 1. **letter_title**: No explicit title. Could be null or descriptive like \\\"Gesch\u00e4ftsbrief betreffend Vertragsentw\u00fcrfe\\\" but since instructions say if not included set to null, I'll use null or perhaps the subject matter if considered a title. Actually, looking at the example, they used \\\"Petition for Environmental Protection\\\" which sounds like a descriptive title. But the instruction says \\\"Title of the letter\\\" - if there's no title line, it should be null.\\n\\n 2. **sender_persons**: \\\"Basler Rheinschiffahrt A.G.\\\" (the company). Or possibly an individual signing on behalf? The signature appears to be just the closing \\\"Hochachtungsvoll\\\" and the company stamp. So the sender is the company.\\n\\n 3. **send_date**: \\\"25.April 1928\\\" \u2192 \\\"1928-04-25\\\"\\n\\n 4. **receiver_persons**: Not explicitly mentioned in the visible text. The letter references \\\"Ihr Geehrtes vom 23.ct\\\" but doesn't name the person/company. So this should be null.\\n\\n Actually, looking one more time at the image to see if I missed any header information... The top has \\\"28\\\" in red (probably a page number), then the date, then the letterhead \\\"Basler Rheinschiffahrt A.G. Basel\\\", then the body starting with \\\"Wir erhielten Ihr Geehrtes...\\\"\\n\\n So my extraction:\\n - letter_title: null (no title visible)\\n - sender_persons: [\\\"Basler Rheinschiffahrt A.G.\\\"] \\n - send_date: [\\\"1928-04-25\\\"]\\n - receiver_persons: null (not specified in visible text)\\n\\n Wait, should I include the stamp text \\\"Basler Personenschiffahrtsgesellschaft\\\" as part of the sender? That appears to be a stamp at the bottom, possibly indicating the department or a related entity. The main letterhead is clearly \\\"Basler Rheinschiffahrt A.G.\\\"\\n\\n Also, checking if \\\"Hochachtungsvoll\\\" is followed by a name... it looks like it's just the closing formula, then the stamp. So no individual name is visible as signer.\\n\\n Final check on date format: ISO format YYYY-MM-DD, so 1928-04-25 is correct.\\n\\n One final thought: Could the \\\"28\\\" be relevant? It's likely a file or page number, not part of the letter content itself.\\n\\n The output must be valid JSON matching the schema provided.\",\"format\":\"unknown\",\"index\":0}]},\"native_finish_reason\":\"stop\"}],\"created\":1789676456,\"model\":\"z-ai/glm-5v-turbo\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":null,\"usage\":{\"completion_tokens\":1242,\"prompt_tokens\":4363,\"total_tokens\":5605,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":0,\"reasoning_tokens\":1173,\"rejected_prediction_tokens\":null,\"image_tokens\":0},\"prompt_tokens_details\":{\"audio_tokens\":0,\"cached_tokens\":256,\"cache_write_tokens\":0,\"video_tokens\":0},\"cost\":0.00995784,\"is_byok\":false,\"cost_details\":{\"upstream_inference_cost\":0.00995784,\"upstream_inference_prompt_cost\":0.00498984,\"upstream_inference_completions_cost\":0.004968}},\"provider\":\"Z.AI\"}"
+}

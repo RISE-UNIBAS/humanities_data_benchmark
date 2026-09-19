@@ -1,0 +1,86 @@
+{
+    "text": "{\"metadata\":{\"send_date\":[\"1936-06-28\"],\"letter_title\":null,\"sender_persons\":[\"Dr. Max Vischer\"],\"receiver_persons\":[\"P. Christ-Wackernagel\"]}}",
+    "model": "z-ai/glm-5v-turbo",
+    "provider": "openrouter",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 8109,
+        "output_tokens": 1332,
+        "total_tokens": 9441,
+        "cached_tokens": 256,
+        "estimated_cost_usd": 0.01481304
+    },
+    "duration": 125.32432770729065,
+    "timestamp": "2026-09-17T22:12:57.871289",
+    "parsed": {
+        "metadata": {
+            "letter_title": null,
+            "send_date": [
+                "1936-06-28"
+            ],
+            "sender_persons": [
+                "Dr. Max Vischer"
+            ],
+            "receiver_persons": [
+                "P. Christ-Wackernagel"
+            ]
+        }
+    },
+    "conversation_id": "64303b06-6fce-4984-a9e8-7be99c2c82d2",
+    "score": {
+        "send_date_tp": 0,
+        "send_date_fp": 1,
+        "send_date_fn": 1,
+        "sender_persons_tp": 1,
+        "sender_persons_fp": 0,
+        "sender_persons_fn": 0,
+        "receiver_persons_tp": 1,
+        "receiver_persons_fp": 0,
+        "receiver_persons_fn": 0,
+        "field_scores": {
+            "send_date": {
+                "response": [
+                    "1936-06-28"
+                ],
+                "ground_truth": [
+                    "1926-06-28"
+                ],
+                "score": null,
+                "counts": {
+                    "send_date_tp": 0,
+                    "send_date_fp": 1,
+                    "send_date_fn": 1
+                }
+            },
+            "sender_persons": {
+                "response": [
+                    "Vischer-von Planta, Max"
+                ],
+                "ground_truth": [
+                    "Vischer-von Planta, Max"
+                ],
+                "score": null,
+                "counts": {
+                    "sender_persons_tp": 1,
+                    "sender_persons_fp": 0,
+                    "sender_persons_fn": 0
+                }
+            },
+            "receiver_persons": {
+                "response": [
+                    "Christ-Wackernagel, Paul"
+                ],
+                "ground_truth": [
+                    "Christ-Wackernagel, Paul"
+                ],
+                "score": null,
+                "counts": {
+                    "receiver_persons_tp": 1,
+                    "receiver_persons_fp": 0,
+                    "receiver_persons_fn": 0
+                }
+            }
+        }
+    },
+    "raw_response": "{\"id\":\"gen-1789675916-dlY2dIoUtiB74zdELFtQ\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\n  \\\"metadata\\\": {\\n    \\\"letter_title\\\": null,\\n    \\\"send_date\\\": [\\n      \\\"1936-06-28\\\"\\n    ],\\n    \\\"sender_persons\\\": [\\n      \\\"Dr. Max Vischer\\\"\\n    ],\\n    \\\"receiver_persons\\\": [\\n      \\\"P. Christ-Wackernagel\\\"\\n    ]\\n  }\\n}\\n\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"reasoning\":\"The user wants me to extract specific information from a historical letter image and return it in a JSON format.\\n\\n Let me analyze the image:\\n\\n 1. **Letter Title**: Looking at the content, this appears to be a business letter regarding a draft of a document about \\\"Basler Rheinschiffahrt Aktiengesellschaft\\\" (Basel Rhine Shipping Company). The letter discusses changes to a draft, so it's a response/confirmation letter. There isn't a formal title like \\\"Petition\\\" or similar, but the subject matter is about confirming receipt and proposing changes to a draft regarding the shipping company. I should check if there's an explicit title. Looking at the text: \\\"Mit bestem Dank best\u00e4tige ich den Empfang Ihres Geheerten vom 25. ct. mit dem Entwurf eines Schreibens an die Basler Rheinschiffahrt Aktiengesellschaft.\\\" This is the main subject. Since there's no explicit title header, I might need to infer or set to null, but looking at the example, they used a descriptive title. However, the instructions say if not included, set to null. But let me look carefully - is there a title? No explicit \\\"Betreff\\\" or \\\"Subject\\\" line with a title. So likely null, or I could describe it based on content. Actually, looking at standard practice for these types of extractions, if there's no explicit title, null is safer.\\n\\n 2. **Sender Persons**: \\n    - Letterhead shows: \\\"DR FRITZ STEIGER\\\" and \\\"DR MAX VISCHER\\\" - \\\"ADVOKATEN UND NOTARE\\\"\\n    - At the end of the letter (page 2), the signature appears to be \\\"Max Vischer\\\" (handwritten)\\n    - The letter uses \\\"ich\\\" (I) throughout, indicating one author\\n    - The signature looks like \\\"Max Vischer\\\"\\n    - So sender is Max Vischer (or Dr. Max Vischer)\\n\\n 3. **Send Date**:\\n    - Top right: \\\"Basel, den 28. Juni 1936.\\\"\\n    - So: 1936-06-28\\n\\n 4. **Receiver Persons**:\\n    - Addressed to: \\\"Herrn P. Christ-Wackernagel\\\"\\n    - Also mentions: \\\"vom Hause Peravicini, Christ & Co.\\\"\\n    - The salutation is \\\"Sehr geehrter Herr Christ,\\\"\\n    - So primary receiver is P. Christ-Wackernagel (or Herr Christ)\\n\\n Let me verify:\\n - Date: 28. Juni 1936 -> 1936-06-28\\n - Sender: Dr. Max Vischer (based on signature and letterhead)\\n - Receiver: P. Christ-Wackernagel (or Herrn P. Christ-Wackernagel)\\n - Title: Not explicitly stated as a title, but the content is about the draft for Basler Rheinschiffahrt AG. I'll check if I should put null or a descriptive title. The example shows \\\"Petition for Environmental Protection\\\" which suggests that if there's a clear subject, we can use it. But strictly speaking, this letter doesn't have a \\\"title\\\" field. However, looking at the content, it's a response regarding a draft. I think null is most accurate, or perhaps \\\"Entwurf eines Schreibens an die Basler Rheinschiffahrt Aktiengesellschaft\\\" as the subject matter. But to be safe and follow instructions literally (\\\"If a piece of information is not included in the letter\\\"), I should use null for title since there's no explicit title line.\\n\\n Wait, looking at the image again carefully:\\n - The letterhead has the names of the law firm.\\n - The date is clear: 28. Juni 1936.\\n - The recipient is clearly P. Christ-Wackernagel.\\n - The sender signs as Max Vischer.\\n\\n For the title: In German business letters of this era, the subject (Betreff) often comes after the address or before the salutation. Here, after \\\"Kaufhausgasse\\\" and before \\\"Sehr geehrter Herr Christ,\\\" there doesn't appear to be a subject line. The first paragraph starts immediately with acknowledging receipt. So yes, no explicit title.\\n\\n Final check on names:\\n - Sender: Max Vischer (Dr. Max Vischer)\\n - Receiver: P. Christ-Wackernagel (also referred to as Herr Christ)\\n\\n Format required:\\n ```json\\n {\\n   \\\"metadata\\\": {\\n     \\\"letter_title\\\": [...],\\n     \\\"send_date\\\": [...],\\n     \\\"sender_persons\\\": [...],\\n     \\\"receiver_persons\\\": [...]\\n   }\\n }\\n ```\\n\\n All values must be lists (arrays).\\n\\n So:\\n - letter_title: null (or empty list? Instructions say \\\"set the value... to 'null'\\\")\\n - send_date: [\\\"1936-06-28\\\"]\\n - sender_persons: [\\\"Dr. Max Vischer\\\"] or [\\\"Max Vischer\\\"] - I'll include the title as it appears in letterhead, or just the name. The signature says \\\"Max Vischer\\\", letterhead says \\\"DR MAX VISCHER\\\". I'll use \\\"Max Vischer\\\" or \\\"Dr. Max Vischer\\\". Let's go with \\\"Max Vischer\\\" as that's who signed it, or full \\\"Dr. Max Vischer\\\". I'll provide \\\"Dr. Max Vischer\\\".\\n - receiver_persons: [\\\"P. Christ-Wackernagel\\\"]\\n\\n Double-checking the date format: ISO format YYYY-MM-DD. Yes, 1936-06-28.\\n\\n One final check: Is there any other receiver? The letter is addressed to \\\"Herrn P. Christ-Wackernagel\\\" at \\\"vom Hause Peravicini, Christ & Co.\\\" So just him.\\n\\n Is there any other sender? The letterhead shows two names, but only one signed. The text uses singular \\\"ich\\\", so only one sender.\\n\\n Okay, ready to construct the JSON.\",\"reasoning_details\":[{\"type\":\"reasoning.text\",\"text\":\"The user wants me to extract specific information from a historical letter image and return it in a JSON format.\\n\\n Let me analyze the image:\\n\\n 1. **Letter Title**: Looking at the content, this appears to be a business letter regarding a draft of a document about \\\"Basler Rheinschiffahrt Aktiengesellschaft\\\" (Basel Rhine Shipping Company). The letter discusses changes to a draft, so it's a response/confirmation letter. There isn't a formal title like \\\"Petition\\\" or similar, but the subject matter is about confirming receipt and proposing changes to a draft regarding the shipping company. I should check if there's an explicit title. Looking at the text: \\\"Mit bestem Dank best\u00e4tige ich den Empfang Ihres Geheerten vom 25. ct. mit dem Entwurf eines Schreibens an die Basler Rheinschiffahrt Aktiengesellschaft.\\\" This is the main subject. Since there's no explicit title header, I might need to infer or set to null, but looking at the example, they used a descriptive title. However, the instructions say if not included, set to null. But let me look carefully - is there a title? No explicit \\\"Betreff\\\" or \\\"Subject\\\" line with a title. So likely null, or I could describe it based on content. Actually, looking at standard practice for these types of extractions, if there's no explicit title, null is safer.\\n\\n 2. **Sender Persons**: \\n    - Letterhead shows: \\\"DR FRITZ STEIGER\\\" and \\\"DR MAX VISCHER\\\" - \\\"ADVOKATEN UND NOTARE\\\"\\n    - At the end of the letter (page 2), the signature appears to be \\\"Max Vischer\\\" (handwritten)\\n    - The letter uses \\\"ich\\\" (I) throughout, indicating one author\\n    - The signature looks like \\\"Max Vischer\\\"\\n    - So sender is Max Vischer (or Dr. Max Vischer)\\n\\n 3. **Send Date**:\\n    - Top right: \\\"Basel, den 28. Juni 1936.\\\"\\n    - So: 1936-06-28\\n\\n 4. **Receiver Persons**:\\n    - Addressed to: \\\"Herrn P. Christ-Wackernagel\\\"\\n    - Also mentions: \\\"vom Hause Peravicini, Christ & Co.\\\"\\n    - The salutation is \\\"Sehr geehrter Herr Christ,\\\"\\n    - So primary receiver is P. Christ-Wackernagel (or Herr Christ)\\n\\n Let me verify:\\n - Date: 28. Juni 1936 -> 1936-06-28\\n - Sender: Dr. Max Vischer (based on signature and letterhead)\\n - Receiver: P. Christ-Wackernagel (or Herrn P. Christ-Wackernagel)\\n - Title: Not explicitly stated as a title, but the content is about the draft for Basler Rheinschiffahrt AG. I'll check if I should put null or a descriptive title. The example shows \\\"Petition for Environmental Protection\\\" which suggests that if there's a clear subject, we can use it. But strictly speaking, this letter doesn't have a \\\"title\\\" field. However, looking at the content, it's a response regarding a draft. I think null is most accurate, or perhaps \\\"Entwurf eines Schreibens an die Basler Rheinschiffahrt Aktiengesellschaft\\\" as the subject matter. But to be safe and follow instructions literally (\\\"If a piece of information is not included in the letter\\\"), I should use null for title since there's no explicit title line.\\n\\n Wait, looking at the image again carefully:\\n - The letterhead has the names of the law firm.\\n - The date is clear: 28. Juni 1936.\\n - The recipient is clearly P. Christ-Wackernagel.\\n - The sender signs as Max Vischer.\\n\\n For the title: In German business letters of this era, the subject (Betreff) often comes after the address or before the salutation. Here, after \\\"Kaufhausgasse\\\" and before \\\"Sehr geehrter Herr Christ,\\\" there doesn't appear to be a subject line. The first paragraph starts immediately with acknowledging receipt. So yes, no explicit title.\\n\\n Final check on names:\\n - Sender: Max Vischer (Dr. Max Vischer)\\n - Receiver: P. Christ-Wackernagel (also referred to as Herr Christ)\\n\\n Format required:\\n ```json\\n {\\n   \\\"metadata\\\": {\\n     \\\"letter_title\\\": [...],\\n     \\\"send_date\\\": [...],\\n     \\\"sender_persons\\\": [...],\\n     \\\"receiver_persons\\\": [...]\\n   }\\n }\\n ```\\n\\n All values must be lists (arrays).\\n\\n So:\\n - letter_title: null (or empty list? Instructions say \\\"set the value... to 'null'\\\")\\n - send_date: [\\\"1936-06-28\\\"]\\n - sender_persons: [\\\"Dr. Max Vischer\\\"] or [\\\"Max Vischer\\\"] - I'll include the title as it appears in letterhead, or just the name. The signature says \\\"Max Vischer\\\", letterhead says \\\"DR MAX VISCHER\\\". I'll use \\\"Max Vischer\\\" or \\\"Dr. Max Vischer\\\". Let's go with \\\"Max Vischer\\\" as that's who signed it, or full \\\"Dr. Max Vischer\\\". I'll provide \\\"Dr. Max Vischer\\\".\\n - receiver_persons: [\\\"P. Christ-Wackernagel\\\"]\\n\\n Double-checking the date format: ISO format YYYY-MM-DD. Yes, 1936-06-28.\\n\\n One final check: Is there any other receiver? The letter is addressed to \\\"Herrn P. Christ-Wackernagel\\\" at \\\"vom Hause Peravicini, Christ & Co.\\\" So just him.\\n\\n Is there any other sender? The letterhead shows two names, but only one signed. The text uses singular \\\"ich\\\", so only one sender.\\n\\n Okay, ready to construct the JSON.\",\"format\":\"unknown\",\"index\":0}]},\"native_finish_reason\":\"stop\"}],\"created\":1789675916,\"model\":\"z-ai/glm-5v-turbo\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":null,\"usage\":{\"completion_tokens\":1332,\"prompt_tokens\":8109,\"total_tokens\":9441,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":0,\"reasoning_tokens\":1255,\"rejected_prediction_tokens\":null,\"image_tokens\":0},\"prompt_tokens_details\":{\"audio_tokens\":0,\"cached_tokens\":256,\"cache_write_tokens\":0,\"video_tokens\":0},\"cost\":0.01481304,\"is_byok\":false,\"cost_details\":{\"upstream_inference_cost\":0.01481304,\"upstream_inference_prompt_cost\":0.00948504,\"upstream_inference_completions_cost\":0.005328}},\"provider\":\"Z.AI\"}"
+}

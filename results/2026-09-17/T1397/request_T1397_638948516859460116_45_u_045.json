@@ -1,0 +1,74 @@
+{
+    "text": "{\"company\":{\"transcription\":\"Ritzi & Wagner\"},\"location\":{\"transcription\":\"St.Gallen (Amriswil)\"},\"b_id\":{\"transcription\":\"B.51.322.GB.808.\"},\"date\":\"\",\"information\":[{\"transcription\":\"Britische schwarze Liste\\nAmendment 20, Dezember 1942.\"},{\"transcription\":\"gestrichen:\\nAmendment 13, 23.11.1945.\"}]}",
+    "model": "moonshotai/kimi-k3",
+    "provider": "openrouter",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 3678,
+        "output_tokens": 1083,
+        "total_tokens": 4761,
+        "cached_tokens": 320,
+        "input_cost_usd": 0.009739851563999999,
+        "output_cost_usd": 0.014385190092,
+        "estimated_cost_usd": 0.024125041655999997
+    },
+    "duration": 19.536743879318237,
+    "timestamp": "2026-09-17T23:40:04.106671",
+    "parsed": {
+        "company": {
+            "transcription": "Ritzi & Wagner"
+        },
+        "location": {
+            "transcription": "St.Gallen (Amriswil)"
+        },
+        "b_id": {
+            "transcription": "B.51.322.GB.808."
+        },
+        "date": "",
+        "information": [
+            {
+                "transcription": "Britische schwarze Liste\nAmendment 20, Dezember 1942."
+            },
+            {
+                "transcription": "gestrichen:\nAmendment 13, 23.11.1945."
+            }
+        ]
+    },
+    "conversation_id": "f4e0c210-7591-481b-9d29-4403907af8ae",
+    "score": {
+        "fuzzy": 1.0,
+        "field_scores": {
+            "b_id.transcription": {
+                "response": "B.51.322.GB.808.",
+                "ground_truth": "B.51.322.GB.808.",
+                "score": 1.0
+            },
+            "company.transcription": {
+                "response": "Ritzi & Wagner",
+                "ground_truth": "Ritzi & Wagner",
+                "score": 1.0
+            },
+            "date": {
+                "response": "",
+                "ground_truth": "",
+                "score": 1.0
+            },
+            "information[0].transcription": {
+                "response": "Britische schwarze Liste\nAmendment 20, Dezember 1942.",
+                "ground_truth": "Britische schwarze Liste\nAmendment 20, Dezember 1942.",
+                "score": 1.0
+            },
+            "information[1].transcription": {
+                "response": "gestrichen:\nAmendment 13, 23.11.1945.",
+                "ground_truth": "gestrichen:\nAmendment 13, 23.11.1945.",
+                "score": 1.0
+            },
+            "location.transcription": {
+                "response": "St.Gallen (Amriswil)",
+                "ground_truth": "St.Gallen (Amriswil)",
+                "score": 1.0
+            }
+        }
+    },
+    "raw_response": "{\"id\":\"gen-1789681184-uaBncavF82lQDZbM8HQY\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\n  \\\"company\\\": {\\\"transcription\\\": \\\"Ritzi & Wagner\\\"},\\n  \\\"location\\\": {\\\"transcription\\\": \\\"St.Gallen (Amriswil)\\\"},\\n  \\\"b_id\\\": {\\\"transcription\\\": \\\"B.51.322.GB.808.\\\"},\\n  \\\"date\\\": \\\"\\\",\\n  \\\"information\\\": [\\n    {\\\"transcription\\\": \\\"Britische schwarze Liste\\\\nAmendment 20, Dezember 1942.\\\"},\\n    {\\\"transcription\\\": \\\"gestrichen:\\\\nAmendment 13, 23.11.1945.\\\"}\\n  ]\\n}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"company\":{\"transcription\":\"Ritzi & Wagner\"},\"location\":{\"transcription\":\"St.Gallen (Amriswil)\"},\"b_id\":{\"transcription\":\"B.51.322.GB.808.\"},\"date\":\"\",\"information\":[{\"transcription\":\"Britische schwarze Liste\\nAmendment 20, Dezember 1942.\"},{\"transcription\":\"gestrichen:\\nAmendment 13, 23.11.1945.\"}]},\"reasoning\":\"The user wants me to extract data from an index card image and return it as JSON.\\n\\nLet me analyze the image:\\n- Top-left: \\\"Ritzi & Wagner, St.Gallen (Amriswil).\\\"\\n  - Company: \\\"Ritzi & Wagner\\\" (excluding location)\\n  - Location: \\\"St.Gallen (Amriswil)\\\" - the city/town. The instruction says \\\"The city or town, often following the company name.\\\" So location would be \\\"St.Gallen (Amriswil)\\\" or just \\\"St.Gallen\\\". Looking at the text: \\\"Ritzi & Wagner, St.Gallen (Amriswil).\\\" The location is \\\"St.Gallen (Amriswil)\\\". But it says exclude the location from company. The location field should be the city or town. I'll use \\\"St.Gallen (Amriswil)\\\".\\n- Top-right: \\\"B.51.322.GB.808.\\\"\\n- Date: The card has \\\"Dezember 1942\\\" and \\\"23.11.1945\\\". The instruction says \\\"Any stamped dates on the card in YYYY-MM-DD format.\\\" These are typed, not stamped. But the date field says \\\"Any stamped dates\\\". There don't appear to be stamped dates - the dates are typed as part of the information. Hmm. Let me reconsider. The date \\\"23.11.1945\\\" could be converted to 1945-11-23. But it's part of the information text, not a stamp. The instruction says \\\"If no date is present, use an empty string.\\\" \\n\\nLooking more carefully, there are no stamped dates visible on the card. The dates mentioned (Dezember 1942, 23.11.1945) are part of the typed information. So date should be empty string? But wait, the schema allows date to be string or null. The user says \\\"Any stamped dates on the card in YYYY-MM-DD format. If no date is present, use an empty string.\\\"\\n\\nThere are no stamps visible. So date = \\\"\\\".\\n\\nActually, let me reconsider. The \\\"gestrichen: Amendment 13, 23.11.1945\\\" - this is a date but it's typed. The field specifically says \\\"stamped dates\\\". I'll leave it empty since there are no stamped dates.\\n\\nInformation blocks:\\n- \\\"Britische schwarze Liste\\\\nAmendment 20, Dezember 1942.\\\"\\n- \\\"gestrichen:\\\\nAmendment 13, 23.11.1945.\\\"\\n\\nThese appear to be two separate blocks (separated by blank line).\\n\\nLet me format the JSON.\\n\\nCompany: \\\"Ritzi & Wagner\\\"\\nLocation: \\\"St.Gallen (Amriswil)\\\" - actually, looking again, the location is \\\"St.Gallen\\\" with \\\"(Amriswil)\\\" in parentheses. The instruction says location is \\\"The city or town\\\". I'll transcribe it as \\\"St.Gallen (Amriswil)\\\" to be faithful, but maybe just \\\"St.Gallen\\\". The primary location is St.Gallen, with Amriswil in parentheses. I'll use \\\"St.Gallen (Amriswil)\\\".\\n\\nHmm, but the company name is \\\"Ritzi & Wagner\\\" and location follows. The full text is \\\"Ritzi & Wagner, St.Gallen (Amriswil).\\\" So location = \\\"St.Gallen (Amriswil)\\\".\\n\\nb_id: \\\"B.51.322.GB.808.\\\"\\n\\ndate: \\\"\\\" (no stamped date)\\n\\ninformation:\\n[\\n  {\\\"transcription\\\": \\\"Britische schwarze Liste\\\\nAmendment 20, Dezember 1942.\\\"},\\n  {\\\"transcription\\\": \\\"gestrichen:\\\\nAmendment 13, 23.11.1945.\\\"}\\n]\\n\\nWait, should the date field capture 1945-11-23? The instruction says \\\"Any stamped dates on the card\\\". There are no stamps. But maybe they mean any dates. Let me re-read: \\\"date\\\": Any stamped dates on the card in YYYY-MM-DD format. If no date is present, use an empty string.\\n\\nThe dates on the card are typed, not stamped. In these archival cards, sometimes there's a date stamp. Here I don't see a separate stamp. The \\\"23.11.1945\\\" is part of the \\\"gestrichen\\\" (deleted) note. I'll leave date as empty string since it's not a stamped date and it's part of the information.\\n\\nActually, reconsidering - the task says \\\"Any stamped dates\\\". There are no visible stamps (like inkstamps). All text is typewritten. So date = \\\"\\\".\\n\\nLet me finalize.\",\"reasoning_details\":[{\"type\":\"reasoning.text\",\"text\":\"The user wants me to extract data from an index card image and return it as JSON.\\n\\nLet me analyze the image:\\n- Top-left: \\\"Ritzi & Wagner, St.Gallen (Amriswil).\\\"\\n  - Company: \\\"Ritzi & Wagner\\\" (excluding location)\\n  - Location: \\\"St.Gallen (Amriswil)\\\" - the city/town. The instruction says \\\"The city or town, often following the company name.\\\" So location would be \\\"St.Gallen (Amriswil)\\\" or just \\\"St.Gallen\\\". Looking at the text: \\\"Ritzi & Wagner, St.Gallen (Amriswil).\\\" The location is \\\"St.Gallen (Amriswil)\\\". But it says exclude the location from company. The location field should be the city or town. I'll use \\\"St.Gallen (Amriswil)\\\".\\n- Top-right: \\\"B.51.322.GB.808.\\\"\\n- Date: The card has \\\"Dezember 1942\\\" and \\\"23.11.1945\\\". The instruction says \\\"Any stamped dates on the card in YYYY-MM-DD format.\\\" These are typed, not stamped. But the date field says \\\"Any stamped dates\\\". There don't appear to be stamped dates - the dates are typed as part of the information. Hmm. Let me reconsider. The date \\\"23.11.1945\\\" could be converted to 1945-11-23. But it's part of the information text, not a stamp. The instruction says \\\"If no date is present, use an empty string.\\\" \\n\\nLooking more carefully, there are no stamped dates visible on the card. The dates mentioned (Dezember 1942, 23.11.1945) are part of the typed information. So date should be empty string? But wait, the schema allows date to be string or null. The user says \\\"Any stamped dates on the card in YYYY-MM-DD format. If no date is present, use an empty string.\\\"\\n\\nThere are no stamps visible. So date = \\\"\\\".\\n\\nActually, let me reconsider. The \\\"gestrichen: Amendment 13, 23.11.1945\\\" - this is a date but it's typed. The field specifically says \\\"stamped dates\\\". I'll leave it empty since there are no stamped dates.\\n\\nInformation blocks:\\n- \\\"Britische schwarze Liste\\\\nAmendment 20, Dezember 1942.\\\"\\n- \\\"gestrichen:\\\\nAmendment 13, 23.11.1945.\\\"\\n\\nThese appear to be two separate blocks (separated by blank line).\\n\\nLet me format the JSON.\\n\\nCompany: \\\"Ritzi & Wagner\\\"\\nLocation: \\\"St.Gallen (Amriswil)\\\" - actually, looking again, the location is \\\"St.Gallen\\\" with \\\"(Amriswil)\\\" in parentheses. The instruction says location is \\\"The city or town\\\". I'll transcribe it as \\\"St.Gallen (Amriswil)\\\" to be faithful, but maybe just \\\"St.Gallen\\\". The primary location is St.Gallen, with Amriswil in parentheses. I'll use \\\"St.Gallen (Amriswil)\\\".\\n\\nHmm, but the company name is \\\"Ritzi & Wagner\\\" and location follows. The full text is \\\"Ritzi & Wagner, St.Gallen (Amriswil).\\\" So location = \\\"St.Gallen (Amriswil)\\\".\\n\\nb_id: \\\"B.51.322.GB.808.\\\"\\n\\ndate: \\\"\\\" (no stamped date)\\n\\ninformation:\\n[\\n  {\\\"transcription\\\": \\\"Britische schwarze Liste\\\\nAmendment 20, Dezember 1942.\\\"},\\n  {\\\"transcription\\\": \\\"gestrichen:\\\\nAmendment 13, 23.11.1945.\\\"}\\n]\\n\\nWait, should the date field capture 1945-11-23? The instruction says \\\"Any stamped dates on the card\\\". There are no stamps. But maybe they mean any dates. Let me re-read: \\\"date\\\": Any stamped dates on the card in YYYY-MM-DD format. If no date is present, use an empty string.\\n\\nThe dates on the card are typed, not stamped. In these archival cards, sometimes there's a date stamp. Here I don't see a separate stamp. The \\\"23.11.1945\\\" is part of the \\\"gestrichen\\\" (deleted) note. I'll leave date as empty string since it's not a stamped date and it's part of the information.\\n\\nActually, reconsidering - the task says \\\"Any stamped dates\\\". There are no visible stamps (like inkstamps). All text is typewritten. So date = \\\"\\\".\\n\\nLet me finalize.\",\"format\":\"unknown\",\"index\":0}]},\"native_finish_reason\":\"stop\"}],\"created\":1789681184,\"model\":\"moonshotai/kimi-k3\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":\"default\",\"usage\":{\"completion_tokens\":1083,\"prompt_tokens\":3678,\"total_tokens\":4761,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":0,\"reasoning_tokens\":953,\"rejected_prediction_tokens\":null,\"image_tokens\":0},\"prompt_tokens_details\":{\"audio_tokens\":0,\"cached_tokens\":320,\"cache_write_tokens\":0,\"video_tokens\":0},\"cost\":0.026415,\"is_byok\":false,\"cost_details\":{\"upstream_inference_cost\":0.026415,\"upstream_inference_prompt_cost\":0.01017,\"upstream_inference_completions_cost\":0.016245}},\"provider\":\"Together\"}"
+}

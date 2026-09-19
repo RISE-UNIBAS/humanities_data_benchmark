@@ -1,0 +1,65 @@
+{
+    "text": "{\"company\":{\"transcription\":\"Trullas & Cie.S.A.\"},\"location\":{\"transcription\":\"GENEVE.\"},\"b_id\":{\"transcription\":\"\"},\"date\":\"\",\"information\":[{\"transcription\":\"siehe: S.A. Trullas & Cie, Genf. (gestrichen)\"}]}",
+    "model": "qwen/qwen3.7-plus",
+    "provider": "openrouter",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 2987,
+        "output_tokens": 1138,
+        "total_tokens": 4125,
+        "input_cost_usd": 0.00095584,
+        "output_cost_usd": 0.00145664,
+        "estimated_cost_usd": 0.00241248
+    },
+    "duration": 23.223673820495605,
+    "timestamp": "2026-09-18T10:18:38.855839",
+    "parsed": {
+        "company": {
+            "transcription": "Trullas & Cie.S.A."
+        },
+        "location": {
+            "transcription": "GENEVE."
+        },
+        "b_id": {
+            "transcription": ""
+        },
+        "date": "",
+        "information": [
+            {
+                "transcription": "siehe: S.A. Trullas & Cie, Genf. (gestrichen)"
+            }
+        ]
+    },
+    "conversation_id": "8ed6c430-db6e-4583-b204-a247bd8e6003",
+    "score": {
+        "fuzzy": 0.9846153846153847,
+        "field_scores": {
+            "b_id.transcription": {
+                "response": "",
+                "ground_truth": "",
+                "score": 1.0
+            },
+            "company.transcription": {
+                "response": "Trullas & Cie.S.A.",
+                "ground_truth": "Trullas & Cie.S.A.",
+                "score": 1.0
+            },
+            "date": {
+                "response": "",
+                "ground_truth": "",
+                "score": 1.0
+            },
+            "information[0].transcription": {
+                "response": "siehe: S.A. Trullas & Cie, Genf. (gestrichen)",
+                "ground_truth": "siehe: S.A. Trullas & Cie, Genf. (gestrichen)",
+                "score": 1.0
+            },
+            "location.transcription": {
+                "response": "GENEVE.",
+                "ground_truth": "GENEVE",
+                "score": 0.923076923076923
+            }
+        }
+    },
+    "raw_response": "{\"id\":\"gen-1789719495-UnIktAc4DmUEltuzknB2\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\n  \\\"company\\\": {\\n    \\\"transcription\\\": \\\"Trullas & Cie.S.A.\\\"\\n  },\\n  \\\"location\\\": {\\n    \\\"transcription\\\": \\\"GENEVE.\\\"\\n  },\\n  \\\"b_id\\\": {\\n    \\\"transcription\\\": \\\"\\\"\\n  },\\n  \\\"date\\\": \\\"\\\",\\n  \\\"information\\\": [\\n    {\\n      \\\"transcription\\\": \\\"siehe: S.A. Trullas & Cie, Genf. (gestrichen)\\\"\\n    }\\n  ]\\n}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"company\":{\"transcription\":\"Trullas & Cie.S.A.\"},\"location\":{\"transcription\":\"GENEVE.\"},\"b_id\":{\"transcription\":\"\"},\"date\":\"\",\"information\":[{\"transcription\":\"siehe: S.A. Trullas & Cie, Genf. (gestrichen)\"}]},\"reasoning\":\"The user wants me to extract information from an index card image and return it as a JSON object.\\n\\n1.  **Company**: Top-left says \\\"Trullas & Cie.S.A.\\\".\\n2.  **Location**: Following the company name is \\\"GENEVE.\\\".\\n3.  **b_id**: Top-right is empty. Wait, let me look closely. There is no \\\"B.\\\" identifier in the top right. Wait, looking at the bottom left, there is \\\"57905\\\". But the prompt says \\\"usually in the top-right, starting with 'B.'\\\". There is no B. identifier. I will leave it empty. Wait, let me check the image again. There is no B. ID.\\n4.  **date**: No stamped dates.\\n5.  **information**: The main body says \\\"siehe: S.A. Trullas & Cie, Genf. (gestrichen)\\\".\\n\\nLet's refine the extraction:\\n- company: \\\"Trullas & Cie.S.A.\\\"\\n- location: \\\"GENEVE.\\\"\\n- b_id: \\\"\\\"\\n- date: \\\"\\\"\\n- information: [\\\"siehe: S.A. Trullas & Cie, Genf. (gestrichen)\\\"]\\n\\nWait, the prompt says \\\"b_id: The identifier code, usually in the top-right, starting with 'B.'.\\\" There is none. I will use an empty string.\\nThe number \\\"57905\\\" is at the bottom left, but it doesn't start with B. I'll ignore it or maybe it's not the b_id. I'll leave b_id empty.\\n\\nLet's construct the JSON.\\n```json\\n{\\n  \\\"company\\\": {\\\"transcription\\\": \\\"Trullas & Cie.S.A.\\\"},\\n  \\\"location\\\": {\\\"transcription\\\": \\\"GENEVE.\\\"},\\n  \\\"b_id\\\": {\\\"transcription\\\": \\\"\\\"},\\n  \\\"date\\\": \\\"\\\",\\n  \\\"information\\\": [\\n    {\\\"transcription\\\": \\\"siehe: S.A. Trullas & Cie, Genf. (gestrichen)\\\"}\\n  ]\\n}\\n```\\nWait, the prompt schema requires `b_id` to be an object with `transcription`.\\nThe schema is:\\n```json\\n[\\n  {\\n    \\\"$defs\\\": {\\n      \\\"BID\\\": {\\\"properties\\\": {\\\"transcription\\\": {\\\"title\\\": \\\"Transcription\\\", \\\"type\\\": \\\"string\\\"}}, \\\"required\\\": [\\\"transcription\\\"], \\\"title\\\": \\\"BID\\\", \\\"type\\\": \\\"object\\\", \\\"additionalProperties\\\": false},\\n      \\\"Company\\\": {\\\"properties\\\": {\\\"transcription\\\": {\\\"title\\\": \\\"Transcription\\\", \\\"type\\\": \\\"string\\\"}}, \\\"required\\\": [\\\"transcription\\\"], \\\"title\\\": \\\"Company\\\", \\\"type\\\": \\\"object\\\", \\\"additionalProperties\\\": false},\\n      \\\"Entry\\\": {\\\"properties\\\": {\\\"transcription\\\": {\\\"title\\\": \\\"Transcription\\\", \\\"type\\\": \\\"string\\\"}}, \\\"required\\\": [\\\"transcription\\\"], \\\"title\\\": \\\"Entry\\\", \\\"type\\\": \\\"object\\\", \\\"additionalProperties\\\": false},\\n      \\\"Location\\\": {\\\"properties\\\": {\\\"transcription\\\": {\\\"title\\\": \\\"Transcription\\\", \\\"type\\\": \\\"string\\\"}}, \\\"required\\\": [\\\"transcription\\\"], \\\"title\\\": \\\"Location\\\", \\\"type\\\": \\\"object\\\", \\\"additionalProperties\\\": false}\\n    },\\n    \\\"properties\\\": {\\n      \\\"company\\\": {\\\"$ref\\\": \\\"#/$defs/Company\\\"},\\n      \\\"location\\\": {\\\"$ref\\\": \\\"#/$defs/Location\\\"},\\n      \\\"b_id\\\": {\\\"$ref\\\": \\\"#/$defs/BID\\\"},\\n      \\\"date\\\": {\\\"anyOf\\\": [{\\\"type\\\": \\\"string\\\"}, {\\\"type\\\": \\\"null\\\"}], \\\"title\\\": \\\"Date\\\"},\\n      \\\"information\\\": {\\\"anyOf\\\": [{\\\"items\\\": {\\\"$ref\\\": \\\"#/$defs/Entry\\\"}, \\\"type\\\": \\\"array\\\"}, {\\\"type\\\": \\\"null\\\"}], \\\"title\\\": \\\"Information\\\"}\\n    },\\n    \\\"required\\\": [\\\"company\\\", \\\"location\\\", \\\"b_id\\\", \\\"date\\\", \\\"information\\\"],\\n    \\\"title\\\": \\\"Card\\\",\\n    \\\"type\\\": \\\"object\\\",\\n    \\\"additionalProperties\\\": false\\n  }\\n]\\n```\\nWait, the schema is a list containing one object. But the prompt says \\\"Return the data ONLY as a valid JSON object.\\\" and gives an example:\\n```json\\n{\\n  \\\"company\\\": {\\\"transcription\\\": \\\"\\\"},\\n  \\\"location\\\": {\\\"transcription\\\": \\\"\\\"},\\n  \\\"b_id\\\": {\\\"transcription\\\": \\\"\\\"},\\n  \\\"date\\\": \\\"\\\",\\n  \\\"information\\\": [\\n    {\\\"transcription\\\": \\\"\\\"}\\n  ]\\n}\\n```\\nI will follow the example format.\\n\\nCompany: Trullas & Cie.S.A.\\nLocation: GENEVE.\\nb_id: \\\"\\\"\\ndate: \\\"\\\"\\ninformation: [\\\"siehe: S.A. Trullas & Cie, Genf. (gestrichen)\\\"]\",\"reasoning_details\":[{\"type\":\"reasoning.text\",\"text\":\"The user wants me to extract information from an index card image and return it as a JSON object.\\n\\n1.  **Company**: Top-left says \\\"Trullas & Cie.S.A.\\\".\\n2.  **Location**: Following the company name is \\\"GENEVE.\\\".\\n3.  **b_id**: Top-right is empty. Wait, let me look closely. There is no \\\"B.\\\" identifier in the top right. Wait, looking at the bottom left, there is \\\"57905\\\". But the prompt says \\\"usually in the top-right, starting with 'B.'\\\". There is no B. identifier. I will leave it empty. Wait, let me check the image again. There is no B. ID.\\n4.  **date**: No stamped dates.\\n5.  **information**: The main body says \\\"siehe: S.A. Trullas & Cie, Genf. (gestrichen)\\\".\\n\\nLet's refine the extraction:\\n- company: \\\"Trullas & Cie.S.A.\\\"\\n- location: \\\"GENEVE.\\\"\\n- b_id: \\\"\\\"\\n- date: \\\"\\\"\\n- information: [\\\"siehe: S.A. Trullas & Cie, Genf. (gestrichen)\\\"]\\n\\nWait, the prompt says \\\"b_id: The identifier code, usually in the top-right, starting with 'B.'.\\\" There is none. I will use an empty string.\\nThe number \\\"57905\\\" is at the bottom left, but it doesn't start with B. I'll ignore it or maybe it's not the b_id. I'll leave b_id empty.\\n\\nLet's construct the JSON.\\n```json\\n{\\n  \\\"company\\\": {\\\"transcription\\\": \\\"Trullas & Cie.S.A.\\\"},\\n  \\\"location\\\": {\\\"transcription\\\": \\\"GENEVE.\\\"},\\n  \\\"b_id\\\": {\\\"transcription\\\": \\\"\\\"},\\n  \\\"date\\\": \\\"\\\",\\n  \\\"information\\\": [\\n    {\\\"transcription\\\": \\\"siehe: S.A. Trullas & Cie, Genf. (gestrichen)\\\"}\\n  ]\\n}\\n```\\nWait, the prompt schema requires `b_id` to be an object with `transcription`.\\nThe schema is:\\n```json\\n[\\n  {\\n    \\\"$defs\\\": {\\n      \\\"BID\\\": {\\\"properties\\\": {\\\"transcription\\\": {\\\"title\\\": \\\"Transcription\\\", \\\"type\\\": \\\"string\\\"}}, \\\"required\\\": [\\\"transcription\\\"], \\\"title\\\": \\\"BID\\\", \\\"type\\\": \\\"object\\\", \\\"additionalProperties\\\": false},\\n      \\\"Company\\\": {\\\"properties\\\": {\\\"transcription\\\": {\\\"title\\\": \\\"Transcription\\\", \\\"type\\\": \\\"string\\\"}}, \\\"required\\\": [\\\"transcription\\\"], \\\"title\\\": \\\"Company\\\", \\\"type\\\": \\\"object\\\", \\\"additionalProperties\\\": false},\\n      \\\"Entry\\\": {\\\"properties\\\": {\\\"transcription\\\": {\\\"title\\\": \\\"Transcription\\\", \\\"type\\\": \\\"string\\\"}}, \\\"required\\\": [\\\"transcription\\\"], \\\"title\\\": \\\"Entry\\\", \\\"type\\\": \\\"object\\\", \\\"additionalProperties\\\": false},\\n      \\\"Location\\\": {\\\"properties\\\": {\\\"transcription\\\": {\\\"title\\\": \\\"Transcription\\\", \\\"type\\\": \\\"string\\\"}}, \\\"required\\\": [\\\"transcription\\\"], \\\"title\\\": \\\"Location\\\", \\\"type\\\": \\\"object\\\", \\\"additionalProperties\\\": false}\\n    },\\n    \\\"properties\\\": {\\n      \\\"company\\\": {\\\"$ref\\\": \\\"#/$defs/Company\\\"},\\n      \\\"location\\\": {\\\"$ref\\\": \\\"#/$defs/Location\\\"},\\n      \\\"b_id\\\": {\\\"$ref\\\": \\\"#/$defs/BID\\\"},\\n      \\\"date\\\": {\\\"anyOf\\\": [{\\\"type\\\": \\\"string\\\"}, {\\\"type\\\": \\\"null\\\"}], \\\"title\\\": \\\"Date\\\"},\\n      \\\"information\\\": {\\\"anyOf\\\": [{\\\"items\\\": {\\\"$ref\\\": \\\"#/$defs/Entry\\\"}, \\\"type\\\": \\\"array\\\"}, {\\\"type\\\": \\\"null\\\"}], \\\"title\\\": \\\"Information\\\"}\\n    },\\n    \\\"required\\\": [\\\"company\\\", \\\"location\\\", \\\"b_id\\\", \\\"date\\\", \\\"information\\\"],\\n    \\\"title\\\": \\\"Card\\\",\\n    \\\"type\\\": \\\"object\\\",\\n    \\\"additionalProperties\\\": false\\n  }\\n]\\n```\\nWait, the schema is a list containing one object. But the prompt says \\\"Return the data ONLY as a valid JSON object.\\\" and gives an example:\\n```json\\n{\\n  \\\"company\\\": {\\\"transcription\\\": \\\"\\\"},\\n  \\\"location\\\": {\\\"transcription\\\": \\\"\\\"},\\n  \\\"b_id\\\": {\\\"transcription\\\": \\\"\\\"},\\n  \\\"date\\\": \\\"\\\",\\n  \\\"information\\\": [\\n    {\\\"transcription\\\": \\\"\\\"}\\n  ]\\n}\\n```\\nI will follow the example format.\\n\\nCompany: Trullas & Cie.S.A.\\nLocation: GENEVE.\\nb_id: \\\"\\\"\\ndate: \\\"\\\"\\ninformation: [\\\"siehe: S.A. Trullas & Cie, Genf. (gestrichen)\\\"]\",\"format\":\"unknown\",\"index\":0}]},\"native_finish_reason\":\"stop\"}],\"created\":1789719495,\"model\":\"qwen/qwen3.7-plus\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":null,\"usage\":{\"completion_tokens\":1138,\"prompt_tokens\":2987,\"total_tokens\":4125,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":0,\"reasoning_tokens\":1023,\"rejected_prediction_tokens\":null,\"image_tokens\":0},\"prompt_tokens_details\":{\"audio_tokens\":0,\"cached_tokens\":0,\"cache_write_tokens\":0,\"video_tokens\":0},\"cost\":0.00241248,\"is_byok\":false,\"cost_details\":{\"upstream_inference_cost\":0.00241248,\"upstream_inference_prompt_cost\":0.00095584,\"upstream_inference_completions_cost\":0.00145664}},\"provider\":\"Alibaba\"}"
+}

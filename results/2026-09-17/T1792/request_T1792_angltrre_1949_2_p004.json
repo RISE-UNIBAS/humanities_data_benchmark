@@ -1,0 +1,90 @@
+{
+    "text": "{\"advertisements\":[{\"box\":[135.0,60.0,958.0,487.0]},{\"box\":[130.0,502.0,955.0,930.0]}]}",
+    "model": "qwen/qwen3.8-max-0902",
+    "provider": "openrouter",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 2915,
+        "output_tokens": 1460,
+        "total_tokens": 4375,
+        "input_cost_usd": 0.00583,
+        "output_cost_usd": 0.00876,
+        "estimated_cost_usd": 0.01459
+    },
+    "duration": 34.32900881767273,
+    "timestamp": "2026-09-18T11:41:58.493066",
+    "parsed": {
+        "advertisements": [
+            {
+                "box": [
+                    135.0,
+                    60.0,
+                    958.0,
+                    487.0
+                ]
+            },
+            {
+                "box": [
+                    130.0,
+                    502.0,
+                    955.0,
+                    930.0
+                ]
+            }
+        ]
+    },
+    "conversation_id": "0dced091-7a66-4f4b-a3f5-b11f58160015",
+    "score": {
+        "field_scores": {
+            "box 0": {
+                "response": null,
+                "ground_truth": [
+                    332,
+                    1772,
+                    2361,
+                    3263
+                ],
+                "score": 0.0
+            },
+            "box 1": {
+                "response": null,
+                "ground_truth": [
+                    342,
+                    223,
+                    2368,
+                    1705
+                ],
+                "score": 0.0
+            },
+            "unmatched prediction 0": {
+                "response": [
+                    135.0,
+                    60.0,
+                    958.0,
+                    487.0
+                ],
+                "ground_truth": null,
+                "score": 0.0
+            },
+            "unmatched prediction 1": {
+                "response": [
+                    130.0,
+                    502.0,
+                    955.0,
+                    930.0
+                ],
+                "ground_truth": null,
+                "score": 0.0
+            }
+        },
+        "f1": 0.0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "mean_iou": 0.0,
+        "true_positives": 0,
+        "false_positives": 2,
+        "false_negatives": 2,
+        "iou_threshold": 0.5
+    },
+    "raw_response": "{\"id\":\"gen-1789724484-mZOQoIb5sFZMBzlOWCLM\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\n    \\\"advertisements\\\": [\\n        {\\\"box\\\": [135, 60, 958, 487]},\\n        {\\\"box\\\": [130, 502, 955, 930]}\\n    ]\\n}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"advertisements\":[{\"box\":[135.0,60.0,958.0,487.0]},{\"box\":[130.0,502.0,955.0,930.0]}]},\"reasoning\":\"The page contains two advertisements. The first is for Crowe & Co. Ltd. (freight forwarding agent), occupying the upper half of the page, roughly from y=60 to y=485 in the displayed image coordinates. However, the coordinates must be in the original page pixels (2479 x 3508). The displayed image seems to be scaled; let me estimate.\\n\\nThe image provided in the prompt appears to be about 1600x2300? Actually, the original is 2479x3508. I need to estimate bounding boxes in original pixel coordinates.\\n\\nLooking at the layout: the upper advertisement box (Crowe & Co.) extends roughly from x=135 to x=955 in the displayed width of about 1600? Hmm, the displayed image width is unknown. Let me think: the image shown in the prompt is probably scaled to some width. I need to map proportions.\\n\\nProportional estimation: the upper ad's border box extends from about x from 0.135 to 0.955 of the width? Actually, the page includes margins; the ad's frame box starts around x=135/1600 = 0.084? Hmm.\\n\\nLet me look at the image carefully: the page image width is 1600? The coordinates in my head: the upper ad's box is from about (135, 60) to (955, 485)? Hmm, but the image width seems to be about 1600 pixels? Actually, the rendered image in the conversation is usually scaled; but I can estimate proportions.\\n\\nUpper ad: top edge y \u2248 60/2300? Hmm.\\n\\nBetter approach: use proportional reasoning. The page height is 3508. The upper ad occupies roughly from y \u2248 0.06*3508 \u2248 210 to y \u2248 0.485*3508 \u2248 1700? Let me look: the upper ad's box ends around the middle of the page (the second box starts around half). The upper box's top edge is about 60 in an image of height about 2300? The image's aspect ratio: 2479x3508 \u2248 0.7067. The displayed image is probably 1600x2264.\\n\\nAssuming displayed height 2264: upper ad box top y \u2248 140? Hmm.\\n\\nLet me guess typical coordinates: upper ad: [135, 60, 955, 485] in a 1000x? space? Not good.\\n\\nLet me define proportions directly from the visual: the upper ad's border rectangle: left edge about 13.5% of width? Actually, the left margin of the page: the ad's frame starts around x=135 in an image of width about 1600 => 0.084? Hmm, the image shows the page with black borders on left and right. The page content area is from about x=45 to about x=975 in width 1000? Ugh.\\n\\nLet me set up: assume the displayed image is width 1600, height 2264 (since 2479x3508 scaled by 0.645). The upper ad's box: left edge x \u2248 220? Hmm.\\n\\nAlternatively, I can give approximate boxes in original pixels using proportions:\\n\\nUpper ad: x from about 0.135*2479 \u2248 335 to about 0.955*2479 \u2248 2367. y from about 0.062*3508 \u2248 218 to about 0.487*3508 \u2248 1708.\\n\\nLower ad: x from about 0.13*2479 \u2248 322 to about 0.955*2479 \u2248 2367. y from about 0.502*3508 \u2248 1761 to about 0.93*3508 \u2248 3262.\\n\\nLooking at the image again: the upper box's top edge is around y=60 in an image of height about 2300? The image height in the prompt is probably 2300? The image appears to be about 1600x2264. The upper box's top edge is around y=140? Hmm, the \\\"Freight Agents to\\\" text is at y\u2248190 in a 2264-height image? The box's top line is around y=140.\\n\\nProportion: 140/2264 \u2248 0.062 => 217 in 3508. Good.\\n\\nUpper box's bottom edge: around y=1105 in 2264? The line between the ads is around y=1105? Actually, the upper box's bottom edge is around y=1100 (just after the \\\"ROMANSHORN\\\" text at about 1040). Proportion 1100/2264 \u2248 0.486 => 1705.\\n\\nLower box's top edge: around y=1140/2264 \u2248 0.503 => 1765. Bottom edge: around y=2110/2264 \u2248 0.932 => 3270.\\n\\nLeft edge: x \u2248 220/1600 = 0.1375 => 341. Right edge: x \u2248 1530/1600 = 0.956 => 2370.\\n\\nThus advertisements:\\n\\n1. Crowe & Co.: [335, 215, 2370, 1710]\\n2. Nivada: [325, 1765, 2370, 3270]\\n\\nThese are reasonable.\\n\\nI'll return the JSON.\",\"reasoning_details\":[{\"type\":\"reasoning.text\",\"text\":\"The page contains two advertisements. The first is for Crowe & Co. Ltd. (freight forwarding agent), occupying the upper half of the page, roughly from y=60 to y=485 in the displayed image coordinates. However, the coordinates must be in the original page pixels (2479 x 3508). The displayed image seems to be scaled; let me estimate.\\n\\nThe image provided in the prompt appears to be about 1600x2300? Actually, the original is 2479x3508. I need to estimate bounding boxes in original pixel coordinates.\\n\\nLooking at the layout: the upper advertisement box (Crowe & Co.) extends roughly from x=135 to x=955 in the displayed width of about 1600? Hmm, the displayed image width is unknown. Let me think: the image shown in the prompt is probably scaled to some width. I need to map proportions.\\n\\nProportional estimation: the upper ad's border box extends from about x from 0.135 to 0.955 of the width? Actually, the page includes margins; the ad's frame box starts around x=135/1600 = 0.084? Hmm.\\n\\nLet me look at the image carefully: the page image width is 1600? The coordinates in my head: the upper ad's box is from about (135, 60) to (955, 485)? Hmm, but the image width seems to be about 1600 pixels? Actually, the rendered image in the conversation is usually scaled; but I can estimate proportions.\\n\\nUpper ad: top edge y \u2248 60/2300? Hmm.\\n\\nBetter approach: use proportional reasoning. The page height is 3508. The upper ad occupies roughly from y \u2248 0.06*3508 \u2248 210 to y \u2248 0.485*3508 \u2248 1700? Let me look: the upper ad's box ends around the middle of the page (the second box starts around half). The upper box's top edge is about 60 in an image of height about 2300? The image's aspect ratio: 2479x3508 \u2248 0.7067. The displayed image is probably 1600x2264.\\n\\nAssuming displayed height 2264: upper ad box top y \u2248 140? Hmm.\\n\\nLet me guess typical coordinates: upper ad: [135, 60, 955, 485] in a 1000x? space? Not good.\\n\\nLet me define proportions directly from the visual: the upper ad's border rectangle: left edge about 13.5% of width? Actually, the left margin of the page: the ad's frame starts around x=135 in an image of width about 1600 => 0.084? Hmm, the image shows the page with black borders on left and right. The page content area is from about x=45 to about x=975 in width 1000? Ugh.\\n\\nLet me set up: assume the displayed image is width 1600, height 2264 (since 2479x3508 scaled by 0.645). The upper ad's box: left edge x \u2248 220? Hmm.\\n\\nAlternatively, I can give approximate boxes in original pixels using proportions:\\n\\nUpper ad: x from about 0.135*2479 \u2248 335 to about 0.955*2479 \u2248 2367. y from about 0.062*3508 \u2248 218 to about 0.487*3508 \u2248 1708.\\n\\nLower ad: x from about 0.13*2479 \u2248 322 to about 0.955*2479 \u2248 2367. y from about 0.502*3508 \u2248 1761 to about 0.93*3508 \u2248 3262.\\n\\nLooking at the image again: the upper box's top edge is around y=60 in an image of height about 2300? The image height in the prompt is probably 2300? The image appears to be about 1600x2264. The upper box's top edge is around y=140? Hmm, the \\\"Freight Agents to\\\" text is at y\u2248190 in a 2264-height image? The box's top line is around y=140.\\n\\nProportion: 140/2264 \u2248 0.062 => 217 in 3508. Good.\\n\\nUpper box's bottom edge: around y=1105 in 2264? The line between the ads is around y=1105? Actually, the upper box's bottom edge is around y=1100 (just after the \\\"ROMANSHORN\\\" text at about 1040). Proportion 1100/2264 \u2248 0.486 => 1705.\\n\\nLower box's top edge: around y=1140/2264 \u2248 0.503 => 1765. Bottom edge: around y=2110/2264 \u2248 0.932 => 3270.\\n\\nLeft edge: x \u2248 220/1600 = 0.1375 => 341. Right edge: x \u2248 1530/1600 = 0.956 => 2370.\\n\\nThus advertisements:\\n\\n1. Crowe & Co.: [335, 215, 2370, 1710]\\n2. Nivada: [325, 1765, 2370, 3270]\\n\\nThese are reasonable.\\n\\nI'll return the JSON.\",\"format\":\"unknown\",\"index\":0}]},\"native_finish_reason\":\"stop\"}],\"created\":1789724484,\"model\":\"qwen/qwen3.8-max-0902\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":null,\"usage\":{\"completion_tokens\":1460,\"prompt_tokens\":2915,\"total_tokens\":4375,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":0,\"reasoning_tokens\":1393,\"rejected_prediction_tokens\":null,\"image_tokens\":0},\"prompt_tokens_details\":{\"audio_tokens\":0,\"cached_tokens\":0,\"cache_write_tokens\":0,\"video_tokens\":0},\"cost\":0.01459,\"is_byok\":false,\"cost_details\":{\"upstream_inference_cost\":0.01459,\"upstream_inference_prompt_cost\":0.00583,\"upstream_inference_completions_cost\":0.00876}},\"provider\":\"Alibaba\"}"
+}

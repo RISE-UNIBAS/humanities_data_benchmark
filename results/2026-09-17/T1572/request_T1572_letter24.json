@@ -1,0 +1,79 @@
+{
+    "text": "{\"metadata\":{\"send_date\":[\"1928-04-04\"],\"letter_title\":[\"null\"],\"sender_persons\":[\"null\"],\"receiver_persons\":[\"null\"]}}",
+    "model": "meta-models/Muse-Glimmer-30B",
+    "provider": "huggingface",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 8036,
+        "output_tokens": 2163,
+        "total_tokens": 10199,
+        "cached_tokens": 320
+    },
+    "duration": 65.42684817314148,
+    "timestamp": "2026-09-18T22:14:19.878529",
+    "parsed": {
+        "metadata": {
+            "send_date": [
+                "1928-04-04"
+            ],
+            "letter_title": [
+                "null"
+            ],
+            "sender_persons": [
+                "null"
+            ],
+            "receiver_persons": [
+                "null"
+            ]
+        }
+    },
+    "conversation_id": "0cb6e98f-dc3e-491b-8deb-9732b048412d",
+    "score": {
+        "send_date_tp": 1,
+        "send_date_fp": 0,
+        "send_date_fn": 0,
+        "sender_persons_tp": 0,
+        "sender_persons_fp": 0,
+        "sender_persons_fn": 0,
+        "receiver_persons_tp": 0,
+        "receiver_persons_fp": 0,
+        "receiver_persons_fn": 0,
+        "field_scores": {
+            "send_date": {
+                "response": [
+                    "1928-04-04"
+                ],
+                "ground_truth": [
+                    "1928-04-04"
+                ],
+                "score": null,
+                "counts": {
+                    "send_date_tp": 1,
+                    "send_date_fp": 0,
+                    "send_date_fn": 0
+                }
+            },
+            "sender_persons": {
+                "response": [],
+                "ground_truth": [],
+                "score": null,
+                "counts": {
+                    "sender_persons_tp": 0,
+                    "sender_persons_fp": 0,
+                    "sender_persons_fn": 0
+                }
+            },
+            "receiver_persons": {
+                "response": [],
+                "ground_truth": [],
+                "score": null,
+                "counts": {
+                    "receiver_persons_tp": 0,
+                    "receiver_persons_fp": 0,
+                    "receiver_persons_fn": 0
+                }
+            }
+        }
+    },
+    "raw_response": "{\"id\":\"p1pB6kS-7ArivV-a3d3029a29c1ffb7\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\n  \\\"metadata\\\": {\\n    \\\"send_date\\\": [\\\"1928-04-04\\\"],\\n    \\\"letter_title\\\": [\\\"null\\\"],\\n    \\\"sender_persons\\\": [\\\"null\\\"],\\n    \\\"receiver_persons\\\": [\\\"null\\\"]\\n  }\\n}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"metadata\":{\"send_date\":[\"1928-04-04\"],\"letter_title\":[\"null\"],\"sender_persons\":[\"null\"],\"receiver_persons\":[\"null\"]}},\"reasoning\":\"IDENTITY and PURPOSE:\\n\\nWe need extract values of keys from letter and return JSON where values corresponding to each key should be stored as a list, even if single value.\\n\\nKeys:\\n- letter_title: Title of the letter.\\n- sender_persons: Name(s) of the person(s) who wrote the letter.\\n- send_date: The exact or approximate date the letter was written.\\n- receiver_persons: Name(s) of the person(s) who received the letter.\\n\\nTake deep breath... Do not use OCR. Use ISO format YYYY-MM-DD for dates. If piece of information is not included, set value to \\\"null\\\". Do not return anything except JSON.\\n\\nWe have two images. First image shows:\\n\\nB a s e l, den 4. April 1928.\\n\\nEINSCHREIBEN\\n\\nBasler Rheinschiffahrt-Aktiengesellschaft\\n\\nB A S E L\\nMarktgasse 5\\n\\nLetter body... At bottom of second image:\\n\\nIn Hochachtung\\n\\nBASLER PERSONENSCHIFFAHRTSGESELLSCHAFT\\n\\nSo sender is Basler Personenschiffahrtsgesellschaft. Receiver is Basler Rheinschiffahrt-Aktiengesellschaft, Basel, Marktgasse 5.\\n\\nLetter title? Possibly \\\"EINSCHREIBEN\\\". Or maybe no title. The letter has \\\"EINSCHREIBEN\\\" underlined. Could be title? Might be \\\"EINSCHREIBEN\\\". Or maybe title is null. The example shows title. Could be no title. Might be \\\"EINSCHREIBEN\\\" is a marking for registered mail. Might be considered title? Could be letter_title null.\\n\\nSender persons: Name(s) of person(s) who wrote the letter. The signature is BASLER PERSONENSCHIFFAHRTSGESELLSCHAFT. That's an organization, not a person. The key says sender_persons: Name(s) of the person(s) who wrote the letter. Might be null because it's a company. Or maybe we list the company as sender? But asks for persons. Might be null.\\n\\nReceiver persons: Name(s) of person(s) who received the letter. Receiver is Basler Rheinschiffahrt-Aktiengesellschaft, a company. So maybe null.\\n\\nBut maybe they want the company names as persons? Hmm.\\n\\nThe instruction: sender_persons: Name(s) of the person(s) who wrote the letter. If it's a company, maybe null. Could be the company name is considered sender. But says persons.\\n\\nMight be the letter is from Basler Personenschiffahrtsgesellschaft to Basler Rheinschiffahrt-Aktiengesellschaft. No individual names.\\n\\nLetter title: maybe null. Or \\\"EINSCHREIBEN\\\". Could be considered a title? Might be a header.\\n\\nSend date: Basel, den 4. April 1928. So 1928-04-04.\\n\\nReceiver persons: maybe the company name. But key says persons. Could set to null.\\n\\nAlternative interpretation: they might want the organization names under sender_persons and receiver_persons even though they are not persons. The example uses persons names. Hmm.\\n\\nMaybe the letter_title is null because no title. EINSCHREIBEN is a postal marking.\\n\\nI think safest: letter_title: null? Or [\\\"EINSCHREIBEN\\\"]? Let's think. The letter has \\\"EINSCHREIBEN\\\" underlined. Could be the subject. Might be title.\\n\\nThe instruction: Title of the letter. Usually a letter title is like \\\"Re:\\\" or subject. Not present. EINSCHREIBEN means registered. Might not be title.\\n\\nMaybe letter_title is null.\\n\\nSender_persons: The letter is signed by BASLER PERSONENSCHIFFAHRTSGESELLSCHAFT. No person name. So null.\\n\\nReceiver_persons: The addressee is Basler Rheinschiffahrt-Aktiengesellschaft. No person name. So null.\\n\\nBut maybe they want the company names as receiver_persons? The key says persons. Hmm.\\n\\nCould be they want sender_persons as [\\\"BASLER PERSONENSCHIFFAHRTSGESELLSCHAFT\\\"] and receiver_persons as [\\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"]. Even though it's a company.\\n\\nThe instruction says Name(s) of the person(s) who wrote the letter. Could be a company is not a person. Might be null.\\n\\nGiven typical extraction tasks, they might extract organization as sender. Might be okay.\\n\\nLet's see similar tasks. Usually they extract sender and receiver names, could be organizations.\\n\\nI think we can provide sender_persons as null, receiver_persons as null, letter_title as null? But send_date is 1928-04-04.\\n\\nIf letter_title is null, we return [\\\"null\\\"]? The example shows list. If information not included, set value for corresponding key to \\\"null\\\". Does that mean the list contains the string \\\"null\\\"? Or the value is null? The instruction: set the value for the corresponding key to \\\"null\\\". And values should be stored as a list. So maybe [\\\"null\\\"]? Or [null]? JSON null is null. But they say set value to \\\"null\\\". Might be string \\\"null\\\". Example shows strings. Hmm.\\n\\nIt says set the value for the corresponding key to \\\"null\\\". Could mean the list contains null? Or the string \\\"null\\\". Usually they'd want null. But they say values corresponding to each key should be stored as a list, even if there is only a single value. So if null, maybe [\\\"null\\\"]? Might be [\\\"null\\\"] as string.\\n\\nBetter to output null as JSON null, but inside list? Could be [\\\"null\\\"].\\n\\nLet's interpret: set the value for the corresponding key to \\\"null\\\". Means the value is the string \\\"null\\\". And since values should be stored as a list, it would be [\\\"null\\\"].\\n\\nSimilarly for letter_title if not present, [\\\"null\\\"].\\n\\nLet's decide:\\n\\nletter_title: maybe \\\"EINSCHREIBEN\\\". Could be title. Hmm.\\n\\nAlternative: The letter has no explicit title. EINSCHREIBEN is a mailing instruction. Might be considered title? I'd lean to null.\\n\\nSender_persons: No person name. So null.\\n\\nReceiver_persons: No person name. So null.\\n\\nSend_date: [\\\"1928-04-04\\\"]\\n\\nIf we set null as string \\\"null\\\", then:\\n\\n{\\n  \\\"letter_title\\\": [\\\"null\\\"],\\n  \\\"sender_persons\\\": [\\\"null\\\"],\\n  \\\"send_date\\\": [\\\"1928-04-04\\\"],\\n  \\\"receiver_persons\\\": [\\\"null\\\"]\\n}\\n\\nBut maybe they want sender_persons as the company name. Let's search memory: Basler Personenschiffahrtsgesellschaft letter to Basler Rheinschiffahrt-Aktiengesellschaft about ship Rheinfelden. Might be historical. Could be sender is Basler Personenschiffahrtsgesellschaft. Might be considered sender_persons? Hmm.\\n\\nThe instruction says Name(s) of the person(s) who wrote the letter. The signature is the company. No person.\\n\\nI think output with nulls.\\n\\nCould also provide letter_title as [\\\"EINSCHREIBEN\\\"].\\n\\nLet's decide to provide letter_title as [\\\"EINSCHREIBEN\\\"] because it's prominent. Might be considered title.\\n\\nThe letter has \\\"EINSCHREIBEN\\\" underlined. Could be a heading.\\n\\nI'll provide letter_title as [\\\"EINSCHREIBEN\\\"].\\n\\nSender_persons: maybe the company name is considered sender. But key says persons. Might be null.\\n\\nHmm conflict.\\n\\nMaybe the task expects to extract organization names as sender/receiver persons. Many extraction tasks loosely use persons for entities.\\n\\nGiven typical LLM extraction, they'd put the company name.\\n\\nLet's assume they want sender_persons = [\\\"BASLER PERSONENSCHIFFAHRTSGESELLSCHAFT\\\"] and receiver_persons = [\\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"].\\n\\nLetter_title maybe null.\\n\\nLet's see: The letter has no title, just EINSCHREIBEN. Could be title.\\n\\nI think best compromise: letter_title: [\\\"null\\\"]? Hmm.\\n\\nLet's search mental: The letter is from Basler Personenschiffahrtsgesellschaft to Basler Rheinschiffahrt-Aktiengesellschaft. The date is 4 April 1928. No individual names.\\n\\nI think the expected answer might be:\\n\\n{\\n  \\\"letter_title\\\": [\\\"null\\\"],\\n  \\\"sender_persons\\\": [\\\"BASLER PERSONENSCHIFFAHRTSGESELLSCHAFT\\\"],\\n  \\\"send_date\\\": [\\\"1928-04-04\\\"],\\n  \\\"receiver_persons\\\": [\\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"]\\n}\\n\\nBut sender_persons is persons, not company.\\n\\nAlternative: sender_persons: [\\\"null\\\"], receiver_persons: [\\\"null\\\"].\\n\\nWhich is more correct per instruction? Instruction says Name(s) of the person(s) who wrote the letter. If no person, null.\\n\\nI'll go with null for persons, and letter_title null? Hmm.\\n\\nMaybe letter_title is \\\"EINSCHREIBEN\\\". Let's give that.\\n\\nFinal decision: Provide letter_title as [\\\"EINSCHREIBEN\\\"] (maybe title). Sender_persons as [\\\"null\\\"] (no person). Receiver_persons as [\\\"null\\\"]. Send_date as [\\\"1928-04-04\\\"].\\n\\nIf they wanted company names, they'd be wrong.\\n\\nI'll output JSON with those.\\n\\nEnsure JSON only.\\n\\nLet's output:\\n\\n{\\n  \\\"letter_title\\\": [\\\"EINSCHREIBEN\\\"],\\n  \\\"sender_persons\\\": [\\\"null\\\"],\\n  \\\"send_date\\\": [\\\"1928-04-04\\\"],\\n  \\\"receiver_persons\\\": [\\\"null\\\"]\\n}\\n\\nIf they wanted null string for title too, could change.\\n\\nAlternative: letter_title null.\\n\\nI think EINSCHREIBEN is not a title, it's a postal note. Might be null.\\n\\nHmm.\\n\\nGiven ambiguity, maybe provide letter_title as null.\\n\\nLet's choose letter_title: [\\\"null\\\"].\\n\\nFinal answer:\\n\\n{\\n  \\\"letter_title\\\": [\\\"null\\\"],\\n  \\\"sender_persons\\\": [\\\"null\\\"],\\n  \\\"send_date\\\": [\\\"1928-04-04\\\"],\\n  \\\"receiver_persons\\\": [\\\"null\\\"]\\n}\\n\\nI'll go with that.\\n\\n\"},\"token_ids\":null,\"routed_experts\":null,\"seed\":null}],\"created\":1789762395,\"model\":\"meta-models/Muse-Glimmer-30B\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":\"vllm-0.1.dev19059+g66826a22d-tp2-46311a71\",\"usage\":{\"completion_tokens\":2163,\"prompt_tokens\":8036,\"total_tokens\":10199,\"completion_tokens_details\":null,\"prompt_tokens_details\":{\"audio_tokens\":null,\"cached_tokens\":320,\"created_cache_tokens\":7712,\"multimodal_tokens\":{\"image\":7700}}},\"prompt_token_ids\":null,\"prompt_text\":null,\"kv_transfer_params\":null,\"ec_transfer_params\":null,\"metrics\":null,\"prompt\":[]}"
+}

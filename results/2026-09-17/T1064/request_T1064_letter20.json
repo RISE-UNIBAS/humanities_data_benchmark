@@ -1,0 +1,85 @@
+{
+    "text": "{\"metadata\":{\"send_date\":[\"1928-03-24\"],\"letter_title\":[\"Verkauf.\"],\"sender_persons\":[\"Basler Personenschiffahrtsgesellschaft\"],\"receiver_persons\":[\"Basler Rheinschiffahrt A.-G.\"]}}",
+    "model": "qwen/qwen3.7-plus",
+    "provider": "openrouter",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 5649,
+        "output_tokens": 1383,
+        "total_tokens": 7032,
+        "input_cost_usd": 0.00180768,
+        "output_cost_usd": 0.00177024,
+        "estimated_cost_usd": 0.00357792
+    },
+    "duration": 28.746854782104492,
+    "timestamp": "2026-09-18T09:42:04.054587",
+    "parsed": {
+        "metadata": {
+            "send_date": [
+                "1928-03-24"
+            ],
+            "letter_title": [
+                "Verkauf."
+            ],
+            "sender_persons": [
+                "Basler Personenschiffahrtsgesellschaft"
+            ],
+            "receiver_persons": [
+                "Basler Rheinschiffahrt A.-G."
+            ]
+        }
+    },
+    "conversation_id": "d40baf19-1c6c-4288-a67e-90256ac13375",
+    "score": {
+        "send_date_tp": 1,
+        "send_date_fp": 0,
+        "send_date_fn": 0,
+        "sender_persons_tp": 0,
+        "sender_persons_fp": 1,
+        "sender_persons_fn": 0,
+        "receiver_persons_tp": 0,
+        "receiver_persons_fp": 1,
+        "receiver_persons_fn": 0,
+        "field_scores": {
+            "send_date": {
+                "response": [
+                    "1928-03-24"
+                ],
+                "ground_truth": [
+                    "1928-03-24"
+                ],
+                "score": null,
+                "counts": {
+                    "send_date_tp": 1,
+                    "send_date_fp": 0,
+                    "send_date_fn": 0
+                }
+            },
+            "sender_persons": {
+                "response": [
+                    "Basler Personenschiffahrtsgesellschaft"
+                ],
+                "ground_truth": [],
+                "score": null,
+                "counts": {
+                    "sender_persons_tp": 0,
+                    "sender_persons_fp": 1,
+                    "sender_persons_fn": 0
+                }
+            },
+            "receiver_persons": {
+                "response": [
+                    "Basler Rheinschiffahrt A.-G."
+                ],
+                "ground_truth": [],
+                "score": null,
+                "counts": {
+                    "receiver_persons_tp": 0,
+                    "receiver_persons_fp": 1,
+                    "receiver_persons_fn": 0
+                }
+            }
+        }
+    },
+    "raw_response": "{\"id\":\"gen-1789717295-fAEfWWTtAwqARjBDx8Y2\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\n  \\\"metadata\\\": {\\n    \\\"send_date\\\": [\\n      \\\"1928-03-24\\\"\\n    ],\\n    \\\"letter_title\\\": [\\n      \\\"Verkauf.\\\"\\n    ],\\n    \\\"sender_persons\\\": [\\n      \\\"Basler Personenschiffahrtsgesellschaft\\\"\\n    ],\\n    \\\"receiver_persons\\\": [\\n      \\\"Basler Rheinschiffahrt A.-G.\\\"\\n    ]\\n  }\\n}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"metadata\":{\"send_date\":[\"1928-03-24\"],\"letter_title\":[\"Verkauf.\"],\"sender_persons\":[\"Basler Personenschiffahrtsgesellschaft\"],\"receiver_persons\":[\"Basler Rheinschiffahrt A.-G.\"]}},\"reasoning\":\"The user wants me to extract metadata from a historical letter provided as two images.\\nI need to output a JSON object following a specific schema.\\n\\n**Image 1 Analysis:**\\n- Top right date: \\\"24. M\u00e4rz 1928.\\\" -> send_date: \\\"1928-03-24\\\"\\n- Top left subject/title: \\\"Verkauf.\\\" -> letter_title: \\\"Verkauf.\\\"\\n- Recipient: \\\"An die Basler Rheinschiffahrt A.-G., Basel.\\\" -> receiver_persons: [\\\"Basler Rheinschiffahrt A.-G.\\\"] (It's a company, but fits the receiver slot).\\n- Sender: The text says \\\"Der Unterzeichnete ist wegen Abreise der andern Zeichnungsberechtigten allein beauftragt...\\\" (The undersigned is commissioned alone...). At the bottom of the second page, there is a stamp/signature area.\\n- Bottom right of page 1: \\\"b.w.\\\" (likely initials, but not a full name).\\n\\n**Image 2 Analysis:**\\n- Continuation of the letter.\\n- Bottom right stamp: \\\"Basler Personenschiffahrtsgesellschaft\\\" (Basel Passenger Shipping Company).\\n- Underneath: \\\"Der Gesch\u00e4ftsf\u00fchrer\\\" (The Managing Director).\\n- So the sender is the \\\"Basler Personenschiffahrtsgesellschaft\\\" or specifically the Managing Director of it. Since no specific name is signed (just \\\"b.w.\\\" which might stand for the name, but it's ambiguous without external knowledge, usually \\\"b.w.\\\" stands for \\\"beim Wort\\\" or similar in shorthand, or initials. Wait, \\\"b.w.\\\" often stands for the name in typed letters if the signature is missing, or it's a placeholder. Actually, looking closely at \\\"b.w.\\\", it might be initials. However, the stamp clearly says \\\"Basler Personenschiffahrtsgesellschaft\\\". I will use the company name as the sender entity since the specific person isn't named clearly, or \\\"Basler Personenschiffahrtsgesellschaft\\\" as the organization. The prompt asks for \\\"sender_persons\\\". Often organizations are treated as entities. Let's look at the text: \\\"Wir bekennen uns...\\\" (We acknowledge...). It's a collective \\\"We\\\". The stamp is the entity.\\n- Let's look for a specific name. \\\"b.w.\\\" is likely initials. Without a clear name, I might have to put null or the company name. The prompt asks for \\\"sender_persons\\\". If it's a company, I'll list the company.\\n- Wait, let's re-read the first page. \\\"An die Basler Rheinschiffahrt A.-G.\\\".\\n- Sender: \\\"Basler Personenschiffahrtsgesellschaft\\\".\\n\\n**Refining the fields:**\\n- `letter_title`: \\\"Verkauf.\\\" (Sale).\\n- `send_date`: \\\"1928-03-24\\\".\\n- `sender_persons`: The letter is signed/stamped by \\\"Basler Personenschiffahrtsgesellschaft\\\". The text says \\\"Der Gesch\u00e4ftsf\u00fchrer\\\" (The Managing Director). No specific name like \\\"Hans M\u00fcller\\\" is visible. I will use the company name as the sender.\\n- `receiver_persons`: \\\"Basler Rheinschiffahrt A.-G.\\\"\\n\\nLet's check the schema requirements.\\n`metadata`: object with `send_date`, `letter_title`, `sender_persons`, `receiver_persons`. All lists or null.\\n\\n- `letter_title`: [\\\"Verkauf.\\\"]\\n- `send_date`: [\\\"1928-03-24\\\"]\\n- `sender_persons`: [\\\"Basler Personenschiffahrtsgesellschaft\\\"] (or null if strictly persons, but usually organizations count in these extraction tasks. The text says \\\"Wir\\\" (We). The stamp is the entity. I'll include the company name).\\n- `receiver_persons`: [\\\"Basler Rheinschiffahrt A.-G.\\\"]\\n\\nLet's look at \\\"b.w.\\\". In German business correspondence, \\\"b.w.\\\" isn't a standard abbreviation for a name. It might be \\\"beiliegend\\\" (enclosed)? No, it's at the signature spot. It could be initials. But \\\"Basler Personenschiffahrtsgesellschaft\\\" is the clear entity.\\n\\nLet's stick to the visible text.\\nTitle: \\\"Verkauf.\\\"\\nDate: \\\"24. M\u00e4rz 1928\\\" -> 1928-03-24.\\nReceiver: \\\"Basler Rheinschiffahrt A.-G.\\\"\\nSender: \\\"Basler Personenschiffahrtsgesellschaft\\\" (from the stamp at the end).\\n\\nOne detail: \\\"Der Unterzeichnete\\\" (The undersigned). The stamp says \\\"Basler Personenschiffahrtsgesellschaft / Der Gesch\u00e4ftsf\u00fchrer\\\". So the sender is the Managing Director of the Basler Personenschiffahrtsgesellschaft. Since the name isn't there, I'll use the company name.\\n\\nFinal check of the JSON structure.\\n```json\\n{\\n  \\\"metadata\\\": {\\n    \\\"send_date\\\": [\\\"1928-03-24\\\"],\\n    \\\"letter_title\\\": [\\\"Verkauf.\\\"],\\n    \\\"sender_persons\\\": [\\\"Basler Personenschiffahrtsgesellschaft\\\"],\\n    \\\"receiver_persons\\\": [\\\"Basler Rheinschiffahrt A.-G.\\\"]\\n  }\\n}\\n```\\nWait, the schema says `sender_persons` and `receiver_persons`. If it's a company, is it a person? In historical archives, often the entity is listed. I will provide the company name.\\n\\nActually, looking very closely at the bottom of page 2, the red stamp says \\\"Basler Personenschiffahrtsgesellschaft\\\". Underneath \\\"Der Gesch\u00e4ftsf\u00fchrer\\\".\\nThe text starts \\\"Wir bekennen uns...\\\" (We acknowledge...).\\nThe recipient is \\\"An die Basler Rheinschiffahrt A.-G.\\\".\\n\\nI will formulate the JSON now.\",\"reasoning_details\":[{\"type\":\"reasoning.text\",\"text\":\"The user wants me to extract metadata from a historical letter provided as two images.\\nI need to output a JSON object following a specific schema.\\n\\n**Image 1 Analysis:**\\n- Top right date: \\\"24. M\u00e4rz 1928.\\\" -> send_date: \\\"1928-03-24\\\"\\n- Top left subject/title: \\\"Verkauf.\\\" -> letter_title: \\\"Verkauf.\\\"\\n- Recipient: \\\"An die Basler Rheinschiffahrt A.-G., Basel.\\\" -> receiver_persons: [\\\"Basler Rheinschiffahrt A.-G.\\\"] (It's a company, but fits the receiver slot).\\n- Sender: The text says \\\"Der Unterzeichnete ist wegen Abreise der andern Zeichnungsberechtigten allein beauftragt...\\\" (The undersigned is commissioned alone...). At the bottom of the second page, there is a stamp/signature area.\\n- Bottom right of page 1: \\\"b.w.\\\" (likely initials, but not a full name).\\n\\n**Image 2 Analysis:**\\n- Continuation of the letter.\\n- Bottom right stamp: \\\"Basler Personenschiffahrtsgesellschaft\\\" (Basel Passenger Shipping Company).\\n- Underneath: \\\"Der Gesch\u00e4ftsf\u00fchrer\\\" (The Managing Director).\\n- So the sender is the \\\"Basler Personenschiffahrtsgesellschaft\\\" or specifically the Managing Director of it. Since no specific name is signed (just \\\"b.w.\\\" which might stand for the name, but it's ambiguous without external knowledge, usually \\\"b.w.\\\" stands for \\\"beim Wort\\\" or similar in shorthand, or initials. Wait, \\\"b.w.\\\" often stands for the name in typed letters if the signature is missing, or it's a placeholder. Actually, looking closely at \\\"b.w.\\\", it might be initials. However, the stamp clearly says \\\"Basler Personenschiffahrtsgesellschaft\\\". I will use the company name as the sender entity since the specific person isn't named clearly, or \\\"Basler Personenschiffahrtsgesellschaft\\\" as the organization. The prompt asks for \\\"sender_persons\\\". Often organizations are treated as entities. Let's look at the text: \\\"Wir bekennen uns...\\\" (We acknowledge...). It's a collective \\\"We\\\". The stamp is the entity.\\n- Let's look for a specific name. \\\"b.w.\\\" is likely initials. Without a clear name, I might have to put null or the company name. The prompt asks for \\\"sender_persons\\\". If it's a company, I'll list the company.\\n- Wait, let's re-read the first page. \\\"An die Basler Rheinschiffahrt A.-G.\\\".\\n- Sender: \\\"Basler Personenschiffahrtsgesellschaft\\\".\\n\\n**Refining the fields:**\\n- `letter_title`: \\\"Verkauf.\\\" (Sale).\\n- `send_date`: \\\"1928-03-24\\\".\\n- `sender_persons`: The letter is signed/stamped by \\\"Basler Personenschiffahrtsgesellschaft\\\". The text says \\\"Der Gesch\u00e4ftsf\u00fchrer\\\" (The Managing Director). No specific name like \\\"Hans M\u00fcller\\\" is visible. I will use the company name as the sender.\\n- `receiver_persons`: \\\"Basler Rheinschiffahrt A.-G.\\\"\\n\\nLet's check the schema requirements.\\n`metadata`: object with `send_date`, `letter_title`, `sender_persons`, `receiver_persons`. All lists or null.\\n\\n- `letter_title`: [\\\"Verkauf.\\\"]\\n- `send_date`: [\\\"1928-03-24\\\"]\\n- `sender_persons`: [\\\"Basler Personenschiffahrtsgesellschaft\\\"] (or null if strictly persons, but usually organizations count in these extraction tasks. The text says \\\"Wir\\\" (We). The stamp is the entity. I'll include the company name).\\n- `receiver_persons`: [\\\"Basler Rheinschiffahrt A.-G.\\\"]\\n\\nLet's look at \\\"b.w.\\\". In German business correspondence, \\\"b.w.\\\" isn't a standard abbreviation for a name. It might be \\\"beiliegend\\\" (enclosed)? No, it's at the signature spot. It could be initials. But \\\"Basler Personenschiffahrtsgesellschaft\\\" is the clear entity.\\n\\nLet's stick to the visible text.\\nTitle: \\\"Verkauf.\\\"\\nDate: \\\"24. M\u00e4rz 1928\\\" -> 1928-03-24.\\nReceiver: \\\"Basler Rheinschiffahrt A.-G.\\\"\\nSender: \\\"Basler Personenschiffahrtsgesellschaft\\\" (from the stamp at the end).\\n\\nOne detail: \\\"Der Unterzeichnete\\\" (The undersigned). The stamp says \\\"Basler Personenschiffahrtsgesellschaft / Der Gesch\u00e4ftsf\u00fchrer\\\". So the sender is the Managing Director of the Basler Personenschiffahrtsgesellschaft. Since the name isn't there, I'll use the company name.\\n\\nFinal check of the JSON structure.\\n```json\\n{\\n  \\\"metadata\\\": {\\n    \\\"send_date\\\": [\\\"1928-03-24\\\"],\\n    \\\"letter_title\\\": [\\\"Verkauf.\\\"],\\n    \\\"sender_persons\\\": [\\\"Basler Personenschiffahrtsgesellschaft\\\"],\\n    \\\"receiver_persons\\\": [\\\"Basler Rheinschiffahrt A.-G.\\\"]\\n  }\\n}\\n```\\nWait, the schema says `sender_persons` and `receiver_persons`. If it's a company, is it a person? In historical archives, often the entity is listed. I will provide the company name.\\n\\nActually, looking very closely at the bottom of page 2, the red stamp says \\\"Basler Personenschiffahrtsgesellschaft\\\". Underneath \\\"Der Gesch\u00e4ftsf\u00fchrer\\\".\\nThe text starts \\\"Wir bekennen uns...\\\" (We acknowledge...).\\nThe recipient is \\\"An die Basler Rheinschiffahrt A.-G.\\\".\\n\\nI will formulate the JSON now.\",\"format\":\"unknown\",\"index\":0}]},\"native_finish_reason\":\"stop\"}],\"created\":1789717295,\"model\":\"qwen/qwen3.7-plus\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":null,\"usage\":{\"completion_tokens\":1383,\"prompt_tokens\":5649,\"total_tokens\":7032,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":0,\"reasoning_tokens\":1277,\"rejected_prediction_tokens\":null,\"image_tokens\":0},\"prompt_tokens_details\":{\"audio_tokens\":0,\"cached_tokens\":0,\"cache_write_tokens\":0,\"video_tokens\":0},\"cost\":0.00357792,\"is_byok\":false,\"cost_details\":{\"upstream_inference_cost\":0.00357792,\"upstream_inference_prompt_cost\":0.00180768,\"upstream_inference_completions_cost\":0.00177024}},\"provider\":\"Alibaba\"}"
+}

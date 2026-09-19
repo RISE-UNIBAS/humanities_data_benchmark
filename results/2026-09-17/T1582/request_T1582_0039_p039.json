@@ -1,0 +1,126 @@
+{
+    "text": "{\"advertisements\":[{\"box\":[55.0,80.0,2425.0,275.0]},{\"box\":[1200.0,275.0,2400.0,475.0]},{\"box\":[1200.0,500.0,2400.0,900.0]}]}",
+    "model": "meta-models/Muse-Glimmer-30B",
+    "provider": "huggingface",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 3916,
+        "output_tokens": 2033,
+        "total_tokens": 5949,
+        "cached_tokens": 48
+    },
+    "duration": 84.72460532188416,
+    "timestamp": "2026-09-18T21:38:01.037464",
+    "parsed": {
+        "advertisements": [
+            {
+                "box": [
+                    55.0,
+                    80.0,
+                    2425.0,
+                    275.0
+                ]
+            },
+            {
+                "box": [
+                    1200.0,
+                    275.0,
+                    2400.0,
+                    475.0
+                ]
+            },
+            {
+                "box": [
+                    1200.0,
+                    500.0,
+                    2400.0,
+                    900.0
+                ]
+            }
+        ]
+    },
+    "conversation_id": "0bf0cf34-8143-4347-af81-dc1732f5ebe1",
+    "score": {
+        "field_scores": {
+            "box 0": {
+                "response": null,
+                "ground_truth": [
+                    140,
+                    293,
+                    2226,
+                    972
+                ],
+                "score": 0.0
+            },
+            "box 1": {
+                "response": null,
+                "ground_truth": [
+                    1246,
+                    1781,
+                    2247,
+                    3102
+                ],
+                "score": 0.0
+            },
+            "box 2": {
+                "response": null,
+                "ground_truth": [
+                    1226,
+                    963,
+                    2235,
+                    1690
+                ],
+                "score": 0.0
+            },
+            "box 3": {
+                "response": null,
+                "ground_truth": [
+                    233,
+                    642,
+                    905,
+                    823
+                ],
+                "score": 0.0
+            },
+            "unmatched prediction 0": {
+                "response": [
+                    55.0,
+                    80.0,
+                    2425.0,
+                    275.0
+                ],
+                "ground_truth": null,
+                "score": 0.0
+            },
+            "unmatched prediction 1": {
+                "response": [
+                    1200.0,
+                    275.0,
+                    2400.0,
+                    475.0
+                ],
+                "ground_truth": null,
+                "score": 0.0
+            },
+            "unmatched prediction 2": {
+                "response": [
+                    1200.0,
+                    500.0,
+                    2400.0,
+                    900.0
+                ],
+                "ground_truth": null,
+                "score": 0.0
+            }
+        },
+        "f1": 0.0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "mean_iou": 0.0,
+        "true_positives": 0,
+        "false_positives": 3,
+        "false_negatives": 4,
+        "iou_threshold": 0.5
+    },
+    "raw_response": "{\"id\":\"p1oyqJi-7ArivV-a3d2ccefb8d6fe29\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{ \\\"advertisements\\\": [\\n  {\\n    \\\"box\\\": [55, 80, 2425, 275] \\n    },\\n  {\\n    \\\"box\\\": [1200, 275, 2400, 475] \\n    },\\n  {\\n    \\\"box\\\": [1200, 500, 2400, 900] \\n    }\\n] }\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"advertisements\":[{\"box\":[55.0,80.0,2425.0,275.0]},{\"box\":[1200.0,275.0,2400.0,475.0]},{\"box\":[1200.0,500.0,2400.0,900.0]}]},\"reasoning\":\"Extract all advertisements and return their bounding boxes.\\nThe original size of the page is 2479 x 3508 pixels.\\n\\nWe need find advertisements. Page shows:\\n\\nTop: LA MONDIALE EXPRESS TRANSPORTS S.A. GENEVE - that's an ad. Bounding box around top banner.\\n\\nRight middle: Banque Cantonale Neuch\u00e2teloise (Guaranteed by the State of Neuch\u00e2tel) - ad.\\n\\nBottom right: CHOCOLATS PETER, CAILLER, KOHLER. - ad.\\n\\nPossibly also the top one is one ad. So three ads.\\n\\nNeed bounding boxes coordinates. Probably normalized? Usually return as [x_min, y_min, x_max, y_max] in pixels. Original size 2479 x 3508.\\n\\nWe need estimate coordinates. Let's approximate.\\n\\nImage: page width ~2479, height 3508.\\n\\nTop ad: starts near top with decorative border. Approx y from ~80 to ~270? Let's estimate. The header \\\"September, 1921. THE ANGLO-SWISS REVIEW 37\\\" is at top. Then decorative line. Ad starts around y=80? Let's assume top margin ~50. The ad box with border. x from ~55 to ~ 2420? Actually page has margin. Let's approximate x_min ~ 55, x_max ~ 2425. y_min ~ 80, y_max ~ 270? Wait the ad includes text below. The ad extends down to \\\"Camionnages en tous genres\\\". That is about y ~ 270? Maybe 280. Let's estimate y_min ~ 80, y_max ~ 275.\\n\\nBetter to give approximate. Might be okay.\\n\\nSecond ad: Banque Cantonale Neuch\u00e2teloise. Right side box. x ~ 500? Actually left side text column. The ad is on right column. x_min ~ 500? Wait the left column text starts at ~60. Right column starts at ~500. The ad box is bordered. x_min ~ 500, x_max ~ 900? No width ~ 900? Let's see page width 2479. Right column maybe from ~ 500 to ~ 900? Actually the ad spans right column width. Approx x_min ~ 500, x_max ~ 900? Wait 2479 is width. The right column is about half. Maybe x_min ~ 500, x_max ~ 900? No 900 is too small. Let's think: image shows left text column about 45% width, right column about 45%. So right column x start ~ 490, end ~ 900? Hmm 2479 total. 490 to 900 is 410 px, too narrow. Maybe the image is cropped? The page is 2479 wide, but the visible page is maybe ~ 2400. The right column starts around 1000? Let's approximate: left column width ~ 450 px. So right column starts ~ 500. The right column ends ~ 900? No.\\n\\nAlternative: use relative coordinates 0-1. Might be easier to give approximate pixel.\\n\\nLet's assume page width 2479. The ad box for Banque: left edge ~ 500? Actually the box is inset. Let's estimate x_min ~ 500, x_max ~ 900? Wait the box is on right side, so x_min ~ 500? That would be middle. Hmm.\\n\\nMaybe better to estimate percentages.\\n\\nTop ad: spans almost full width. x_min ~ 55 (2.2%), x_max ~ 2420 (97.6%). y_min ~ 80 (2.3%), y_max ~ 275 (7.8%).\\n\\nBanque ad: x_min ~ 500 (20%), x_max ~ 900? No 900 is 36%. That seems too narrow. Maybe x_min ~ 500, x_max ~ 900? Actually the box is about 40% width. 2479 *0.4 = 991. So x_max ~ 500+991=1491. So x_max ~ 1490. y_min ~ 275 (7.8%), y_max ~ 475 (13.5%).\\n\\nChocolats ad: x_min ~ 500, x_max ~ 900? Actually same width. y_min ~ 500, y_max ~ 900? Let's see. The ad is lower right. y from ~ 500 to ~ 900? Maybe y_min ~ 500 (14%), y_max ~ 900 (25%). Wait the ad extends to bottom. The text \\\"PETER, CAILLER, KOHLER.\\\" is at bottom. So y_max ~ 900? Might be ~ 900? Actually page height 3508. 900 is 25%. Could be ~ 500 to 900? Let's estimate y_min ~ 500, y_max ~ 900? The ad box is tall. Maybe y_min ~ 500, y_max ~ 900? Hmm.\\n\\nLet's refine: The Banque ad is just below top ad, about 275 to 475. The Chocolats ad is below that, starting around 500 and going down to about 900? The bottom of the ad is around 900? The page bottom is 3508. The ad ends around 900? Actually the ad is about half page height. Maybe y_max ~ 900? Could be ~ 900? Let's assume y_min ~ 500, y_max ~ 900? Wait the ad includes illustration and text. The bottom text is around 900? Might be ~ 900? Let's say y_max ~ 900? Could be ~ 900? Hmm.\\n\\nAlternative approach: Provide bounding boxes in relative coordinates [x_min, y_min, x_max, y_max] normalized 0-1000. Might be acceptable.\\n\\nGiven uncertainty, provide approximate pixel values.\\n\\nI'll give:\\n\\n1. LA MONDIALE EXPRESS TRANSPORTS S.A. ad: {x_min=55, y_min=80, x_max=2425, y_max=275}\\n2. Banque Cantonale Neuch\u00e2teloise ad: {x_min=500, y_min=275, x_max=900? Wait x_max maybe 900? Let's pick 500 to 900? Let's pick 500 to 900? Hmm.\\n\\nMaybe better to use x_min=500, x_max=900? Actually the box is on right side, so x_min ~ 500? Wait the left column is about 0-480. So right column starts ~ 500. The box width is about 400? Let's assume x_max ~ 900? No 500+400=900. Could be.\\n\\nLet's assume page width 2479, right column width ~ 900. So x_min ~ 500, x_max ~ 900? Wait 500+900=1400. Hmm.\\n\\nLet's pick x_min=500, x_max=900? I'm confused.\\n\\nLet's look at image: The left text column occupies about 45% of page width. The right column occupies about 45%. So right column starts at ~ 50% of width. 2479 *0.5 = 1239. So x_min ~ 1239. That makes sense. The left column ends around 1200. So right column starts ~ 1230. So x_min ~ 500 is wrong.\\n\\nYes! The page is split into two columns. Left column is left half, right column is right half. So x_min for right ads is about 1200. Good catch.\\n\\nSo top ad spans full width: x_min ~ 55, x_max ~ 2425.\\n\\nBanque ad: x_min ~ 500? No ~ 1230. Let's estimate x_min ~ 500? Wait 1230. x_max ~ 900? No ~ 2400? Actually right column ends at ~ 2400. So x_max ~ 2400? But the ad box has margin. Maybe x_min ~ 500? Let's assume x_min ~ 500? Hmm.\\n\\nLet's assume left column width ~ 470 px? No.\\n\\nBetter estimate: The page image shows left text column about 45% width, right column about 45%. So right column x start ~ 0.48 * 2479 \u2248 1190. x end ~ 0.95 * 2479 \u2248 2355.\\n\\nSo Banque ad: x_min ~ 1200, x_max ~ 2400. y_min ~ 275, y_max ~ 475.\\n\\nChocolats ad: x_min ~ 1200, x_max ~ 2400. y_min ~ 500, y_max ~ 900.\\n\\nTop ad: x_min ~ 55, x_max ~ 2425, y_min ~ 80, y_max ~ 275.\\n\\nLet's provide those.\\n\\nI'll output three bounding boxes.\\n\\nMaybe also the top ad includes the elephant illustration. Good.\\n\\nReturn as list.\\n\\nI'll give approximate pixel coordinates.\\n\\nFinal answer: \\n- La Mondiale Express Transports S.A.: [~55, ~80, ~2425, ~275]\\n- Banque Cantonale Neuch\u00e2teloise: [~1200, ~275, ~2400, ~475]\\n- Chocolats Peter, Cailler, Kohler: [~1200, ~500, ~2400, ~900]\\n\\nIf need more precise, could refine.\\n\\nI'll present as JSON.\\n\\nLet's output.\"},\"token_ids\":null,\"routed_experts\":null,\"seed\":null}],\"created\":1789760197,\"model\":\"meta-models/Muse-Glimmer-30B\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":\"vllm-0.1.dev19059+g66826a22d-tp2-46311a71\",\"usage\":{\"completion_tokens\":2033,\"prompt_tokens\":3916,\"total_tokens\":5949,\"completion_tokens_details\":null,\"prompt_tokens_details\":{\"audio_tokens\":null,\"cached_tokens\":48,\"created_cache_tokens\":3856,\"multimodal_tokens\":{\"image\":3850}}},\"prompt_token_ids\":null,\"prompt_text\":null,\"kv_transfer_params\":null,\"ec_transfer_params\":null,\"metrics\":null,\"prompt\":[]}"
+}

@@ -1,0 +1,77 @@
+{
+    "text": "{\"metadata\":{\"send_date\":[\"1928-04-23\"],\"letter_title\":null,\"sender_persons\":null,\"receiver_persons\":[\"Basler Rheinschiffahrt-Aktiengesellschaft\"]}}",
+    "model": "meta-models/Muse-Glimmer-30B",
+    "provider": "huggingface",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 8036,
+        "output_tokens": 1126,
+        "total_tokens": 9162,
+        "cached_tokens": 320
+    },
+    "duration": 44.25012922286987,
+    "timestamp": "2026-09-18T21:43:32.029725",
+    "parsed": {
+        "metadata": {
+            "send_date": [
+                "1928-04-23"
+            ],
+            "letter_title": null,
+            "sender_persons": null,
+            "receiver_persons": [
+                "Basler Rheinschiffahrt-Aktiengesellschaft"
+            ]
+        }
+    },
+    "conversation_id": "c519fad0-9fcb-45fa-b86a-1b3592a7c198",
+    "score": {
+        "send_date_tp": 1,
+        "send_date_fp": 0,
+        "send_date_fn": 0,
+        "sender_persons_tp": 0,
+        "sender_persons_fp": 0,
+        "sender_persons_fn": 0,
+        "receiver_persons_tp": 0,
+        "receiver_persons_fp": 1,
+        "receiver_persons_fn": 0,
+        "field_scores": {
+            "send_date": {
+                "response": [
+                    "1928-04-23"
+                ],
+                "ground_truth": [
+                    "1928-04-23"
+                ],
+                "score": null,
+                "counts": {
+                    "send_date_tp": 1,
+                    "send_date_fp": 0,
+                    "send_date_fn": 0
+                }
+            },
+            "sender_persons": {
+                "response": [],
+                "ground_truth": [],
+                "score": null,
+                "counts": {
+                    "sender_persons_tp": 0,
+                    "sender_persons_fp": 0,
+                    "sender_persons_fn": 0
+                }
+            },
+            "receiver_persons": {
+                "response": [
+                    "Basler Rheinschiffahrt-Aktiengesellschaft"
+                ],
+                "ground_truth": [],
+                "score": null,
+                "counts": {
+                    "receiver_persons_tp": 0,
+                    "receiver_persons_fp": 1,
+                    "receiver_persons_fn": 0
+                }
+            }
+        }
+    },
+    "raw_response": "{\"id\":\"p1p1jiM-fdNmn-a3d2d5fecf4788ee\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\n  \\\"metadata\\\": {\\n    \\\"send_date\\\": [\\\"1928-04-23\\\"],\\n    \\\"letter_title\\\": null,\\n    \\\"sender_persons\\\": null,\\n    \\\"receiver_persons\\\": [\\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"]\\n  }\\n}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"metadata\":{\"send_date\":[\"1928-04-23\"],\"letter_title\":null,\"sender_persons\":null,\"receiver_persons\":[\"Basler Rheinschiffahrt-Aktiengesellschaft\"]}},\"reasoning\":\"IDENTITY and PURPOSE:\\n\\nWe need extract values of keys from letter and return JSON where values corresponding to each key should be stored as a list, even if single value.\\n\\nKeys:\\n- letter_title: Title of the letter.\\n- sender_persons: Name(s) of the person(s) who wrote the letter.\\n- send_date: The exact or approximate date the letter was written.\\n- receiver_persons: Name(s) of the person(s) who received the letter.\\n\\nTake deep breath... Do not use OCR. Use ISO format YYYY-MM-DD for dates. If info not included, set value to \\\"null\\\". Do not return anything except JSON.\\n\\nWe have two images. First page: Basel, den 23. April 1928.\\n\\nBasler Rheinschiffahrt-Aktiengesellschaft\\nBasel\\nMarktgasse 5.\\n\\nWir sind im Besitze Ihres Geehrten vom 28. M\u00e4rz...\\n\\nSo letter is addressed to Basler Rheinschiffahrt-Aktiengesellschaft, Basel, Marktgasse 5.\\n\\nSender? At bottom of second page: In Hochachtung Basler Personenschifffahrtsgesellschaft\\n\\nSo sender is Basler Personenschifffahrtsgesellschaft. Possibly sender persons? Name(s) of person(s) who wrote the letter. Might be company. Could be no individual persons. So sender_persons maybe [\\\"Basler Personenschifffahrtsgesellschaft\\\"]? Or null? The key says sender_persons: Name(s) of the person(s) who wrote the letter. Company is not a person. Might be null? Hmm.\\n\\nMaybe the letter is from Basler Personenschifffahrtsgesellschaft to Basler Rheinschiffahrt-Aktiengesellschaft. So receiver_persons is Basler Rheinschiffahrt-Aktiengesellschaft. Sender_persons maybe null because no person name given, only company.\\n\\nLetter_title: Title of the letter. Is there a title? Maybe none. Could be null. Or maybe the address is title? Might be no title. Could be \\\"null\\\". The example shows title. Might be no title. Could be empty? Probably null.\\n\\nSend_date: Basel, den 23. April 1928. So 1928-04-23.\\n\\nReceiver_persons: Basler Rheinschiffahrt-Aktiengesellschaft. Possibly also \\\"Basel\\\" and \\\"Marktgasse 5.\\\" But name is company.\\n\\nSender_persons: maybe null because no person name. Or maybe the company name is considered sender. The key says person(s). Might be null.\\n\\nAlternative interpretation: sender_persons could be the company name as entity. Might still list.\\n\\nThe instruction: extract values of keys from the letter. If a piece of information is not included, set value to \\\"null\\\". The sender persons name not included, only company. So maybe null.\\n\\nLetter_title: Title of the letter. No title visible. So null.\\n\\nThus JSON:\\n\\n{\\n  \\\"letter_title\\\": null,\\n  \\\"sender_persons\\\": null,\\n  \\\"send_date\\\": [\\\"1928-04-23\\\"],\\n  \\\"receiver_persons\\\": [\\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"]\\n}\\n\\nBut values should be stored as a list, even if single value. So send_date is list. receiver_persons is list. letter_title is null? Should be null not list? Example shows list for each. But instruction says set value to \\\"null\\\". So letter_title: null? Or [\\\"null\\\"]? Probably null.\\n\\nThe example shows values as list. But for null, maybe just null.\\n\\nMaybe sender_persons could be [\\\"Basler Personenschifffahrtsgesellschaft\\\"] as the sender entity. The key says persons, but maybe they accept organization.\\n\\nHmm. Could be they want sender_persons as the company name. Might be okay.\\n\\nAlso receiver_persons could be [\\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\", \\\"Basel\\\"]? No.\\n\\nBetter to provide receiver_persons as [\\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"].\\n\\nSender_persons: maybe null.\\n\\nLetter_title: maybe null.\\n\\nCheck first page: no title. Could be the address is considered title? No.\\n\\nThus output JSON.\\n\\nPotential nuance: send_date is \\\"Basel, den 23. April 1928.\\\" So date is 1928-04-23.\\n\\nReturn only JSON.\\n\\nI'll output:\\n\\n{\\n  \\\"letter_title\\\": null,\\n  \\\"sender_persons\\\": null,\\n  \\\"send_date\\\": [\\\"1928-04-23\\\"],\\n  \\\"receiver_persons\\\": [\\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"]\\n}\\n\\nIf they want sender_persons as company, could be [\\\"Basler Personenschifffahrtsgesellschaft\\\"]. Let's think: The letter is signed \\\"Basler Personenschifffahrtsgesellschaft\\\". That's the sender. Even though it's a company, it's the entity. Might be considered sender_persons? Might be okay to list.\\n\\nThe instruction says Name(s) of the person(s) who wrote the letter. No person name. So null is more accurate.\\n\\nI'll go with null for sender_persons and letter_title.\\n\\nMake sure JSON format correct.\\n\\nOutput only JSON.\"},\"token_ids\":null,\"routed_experts\":null,\"seed\":null}],\"created\":1789760568,\"model\":\"meta-models/Muse-Glimmer-30B\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":\"vllm-0.1.dev19059+g66826a22d-tp2-46311a71\",\"usage\":{\"completion_tokens\":1126,\"prompt_tokens\":8036,\"total_tokens\":9162,\"completion_tokens_details\":null,\"prompt_tokens_details\":{\"audio_tokens\":null,\"cached_tokens\":320,\"created_cache_tokens\":7712,\"multimodal_tokens\":{\"image\":7700}}},\"prompt_token_ids\":null,\"prompt_text\":null,\"kv_transfer_params\":null,\"ec_transfer_params\":null,\"metrics\":null,\"prompt\":[]}"
+}

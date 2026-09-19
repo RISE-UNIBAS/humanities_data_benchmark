@@ -1,0 +1,87 @@
+{
+    "text": "{\"advertisements\":[{\"box\":[100.0,1300.0,2380.0,1620.0]},{\"box\":[100.0,1660.0,2380.0,1970.0]}]}",
+    "model": "thinkingmachines/Inkling",
+    "provider": "huggingface",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 1983,
+        "output_tokens": 912,
+        "total_tokens": 2895
+    },
+    "duration": 10.597386837005615,
+    "timestamp": "2026-09-18T21:12:35.641787",
+    "parsed": {
+        "advertisements": [
+            {
+                "box": [
+                    100.0,
+                    1300.0,
+                    2380.0,
+                    1620.0
+                ]
+            },
+            {
+                "box": [
+                    100.0,
+                    1660.0,
+                    2380.0,
+                    1970.0
+                ]
+            }
+        ]
+    },
+    "conversation_id": "c2859df9-b35b-4822-991e-248123b558f1",
+    "score": {
+        "field_scores": {
+            "box 0": {
+                "response": null,
+                "ground_truth": [
+                    175,
+                    2602,
+                    2149,
+                    2988
+                ],
+                "score": 0.0
+            },
+            "box 1": {
+                "response": null,
+                "ground_truth": [
+                    175,
+                    2216,
+                    2151,
+                    2600
+                ],
+                "score": 0.0
+            },
+            "unmatched prediction 0": {
+                "response": [
+                    100.0,
+                    1300.0,
+                    2380.0,
+                    1620.0
+                ],
+                "ground_truth": null,
+                "score": 0.0
+            },
+            "unmatched prediction 1": {
+                "response": [
+                    100.0,
+                    1660.0,
+                    2380.0,
+                    1970.0
+                ],
+                "ground_truth": null,
+                "score": 0.0
+            }
+        },
+        "f1": 0.0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "mean_iou": 0.0,
+        "true_positives": 0,
+        "false_positives": 2,
+        "false_negatives": 2,
+        "iou_threshold": 0.5
+    },
+    "raw_response": "{\"id\":\"p1orPpV-6z2FuN-a3d2a97f9f6624ad\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\n  \\\"advertisements\\\": [\\n    {\\n      \\\"box\\\": [100, 1300, 2380, 1620]\\n    },\\n    {\\n      \\\"box\\\": [100, 1660, 2380, 1970]\\n    }\\n  ]\\n}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"advertisements\":[{\"box\":[100.0,1300.0,2380.0,1620.0]},{\"box\":[100.0,1660.0,2380.0,1970.0]}]},\"reasoning\":\"We need extract all advertisements and return bounding boxes. Need analyze image: page from magazine with \\\"HOTELS SPECIALLY RECOMMENDED\\\" list, then two large ad boxes at bottom: \\\"Hotel-Pension Florhof Z\u00fcrich\\\" and \\\"Basle / Parkhotel Bernerhof\\\". Need bounding boxes in original size 2479x3508.\\n\\nNeed determine coordinates precisely.\\n\\nLet's inspect image layout. Top part is list of hotels with descriptions. Then near bottom there are two rectangular bordered advertisements.\\n\\nFirst ad: \\\"Hotel-Pension Florhof Z\u00fcrich\\\" box. Let's estimate y start around 1300? Actually need more precise based on image dimensions 2479x3508. The page is tall. The bottom ads are in lower portion. Let's approximate bounding boxes using relative positions.\\n\\nLooking at image: The first ad box starts maybe around y=1300? Wait the list occupies top half. Let's examine mental layout: The page has header \\\"HOTELS SPECIALLY RECOMMENDED\\\" near top y~150. Then list entries from y~250 to y~1250. Then first ad box starts around y=1310 and ends around y=1630? Second ad box starts around y=1680 and ends around y=1980? Then below is article text.\\n\\nBut need be accurate based on pixels. Let's determine using visible borders.\\n\\nAd 1 box: left border near x~100? Right border near x~2380? Top border near y~1290? Bottom near y~1610? Let's refine.\\n\\nAd 2 box: left/right similar. Top near y~1660? Bottom near y~1950?\\n\\nWe need \\\"all advertisements\\\" - likely these two boxes. Also possibly the list itself is advertisements? The section title \\\"HOTELS SPECIALLY RECOMMENDED\\\" lists hotels with descriptions, likely paid listings/ads. But the prompt says \\\"Extract all advertisements and return their bounding boxes.\\\" In magazine page analysis, often the bordered boxes are ads, while the list might be directory listings, but could also be ads. However the two prominent boxes at bottom are clearly advertisements with large headings. The list above is also recommending hotels, but formatted as text list, not boxed ads. Usually in these tasks they want the display ads with borders. Let's include both bottom boxes.\\n\\nNeed provide bounding boxes in format [x1, y1, x2, y2].\\n\\nLet's estimate more precisely using image proportions.\\n\\nImage width 2479. The left margin maybe ~100, right margin ~100, so box width ~2280 centered. Actually the boxes seem to span almost full width with margins about 100 on each side. So x1 \u2248 100, x2 \u2248 2380.\\n\\nFor y: The first box top is just below the list ending around y=1280? Let's check list ends with \\\"ZUERICH. \u2014 Hotel St. Gotthard...\\\" near bottom of list. Then there is some space, then box. So y1 \u2248 1300, y2 \u2248 1620.\\n\\nSecond box y1 \u2248 1660, y2 \u2248 1970.\\n\\nBut I need be somewhat accurate. Let's think about page height 3508. The bottom article starts around y=2000 and goes to bottom ~3400. So yes, boxes are around 1300-2000.\\n\\nThus I will return:\\n[100, 1300, 2380, 1620]\\n[100, 1660, 2380, 1970]\\n\\nBut maybe the list entries are also ads? Let's consider. The section is \\\"HOTELS SPECIALLY RECOMMENDED\\\" with many hotel entries. Each entry could be considered an advertisement. But they ask \\\"all advertisements\\\" plural, and there are two clear display ads. The list is more like editorial recommendations? Actually it's in \\\"The Anglo-Swiss Commercial Gazette\\\" and lists hotels with details, likely paid listings. But bounding boxes for each entry would be many. The prompt likely expects the two large ones because they are visually distinct advertisements.\\n\\nLet's provide both large boxes. Maybe also include the header? No.\\n\\nI'll provide the two boxes.\"},\"seed\":null}],\"created\":1789758746,\"model\":\"thinkingmachines/Inkling\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":\"default\",\"usage\":{\"completion_tokens\":912,\"prompt_tokens\":1983,\"total_tokens\":2895,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":null,\"reasoning_tokens\":851,\"rejected_prediction_tokens\":null},\"prompt_tokens_details\":{\"audio_tokens\":null,\"cached_tokens\":0}},\"prompt\":[]}"
+}

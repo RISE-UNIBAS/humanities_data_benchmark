@@ -1,0 +1,85 @@
+{
+    "text": "{\"metadata\":{\"send_date\":[\"1928-04-26\"],\"letter_title\":null,\"sender_persons\":null,\"receiver_persons\":[\"Max Oettinger\"]}}",
+    "model": "deepseek-flash",
+    "provider": "deepseek",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 1624,
+        "output_tokens": 2474,
+        "total_tokens": 4098,
+        "cached_tokens": 1408,
+        "input_cost_usd": 0.00048719999999999997,
+        "output_cost_usd": 0.0029688,
+        "estimated_cost_usd": 0.0034560000000000003
+    },
+    "duration": 14.159305572509766,
+    "timestamp": "2026-09-16T17:03:23.380473",
+    "parsed": {
+        "metadata": {
+            "send_date": [
+                "1928-04-26"
+            ],
+            "letter_title": null,
+            "sender_persons": null,
+            "receiver_persons": [
+                "Max Oettinger"
+            ]
+        }
+    },
+    "conversation_id": "658b5dfe-44d2-46d7-817d-e8bb5956c6f7",
+    "score": {
+        "send_date_tp": 1,
+        "send_date_fp": 0,
+        "send_date_fn": 0,
+        "sender_persons_tp": 0,
+        "sender_persons_fp": 0,
+        "sender_persons_fn": 2,
+        "receiver_persons_tp": 1,
+        "receiver_persons_fp": 0,
+        "receiver_persons_fn": 0,
+        "field_scores": {
+            "send_date": {
+                "response": [
+                    "1928-04-26"
+                ],
+                "ground_truth": [
+                    "1928-04-26"
+                ],
+                "score": null,
+                "counts": {
+                    "send_date_tp": 1,
+                    "send_date_fp": 0,
+                    "send_date_fn": 0
+                }
+            },
+            "sender_persons": {
+                "response": [],
+                "ground_truth": [
+                    "Groschupf-Jaeger, Louis",
+                    "Ritter-Dreier, Fritz"
+                ],
+                "score": null,
+                "counts": {
+                    "sender_persons_tp": 0,
+                    "sender_persons_fp": 0,
+                    "sender_persons_fn": 2
+                }
+            },
+            "receiver_persons": {
+                "response": [
+                    "Oettinger-Meili, Artur"
+                ],
+                "ground_truth": [
+                    "Oettinger-Meili, Artur"
+                ],
+                "score": null,
+                "counts": {
+                    "receiver_persons_tp": 1,
+                    "receiver_persons_fp": 0,
+                    "receiver_persons_fn": 0
+                }
+            }
+        }
+    },
+    "raw_response": "{\"id\":\"bdac0d4a-4e4b-4597-9cc7-f50063337099\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\\"metadata\\\":{\\\"send_date\\\":[\\\"1928-04-26\\\"],\\\"letter_title\\\":null,\\\"sender_persons\\\":null,\\\"receiver_persons\\\":[\\\"Max Oettinger\\\"]}}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"reasoning_content\":\"We need answer JSON only. Need extract from letter. Need not OCR? We can read. Need map keys. Schema requires {\\\"metadata\\\": {...}} with send_date, letter_title, sender_persons, receiver_persons. Values list or null.\\n\\nLetter is typed in German. Header: Basler Rheinschiffahrt-Aktiengesellschaft, Marktgasse 5. Basel, den 26. April 1928. To: Herrn Max Oettinger, Verkehrsbureau, Basel. Body: confirm receipt of your letter from 25th d.s. with documents mentioned under 1-5. Request copy of relevant Bewilligung. Closing: Hochachtend BASLER RHEINSCHIFFAHRT-AKTIENGESELLSCHAFT, signatures.\\n\\nletter_title? No explicit title. Could be \\\"Empfangsbest\u00e4tigung und Bitte um Abschrift der Bewilligung\\\" maybe? But task says Title of letter. In historical letter, no title. Should be null? Maybe extract from content? Usually if not included, null. But \\\"letter_title\\\" might be inferred? The instruction says if a piece of information is not included in letter, set value to null. The letter doesn't have title. So null. However maybe the title could be \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\" but that's sender. We need be careful.\\n\\nsender_persons: The letter is from Basler Rheinschiffahrt-Aktiengesellschaft (company). But signatories? Signatures illegible: maybe two signatures. Could identify names? The sender persons who wrote the letter? It's company, not persons. But instructions ask sender_persons: Name(s) of person(s) who wrote the letter. There are signatures. We might not be able to read. Could be \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"? But that's organization. The schema likely expects persons. The letterhead says company. The signatures are handwritten, difficult. Maybe \\\"H. ...\\\"? Let's inspect signatures: One appears \\\"G. ...\\\"? Actually left signature maybe \\\"H. ...\\\"? Right signature looks like \\\"Gygi\\\"? Let's zoom mentally. The letter is from Basler Rheinschiffahrt-Aktiengesellschaft. The signatures: left maybe \\\"W. ...\\\" or \\\"H. ...\\\"? Right maybe \\\"Gysin\\\"? Hmm.\\n\\nLet's think: Basler Rheinschiffahrt-Aktiengesellschaft in 1928. Max Oettinger, Verkehrsbureau Basel. Signatures could be directors. We need not OCR? It says do not use OCR. But we can interpret. The task: extract values from images. We are historian. We need JSON. If signature illegible, set sender_persons to [\\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"]? That's not person. Or null? The letter itself has sender company name, but not individual persons. The signatures might be personal names. If we cannot decipher, maybe null? But we need produce list. Could infer \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\" as sender? The key says sender_persons, not sender_organization. But the example \\\"Lisa Simpson\\\" person. So if no person, null. However the letter is signed by two people, so sender_persons should ideally include their names. But we can't read. Could use \\\"unknown\\\" but null? Instructions: If info not included, null. Names are included as signatures but illegible? Hmm.\\n\\nMaybe we can recognize: \\\"Hochachtend BASLER RHEINSCHIFFAHRT-AKTIENGESELLSCHAFT\\\" and signatures. One signature might be \\\"H. Blaser\\\"? Let's try. The left signature: looks like \\\"H. ...\\\" maybe \\\"H. Weber\\\"? There is a dot after H? It could be \\\"H. Wirz\\\"? Right signature: maybe \\\"G. ...\\\" with a long descender. Could be \\\"G. Gysin\\\"? Max Oettinger was a Basel traffic official. The company Basler Rheinschiffahrt-Aktiengesellschaft. The signatories could be \\\"H. Meyer\\\" and \\\"G. S...\\\"? Not sure.\\n\\nGiven schema requires JSON. We can set sender_persons to null if no names legible. But there are signatures; maybe we should list the company as sender? The field name sender_persons; maybe include both company and signatories? Example only persons. However historical letters often sender is organization; but the instruction specifically person(s) who wrote the letter. The signatories wrote it. But we can't read names. Could set to null. But maybe the letterhead \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\" is the sender, so sender_persons could be [\\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"]? The key says persons, but in many datasets, organization can be used. But it's not person. Better to use the company as sender? Hmm.\\n\\nLet's parse letter content:\\n- Basler Rheinschiffahrt-Aktiengesellschaft\\n- Basel, den 26. April 1928\\n- Herrn Max Oettinger, Verkehrsbureau, Basel.\\n- \\\"Wir best\u00e4tigen den Empfang Ihres Schreibens vom 25. ds. mit den darin unter 1 - 5 erw\u00e4hnten Schriftst\u00fccken. Es w\u00e4re uns sehr gedient, wenn Sie uns eine Abschrift der betreffenden Bewilligung \u00fcberlassen k\u00f6nnten.\\\"\\n- Signatures.\\n\\nsend_date: 1928-04-26. likely exact.\\nreceiver_persons: Herrn Max Oettinger. So [\\\"Max Oettinger\\\"].\\nletter_title: No title. Could be null. But maybe \\\"Empfangsbest\u00e4tigung\\\" (confirmation of receipt) not explicit. Null.\\nsender_persons: The signatures. Could we infer names? Let's search memory? Basler Rheinschiffahrt-Aktiengesellschaft, 1928, Max Oettinger. Signatures maybe \\\"H. R. ...\\\" and \\\"G. ...\\\"? The left signature might be \\\"H. ...\\\" maybe \\\"H. Riggenbach\\\"? Right could be \\\"G. ...\\\" maybe \\\"G. Baur\\\"? Not sure.\\n\\nMaybe the idea: The letter is from a company, so sender_persons could be null. But the schema requires list or null. Since there are signatories, but not typed, the information is included but not machine-readable? The instruction says \\\"Do not use OCR. Map out claims...\\\" It expects reading. We can attempt to read signatures. Let's examine the image more carefully.\\n\\nImage: At bottom center:\\n\\\"Hochachtend\\nBASLER\\nRHEINSCHIFFAHRT-AKTIENGESELLSCHAFT\\\"\\nThen two signatures. Left signature: starts with a capital letter that looks like \\\"H\\\" or maybe \\\"F\\\"? It has a loop. Could be \\\"H. ...\\\" with a long stroke. The surname might begin with \\\"W\\\" or \\\"M\\\"? It's cursive. Right signature: starts with \\\"G\\\" maybe, then \\\"y\\\" or \\\"g\\\"? It looks like \\\"Gygi\\\" or \\\"Gysi\\\"? Actually it might be \\\"G. ...\\\" with a long \\\"y\\\" descender. The surname could be \\\"Gygi\\\"? There is a Swiss surname Gygi. The left could be \\\"H. ...\\\" maybe \\\"H. W...\\\"? Could be \\\"H. Weber\\\"? Hmm.\\n\\nIf we can identify names, great. But if not, we should set null. However the output should be from images; if we can't read, null is acceptable? The instruction says if piece of info not included, null. It is included as signatures, but not legible. I'd set null to avoid incorrect.\\n\\nBut maybe the expected answer in dataset might include sender_persons as [\\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"]? Let's check common letter metadata extraction. The sender_persons field for a company letter often includes the company name if no individual. But the key says persons. The example \\\"Lisa Simpson\\\" is individual. However in historical letters, sender can be organization. The instruction: \\\"Name(s) of the person(s) who wrote the letter.\\\" So if it's a company, maybe no person. But signatures indicate persons. Could include the company name as a fallback? I'd rather not.\\n\\nCould letter_title be \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"? No, that's sender.\\n\\nLet's consider the red \\\"29\\\" on top right. Not title.\\n\\nMaybe letter_title should be \\\"Empfangsbest\u00e4tigung\\\" because it's confirming receipt. But no explicit title. The instruction says if not included, null. So null.\\n\\nThus JSON:\\n{\\n  \\\"metadata\\\": {\\n    \\\"send_date\\\": [\\\"1928-04-26\\\"],\\n    \\\"letter_title\\\": null,\\n    \\\"sender_persons\\\": null,\\n    \\\"receiver_persons\\\": [\\\"Max Oettinger\\\"]\\n  }\\n}\\n\\nBut wait, sender_persons might be inferred from sender letterhead? \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\" is not person. The key requires person(s). Could be null. However, the letter is signed by two persons; maybe we can list them as \\\"[Handschriftlich]\\\" or omit? The schema requires list of strings. Null is allowed.\\n\\nLet's see if there's any typed name of signatory? No.\\n\\nMaybe the task expects us to extract sender_persons as the company name because it's the sender? But the field says persons. In many historical letter datasets, sender_persons can be organization. But the instruction explicitly says person(s). I'd lean null.\\n\\nBut the example: sender_persons: [\\\"Lisa Simpson\\\"] - person. So if company, null.\\n\\nLet's examine signature more: The left signature could be \\\"H. Blaser\\\" or \\\"H. Bl\u00e4si\\\"? The right signature could be \\\"G. Buser\\\"? Actually \\\"G\\\" then \\\"y\\\" then \\\"g\\\" then \\\"i\\\"? Could be \\\"Gygi\\\". There is a Swiss politician? Not relevant. The letterhead has \\\"R/N.\\\" maybe \\\"Rheinschiffahrt / N...\\\"? No.\\n\\nGiven no OCR, but we can read printed text. The signatures are handwritten; if we cannot reliably read, null.\\n\\nMaybe use \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\" as sender? Hmm.\\n\\nI need decide. The final answer must be JSON only. I'll output with null for letter_title and sender_persons. But maybe I should include \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\" as sender? The key says sender_persons, but in some schemas, organizations are acceptable? The instruction: \\\"Name(s) of the person(s) who wrote the letter.\\\" So no.\\n\\nCould the letter_title be \\\"Best\u00e4tigung des Empfangs Ihres Schreibens vom 25. ds.\\\"? No, that's body.\\n\\nThus final JSON as above.\\n\\nWait, check send_date format: \\\"Basel, den 26. April 1928\\\" -> ISO 1928-04-26. correct.\\n\\nreceiver_persons: \\\"Herrn Max Oettinger, Verkehrsbureau, Basel.\\\" -> Max Oettinger. correct.\\n\\nletter_title: null.\\n\\nsender_persons: null.\\n\\nReturn in exact schema: {\\\"metadata\\\": {...}}.\\n\\nI'll produce JSON.\"}}],\"created\":1789570990,\"model\":\"deepseek-flash\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":\"aeb56401ca74e127821c4f9126dcb669\",\"usage\":{\"completion_tokens\":2474,\"prompt_tokens\":1624,\"total_tokens\":4098,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":null,\"reasoning_tokens\":2433,\"rejected_prediction_tokens\":null},\"prompt_tokens_details\":{\"audio_tokens\":null,\"cached_tokens\":1408},\"prompt_cache_hit_tokens\":1408,\"prompt_cache_miss_tokens\":216}}"
+}

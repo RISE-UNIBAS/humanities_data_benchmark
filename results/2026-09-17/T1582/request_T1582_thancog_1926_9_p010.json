@@ -1,0 +1,88 @@
+{
+    "text": "{\"advertisements\":[{\"box\":[560.0,1650.0,925.0,2450.0]},{\"box\":[135.0,2400.0,925.0,3150.0]}]}",
+    "model": "meta-models/Muse-Glimmer-30B",
+    "provider": "huggingface",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 3916,
+        "output_tokens": 1039,
+        "total_tokens": 4955,
+        "cached_tokens": 48
+    },
+    "duration": 41.82451796531677,
+    "timestamp": "2026-09-18T21:40:20.589098",
+    "parsed": {
+        "advertisements": [
+            {
+                "box": [
+                    560.0,
+                    1650.0,
+                    925.0,
+                    2450.0
+                ]
+            },
+            {
+                "box": [
+                    135.0,
+                    2400.0,
+                    925.0,
+                    3150.0
+                ]
+            }
+        ]
+    },
+    "conversation_id": "f025893e-6068-4426-a082-577066d4a77d",
+    "score": {
+        "field_scores": {
+            "box 0": {
+                "response": null,
+                "ground_truth": [
+                    328,
+                    2516,
+                    2309,
+                    3188
+                ],
+                "score": 0.0
+            },
+            "box 1": {
+                "response": null,
+                "ground_truth": [
+                    1375,
+                    1809,
+                    2314,
+                    2509
+                ],
+                "score": 0.0
+            },
+            "unmatched prediction 0": {
+                "response": [
+                    560.0,
+                    1650.0,
+                    925.0,
+                    2450.0
+                ],
+                "ground_truth": null,
+                "score": 0.0
+            },
+            "unmatched prediction 1": {
+                "response": [
+                    135.0,
+                    2400.0,
+                    925.0,
+                    3150.0
+                ],
+                "ground_truth": null,
+                "score": 0.0
+            }
+        },
+        "f1": 0.0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "mean_iou": 0.0,
+        "true_positives": 0,
+        "false_positives": 2,
+        "false_negatives": 2,
+        "iou_threshold": 0.5
+    },
+    "raw_response": "{\"id\":\"p1ozmRT-fdNmn-a3d2d160ffca6b8a\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\\"advertisements\\\": [\\n  {\\n    \\\"box\\\": [560, 1650, 925, 2450]\\n  },\\n  {\\n    \\\"box\\\": [135, 2400, 925, 3150]\\n  }\\n]}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"advertisements\":[{\"box\":[560.0,1650.0,925.0,2450.0]},{\"box\":[135.0,2400.0,925.0,3150.0]}]},\"reasoning\":\"Extract all advertisements and return their bounding boxes.\\nThe original size of the page is 2479 x 3508 pixels.\\n\\nI see two advertisements: Fr. Klingelfuss & Co. BASLE (Switzerland) X-RAYS APPARATUS etc. And Banque F\u00e9d\u00e9rale S. A. Eidgen\u00f6ssische Bank A. G.\\n\\nNeed bounding boxes. Probably coordinates normalized? Usually return as [x_min, y_min, x_max, y_max] in pixels. Might need relative? The instruction says original size 2479 x 3508 pixels. So give pixel coordinates.\\n\\nEstimate. The page image. Let's approximate.\\n\\nFirst ad: Fr. Klingelfuss & Co. Box on right middle. Approx x from ~560 to ~925? Wait page width 2479. The ad is on right column. Left edge maybe ~560? Actually left column ends around ~520. So ad starts ~560. Ends ~925? Wait right margin ~925? Hmm page width 2479, but image shows maybe left margin ~130. Let's approximate relative.\\n\\nBetter estimate using typical layout. The ad box is bordered. Top about 515? Let's guess.\\n\\nMaybe use normalized 0-1000? Might be pixel.\\n\\nI'll approximate:\\n\\nFr. Klingelfuss & Co. ad bounding box: x_min ~ 560, y_min ~ 512, x_max ~ 925, y_max ~ 717.\\n\\nBanque F\u00e9d\u00e9rale ad at bottom spanning width. x_min ~ 135, y_min ~ 720, x_max ~ 925, y_max ~ 910.\\n\\nLet's refine. The bottom ad starts around 135 px from left, top ~ 720? Actually the decorative border starts ~ 720. Bottom ~ 910.\\n\\nMaybe y coordinates: page height 3508. The top of page is ~ 200? The ad is lower. Let's estimate percentages.\\n\\nVisually, top of page ~ 10% down. The Fr. Klingelfuss ad is about 50% down. So y_min ~ 0.5*3508 \u2248 1754. Wait 3508 pixels height. The image shows page. The top margin maybe 200 px. So 50% is ~1750. Hmm.\\n\\nLet's assume coordinates in original image pixels. The image shown is maybe cropped. Hard to know.\\n\\nAlternative: provide relative coordinates [x1, y1, x2, y2] normalized 0-1.\\n\\nMight be acceptable to give approximate.\\n\\nI'll give two boxes:\\n\\n1. Fr. Klingelfuss & Co. ad: {x_min= 560, y_min= 510, x_max= 925, y_max= 715}\\n2. Banque F\u00e9d\u00e9rale S. A. ad: {x_min= 135, y_min= 720, x_max= 925, y_max= 910}\\n\\nIf need normalized: divide by 2479 and 3508.\\n\\nCompute normalized approx:\\n\\nFr. Klingelfuss:\\nx_min 560/2479\u22480.226\\nx_max 925/2479\u22480.373\\ny_min 510/3508\u22480.145\\ny_max 715/3508\u22480.204\\n\\nWait y seems too high. Maybe my y estimate off because image is cropped. Actually the page image height maybe 3508 includes black border. The content starts lower. Might be okay.\\n\\nAlternative estimate using visual proportion: The ad is about 45% down from top of content. Content top ~ 200 px. So y_min ~ 200 + 0.45* (3508-400) \u2248 200+ 1400=1600. Hmm.\\n\\nLet's assume the coordinates given are relative to the image as displayed. Might be easier to give approximate bounding boxes in pixels as per image dimensions.\\n\\nI'll provide approximate boxes:\\n\\n- Fr. Klingelfuss & Co. BASLE (Switzerland) advertisement: [~560, ~1650, ~925, ~2450] (approx)\\n- Banque F\u00e9d\u00e9rale S. A. Eidgen\u00f6ssische Bank A. G. advertisement: [~135, ~2400, ~925, ~3150]\\n\\nLet's pick reasonable.\\n\\nMaybe better to give normalized 0-1000.\\n\\nI'll output both pixel and normalized.\\n\\nI'll give:\\n\\nAdvertisement 1: Fr. Klingelfuss & Co.\\nBounding box: x_min= 560, y_min= 1,650, x_max= 925, y_max= 2,450\\n\\nAdvertisement 2: Banque F\u00e9d\u00e9rale S. A.\\nBounding box: x_min= 135, y_min= 2,400, x_max= 925, y_max= 3,150\\n\\nLet's deliver.\\n\\n\"},\"token_ids\":null,\"routed_experts\":null,\"seed\":null}],\"created\":1789760379,\"model\":\"meta-models/Muse-Glimmer-30B\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":\"vllm-0.1.dev19059+g66826a22d-tp2-46311a71\",\"usage\":{\"completion_tokens\":1039,\"prompt_tokens\":3916,\"total_tokens\":4955,\"completion_tokens_details\":null,\"prompt_tokens_details\":{\"audio_tokens\":null,\"cached_tokens\":48,\"created_cache_tokens\":3856,\"multimodal_tokens\":{\"image\":3850}}},\"prompt_token_ids\":null,\"prompt_text\":null,\"kv_transfer_params\":null,\"ec_transfer_params\":null,\"metrics\":null,\"prompt\":[]}"
+}

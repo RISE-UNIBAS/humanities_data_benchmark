@@ -1,0 +1,70 @@
+{
+    "text": "{\"advertisements\":[{\"box\":[170.0,90.0,2150.0,490.0]}]}",
+    "model": "meta-models/Muse-Glimmer-30B",
+    "provider": "huggingface",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 3916,
+        "output_tokens": 1672,
+        "total_tokens": 5588,
+        "cached_tokens": 48
+    },
+    "duration": 54.13856220245361,
+    "timestamp": "2026-09-18T21:40:48.148013",
+    "parsed": {
+        "advertisements": [
+            {
+                "box": [
+                    170.0,
+                    90.0,
+                    2150.0,
+                    490.0
+                ]
+            }
+        ]
+    },
+    "conversation_id": "249e7fb5-fb79-49d6-a2b0-3da0ba62aa61",
+    "score": {
+        "field_scores": {
+            "box 0": {
+                "response": null,
+                "ground_truth": [
+                    179,
+                    321,
+                    2175,
+                    1730
+                ],
+                "score": 0.0
+            },
+            "box 1": {
+                "response": null,
+                "ground_truth": [
+                    179,
+                    1765,
+                    2163,
+                    3165
+                ],
+                "score": 0.0
+            },
+            "unmatched prediction 0": {
+                "response": [
+                    170.0,
+                    90.0,
+                    2150.0,
+                    490.0
+                ],
+                "ground_truth": null,
+                "score": 0.0
+            }
+        },
+        "f1": 0.0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "mean_iou": 0.0,
+        "true_positives": 0,
+        "false_positives": 1,
+        "false_negatives": 2,
+        "iou_threshold": 0.5
+    },
+    "raw_response": "{\"id\":\"p1ozr1V-7ArivV-a3d2d1c20d9afe99\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\\"advertisements\\\": [\\n  {\\n    \\\"box\\\": [170, 90, 2150, 490]\\n  }\\n] }\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"advertisements\":[{\"box\":[170.0,90.0,2150.0,490.0]}]},\"reasoning\":\"Extract all advertisements and return their bounding boxes.\\nThe original size of the page is 2479 x 3508 pixels.\\n\\nThe page shows two large boxed sections. Top one is \\\"Die Britische Industrie-Messe 1927\\\" - that's an advertisement. Bottom one is \\\"APPLICATION FOR ADMISSION TO MEMBERSHIP\\\" - is that an advertisement? Might be a form. Could be considered an advertisement? Might be a notice. The top is clearly an ad. The bottom looks like a membership application form, maybe also an ad? Might be a form insert. Could be considered an advertisement? Hmm.\\n\\nThe instruction: Extract all advertisements. The top box is an ad. The bottom box is maybe a form, not an ad. Could be a notice. Might be not an advertisement. However sometimes application forms are printed as part of magazine. Might be considered an advertisement for the British Chamber of Commerce. Could be.\\n\\nMaybe there are two advertisements: the top one and the bottom one. The bottom one is \\\"APPLICATION FOR ADMISSION TO MEMBERSHIP\\\" which is a form, maybe not an ad. But it is a boxed section.\\n\\nI think the top is an advertisement for the British Industrial Exhibition 1927. The bottom is a membership application form, maybe not an ad. Could be a \\\"notice\\\". Might be considered an advertisement for the Chamber.\\n\\nGiven typical extraction, I'd return two bounding boxes.\\n\\nNeed coordinates. Original size 2479 x 3508. Need estimate bounding boxes.\\n\\nTop ad: starts around y ~ 90? The page header is at top. The box starts about 90 px from top? Let's estimate. The image shows top border about 90px down. The box spans almost full width. Approx x_min ~ 70, x_max ~ 870? Wait page width 2479. The visible page is maybe centered. The left margin about 70? Let's approximate.\\n\\nBetter to give relative coordinates. Might need pixel values. Approx:\\n\\nTop ad box: x_min ~ 70, y_min ~ 90, x_max ~ 870? Wait 2479 is width. The page is maybe 2000 px wide. Let's assume the box left ~ 170, right ~ 870? Hmm.\\n\\nMaybe use normalized? The instruction says return bounding boxes. Probably [x_min, y_min, x_max, y_max].\\n\\nLet's estimate visually. The page width 2479. The content area is about from ~ 70 to ~ 870? Actually the page is a book page, the visible area is about 2000 px wide. The left edge of the box is about 170 px from left of image. Right edge about 870? Wait 2479 is total. The box is about 80% of width. Let's approximate x_min=170, x_max= 870? That would be 700 px. Might be too narrow.\\n\\nAlternative: Use relative percentages. Could give approximate.\\n\\nMaybe better to give coordinates in pixels based on typical scan. Let's assume the page image is 2479 wide, 3508 tall. The top ad box top ~ 90? Actually header \\\"September, 1926.\\\" is at ~ 70. Box starts ~ 90. Box ends ~ 490? Let's see. The top box occupies about top third. So y_max ~ 490. Bottom box starts ~ 500, ends ~ 900? Wait bottom box goes down to ~ 900? Actually bottom box ends around 900? The page is 3508 tall. The bottom box ends around 900? Hmm maybe 900 is too low. Let's think: The page shows two boxes, top about 400px tall, bottom about 400px tall, with gap. So top box y_min ~ 90, y_max ~ 490. Bottom box y_min ~ 500, y_max ~ 900? Wait 900 is still top half. Maybe the image is cropped. The page height 3508, but the visible content is maybe top half. Could be the scan includes whole page. The boxes are in upper half. So y_max ~ 900 is plausible.\\n\\nLet's estimate more precisely: The top box's top border is about 90 px from top of image. Bottom border about 490 px. Left border about 170 px. Right border about 870? Wait 870 is too small. The page width is 2479, the box spans almost full width of page, maybe from 170 to 870? That's 700 px. Could be 170 to 870? Actually 2479 width, the page content is maybe 2000 px. The box left margin maybe 170, right margin maybe 870? That would be 700 px width. Might be okay.\\n\\nAlternative estimate: x_min= 170, x_max= 870? Wait 870 is less than 2479/2. Hmm.\\n\\nMaybe the image is rotated? No.\\n\\nLet's assume the page is centered, the left edge of the box is about 170 px from left of image, right edge about 870? No.\\n\\nLet's look at the image: The page is a book page, the left side shows a bit of previous page. The main page occupies most of width. The box left edge is about 70 px from left edge of the main page. The main page starts about 70 px from left of image. So x_min ~ 170? Hmm.\\n\\nMaybe better to give approximate normalized coordinates: [0.07, 0.09, 0.87, 0.49] etc.\\n\\nBut the instruction likely expects pixel coordinates. Could give approximate.\\n\\nI'll provide two boxes:\\n\\n1. Die Britische Industrie-Messe 1927 advertisement: approx {x_min=170, y_min=90, x_max=870? Wait 870 is too small. Let's try x_max= 870? Actually 2479 *0.87 = 2157. So x_max ~ 2150. Let's use 170 to 2150.\\n\\nLet's estimate: left margin ~ 170, right margin ~ 2150. So x_min=170, x_max=2150. y_min=90, y_max=490.\\n\\n2. Application for admission to membership: x_min=170, x_max=2150, y_min=500, y_max=900? Wait maybe y_max= 900? Let's say y_min=500, y_max=900? Actually the box ends around 900? Might be 900? Let's say y_max= 900? Could be 900? Let's estimate y_max ~ 900? Hmm.\\n\\nMaybe the bottom box ends around 900? The page height 3508, so 900 is about 25% down. Could be.\\n\\nLet's give y_min=500, y_max=900? Wait the box is tall. Maybe y_max= 900? Let's say 500 to 900? Actually the box height looks similar to top. So y_max ~ 900? Top ended at 490, so bottom ends at ~ 900. So y_min ~ 500, y_max ~ 900.\\n\\nI'll output approximate.\\n\\nMaybe the system expects just one advertisement: the top one. The bottom is a form, not an ad.\\n\\nI'll provide one box for the top advertisement.\\n\\nI'll give both with note.\\n\\nFinal answer: Top ad bounding box approx [~170, ~90, ~2150, ~490]. If only one ad, that's it.\\n\\nI'll present both.\\n\\nLet's output:\\n\\nAdvertisement 1 (Die Britische Industrie-Messe 1927): {x_min=170, y_min=90, x_max=2150, y_max=490}\\n\\nAdvertisement 2 (Application for Admission to Membership) maybe not an ad but form: {x_min=170, y_min=500, x_max=2150, y_max=900}\\n\\nIf strictly ads, only first.\\n\\nI'll give first.\\n\\n\"},\"token_ids\":null,\"routed_experts\":null,\"seed\":null}],\"created\":1789760394,\"model\":\"meta-models/Muse-Glimmer-30B\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":\"vllm-0.1.dev19059+g66826a22d-tp2-46311a71\",\"usage\":{\"completion_tokens\":1672,\"prompt_tokens\":3916,\"total_tokens\":5588,\"completion_tokens_details\":null,\"prompt_tokens_details\":{\"audio_tokens\":null,\"cached_tokens\":48,\"created_cache_tokens\":3856,\"multimodal_tokens\":{\"image\":3850}}},\"prompt_token_ids\":null,\"prompt_text\":null,\"kv_transfer_params\":null,\"ec_transfer_params\":null,\"metrics\":null,\"prompt\":[]}"
+}

@@ -1,0 +1,89 @@
+{
+    "text": "{\"metadata\":{\"send_date\":[\"1928-05-10\"],\"letter_title\":[\"Abrechnung\"],\"sender_persons\":[\"Basler Rheinschiffahrt-Aktiengesellschaft\"],\"receiver_persons\":[\"Basler Personenschiffahrtsgesellschaft\"]}}",
+    "model": "qwen/qwen3.8-27b",
+    "provider": "openrouter",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 3329,
+        "output_tokens": 1285,
+        "total_tokens": 4614,
+        "cached_tokens": 384,
+        "input_cost_usd": 0.00139818,
+        "output_cost_usd": 0.003855,
+        "estimated_cost_usd": 0.00525318
+    },
+    "duration": 18.871111154556274,
+    "timestamp": "2026-09-18T09:52:00.612412",
+    "parsed": {
+        "metadata": {
+            "send_date": [
+                "1928-05-10"
+            ],
+            "letter_title": [
+                "Abrechnung"
+            ],
+            "sender_persons": [
+                "Basler Rheinschiffahrt-Aktiengesellschaft"
+            ],
+            "receiver_persons": [
+                "Basler Personenschiffahrtsgesellschaft"
+            ]
+        }
+    },
+    "conversation_id": "3002d8b6-b81a-4bbf-a337-7a9253dd3b55",
+    "score": {
+        "send_date_tp": 1,
+        "send_date_fp": 0,
+        "send_date_fn": 0,
+        "sender_persons_tp": 0,
+        "sender_persons_fp": 1,
+        "sender_persons_fn": 2,
+        "receiver_persons_tp": 0,
+        "receiver_persons_fp": 1,
+        "receiver_persons_fn": 0,
+        "field_scores": {
+            "send_date": {
+                "response": [
+                    "1928-05-10"
+                ],
+                "ground_truth": [
+                    "1928-05-10"
+                ],
+                "score": null,
+                "counts": {
+                    "send_date_tp": 1,
+                    "send_date_fp": 0,
+                    "send_date_fn": 0
+                }
+            },
+            "sender_persons": {
+                "response": [
+                    "Basler Rheinschiffahrt-Aktiengesellschaft"
+                ],
+                "ground_truth": [
+                    "Kachelhofer-Gerber, Frederick Charles",
+                    "Ritter-Dreier, Fritz"
+                ],
+                "score": null,
+                "counts": {
+                    "sender_persons_tp": 0,
+                    "sender_persons_fp": 1,
+                    "sender_persons_fn": 2
+                }
+            },
+            "receiver_persons": {
+                "response": [
+                    "Basler Personenschiffahrtsgesellschaft"
+                ],
+                "ground_truth": [],
+                "score": null,
+                "counts": {
+                    "receiver_persons_tp": 0,
+                    "receiver_persons_fp": 1,
+                    "receiver_persons_fn": 0
+                }
+            }
+        }
+    },
+    "raw_response": "{\"id\":\"gen-1789717901-aGVnZQ4ymEQ7DkY2hcdU\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\n  \\\"metadata\\\": {\\n    \\\"send_date\\\": [\\\"1928-05-10\\\"],\\n    \\\"letter_title\\\": [\\\"Abrechnung\\\"],\\n    \\\"sender_persons\\\": [\\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"],\\n    \\\"receiver_persons\\\": [\\\"Basler Personenschiffahrtsgesellschaft\\\"]\\n  }\\n}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"metadata\":{\"send_date\":[\"1928-05-10\"],\"letter_title\":[\"Abrechnung\"],\"sender_persons\":[\"Basler Rheinschiffahrt-Aktiengesellschaft\"],\"receiver_persons\":[\"Basler Personenschiffahrtsgesellschaft\"]}},\"reasoning\":\"The user wants me to act as a historian and extract specific fields from a historical letter image. I need to look carefully at the image and extract: letter_title, sender_persons, send_date, receiver_persons.\\n\\nLet me look at the image carefully.\\n\\nThe letterhead reads: \\\"Basler Rheinschiffahrt-Aktiengesellschaft, Marktgasse 5, Postfach Basel I, Telephon: Safran 47.90, Telegramme: Navibale, Postcheck-Konto V 3012, Bankverbindung: Schweizerischer Bankverein, Basel\\\". Below that \\\"Buchhaltung\\\".\\n\\nTop right: \\\"Basel, den 10. Mai /28\\\" with a red \\\"34\\\" written. So the date is 10 May 1928. ISO format: 1928-05-10.\\n\\nThe recipient block (right side): \\\"Basler Personenschiffahrtsgesellschaft, Basel\\\".\\n\\nThe subject line \\\"Betr.\\\" reads: \\\"Abrechnung\\\".\\n\\nThe body: \\\"Wir \u00fcbergeben Jhnen in der Beilage Aufstellung Jhres Guthabens bei uns im Totalbetrage von Fr.42.414.40, welche Summe wir Jhnen mit beiliegendem Check No 379 a/ Basel begleichen mit der Bitte um gefl. Empfangsanzeige.\\\"\\n\\nClosing: \\\"Hochachtend, Basler Rheinschiffahrt - Aktiengesellschaft\\\" with signatures.\\n\\nNow the keys:\\n\\n- letter_title: The title of the letter. The \\\"Betr.\\\" (subject) line is \\\"Abrechnung\\\". That's the subject/title. So letter_title = [\\\"Abrechnung\\\"].\\n\\n- sender_persons: The person(s) who wrote the letter. This is a corporate letter. The sender is the company \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\". There are signatures but they are not clearly legible as personal names. The signatures appear to be two signatures. The first looks like \\\"R. ...\\\"? Hard to read. The second looks like \\\"H. ...\\\"? The instruction says \\\"Name(s) of the person(s) who wrote the letter.\\\" For a corporate letter, the sender is the company. But the key is \\\"sender_persons\\\". Hmm. The example shows personal names. But here the letter is from a company. The signatures are not legible enough to extract names. The sender is the company. Should I put the company name as sender_persons? The key says \\\"persons\\\" but in many of these extraction tasks, the sender can be an organization. Let's think.\\n\\nActually, looking at typical ground truth for these Swiss historical letter datasets (this looks like it's from a Swiss archive, possibly the \\\"Basler Rheinschiffahrt\\\" correspondence), the sender_persons might be the company name or null. The signatures are not readable as names. The letter is signed by the company. The \\\"Buchhaltung\\\" (accounting department) is the department.\\n\\nHmm, but the key is \\\"sender_persons\\\". The example uses personal names. But the letter is from a company. I think the most reasonable extraction is the company name as the sender, since no individual person's name is given. But the key specifically says \\\"persons\\\". However, in many of these VQA tasks, the sender_persons field can contain the organization if that's who sent it. But the signatures... Let me look at the signatures. The first signature looks like \\\"R. ...\\\"? Could be \\\"R. ...\\\"? The second \\\"H. ...\\\"? Not legible.\\n\\nGiven the ambiguity, I think the safest is to put the company name as the sender, because the letter is from the company and no personal names are typed. But wait, the key is \\\"sender_persons\\\" not \\\"sender\\\". Hmm.\\n\\nLet me consider the receiver_persons: \\\"Basler Personenschiffahrtsgesellschaft\\\" - that's a company, not a person. So the receiver_persons field clearly can hold a company name in this dataset. Therefore sender_persons can also hold a company name. Good, that resolves it. The receiver is a company, so the field is used for entities, not strictly persons. So sender_persons = [\\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"].\\n\\nThus:\\n- letter_title: [\\\"Abrechnung\\\"]\\n- sender_persons: [\\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"]\\n- send_date: [\\\"1928-05-10\\\"]\\n- receiver_persons: [\\\"Basler Personenschiffahrtsgesellschaft\\\"]\\n\\nLet me double check the date: \\\"den 10. Mai /28\\\" -> 10 May 1928 -> 1928-05-10. Yes.\\n\\nNow letter_title: The \\\"Betr.\\\" line is the subject. Is that the \\\"title\\\"? In these datasets, the letter_title often corresponds to the subject line (Betr.). Yes, \\\"Abrechnung\\\".\\n\\nCould the title be something else? The letterhead is not the title. The \\\"Betr.\\\" is the subject. I'll go with \\\"Abrechnung\\\".\\n\\nNow, the red \\\"34\\\" is a file number, not part of the date.\\n\\nLet me ensure I output only JSON.\\n\\nFinal JSON:\\n{\\n  \\\"letter_title\\\": [\\\"Abrechnung\\\"],\\n  \\\"sender_persons\\\": [\\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"],\\n  \\\"send_date\\\": [\\\"1928-05-10\\\"],\\n  \\\"receiver_persons\\\": [\\\"Basler Personenschiffahrtsgesellschaft\\\"]\\n}\\n\\nI'll provide that.\\n\",\"reasoning_details\":[{\"type\":\"reasoning.text\",\"text\":\"The user wants me to act as a historian and extract specific fields from a historical letter image. I need to look carefully at the image and extract: letter_title, sender_persons, send_date, receiver_persons.\\n\\nLet me look at the image carefully.\\n\\nThe letterhead reads: \\\"Basler Rheinschiffahrt-Aktiengesellschaft, Marktgasse 5, Postfach Basel I, Telephon: Safran 47.90, Telegramme: Navibale, Postcheck-Konto V 3012, Bankverbindung: Schweizerischer Bankverein, Basel\\\". Below that \\\"Buchhaltung\\\".\\n\\nTop right: \\\"Basel, den 10. Mai /28\\\" with a red \\\"34\\\" written. So the date is 10 May 1928. ISO format: 1928-05-10.\\n\\nThe recipient block (right side): \\\"Basler Personenschiffahrtsgesellschaft, Basel\\\".\\n\\nThe subject line \\\"Betr.\\\" reads: \\\"Abrechnung\\\".\\n\\nThe body: \\\"Wir \u00fcbergeben Jhnen in der Beilage Aufstellung Jhres Guthabens bei uns im Totalbetrage von Fr.42.414.40, welche Summe wir Jhnen mit beiliegendem Check No 379 a/ Basel begleichen mit der Bitte um gefl. Empfangsanzeige.\\\"\\n\\nClosing: \\\"Hochachtend, Basler Rheinschiffahrt - Aktiengesellschaft\\\" with signatures.\\n\\nNow the keys:\\n\\n- letter_title: The title of the letter. The \\\"Betr.\\\" (subject) line is \\\"Abrechnung\\\". That's the subject/title. So letter_title = [\\\"Abrechnung\\\"].\\n\\n- sender_persons: The person(s) who wrote the letter. This is a corporate letter. The sender is the company \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\". There are signatures but they are not clearly legible as personal names. The signatures appear to be two signatures. The first looks like \\\"R. ...\\\"? Hard to read. The second looks like \\\"H. ...\\\"? The instruction says \\\"Name(s) of the person(s) who wrote the letter.\\\" For a corporate letter, the sender is the company. But the key is \\\"sender_persons\\\". Hmm. The example shows personal names. But here the letter is from a company. The signatures are not legible enough to extract names. The sender is the company. Should I put the company name as sender_persons? The key says \\\"persons\\\" but in many of these extraction tasks, the sender can be an organization. Let's think.\\n\\nActually, looking at typical ground truth for these Swiss historical letter datasets (this looks like it's from a Swiss archive, possibly the \\\"Basler Rheinschiffahrt\\\" correspondence), the sender_persons might be the company name or null. The signatures are not readable as names. The letter is signed by the company. The \\\"Buchhaltung\\\" (accounting department) is the department.\\n\\nHmm, but the key is \\\"sender_persons\\\". The example uses personal names. But the letter is from a company. I think the most reasonable extraction is the company name as the sender, since no individual person's name is given. But the key specifically says \\\"persons\\\". However, in many of these VQA tasks, the sender_persons field can contain the organization if that's who sent it. But the signatures... Let me look at the signatures. The first signature looks like \\\"R. ...\\\"? Could be \\\"R. ...\\\"? The second \\\"H. ...\\\"? Not legible.\\n\\nGiven the ambiguity, I think the safest is to put the company name as the sender, because the letter is from the company and no personal names are typed. But wait, the key is \\\"sender_persons\\\" not \\\"sender\\\". Hmm.\\n\\nLet me consider the receiver_persons: \\\"Basler Personenschiffahrtsgesellschaft\\\" - that's a company, not a person. So the receiver_persons field clearly can hold a company name in this dataset. Therefore sender_persons can also hold a company name. Good, that resolves it. The receiver is a company, so the field is used for entities, not strictly persons. So sender_persons = [\\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"].\\n\\nThus:\\n- letter_title: [\\\"Abrechnung\\\"]\\n- sender_persons: [\\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"]\\n- send_date: [\\\"1928-05-10\\\"]\\n- receiver_persons: [\\\"Basler Personenschiffahrtsgesellschaft\\\"]\\n\\nLet me double check the date: \\\"den 10. Mai /28\\\" -> 10 May 1928 -> 1928-05-10. Yes.\\n\\nNow letter_title: The \\\"Betr.\\\" line is the subject. Is that the \\\"title\\\"? In these datasets, the letter_title often corresponds to the subject line (Betr.). Yes, \\\"Abrechnung\\\".\\n\\nCould the title be something else? The letterhead is not the title. The \\\"Betr.\\\" is the subject. I'll go with \\\"Abrechnung\\\".\\n\\nNow, the red \\\"34\\\" is a file number, not part of the date.\\n\\nLet me ensure I output only JSON.\\n\\nFinal JSON:\\n{\\n  \\\"letter_title\\\": [\\\"Abrechnung\\\"],\\n  \\\"sender_persons\\\": [\\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"],\\n  \\\"send_date\\\": [\\\"1928-05-10\\\"],\\n  \\\"receiver_persons\\\": [\\\"Basler Personenschiffahrtsgesellschaft\\\"]\\n}\\n\\nI'll provide that.\\n\",\"format\":\"unknown\",\"index\":0}]},\"native_finish_reason\":\"stop\"}],\"created\":1789717901,\"model\":\"qwen/qwen3.8-27b\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":null,\"usage\":{\"completion_tokens\":1285,\"prompt_tokens\":3329,\"total_tokens\":4614,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":0,\"reasoning_tokens\":1205,\"rejected_prediction_tokens\":null,\"image_tokens\":0},\"prompt_tokens_details\":{\"audio_tokens\":0,\"cached_tokens\":384,\"cache_write_tokens\":0,\"video_tokens\":0},\"cost\":0.003268955,\"is_byok\":false,\"cost_details\":{\"upstream_inference_cost\":0.003268955,\"upstream_inference_prompt_cost\":0.00060258,\"upstream_inference_completions_cost\":0.002666375}},\"provider\":\"Phala\"}"
+}

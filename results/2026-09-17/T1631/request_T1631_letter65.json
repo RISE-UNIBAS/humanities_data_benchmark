@@ -1,0 +1,80 @@
+{
+    "text": "{\"metadata\":{\"send_date\":[\"1935-08-17\"],\"letter_title\":null,\"sender_persons\":null,\"receiver_persons\":[\"Fritz Ritter\"]}}",
+    "model": "z-ai/glm-5v-turbo",
+    "provider": "openrouter",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 4363,
+        "output_tokens": 1287,
+        "total_tokens": 5650,
+        "cached_tokens": 256,
+        "estimated_cost_usd": 0.01013784
+    },
+    "duration": 72.36222696304321,
+    "timestamp": "2026-09-17T22:30:31.361197",
+    "parsed": {
+        "metadata": {
+            "letter_title": null,
+            "send_date": [
+                "1935-08-17"
+            ],
+            "sender_persons": null,
+            "receiver_persons": [
+                "Fritz Ritter"
+            ]
+        }
+    },
+    "conversation_id": "fa8070d4-6ee3-4067-8c75-8a5f2acb4d1f",
+    "score": {
+        "send_date_tp": 1,
+        "send_date_fp": 0,
+        "send_date_fn": 0,
+        "sender_persons_tp": 0,
+        "sender_persons_fp": 0,
+        "sender_persons_fn": 0,
+        "receiver_persons_tp": 1,
+        "receiver_persons_fp": 0,
+        "receiver_persons_fn": 0,
+        "field_scores": {
+            "send_date": {
+                "response": [
+                    "1935-08-17"
+                ],
+                "ground_truth": [
+                    "1935-08-17"
+                ],
+                "score": null,
+                "counts": {
+                    "send_date_tp": 1,
+                    "send_date_fp": 0,
+                    "send_date_fn": 0
+                }
+            },
+            "sender_persons": {
+                "response": [],
+                "ground_truth": [],
+                "score": null,
+                "counts": {
+                    "sender_persons_tp": 0,
+                    "sender_persons_fp": 0,
+                    "sender_persons_fn": 0
+                }
+            },
+            "receiver_persons": {
+                "response": [
+                    "Ritter-Dreier, Fritz"
+                ],
+                "ground_truth": [
+                    "Ritter-Dreier, Fritz"
+                ],
+                "score": null,
+                "counts": {
+                    "receiver_persons_tp": 1,
+                    "receiver_persons_fp": 0,
+                    "receiver_persons_fn": 0
+                }
+            }
+        }
+    },
+    "raw_response": "{\"id\":\"gen-1789676991-o2ZRX2EqGp1vCkMlQ7aG\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\n    \\\"metadata\\\": {\\n        \\\"letter_title\\\": null,\\n        \\\"send_date\\\": [\\n            \\\"1935-08-17\\\"\\n        ],\\n        \\\"sender_persons\\\": null,\\n        \\\"receiver_persons\\\": [\\n            \\\"Fritz Ritter\\\"\\n        ]\\n    }\\n}\\n\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"reasoning\":\"The user wants me to extract specific information from a historical letter image and return it in a JSON format.\\n\\n Let me analyze the image:\\n\\n 1. **Letter Title**: The letterhead says \\\"BASLER PERSONENSCHIFFFAHRTSGESELLSCHAFT\\\" (Basel Passenger Shipping Company). This appears to be the organization sending the letter, but there isn't a specific \\\"title\\\" for the letter itself like \\\"Petition\\\" or similar. However, looking at the content, it's a business correspondence regarding a Generalversammlung (General Meeting) and military service. The letter doesn't have an explicit title in the traditional sense, so I might need to use null or infer from context. Actually, looking carefully, there's no explicit title line like \\\"Re: ...\\\" or subject line visible. So this should be null.\\n\\n 2. **Sender Persons**: At the bottom it says \\\"Basler Personenschiffahrtsgesellschaft\\\" with \\\"Der Gesch\u00e4ftsf\u00fchrer:\\\" (The Managing Director) underneath, but no specific name is signed. However, the letterhead indicates the sender is the Basler Personenschiffahrtsgesellschaft (Basel Passenger Shipping Company). But the question asks for \\\"person(s)\\\" - so I need to check if there's a specific person named as sender. Looking at the signature area: \\\"Basler Personenschiffahrtsgesellschaft / Der Gesch\u00e4ftsf\u00fchrer:\\\" - but no name is typed or signed below that. So the sender is the organization, not a specific person? Or should I list the organization? The key asks for \\\"sender_persons\\\" (persons), so if no individual is named, it might be null, or I could put the organization name. But strictly speaking, it asks for persons. However, in historical documents, sometimes the organization is listed when no individual signs. Let me look again... actually, there's no individual signature visible, just the printed organization name with \\\"Der Gesch\u00e4ftsf\u00fchrer\\\" indicating it's from the managing director (unnamed).\\n\\n Wait, looking at the example, they want names of persons. If it's an organizational letter without a specific person named, I should probably put null or the organization name. But let me check if there's any other indication... No, I don't see a specific person's name as sender.\\n\\n 3. **Send Date**: Clearly visible at top right: \\\"Basel, den 17. August 1935.\\\" So: 1935-08-17\\n\\n 4. **Receiver Persons**: The letter is addressed to:\\n    \\\"Herrn Fritz Ritter\\\"\\n    \\\"Basler Rheinschifffahrt A.-G.--\\\"\\n    \\\"Basel 19\\\"\\n    \\n    So the receiver person is Fritz Ritter.\\n\\n Let me double-check:\\n - Letter title: Not explicitly stated. Could be null.\\n - Sender: Basler Personenschiffahrtsgesellschaft (organization), but no specific person named. The key is \\\"sender_persons\\\" (plural of person). Since no individual is named, this should likely be null, or perhaps I should note the organization? But the example shows \\\"Lisa Simpson\\\" (a person). I'll go with null for the person, or potentially list the organization if interpreted broadly. But to be safe and accurate: no individual sender is named.\\n \\n Actually, looking at standard practice for these types of extractions, if the sender is an organization and no individual is signed, we usually put null for sender_persons, or sometimes the organization name if allowed. But given the strict schema asking for \\\"persons\\\", I'll use null unless I see a name.\\n\\n Wait, I should reconsider the title. Sometimes the first line or the subject matter serves as a title. But here, the first line is the letterhead. There's no \\\"Betreff:\\\" (Subject:) line visible. So null is appropriate for title.\\n\\n Summary:\\n - letter_title: null\\n - sender_persons: null (or possibly \\\"Gesch\u00e4ftsf\u00fchrer der Basler Personenschiffahrtsgesellschaft\\\" but that's a role, not a name)\\n - send_date: [\\\"1935-08-17\\\"]\\n - receiver_persons: [\\\"Fritz Ritter\\\"]\\n\\n Let me verify the date format: ISO format YYYY-MM-DD. Yes, 1935-08-17.\\n\\n One final check on the image content:\\n - Top: BASLER PERSONENSCHIFFFAHRTSGESELLSCHAFT\\n - Date: Basel, den 17. August 1935.\\n - Addressee: Herrn Fritz Ritter, Basler Rheinschifffahrt A.-G., Basel 19\\n - Content: Thanks for answer from 16th, regrets he can't be greeted at General Meeting due to military service, mentions previous questions about operations management, mentions Herr Wacker in Schweizerhall and representatives of Gemeinde Kaiseraugst regarding ferry service, asks to send a representative if he can't come himself.\\n - Closing: Mit vorz\u00fcglicher Hochachtung (With distinguished regards)\\n - Signature block: Basler Personenschiffahrtsgesellschaft / Der Gesch\u00e4ftsf\u00fchrer:\\n - Attachment: Einladung (Invitation)\\n\\n So yes, my extraction seems correct.\\n\\n Final JSON structure:\\n {\\n   \\\"metadata\\\": {\\n     \\\"letter_title\\\": null,\\n     \\\"send_date\\\": [\\\"1935-08-17\\\"],\\n     \\\"sender_persons\\\": null,\\n     \\\"receiver_persons\\\": [\\\"Fritz Ritter\\\"]\\n   }\\n }\\n\\n Or should sender_persons contain the organization? The definition says \\\"Name(s) of the person(s) who wrote the letter.\\\" An organization is not a person. So null is correct.\\n\\n One edge case: Could \\\"Der Gesch\u00e4ftsf\u00fchrer\\\" imply that the managing director wrote it, and thus we should list that role? No, that's not a name.\\n\\n I'll proceed with the JSON as outlined.\",\"reasoning_details\":[{\"type\":\"reasoning.text\",\"text\":\"The user wants me to extract specific information from a historical letter image and return it in a JSON format.\\n\\n Let me analyze the image:\\n\\n 1. **Letter Title**: The letterhead says \\\"BASLER PERSONENSCHIFFFAHRTSGESELLSCHAFT\\\" (Basel Passenger Shipping Company). This appears to be the organization sending the letter, but there isn't a specific \\\"title\\\" for the letter itself like \\\"Petition\\\" or similar. However, looking at the content, it's a business correspondence regarding a Generalversammlung (General Meeting) and military service. The letter doesn't have an explicit title in the traditional sense, so I might need to use null or infer from context. Actually, looking carefully, there's no explicit title line like \\\"Re: ...\\\" or subject line visible. So this should be null.\\n\\n 2. **Sender Persons**: At the bottom it says \\\"Basler Personenschiffahrtsgesellschaft\\\" with \\\"Der Gesch\u00e4ftsf\u00fchrer:\\\" (The Managing Director) underneath, but no specific name is signed. However, the letterhead indicates the sender is the Basler Personenschiffahrtsgesellschaft (Basel Passenger Shipping Company). But the question asks for \\\"person(s)\\\" - so I need to check if there's a specific person named as sender. Looking at the signature area: \\\"Basler Personenschiffahrtsgesellschaft / Der Gesch\u00e4ftsf\u00fchrer:\\\" - but no name is typed or signed below that. So the sender is the organization, not a specific person? Or should I list the organization? The key asks for \\\"sender_persons\\\" (persons), so if no individual is named, it might be null, or I could put the organization name. But strictly speaking, it asks for persons. However, in historical documents, sometimes the organization is listed when no individual signs. Let me look again... actually, there's no individual signature visible, just the printed organization name with \\\"Der Gesch\u00e4ftsf\u00fchrer\\\" indicating it's from the managing director (unnamed).\\n\\n Wait, looking at the example, they want names of persons. If it's an organizational letter without a specific person named, I should probably put null or the organization name. But let me check if there's any other indication... No, I don't see a specific person's name as sender.\\n\\n 3. **Send Date**: Clearly visible at top right: \\\"Basel, den 17. August 1935.\\\" So: 1935-08-17\\n\\n 4. **Receiver Persons**: The letter is addressed to:\\n    \\\"Herrn Fritz Ritter\\\"\\n    \\\"Basler Rheinschifffahrt A.-G.--\\\"\\n    \\\"Basel 19\\\"\\n    \\n    So the receiver person is Fritz Ritter.\\n\\n Let me double-check:\\n - Letter title: Not explicitly stated. Could be null.\\n - Sender: Basler Personenschiffahrtsgesellschaft (organization), but no specific person named. The key is \\\"sender_persons\\\" (plural of person). Since no individual is named, this should likely be null, or perhaps I should note the organization? But the example shows \\\"Lisa Simpson\\\" (a person). I'll go with null for the person, or potentially list the organization if interpreted broadly. But to be safe and accurate: no individual sender is named.\\n \\n Actually, looking at standard practice for these types of extractions, if the sender is an organization and no individual is signed, we usually put null for sender_persons, or sometimes the organization name if allowed. But given the strict schema asking for \\\"persons\\\", I'll use null unless I see a name.\\n\\n Wait, I should reconsider the title. Sometimes the first line or the subject matter serves as a title. But here, the first line is the letterhead. There's no \\\"Betreff:\\\" (Subject:) line visible. So null is appropriate for title.\\n\\n Summary:\\n - letter_title: null\\n - sender_persons: null (or possibly \\\"Gesch\u00e4ftsf\u00fchrer der Basler Personenschiffahrtsgesellschaft\\\" but that's a role, not a name)\\n - send_date: [\\\"1935-08-17\\\"]\\n - receiver_persons: [\\\"Fritz Ritter\\\"]\\n\\n Let me verify the date format: ISO format YYYY-MM-DD. Yes, 1935-08-17.\\n\\n One final check on the image content:\\n - Top: BASLER PERSONENSCHIFFFAHRTSGESELLSCHAFT\\n - Date: Basel, den 17. August 1935.\\n - Addressee: Herrn Fritz Ritter, Basler Rheinschifffahrt A.-G., Basel 19\\n - Content: Thanks for answer from 16th, regrets he can't be greeted at General Meeting due to military service, mentions previous questions about operations management, mentions Herr Wacker in Schweizerhall and representatives of Gemeinde Kaiseraugst regarding ferry service, asks to send a representative if he can't come himself.\\n - Closing: Mit vorz\u00fcglicher Hochachtung (With distinguished regards)\\n - Signature block: Basler Personenschiffahrtsgesellschaft / Der Gesch\u00e4ftsf\u00fchrer:\\n - Attachment: Einladung (Invitation)\\n\\n So yes, my extraction seems correct.\\n\\n Final JSON structure:\\n {\\n   \\\"metadata\\\": {\\n     \\\"letter_title\\\": null,\\n     \\\"send_date\\\": [\\\"1935-08-17\\\"],\\n     \\\"sender_persons\\\": null,\\n     \\\"receiver_persons\\\": [\\\"Fritz Ritter\\\"]\\n   }\\n }\\n\\n Or should sender_persons contain the organization? The definition says \\\"Name(s) of the person(s) who wrote the letter.\\\" An organization is not a person. So null is correct.\\n\\n One edge case: Could \\\"Der Gesch\u00e4ftsf\u00fchrer\\\" imply that the managing director wrote it, and thus we should list that role? No, that's not a name.\\n\\n I'll proceed with the JSON as outlined.\",\"format\":\"unknown\",\"index\":0}]},\"native_finish_reason\":\"stop\"}],\"created\":1789676991,\"model\":\"z-ai/glm-5v-turbo\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":null,\"usage\":{\"completion_tokens\":1287,\"prompt_tokens\":4363,\"total_tokens\":5650,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":0,\"reasoning_tokens\":1223,\"rejected_prediction_tokens\":null,\"image_tokens\":0},\"prompt_tokens_details\":{\"audio_tokens\":0,\"cached_tokens\":256,\"cache_write_tokens\":0,\"video_tokens\":0},\"cost\":0.01013784,\"is_byok\":false,\"cost_details\":{\"upstream_inference_cost\":0.01013784,\"upstream_inference_prompt_cost\":0.00498984,\"upstream_inference_completions_cost\":0.005148}},\"provider\":\"Z.AI\"}"
+}

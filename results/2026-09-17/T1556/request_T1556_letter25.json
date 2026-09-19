@@ -1,0 +1,86 @@
+{
+    "text": "{\"metadata\":{\"send_date\":[\"1928-04-04\"],\"letter_title\":[\"Kauf \\\"Rheinfelden\\\"\"],\"sender_persons\":[\"Basler Rheinschiffahrt-Aktiengesellschaft\"],\"receiver_persons\":[\"Basler Personenschiffahrtsgesellschaft\"]}}",
+    "model": "thinkingmachines/Inkling",
+    "provider": "huggingface",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 4180,
+        "output_tokens": 1394,
+        "total_tokens": 5574,
+        "cached_tokens": 256
+    },
+    "duration": 18.811754941940308,
+    "timestamp": "2026-09-17T11:37:39.321805",
+    "parsed": {
+        "metadata": {
+            "send_date": [
+                "1928-04-04"
+            ],
+            "letter_title": [
+                "Kauf \"Rheinfelden\""
+            ],
+            "sender_persons": [
+                "Basler Rheinschiffahrt-Aktiengesellschaft"
+            ],
+            "receiver_persons": [
+                "Basler Personenschiffahrtsgesellschaft"
+            ]
+        }
+    },
+    "conversation_id": "96364f71-6de2-43da-9265-d0293c20f111",
+    "score": {
+        "send_date_tp": 1,
+        "send_date_fp": 0,
+        "send_date_fn": 0,
+        "sender_persons_tp": 0,
+        "sender_persons_fp": 1,
+        "sender_persons_fn": 2,
+        "receiver_persons_tp": 0,
+        "receiver_persons_fp": 1,
+        "receiver_persons_fn": 0,
+        "field_scores": {
+            "send_date": {
+                "response": [
+                    "1928-04-04"
+                ],
+                "ground_truth": [
+                    "1928-04-04"
+                ],
+                "score": null,
+                "counts": {
+                    "send_date_tp": 1,
+                    "send_date_fp": 0,
+                    "send_date_fn": 0
+                }
+            },
+            "sender_persons": {
+                "response": [
+                    "Basler Rheinschiffahrt-Aktiengesellschaft"
+                ],
+                "ground_truth": [
+                    "Groschupf-Jaeger, Louis",
+                    "Ritter-Dreier, Fritz"
+                ],
+                "score": null,
+                "counts": {
+                    "sender_persons_tp": 0,
+                    "sender_persons_fp": 1,
+                    "sender_persons_fn": 2
+                }
+            },
+            "receiver_persons": {
+                "response": [
+                    "Basler Personenschiffahrtsgesellschaft"
+                ],
+                "ground_truth": [],
+                "score": null,
+                "counts": {
+                    "receiver_persons_tp": 0,
+                    "receiver_persons_fp": 1,
+                    "receiver_persons_fn": 0
+                }
+            }
+        }
+    },
+    "raw_response": "{\"id\":\"p1dAjAD-4i1VM9-a3c721bba8bed67f\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\n  \\\"metadata\\\": {\\n    \\\"send_date\\\": [\\\"1928-04-04\\\"],\\n    \\\"letter_title\\\": [\\\"Kauf \\\\\\\"Rheinfelden\\\\\\\"\\\"],\\n    \\\"sender_persons\\\": [\\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"],\\n    \\\"receiver_persons\\\": [\\\"Basler Personenschiffahrtsgesellschaft\\\"]\\n  }\\n}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"metadata\":{\"send_date\":[\"1928-04-04\"],\"letter_title\":[\"Kauf \\\"Rheinfelden\\\"\"],\"sender_persons\":[\"Basler Rheinschiffahrt-Aktiengesellschaft\"],\"receiver_persons\":[\"Basler Personenschiffahrtsgesellschaft\"]}},\"reasoning\":\"We need parse letter images. Need extract letter_title, sender_persons, send_date, receiver_persons. Let's analyze image content.\\n\\nImage 1: Header \\\"Basler Rheinschiffahrt-Aktiengesellschaft Marktgasse 5 ...\\\" Date \\\"Basel, den 4. April 1928.\\\" Addressee \\\"Basler Personenschiffahrtsgesellschaft, Basel.\\\" Subject \\\"Betrifft Kauf \\\"Rheinfelden\\\" Ihr Schreiben vom 4. April\\\"\\n\\nImage 2: Continuation, header \\\"Basler Personenschiffahrtsgesellschaft, Basel. 4.4.28.\\\" Closing \\\"Hochachtend BASLER RHEINSCHIFFAHRT-AKTIENGESELLSCHAFT\\\" with signatures.\\n\\nThus letter is from Basler Rheinschiffahrt-Aktiengesellschaft to Basler Personenschiffahrtsgesellschaft. Need title? Maybe not explicit title except subject line? The prompt asks \\\"letter_title: Title of the letter.\\\" Might be null if none, but there might be implied title? Let's check if there's a title on letterhead? No. Could use subject \\\"Kauf Rheinfelden\\\"? But likely null? However example had \\\"Petition for Environmental Protection\\\" which sounds like title/subject. Here we have \\\"Betrifft Kauf 'Rheinfelden'\\\" which is subject/re. Might be considered title? Let's think.\\n\\nWe need return JSON with lists.\\n\\nSend date: \\\"1928-04-04\\\" (Basel, den 4. April 1928).\\n\\nSender persons: The organization \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\" maybe also signatories? The signatures appear maybe \\\"G. ...\\\"? But likely sender is the company, not individual persons. The key says \\\"Name(s) of the person(s) who wrote the letter.\\\" Could be the company represented? But \\\"persons\\\" implies individuals. However signatures are present but unreadable precisely? Let's inspect image 2 bottom right signatures: One looks like \\\"G. ...\\\"? Another \\\"A. ...\\\"? Not clearly readable. Given letterhead and closing with company name, likely sender organization, but key asks persons. Might still list company? But example lists \\\"Lisa Simpson\\\" person. Here maybe we should list signatories if readable? Let's examine mental image: There are two signatures, one maybe \\\"G. M\u00fcller\\\"? Actually hard to tell. But the closing says \\\"Hochachtend BASLER RHEINSCHIFFAHRT-AKTIENGESELLSCHAFT\\\" then signatures below/left. The signatures might be of representatives. However without clear names, maybe null? But we can identify sender organization from letterhead. The prompt says \\\"sender_persons: Name(s) of the person(s) who wrote the letter.\\\" In business letters, often the company is the sender. But they said persons. Still we can put the company name? Let's hold that thought.\\n\\nReceiver persons: \\\"Basler Personenschiffahrtsgesellschaft\\\" addressed, but also \\\"Basel.\\\" So receiver is that company/organization.\\n\\nLetter title: Maybe null, or \\\"Kauf 'Rheinfelden'\\\"? Let's decide. The letter has a subject line \\\"Betrifft Kauf \\\"Rheinfelden\\\"\\\". That functions as title/subject. I think include that as title? But the key is \\\"letter_title\\\" not \\\"subject\\\". However in absence of explicit title, subject can serve. Let's include [\\\"Kauf \\\\\\\"Rheinfelden\\\\\\\"\\\"]? Or maybe null. Let's examine instructions: \\\"letter_title: Title of the letter.\\\" In the image, there is no prominent title except letterhead. So likely null. But sometimes they want the subject line. Let's provide null? Hmm.\\n\\nLet's parse all visible text precisely.\\n\\nImage 1 top right: \\\"Basel, den 4. April 1928.\\\" Number \\\"25\\\" in red.\\n\\nLeft header:\\nBasler\\nRheinschiffahrt-Aktiengesellschaft\\nMarktgasse 5\\n\\nPostfach Basel I\\nTelephon: Safran 47.90\\nTelegramme: Navibale\\nPostcheck-Konto V 3012\\nBankverbindung: Schweizerischer Bankverein, Basel\\n\\nThen right side:\\nBasler Personenschiffahrtsgesellschaft,\\nBasel.\\n\\nThen:\\nBetrifft Kauf \\\"Rheinfelden\\\"\\nIhr Schreiben vom 4. April\\nUnserm Angebot, das Schiff \\\"Rheinfelden\\\"\\n...\\n\\nImage 2 top center: \\\"- 2 -\\\"\\nThen \\\"Basler Personenschiffahrtsgesellschaft, Basel. 4.4.28.\\\"\\nThen body continues.\\nClosing:\\n\\\"Wir sehen Ihrer gefl. Mitteilung, ob Sie\\nbereit sind, f\u00fcr den Fall, dass Ihre Gesellschaft bestehen\\nbleibt, die von uns geforderte Bedingung anzunehmen, gerne\\nentgegen.\\n\\nHochachtend\\nBASLER\\nRHEINSCHIFFAHRT-AKTIENGESELLSCHAFT\\\"\\n\\nThen signatures.\\n\\nThus send_date is 1928-04-04.\\n\\nSender: Basler Rheinschiffahrt-Aktiengesellschaft. Even though it's an organization, it's the sender. We'll list that.\\n\\nReceiver: Basler Personenschiffahrtsgesellschaft.\\n\\nTitle: Maybe null. But I think it's okay to put null since no explicit title. However the example included a descriptive title that might have been in the document. Here there is \\\"Betrifft Kauf 'Rheinfelden'\\\" which is like \\\"Re: Purchase 'Rheinfelden'\\\". That could be the title. Let's include it as [\\\"Betrifft Kauf \\\\\\\"Rheinfelden\\\\\\\"\\\"]? Or just [\\\"Kauf \\\\\\\"Rheinfelden\\\\\\\"\\\"]. Let's go with subject as title? The prompt says \\\"Title of the letter.\\\" In formal letters, the \\\"Betreff\\\" is the subject/title. So I will include [\\\"Kauf \\\\\\\"Rheinfelden\\\\\\\"\\\"].\\n\\nBut wait, there might also be letter number? No.\\n\\nThus JSON:\\n{\\n\\\"letter_title\\\": [\\\"Kauf \\\\\\\"Rheinfelden\\\\\\\"\\\"],\\n\\\"send_date\\\": [\\\"1928-04-04\\\"],\\n\\\"sender_persons\\\": [\\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"],\\n\\\"receiver_persons\\\": [\\\"Basler Personenschiffahrtsgesellschaft\\\"]\\n}\\n\\nNeed lists even if single.\\n\\nCheck date format ISO: 1928-04-04 yes.\\n\\nNo other values. Let's return exactly.\"},\"seed\":null}],\"created\":1789637841,\"model\":\"thinkingmachines/Inkling\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":\"default\",\"usage\":{\"completion_tokens\":1394,\"prompt_tokens\":4180,\"total_tokens\":5574,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":null,\"reasoning_tokens\":1314,\"rejected_prediction_tokens\":null},\"prompt_tokens_details\":{\"audio_tokens\":null,\"cached_tokens\":256}},\"prompt\":[]}"
+}

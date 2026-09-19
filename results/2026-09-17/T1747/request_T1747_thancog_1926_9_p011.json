@@ -1,0 +1,76 @@
+{
+    "text": "{\"advertisements\":[{\"box\":[170.0,332.0,2163.0,2178.0]},{\"box\":[170.0,2206.0,2163.0,2588.0]}]}",
+    "model": "qwen/qwen3.8-27b",
+    "provider": "openrouter",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 3167,
+        "output_tokens": 1126,
+        "total_tokens": 4293,
+        "cached_tokens": 256,
+        "input_cost_usd": 0.000677738,
+        "output_cost_usd": 0.0028713,
+        "estimated_cost_usd": 0.003549038
+    },
+    "duration": 19.23876667022705,
+    "timestamp": "2026-09-18T15:12:12.906810",
+    "parsed": {
+        "advertisements": [
+            {
+                "box": [
+                    170.0,
+                    332.0,
+                    2163.0,
+                    2178.0
+                ]
+            },
+            {
+                "box": [
+                    170.0,
+                    2206.0,
+                    2163.0,
+                    2588.0
+                ]
+            }
+        ]
+    },
+    "conversation_id": "0f309f3d-e4c3-49b8-8bbb-86afd6dd7a9e",
+    "score": {
+        "field_scores": {
+            "box 0": {
+                "response": [
+                    170.0,
+                    2206.0,
+                    2163.0,
+                    2588.0
+                ],
+                "ground_truth": [
+                    177,
+                    2235,
+                    2160,
+                    2644
+                ],
+                "score": 0.802
+            },
+            "unmatched prediction 0": {
+                "response": [
+                    170.0,
+                    332.0,
+                    2163.0,
+                    2178.0
+                ],
+                "ground_truth": null,
+                "score": 0.0
+            }
+        },
+        "f1": 0.667,
+        "precision": 0.5,
+        "recall": 1.0,
+        "mean_iou": 0.802,
+        "true_positives": 1,
+        "false_positives": 1,
+        "false_negatives": 0,
+        "iou_threshold": 0.5
+    },
+    "raw_response": "{\"id\":\"gen-1789737113-wvZgZtgioaxncYvCmbM2\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\n    \\\"advertisements\\\": [\\n        {\\\"box\\\": [170, 332, 2163, 2178]},\\n        {\\\"box\\\": [170, 2206, 2163, 2588]}\\n    ]\\n}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"advertisements\":[{\"box\":[170.0,332.0,2163.0,2178.0]},{\"box\":[170.0,2206.0,2163.0,2588.0]}]},\"reasoning\":\"The user wants me to identify advertisements in this historical magazine page. Let me carefully examine the page.\\n\\nThe page is from \\\"THE ANGLO-SWISS COMMERCIAL GAZETTE\\\", September 1926, page 11.\\n\\nLooking at the content:\\n1. Top section: \\\"HOTELS SPECIALLY RECOMMENDED\\\" - this is a boxed header followed by a list of hotels. This appears to be a directory/listing section, possibly an advertisement or a recommended list. It's framed with a border at the top. This could be considered an advertisement block since it's promoting hotels.\\n\\n2. Middle section: \\\"Hotel-Pension Florhof Z\u00fcrich\\\" - this is clearly an advertisement, boxed with a border, promoting a specific hotel with pricing.\\n\\n3. Bottom section: Two columns of text - \\\"Details required on Invoices for South Africa\\\" and news items about Australia population, Rhine tug, British air passenger services. These are editorial/news content, not advertisements.\\n\\nSo the advertisements are:\\n- The \\\"HOTELS SPECIALLY RECOMMENDED\\\" block (top)\\n- The \\\"Hotel-Pension Florhof Z\u00fcrich\\\" block (middle)\\n\\nLet me determine bounding boxes. The page is 2479 x 3508.\\n\\nLooking at the image dimensions, the image shown is roughly 1754 x 2480 (scaled). I need to map to original 2479 x 3508.\\n\\nLet me look at the image coordinates. The image I see is approximately 1754 wide. The scale factor to 2479 is about 1.413.\\n\\nLet me estimate positions in the displayed image (assuming displayed image is ~1754 x 2480).\\n\\nActually, let me think about the layout. The \\\"HOTELS SPECIALLY RECOMMENDED\\\" header box starts around y=235 in displayed and the list ends around y=1530 (the ZUERICH Hotel St. Gotthard line). The horizontal extent is from about x=120 to x=1530 in displayed.\\n\\nThe \\\"Hotel-Pension Florhof Z\u00fcrich\\\" box is from about y=1560 to y=1830 in displayed, x from 120 to 1530.\\n\\nLet me convert to original coordinates. Displayed width ~1754, original 2479, factor = 2479/1754 = 1.4133. Displayed height ~2480, original 3508, factor = 3508/2480 = 1.4145. Good, consistent ~1.414.\\n\\nSo multiply displayed coords by ~1.414.\\n\\nFor HOTELS SPECIALLY RECOMMENDED block:\\nDisplayed x0 ~120 -> 170; x1 ~1530 -> 2164. y0 ~235 -> 332; y1 ~1530 -> 2164.\\n\\nHmm let me look more carefully at the image. The header box \\\"HOTELS SPECIALLY RECOMMENDED\\\" top border is around y=235. The list of hotels ends with \\\"ZUERICH. \u2014 Hotel St. Gotthard...\\\" around y=1525. There's a horizontal line below it around y=1540.\\n\\nFor Florhof box: top border ~1560, bottom border ~1830. x from ~120 to ~1530.\\n\\nLet me refine displayed coordinates by examining the image more carefully. The image width appears 1754. The left margin of text content ~120, right margin ~1530.\\n\\nConvert:\\nHOTELS block: x0=120*1.414=170, y0=235*1.414=332, x1=1530*1.414=2163, y1=1540*1.414=2178.\\n\\nFlorhof block: x0=120*1.414=170, y0=1560*1.414=2206, x1=1530*1.414=2163, y1=1830*1.414=2588.\\n\\nThese are reasonable. Let me provide these two boxes.\\n\\nI'll round to integers.\\n\\nFinal:\\n[170, 332, 2163, 2178]\\n[170, 2206, 2163, 2588]\\n\\nI'll output JSON.\\n\",\"reasoning_details\":[{\"type\":\"reasoning.text\",\"text\":\"The user wants me to identify advertisements in this historical magazine page. Let me carefully examine the page.\\n\\nThe page is from \\\"THE ANGLO-SWISS COMMERCIAL GAZETTE\\\", September 1926, page 11.\\n\\nLooking at the content:\\n1. Top section: \\\"HOTELS SPECIALLY RECOMMENDED\\\" - this is a boxed header followed by a list of hotels. This appears to be a directory/listing section, possibly an advertisement or a recommended list. It's framed with a border at the top. This could be considered an advertisement block since it's promoting hotels.\\n\\n2. Middle section: \\\"Hotel-Pension Florhof Z\u00fcrich\\\" - this is clearly an advertisement, boxed with a border, promoting a specific hotel with pricing.\\n\\n3. Bottom section: Two columns of text - \\\"Details required on Invoices for South Africa\\\" and news items about Australia population, Rhine tug, British air passenger services. These are editorial/news content, not advertisements.\\n\\nSo the advertisements are:\\n- The \\\"HOTELS SPECIALLY RECOMMENDED\\\" block (top)\\n- The \\\"Hotel-Pension Florhof Z\u00fcrich\\\" block (middle)\\n\\nLet me determine bounding boxes. The page is 2479 x 3508.\\n\\nLooking at the image dimensions, the image shown is roughly 1754 x 2480 (scaled). I need to map to original 2479 x 3508.\\n\\nLet me look at the image coordinates. The image I see is approximately 1754 wide. The scale factor to 2479 is about 1.413.\\n\\nLet me estimate positions in the displayed image (assuming displayed image is ~1754 x 2480).\\n\\nActually, let me think about the layout. The \\\"HOTELS SPECIALLY RECOMMENDED\\\" header box starts around y=235 in displayed and the list ends around y=1530 (the ZUERICH Hotel St. Gotthard line). The horizontal extent is from about x=120 to x=1530 in displayed.\\n\\nThe \\\"Hotel-Pension Florhof Z\u00fcrich\\\" box is from about y=1560 to y=1830 in displayed, x from 120 to 1530.\\n\\nLet me convert to original coordinates. Displayed width ~1754, original 2479, factor = 2479/1754 = 1.4133. Displayed height ~2480, original 3508, factor = 3508/2480 = 1.4145. Good, consistent ~1.414.\\n\\nSo multiply displayed coords by ~1.414.\\n\\nFor HOTELS SPECIALLY RECOMMENDED block:\\nDisplayed x0 ~120 -> 170; x1 ~1530 -> 2164. y0 ~235 -> 332; y1 ~1530 -> 2164.\\n\\nHmm let me look more carefully at the image. The header box \\\"HOTELS SPECIALLY RECOMMENDED\\\" top border is around y=235. The list of hotels ends with \\\"ZUERICH. \u2014 Hotel St. Gotthard...\\\" around y=1525. There's a horizontal line below it around y=1540.\\n\\nFor Florhof box: top border ~1560, bottom border ~1830. x from ~120 to ~1530.\\n\\nLet me refine displayed coordinates by examining the image more carefully. The image width appears 1754. The left margin of text content ~120, right margin ~1530.\\n\\nConvert:\\nHOTELS block: x0=120*1.414=170, y0=235*1.414=332, x1=1530*1.414=2163, y1=1540*1.414=2178.\\n\\nFlorhof block: x0=120*1.414=170, y0=1560*1.414=2206, x1=1530*1.414=2163, y1=1830*1.414=2588.\\n\\nThese are reasonable. Let me provide these two boxes.\\n\\nI'll round to integers.\\n\\nFinal:\\n[170, 332, 2163, 2178]\\n[170, 2206, 2163, 2588]\\n\\nI'll output JSON.\\n\",\"format\":\"unknown\",\"index\":0}]},\"native_finish_reason\":\"stop\"}],\"created\":1789737113,\"model\":\"qwen/qwen3.8-27b\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":null,\"usage\":{\"completion_tokens\":1126,\"prompt_tokens\":3167,\"total_tokens\":4293,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":0,\"reasoning_tokens\":1056,\"rejected_prediction_tokens\":null,\"image_tokens\":0},\"prompt_tokens_details\":{\"audio_tokens\":0,\"cached_tokens\":256,\"cache_write_tokens\":0,\"video_tokens\":0},\"cost\":0.0029269452,\"is_byok\":false,\"cost_details\":{\"upstream_inference_cost\":0.0029269452,\"upstream_inference_prompt_cost\":0.0005904952,\"upstream_inference_completions_cost\":0.00233645}},\"provider\":\"Phala\"}"
+}

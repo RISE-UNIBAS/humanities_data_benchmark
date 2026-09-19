@@ -1,0 +1,80 @@
+{
+    "text": "{\"advertisements\":[{\"box\":[245.0,368.0,2284.0,1775.0]},{\"box\":[240.0,1818.0,2255.0,3268.0]}]}",
+    "model": "deepseek-flash",
+    "provider": "deepseek",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 1288,
+        "output_tokens": 1064,
+        "total_tokens": 2352,
+        "input_cost_usd": 0.0003864,
+        "output_cost_usd": 0.0012768,
+        "estimated_cost_usd": 0.0016632
+    },
+    "duration": 7.858678579330444,
+    "timestamp": "2026-09-16T17:17:36.046931",
+    "parsed": {
+        "advertisements": [
+            {
+                "box": [
+                    245,
+                    368,
+                    2284,
+                    1775
+                ]
+            },
+            {
+                "box": [
+                    240,
+                    1818,
+                    2255,
+                    3268
+                ]
+            }
+        ]
+    },
+    "conversation_id": "6146dac6-7937-4605-8d0d-9ad1927400c5",
+    "score": {
+        "field_scores": {
+            "box 1": {
+                "response": [
+                    245,
+                    368,
+                    2284,
+                    1775
+                ],
+                "ground_truth": [
+                    346,
+                    339,
+                    2323,
+                    1751
+                ],
+                "score": 0.899
+            },
+            "box 0": {
+                "response": [
+                    240,
+                    1818,
+                    2255,
+                    3268
+                ],
+                "ground_truth": [
+                    342,
+                    1781,
+                    2323,
+                    3198
+                ],
+                "score": 0.855
+            }
+        },
+        "f1": 1.0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "mean_iou": 0.877,
+        "true_positives": 2,
+        "false_positives": 0,
+        "false_negatives": 0,
+        "iou_threshold": 0.5
+    },
+    "raw_response": "{\"id\":\"0eaee2b1-9ca1-4923-9ef7-dafce787f350\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\\"advertisements\\\":[{\\\"box\\\":[245,368,2284,1775]},{\\\"box\\\":[240,1818,2255,3268]}]}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"reasoning_content\":\"We need answer user asks extract all advertisements and return bounding boxes. Need JSON schema. Need identify ads on page. Page image 2479 x 3508? Need coordinates. Two advertisements? Top Cunard Line ad, bottom Imperial Airways ad. Need bounding boxes. Need estimate pixel coords.\\n\\nLet's examine image. It is a magazine page with header \\\"THE ANGLO-SWISS COMMERCIAL GAZETTE September, 1926.\\\" There are two large ads framed. Top ad from Cunard Line box approx x? image displayed maybe width 1772? Let's map. Original size 2479 x 3508. We need coordinates. Top ad: black border rectangle around Cunard Line. From visual, left border around x=245? right around x=2295? top around y=365? bottom around y=1780? Need precise.\\n\\nLet's load mentally? We don't have actual image dimensions but given 2479x3508. The page likely includes margins. Top ad box: border starts below header. Header text at top y ~ 80-120. The ad top line horizontal maybe y=366. Bottom line maybe y=1768. Left line x~238. Right line x~2266. Let's compute.\\n\\nBottom ad: starts y~1830? top border around y=1828? bottom border around y=3265? left x~240? right x~2252? Need include all content. The ad headlines \\\"IMPERIAL AIRWAYS\\\" to contact details. The border is visible. Let's estimate.\\n\\nNeed return JSON only? They ask \\\"Extract all advertisements and return their bounding boxes.\\\" Need likely output {\\\"advertisements\\\":[{\\\"box\\\":[...]}, ...]}. No text? Schema only box. We can include no extra. Ensure valid JSON.\\n\\nBut need ensure bounding boxes \\\"all advertisements found\\\" maybe there are two. Could there be tiny ads? None besides two display ads. The header maybe not ad. So two.\\n\\nNeed coordinates. Let's derive more accurately by using image proportions from prompt? The image dimensions maybe 1662? But original 2479x3508. If I estimate based on displayed image. Let's locate features.\\n\\nTop ad:\\n- Top border horizontal line starts at left near x=242, extends to right x=2285. Top y? The page top margin: header line 2. The ad top border starts at y maybe 380? Let's use ratio: top of image to top of ad border about 10.5% of height? 3508 * 0.105 = 368. Yes.\\n- Bottom border horizontal line y about 1775? Ratio 0.506? 3508*0.506=1775.\\n- Left border x about 244? 2479*0.0985 = 244.\\n- Right border x about 2284? 2479*0.921 = 2283.\\nSo top ad box = [244, 368, 2284, 1775]\\n\\nBut maybe lower? The Cunard ad bottom border is just above \\\"THERE IS ONLY ONE...\\\" at y=1780? Actually top ad bottom border overlaps with bottom ad top border? There is a gap. Top ad bottom border maybe y=1793? Then bottom ad top border y=1816. Let's inspect: There are two rectangle borders separated by black horizontal line? The bottom ad top border begins at y = maybe 1810. Top ad bottom y = 1780. Need separate.\\n\\nLet's recalc using height: Top ad top y = 368; top ad bottom y = 1780; height 1412. Bottom ad top y = 1826? bottom y = 3262? height 1436. Bottom ad left x = 240? right x = 2250? Need right maybe 2255.\\n\\nLet's look at bottom ad border: Left border at x ~239; top border y ~1817; bottom border y ~3267; right border x ~2252. It contains \\\"IMPERIAL AIRWAYS LTD\\\" and plane. The bottom border is above bottom page text? There is margin bottom.\\n\\nNeed maybe output as floats? integers acceptable.\\n\\nLet's produce:\\n{\\n  \\\"advertisements\\\": [\\n    {\\\"box\\\": [245, 368, 2284, 1775]},\\n    {\\\"box\\\": [240, 1818, 2255, 3268]}\\n  ]\\n}\\n\\nBut need check: Top ad box may include \\\"CUNARD LINE\\\" headline and all. Bottom ad includes \\\"IMPERIAL AIRWAYS\\\" ad. Yes.\\n\\nNeed ensure no other ads like \\\"THE ANGLO-SWISS COMMERCIAL GAZETTE\\\" is a header not advertisement. \\\"Offices of THOS. COOK...\\\" within top ad. So only two.\\n\\nCould include page number? no.\\n\\nLet's final JSON. Must be valid JSON matching schema. No markdown.\"}}],\"created\":1789571849,\"model\":\"deepseek-flash\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":\"aeb56401ca74e127821c4f9126dcb669\",\"usage\":{\"completion_tokens\":1064,\"prompt_tokens\":1288,\"total_tokens\":2352,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":null,\"reasoning_tokens\":1030,\"rejected_prediction_tokens\":null},\"prompt_tokens_details\":{\"audio_tokens\":null,\"cached_tokens\":0},\"prompt_cache_hit_tokens\":0,\"prompt_cache_miss_tokens\":1288}}"
+}

@@ -1,0 +1,54 @@
+{
+    "text": "{\"advertisements\":[{\"box\":[1250.0,2300.0,2400.0,3300.0]}]}",
+    "model": "meta-models/Muse-Glimmer-30B",
+    "provider": "huggingface",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 3916,
+        "output_tokens": 1316,
+        "total_tokens": 5232
+    },
+    "duration": 59.26480460166931,
+    "timestamp": "2026-09-18T21:37:35.577664",
+    "parsed": {
+        "advertisements": [
+            {
+                "box": [
+                    1250.0,
+                    2300.0,
+                    2400.0,
+                    3300.0
+                ]
+            }
+        ]
+    },
+    "conversation_id": "ea279fc9-5c9e-4b19-8ab6-a3355fc1d9ec",
+    "score": {
+        "field_scores": {
+            "box 0": {
+                "response": [
+                    1250.0,
+                    2300.0,
+                    2400.0,
+                    3300.0
+                ],
+                "ground_truth": [
+                    1414,
+                    2523,
+                    2372,
+                    3244
+                ],
+                "score": 0.601
+            }
+        },
+        "f1": 1.0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "mean_iou": 0.601,
+        "true_positives": 1,
+        "false_positives": 0,
+        "false_negatives": 0,
+        "iou_threshold": 0.5
+    },
+    "raw_response": "{\"id\":\"p1oyqP2-fdNmn-a3d2ccef3ad1d6e3\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\\"advertisements\\\": [\\n  {\\n    \\\"box\\\": [1250, 2300, 2400, 3300]\\n  }\\n]}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"advertisements\":[{\"box\":[1250.0,2300.0,2400.0,3300.0]}]},\"reasoning\":\"Extract all advertisements and return their bounding boxes.\\nThe original size of the page is 2479 x 3508 pixels.\\n\\nI see a page from THE ANGLO-SWISS REVIEW September 1921. Page 32. Left column SMILES. Right column STAINLESS IRON. At bottom right there is an advertisement: GLAUS, LEUZINGER & Co. S. A. AARAU - SWITZERLAND Manufacturers of Measuring Instruments of finest Precision with illustration. Ask for Catalogues.\\n\\nIs that the only advertisement? Possibly also the header? No. Might be just that one ad. Could be also the page number? No.\\n\\nSo bounding box for that ad. Need coordinates. Original size 2479 x 3508. Need estimate. The ad is at bottom right, within a box. Approx x from ~570 to ~960? Wait page width 2479. The right column starts about maybe 1250. The ad box spans from about 570? No left margin. Let's estimate. The page image shows left column ~ 130 to ~ 1200, right column ~ 1250 to ~ 2400. The ad box is in right column, from about x=570? No that's left. Let's assume image coordinates normalized? Usually bounding box in pixels. Need approximate.\\n\\nBetter estimate: The ad box is roughly from x ~ 570? Wait the page is a book opened, left page is left side of image, right page is right side. The ad is on right page, lower part. So x coordinate maybe 1250 to 950? Hmm.\\n\\nLet's approximate relative. The page width 2479. The right page occupies roughly from ~ 1200 to 2479. The ad box left edge about 1250? Actually the ad box is inset. Maybe left ~ 570? No.\\n\\nLet's assume the image is the whole scan with both pages. The left page is left half, right page right half. The ad is on right page, about 60% down. So x start ~ 1250? Let's estimate: right page starts at ~ 1200. Ad left border ~ 1250? Wait the ad box is near the right margin but with margin. Maybe x_min ~ 570? No.\\n\\nBetter to give normalized coordinates? The instruction says return bounding boxes. Probably need [x_min, y_min, x_max, y_max]. Let's approximate.\\n\\nVisually, the ad box occupies about 60% of page width of right column. Right column width ~ 1200 px. Ad width ~ 1000 px. So x_min ~ 1250? Actually right page left edge ~ 1200. Ad left ~ 1250? Might be 1250 to 2400. y_min ~ 720? The ad starts about 70% down. Page height 3508. Ad top ~ 2400? Let's estimate: top of page ~ 0. Ad top ~ 2300? Hmm.\\n\\nLet's approximate: The ad box top is about 70% down the page. 0.70 * 3508 \u2248 2456. Bottom ~ 92% => 3227. So y_min ~ 2400, y_max ~ 3300.\\n\\nx_min ~ 570? Wait left page is left. The right page starts at about 1250. So x_min ~ 1250? Actually the ad box left edge is about 1250? Let's say 1250 to 2400.\\n\\nMaybe better to give relative coordinates 0-1. But request says original size 2479 x 3508 pixels. So give pixel values.\\n\\nI'll estimate:\\n\\nx_min \u2248 570? No.\\n\\nLet's look at image: The left page occupies about 0 to ~ 1250. The right page 1250 to 2479. The ad box is on right page, with left margin about 1250+~100 = 1350? Actually the ad box is inset from the right page edge by maybe 50 px. So x_max ~ 2400. x_min ~ 1250? Wait the ad box spans almost full width of right column. So x_min ~ 1250? Might be 1250? Let's pick 1250 to 2400.\\n\\ny_min ~ 2300? Let's pick 2300 to 3300.\\n\\nMaybe more precise: The ad box top is about 2/3 down. 3508 * 0.68 = 2385. Bottom about 0.92 = 3227.\\n\\nSo bounding box: [1250, 2300, 2400, 3300].\\n\\nCould also be [570, 2300, 950, 3300] if coordinates are relative to whole image but the image shows both pages with black border. Hmm.\\n\\nAlternative: The scan shows the book with left page on left, right page on right. The ad is on right page, so x around 1300-2400.\\n\\nI'll output one box.\\n\\nIf there are no other ads, just that.\\n\\nReturn as JSON maybe.\\n\\nI'll give approximate bounding box: x_min= 1250, y_min= 2300, x_max= 2400, y_max= 3300.\\n\\nMaybe refine: x_min= 570? Wait the image width is 2479. The left page is about 1200 px wide. The right page is about 1200 px. The ad is on right page, so x_min ~ 1250. Good.\\n\\nI'll output.\\n\\nPossibly also the header \\\"THE ANGLO-SWISS REVIEW\\\" is not an ad.\\n\\nSo final answer: one advertisement for GLAUS, LEUZINGER & Co. S. A. with bounding box approx [~1250, ~2300, ~2400, ~3300].\\n\\nI'll provide coordinates.\\n\\nLet's give as [1250, 2300, 2400, 3300].\\n\\nIf need more precise: maybe x_min= 570? Hmm.\\n\\nGiven uncertainty, I can give relative percentages: x_min=0.50, y_min=0.68 etc.\\n\\nI'll give pixel estimate.\\n\\nFinal.\"},\"token_ids\":null,\"routed_experts\":null,\"seed\":null}],\"created\":1789760198,\"model\":\"meta-models/Muse-Glimmer-30B\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":\"vllm-0.1.dev19059+g66826a22d-tp2-46311a71\",\"usage\":{\"completion_tokens\":1316,\"prompt_tokens\":3916,\"total_tokens\":5232,\"completion_tokens_details\":null,\"prompt_tokens_details\":{\"audio_tokens\":null,\"cached_tokens\":0,\"created_cache_tokens\":3904,\"multimodal_tokens\":{\"image\":3850}}},\"prompt_token_ids\":null,\"prompt_text\":null,\"kv_transfer_params\":null,\"ec_transfer_params\":null,\"metrics\":null,\"prompt\":[]}"
+}

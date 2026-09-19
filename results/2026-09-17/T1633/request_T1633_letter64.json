@@ -1,0 +1,84 @@
+{
+    "text": "{\"metadata\":{\"send_date\":[\"1935-08-16\"],\"letter_title\":null,\"sender_persons\":[\"Basler Rheinschiffahrt Aktiengesellschaft\"],\"receiver_persons\":[\"Basler Personenschiffahrts-Gesellschaft\"]}}",
+    "model": "z-ai/glm-5v-turbo",
+    "provider": "openrouter",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 4363,
+        "output_tokens": 1194,
+        "total_tokens": 5557,
+        "cached_tokens": 4352,
+        "estimated_cost_usd": 0.00583368
+    },
+    "duration": 79.63962197303772,
+    "timestamp": "2026-09-17T22:49:45.841379",
+    "parsed": {
+        "metadata": {
+            "letter_title": null,
+            "send_date": [
+                "1935-08-16"
+            ],
+            "sender_persons": [
+                "Basler Rheinschiffahrt Aktiengesellschaft"
+            ],
+            "receiver_persons": [
+                "Basler Personenschiffahrts-Gesellschaft"
+            ]
+        }
+    },
+    "conversation_id": "c1b8d8a5-aedb-4ae7-a0ea-054cedb3c080",
+    "score": {
+        "send_date_tp": 1,
+        "send_date_fp": 0,
+        "send_date_fn": 0,
+        "sender_persons_tp": 0,
+        "sender_persons_fp": 1,
+        "sender_persons_fn": 1,
+        "receiver_persons_tp": 0,
+        "receiver_persons_fp": 1,
+        "receiver_persons_fn": 0,
+        "field_scores": {
+            "send_date": {
+                "response": [
+                    "1935-08-16"
+                ],
+                "ground_truth": [
+                    "1935-08-16"
+                ],
+                "score": null,
+                "counts": {
+                    "send_date_tp": 1,
+                    "send_date_fp": 0,
+                    "send_date_fn": 0
+                }
+            },
+            "sender_persons": {
+                "response": [
+                    "Basler Rheinschiffahrt Aktiengesellschaft"
+                ],
+                "ground_truth": [
+                    "Ritter-Dreier, Fritz"
+                ],
+                "score": null,
+                "counts": {
+                    "sender_persons_tp": 0,
+                    "sender_persons_fp": 1,
+                    "sender_persons_fn": 1
+                }
+            },
+            "receiver_persons": {
+                "response": [
+                    "Basler Personenschiffahrts-Gesellschaft"
+                ],
+                "ground_truth": [],
+                "score": null,
+                "counts": {
+                    "receiver_persons_tp": 0,
+                    "receiver_persons_fp": 1,
+                    "receiver_persons_fn": 0
+                }
+            }
+        }
+    },
+    "raw_response": "{\"id\":\"gen-1789678156-YuR1XRJ52NJb5lLWtOKw\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\n  \\\"metadata\\\": {\\n    \\\"letter_title\\\": null,\\n    \\\"send_date\\\": [\\n      \\\"1935-08-16\\\"\\n    ],\\n    \\\"sender_persons\\\": [\\n      \\\"Basler Rheinschiffahrt Aktiengesellschaft\\\"\\n    ],\\n    \\\"receiver_persons\\\": [\\n      \\\"Basler Personenschiffahrts-Gesellschaft\\\"\\n    ]\\n  }\\n}\\n\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"reasoning\":\"The user wants me to extract specific information from a historical letter image and format it as a JSON object.\\n\\n The image shows a letter from \\\"Basler Rheinschiffahrt Aktiengesellschaft\\\" (Basel Rhine Shipping Company) dated August 16, 1935.\\n\\n Let me identify the required fields:\\n\\n 1. **letter_title**: The letter doesn't have a clear title in the traditional sense, but it's a business correspondence. Looking at the content, it's about changing a ship for a general meeting due to low participant numbers. However, since there's no explicit title like \\\"Re: ...\\\" or similar, I should check if there's any subject line. The letter starts with \\\"Wir haben Kenntnis genommen...\\\" (We have taken note...). There's no explicit title, so this might be null or I could describe the content. But looking at the instructions, if not included, set to null. Actually, looking carefully, there is no explicit title/subject line visible.\\n\\n 2. **sender_persons**: The letter is from \\\"Basler Rheinschiffahrt Aktiengesellschaft\\\" (a company), but at the bottom it's signed with what looks like a signature and printed \\\"Hochachtend / BASELER / RHEINSCHIFFAHRT AKTIENGESELLSCHAFT\\\". So the sender is the company itself. Since the field asks for \\\"person(s)\\\", but this is a company, I should probably list the company name or note that it's from the company. The signature appears to be from an individual representing the company, but the printed text indicates the organization. I'll use the company name as the sender entity.\\n\\n 3. **send_date**: Clearly visible as \\\"den 16. August 1935\\\" which is 1935-08-16 in ISO format.\\n\\n 4. **receiver_persons**: The letter is addressed to \\\"Basler Personenschiffahrts-Gesellschaft, Basel\\\" (Basel Passenger Shipping Society, Basel). This is an organization, not an individual person, but it's the recipient.\\n\\n Let me double-check:\\n - Date: \\\"den 16. August 1935\\\" -> 1935-08-16\\n - Sender: Basler Rheinschiffahrt Aktiengesellschaft (signed by someone, but representing the company)\\n - Receiver: Basler Personenschiffahrts-Gesellschaft\\n - Title: None explicitly stated\\n\\n Wait, looking at the example, they used descriptive titles like \\\"Petition for Environmental Protection\\\". This letter is regarding the change of ship for the General Meeting (Generalversammlung) on August 31st. But strictly speaking, there is no \\\"title\\\" field in the document itself. The instructions say: \\\"If a piece of information is not included in the letter, set the value for the corresponding key to 'null'.\\\"\\n\\n So:\\n - letter_title: null (or could be interpreted as the subject matter, but safer to say null if no explicit title)\\n - sender_persons: [\\\"Basler Rheinschiffahrt Aktiengesellschaft\\\"] \\n - send_date: [\\\"1935-08-16\\\"]\\n - receiver_persons: [\\\"Basler Personenschiffahrts-Gesellschaft\\\"]\\n\\n Actually, looking at the signature again, there's a handwritten signature above the printed company name. It looks like it might be \\\"M\u00fcller\\\" or something similar, but it's hard to read definitively. The safe bet is to use the organizational name.\\n\\n Also, checking if there are any other persons mentioned:\\n - The letter mentions \\\"Ihre General-Versammlung\\\" (your General Meeting) - referring to the receiver's meeting.\\n - It mentions \\\"der Unterzeichnete\\\" (the undersigned) who is in military service and cannot attend.\\n\\n But for the structured data:\\n - Sender: Basler Rheinschiffahrt Aktiengesellschaft\\n - Receiver: Basler Personenschiffahrts-Gesellschaft\\n - Date: 1935-08-16\\n - Title: null (no explicit title)\\n\\n Let me verify the date format once more: YYYY-MM-DD -> 1935-08-16. Correct.\\n\\n Final check of the schema requirements:\\n - Must be valid JSON\\n - Must match the exact schema provided\\n - Values should be lists (arrays)\\n - Use null if information missing\\n\\n Structure:\\n ```json\\n {\\n   \\\"metadata\\\": {\\n     \\\"letter_title\\\": null,\\n     \\\"send_date\\\": [\\\"1935-08-16\\\"],\\n     \\\"sender_persons\\\": [\\\"Basler Rheinschiffahrt Aktiengesellschaft\\\"],\\n     \\\"receiver_persons\\\": [\\\"Basler Personenschiffahrts-Gesellschaft\\\"]\\n   }\\n }\\n ```\\n\\n Or should I include the individual signer? The signature is present but illegible/too stylized to be certain. The printed text clearly identifies the sending organization. I'll stick with the organization names as they are the clear legal entities involved.\\n\\n One final check: Is there any chance \\\"letter_title\\\" should be inferred from the content? The example shows \\\"Petition for Environmental Protection\\\" which sounds like it could be inferred from content or an actual title. Given the instruction \\\"If a piece of information is not included in the letter\\\", and there is no subject line or title header, null is appropriate.\",\"reasoning_details\":[{\"type\":\"reasoning.text\",\"text\":\"The user wants me to extract specific information from a historical letter image and format it as a JSON object.\\n\\n The image shows a letter from \\\"Basler Rheinschiffahrt Aktiengesellschaft\\\" (Basel Rhine Shipping Company) dated August 16, 1935.\\n\\n Let me identify the required fields:\\n\\n 1. **letter_title**: The letter doesn't have a clear title in the traditional sense, but it's a business correspondence. Looking at the content, it's about changing a ship for a general meeting due to low participant numbers. However, since there's no explicit title like \\\"Re: ...\\\" or similar, I should check if there's any subject line. The letter starts with \\\"Wir haben Kenntnis genommen...\\\" (We have taken note...). There's no explicit title, so this might be null or I could describe the content. But looking at the instructions, if not included, set to null. Actually, looking carefully, there is no explicit title/subject line visible.\\n\\n 2. **sender_persons**: The letter is from \\\"Basler Rheinschiffahrt Aktiengesellschaft\\\" (a company), but at the bottom it's signed with what looks like a signature and printed \\\"Hochachtend / BASELER / RHEINSCHIFFAHRT AKTIENGESELLSCHAFT\\\". So the sender is the company itself. Since the field asks for \\\"person(s)\\\", but this is a company, I should probably list the company name or note that it's from the company. The signature appears to be from an individual representing the company, but the printed text indicates the organization. I'll use the company name as the sender entity.\\n\\n 3. **send_date**: Clearly visible as \\\"den 16. August 1935\\\" which is 1935-08-16 in ISO format.\\n\\n 4. **receiver_persons**: The letter is addressed to \\\"Basler Personenschiffahrts-Gesellschaft, Basel\\\" (Basel Passenger Shipping Society, Basel). This is an organization, not an individual person, but it's the recipient.\\n\\n Let me double-check:\\n - Date: \\\"den 16. August 1935\\\" -> 1935-08-16\\n - Sender: Basler Rheinschiffahrt Aktiengesellschaft (signed by someone, but representing the company)\\n - Receiver: Basler Personenschiffahrts-Gesellschaft\\n - Title: None explicitly stated\\n\\n Wait, looking at the example, they used descriptive titles like \\\"Petition for Environmental Protection\\\". This letter is regarding the change of ship for the General Meeting (Generalversammlung) on August 31st. But strictly speaking, there is no \\\"title\\\" field in the document itself. The instructions say: \\\"If a piece of information is not included in the letter, set the value for the corresponding key to 'null'.\\\"\\n\\n So:\\n - letter_title: null (or could be interpreted as the subject matter, but safer to say null if no explicit title)\\n - sender_persons: [\\\"Basler Rheinschiffahrt Aktiengesellschaft\\\"] \\n - send_date: [\\\"1935-08-16\\\"]\\n - receiver_persons: [\\\"Basler Personenschiffahrts-Gesellschaft\\\"]\\n\\n Actually, looking at the signature again, there's a handwritten signature above the printed company name. It looks like it might be \\\"M\u00fcller\\\" or something similar, but it's hard to read definitively. The safe bet is to use the organizational name.\\n\\n Also, checking if there are any other persons mentioned:\\n - The letter mentions \\\"Ihre General-Versammlung\\\" (your General Meeting) - referring to the receiver's meeting.\\n - It mentions \\\"der Unterzeichnete\\\" (the undersigned) who is in military service and cannot attend.\\n\\n But for the structured data:\\n - Sender: Basler Rheinschiffahrt Aktiengesellschaft\\n - Receiver: Basler Personenschiffahrts-Gesellschaft\\n - Date: 1935-08-16\\n - Title: null (no explicit title)\\n\\n Let me verify the date format once more: YYYY-MM-DD -> 1935-08-16. Correct.\\n\\n Final check of the schema requirements:\\n - Must be valid JSON\\n - Must match the exact schema provided\\n - Values should be lists (arrays)\\n - Use null if information missing\\n\\n Structure:\\n ```json\\n {\\n   \\\"metadata\\\": {\\n     \\\"letter_title\\\": null,\\n     \\\"send_date\\\": [\\\"1935-08-16\\\"],\\n     \\\"sender_persons\\\": [\\\"Basler Rheinschiffahrt Aktiengesellschaft\\\"],\\n     \\\"receiver_persons\\\": [\\\"Basler Personenschiffahrts-Gesellschaft\\\"]\\n   }\\n }\\n ```\\n\\n Or should I include the individual signer? The signature is present but illegible/too stylized to be certain. The printed text clearly identifies the sending organization. I'll stick with the organization names as they are the clear legal entities involved.\\n\\n One final check: Is there any chance \\\"letter_title\\\" should be inferred from the content? The example shows \\\"Petition for Environmental Protection\\\" which sounds like it could be inferred from content or an actual title. Given the instruction \\\"If a piece of information is not included in the letter\\\", and there is no subject line or title header, null is appropriate.\",\"format\":\"unknown\",\"index\":0}]},\"native_finish_reason\":\"stop\"}],\"created\":1789678156,\"model\":\"z-ai/glm-5v-turbo\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":null,\"usage\":{\"completion_tokens\":1194,\"prompt_tokens\":4363,\"total_tokens\":5557,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":0,\"reasoning_tokens\":1107,\"rejected_prediction_tokens\":null,\"image_tokens\":0},\"prompt_tokens_details\":{\"audio_tokens\":0,\"cached_tokens\":4352,\"cache_write_tokens\":0,\"video_tokens\":0},\"cost\":0.00583368,\"is_byok\":false,\"cost_details\":{\"upstream_inference_cost\":0.00583368,\"upstream_inference_prompt_cost\":0.00105768,\"upstream_inference_completions_cost\":0.004776}},\"provider\":\"Z.AI\"}"
+}

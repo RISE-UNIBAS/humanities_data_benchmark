@@ -1,0 +1,88 @@
+{
+    "text": "{\"advertisements\":[{\"box\":[140.0,95.0,930.0,495.0]},{\"box\":[140.0,505.0,930.0,905.0]}]}",
+    "model": "meta-models/Muse-Glimmer-30B",
+    "provider": "huggingface",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 3916,
+        "output_tokens": 1488,
+        "total_tokens": 5404,
+        "cached_tokens": 48
+    },
+    "duration": 63.499260902404785,
+    "timestamp": "2026-09-18T21:40:32.675157",
+    "parsed": {
+        "advertisements": [
+            {
+                "box": [
+                    140.0,
+                    95.0,
+                    930.0,
+                    495.0
+                ]
+            },
+            {
+                "box": [
+                    140.0,
+                    505.0,
+                    930.0,
+                    905.0
+                ]
+            }
+        ]
+    },
+    "conversation_id": "d70d5fce-3414-4562-9d65-5f8d64c92b09",
+    "score": {
+        "field_scores": {
+            "box 0": {
+                "response": null,
+                "ground_truth": [
+                    342,
+                    1781,
+                    2323,
+                    3198
+                ],
+                "score": 0.0
+            },
+            "box 1": {
+                "response": null,
+                "ground_truth": [
+                    346,
+                    339,
+                    2323,
+                    1751
+                ],
+                "score": 0.0
+            },
+            "unmatched prediction 0": {
+                "response": [
+                    140.0,
+                    95.0,
+                    930.0,
+                    495.0
+                ],
+                "ground_truth": null,
+                "score": 0.0
+            },
+            "unmatched prediction 1": {
+                "response": [
+                    140.0,
+                    505.0,
+                    930.0,
+                    905.0
+                ],
+                "ground_truth": null,
+                "score": 0.0
+            }
+        },
+        "f1": 0.0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "mean_iou": 0.0,
+        "true_positives": 0,
+        "false_positives": 2,
+        "false_negatives": 2,
+        "iou_threshold": 0.5
+    },
+    "raw_response": "{\"id\":\"p1oziqP-fdNmn-a3d2d126baddd67c\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\\"advertisements\\\": [\\n  {\\n    \\\"box\\\": [140, 95, 930, 495]\\n  },\\n  {\\n    \\\"box\\\": [140, 505, 930, 905]\\n  }\\n]}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"advertisements\":[{\"box\":[140.0,95.0,930.0,495.0]},{\"box\":[140.0,505.0,930.0,905.0]}]},\"reasoning\":\"Extract all advertisements and return their bounding boxes.\\nThe original size of the page is 2479 x 3508 pixels.\\n\\nThe page shows two ads: Cunard Line top, Imperial Airways Ltd bottom.\\n\\nNeed bounding boxes. Likely coordinates normalized? Usually return as [x_min, y_min, x_max, y_max] in pixels. Might need relative? Probably absolute pixel coordinates.\\n\\nWe need estimate. Image width 2479, height 3508. The page is left page. The ad boxes are within.\\n\\nTop ad: CUNARD LINE. Bounding box roughly from left ~140 to right ~930? Wait image width 2479 but page is maybe ~ 2000? Let's approximate.\\n\\nBetter estimate: The ad border is inset. Top ad top ~ 95? Let's assume coordinates in pixels.\\n\\nWe can approximate:\\n\\nTop ad: x_min ~ 140? Actually left margin ~ 140? Let's see image: left edge of page ~ 35 px, ad border starts ~ 140. Right border ~ 930? Wait page width is 2479, but the page is centered. The ad spans most of page width. Let's estimate x_min = 140, x_max = 935? Hmm.\\n\\nMaybe use relative coordinates 0-1. Could provide normalized.\\n\\nOften these tasks expect [x_min, y_min, x_max, y_max] with values between 0 and 1000? Might be 0-1000.\\n\\nAlternative: Provide approximate bounding boxes in pixel coordinates.\\n\\nLet's estimate:\\n\\nPage height 3508. Top of ad ~ 95? The header \\\"2 THE ANGLO...\\\" is at top. Ad starts below that. Approx y_min ~ 95? Actually top border ~ 95? Let's say y_min = 95 (or 100). y_max ~ 495? Wait bottom of top ad ~ 495? Let's see: top ad occupies about top third. Maybe y_max ~ 495? Actually image height 3508, top ad ends around ~ 500? Let's approximate y_min=95, y_max=495.\\n\\nBottom ad: y_min ~ 505, y_max ~ 905? Wait bottom ad goes down to near bottom. Maybe y_max ~ 905? Actually page bottom is ~ 3300. The ad ends around ~ 905? No, the ad is lower. Let's see: top ad ends ~ 500, bottom ad starts ~ 510, ends ~ 905? Wait the page shows two ads stacked, bottom ad ends around ~ 905? The image shows bottom ad ends about 3/4 down. Maybe y_max ~ 905? Hmm.\\n\\nLet's assume image is cropped. The visible area is about 0-1000? Might be easier to give normalized coordinates 0-1.\\n\\nLet's estimate normalized:\\n\\nTop ad: x ~ 0.14 to 0.93? Actually left margin ~ 0.06, right ~ 0.94. Let's say x_min=0.14, x_max=0.93. y_min=0.10, y_max=0.50.\\n\\nBottom ad: x_min=0.14, x_max=0.93, y_min=0.51, y_max=0.91.\\n\\nConvert to pixels: x_min=0.14*2479\u2248347, x_max=0.93*2479\u22482305. y_min=0.10*3508\u2248351, y_max=0.50*3508\u22481754. That's too large? Wait 0.5*3508=1754. Might be okay.\\n\\nAlternative more precise: Let's look at image: top ad border is about 140px from left edge of image. Image width 2479, so left ~ 140. Right ~ 935? Wait the page is left page, the right side of page is about 950? Actually the page width in image is about 1000px? Hmm the image shows the page with black border. The page occupies maybe ~ 900px width. So x_max ~ 935. So my earlier 2305 is too high.\\n\\nMaybe the original size of the page is 2479 x 3508 pixels, meaning the image dimensions are that. So the page occupies most of width. The left page is about 1200px wide. So x_max ~ 1200.\\n\\nLet's assume page left edge ~ 35, right edge ~ 940. So x_min ~ 140, x_max ~ 930.\\n\\nLet's estimate:\\n\\nTop ad: x_min=140, y_min=95, x_max=930, y_max=495.\\n\\nBottom ad: x_min=140, y_min=505, x_max=930, y_max=905? Wait bottom ad ends around 905? Actually the bottom of the ad is around 905? The image shows bottom ad ends about 900px down from top. Let's say y_max=905? Hmm.\\n\\nMaybe better to give relative coordinates 0-1000.\\n\\nGiven uncertainty, provide approximate bounding boxes.\\n\\nI'll output two boxes:\\n\\nCunard Line ad: [~140, ~95, ~930, ~495]\\n\\nImperial Airways Ltd ad: [~140, ~505, ~930, ~905]\\n\\nIf need normalized 0-1: [0.056, 0.027, 0.375, 0.141] etc.\\n\\nLet's compute more precisely using visual estimation:\\n\\nAssume image width 2479, height 3508.\\n\\nLeft margin of ad ~ 140px => 140/2479=0.0565\\n\\nRight margin ~ 935px => 935/2479=0.377\\n\\nTop ~ 95px => 95/3508=0.027\\n\\nBottom top ad ~ 495px => 495/3508=0.141\\n\\nBottom ad top ~ 505px => 0.144\\n\\nBottom ad bottom ~ 905px => 0.258\\n\\nWait 905/3508=0.258. That seems too small. Maybe the image is cropped vertically? Actually the page height 3508, the ads occupy top ~ 1000px. So 905 is plausible.\\n\\nMaybe the image shown is only a portion? The page is 2479x3508, but the image displayed is maybe scaled. Hmm.\\n\\nAlternative approach: Provide bounding boxes as percentages.\\n\\nI'll give both pixel approx and normalized.\\n\\nI'll output:\\n\\nAdvertisement 1 (Cunard Line): {x_min: 140, y_min: 95, x_max: 930, y_max: 495}\\n\\nAdvertisement 2 (Imperial Airways Ltd): {x_min: 140, y_min: 505, x_max: 930, y_max: 905}\\n\\nIf need in 0-1000 scale: multiply.\\n\\nLet's provide as [x_min, y_min, x_max, y_max] in pixels.\\n\\nI'll deliver.\\n\\n\"},\"token_ids\":null,\"routed_experts\":null,\"seed\":null}],\"created\":1789760370,\"model\":\"meta-models/Muse-Glimmer-30B\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":\"vllm-0.1.dev19059+g66826a22d-tp2-46311a71\",\"usage\":{\"completion_tokens\":1488,\"prompt_tokens\":3916,\"total_tokens\":5404,\"completion_tokens_details\":null,\"prompt_tokens_details\":{\"audio_tokens\":null,\"cached_tokens\":48,\"created_cache_tokens\":3856,\"multimodal_tokens\":{\"image\":3850}}},\"prompt_token_ids\":null,\"prompt_text\":null,\"kv_transfer_params\":null,\"ec_transfer_params\":null,\"metrics\":null,\"prompt\":[]}"
+}

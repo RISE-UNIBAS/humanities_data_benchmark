@@ -1,0 +1,90 @@
+{
+    "text": "{\"metadata\":{\"send_date\":[\"1926-06-22\"],\"letter_title\":[\"Letter from Basler Rheinschifffahrt-Aktiengesellschaft\"],\"sender_persons\":[\"Basler Rheinschifffahrt-Aktiengesellschaft\"],\"receiver_persons\":[\"Herrn P. Christ - Wackernagel\"]}}",
+    "model": "qwen/qwen3.5-flash-02-23",
+    "provider": "openrouter",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 3129,
+        "output_tokens": 1555,
+        "total_tokens": 4684,
+        "input_cost_usd": 0.000203385,
+        "output_cost_usd": 0.0004043,
+        "estimated_cost_usd": 0.000607685
+    },
+    "duration": 16.252870321273804,
+    "timestamp": "2026-09-17T19:54:40.579049",
+    "parsed": {
+        "metadata": {
+            "send_date": [
+                "1926-06-22"
+            ],
+            "letter_title": [
+                "Letter from Basler Rheinschifffahrt-Aktiengesellschaft"
+            ],
+            "sender_persons": [
+                "Basler Rheinschifffahrt-Aktiengesellschaft"
+            ],
+            "receiver_persons": [
+                "Herrn P. Christ - Wackernagel"
+            ]
+        }
+    },
+    "conversation_id": "46f06a6b-36e7-4a45-a904-299fdeb17f25",
+    "score": {
+        "send_date_tp": 1,
+        "send_date_fp": 0,
+        "send_date_fn": 0,
+        "sender_persons_tp": 0,
+        "sender_persons_fp": 1,
+        "sender_persons_fn": 2,
+        "receiver_persons_tp": 1,
+        "receiver_persons_fp": 0,
+        "receiver_persons_fn": 0,
+        "field_scores": {
+            "send_date": {
+                "response": [
+                    "1926-06-22"
+                ],
+                "ground_truth": [
+                    "1926-06-22"
+                ],
+                "score": null,
+                "counts": {
+                    "send_date_tp": 1,
+                    "send_date_fp": 0,
+                    "send_date_fn": 0
+                }
+            },
+            "sender_persons": {
+                "response": [
+                    "Basler Rheinschifffahrt-Aktiengesellschaft"
+                ],
+                "ground_truth": [
+                    "Groschupf-Jaeger, Louis",
+                    "Ritter-Dreier, Fritz"
+                ],
+                "score": null,
+                "counts": {
+                    "sender_persons_tp": 0,
+                    "sender_persons_fp": 1,
+                    "sender_persons_fn": 2
+                }
+            },
+            "receiver_persons": {
+                "response": [
+                    "Christ-Wackernagel, Paul"
+                ],
+                "ground_truth": [
+                    "Christ-Wackernagel, Paul"
+                ],
+                "score": null,
+                "counts": {
+                    "receiver_persons_tp": 1,
+                    "receiver_persons_fp": 0,
+                    "receiver_persons_fn": 0
+                }
+            }
+        }
+    },
+    "raw_response": "{\"id\":\"gen-1789667665-PiGJ7v8C73SUmsWfRFAX\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\n   \\\"metadata\\\": {\\n   \\\"send_date\\\": [\\\"1926-06-22\\\"],\\n   \\\"letter_title\\\": [\\\"Letter from Basler Rheinschifffahrt-Aktiengesellschaft\\\"],\\n   \\\"sender_persons\\\": [\\\"Basler Rheinschifffahrt-Aktiengesellschaft\\\"],\\n   \\\"receiver_persons\\\": [\\\"Herrn P. Christ - Wackernagel\\\"]\\n}\\n}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"metadata\":{\"send_date\":[\"1926-06-22\"],\"letter_title\":[\"Letter from Basler Rheinschifffahrt-Aktiengesellschaft\"],\"sender_persons\":[\"Basler Rheinschifffahrt-Aktiengesellschaft\"],\"receiver_persons\":[\"Herrn P. Christ - Wackernagel\"]}},\"reasoning\":\"Okay, let's tackle this problem. I need to extract the metadata from the historical letter provided in the image. The user wants the JSON output with specific fields: letter_title, sender_persons, send_date, and receiver_persons. Each should be a list, even if there's only one entry.\\n\\nFirst, looking at the image. The letterhead says \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\" which translates to Basel Rhine Shipping Joint-Stock Company. That might be part of the title or the sender. The date is at the top right: \\\"Basel, den 22. Juni 1926.\\\" So the send_date should be 1926-06-22 in ISO format.\\n\\nThe recipient is addressed as \\\"Herrn P. Christ - Wackernagel, Basel.\\\" So the receiver_persons would be [\\\"P. Christ - Wackernagel\\\"]. Wait, but sometimes names can have multiple parts. Let me check again. The salutation is \\\"Sehr geehrter Herr Christ,\\\" so maybe the full name is P. Christ-Wackernagel. But the address line has \\\"Herrn P. Christ - Wackernagel,\\\" so that's probably the full name. So receiver is [\\\"P. Christ - Wackernagel\\\"].\\n\\nSender: The company name is Basler Rheinschiffahrt-Aktiengesellschaft. The signature at the bottom is \\\"BASLER RHEINSCHIFFAHRT-AKTIENGESELLSCHAFT\\\" with a handwritten signature. Since it's a company letter, the sender is the company itself. So sender_persons would be [\\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"].\\n\\nLetter title: There's no explicit title on the letter. It's a formal business letter, so maybe the title isn't present. The content mentions sending a copy of a previous letter to Dr. Max Vischer, but that's part of the body. So letter_title might be null. Wait, the example had a title like \\\"Petition for Environmental Protection\\\", but here there's no such title. So letter_title should be [\\\"null\\\"]? Wait, the instructions say if not included, set to \\\"null\\\". But in the schema, the values are lists. Wait, looking back at the schema: the Metadata properties have \\\"anyOf\\\": [{\\\"items\\\": {\\\"type\\\": \\\"string\\\"}, \\\"type\\\": \\\"array\\\"}, {\\\"type\\\": \\\"null\\\"}]. So each key's value can be either an array of strings or null. Wait, no, looking at the schema again:\\n\\nWait, the schema defines Metadata as having properties where each (send_date, letter_title, etc.) is anyOf [array of strings, null]. So for example, send_date can be a list of strings or null. But in the example given by the user, they used [\\\"1993-03-12\\\"], so a list with one string. If the information is missing, set to null. Wait, but the instruction says: \\\"If a piece of information is not included in the letter, set the value for the corresponding key to 'null'.\\\" So for letter_title, since there's no title, it should be null. But in the schema, the type is anyOf [array of strings, null]. So the correct way is to have the value as null, not a list containing \\\"null\\\". Wait, looking at the example:\\n\\nIn the example, the output is:\\n{\\n    \\\"letter_title\\\": [\\\"Petition for Environmental Protection\\\"],\\n    ...\\n}\\n\\nBut if the title is missing, according to the instructions, set to \\\"null\\\". Wait, the instruction says: \\\"set the value for the corresponding key to 'null'\\\". But in JSON, null is a valid value. However, the schema says that each property in Metadata is anyOf [array of strings, null]. So for example, send_date can be either a list of strings or null. So if the date is present, it's a list with one string; if not, it's null. Similarly for others.\\n\\nSo in this case, letter_title is not present, so it should be null. But wait, the example shows that when there is a title, it's a list. So if there's no title, the value is null. So in the JSON, letter_title would be null, not [\\\"null\\\"]. Because \\\"null\\\" as a string is different from the JSON null value.\\n\\nWait, the instruction says: \\\"set the value for the corresponding key to 'null'\\\". But in JSON, that's the literal null, not a string. So for example, if the letter_title is missing, then \\\"letter_title\\\": null. But looking at the schema, the Metadata properties are defined as anyOf [array of strings, null]. So yes, each of those keys can be either a list of strings or null.\\n\\nSo in this case, the letter has no title, so letter_title is null. The send_date is present: 1926-06-22. Sender is the company, so [\\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"]. Receiver is [\\\"P. Christ - Wackernagel\\\"].\\n\\nWait, but the sender: the letter is from the company, but sometimes companies have specific individuals as signatories. The signature at the bottom is a handwritten signature, but the printed name is the company. So the sender is the company. So sender_persons is the company name.\\n\\nReceiver: the addressee is Herrn P. Christ - Wackernagel, Basel. So the receiver is P. Christ - Wackernagel.\\n\\nSo putting it all together:\\n\\n{\\n  \\\"metadata\\\": {\\n    \\\"send_date\\\": [\\\"1926-06-22\\\"],\\n    \\\"letter_title\\\": null,\\n    \\\"sender_persons\\\": [\\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"],\\n    \\\"receiver_persons\\\": [\\\"P. Christ - Wackernagel\\\"]\\n  }\\n}\\n\\nWait, but the schema requires that each of the Metadata properties is either an array of strings or null. So for letter_title, since there's no title, it's null. For the others, they have values as arrays.\\n\\nYes, that matches the schema. Let me double-check the image again.\\n\\nDate: \\\"Basel, den 22. Juni 1926.\\\" So 22 June 1926 \u2192 1926-06-22.\\n\\nSender: The letterhead is Basler Rheinschiffahrt-Aktiengesellschaft, and the closing is the same company name. So sender is the company.\\n\\nReceiver: Addressed to Herrn P. Christ - Wackernagel, Basel. So the person is P. Christ - Wackernagel.\\n\\nNo title mentioned, so letter_title is null.\\n\\nYes, that seems correct.\\n\",\"reasoning_details\":[{\"type\":\"reasoning.text\",\"text\":\"Okay, let's tackle this problem. I need to extract the metadata from the historical letter provided in the image. The user wants the JSON output with specific fields: letter_title, sender_persons, send_date, and receiver_persons. Each should be a list, even if there's only one entry.\\n\\nFirst, looking at the image. The letterhead says \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\" which translates to Basel Rhine Shipping Joint-Stock Company. That might be part of the title or the sender. The date is at the top right: \\\"Basel, den 22. Juni 1926.\\\" So the send_date should be 1926-06-22 in ISO format.\\n\\nThe recipient is addressed as \\\"Herrn P. Christ - Wackernagel, Basel.\\\" So the receiver_persons would be [\\\"P. Christ - Wackernagel\\\"]. Wait, but sometimes names can have multiple parts. Let me check again. The salutation is \\\"Sehr geehrter Herr Christ,\\\" so maybe the full name is P. Christ-Wackernagel. But the address line has \\\"Herrn P. Christ - Wackernagel,\\\" so that's probably the full name. So receiver is [\\\"P. Christ - Wackernagel\\\"].\\n\\nSender: The company name is Basler Rheinschiffahrt-Aktiengesellschaft. The signature at the bottom is \\\"BASLER RHEINSCHIFFAHRT-AKTIENGESELLSCHAFT\\\" with a handwritten signature. Since it's a company letter, the sender is the company itself. So sender_persons would be [\\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"].\\n\\nLetter title: There's no explicit title on the letter. It's a formal business letter, so maybe the title isn't present. The content mentions sending a copy of a previous letter to Dr. Max Vischer, but that's part of the body. So letter_title might be null. Wait, the example had a title like \\\"Petition for Environmental Protection\\\", but here there's no such title. So letter_title should be [\\\"null\\\"]? Wait, the instructions say if not included, set to \\\"null\\\". But in the schema, the values are lists. Wait, looking back at the schema: the Metadata properties have \\\"anyOf\\\": [{\\\"items\\\": {\\\"type\\\": \\\"string\\\"}, \\\"type\\\": \\\"array\\\"}, {\\\"type\\\": \\\"null\\\"}]. So each key's value can be either an array of strings or null. Wait, no, looking at the schema again:\\n\\nWait, the schema defines Metadata as having properties where each (send_date, letter_title, etc.) is anyOf [array of strings, null]. So for example, send_date can be a list of strings or null. But in the example given by the user, they used [\\\"1993-03-12\\\"], so a list with one string. If the information is missing, set to null. Wait, but the instruction says: \\\"If a piece of information is not included in the letter, set the value for the corresponding key to 'null'.\\\" So for letter_title, since there's no title, it should be null. But in the schema, the type is anyOf [array of strings, null]. So the correct way is to have the value as null, not a list containing \\\"null\\\". Wait, looking at the example:\\n\\nIn the example, the output is:\\n{\\n    \\\"letter_title\\\": [\\\"Petition for Environmental Protection\\\"],\\n    ...\\n}\\n\\nBut if the title is missing, according to the instructions, set to \\\"null\\\". Wait, the instruction says: \\\"set the value for the corresponding key to 'null'\\\". But in JSON, null is a valid value. However, the schema says that each property in Metadata is anyOf [array of strings, null]. So for example, send_date can be either a list of strings or null. So if the date is present, it's a list with one string; if not, it's null. Similarly for others.\\n\\nSo in this case, letter_title is not present, so it should be null. But wait, the example shows that when there is a title, it's a list. So if there's no title, the value is null. So in the JSON, letter_title would be null, not [\\\"null\\\"]. Because \\\"null\\\" as a string is different from the JSON null value.\\n\\nWait, the instruction says: \\\"set the value for the corresponding key to 'null'\\\". But in JSON, that's the literal null, not a string. So for example, if the letter_title is missing, then \\\"letter_title\\\": null. But looking at the schema, the Metadata properties are defined as anyOf [array of strings, null]. So yes, each of those keys can be either a list of strings or null.\\n\\nSo in this case, the letter has no title, so letter_title is null. The send_date is present: 1926-06-22. Sender is the company, so [\\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"]. Receiver is [\\\"P. Christ - Wackernagel\\\"].\\n\\nWait, but the sender: the letter is from the company, but sometimes companies have specific individuals as signatories. The signature at the bottom is a handwritten signature, but the printed name is the company. So the sender is the company. So sender_persons is the company name.\\n\\nReceiver: the addressee is Herrn P. Christ - Wackernagel, Basel. So the receiver is P. Christ - Wackernagel.\\n\\nSo putting it all together:\\n\\n{\\n  \\\"metadata\\\": {\\n    \\\"send_date\\\": [\\\"1926-06-22\\\"],\\n    \\\"letter_title\\\": null,\\n    \\\"sender_persons\\\": [\\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"],\\n    \\\"receiver_persons\\\": [\\\"P. Christ - Wackernagel\\\"]\\n  }\\n}\\n\\nWait, but the schema requires that each of the Metadata properties is either an array of strings or null. So for letter_title, since there's no title, it's null. For the others, they have values as arrays.\\n\\nYes, that matches the schema. Let me double-check the image again.\\n\\nDate: \\\"Basel, den 22. Juni 1926.\\\" So 22 June 1926 \u2192 1926-06-22.\\n\\nSender: The letterhead is Basler Rheinschiffahrt-Aktiengesellschaft, and the closing is the same company name. So sender is the company.\\n\\nReceiver: Addressed to Herrn P. Christ - Wackernagel, Basel. So the person is P. Christ - Wackernagel.\\n\\nNo title mentioned, so letter_title is null.\\n\\nYes, that seems correct.\\n\",\"format\":\"unknown\",\"index\":0}]},\"native_finish_reason\":\"stop\"}],\"created\":1789667665,\"model\":\"qwen/qwen3.5-flash-02-23\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":null,\"usage\":{\"completion_tokens\":1555,\"prompt_tokens\":3129,\"total_tokens\":4684,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":0,\"reasoning_tokens\":1460,\"rejected_prediction_tokens\":null,\"image_tokens\":0},\"prompt_tokens_details\":{\"audio_tokens\":0,\"cached_tokens\":0,\"cache_write_tokens\":0,\"video_tokens\":0},\"cost\":0.000607685,\"is_byok\":false,\"cost_details\":{\"upstream_inference_cost\":0.000607685,\"upstream_inference_prompt_cost\":0.000203385,\"upstream_inference_completions_cost\":0.0004043}},\"provider\":\"Alibaba\"}"
+}

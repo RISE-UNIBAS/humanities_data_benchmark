@@ -1,0 +1,86 @@
+{
+    "text": "{\"metadata\":{\"send_date\":[\"1928-04-03\"],\"letter_title\":[\"Kauf \\\"Rheinfelden\\\"\"],\"sender_persons\":[\"Basler Rheinschiffahrt-Aktiengesellschaft\"],\"receiver_persons\":[\"Basler Personenschiffahrtsgesellschaft\"]}}",
+    "model": "thinkingmachines/Inkling",
+    "provider": "huggingface",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 4180,
+        "output_tokens": 2083,
+        "total_tokens": 6263,
+        "cached_tokens": 256
+    },
+    "duration": 35.88414430618286,
+    "timestamp": "2026-09-17T11:41:33.171472",
+    "parsed": {
+        "metadata": {
+            "send_date": [
+                "1928-04-03"
+            ],
+            "letter_title": [
+                "Kauf \"Rheinfelden\""
+            ],
+            "sender_persons": [
+                "Basler Rheinschiffahrt-Aktiengesellschaft"
+            ],
+            "receiver_persons": [
+                "Basler Personenschiffahrtsgesellschaft"
+            ]
+        }
+    },
+    "conversation_id": "8e1be551-08f4-457c-8daf-afc1a0a33007",
+    "score": {
+        "send_date_tp": 1,
+        "send_date_fp": 0,
+        "send_date_fn": 0,
+        "sender_persons_tp": 0,
+        "sender_persons_fp": 1,
+        "sender_persons_fn": 2,
+        "receiver_persons_tp": 0,
+        "receiver_persons_fp": 1,
+        "receiver_persons_fn": 0,
+        "field_scores": {
+            "send_date": {
+                "response": [
+                    "1928-04-03"
+                ],
+                "ground_truth": [
+                    "1928-04-03"
+                ],
+                "score": null,
+                "counts": {
+                    "send_date_tp": 1,
+                    "send_date_fp": 0,
+                    "send_date_fn": 0
+                }
+            },
+            "sender_persons": {
+                "response": [
+                    "Basler Rheinschiffahrt-Aktiengesellschaft"
+                ],
+                "ground_truth": [
+                    "Groschupf-Jaeger, Louis",
+                    "Ritter-Dreier, Fritz"
+                ],
+                "score": null,
+                "counts": {
+                    "sender_persons_tp": 0,
+                    "sender_persons_fp": 1,
+                    "sender_persons_fn": 2
+                }
+            },
+            "receiver_persons": {
+                "response": [
+                    "Basler Personenschiffahrtsgesellschaft"
+                ],
+                "ground_truth": [],
+                "score": null,
+                "counts": {
+                    "receiver_persons_tp": 0,
+                    "receiver_persons_fp": 1,
+                    "receiver_persons_fn": 0
+                }
+            }
+        }
+    },
+    "raw_response": "{\"id\":\"p1dBqcf-6z2FuN-a3c72706cf6bc948\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\n  \\\"metadata\\\": {\\n    \\\"send_date\\\": [\\\"1928-04-03\\\"],\\n    \\\"letter_title\\\": [\\\"Kauf \\\\\\\"Rheinfelden\\\\\\\"\\\"],\\n    \\\"sender_persons\\\": [\\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"],\\n    \\\"receiver_persons\\\": [\\\"Basler Personenschiffahrtsgesellschaft\\\"]\\n  }\\n}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"metadata\":{\"send_date\":[\"1928-04-03\"],\"letter_title\":[\"Kauf \\\"Rheinfelden\\\"\"],\"sender_persons\":[\"Basler Rheinschiffahrt-Aktiengesellschaft\"],\"receiver_persons\":[\"Basler Personenschiffahrtsgesellschaft\"]}},\"reasoning\":\"We need parse images of historical letter, extract keys: letter_title, sender_persons, send_date, receiver_persons. Need examine both pages.\\n\\nPage 1 (image 1):\\nHeader: \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\" with address etc.\\nTop right: \\\"Basel, den 3. April 1928.\\\"\\nThen address block: \\\"Basler Personenschiffahrtsgesellschaft, Basel.\\\"\\nThen \\\"R/M\\\" maybe reference.\\nThen salutation: \\\"Betrifft Kauf \\\"Rheinfelden\\\" Ihr Schreiben vom 24. M\u00e4rz.\\\"\\nThen body with proposals.\\nBottom right: \\\"-/.\\\" maybe end page 1.\\n\\nPage 2 (image 2):\\nHeader: \\\"Basler Personenschiffahrtsgesellschaft, Basel. 3.4.28.\\\"\\nThen \\\"Wiederver\u00e4usserung des Schiffes \\\"Rheinfelden\\\" des Vorkaufsrecht ein.\\\"\\nThen body.\\nThen closing: \\\"Hochachtend BASLER RHEINSCHIFFAHRT-AKTIENGESELLSCHAFT\\\" with signatures.\\n\\nThus letter is from Basler Rheinschiffahrt-Aktiengesellschaft to Basler Personenschiffahrtsgesellschaft. Date 3 April 1928. Need letter_title? Maybe subject/title of letter. The letter concerns \\\"Kauf 'Rheinfelden'\\\" and \\\"Wiederver\u00e4usserung des Schiffes 'Rheinfelden'\\\". But \\\"letter_title\\\" likely the title/heading of the letter. In page 1 there is no explicit title except \\\"Betrifft Kauf \\\"Rheinfelden\\\"\\\". In page 2 there is heading \\\"Wiederver\u00e4usserung des Schiffes \\\"Rheinfelden\\\" des Vorkaufsrecht ein.\\\" Hmm maybe letter_title should be extracted if present. Let's think about what they expect. The example had \\\"Petition for Environmental Protection\\\" which sounds like a title. Here maybe the subject line serves as title: \\\"Kauf 'Rheinfelden'\\\" or \\\"Wiederver\u00e4usserung des Schiffes 'Rheinfelden'\\\". But need be precise from letter.\\n\\nLet's examine page 1 text near top right of body: \\\"Betrifft Kauf \\\"Rheinfelden\\\" Ihr Schreiben vom 24. M\u00e4rz.\\\" That is like \\\"Re: Purchase 'Rheinfelden' Your letter of 24 March.\\\" So letter_title might be [\\\"Kauf \\\\\\\"Rheinfelden\\\\\\\"\\\"] or [\\\"Wiederver\u00e4usserung des Schiffes \\\\\\\"Rheinfelden\\\\\\\"\\\"]. Which one is correct? The prompt says \\\"Title of the letter.\\\" In formal letters, the subject line (Betreff) is often considered title. Here \\\"Betrifft Kauf \\\"Rheinfelden\\\"\\\" is on page 1. On page 2, there's a centered heading \\\"Wiederver\u00e4usserung des Schiffes \\\"Rheinfelden\\\" des Vorkaufsrecht ein.\\\" That looks like a title/heading for page 2 continuation. But likely the letter's subject is about resale/purchase of ship Rheinfelden.\\n\\nWe need sender_persons: \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\" is the sender, signed at bottom. Could also include individual signatories? The signatures are present but not readable clearly? Let's inspect image 2 bottom: signatures appear, one maybe \\\"J. M\u00fcller\\\"? Actually hard to read. But the organizational sender is clear. The prompt asks \\\"Name(s) of the person(s) who wrote the letter.\\\" Could be the company, or individuals signing. Usually in these extraction tasks, they want the named sender in the letterhead/signature block. Here letterhead on page 1 is \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\". The closing on page 2 is \\\"BASLER RHEINSCHIFFAHRT-AKTIENGESELLSCHAFT\\\". So sender_persons should be [\\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"].\\n\\nReceiver_persons: Addressed to \\\"Basler Personenschiffahrtsgesellschaft, Basel.\\\" So [\\\"Basler Personenschiffahrtsgesellschaft\\\"].\\n\\nSend_date: \\\"Basel, den 3. April 1928.\\\" So [\\\"1928-04-03\\\"].\\n\\nLetter_title: Need determine. Let's check if there's any other title. Page 1 has no other title. The subject is \\\"Kauf 'Rheinfelden'\\\". But page 2 starts with \\\"Wiederver\u00e4usserung des Schiffes \\\"Rheinfelden\\\" des Vorkaufsrecht ein.\\\" That might be the title of the document? Actually it's a continuation line, maybe \\\"Wiederver\u00e4usserung des Schiffes \\\"Rheinfelden\\\" des Vorkaufsrecht ein.\\\" Hmm grammar: \\\"Wiederver\u00e4usserung des Schiffes \\\"Rheinfelden\\\" des Vorkaufs-recht ein.\\\" Maybe \\\"Wiederver\u00e4usserung des Schiffes \\\"Rheinfelden\\\". Das Vorkaufsrecht ein.\\\" Not clear.\\n\\nGiven typical extraction, they might want the subject line from page 1: \\\"Kauf \\\"Rheinfelden\\\"\\\". But they said \\\"letter_title: Title of the letter.\\\" In the example, it's \\\"Petition for Environmental Protection\\\" which is like the document title. Here the document might be titled \\\"Wiederver\u00e4usserung des Schiffes \\\"Rheinfelden\\\"\\\". But I think safest is to include the subject/re line: [\\\"Kauf \\\\\\\"Rheinfelden\\\\\\\"\\\"]? Or maybe null if not clear? Let's examine the letter structure: Page 1 starts with address and then \\\"R/M\\\" then \\\"Betrifft Kauf \\\"Rheinfelden\\\" Ihr Schreiben vom 24. M\u00e4rz.\\\" This is clearly the subject. So letter_title = [\\\"Kauf \\\\\\\"Rheinfelden\\\\\\\"\\\"].\\n\\nBut wait, page 2 header includes \\\"Basler Personenschiffahrtsgesellschaft, Basel. 3.4.28.\\\" and then \\\"Wiederver\u00e4usserung des Schiffes \\\"Rheinfelden\\\" des Vorkaufsrecht ein.\\\" This could be interpreted as the title of the letter being continued. Actually in old letters, they sometimes put the subject on the second page at top. So the full subject might be \\\"Wiederver\u00e4usserung des Schiffes \\\"Rheinfelden\\\"\\\". Let's parse: \\\"Wiederver\u00e4usserung des Schiffes \\\"Rheinfelden\\\" des Vorkaufsrecht ein.\\\" Maybe it's \\\"Wiederver\u00e4usserung des Schiffes \\\"Rheinfelden\\\". Das Vorkaufsrecht ein[...]\\\" Hmm not perfect.\\n\\nGiven that page 1 says \\\"Betrifft Kauf \\\"Rheinfelden\\\"\\\" and page 2 mentions \\\"Wiederver\u00e4usserung\\\" (resale) and \\\"Vorkaufsrecht\\\" (preemption right). The letter discusses selling the ship back? Actually body says they propose to increase purchase price to allow 20% share in capital, and grant free ticket for two years, and provide boat \\\"Rheinfelden\\\" for free travel if company continues, etc. So it's about purchase/resale conditions.\\n\\nBut for extraction, we just need values. Let's provide letter_title as [\\\"Wiederver\u00e4usserung des Schiffes \\\\\\\"Rheinfelden\\\\\\\"\\\"]? Or [\\\"Kauf \\\\\\\"Rheinfelden\\\\\\\"\\\"]?\\n\\nLet's think about the instruction: \\\"letter_title: Title of the letter.\\\" If I look at the image, is there a prominent title? The letterhead \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\" is not the title. The date is there. Then there's \\\"Betrifft Kauf \\\"Rheinfelden\\\"...\\\" That is like \\\"Subject: Purchase 'Rheinfelden'\\\". In many formal letters, \\\"Betreff\\\" is the subject/title. So I will use that.\\n\\nBut also page 2 has a line that looks like a heading centered? Actually it's left-aligned under the header: \\\"Wiederver\u00e4usserung des Schiffes \\\"Rheinfelden\\\" des Vorkaufs-recht ein.\\\" This might be the continuation of the subject from page 1? Let's check alignment: In image 2, it's near top left, underlined? Actually it's underlined? The text \\\"Basler Personenschiffahrtsgesellschaft, Basel. 3.4.28.\\\" is centered/underlined? Then below that is \\\"Wiederver\u00e4usserung des Schiffes \\\"Rheinfelden\\\" des Vorkaufs-recht ein.\\\" This looks like a subject line for page 2. So the full subject might combine both? But likely it's the same subject expressed differently.\\n\\nGiven ambiguity, I might include both? No, value should be list, but can include one. Let's choose the one that is clearly a title/subject. \\\"Kauf \\\"Rheinfelden\\\"\\\" is explicit with \\\"Betrifft\\\". So I'll go with [\\\"Kauf \\\\\\\"Rheinfelden\\\\\\\"\\\"].\\n\\nBut wait, there's also \\\"Ihr Schreiben vom 24. M\u00e4rz.\\\" So it's a reply.\\n\\nThus JSON:\\n{\\n\\\"letter_title\\\": [\\\"Kauf \\\\\\\"Rheinfelden\\\\\\\"\\\"],\\n\\\"sender_persons\\\": [\\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"],\\n\\\"send_date\\\": [\\\"1928-04-03\\\"],\\n\\\"receiver_persons\\\": [\\\"Basler Personenschiffahrtsgesellschaft\\\"]\\n}\\n\\nNeed check if any individual names in signatures readable? In image 2, signatures are present but not legible. So organization is correct.\\n\\nOne more check: The date on page 2 is \\\"3.4.28.\\\" which confirms 1928-04-03.\\n\\nThus output.\"},\"seed\":null}],\"created\":1789638058,\"model\":\"thinkingmachines/Inkling\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":\"default\",\"usage\":{\"completion_tokens\":2083,\"prompt_tokens\":4180,\"total_tokens\":6263,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":null,\"reasoning_tokens\":2003,\"rejected_prediction_tokens\":null},\"prompt_tokens_details\":{\"audio_tokens\":null,\"cached_tokens\":256}},\"prompt\":[]}"
+}

@@ -1,0 +1,81 @@
+{
+    "text": "{\"metadata\":{\"send_date\":[\"1926-03-29\"],\"letter_title\":null,\"sender_persons\":null,\"receiver_persons\":[\"Dr. W. Krasting\"]}}",
+    "model": "qwen/qwen3.7-plus",
+    "provider": "openrouter",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 3127,
+        "output_tokens": 888,
+        "total_tokens": 4015,
+        "input_cost_usd": 0.0010006400000000001,
+        "output_cost_usd": 0.00113664,
+        "estimated_cost_usd": 0.00213728
+    },
+    "duration": 18.573091983795166,
+    "timestamp": "2026-09-18T09:40:51.849295",
+    "parsed": {
+        "metadata": {
+            "send_date": [
+                "1926-03-29"
+            ],
+            "letter_title": null,
+            "sender_persons": null,
+            "receiver_persons": [
+                "Dr. W. Krasting"
+            ]
+        }
+    },
+    "conversation_id": "dc5a0003-644e-456f-a215-f9dd9975b04a",
+    "score": {
+        "send_date_tp": 1,
+        "send_date_fp": 0,
+        "send_date_fn": 0,
+        "sender_persons_tp": 0,
+        "sender_persons_fp": 0,
+        "sender_persons_fn": 0,
+        "receiver_persons_tp": 1,
+        "receiver_persons_fp": 0,
+        "receiver_persons_fn": 0,
+        "field_scores": {
+            "send_date": {
+                "response": [
+                    "1926-03-29"
+                ],
+                "ground_truth": [
+                    "1926-03-29"
+                ],
+                "score": null,
+                "counts": {
+                    "send_date_tp": 1,
+                    "send_date_fp": 0,
+                    "send_date_fn": 0
+                }
+            },
+            "sender_persons": {
+                "response": [],
+                "ground_truth": [],
+                "score": null,
+                "counts": {
+                    "sender_persons_tp": 0,
+                    "sender_persons_fp": 0,
+                    "sender_persons_fn": 0
+                }
+            },
+            "receiver_persons": {
+                "response": [
+                    "Krasting, Wilhelm"
+                ],
+                "ground_truth": [
+                    "Krasting, Wilhelm"
+                ],
+                "score": null,
+                "counts": {
+                    "receiver_persons_tp": 1,
+                    "receiver_persons_fp": 0,
+                    "receiver_persons_fn": 0
+                }
+            }
+        }
+    },
+    "raw_response": "{\"id\":\"gen-1789717234-R4X9CGKsYy53Vwmf93A1\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\n  \\\"metadata\\\": {\\n    \\\"send_date\\\": [\\n      \\\"1926-03-29\\\"\\n    ],\\n    \\\"letter_title\\\": null,\\n    \\\"sender_persons\\\": null,\\n    \\\"receiver_persons\\\": [\\n      \\\"Dr. W. Krasting\\\"\\n    ]\\n  }\\n}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"metadata\":{\"send_date\":[\"1926-03-29\"],\"letter_title\":null,\"sender_persons\":null,\"receiver_persons\":[\"Dr. W. Krasting\"]}},\"reasoning\":\"The user wants me to extract metadata from a historical letter image and return it as a JSON object.\\nThe JSON schema requires:\\n- `metadata`: an object containing:\\n    - `send_date`: list of strings or null\\n    - `letter_title`: list of strings or null\\n    - `sender_persons`: list of strings or null\\n    - `receiver_persons`: list of strings or null\\n\\nLet's analyze the image:\\n- Date: \\\"Basel, den 29. M\u00e4rz 1926.\\\" -> \\\"1926-03-29\\\"\\n- Receiver: \\\"Herrn Dr. W. Krasting,\\\" -> \\\"Dr. W. Krasting\\\"\\n- Organization of receiver: \\\"Internationale Ausstellung f\u00fcr Binnenschiffahrt und Wasserkraftnutzung Basel 1926\\\"\\n- Sender: The letter is signed \\\"Hochachtungsvoll\\\" but there is no name below it. Wait, looking closely at the image, there is no signature name. It just says \\\"Hochachtungsvoll\\\". So sender_persons is null.\\n- Letter title: There is no explicit title. It's a business letter. So letter_title is null.\\n\\nLet's re-examine the sender. Is there a letterhead? No. Just \\\"T\\\" at the top left.\\nWait, \\\"Internationale Ausstellung f\u00fcr Binnenschiffahrt und Wasserkraftnutzung Basel 1926\\\" is the address of the receiver.\\nThe sender is unknown.\\n\\nLet's check the fields:\\n- `send_date`: [\\\"1926-03-29\\\"]\\n- `letter_title`: null\\n- `sender_persons`: null\\n- `receiver_persons`: [\\\"Dr. W. Krasting\\\"]\\n\\nWait, the schema says:\\n\\\"send_date\\\": {\\\"anyOf\\\": [{\\\"items\\\": {\\\"type\\\": \\\"string\\\"}, \\\"type\\\": \\\"array\\\"}, {\\\"type\\\": \\\"null\\\"}], \\\"title\\\": \\\"Send Date\\\"}\\n\\\"letter_title\\\": {\\\"anyOf\\\": [{\\\"items\\\": {\\\"type\\\": \\\"string\\\"}, \\\"type\\\": \\\"array\\\"}, {\\\"type\\\": \\\"null\\\"}], \\\"title\\\": \\\"Letter Title\\\"}\\n\\\"sender_persons\\\": {\\\"anyOf\\\": [{\\\"items\\\": {\\\"type\\\": \\\"string\\\"}, \\\"type\\\": \\\"array\\\"}, {\\\"type\\\": \\\"null\\\"}], \\\"title\\\": \\\"Sender Persons\\\"}\\n\\\"receiver_persons\\\": {\\\"anyOf\\\": [{\\\"items\\\": {\\\"type\\\": \\\"string\\\"}, \\\"type\\\": \\\"array\\\"}, {\\\"type\\\": \\\"null\\\"}], \\\"title\\\": \\\"Receiver Persons\\\"}\\n\\nSo:\\n```json\\n{\\n  \\\"metadata\\\": {\\n    \\\"send_date\\\": [\\\"1926-03-29\\\"],\\n    \\\"letter_title\\\": null,\\n    \\\"sender_persons\\\": null,\\n    \\\"receiver_persons\\\": [\\\"Dr. W. Krasting\\\"]\\n  }\\n}\\n```\\nWait, the prompt says \\\"If a piece of information is not included in the letter, set the value for the corresponding key to \\\"null\\\".\\\"\\nBut the schema says `{\\\"type\\\": \\\"null\\\"}`. So `null` is correct.\\n\\nLet's double check the receiver. \\\"Herrn Dr. W. Krasting,\\\". So \\\"Dr. W. Krasting\\\".\\nDate: \\\"29. M\u00e4rz 1926\\\" -> \\\"1926-03-29\\\".\\n\\nIs there any sender? No signature visible.\\nIs there a title? No.\\n\\nFinal JSON structure:\\n{\\n  \\\"metadata\\\": {\\n    \\\"send_date\\\": [\\n      \\\"1926-03-29\\\"\\n    ],\\n    \\\"letter_title\\\": null,\\n    \\\"sender_persons\\\": null,\\n    \\\"receiver_persons\\\": [\\n      \\\"Dr. W. Krasting\\\"\\n    ]\\n  }\\n}\",\"reasoning_details\":[{\"type\":\"reasoning.text\",\"text\":\"The user wants me to extract metadata from a historical letter image and return it as a JSON object.\\nThe JSON schema requires:\\n- `metadata`: an object containing:\\n    - `send_date`: list of strings or null\\n    - `letter_title`: list of strings or null\\n    - `sender_persons`: list of strings or null\\n    - `receiver_persons`: list of strings or null\\n\\nLet's analyze the image:\\n- Date: \\\"Basel, den 29. M\u00e4rz 1926.\\\" -> \\\"1926-03-29\\\"\\n- Receiver: \\\"Herrn Dr. W. Krasting,\\\" -> \\\"Dr. W. Krasting\\\"\\n- Organization of receiver: \\\"Internationale Ausstellung f\u00fcr Binnenschiffahrt und Wasserkraftnutzung Basel 1926\\\"\\n- Sender: The letter is signed \\\"Hochachtungsvoll\\\" but there is no name below it. Wait, looking closely at the image, there is no signature name. It just says \\\"Hochachtungsvoll\\\". So sender_persons is null.\\n- Letter title: There is no explicit title. It's a business letter. So letter_title is null.\\n\\nLet's re-examine the sender. Is there a letterhead? No. Just \\\"T\\\" at the top left.\\nWait, \\\"Internationale Ausstellung f\u00fcr Binnenschiffahrt und Wasserkraftnutzung Basel 1926\\\" is the address of the receiver.\\nThe sender is unknown.\\n\\nLet's check the fields:\\n- `send_date`: [\\\"1926-03-29\\\"]\\n- `letter_title`: null\\n- `sender_persons`: null\\n- `receiver_persons`: [\\\"Dr. W. Krasting\\\"]\\n\\nWait, the schema says:\\n\\\"send_date\\\": {\\\"anyOf\\\": [{\\\"items\\\": {\\\"type\\\": \\\"string\\\"}, \\\"type\\\": \\\"array\\\"}, {\\\"type\\\": \\\"null\\\"}], \\\"title\\\": \\\"Send Date\\\"}\\n\\\"letter_title\\\": {\\\"anyOf\\\": [{\\\"items\\\": {\\\"type\\\": \\\"string\\\"}, \\\"type\\\": \\\"array\\\"}, {\\\"type\\\": \\\"null\\\"}], \\\"title\\\": \\\"Letter Title\\\"}\\n\\\"sender_persons\\\": {\\\"anyOf\\\": [{\\\"items\\\": {\\\"type\\\": \\\"string\\\"}, \\\"type\\\": \\\"array\\\"}, {\\\"type\\\": \\\"null\\\"}], \\\"title\\\": \\\"Sender Persons\\\"}\\n\\\"receiver_persons\\\": {\\\"anyOf\\\": [{\\\"items\\\": {\\\"type\\\": \\\"string\\\"}, \\\"type\\\": \\\"array\\\"}, {\\\"type\\\": \\\"null\\\"}], \\\"title\\\": \\\"Receiver Persons\\\"}\\n\\nSo:\\n```json\\n{\\n  \\\"metadata\\\": {\\n    \\\"send_date\\\": [\\\"1926-03-29\\\"],\\n    \\\"letter_title\\\": null,\\n    \\\"sender_persons\\\": null,\\n    \\\"receiver_persons\\\": [\\\"Dr. W. Krasting\\\"]\\n  }\\n}\\n```\\nWait, the prompt says \\\"If a piece of information is not included in the letter, set the value for the corresponding key to \\\"null\\\".\\\"\\nBut the schema says `{\\\"type\\\": \\\"null\\\"}`. So `null` is correct.\\n\\nLet's double check the receiver. \\\"Herrn Dr. W. Krasting,\\\". So \\\"Dr. W. Krasting\\\".\\nDate: \\\"29. M\u00e4rz 1926\\\" -> \\\"1926-03-29\\\".\\n\\nIs there any sender? No signature visible.\\nIs there a title? No.\\n\\nFinal JSON structure:\\n{\\n  \\\"metadata\\\": {\\n    \\\"send_date\\\": [\\n      \\\"1926-03-29\\\"\\n    ],\\n    \\\"letter_title\\\": null,\\n    \\\"sender_persons\\\": null,\\n    \\\"receiver_persons\\\": [\\n      \\\"Dr. W. Krasting\\\"\\n    ]\\n  }\\n}\",\"format\":\"unknown\",\"index\":0}]},\"native_finish_reason\":\"stop\"}],\"created\":1789717234,\"model\":\"qwen/qwen3.7-plus\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":null,\"usage\":{\"completion_tokens\":888,\"prompt_tokens\":3127,\"total_tokens\":4015,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":0,\"reasoning_tokens\":810,\"rejected_prediction_tokens\":null,\"image_tokens\":0},\"prompt_tokens_details\":{\"audio_tokens\":0,\"cached_tokens\":0,\"cache_write_tokens\":0,\"video_tokens\":0},\"cost\":0.00213728,\"is_byok\":false,\"cost_details\":{\"upstream_inference_cost\":0.00213728,\"upstream_inference_prompt_cost\":0.00100064,\"upstream_inference_completions_cost\":0.00113664}},\"provider\":\"Alibaba\"}"
+}

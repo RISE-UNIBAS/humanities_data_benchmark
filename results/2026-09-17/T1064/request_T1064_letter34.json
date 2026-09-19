@@ -1,0 +1,88 @@
+{
+    "text": "{\"metadata\":{\"send_date\":[\"1934-05-10\"],\"letter_title\":[\"Abrechnung\"],\"sender_persons\":[\"Basler Rheinschiffahrt-Aktiengesellschaft\"],\"receiver_persons\":[\"Basler Personenschiffahrtsgesellschaft\"]}}",
+    "model": "qwen/qwen3.7-plus",
+    "provider": "openrouter",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 3127,
+        "output_tokens": 1147,
+        "total_tokens": 4274,
+        "input_cost_usd": 0.0010006400000000001,
+        "output_cost_usd": 0.00146816,
+        "estimated_cost_usd": 0.0024688
+    },
+    "duration": 24.786653995513916,
+    "timestamp": "2026-09-18T09:42:59.076767",
+    "parsed": {
+        "metadata": {
+            "send_date": [
+                "1934-05-10"
+            ],
+            "letter_title": [
+                "Abrechnung"
+            ],
+            "sender_persons": [
+                "Basler Rheinschiffahrt-Aktiengesellschaft"
+            ],
+            "receiver_persons": [
+                "Basler Personenschiffahrtsgesellschaft"
+            ]
+        }
+    },
+    "conversation_id": "251257a7-0513-4e6f-b53c-9d4fa42e578b",
+    "score": {
+        "send_date_tp": 0,
+        "send_date_fp": 1,
+        "send_date_fn": 1,
+        "sender_persons_tp": 0,
+        "sender_persons_fp": 1,
+        "sender_persons_fn": 2,
+        "receiver_persons_tp": 0,
+        "receiver_persons_fp": 1,
+        "receiver_persons_fn": 0,
+        "field_scores": {
+            "send_date": {
+                "response": [
+                    "1934-05-10"
+                ],
+                "ground_truth": [
+                    "1928-05-10"
+                ],
+                "score": null,
+                "counts": {
+                    "send_date_tp": 0,
+                    "send_date_fp": 1,
+                    "send_date_fn": 1
+                }
+            },
+            "sender_persons": {
+                "response": [
+                    "Basler Rheinschiffahrt-Aktiengesellschaft"
+                ],
+                "ground_truth": [
+                    "Kachelhofer-Gerber, Frederick Charles",
+                    "Ritter-Dreier, Fritz"
+                ],
+                "score": null,
+                "counts": {
+                    "sender_persons_tp": 0,
+                    "sender_persons_fp": 1,
+                    "sender_persons_fn": 2
+                }
+            },
+            "receiver_persons": {
+                "response": [
+                    "Basler Personenschiffahrtsgesellschaft"
+                ],
+                "ground_truth": [],
+                "score": null,
+                "counts": {
+                    "receiver_persons_tp": 0,
+                    "receiver_persons_fp": 1,
+                    "receiver_persons_fn": 0
+                }
+            }
+        }
+    },
+    "raw_response": "{\"id\":\"gen-1789717354-DVKHmdtSTw7pNzRlclMw\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\n  \\\"metadata\\\": {\\n    \\\"send_date\\\": [\\n      \\\"1934-05-10\\\"\\n    ],\\n    \\\"letter_title\\\": [\\n      \\\"Abrechnung\\\"\\n    ],\\n    \\\"sender_persons\\\": [\\n      \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"\\n    ],\\n    \\\"receiver_persons\\\": [\\n      \\\"Basler Personenschiffahrtsgesellschaft\\\"\\n    ]\\n  }\\n}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"metadata\":{\"send_date\":[\"1934-05-10\"],\"letter_title\":[\"Abrechnung\"],\"sender_persons\":[\"Basler Rheinschiffahrt-Aktiengesellschaft\"],\"receiver_persons\":[\"Basler Personenschiffahrtsgesellschaft\"]}},\"reasoning\":\"The user wants me to extract metadata from a historical letter image and format it as JSON.\\nThe JSON schema requires:\\n- `metadata`: an object containing:\\n    - `send_date`: list of strings or null\\n    - `letter_title`: list of strings or null\\n    - `sender_persons`: list of strings or null\\n    - `receiver_persons`: list of strings or null\\n\\nLet's analyze the image:\\n- **Header (Sender):** Basler Rheinschiffahrt-Aktiengesellschaft, Marktgasse 5, Basel.\\n- **Date:** Basel, den 10. Mai /28 34 (The 28 is crossed out or typed, and 34 is written in red next to it. Wait, it looks like \\\"/28\\\" is typed and \\\"34\\\" is handwritten in red. So the date is 10. Mai 1934. Let's use 1934-05-10).\\n- **Receiver:** Basler Personenschiffahrtsgesellschaft, Basel.\\n- **Subject/Title:** Betr. Abrechnung (Regarding settlement/accounting).\\n- **Body:** \\\"Wir \u00fcbergeben Ihnen in der Beilage Aufstellung Ihres Guthabens bei uns im Totalbetrage von Fr. 42.414.40, welche Summe wir Ihnen mit beiliegendem Check No 379 a/ Basel begleichen mit der Bitte um gefl. Empfangsanzeige.\\\"\\n- **Sign-off:** Hochachtend, Basler Rheinschiffahrt - Aktiengesellschaft.\\n- **Signatures:** Two illegible signatures.\\n\\nMapping to keys:\\n- `letter_title`: \\\"Betr. Abrechnung\\\" -> [\\\"Abrechnung\\\"] or [\\\"Betr. Abrechnung\\\"]\\n- `send_date`: \\\"10. Mai 1934\\\" -> [\\\"1934-05-10\\\"]\\n- `sender_persons`: The sender is a company \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\". The prompt asks for \\\"Name(s) of the person(s)\\\". Since it's a company, I can put the company name or null. Usually, for company letters, the company name is used if no specific person is clear, or null. Let's use the company name as the sender entity, or maybe the signatures? The signatures are illegible. I will use the company name: \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\". Wait, the schema says \\\"sender_persons\\\". I'll put the company name.\\n- `receiver_persons`: \\\"Basler Personenschiffahrtsgesellschaft\\\"\\n\\nLet's refine:\\n- `letter_title`: [\\\"Abrechnung\\\"]\\n- `send_date`: [\\\"1934-05-10\\\"]\\n- `sender_persons`: [\\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"]\\n- `receiver_persons`: [\\\"Basler Personenschiffahrtsgesellschaft\\\"]\\n\\nWait, the prompt says \\\"Name(s) of the person(s)\\\". If it's an organization, it's often acceptable to list the organization.\\nLet's check the date again: \\\"Basel, den 10. Mai /28 34\\\". The 28 is typed, 34 is handwritten in red. So 1934.\\n\\nJSON structure:\\n```json\\n{\\n  \\\"metadata\\\": {\\n    \\\"send_date\\\": [\\\"1934-05-10\\\"],\\n    \\\"letter_title\\\": [\\\"Abrechnung\\\"],\\n    \\\"sender_persons\\\": [\\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"],\\n    \\\"receiver_persons\\\": [\\\"Basler Personenschiffahrtsgesellschaft\\\"]\\n  }\\n}\\n```\\nWait, the example shows:\\n```json\\n{\\n    \\\"letter_title\\\": [\\\"Petition for Environmental Protection\\\"],\\n    \\\"send_date\\\": [\\\"1993-03-12\\\"],\\n    \\\"sender_persons\\\": [\\\"Lisa Simpson\\\"],\\n    \\\"receiver_persons\\\": [\\\"Mayor Joe Quimby\\\", \\\"Seymour Skinner\\\"],\\n}\\n```\\nBut the schema requires a root object with a `metadata` key.\\n```json\\n{\\n  \\\"metadata\\\": {\\n    \\\"send_date\\\": [\\\"1934-05-10\\\"],\\n    \\\"letter_title\\\": [\\\"Abrechnung\\\"],\\n    \\\"sender_persons\\\": [\\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"],\\n    \\\"receiver_persons\\\": [\\\"Basler Personenschiffahrtsgesellschaft\\\"]\\n  }\\n}\\n```\\nLet's double check the title. \\\"Betr. Abrechnung\\\". \\\"Abrechnung\\\" is good.\\nSender: Basler Rheinschiffahrt-Aktiengesellschaft.\\nReceiver: Basler Personenschiffahrtsgesellschaft.\\nDate: 1934-05-10.\",\"reasoning_details\":[{\"type\":\"reasoning.text\",\"text\":\"The user wants me to extract metadata from a historical letter image and format it as JSON.\\nThe JSON schema requires:\\n- `metadata`: an object containing:\\n    - `send_date`: list of strings or null\\n    - `letter_title`: list of strings or null\\n    - `sender_persons`: list of strings or null\\n    - `receiver_persons`: list of strings or null\\n\\nLet's analyze the image:\\n- **Header (Sender):** Basler Rheinschiffahrt-Aktiengesellschaft, Marktgasse 5, Basel.\\n- **Date:** Basel, den 10. Mai /28 34 (The 28 is crossed out or typed, and 34 is written in red next to it. Wait, it looks like \\\"/28\\\" is typed and \\\"34\\\" is handwritten in red. So the date is 10. Mai 1934. Let's use 1934-05-10).\\n- **Receiver:** Basler Personenschiffahrtsgesellschaft, Basel.\\n- **Subject/Title:** Betr. Abrechnung (Regarding settlement/accounting).\\n- **Body:** \\\"Wir \u00fcbergeben Ihnen in der Beilage Aufstellung Ihres Guthabens bei uns im Totalbetrage von Fr. 42.414.40, welche Summe wir Ihnen mit beiliegendem Check No 379 a/ Basel begleichen mit der Bitte um gefl. Empfangsanzeige.\\\"\\n- **Sign-off:** Hochachtend, Basler Rheinschiffahrt - Aktiengesellschaft.\\n- **Signatures:** Two illegible signatures.\\n\\nMapping to keys:\\n- `letter_title`: \\\"Betr. Abrechnung\\\" -> [\\\"Abrechnung\\\"] or [\\\"Betr. Abrechnung\\\"]\\n- `send_date`: \\\"10. Mai 1934\\\" -> [\\\"1934-05-10\\\"]\\n- `sender_persons`: The sender is a company \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\". The prompt asks for \\\"Name(s) of the person(s)\\\". Since it's a company, I can put the company name or null. Usually, for company letters, the company name is used if no specific person is clear, or null. Let's use the company name as the sender entity, or maybe the signatures? The signatures are illegible. I will use the company name: \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\". Wait, the schema says \\\"sender_persons\\\". I'll put the company name.\\n- `receiver_persons`: \\\"Basler Personenschiffahrtsgesellschaft\\\"\\n\\nLet's refine:\\n- `letter_title`: [\\\"Abrechnung\\\"]\\n- `send_date`: [\\\"1934-05-10\\\"]\\n- `sender_persons`: [\\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"]\\n- `receiver_persons`: [\\\"Basler Personenschiffahrtsgesellschaft\\\"]\\n\\nWait, the prompt says \\\"Name(s) of the person(s)\\\". If it's an organization, it's often acceptable to list the organization.\\nLet's check the date again: \\\"Basel, den 10. Mai /28 34\\\". The 28 is typed, 34 is handwritten in red. So 1934.\\n\\nJSON structure:\\n```json\\n{\\n  \\\"metadata\\\": {\\n    \\\"send_date\\\": [\\\"1934-05-10\\\"],\\n    \\\"letter_title\\\": [\\\"Abrechnung\\\"],\\n    \\\"sender_persons\\\": [\\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"],\\n    \\\"receiver_persons\\\": [\\\"Basler Personenschiffahrtsgesellschaft\\\"]\\n  }\\n}\\n```\\nWait, the example shows:\\n```json\\n{\\n    \\\"letter_title\\\": [\\\"Petition for Environmental Protection\\\"],\\n    \\\"send_date\\\": [\\\"1993-03-12\\\"],\\n    \\\"sender_persons\\\": [\\\"Lisa Simpson\\\"],\\n    \\\"receiver_persons\\\": [\\\"Mayor Joe Quimby\\\", \\\"Seymour Skinner\\\"],\\n}\\n```\\nBut the schema requires a root object with a `metadata` key.\\n```json\\n{\\n  \\\"metadata\\\": {\\n    \\\"send_date\\\": [\\\"1934-05-10\\\"],\\n    \\\"letter_title\\\": [\\\"Abrechnung\\\"],\\n    \\\"sender_persons\\\": [\\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"],\\n    \\\"receiver_persons\\\": [\\\"Basler Personenschiffahrtsgesellschaft\\\"]\\n  }\\n}\\n```\\nLet's double check the title. \\\"Betr. Abrechnung\\\". \\\"Abrechnung\\\" is good.\\nSender: Basler Rheinschiffahrt-Aktiengesellschaft.\\nReceiver: Basler Personenschiffahrtsgesellschaft.\\nDate: 1934-05-10.\",\"format\":\"unknown\",\"index\":0}]},\"native_finish_reason\":\"stop\"}],\"created\":1789717354,\"model\":\"qwen/qwen3.7-plus\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":null,\"usage\":{\"completion_tokens\":1147,\"prompt_tokens\":3127,\"total_tokens\":4274,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":0,\"reasoning_tokens\":1041,\"rejected_prediction_tokens\":null,\"image_tokens\":0},\"prompt_tokens_details\":{\"audio_tokens\":0,\"cached_tokens\":0,\"cache_write_tokens\":0,\"video_tokens\":0},\"cost\":0.0024688,\"is_byok\":false,\"cost_details\":{\"upstream_inference_cost\":0.0024688,\"upstream_inference_prompt_cost\":0.00100064,\"upstream_inference_completions_cost\":0.00146816}},\"provider\":\"Alibaba\"}"
+}

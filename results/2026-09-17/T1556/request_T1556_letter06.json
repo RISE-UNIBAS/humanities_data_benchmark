@@ -1,0 +1,76 @@
+{
+    "text": "{\"metadata\":{\"send_date\":[\"1926-03-23\"],\"letter_title\":null,\"sender_persons\":null,\"receiver_persons\":[\"Basler Rheinschiffahrt-Aktiengesellschaft\"]}}",
+    "model": "thinkingmachines/Inkling",
+    "provider": "huggingface",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 2254,
+        "output_tokens": 1001,
+        "total_tokens": 3255
+    },
+    "duration": 12.205159425735474,
+    "timestamp": "2026-09-17T11:36:35.014982",
+    "parsed": {
+        "metadata": {
+            "send_date": [
+                "1926-03-23"
+            ],
+            "letter_title": null,
+            "sender_persons": null,
+            "receiver_persons": [
+                "Basler Rheinschiffahrt-Aktiengesellschaft"
+            ]
+        }
+    },
+    "conversation_id": "d9d571e5-0c47-4682-9462-129642293fc2",
+    "score": {
+        "send_date_tp": 0,
+        "send_date_fp": 1,
+        "send_date_fn": 1,
+        "sender_persons_tp": 0,
+        "sender_persons_fp": 0,
+        "sender_persons_fn": 0,
+        "receiver_persons_tp": 0,
+        "receiver_persons_fp": 1,
+        "receiver_persons_fn": 0,
+        "field_scores": {
+            "send_date": {
+                "response": [
+                    "1926-03-23"
+                ],
+                "ground_truth": [
+                    "1926-03-29"
+                ],
+                "score": null,
+                "counts": {
+                    "send_date_tp": 0,
+                    "send_date_fp": 1,
+                    "send_date_fn": 1
+                }
+            },
+            "sender_persons": {
+                "response": [],
+                "ground_truth": [],
+                "score": null,
+                "counts": {
+                    "sender_persons_tp": 0,
+                    "sender_persons_fp": 0,
+                    "sender_persons_fn": 0
+                }
+            },
+            "receiver_persons": {
+                "response": [
+                    "Basler Rheinschiffahrt-Aktiengesellschaft"
+                ],
+                "ground_truth": [],
+                "score": null,
+                "counts": {
+                    "receiver_persons_tp": 0,
+                    "receiver_persons_fp": 1,
+                    "receiver_persons_fn": 0
+                }
+            }
+        }
+    },
+    "raw_response": "{\"id\":\"p1dAS43-6z2FuN-a3c720534d093bd1\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\n  \\\"metadata\\\": {\\n    \\\"send_date\\\": [\\\"1926-03-23\\\"],\\n    \\\"letter_title\\\": null,\\n    \\\"sender_persons\\\": null,\\n    \\\"receiver_persons\\\": [\\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"]\\n  }\\n}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"metadata\":{\"send_date\":[\"1926-03-23\"],\"letter_title\":null,\"sender_persons\":null,\"receiver_persons\":[\"Basler Rheinschiffahrt-Aktiengesellschaft\"]}},\"reasoning\":\"We need parse image of letter. Need extract letter_title, sender_persons, send_date, receiver_persons. Let's analyze visible text.\\n\\nImage shows typed letter in German. Top right \\\"6\\\" maybe page number. Date line: \\\"Basel, den 23.M\u00e4rz 1926.\\\" So send_date 1926-03-23.\\n\\nAddressee:\\n\\\"Basler Rheinschiffahrt-Aktiengesellschaft\\nMarktgasse 5,III\\nBasel.\\\"\\n\\nThen \\\"Basel.\\\" maybe salutation? Actually \\\"B a s e l .\\\" centered? Then body starts \\\"Zur\u00fcckkommend auf Ihre beiden Schreiben vom 16.Februar und 4.M\u00e4rz...\\\"\\n\\nNeed letter title? Maybe none explicit. Could be null? But maybe there is title? The letter might not have a title. So letter_title null? Or maybe \\\"Zur\u00fcckkommend...\\\" no. We'll set null.\\n\\nSender persons: Not explicitly signed? At bottom \\\"Hochachtungsvoll\\\" then maybe signature missing? Let's inspect image: bottom right has \\\"Hochachtungsvoll\\\" but no visible name below? Might be cut off? Actually image shows only up to \\\"Hochachtungsvoll\\\" with no signature visible. So sender unknown -> null? But maybe sender is implied by letterhead? No letterhead visible except address of receiver. So sender_persons null.\\n\\nReceiver persons: \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\" is organization, not person. The prompt asks Name(s) of person(s) who received. Might be organization? But key says receiver_persons, likely can include organization? Example had Mayor and Skinner (persons). Here addressed to company. Maybe we should list the company? Or null if not persons? Let's think. The letter is addressed to Basler Rheinschiffahrt-Aktiengesellschaft. That is the receiver. Even though not a person, it's the recipient entity. But key name \\\"receiver_persons\\\" might still accept it? However instructions say \\\"Name(s) of the person(s) who received the letter.\\\" If it's a company, not a person. But often in these extraction tasks they want the addressee as listed. Let's include \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\". Maybe also location? No.\\n\\nCheck for sender signature: Maybe at very bottom cut off? The image ends with \\\"Hochachtungsvoll\\\" near bottom center-right. There might be a signature below that's outside frame? But we only have what's visible. So sender null.\\n\\nLetter title: Maybe none. Set null.\\n\\nThus JSON:\\n{\\n\\\"letter_title\\\": [null]? Wait instructions: values stored as list, even if single value. If information not included, set value for corresponding key to \\\"null\\\". Does that mean the list contains null? Or the value is null not in list? Example shows lists with strings. For missing, probably [\\\"null\\\"]? Actually they said \\\"set the value for the corresponding key to 'null'\\\". That could mean the JSON value is null, not a list containing null. But they also said \\\"where the values corresponding to each key should be stored as a list, even if there is only a single value for a key\\\". So likely always a list. If missing, maybe [null]? Or null? Let's examine consistency: They want list for values. If missing, maybe list with null inside? Or just null breaking list rule? Usually in these prompts they say set value to \\\"null\\\" meaning the list element? Hmm.\\n\\nLet's recall similar prompts: \\\"If a piece of information is not included in the letter, set the value for the corresponding key to 'null'.\\\" Given they said values should be stored as a list, I think they want e.g., \\\"letter_title\\\": null? But that conflicts with list. However they might allow null as the value of the key instead of list. But to be safe, maybe use [null]? Let's check mental examples: In other extraction tasks with same wording, they often output \\\"sender_persons\\\": null if missing, not in list. But they said \\\"stored as a list, even if there is only a single value\\\". That applies when there is a value. If no value, null.\\n\\nThus:\\nletter_title: null\\nsender_persons: null\\nsend_date: [\\\"1926-03-23\\\"]\\nreceiver_persons: [\\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"]\\n\\nBut wait there might be a specific person within company? The body mentions \\\"Ihre beiden Schreiben\\\" and \\\"Ich teile Ihnen mit...\\\" No named individual.\\n\\nThus output.\"},\"seed\":null}],\"created\":1789637784,\"model\":\"thinkingmachines/Inkling\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":\"default\",\"usage\":{\"completion_tokens\":1001,\"prompt_tokens\":2254,\"total_tokens\":3255,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":null,\"reasoning_tokens\":938,\"rejected_prediction_tokens\":null},\"prompt_tokens_details\":{\"audio_tokens\":null,\"cached_tokens\":0}},\"prompt\":[]}"
+}

@@ -1,0 +1,87 @@
+{
+    "text": "{\"metadata\":{\"send_date\":[\"1926-03-26\"],\"letter_title\":null,\"sender_persons\":[\"W. W. Mann\"],\"receiver_persons\":[\"Christ\"]}}",
+    "model": "qwen/qwen3.7-plus",
+    "provider": "openrouter",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 3127,
+        "output_tokens": 1192,
+        "total_tokens": 4319,
+        "input_cost_usd": 0.0010006400000000001,
+        "output_cost_usd": 0.00152576,
+        "estimated_cost_usd": 0.0025264
+    },
+    "duration": 25.120956420898438,
+    "timestamp": "2026-09-18T09:40:58.383325",
+    "parsed": {
+        "metadata": {
+            "send_date": [
+                "1926-03-26"
+            ],
+            "letter_title": null,
+            "sender_persons": [
+                "W. W. Mann"
+            ],
+            "receiver_persons": [
+                "Christ"
+            ]
+        }
+    },
+    "conversation_id": "67172483-3930-492e-b58d-100cc41f7ae5",
+    "score": {
+        "send_date_tp": 1,
+        "send_date_fp": 0,
+        "send_date_fn": 0,
+        "sender_persons_tp": 0,
+        "sender_persons_fp": 1,
+        "sender_persons_fn": 1,
+        "receiver_persons_tp": 1,
+        "receiver_persons_fp": 0,
+        "receiver_persons_fn": 0,
+        "field_scores": {
+            "send_date": {
+                "response": [
+                    "1926-03-26"
+                ],
+                "ground_truth": [
+                    "1926-03-26"
+                ],
+                "score": null,
+                "counts": {
+                    "send_date_tp": 1,
+                    "send_date_fp": 0,
+                    "send_date_fn": 0
+                }
+            },
+            "sender_persons": {
+                "response": [
+                    "W. W. Mann"
+                ],
+                "ground_truth": [
+                    "Krasting, Wilhelm"
+                ],
+                "score": null,
+                "counts": {
+                    "sender_persons_tp": 0,
+                    "sender_persons_fp": 1,
+                    "sender_persons_fn": 1
+                }
+            },
+            "receiver_persons": {
+                "response": [
+                    "Christ-Wackernagel, Paul"
+                ],
+                "ground_truth": [
+                    "Christ-Wackernagel, Paul"
+                ],
+                "score": null,
+                "counts": {
+                    "receiver_persons_tp": 1,
+                    "receiver_persons_fp": 0,
+                    "receiver_persons_fn": 0
+                }
+            }
+        }
+    },
+    "raw_response": "{\"id\":\"gen-1789717234-AzIISRSOvNucJPI9fLyt\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\n  \\\"metadata\\\": {\\n    \\\"send_date\\\": [\\n      \\\"1926-03-26\\\"\\n    ],\\n    \\\"letter_title\\\": null,\\n    \\\"sender_persons\\\": [\\n      \\\"W. W. Mann\\\"\\n    ],\\n    \\\"receiver_persons\\\": [\\n      \\\"Christ\\\"\\n    ]\\n  }\\n}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"metadata\":{\"send_date\":[\"1926-03-26\"],\"letter_title\":null,\"sender_persons\":[\"W. W. Mann\"],\"receiver_persons\":[\"Christ\"]}},\"reasoning\":\"The user wants me to extract metadata from a historical letter image and return it as a JSON object.\\nThe JSON schema requires:\\n- `metadata`: an object containing:\\n    - `send_date`: list of strings or null\\n    - `letter_title`: list of strings or null\\n    - `sender_persons`: list of strings or null\\n    - `receiver_persons`: list of strings or null\\n\\nLet's analyze the image:\\n- Header: BASEL 1926 INTERNATIONALE AUSSTELLUNG F\u00dcR BINNENSCHIFFAHRT UND WASSERKRAFTNUTZUNG\\n- Date: Basel, den 26. M\u00e4rz 1926. -> send_date: [\\\"1926-03-26\\\"]\\n- Receiver: Herrn Christ c/o. Paravicini, Christ & Co. -> receiver_persons: [\\\"Christ\\\"]\\n- Body text: Discusses Basler Rheinschiffahrts-Aktiengesellschaft and ships \\\"Rheinfelden\\\" and \\\"Vogel-Gryf\\\".\\n- Signature: Looks like \\\"W. W. Mann\\\" or similar. Let's look closely at the signature. \\\"W. W. Mann\\\" or \\\"W. W. ma...\\\". Actually, it looks like \\\"W. W. Mann\\\" or \\\"W. W. Mar...\\\". Wait, \\\"W. W. Mann\\\" is a known figure? Or maybe \\\"W. W. Mar...\\\". Let's just transcribe what it looks like: \\\"W. W. Mann\\\" or \\\"W. W. Mar...\\\". Let's look at the initials \\\"K/L.\\\" at the top left.\\n- Sender: The letter is on letterhead of \\\"Internationale Ausstellung...\\\". The signature is handwritten. It looks like \\\"W. W. Mann\\\" or \\\"W. W. Mar...\\\". Let's guess \\\"W. W. Mann\\\" or just put the signature as is. Actually, looking closely at the signature, it looks like \\\"W. W. Mann\\\". Wait, could it be \\\"W. W. Mar... \\\"? Let's use \\\"W. W. Mann\\\" or just \\\"W. W. Mann\\\". Let's look at the name \\\"Christ\\\".\\n- Letter title: There is no explicit title, but the letterhead says \\\"Internationale Ausstellung f\u00fcr Binnenschiffahrt und Wasserkraftnutzung\\\". Usually, if there's no specific title, it might be null or the subject. Let's set letter_title to null or maybe the letterhead? The prompt says \\\"Title of the letter\\\". There is no subject line. So `letter_title`: null. Wait, the example shows `letter_title` as a list. If not included, set to \\\"null\\\" (but in JSON schema it's null or list of strings). The schema says `anyOf: [array of strings, null]`. So `null`.\\n\\nLet's refine the extracted values:\\n- `send_date`: [\\\"1926-03-26\\\"]\\n- `letter_title`: null (no specific title, just letterhead)\\n- `sender_persons`: [\\\"W. W. Mann\\\"] (signature looks like W. W. Mann)\\n- `receiver_persons`: [\\\"Christ\\\"] (Herrn Christ)\\n\\nWait, the signature looks like \\\"W. W. Mann\\\" or \\\"W. W. Mar...\\\". Let's look at \\\"W. W. Mann\\\". Actually, it looks like \\\"W. W. Mann\\\". Let's use \\\"W. W. Mann\\\".\\nWait, the receiver is \\\"Herrn Christ\\\". So \\\"Christ\\\".\\n\\nLet's check the schema again.\\n```json\\n{\\n  \\\"metadata\\\": {\\n    \\\"send_date\\\": [\\\"1926-03-26\\\"],\\n    \\\"letter_title\\\": null,\\n    \\\"sender_persons\\\": [\\\"W. W. Mann\\\"],\\n    \\\"receiver_persons\\\": [\\\"Christ\\\"]\\n  }\\n}\\n```\\nWait, the signature could be \\\"W. W. Mar...\\\". Let's look at the letters. \\\"W. W. Mann\\\" is plausible. Or \\\"W. W. Mar...\\\". Let's just use \\\"W. W. Mann\\\".\\nActually, looking very closely at the signature: \\\"W. W. Mann\\\" or \\\"W. W. Mar...\\\". It looks like \\\"W. W. Mann\\\".\\nLet's consider \\\"Christ\\\" as the receiver. \\\"Herrn Christ\\\".\\n\\nLet's double check the date: \\\"26. M\u00e4rz 1926\\\" -> \\\"1926-03-26\\\".\\n\\nFinal JSON structure:\\n```json\\n{\\n  \\\"metadata\\\": {\\n    \\\"send_date\\\": [\\\"1926-03-26\\\"],\\n    \\\"letter_title\\\": null,\\n    \\\"sender_persons\\\": [\\\"W. W. Mann\\\"],\\n    \\\"receiver_persons\\\": [\\\"Christ\\\"]\\n  }\\n}\\n```\\nWait, the schema requires `letter_title` to be an array of strings or null.\\n`sender_persons` array of strings or null.\\n`receiver_persons` array of strings or null.\\n`send_date` array of strings or null.\\n\\nI will formulate the JSON now.\",\"reasoning_details\":[{\"type\":\"reasoning.text\",\"text\":\"The user wants me to extract metadata from a historical letter image and return it as a JSON object.\\nThe JSON schema requires:\\n- `metadata`: an object containing:\\n    - `send_date`: list of strings or null\\n    - `letter_title`: list of strings or null\\n    - `sender_persons`: list of strings or null\\n    - `receiver_persons`: list of strings or null\\n\\nLet's analyze the image:\\n- Header: BASEL 1926 INTERNATIONALE AUSSTELLUNG F\u00dcR BINNENSCHIFFAHRT UND WASSERKRAFTNUTZUNG\\n- Date: Basel, den 26. M\u00e4rz 1926. -> send_date: [\\\"1926-03-26\\\"]\\n- Receiver: Herrn Christ c/o. Paravicini, Christ & Co. -> receiver_persons: [\\\"Christ\\\"]\\n- Body text: Discusses Basler Rheinschiffahrts-Aktiengesellschaft and ships \\\"Rheinfelden\\\" and \\\"Vogel-Gryf\\\".\\n- Signature: Looks like \\\"W. W. Mann\\\" or similar. Let's look closely at the signature. \\\"W. W. Mann\\\" or \\\"W. W. ma...\\\". Actually, it looks like \\\"W. W. Mann\\\" or \\\"W. W. Mar...\\\". Wait, \\\"W. W. Mann\\\" is a known figure? Or maybe \\\"W. W. Mar...\\\". Let's just transcribe what it looks like: \\\"W. W. Mann\\\" or \\\"W. W. Mar...\\\". Let's look at the initials \\\"K/L.\\\" at the top left.\\n- Sender: The letter is on letterhead of \\\"Internationale Ausstellung...\\\". The signature is handwritten. It looks like \\\"W. W. Mann\\\" or \\\"W. W. Mar...\\\". Let's guess \\\"W. W. Mann\\\" or just put the signature as is. Actually, looking closely at the signature, it looks like \\\"W. W. Mann\\\". Wait, could it be \\\"W. W. Mar... \\\"? Let's use \\\"W. W. Mann\\\" or just \\\"W. W. Mann\\\". Let's look at the name \\\"Christ\\\".\\n- Letter title: There is no explicit title, but the letterhead says \\\"Internationale Ausstellung f\u00fcr Binnenschiffahrt und Wasserkraftnutzung\\\". Usually, if there's no specific title, it might be null or the subject. Let's set letter_title to null or maybe the letterhead? The prompt says \\\"Title of the letter\\\". There is no subject line. So `letter_title`: null. Wait, the example shows `letter_title` as a list. If not included, set to \\\"null\\\" (but in JSON schema it's null or list of strings). The schema says `anyOf: [array of strings, null]`. So `null`.\\n\\nLet's refine the extracted values:\\n- `send_date`: [\\\"1926-03-26\\\"]\\n- `letter_title`: null (no specific title, just letterhead)\\n- `sender_persons`: [\\\"W. W. Mann\\\"] (signature looks like W. W. Mann)\\n- `receiver_persons`: [\\\"Christ\\\"] (Herrn Christ)\\n\\nWait, the signature looks like \\\"W. W. Mann\\\" or \\\"W. W. Mar...\\\". Let's look at \\\"W. W. Mann\\\". Actually, it looks like \\\"W. W. Mann\\\". Let's use \\\"W. W. Mann\\\".\\nWait, the receiver is \\\"Herrn Christ\\\". So \\\"Christ\\\".\\n\\nLet's check the schema again.\\n```json\\n{\\n  \\\"metadata\\\": {\\n    \\\"send_date\\\": [\\\"1926-03-26\\\"],\\n    \\\"letter_title\\\": null,\\n    \\\"sender_persons\\\": [\\\"W. W. Mann\\\"],\\n    \\\"receiver_persons\\\": [\\\"Christ\\\"]\\n  }\\n}\\n```\\nWait, the signature could be \\\"W. W. Mar...\\\". Let's look at the letters. \\\"W. W. Mann\\\" is plausible. Or \\\"W. W. Mar...\\\". Let's just use \\\"W. W. Mann\\\".\\nActually, looking very closely at the signature: \\\"W. W. Mann\\\" or \\\"W. W. Mar...\\\". It looks like \\\"W. W. Mann\\\".\\nLet's consider \\\"Christ\\\" as the receiver. \\\"Herrn Christ\\\".\\n\\nLet's double check the date: \\\"26. M\u00e4rz 1926\\\" -> \\\"1926-03-26\\\".\\n\\nFinal JSON structure:\\n```json\\n{\\n  \\\"metadata\\\": {\\n    \\\"send_date\\\": [\\\"1926-03-26\\\"],\\n    \\\"letter_title\\\": null,\\n    \\\"sender_persons\\\": [\\\"W. W. Mann\\\"],\\n    \\\"receiver_persons\\\": [\\\"Christ\\\"]\\n  }\\n}\\n```\\nWait, the schema requires `letter_title` to be an array of strings or null.\\n`sender_persons` array of strings or null.\\n`receiver_persons` array of strings or null.\\n`send_date` array of strings or null.\\n\\nI will formulate the JSON now.\",\"format\":\"unknown\",\"index\":0}]},\"native_finish_reason\":\"stop\"}],\"created\":1789717234,\"model\":\"qwen/qwen3.7-plus\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":null,\"usage\":{\"completion_tokens\":1192,\"prompt_tokens\":3127,\"total_tokens\":4319,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":0,\"reasoning_tokens\":1108,\"rejected_prediction_tokens\":null,\"image_tokens\":0},\"prompt_tokens_details\":{\"audio_tokens\":0,\"cached_tokens\":0,\"cache_write_tokens\":0,\"video_tokens\":0},\"cost\":0.0025264,\"is_byok\":false,\"cost_details\":{\"upstream_inference_cost\":0.0025264,\"upstream_inference_prompt_cost\":0.00100064,\"upstream_inference_completions_cost\":0.00152576}},\"provider\":\"Alibaba\"}"
+}

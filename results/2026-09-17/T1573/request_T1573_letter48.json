@@ -1,0 +1,84 @@
+{
+    "text": "{\"metadata\":{\"send_date\":[\"1932-09-07\"],\"letter_title\":[\"Betr.Personenschiffahrt\"],\"sender_persons\":null,\"receiver_persons\":[\"Dr.M.Vischer-von Planta\"]}}",
+    "model": "meta-models/Muse-Glimmer-30B",
+    "provider": "huggingface",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 11886,
+        "output_tokens": 936,
+        "total_tokens": 12822,
+        "cached_tokens": 320
+    },
+    "duration": 30.120763540267944,
+    "timestamp": "2026-09-18T22:16:49.465402",
+    "parsed": {
+        "metadata": {
+            "send_date": [
+                "1932-09-07"
+            ],
+            "letter_title": [
+                "Betr.Personenschiffahrt"
+            ],
+            "sender_persons": null,
+            "receiver_persons": [
+                "Dr.M.Vischer-von Planta"
+            ]
+        }
+    },
+    "conversation_id": "5cbb8232-7bc0-4584-9b1c-3fef8526e59e",
+    "score": {
+        "send_date_tp": 1,
+        "send_date_fp": 0,
+        "send_date_fn": 0,
+        "sender_persons_tp": 0,
+        "sender_persons_fp": 0,
+        "sender_persons_fn": 2,
+        "receiver_persons_tp": 0,
+        "receiver_persons_fp": 1,
+        "receiver_persons_fn": 1,
+        "field_scores": {
+            "send_date": {
+                "response": [
+                    "1932-09-07"
+                ],
+                "ground_truth": [
+                    "1932-09-07"
+                ],
+                "score": null,
+                "counts": {
+                    "send_date_tp": 1,
+                    "send_date_fp": 0,
+                    "send_date_fn": 0
+                }
+            },
+            "sender_persons": {
+                "response": [],
+                "ground_truth": [
+                    "Groschupf-Jaeger, Louis",
+                    "Ritter-Dreier, Fritz"
+                ],
+                "score": null,
+                "counts": {
+                    "sender_persons_tp": 0,
+                    "sender_persons_fp": 0,
+                    "sender_persons_fn": 2
+                }
+            },
+            "receiver_persons": {
+                "response": [
+                    "Dr.M.Vischer-von Planta"
+                ],
+                "ground_truth": [
+                    "Vischer-von Planta, Max"
+                ],
+                "score": null,
+                "counts": {
+                    "receiver_persons_tp": 0,
+                    "receiver_persons_fp": 1,
+                    "receiver_persons_fn": 1
+                }
+            }
+        }
+    },
+    "raw_response": "{\"id\":\"p1pC3oq-7ArivV-a3d307200c542c58\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\n  \\\"metadata\\\": {\\n    \\\"send_date\\\": [\\\"1932-09-07\\\"],\\n    \\\"letter_title\\\": [\\\"Betr.Personenschiffahrt\\\"],\\n    \\\"sender_persons\\\": null,\\n    \\\"receiver_persons\\\": [\\\"Dr.M.Vischer-von Planta\\\"]\\n  }\\n}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"metadata\":{\"send_date\":[\"1932-09-07\"],\"letter_title\":[\"Betr.Personenschiffahrt\"],\"sender_persons\":null,\"receiver_persons\":[\"Dr.M.Vischer-von Planta\"]}},\"reasoning\":\"IDENTITY and PURPOSE:\\n\\nWe need extract values of keys from letter and return JSON where values corresponding to each key should be stored as a list, even if single value.\\n\\nKeys:\\n- letter_title: Title of the letter.\\n- sender_persons: Name(s) of the person(s) who wrote the letter.\\n- send_date: The exact or approximate date the letter was written.\\n- receiver_persons: Name(s) of the person(s) who received the letter.\\n\\nTake deep breath... Do not use OCR. Use ISO format YYYY-MM-DD for dates. If info not included, set value to \\\"null\\\". Do not return anything except JSON.\\n\\nWe have images. First page: Basler Rheinschiffahrt-Aktiengesellschaft Basel. STRASSBURG - KEHL... DIREKTION. Basel, den 7.Sept.1932. Herr Dr.M.Vischer-von Planta Basel Albangraben 8. Betr.Personenschiffahrt.\\n\\nLetter title? Possibly \\\"Betr.Personenschiffahrt\\\" or maybe the header? Title of the letter. Could be \\\"Betr. Personenschiffahrt\\\". Might be subject line. Could also be the company name? Usually letter title is subject. So \\\"Betr.Personenschiffahrt\\\" or \\\"Betr. Personenschiffahrt\\\". The image shows \\\"Betr.Personenschiffahrt\\\" underlined.\\n\\nSender persons: Name(s) of person(s) who wrote the letter. The letter is from Basler Rheinschiffahrt Aktiengesellschaft, Direktion. Signatures at bottom: two signatures, but names not printed? The signature line says \\\"Basler Rheinschiffahrt Aktiengesellschaft\\\" with two signatures. No names legible. Might be null? Could be the company as sender? Sender persons is persons. Might be null because no person name given. The letter is from the Direktion, but no individual names. Signatures are illegible. So sender_persons maybe null. Or could be the company? But key asks for person(s). So null.\\n\\nSend date: Basel, den 7.Sept.1932 => 1932-09-07.\\n\\nReceiver persons: Herr Dr.M.Vischer-von Planta. Address Basel Albangraben 8. So receiver is Dr. M. Vischer-von Planta. Possibly \\\"Dr. M. Vischer-von Planta\\\". Might include Herr. Name is Dr.M.Vischer-von Planta. So list with that.\\n\\nLetter title: maybe \\\"Betr.Personenschiffahrt\\\". Could also be no title. Might be null? The example shows title. I think subject is title.\\n\\nThus JSON:\\n\\n{\\n  \\\"letter_title\\\": [\\\"Betr.Personenschiffahrt\\\"],\\n  \\\"sender_persons\\\": null? Or []? Instruction: values corresponding to each key should be stored as a list, even if there is only a single value for a key. If a piece of information is not included in the letter, set the value for the corresponding key to \\\"null\\\". So sender_persons not included? The sender is a company, not a person. So null.\\n\\nBut maybe sender persons could be inferred? The signatures are illegible. Could be null.\\n\\nReceiver_persons: [\\\"Dr. M. Vischer-von Planta\\\"] or [\\\"Herr Dr.M.Vischer-von Planta\\\"]. Use as appears. Probably \\\"Dr.M.Vischer-von Planta\\\". Keep as in image.\\n\\nSend_date: [\\\"1932-09-07\\\"]\\n\\nLetter_title: [\\\"Betr.Personenschiffahrt\\\"]\\n\\nReturn JSON only.\\n\\nMake sure format correct.\\n\\nPotential nuance: letter_title might be \\\"Basler Rheinschiffahrt-Aktiengesellschaft Basel\\\"? No.\\n\\nThe header is company name. Subject is Betr. Personenschiffahrt.\\n\\nI'll output:\\n\\n{\\n  \\\"letter_title\\\": [\\\"Betr.Personenschiffahrt\\\"],\\n  \\\"sender_persons\\\": null,\\n  \\\"send_date\\\": [\\\"1932-09-07\\\"],\\n  \\\"receiver_persons\\\": [\\\"Dr.M.Vischer-von Planta\\\"]\\n}\\n\\nIf they want list for sender_persons null? Could be null not list. Instruction says set value to \\\"null\\\". So value is null, not list.\\n\\nMake sure JSON valid.\\n\\nReturn only JSON.\\n\\nLet's output.\"},\"token_ids\":null,\"routed_experts\":null,\"seed\":null}],\"created\":1789762580,\"model\":\"meta-models/Muse-Glimmer-30B\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":\"vllm-0.1.dev19059+g66826a22d-tp2-46311a71\",\"usage\":{\"completion_tokens\":936,\"prompt_tokens\":11886,\"total_tokens\":12822,\"completion_tokens_details\":null,\"prompt_tokens_details\":{\"audio_tokens\":null,\"cached_tokens\":320,\"created_cache_tokens\":11552,\"multimodal_tokens\":{\"image\":11550}}},\"prompt_token_ids\":null,\"prompt_text\":null,\"kv_transfer_params\":null,\"ec_transfer_params\":null,\"metrics\":null,\"prompt\":[]}"
+}

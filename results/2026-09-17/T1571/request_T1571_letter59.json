@@ -1,0 +1,73 @@
+{
+    "text": "{\"metadata\":{\"send_date\":[\"1932-12-16\"],\"letter_title\":null,\"sender_persons\":null,\"receiver_persons\":null}}",
+    "model": "meta-models/Muse-Glimmer-30B",
+    "provider": "huggingface",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 4186,
+        "output_tokens": 1198,
+        "total_tokens": 5384,
+        "cached_tokens": 320
+    },
+    "duration": 35.04223084449768,
+    "timestamp": "2026-09-18T21:45:28.033812",
+    "parsed": {
+        "metadata": {
+            "send_date": [
+                "1932-12-16"
+            ],
+            "letter_title": null,
+            "sender_persons": null,
+            "receiver_persons": null
+        }
+    },
+    "conversation_id": "78917e21-8e91-49c4-a758-f8b90886cd28",
+    "score": {
+        "send_date_tp": 1,
+        "send_date_fp": 0,
+        "send_date_fn": 0,
+        "sender_persons_tp": 0,
+        "sender_persons_fp": 0,
+        "sender_persons_fn": 0,
+        "receiver_persons_tp": 0,
+        "receiver_persons_fp": 0,
+        "receiver_persons_fn": 0,
+        "field_scores": {
+            "send_date": {
+                "response": [
+                    "1932-12-16"
+                ],
+                "ground_truth": [
+                    "1932-12-16"
+                ],
+                "score": null,
+                "counts": {
+                    "send_date_tp": 1,
+                    "send_date_fp": 0,
+                    "send_date_fn": 0
+                }
+            },
+            "sender_persons": {
+                "response": [],
+                "ground_truth": [],
+                "score": null,
+                "counts": {
+                    "sender_persons_tp": 0,
+                    "sender_persons_fp": 0,
+                    "sender_persons_fn": 0
+                }
+            },
+            "receiver_persons": {
+                "response": [],
+                "ground_truth": [],
+                "score": null,
+                "counts": {
+                    "receiver_persons_tp": 0,
+                    "receiver_persons_fp": 0,
+                    "receiver_persons_fn": 0
+                }
+            }
+        }
+    },
+    "raw_response": "{\"id\":\"p1p2Nrk-7ArivV-a3d2d90e2df92c24\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\n  \\\"metadata\\\": {\\n    \\\"send_date\\\": [\\\"1932-12-16\\\"]\\n  ,\\n  \\\"letter_title\\\": null,\\n  \\\"sender_persons\\\": null,\\n  \\\"receiver_persons\\\": null\\n} \\n\\n  }\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"metadata\":{\"send_date\":[\"1932-12-16\"],\"letter_title\":null,\"sender_persons\":null,\"receiver_persons\":null}},\"reasoning\":\"IDENTITY and PURPOSE:\\n\\nExtract values of keys from letter and return JSON where values corresponding to each key should be stored as a list, even if single value.\\n\\nKeys:\\n- letter_title: Title of the letter.\\n- sender_persons: Name(s) of the person(s) who wrote the letter.\\n- send_date: exact or approximate date letter was written.\\n- receiver_persons: Name(s) of the person(s) who received the letter.\\n\\nTake deep breath... Do not use OCR. Use ISO format YYYY-MM-DD for dates. If info not included, set value to \\\"null\\\". Do not return anything except JSON.\\n\\nFrom image: top \\\"BASLER PERSONENSCHIFFAHRTSGESELLSCHAFT\\\". Then \\\"Basel, den 16. Dezember 1932.\\\" So send_date = 1932-12-16.\\n\\n\\\"An die Basler Rheinschiffahrt A.-G.- Marktstrasse 5 Basel\\\". So receiver is Basler Rheinschiffahrt A.-G.-? Receiver persons: name(s) of person(s) who received. The letter is addressed to a company. Might be no person name. Could be null? Or receiver_persons is the company? The key says Name(s) of the person(s) who received the letter. The addressee is a company, not a person. So maybe null. Or maybe we list the company as receiver? The example shows Mayor Joe Quimby, Seymour Skinner. So persons. Might be null.\\n\\nSender persons: The letter is from Basler Personenschiffahrtsgesellschaft. At bottom faint \\\"Basler Personenschiffahrtsgesellschaft Der Pr\u00e4sident: Der Gesch\u00e4ftsf\u00fchr...\\\" No names visible. So sender persons unknown. Could be null. Or sender is the company? The key asks name(s) of person(s) who wrote. No person name visible. So null.\\n\\nLetter_title: Title of the letter. Maybe none. Could be null. Or maybe the header \\\"BASLER PERSONENSCHIFFAHRTSGESELLSCHAFT\\\" is title? Or no title. Might be null.\\n\\nThe instruction: If a piece of information is not included in the letter, set value for corresponding key to \\\"null\\\". So letter_title not present. Sender persons not present (only company). Receiver persons not present (company). So null.\\n\\nBut maybe sender_persons could be \\\"Basler Personenschiffahrtsgesellschaft\\\"? That's an organization not a person. Hmm.\\n\\nMaybe the letter_title is the header? Could be \\\"BASLER PERSONENSCHIFFAHRTSGESELLSCHAFT\\\". Might be considered title.\\n\\nAlternative interpretation: sender_persons could be the company as sender entity. But key says persons.\\n\\nI think safest is to set sender_persons to null, receiver_persons to null, letter_title to null.\\n\\nBut maybe letter_title could be empty? Could be null.\\n\\nCheck image: top left \\\"BASLER PERSONENSCHIFFAHRTSGESELLSCHAFT\\\". That's letterhead. Not title.\\n\\nNo subject line.\\n\\nThus JSON:\\n\\n{\\n  \\\"letter_title\\\": null,\\n  \\\"sender_persons\\\": null,\\n  \\\"send_date\\\": [\\\"1932-12-16\\\"],\\n  \\\"receiver_persons\\\": null\\n}\\n\\nBut values should be stored as a list, even if single value. For null, is it [\\\"null\\\"]? The example shows values as list. If info not included, set value for corresponding key to \\\"null\\\". Does that mean the value is the string \\\"null\\\" or JSON null? Probably JSON null, not a list containing null? The instruction: set the value for the corresponding key to \\\"null\\\". And values corresponding to each key should be stored as a list, even if there is only a single value for a key. Conflict. If we set to null, it's not a list. Maybe they want [\\\"null\\\"]? Or null as value not list.\\n\\nInterpretation: The value should be a list. If info missing, set the value to \\\"null\\\". Could mean the list contains the string \\\"null\\\"? Or the value is null (not a list). Hmm.\\n\\nExample shows all values as lists. So maybe for missing info, we should have [\\\"null\\\"]? Or just null? The instruction says set the value for the corresponding key to \\\"null\\\". Could be the literal null in JSON. But also says values should be stored as a list. Might be contradictory.\\n\\nMaybe they want the key's value to be a list, and if missing, the list contains null? Or the value is null.\\n\\nI think typical approach: if missing, set to null (not a list). But instruction says values should be stored as a list, even if single value. Might be a general rule, but null is exception.\\n\\nI'll output with null for missing, and list for date.\\n\\nCould also set letter_title to [\\\"BASLER PERSONENSCHIFFAHRTSGESELLSCHAFT\\\"]? Might be considered title.\\n\\nLet's search memory: Basler Personenschiffahrtsgesellschaft letter 16 Dec 1932 to Basler Rheinschiffahrt. Might be known. Sender persons maybe President and Gesch\u00e4ftsf\u00fchrer but names not printed? The faint text at bottom maybe has names but illegible. So null.\\n\\nReceiver persons: maybe no person.\\n\\nI'll output:\\n\\n{\\n  \\\"letter_title\\\": null,\\n  \\\"sender_persons\\\": null,\\n  \\\"send_date\\\": [\\\"1932-12-16\\\"],\\n  \\\"receiver_persons\\\": null\\n}\\n\\nIf they wanted list for null, could be [\\\"null\\\"]. Might be safer to use null.\\n\\nI'll deliver that.\\n\\n\"},\"token_ids\":null,\"routed_experts\":null,\"seed\":null}],\"created\":1789760693,\"model\":\"meta-models/Muse-Glimmer-30B\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":\"vllm-0.1.dev19059+g66826a22d-tp2-46311a71\",\"usage\":{\"completion_tokens\":1198,\"prompt_tokens\":4186,\"total_tokens\":5384,\"completion_tokens_details\":null,\"prompt_tokens_details\":{\"audio_tokens\":null,\"cached_tokens\":320,\"created_cache_tokens\":3856,\"multimodal_tokens\":{\"image\":3850}}},\"prompt_token_ids\":null,\"prompt_text\":null,\"kv_transfer_params\":null,\"ec_transfer_params\":null,\"metrics\":null,\"prompt\":[]}"
+}

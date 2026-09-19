@@ -1,0 +1,83 @@
+{
+    "text": "{\"metadata\":{\"send_date\":[\"1926-07-13\"],\"letter_title\":[\"Betr. \\\"ALBATROS\\\"\"],\"sender_persons\":[\"Basler Personenschiffahrtsgesellschaft\"],\"receiver_persons\":[\"Elektrizit\u00e4tswerk, Basel\"]}}",
+    "model": "qwen/qwen3.6-plus",
+    "provider": "openrouter",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 3106,
+        "output_tokens": 1125,
+        "total_tokens": 4231,
+        "estimated_cost_usd": 0.0032032
+    },
+    "duration": 53.8766975402832,
+    "timestamp": "2026-09-17T06:45:47.526709",
+    "parsed": {
+        "metadata": {
+            "send_date": [
+                "1926-07-13"
+            ],
+            "letter_title": [
+                "Betr. \"ALBATROS\""
+            ],
+            "sender_persons": [
+                "Basler Personenschiffahrtsgesellschaft"
+            ],
+            "receiver_persons": [
+                "Elektrizit\u00e4tswerk, Basel"
+            ]
+        }
+    },
+    "conversation_id": "c5034ae5-7a96-4b80-b131-4662b8df5b19",
+    "score": {
+        "send_date_tp": 1,
+        "send_date_fp": 0,
+        "send_date_fn": 0,
+        "sender_persons_tp": 0,
+        "sender_persons_fp": 1,
+        "sender_persons_fn": 0,
+        "receiver_persons_tp": 0,
+        "receiver_persons_fp": 1,
+        "receiver_persons_fn": 0,
+        "field_scores": {
+            "send_date": {
+                "response": [
+                    "1926-07-13"
+                ],
+                "ground_truth": [
+                    "1926-07-13"
+                ],
+                "score": null,
+                "counts": {
+                    "send_date_tp": 1,
+                    "send_date_fp": 0,
+                    "send_date_fn": 0
+                }
+            },
+            "sender_persons": {
+                "response": [
+                    "Basler Personenschiffahrtsgesellschaft"
+                ],
+                "ground_truth": [],
+                "score": null,
+                "counts": {
+                    "sender_persons_tp": 0,
+                    "sender_persons_fp": 1,
+                    "sender_persons_fn": 0
+                }
+            },
+            "receiver_persons": {
+                "response": [
+                    "Elektrizit\u00e4tswerk, Basel"
+                ],
+                "ground_truth": [],
+                "score": null,
+                "counts": {
+                    "receiver_persons_tp": 0,
+                    "receiver_persons_fp": 1,
+                    "receiver_persons_fn": 0
+                }
+            }
+        }
+    },
+    "raw_response": "{\"id\":\"gen-1789620325-OjCAbh1ySKe6jkw7WU9V\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\n    \\\"metadata\\\": {\\n        \\\"send_date\\\": [\\n            \\\"1926-07-13\\\"\\n        ],\\n        \\\"letter_title\\\": [\\n            \\\"Betr. \\\\\\\"ALBATROS\\\\\\\"\\\"\\n        ],\\n        \\\"sender_persons\\\": [\\n            \\\"Basler Personenschiffahrtsgesellschaft\\\"\\n        ],\\n        \\\"receiver_persons\\\": [\\n            \\\"Elektrizit\u00e4tswerk, Basel\\\"\\n        ]\\n    }\\n}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"reasoning\":\"The user wants me to extract specific metadata from a historical letter image and return it as a JSON object.\\n\\n**1. Analyze the Image:**\\n*   **Date:** Top right corner says \\\"13. Juli 1926.\\\"\\n*   **Recipient:** \\\"An das Elektrizit\u00e4tswerk, Basel.\\\" (To the Electricity Works, Basel).\\n*   **Subject/Title:** \\\"Betr. 'ALBATROS'.\\\" (Regarding 'ALBATROS'). This acts as the title or subject line.\\n*   **Sender:** Bottom right signature block says \\\"Basler Personenschiffahrtsgesellschaft\\\" (Basel Passenger Shipping Company). There are titles \\\"Der Pr\u00e4sident\\\" (The President) and \\\"Der Gesch\u00e4ftsf\u00fchrer\\\" (The Managing Director), but the names are illegible or just initials (\\\"ch\\\" looks like a signature). The entity sending it is clearly the company.\\n*   **Content:** The letter discusses test drives (\\\"Probefahrten\\\") of a ship named \\\"ALBATROS\\\" under the supervision of \\\"Herrn H. Wylemann\\\". It mentions the engine failed 4 times. It demands the machine runs flawlessly.\\n\\n**2. Extract Values for Keys:**\\n\\n*   **letter_title:** The subject line is \\\"Betr. 'ALBATROS'\\\". I can extract \\\"ALBATROS\\\" or the whole line. The prompt asks for a title. \\\"Betr. 'ALBATROS'\\\" is the closest thing to a title. Let's use \\\"Betr. 'ALBATROS'\\\". Or perhaps just \\\"ALBATROS\\\". Let's look at the example. The example used \\\"Petition for Environmental Protection\\\". Here, the subject is the ship name. I will use \\\"Betr. 'ALBATROS'\\\".\\n*   **sender_persons:** The letter is signed by \\\"Basler Personenschiffahrtsgesellschaft\\\". This is an organization, not a specific person, though it lists titles \\\"Der Pr\u00e4sident\\\" and \\\"Der Gesch\u00e4ftsf\u00fchrer\\\". The prompt asks for \\\"sender_persons\\\". Since it's a company letterhead/signature, I should probably list the company name or \\\"null\\\" if strictly persons are required. However, usually, in these tasks, the entity signing is the sender. Let's look at the signature. It looks like \\\"ch\\\" or similar initials. The text says \\\"zeichnen wir\\\" (we sign). So the sender is the company. I will put \\\"Basler Personenschiffahrtsgesellschaft\\\". Wait, the key is `sender_persons`. If it's a company, is it a person? In historical document extraction, organizations are often treated as the sender entity. I will include the company name.\\n*   **send_date:** \\\"13. Juli 1926\\\". ISO format: \\\"1926-07-13\\\".\\n*   **receiver_persons:** \\\"An das Elektrizit\u00e4tswerk, Basel.\\\" This is an organization (Electricity Works of Basel). Again, the key is `receiver_persons`. I will include the organization name as the receiver.\\n\\n**3. Refine Extraction:**\\n\\n*   **letter_title:** \\\"Betr. 'ALBATROS'\\\" seems appropriate.\\n*   **sender_persons:** \\\"Basler Personenschiffahrtsgesellschaft\\\".\\n*   **send_date:** \\\"1926-07-13\\\".\\n*   **receiver_persons:** \\\"Elektrizit\u00e4tswerk, Basel\\\".\\n\\n**4. Final JSON Construction:**\\n*   `letter_title`: [\\\"Betr. \\\\\\\"ALBATROS\\\\\\\"\\\"]\\n*   `send_date`: [\\\"1926-07-13\\\"]\\n*   `sender_persons`: [\\\"Basler Personenschiffahrtsgesellschaft\\\"]\\n*   `receiver_persons`: [\\\"Elektrizit\u00e4tswerk, Basel\\\"]\\n\\nLet's double check the sender. The text says \\\"zeichnen wir\\\" (we sign) and then lists the company name. So the company is the sender.\\nLet's double check the receiver. \\\"An das Elektrizit\u00e4tswerk, Basel.\\\"\\n\\nOne detail: The prompt asks for \\\"sender_persons\\\" and \\\"receiver_persons\\\". If the document is from an organization to an organization, should I put the organization name? Yes, usually that's the expected behavior unless a specific human name is available. Here, no specific human name is clearly the sender (just initials) or receiver (it's addressed to the department).\\n\\nLet's look at the text again.\\n\\\"An das Elektrizit\u00e4tswerk, Basel.\\\" -> Receiver.\\n\\\"Basler Personenschiffahrtsgesellschaft\\\" -> Sender.\\n\\nThe date is clearly 13. Juli 1926.\\n\\nThe title/subject is \\\"Betr. 'ALBATROS'\\\".\\n\\nLet's format the JSON.\",\"reasoning_details\":[{\"type\":\"reasoning.text\",\"text\":\"The user wants me to extract specific metadata from a historical letter image and return it as a JSON object.\\n\\n**1. Analyze the Image:**\\n*   **Date:** Top right corner says \\\"13. Juli 1926.\\\"\\n*   **Recipient:** \\\"An das Elektrizit\u00e4tswerk, Basel.\\\" (To the Electricity Works, Basel).\\n*   **Subject/Title:** \\\"Betr. 'ALBATROS'.\\\" (Regarding 'ALBATROS'). This acts as the title or subject line.\\n*   **Sender:** Bottom right signature block says \\\"Basler Personenschiffahrtsgesellschaft\\\" (Basel Passenger Shipping Company). There are titles \\\"Der Pr\u00e4sident\\\" (The President) and \\\"Der Gesch\u00e4ftsf\u00fchrer\\\" (The Managing Director), but the names are illegible or just initials (\\\"ch\\\" looks like a signature). The entity sending it is clearly the company.\\n*   **Content:** The letter discusses test drives (\\\"Probefahrten\\\") of a ship named \\\"ALBATROS\\\" under the supervision of \\\"Herrn H. Wylemann\\\". It mentions the engine failed 4 times. It demands the machine runs flawlessly.\\n\\n**2. Extract Values for Keys:**\\n\\n*   **letter_title:** The subject line is \\\"Betr. 'ALBATROS'\\\". I can extract \\\"ALBATROS\\\" or the whole line. The prompt asks for a title. \\\"Betr. 'ALBATROS'\\\" is the closest thing to a title. Let's use \\\"Betr. 'ALBATROS'\\\". Or perhaps just \\\"ALBATROS\\\". Let's look at the example. The example used \\\"Petition for Environmental Protection\\\". Here, the subject is the ship name. I will use \\\"Betr. 'ALBATROS'\\\".\\n*   **sender_persons:** The letter is signed by \\\"Basler Personenschiffahrtsgesellschaft\\\". This is an organization, not a specific person, though it lists titles \\\"Der Pr\u00e4sident\\\" and \\\"Der Gesch\u00e4ftsf\u00fchrer\\\". The prompt asks for \\\"sender_persons\\\". Since it's a company letterhead/signature, I should probably list the company name or \\\"null\\\" if strictly persons are required. However, usually, in these tasks, the entity signing is the sender. Let's look at the signature. It looks like \\\"ch\\\" or similar initials. The text says \\\"zeichnen wir\\\" (we sign). So the sender is the company. I will put \\\"Basler Personenschiffahrtsgesellschaft\\\". Wait, the key is `sender_persons`. If it's a company, is it a person? In historical document extraction, organizations are often treated as the sender entity. I will include the company name.\\n*   **send_date:** \\\"13. Juli 1926\\\". ISO format: \\\"1926-07-13\\\".\\n*   **receiver_persons:** \\\"An das Elektrizit\u00e4tswerk, Basel.\\\" This is an organization (Electricity Works of Basel). Again, the key is `receiver_persons`. I will include the organization name as the receiver.\\n\\n**3. Refine Extraction:**\\n\\n*   **letter_title:** \\\"Betr. 'ALBATROS'\\\" seems appropriate.\\n*   **sender_persons:** \\\"Basler Personenschiffahrtsgesellschaft\\\".\\n*   **send_date:** \\\"1926-07-13\\\".\\n*   **receiver_persons:** \\\"Elektrizit\u00e4tswerk, Basel\\\".\\n\\n**4. Final JSON Construction:**\\n*   `letter_title`: [\\\"Betr. \\\\\\\"ALBATROS\\\\\\\"\\\"]\\n*   `send_date`: [\\\"1926-07-13\\\"]\\n*   `sender_persons`: [\\\"Basler Personenschiffahrtsgesellschaft\\\"]\\n*   `receiver_persons`: [\\\"Elektrizit\u00e4tswerk, Basel\\\"]\\n\\nLet's double check the sender. The text says \\\"zeichnen wir\\\" (we sign) and then lists the company name. So the company is the sender.\\nLet's double check the receiver. \\\"An das Elektrizit\u00e4tswerk, Basel.\\\"\\n\\nOne detail: The prompt asks for \\\"sender_persons\\\" and \\\"receiver_persons\\\". If the document is from an organization to an organization, should I put the organization name? Yes, usually that's the expected behavior unless a specific human name is available. Here, no specific human name is clearly the sender (just initials) or receiver (it's addressed to the department).\\n\\nLet's look at the text again.\\n\\\"An das Elektrizit\u00e4tswerk, Basel.\\\" -> Receiver.\\n\\\"Basler Personenschiffahrtsgesellschaft\\\" -> Sender.\\n\\nThe date is clearly 13. Juli 1926.\\n\\nThe title/subject is \\\"Betr. 'ALBATROS'\\\".\\n\\nLet's format the JSON.\",\"format\":\"unknown\",\"index\":0}]},\"native_finish_reason\":\"stop\"}],\"created\":1789620325,\"model\":\"qwen/qwen3.6-plus\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":null,\"usage\":{\"completion_tokens\":1125,\"prompt_tokens\":3106,\"total_tokens\":4231,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":0,\"reasoning_tokens\":1019,\"rejected_prediction_tokens\":null,\"image_tokens\":0},\"prompt_tokens_details\":{\"audio_tokens\":0,\"cached_tokens\":0,\"cache_write_tokens\":0,\"video_tokens\":0},\"cost\":0.0032032,\"is_byok\":false,\"cost_details\":{\"upstream_inference_cost\":0.0032032,\"upstream_inference_prompt_cost\":0.00100945,\"upstream_inference_completions_cost\":0.00219375}},\"provider\":\"Alibaba\"}"
+}

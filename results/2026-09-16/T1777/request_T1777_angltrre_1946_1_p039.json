@@ -1,0 +1,103 @@
+{
+    "text": "{\"advertisements\":[{\"box\":[190.0,165.0,2290.0,1645.0]},{\"box\":[190.0,1715.0,1195.0,3300.0]},{\"box\":[1290.0,1715.0,2290.0,3300.0]}]}",
+    "model": "deepseek-flash",
+    "provider": "deepseek",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 1288,
+        "output_tokens": 3636,
+        "total_tokens": 4924,
+        "input_cost_usd": 0.0003864,
+        "output_cost_usd": 0.004363199999999999,
+        "estimated_cost_usd": 0.0047496
+    },
+    "duration": 21.258822917938232,
+    "timestamp": "2026-09-16T17:17:14.120653",
+    "parsed": {
+        "advertisements": [
+            {
+                "box": [
+                    190,
+                    165,
+                    2290,
+                    1645
+                ]
+            },
+            {
+                "box": [
+                    190,
+                    1715,
+                    1195,
+                    3300
+                ]
+            },
+            {
+                "box": [
+                    1290,
+                    1715,
+                    2290,
+                    3300
+                ]
+            }
+        ]
+    },
+    "conversation_id": "9987cf4a-f90a-4498-a3a9-e0b5c964fe93",
+    "score": {
+        "field_scores": {
+            "box 1": {
+                "response": [
+                    190,
+                    1715,
+                    1195,
+                    3300
+                ],
+                "ground_truth": [
+                    179,
+                    1739,
+                    1195,
+                    3226
+                ],
+                "score": 0.929
+            },
+            "box 0": {
+                "response": [
+                    190,
+                    165,
+                    2290,
+                    1645
+                ],
+                "ground_truth": [
+                    182,
+                    204,
+                    2244,
+                    1697
+                ],
+                "score": 0.917
+            },
+            "box 2": {
+                "response": [
+                    1290,
+                    1715,
+                    2290,
+                    3300
+                ],
+                "ground_truth": [
+                    1237,
+                    1739,
+                    2246,
+                    3225
+                ],
+                "score": 0.854
+            }
+        },
+        "f1": 1.0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "mean_iou": 0.9,
+        "true_positives": 3,
+        "false_positives": 0,
+        "false_negatives": 0,
+        "iou_threshold": 0.5
+    },
+    "raw_response": "{\"id\":\"b5800b81-e6f8-45f4-ae4d-5ea300b78ff9\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\\"advertisements\\\":[{\\\"box\\\":[190,165,2290,1645]},{\\\"box\\\":[190,1715,1195,3300]},{\\\"box\\\":[1290,1715,2290,3300]}]}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"reasoning_content\":\"We need answer only JSON. Need extract all advertisements and bounding boxes. Need identify ads on page. Page has three main advertisement panels? Top large Goth & Co. Ltd. ad, bottom left Ls. Vial & Cie machine tools ad, bottom right E. Borel & Co watch ad. Need provide bounding boxes in original pixel coordinates 2479x3508. Need estimate from image.\\n\\nNeed be careful. The page: size 2479x3508. Image shows page with outer black border maybe. We need bounding boxes for advertisements. Likely three ads. Need include coordinates.\\n\\nLet's inspect image mentally. Top ad panel: border rectangle containing Goth logo etc. It spans from left margin to right margin, top from about y=100? Bottom around y=1630? Need estimate.\\n\\nLet's use image dimensions as displayed in prompt? It says original size 2479 x 3508. The image is portrait, maybe displayed 2479x3508. We can estimate relative coordinates. Need pixel boxes.\\n\\nVisible page: There is black border around entire page? The page content has beige background. Top ad rectangle has border from x ~ 190? to x ~ 2300? Let's estimate.\\n\\nLet's open visual in mind. The page image has a black border all around? The actual scanned page maybe includes black background at edges. The outer black border maybe thin at top/bottom/left/right. But advertisements are inside. Need maybe exclude black border.\\n\\nLet's identify ad rectangles:\\n1. Top ad: Large rectangle from x ~ 190 to 2300? y ~ 145 to 1640? Actually top panel starts with white border? It contains Goth logo and text. The rectangle border visible: top around y=180? bottom around y=1650? Let's derive from proportions.\\n\\nImage is 2479 wide x 3508 high. The top ad panel width maybe ~ 85% page width, so x0~190, x1~2280. Height ~ 43% page height? y0~160, y1~1640. Bottom ads:\\nBottom-left ad: rectangle from x~190 to x~1200? y~1710 to y~3320? Bottom-right ad: x~1280 to x~2290? y~1710 to y~3320? But there is small number \\\"37\\\" at bottom right. The bottom ads likely separate.\\n\\nNeed produce JSON with advertisements list. The schema only requires box, but can include only boxes. Should we identify each ad separately? likely.\\n\\nLet's examine actual page layout more precisely. Top ad: The border encompasses from near left margin to near right margin. Coordinates: x0 maybe 186, y0 maybe 145, x1 2296, y1 1648. But perhaps includes black top edge? Let's estimate.\\n\\nBottom left ad: It has border rectangle starting around x=190, y=1716? ends x=1200?, y=3305? The bottom right ad: x=1284?, y=1716?, x=2288?, y=3305? There is a small \\\"37\\\" outside at bottom right, not part of ad. Top ad maybe includes border with text \\\"GOTH & CO. LTD., BASLE\\\" etc. Bottom left ad includes machine image and text \\\"Ls. Vial & Cie., Machine-Tools, Geneva\\\". Bottom right ad includes illustration with watch and \\\"E. BOREL, CO NEUCHATEL\\\".\\n\\nNeed return no extra text. Valid JSON. We can include bounding boxes as arrays [x0,y0,x1,y1]. Need maybe all numbers integers. Use 0-2479, 0-3508.\\n\\nLet's inspect likely coordinates from image if displayed. Maybe we can approximate using proportions.\\n\\nLet's measure relative to image dimensions mentally. Top of top ad: y ~ 175? Actually the black border at top maybe 0-40? Then beige page begins. Top ad border top line maybe y = 160? Let's look: The top ad starts after some blank margin. The top border is thin black line. It is at about 5% down? 5% of 3508 = 175. Top border line y0 ~ 175. Bottom border of top ad: about 46% down? 0.46*3508=1614. Maybe y1 ~ 1635. Width: left border x0 ~ 7.5% of width = 186; right border x1 ~ 92.5% = 2293. This rectangle encompasses text. So box top: [186, 160, 2298, 1638]. But maybe top ad starts at y=140 and ends 1645.\\n\\nBottom ads: Top border of both bottom ads maybe y ~ 1710. Bottom border of both bottom ads maybe y ~ 3295. Left ad: x0 ~ 186, x1 ~ 1190? Right ad: x0 ~ 1285, x1 ~ 2295? There is gap between bottom ads around 90 px. Bottom left ad width ~1000, bottom right width ~1010. Bottom left ad's border maybe x0=188, x1=1190. Bottom right x0=1285, x1=2292. Height same y0=1715, y1=3300. But bottom right image extends to maybe y=3300; bottom left text ends y=3170? Actually ad border includes bottom line at y~3300. There is page number 37 at y~3370? outside bottom right.\\n\\nLet's verify from image: Bottom left ad has machine image top, then text, then contact. The border bottom maybe after \\\"Tel. 2 64 20\\\" with some margin. The \\\"37\\\" is below right ad border near bottom right. Bottom right ad has illustration with \\\"E. BOREL, CO NEUCHATEL\\\" at bottom; border bottom around y=3310? It looks aligned with bottom left ad border? Yes both bottom ad rectangles bottom align.\\n\\nNeed maybe include the entire top ad as one bounding box. It contains logo and text; yes.\\n\\nPotential issue: The top ad may be two parts? The top rectangle contains \\\"GOTH & CO. LTD., BASLE\\\" address etc. That's one advertisement. Bottom left is one, bottom right is one. So three advertisements.\\n\\nNeed ensure JSON schema exactly: {\\\"advertisements\\\": [{\\\"box\\\": [x0,y0,x1,y1]}]}. No other text. We should not include commas? JSON valid.\\n\\nNeed decide coordinates more accurately. We can possibly estimate using image pixel coordinates from OCR? But no. Let's calculate from proportions with image maybe 2479 x 3508. Use visual landmarks.\\n\\nLet's model page:\\n- Top ad border: x0 about 7.5% = 186, x1 about 92.5% = 2293, y0 about 4.5% = 158, y1 about 46.5% = 1631. But let's see if top border line at y about 165? The text \\\"INTERNATIONAL...\\\" is around y=975? Actually no, maybe top ad border top is y=170. Bottom line y=1630. Height 1460. Width 2107. Use [187, 169, 2290, 1635].\\n\\n- Bottom left ad: likely x0=187, y0=1715, x1=1190, y1=3300? Let's look at proportions: Bottom left ad left edge aligns with top ad left edge maybe x=187. Right edge maybe around 48% width = 1190. Top edge y=1715 (49% of height? 0.488*3508=1712). Bottom edge y=3308 (94.3%? 0.943*3508=3307). So [187, 1712, 1190, 3308].\\n- Bottom right ad: left edge x=1290 (52% width = 1289), right edge x=2292, top y=1712, bottom y=3308. But right ad is wider? Actually left edge maybe 1285, right edge 2293. [1285, 1712, 2293, 3308]. Gap between bottom ads ~ 95. Both bottom ads maybe equal widths? Top right of bottom right ad maybe x=2292; top left x=1288. Width ~1004, similar to left width 1003. Good.\\n\\nBut need check if bottom left ad includes \\\"Ls. Vial & Cie., Machine-Tools, Geneva\\\" and maybe \\\"11, rue du Mont-Blanc\\\" and \\\"Tel. 2 64 20\\\". Yes.\\n\\nBottom right ad includes \\\"E. BOREL, CO NEUCHATEL\\\" but also illustration. Yes.\\n\\nMaybe there is a fourth ad? The page has \\\"37\\\" not ad. No.\\n\\nShould we include the top ad maybe has logo \\\"Goth\\\" with \\\"1870\\\". It's advertisement. Yes.\\n\\nNeed maybe ensure no other small ads? The page appears single page with three ads. Let's return with those.\\n\\nBut let's be more rigorous. We can attempt to use pixel coordinates from image if we mentally zoom. Let's examine the image dimensions 2479x3508. Top ad border: Let's estimate exact x0 by relative to black left border? The outer black border maybe x=0-40? Actually page image has black around edges: top black bar height ~80? left black bar width ~80? Right black bar width ~80? Bottom black bar height ~80? But the beige page includes white? The ad rectangles are inset from beige page. Hard.\\n\\nThe image is likely a scan of a magazine page with black background at edges? The top ad border top line maybe not at y=169? Let's see: The first element \\\"Goth\\\" logo is in top ad. The top ad rectangle top line is around 4.5%? Top ad bottom line is around 46.5%. If y0=169, y1=1635, height 1466. The top ad logo center y maybe 400? Hmm.\\n\\nLet's derive from text positions:\\n- Top ad: The text \\\"GOTH & CO. LTD., BASLE\\\" around vertical center of top ad? In image, it is around 32% down page? 0.32*3508=1122. The ad bottom maybe 46.5%=1631, top maybe 4.5%=158, so center y=894, text at 1122 is lower? Actually from image, \\\"GOTH & CO. LTD.\\\" is roughly middle of ad? Maybe top ad center y ~ 900? Wait \\\"Goth logo\\\" at top, text below; \\\"GOTH & CO.\\\" maybe around y=1100, so center maybe 850? Not sure.\\n\\nMaybe top ad y0=160, y1=1670? Let's not overstate.\\n\\nLet's perhaps use normalized coordinates? No, schema says pixel coordinates. But we can approximate.\\n\\nMaybe the task expects detection of ad bounding boxes from a page. Could be from an annotated dataset? The page might have exact bounding boxes from pub? We need infer.\\n\\nLet's see if there are 3 bounding boxes:\\n- Ad 1: top large box\\n- Ad 2: bottom left\\n- Ad 3: bottom right\\nCould also include small section at bottom right \\\"37\\\" not ad. No.\\n\\nLet's consider if top ad bounding box should include the large outer border or just the text? It likely should include the full ad panel with outer border. So x0=~186, y0=~158, x1=~2290, y1=~1640. But if using exact, maybe [191, 159, 2286, 1640]? Let's choose reasonable.\\n\\nCould there be a thin border around entire page? The ads have border lines. Top ad border line might be x0=190, y0=155, x1=2295, y1=1645. Bottom left border line x0=190, y0=1718, x1=1192, y1=3304; bottom right x0=1286, y0=1718, x1=2290, y1=3304.\\n\\nNeed maybe use integer numbers. We'll output maybe:\\n{\\\"advertisements\\\":[{\\\"box\\\":[188,162,2295,1648]},{\\\"box\\\":[190,1716,1192,3305]},{\\\"box\\\":[1286,1716,2292,3305]}]}\\n\\nBut let's see if bottom right bottom y maybe 3300, left 3305. The black border? The page number \\\"37\\\" at y~3320? maybe bottom right ad border ends before page number. If top ad bottom y 1648, bottom ads top y1716 gap 68. Good.\\n\\nLet's verify bottom left x1: In image, bottom left ad right border is before gap; gap center x about 1235? The bottom left ad right edge maybe 1205? Let's measure: width of bottom left ad from left margin to gap; right border maybe at 48.5% of width = 1202. Bottom right left border maybe 52.2% = 1294. So [188,1716,1200,3302] and [1293,1716,2293,3302]. Let's use x1=1198 maybe.\\n\\nBut maybe the bottom left ad includes \\\"VICO 750\\\" and text; border from x0=190 to x1=1200. Bottom right x0=1288 to x1=2290. Good.\\n\\nNeed ensure JSON no trailing commas, valid.\\n\\nGiven instruction \\\"You MUST strictly adhere to the following schema to reply:\\n{\\\"type\\\": \\\"json_object\\\"}\\\". Actually they provided schema. Need respond with JSON object. The schema description includes $defs etc. Must match exact schema? We need output JSON with advertisements array. The schema has \\\"advertisements\\\" required. We'll do that.\\n\\nLet's consider if there are multiple ads in top panel? Maybe one large ad with a smaller \\\"Goth\\\" logo and text; yes.\\n\\nLet's see if bottom right ad contains \\\"E. BOREL, CO\\\" but not \\\"NEUCHATEL\\\"? It is one ad. Bottom-left maybe \\\"Ls. Vial & Cie.\\\" with machine-tools. Yes.\\n\\nPotential issue: Could the top ad be two advertisements: one for Goth & Co. and one for something else? No, same panel.\\n\\nNeed maybe include bounding boxes for advertisements only; not the whole page. Yes.\\n\\nLet's refine using actual image coordinates maybe. We can approximate from viewing. Let's calculate with proportions from image perhaps:\\n- Image height 3508. Top ad: top border at y=165? Let's look: The top ad outer border line at top maybe just below black top margin. Black top margin maybe 80 px? The first horizontal line of top ad rectangle begins around 4.7% = 165. Bottom line around 46.8% = 1642. Height ~1477. Top ad width: left border x=190, right border x=2290. Use [190,164,2292,1642].\\n- Bottom ads: top border y=1718 (49% height). Bottom border y=3300 (94% height). Left ad x=190, x1=1210? right ad x=1290, x1=2292. But if left ad x1=1210, right ad x0=1290, gap 80; okay. Height 1582. Use [190,1718,1210,3300] and [1290,1718,2292,3300].\\nMaybe left ad bottom right x1=1210, right ad x0=1290 (gap 80). Top ad x1=2292; bottom right x1=2292. Good.\\n\\nLet's see image: Bottom left ad right border seems less than half: maybe x=1190; bottom right left border maybe x=1285; gap 95. Okay.\\n\\nNeed maybe not include coordinates beyond 2479x3508. All within.\\n\\nLet's decide final:\\n[\\n  {\\\"box\\\": [190, 165, 2290, 1645]},\\n  {\\\"box\\\": [190, 1715, 1195, 3300]},\\n  {\\\"box\\\": [1290, 1715, 2290, 3300]}\\n]\\nBut if top ad bottom y=1645, bottom left top y=1715, gap 70. Good.\\nHowever, top ad might end at y=1638, bottom ads start 1712. Not critical.\\n\\nLet's ensure box arrays have numbers, not strings. Valid JSON.\\n\\nNeed only final JSON, no explanation. Use \\\"advertisements\\\": [ ... ].\\n\\nLet's produce.\"}}],\"created\":1789571815,\"model\":\"deepseek-flash\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":\"aeb56401ca74e127821c4f9126dcb669\",\"usage\":{\"completion_tokens\":3636,\"prompt_tokens\":1288,\"total_tokens\":4924,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":null,\"reasoning_tokens\":3587,\"rejected_prediction_tokens\":null},\"prompt_tokens_details\":{\"audio_tokens\":null,\"cached_tokens\":0},\"prompt_cache_hit_tokens\":0,\"prompt_cache_miss_tokens\":1288}}"
+}

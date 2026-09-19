@@ -1,0 +1,103 @@
+{
+    "text": "{\"advertisements\":[{\"box\":[680.0,170.0,1660.0,1630.0]},{\"box\":[180.0,1680.0,1180.0,3260.0]},{\"box\":[1230.0,1740.0,2200.0,3160.0]}]}",
+    "model": "deepseek-flash",
+    "provider": "deepseek",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 1288,
+        "output_tokens": 4390,
+        "total_tokens": 5678,
+        "input_cost_usd": 0.0003864,
+        "output_cost_usd": 0.005267999999999999,
+        "estimated_cost_usd": 0.0056543999999999995
+    },
+    "duration": 23.700076580047607,
+    "timestamp": "2026-09-16T17:17:16.602816",
+    "parsed": {
+        "advertisements": [
+            {
+                "box": [
+                    680,
+                    170,
+                    1660,
+                    1630
+                ]
+            },
+            {
+                "box": [
+                    180,
+                    1680,
+                    1180,
+                    3260
+                ]
+            },
+            {
+                "box": [
+                    1230,
+                    1740,
+                    2200,
+                    3160
+                ]
+            }
+        ]
+    },
+    "conversation_id": "9d4f9603-e211-4a7f-b612-f502a6059387",
+    "score": {
+        "field_scores": {
+            "box 2": {
+                "response": [
+                    680,
+                    170,
+                    1660,
+                    1630
+                ],
+                "ground_truth": [
+                    694,
+                    195,
+                    1680,
+                    1610
+                ],
+                "score": 0.937
+            },
+            "box 0": {
+                "response": [
+                    1230,
+                    1740,
+                    2200,
+                    3160
+                ],
+                "ground_truth": [
+                    1202,
+                    1721,
+                    2204,
+                    3190
+                ],
+                "score": 0.936
+            },
+            "box 1": {
+                "response": [
+                    180,
+                    1680,
+                    1180,
+                    3260
+                ],
+                "ground_truth": [
+                    175,
+                    1723,
+                    1169,
+                    3192
+                ],
+                "score": 0.915
+            }
+        },
+        "f1": 1.0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "mean_iou": 0.929,
+        "true_positives": 3,
+        "false_positives": 0,
+        "false_negatives": 0,
+        "iou_threshold": 0.5
+    },
+    "raw_response": "{\"id\":\"db699667-1160-4a73-822b-334e234d9db6\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\\"advertisements\\\":[{\\\"box\\\":[680,170,1660,1630]},{\\\"box\\\":[180,1680,1180,3260]},{\\\"box\\\":[1230,1740,2200,3160]}]}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"reasoning_content\":\"We need answer only JSON. Need extract all advertisements and bounding boxes. Need inspect image. Page 2479x3508. There are three ads? Top ad W. TRIBOLD watch, bottom left A. MURALT watch, bottom right OMYA Pl\u00fcss-Staufer chemicals. Need bounding boxes pixel coords. Need be careful include ad boundaries maybe just visual advertisement area. We need estimate coordinates.\\n\\nLet's identify. Full image dimensions: width 2479, height 3508. The displayed image likely scaled. Need infer coordinates.\\n\\nTop ad: W. TRIBOLD: area from around x=680? to 1680? y=180? to 1630? Wait top ad includes gate, watch, text. There is horizontal rule at y~1660? Let's map.\\n\\nLet's get proportional. The image dimensions given. In displayed image, top ad has text \\\"Well closed...\\\" at top, gate, watch, \\\"the good quality watch\\\", \\\"W.TRIEBOLD WATCH FACTORY - RHEINFELDEN - SWITZERLAND\\\". It occupies central top. Bounding box should include entire ad graphic, likely within x ~660? to 1660? y ~180? to 1600? Maybe.\\n\\nBottom left ad: A. MURALT: includes snowy mountain with pocket watch, text \\\"A. MURALT WATCH FACTORY OBERGERLAFINGEN ... Watches of all kinds ...\\\" with crest. Bounding box roughly x=180? to 1170? y=1700? to 3200? It is in lower left quadrant, separated by line from right ad. The left ad maybe extends from x=170? to 1190? y=1740? to 3270? Need.\\n\\nBottom right ad: OMYA Pl\u00fcss-Staufer: black rounded rectangle with OMYA logo, globe, chemicals text, Oftringen. Bounding box roughly x=1240? to 2190? y=1740? to 3170? Wait.\\n\\nNeed return valid JSON with advertisements array containing boxes. No OCR text. Could include all three.\\n\\nNeed ensure bounding boxes reflect original pixel coordinates. We need approximate. Let's analyze page layout more precisely.\\n\\nImage is likely scanned page 2479x3508. Aspect ratio ~0.707. Page content has thick black right/bottom edges, some rotation? The printed page area maybe from x=0 to 2300? but no need.\\n\\nWe need bounding boxes around ads. Let's use coordinate system original size. I need estimate from visual proportions.\\n\\nLet's denote width=W=2479, height=H=3508. The displayed image maybe has page content width ~2260? Actually image includes a black border on right and bottom edge? In scaled image, right side black strip at x~2300-2479? Page may be slightly skewed. For our boxes, relative to full image, ad top at y around 6%? \\\"Well closed...\\\" text top maybe y=0.06*3508=210. Bottom of top ad around y=0.46*3508=1614. Left x maybe 0.27*2479=669, right x maybe 0.665*2479=1648.\\n\\nLet's measure visually with percentages.\\n\\nTop ad:\\n- top of gate urn? The highest point of the ad's top maybe decorative finial top at y~180? The \\\"Well closed...\\\" text at y~200. Actually top left of ad maybe around x=685, y=180? Top right around x=1665, y=180. Bottom at y~1640 after bottom text.\\n- ad width maybe 980 px? If x0=680, x1=1660 = 980.\\n- y0=190, y1=1640 = 1450.\\n\\nLet's check if x0 relative: The ad centered? Page width around 2300? Center of ad ~1180? Text W.TRIEBOLD centered around x=1160. Page center? The two bottom ads each width ~1000. The right ad starts at x=1230? ends x=2180. Left ad x=180 to 1180. So top ad center ~1170, width ~1000; x0 ~670, x1 ~1670. That seems plausible.\\n\\nBottom left ad:\\n- top maybe y=1700? There is horizontal rule at y~1660? The ad begins below line at y~1700. Bottom maybe y=3250? The text \\\"A. MURALT ... 18\\\"\\\")\\\" ends around y=3220. The crest extends slightly higher. Bounding box maybe x=170 to x=1190. Page left margin maybe x=170? The vertical text on left edge at x=60? The ad left edge maybe x=160. The right edge maybe x=1195 (vertical line between columns? Actually no line? The left ad image ends at x=1185? The right ad begins at x=1235). So x0=170, x1=1180, y0=1730, y1=3260.\\n\\nBottom right ad:\\n- It is black rounded rectangle. top y=1760? bottom y=3180? left x=1230? right x=2200? The black area maybe extends to x=2190, y=3150. The ad content includes OMYA, globe, chemicals, Pl\u00fcss-Staufer, Oftringen. Bounding box likely the black rectangle: x0=1220? x1=2200? y0=1750? y1=3160? Or include small white space? Usually advertisement bounding box includes the ad area. The black rectangle has rounded corners; bounding box should enclose it. It appears from x~1230 to x~2190, y~1740 to y~3160. Need precise.\\n\\nMaybe we can measure from image: At top of right ad, there is border line of black rounded rectangle. Top left at x ~1240, y ~1770? Bottom at y ~3150. Left x ~1195? Wait right ad starts maybe at same y as left ad. Left ad top y ~1730; right ad top slightly lower? Actually black rectangle top at same horizontal line? In image, horizontal line at y~1660 then below, right ad black rounded rectangle top around y=1760? The bottom left ad has snowy image top around y=1690? There is no border. So right ad y0 ~1750. x0 maybe 1230. x1 maybe 2210. y1 maybe 3160.\\n\\nNeed maybe include page number? No, only advertisements. Could include bottom right \\\"35\\\" page number? Not an ad. Not include.\\n\\nLet's improve by estimating using actual pixel coordinates from image. Let's mentally scale: The full image has width 2479. On screen, maybe width 1000? Let's approximate using proportions.\\n\\nUse visible elements:\\nTop ad:\\n- The top horizontal line of the ad? There's no border. The gate image width perhaps from x=720 to 1620? The text \\\"W.TRIEBOLD\\\" centered around x=1170. \\\"Well closed...\\\" at x~1190? right aligned? At top right x~1660? The top ad's top maybe y=170. Let's estimate y top = 0.055*3508 = 193. Left x = 0.27*2479 = 669. Right x = 0.67*2479 = 1661. Bottom y = 0.458*3508 = 1607. Let's set [670, 180, 1665, 1615]. But need bottom includes \\\"WATCH FACTORY\\\" text. Bottom text y around 1580. Maybe y1=1620.\\n\\nBottom left ad:\\n- Top around y=0.49*3508=1719. Bottom y=0.93*3508=3262. Left x=0.068*2479=169. Right x=0.48*2479=1190. Hmm left ad includes crest and text; right edge around x=1190? The text \\\"A. MURALT\\\" left aligned at x~190? Actually \\\"A. MURALT\\\" starts x~190? The crest centered around x=770? Let's compute: The text \\\"Watches of all kinds (lever 5\\\" - 18\\\")\\\" at bottom x~220 to 580? The rightmost part of crest maybe x=1050. There is blank space until right ad. So x1 maybe 1120? Let's check visual: The snowy mountain image extends from left x~180 to x~1140? It ends before right ad. The text \\\"Watches...\\\" line under mountain? The mountain image width maybe from x=180 to x=1140. Then there's blank to x=1230. The crest at bottom x=450 to 950? So x1=1150. Bounding box maybe [170, 1700, 1150, 3270].\\n\\nBut need ad area may start below horizontal line, not at 1700? The horizontal line at y~0.47*3508=1650. The left ad content top maybe y=1710. Fine.\\n\\nBottom right ad:\\n- Top y around 0.50*3508=1754. Bottom y around 0.90*3508=3157. Left x around 0.50*2479=1240. Right x around 0.89*2479=2206. So [1230, 1740, 2200, 3160]. But black rectangle maybe extends to x=2210; right margin? The image has black strip at right x>2300, so ad ends before 2210. y1 maybe 3150. Let's set [1230, 1750, 2200, 3150].\\n\\nNeed maybe have three separate boxes. But maybe there are more? The page includes vertical text on left edge \\\"SALE\\\" maybe not ad? It is text along edge; could be part of ad? The left edge has vertical \\\"SALE\\\"? Actually image left has cut-off text \\\"SALE\\\" perhaps from previous ad? It might be an advertisement? It is vertical text, maybe \\\"SALE\\\" and other text? It's on the left margin, partially visible. Should we include? The instruction \\\"Extract all advertisements\\\" and page includes three ads. The vertical text at left edge might be an ad? But it's likely a sidebar or article title? Need examine: The left edge has letters \\\"S A L E\\\" vertically? The page seems from a magazine, with ads. The main ads are three. The left edge maybe a portion of an ad from adjacent page, not fully visible; not an advertisement on this page? It's cropped. It might be text \\\"SALE\\\" but not a full ad. Better not include.\\n\\nNeed respond with valid JSON only, no markdown. Use exact schema: {\\\"advertisements\\\":[{\\\"box\\\":[x0,y0,x1,y1]}, ...]}.\\n\\nLet's consider whether boxes should be exactly bounding boxes around ads including all elements maybe text? In ad extraction tasks, bounding box is around the advertisement content. Our coordinates approximate; need likely accepted. But need more accuracy? Could maybe use normalized from image? Let's attempt more precise.\\n\\nLet's try to identify coordinate mapping using known text positions. The page is 2479x3508. The horizontal rule above bottom ads: maybe y=1665? Let's find in image: There is a thin horizontal line above the bottom two ads, spanning from x~170 to x~2220? Actually it spans full width? It appears just above bottom ads, at roughly halfway down. It separates top ad from bottom ads. The top ad bottom is above this line; bottom ads start below this line. Let's set line at y=1660. Then top ad bottom maybe y1=1635 (some space above line). Bottom ads y0=1690.\\n\\nTop ad bottom text \\\"WATCH FACTORY - RHEINFELDEN - SWITZERLAND\\\" baseline maybe just above line. Let's set y1=1630.\\n\\nTop ad top: The top text \\\"Well closed...\\\" top maybe y=185. The gate finial top maybe y=170. Let's set y0=175. Bottom of top ad maybe y=1630. x0=680? x1=1650? Need check top ad left: The left edge of gate image perhaps x=690. Right edge x=1660. Then bottom text \\\"W.TRIEBOLD\\\" centered maybe x=1150. Top ad bounding box [680, 175, 1660, 1630]. Area = 980x1455.\\n\\nLet's verify aspect ratio. Top ad in image: width ~630? height ~800? On a 1000px wide image, top ad width maybe 0.39*1000=390; height maybe 0.44*1000=440? Wait original aspect ratio. Let's use image display dimensions: The whole image display maybe width 724? Height 1024? The top ad occupies x=185 to 490, y=50 to 470 in display? Then scale factor original/display = 2479/724=3.42; height scale=3508/1024=3.43. If display top ad x0=185 -> original 633; x1=490 -> 1676; y0=50 -> 172; y1=470 -> 1612. So [633,172,1676,1612]. Similar.\\n\\nLet's derive display coordinates from actual image? I can't measure but can approximate.\\n\\nThe top ad display:\\n- Left edge of gate: maybe x=190. Right edge: maybe x=490. Width 300 px display -> original 1027. So x0 ~ 650, x1 ~ 1680.\\n- Top: y=45. Bottom: y=475. Height 430 -> original 1475. So y0 ~150, y1 ~1625.\\nSo [650,160,1680,1630].\\n\\nBottom left ad display:\\n- Top y=480, bottom y=955. Left x=45, right x=350? Width 305 -> original 1043. So x0=150, x1=1193. y0=1645, y1=3270? Wait display y=480 -> 1646; y=955 -> 3272. But bottom left ad bottom maybe below page? The image bottom at display y=1024, but ad ends y=955; original 3272. So [150,1650,1195,3275].\\n\\nBottom right ad display:\\n- Top y=500, bottom y=940. Left x=360, right x=650? Width 290 -> original 993. x0=1233, x1=2226. y0=1715, y1=3225. But our earlier x1 2200. Display right maybe 645? Let's see: The right ad black rectangle ends before page right black border. In display, ad right edge maybe x=640; original 2194. y bottom maybe y=925? original 3172. So [1230,1715,2200,3175].\\n\\nNeed maybe include page number \\\"35\\\"? Not ad.\\n\\nPotential issue: The top ad includes \\\"W. TRIEBOLD WATCH FACTORY...\\\" and the text is part of ad. Good.\\n\\nLet's maybe produce JSON with three boxes. Need no extra text.\\n\\nBut let's consider if there is a fourth advertisement: The left edge vertical text \\\"SALE\\\" maybe \\\"SALE\\\" actually part of ad? The page might be from \\\"The Swiss Watch\\\" magazine? The left margin has vertical text \\\"SALE\\\" and maybe \\\"Watches\\\"? It's not a complete ad. We should not include.\\n\\nMaybe there is a small \\\"35\\\" page number at bottom right, not ad.\\n\\nLet's ensure boxes not overlapping? Top box ends y=1630; bottom boxes start y=1650. Good. Left and right gap.\\n\\nLet's maybe adjust coordinates to be more consistent:\\nTop: [680, 170, 1660, 1635]\\nBottom left: [170, 1680, 1180, 3270]\\nBottom right: [1230, 1730, 2200, 3160]\\n\\nBut need coordinate order: [x0, y0, x1, y1], where x0 top-left, y0 top, x1 bottom-right, y1 bottom. Yes.\\n\\nLet's maybe use integer coordinates. Ensure y1 > y0.\\n\\nLet's think if top ad bottom should be around y=1640? Horizontal line maybe y=1660. The ad text \\\"SWITZERLAND\\\" is above line. So y1=1620. Top y0=160? The gate top urn maybe y=175. \\\"Well closed...\\\" text at y=200. So y0=170. Good.\\n\\nBottom left ad: The top of mountain image maybe y=1700. The horizontal line at y=1660; left ad begins below line. Text bottom \\\"lever 5\\\" - 18\\\")\\\" maybe y=3220. So y1=3260. left x maybe 180. \\\"A. MURALT\\\" starts x=210; rightmost crest maybe x=1040? Wait the crest at bottom is large and extends to x~1020? Let's see: The crest with crown and shield maybe centered under mountain image? The mountain image is wider than crest. The mountain image left x=190, right x=1170. Text \\\"Watches of all kinds\\\" line maybe width from x=230 to 700. The crest is between x=420 and 850? Actually The crest is centered at x~670, width 300? The text \\\"A. MURALT\\\" at x=220. So right edge of mountain image maybe x=1070? The image is rectangular? It ends before text? It might be a rectangular image with a mountain. Let's look: The snowy mountain image has edges? It appears as a rectangular image with a white background; its right edge maybe x=1120? It contains the watch at top right. The crest is below. So overall ad box likely x=180 to 1150. Maybe x1=1180. Original 1150/2479=0.464. Visual left ad width ~46% of page. Right ad starts at x=1230 (49.6%). There is a 3% gap. Fine.\\n\\nBottom right ad: black rectangle x0 ~1230, x1 ~2200. Text \\\"OMYA\\\" extends close to edges. Right edge maybe x=2190. Bottom y1 maybe 3140? Let's compute from display: black rectangle bottom maybe y=925 display; original 3175. Top y=500 display -> 1714. left x=360 display -> 1233. right x=655 display -> 2245? Hmm if display width 724, right x=655 -> original 2243. But page right edge maybe 2300 black strip. The black rectangle right edge could be ~2250. In earlier I said 2200. Need verify from image: The right ad black rectangle right edge is near the right margin but not flush. There is white space between ad and black border on right. On display, maybe right edge x=640? original 2192. The black strip on right begins x=690? original 2363. So ad right 2190. Good.\\n\\nLet's maybe choose:\\n- Top: [680, 170, 1660, 1630]\\n- Bottom left: [180, 1680, 1180, 3260]\\n- Bottom right: [1230, 1740, 2200, 3160]\\n\\nNeed final JSON. Ensure valid JSON object: {\\\"advertisements\\\":[{\\\"box\\\":[680,170,1660,1630]},{\\\"box\\\":[180,1680,1180,3260]},{\\\"box\\\":[1230,1740,2200,3160]}]}\\n\\nBut maybe the schema expects \\\"advertisements\\\" array of objects with \\\"box\\\". Yes. No additional properties. Need maybe \\\"type\\\": \\\"json_object\\\"? No, prompt says response with valid JSON matching schema; likely just JSON. We'll output JSON only.\"}}],\"created\":1789571815,\"model\":\"deepseek-flash\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":\"aeb56401ca74e127821c4f9126dcb669\",\"usage\":{\"completion_tokens\":4390,\"prompt_tokens\":1288,\"total_tokens\":5678,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":null,\"reasoning_tokens\":4341,\"rejected_prediction_tokens\":null},\"prompt_tokens_details\":{\"audio_tokens\":null,\"cached_tokens\":0},\"prompt_cache_hit_tokens\":0,\"prompt_cache_miss_tokens\":1288}}"
+}

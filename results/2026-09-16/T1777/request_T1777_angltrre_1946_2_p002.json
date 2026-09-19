@@ -1,0 +1,77 @@
+{
+    "text": "{\"advertisements\":[{\"box\":[0.0,0.0,2479.0,3508.0]}]}",
+    "model": "deepseek-flash",
+    "provider": "deepseek",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 1288,
+        "output_tokens": 1125,
+        "total_tokens": 2413,
+        "input_cost_usd": 0.0003864,
+        "output_cost_usd": 0.0013499999999999999,
+        "estimated_cost_usd": 0.0017364
+    },
+    "duration": 9.860311031341553,
+    "timestamp": "2026-09-16T17:17:02.730144",
+    "parsed": {
+        "advertisements": [
+            {
+                "box": [
+                    0,
+                    0,
+                    2479,
+                    3508
+                ]
+            }
+        ]
+    },
+    "conversation_id": "c6229300-37a7-4428-8edb-e2a215fa8e94",
+    "score": {
+        "field_scores": {
+            "box 2": {
+                "response": [
+                    0,
+                    0,
+                    2479,
+                    3508
+                ],
+                "ground_truth": [
+                    121,
+                    62,
+                    2354,
+                    3383
+                ],
+                "score": 0.853
+            },
+            "box 0": {
+                "response": null,
+                "ground_truth": [
+                    1872,
+                    563,
+                    2190,
+                    911
+                ],
+                "score": 0.0
+            },
+            "box 1": {
+                "response": null,
+                "ground_truth": [
+                    1632,
+                    556,
+                    1865,
+                    847
+                ],
+                "score": 0.0
+            }
+        },
+        "f1": 0.5,
+        "precision": 1.0,
+        "recall": 0.333,
+        "mean_iou": 0.853,
+        "true_positives": 1,
+        "false_positives": 0,
+        "false_negatives": 2,
+        "iou_threshold": 0.5
+    },
+    "raw_response": "{\"id\":\"21561499-4138-4f18-8a8c-3b7b51e3cc18\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\\"advertisements\\\":[{\\\"box\\\":[0,0,2479,3508]}]}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"reasoning_content\":\"We need answer JSON only. Need extract all advertisements and bounding boxes. Page seems a single full-page advertisement for Strub shoes. Need bounding box likely whole page? Original size 2479 x 3508. The page includes black border? The image from scanned page. The advertisement is entire page maybe with margins. Need provide bounding box [x0,y0,x1,y1] pixel coordinates. Need determine coordinates of advertisement. The image has black border around, white page. The ad content is entire page except black border. We need \\\"all advertisements found on page.\\\" Likely one advertisement. Bounding box should enclose the ad. Should we include whole page area inside black border? Need coordinates. Need estimate from image dimensions 2479 x 3508. The image shown likely entire page including black border edges. Need bounding box of advertisement. Since it's a full-page ad, box perhaps [0,0,2479,3508] or inside border? Need decide.\\n\\nLet's inspect: The page is scanned; black border on left and right, top? Top black border maybe around? There is a black background border around entire image. The advertisement area is white/light blue. The black border likely is part of scan, not ad. Bounding box should cover advertisement content, maybe exclude black border. Need estimate.\\n\\nImage dimensions: 2479 width, 3508 height. The actual page/ad area: There is black border at left maybe x ~ 50? Right x ~ 2450? Top y ~ 0? Bottom y ~ 3508? The ad artwork extends to the edges of white page, with black scan border visible. Need maybe use coordinates [40, 30, 2450, 3470]? Let's estimate from typical scanned page. But no precise. Could provide full page [0,0,2479,3508] as advertisement includes entire page. But bounding box should be of advertisement. If it's full-page ad, often bbox full image. However schema expects advertisements found, maybe can output list with one item. Need choose.\\n\\nLet's examine visual: The page has black border at left and right; at top there is a tab? There's a black border at top? The top black border maybe from y=0 to y~60, with a tab at center top? Actually top edge: black border, a semi-circular tab (like page tab?) at top center. Left and right black vertical strips. Bottom black strip? There is black at bottom too maybe. The ad artwork includes a faint white background, blue globe, text. The ad likely covers the entire page except black margin. The bounding box might be the full image including black border if that's the page. But \\\"advertisement\\\" likely only the ad content, not scan border. We can choose [0, 0, 2479, 3508]? But if excluding black border, maybe [45, 30, 2435, 3475].\\n\\nLet's parse prompt: \\\"Extract all advertisements and return their bounding boxes. The original size of the page is 2479 x 3508 pixels.\\\" Then JSON schema with Advertisement bounding boxes. Since entire page is one ad, box could be [0,0,2479,3508]. In many VQA tasks, full-page ads coordinate maybe include all. But \\\"advertisements\\\" plural, but one. I think output full page bounding box. However need be careful: The black border is not part of ad, but scanning included it. The ad itself has blue background. Bounding box might be around content area. Let's inspect likely crop: The ad content starts at maybe x=54, y=19? left black strip width maybe ~40 px. Right black strip maybe ~45 px. Top black border maybe ~15 px? Bottom black strip ~10 px? Let's estimate from image: width 2479, height 3508. The black border appears maybe left vertical strip from x=0 to ~42, right strip from x~2440 to 2479, top maybe y=0 to ~25? Bottom y~3480 to 3508. The ad area maybe from x~42 to 2440, y~25 to 3480. But also there is a top tab? Actually top center has a rounded tab shape protruding above black? Wait top edge: There is black border, but a small white tab with black outline at top center? Maybe from underlying page? It looks like a tab at top center, part of page edge? The ad fill extends behind. The bounding box if including tab? Hmm.\\n\\nThe task likely expects a bounding box for the advertisement, not necessarily excluding tiny black margins. Usually for magazine page, if full-page ad, bbox is entire page. The original page size 2479 x 3508. I'll output [0,0,2479,3508]. But maybe they want coordinates of ad content, not page. Let's consider examples from similar tasks? Often in document layout, advertisement bounding boxes are given as areas. If the entire page is ad, bbox is entire page. I'll do that.\\n\\nNeed JSON object with advertisements array containing one object: {\\\"box\\\": [0, 0, 2479, 3508]}. Ensure valid JSON only.\\n\\nLet's final.\"}}],\"created\":1789571815,\"model\":\"deepseek-flash\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":\"aeb56401ca74e127821c4f9126dcb669\",\"usage\":{\"completion_tokens\":1125,\"prompt_tokens\":1288,\"total_tokens\":2413,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":null,\"reasoning_tokens\":1105,\"rejected_prediction_tokens\":null},\"prompt_tokens_details\":{\"audio_tokens\":null,\"cached_tokens\":0},\"prompt_cache_hit_tokens\":0,\"prompt_cache_miss_tokens\":1288}}"
+}

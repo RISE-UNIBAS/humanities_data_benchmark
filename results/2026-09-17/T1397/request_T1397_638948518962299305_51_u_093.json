@@ -1,0 +1,62 @@
+{
+    "text": "{\"company\":{\"transcription\":\"Schweizerische Sodafabrik\"},\"location\":{\"transcription\":\"ZURZACH\"},\"b_id\":{\"transcription\":\"B.51.322.01\"},\"date\":\"\",\"information\":[]}",
+    "model": "moonshotai/kimi-k3",
+    "provider": "openrouter",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 3819,
+        "output_tokens": 972,
+        "total_tokens": 4791,
+        "cached_tokens": 320,
+        "input_cost_usd": 0.010113239021999999,
+        "output_cost_usd": 0.012910807728,
+        "estimated_cost_usd": 0.02302404675
+    },
+    "duration": 15.476120233535767,
+    "timestamp": "2026-09-17T23:40:24.392711",
+    "parsed": {
+        "company": {
+            "transcription": "Schweizerische Sodafabrik"
+        },
+        "location": {
+            "transcription": "ZURZACH"
+        },
+        "b_id": {
+            "transcription": "B.51.322.01"
+        },
+        "date": "",
+        "information": []
+    },
+    "conversation_id": "4332c990-94d4-467f-a430-4cc851054c5e",
+    "score": {
+        "fuzzy": 0.8,
+        "field_scores": {
+            "b_id.transcription": {
+                "response": "B.51.322.01",
+                "ground_truth": "B.51.322.01",
+                "score": 1.0
+            },
+            "company.transcription": {
+                "response": "Schweizerische Sodafabrik",
+                "ground_truth": "Schweizerische Sodafabrik",
+                "score": 1.0
+            },
+            "date": {
+                "response": "",
+                "ground_truth": "",
+                "score": 1.0
+            },
+            "information[0].transcription": {
+                "response": "",
+                "ground_truth": "(U'Chemise)",
+                "score": 0.0
+            },
+            "location.transcription": {
+                "response": "ZURZACH",
+                "ground_truth": "ZURZACH",
+                "score": 1.0
+            }
+        }
+    },
+    "raw_response": "{\"id\":\"gen-1789681208-cFe78GkIf2OI0Z2kdXLd\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\\"company\\\":{\\\"transcription\\\":\\\"Schweizerische Sodafabrik\\\"},\\\"location\\\":{\\\"transcription\\\":\\\"ZURZACH\\\"},\\\"b_id\\\":{\\\"transcription\\\":\\\"B.51.322.01\\\"},\\\"date\\\":\\\"\\\",\\\"information\\\":[]}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"company\":{\"transcription\":\"Schweizerische Sodafabrik\"},\"location\":{\"transcription\":\"ZURZACH\"},\"b_id\":{\"transcription\":\"B.51.322.01\"},\"date\":\"\",\"information\":[]},\"reasoning\":\"The user wants me to extract data from an index card image. Let me analyze the image.\\n\\nTop-left: \\\"Schweizerische Sodafabrik, ZURZACH\\\"\\n- Company: \\\"Schweizerische Sodafabrik\\\" (excluding location)\\n- Location: \\\"ZURZACH\\\"\\n\\nTop-right: \\\"B.51.322.01\\\" with \\\"(U Chemise)\\\" below it. The b_id starts with \\\"B.\\\" so it's \\\"B.51.322.01\\\". It might be cut off at the right edge - \\\"B.51.322.01\\\" possibly more digits. Looking at the image, it says \\\"B.51.322.01\\\" and the right edge is cut off. I'll transcribe what's visible: \\\"B.51.322.01\\\".\\n\\nThere's also \\\"(U Chemise)\\\" below the B number. This appears to be part of the top-right area, possibly a note. Should it go in information? The instructions say information is from the main body of the card. The main body appears empty. The \\\"(U Chemise)\\\" is in the top right under the b_id. \\n\\nDate: No stamped dates visible. Use empty string.\\n\\nInformation: The main body is empty. There are no text blocks in the main body. So information should be an empty list or contain nothing. The schema allows information to be an array or null. The required format shows a list with one entry. But if there's no information, I should provide an empty list. Actually, looking at the format, it says \\\"information\\\": [{\\\"transcription\\\": \\\"\\\"}]. But if no value, leave transcription empty. Hmm.\\n\\nThe main body of the card is blank (just lined paper). So information should be an empty array []. But the schema requires information to be present. It can be an empty array. Let me think - the user says \\\"If you cannot find a value for a field, leave its transcription value as an empty string.\\\" For information, it's a list. If there are no text blocks, an empty list makes sense. But the example shows one entry with empty transcription. \\n\\nGiven the body is empty, I'll use an empty list for information. Actually, to be safe and match the format, maybe include the \\\"(U Chemise)\\\"? No, that's not main body. The main body is empty. I'll set information to [].\\n\\nWait, but the JSON schema says information can be array or null. Empty array is valid. Let me use empty array.\\n\\nActually, re-reading: \\\"information\\\": A list of text blocks from the main body of the card. There are none. So empty list.\\n\\nLet me reconsider the b_id. The image shows \\\"B.51.322.01\\\" but it's at the very right edge and may be cut off. The visible text is \\\"B.51.322.01\\\". I'll transcribe exactly that.\\n\\nThe \\\"(U Chemise)\\\" - it has overlines/underlines. It says \\\"(U Chemise)\\\" with the U having an overline perhaps. I'll not include it since it's not requested specifically, unless it should be in information. It's in the header area. I'll leave it out.\\n\\nFinal JSON:\\n{\\n  \\\"company\\\": {\\\"transcription\\\": \\\"Schweizerische Sodafabrik\\\"},\\n  \\\"location\\\": {\\\"transcription\\\": \\\"ZURZACH\\\"},\\n  \\\"b_id\\\": {\\\"transcription\\\": \\\"B.51.322.01\\\"},\\n  \\\"date\\\": \\\"\\\",\\n  \\\"information\\\": []\\n}\\n\\nHmm, but the required format shows information with one object. If I provide empty array, that's still valid JSON and matches schema (array). But the instruction \\\"If you cannot find a value for a field, leave its transcription value as an empty string\\\" suggests for information maybe [{\\\"transcription\\\": \\\"\\\"}]. However, that would imply there's a text block that's empty, which is odd. \\n\\nI think for a list field, if no blocks, empty list is most accurate. But to strictly follow \\\"leave its transcription value as an empty string\\\", maybe they want [{\\\"transcription\\\": \\\"\\\"}]. The schema allows array. The example format has one entry. Given ambiguity, I'll provide an empty array since there are genuinely no text blocks in the main body. Actually, let me reconsider - many of these tasks expect the information list to possibly be empty. I'll go with empty array.\\n\\nWait, the schema title is Card and information isrequired. Empty array satisfies required. Good.\\n\\nLet me finalize.\",\"reasoning_details\":[{\"type\":\"reasoning.text\",\"text\":\"The user wants me to extract data from an index card image. Let me analyze the image.\\n\\nTop-left: \\\"Schweizerische Sodafabrik, ZURZACH\\\"\\n- Company: \\\"Schweizerische Sodafabrik\\\" (excluding location)\\n- Location: \\\"ZURZACH\\\"\\n\\nTop-right: \\\"B.51.322.01\\\" with \\\"(U Chemise)\\\" below it. The b_id starts with \\\"B.\\\" so it's \\\"B.51.322.01\\\". It might be cut off at the right edge - \\\"B.51.322.01\\\" possibly more digits. Looking at the image, it says \\\"B.51.322.01\\\" and the right edge is cut off. I'll transcribe what's visible: \\\"B.51.322.01\\\".\\n\\nThere's also \\\"(U Chemise)\\\" below the B number. This appears to be part of the top-right area, possibly a note. Should it go in information? The instructions say information is from the main body of the card. The main body appears empty. The \\\"(U Chemise)\\\" is in the top right under the b_id. \\n\\nDate: No stamped dates visible. Use empty string.\\n\\nInformation: The main body is empty. There are no text blocks in the main body. So information should be an empty list or contain nothing. The schema allows information to be an array or null. The required format shows a list with one entry. But if there's no information, I should provide an empty list. Actually, looking at the format, it says \\\"information\\\": [{\\\"transcription\\\": \\\"\\\"}]. But if no value, leave transcription empty. Hmm.\\n\\nThe main body of the card is blank (just lined paper). So information should be an empty array []. But the schema requires information to be present. It can be an empty array. Let me think - the user says \\\"If you cannot find a value for a field, leave its transcription value as an empty string.\\\" For information, it's a list. If there are no text blocks, an empty list makes sense. But the example shows one entry with empty transcription. \\n\\nGiven the body is empty, I'll use an empty list for information. Actually, to be safe and match the format, maybe include the \\\"(U Chemise)\\\"? No, that's not main body. The main body is empty. I'll set information to [].\\n\\nWait, but the JSON schema says information can be array or null. Empty array is valid. Let me use empty array.\\n\\nActually, re-reading: \\\"information\\\": A list of text blocks from the main body of the card. There are none. So empty list.\\n\\nLet me reconsider the b_id. The image shows \\\"B.51.322.01\\\" but it's at the very right edge and may be cut off. The visible text is \\\"B.51.322.01\\\". I'll transcribe exactly that.\\n\\nThe \\\"(U Chemise)\\\" - it has overlines/underlines. It says \\\"(U Chemise)\\\" with the U having an overline perhaps. I'll not include it since it's not requested specifically, unless it should be in information. It's in the header area. I'll leave it out.\\n\\nFinal JSON:\\n{\\n  \\\"company\\\": {\\\"transcription\\\": \\\"Schweizerische Sodafabrik\\\"},\\n  \\\"location\\\": {\\\"transcription\\\": \\\"ZURZACH\\\"},\\n  \\\"b_id\\\": {\\\"transcription\\\": \\\"B.51.322.01\\\"},\\n  \\\"date\\\": \\\"\\\",\\n  \\\"information\\\": []\\n}\\n\\nHmm, but the required format shows information with one object. If I provide empty array, that's still valid JSON and matches schema (array). But the instruction \\\"If you cannot find a value for a field, leave its transcription value as an empty string\\\" suggests for information maybe [{\\\"transcription\\\": \\\"\\\"}]. However, that would imply there's a text block that's empty, which is odd. \\n\\nI think for a list field, if no blocks, empty list is most accurate. But to strictly follow \\\"leave its transcription value as an empty string\\\", maybe they want [{\\\"transcription\\\": \\\"\\\"}]. The schema allows array. The example format has one entry. Given ambiguity, I'll provide an empty array since there are genuinely no text blocks in the main body. Actually, let me reconsider - many of these tasks expect the information list to possibly be empty. I'll go with empty array.\\n\\nWait, the schema title is Card and information isrequired. Empty array satisfies required. Good.\\n\\nLet me finalize.\",\"format\":\"unknown\",\"index\":0}]},\"native_finish_reason\":\"stop\"}],\"created\":1789681208,\"model\":\"moonshotai/kimi-k3\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":\"default\",\"usage\":{\"completion_tokens\":972,\"prompt_tokens\":3819,\"total_tokens\":4791,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":0,\"reasoning_tokens\":916,\"rejected_prediction_tokens\":null,\"image_tokens\":0},\"prompt_tokens_details\":{\"audio_tokens\":0,\"cached_tokens\":320,\"cache_write_tokens\":0,\"video_tokens\":0},\"cost\":0.025173,\"is_byok\":false,\"cost_details\":{\"upstream_inference_cost\":0.025173,\"upstream_inference_prompt_cost\":0.010593,\"upstream_inference_completions_cost\":0.01458}},\"provider\":\"Together\"}"
+}

@@ -1,0 +1,84 @@
+{
+    "text": "{\"metadata\":{\"send_date\":[\"1928-02-18\"],\"letter_title\":null,\"sender_persons\":[\"Basler Rheinschiffahrt-Aktiengesellschaft\"],\"receiver_persons\":[\"Vorstand der Basler Personenschiffahrts-Gesellschaft\"]}}",
+    "model": "thinkingmachines/Inkling",
+    "provider": "huggingface",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 11884,
+        "output_tokens": 848,
+        "total_tokens": 12732,
+        "cached_tokens": 256
+    },
+    "duration": 35.18748354911804,
+    "timestamp": "2026-09-17T11:41:19.331368",
+    "parsed": {
+        "metadata": {
+            "send_date": [
+                "1928-02-18"
+            ],
+            "letter_title": null,
+            "sender_persons": [
+                "Basler Rheinschiffahrt-Aktiengesellschaft"
+            ],
+            "receiver_persons": [
+                "Vorstand der Basler Personenschiffahrts-Gesellschaft"
+            ]
+        }
+    },
+    "conversation_id": "ac66c76e-66e1-47a2-b24e-026a7ba907b3",
+    "score": {
+        "send_date_tp": 1,
+        "send_date_fp": 0,
+        "send_date_fn": 0,
+        "sender_persons_tp": 0,
+        "sender_persons_fp": 1,
+        "sender_persons_fn": 2,
+        "receiver_persons_tp": 0,
+        "receiver_persons_fp": 1,
+        "receiver_persons_fn": 0,
+        "field_scores": {
+            "send_date": {
+                "response": [
+                    "1928-02-18"
+                ],
+                "ground_truth": [
+                    "1928-02-18"
+                ],
+                "score": null,
+                "counts": {
+                    "send_date_tp": 1,
+                    "send_date_fp": 0,
+                    "send_date_fn": 0
+                }
+            },
+            "sender_persons": {
+                "response": [
+                    "Basler Rheinschiffahrt-Aktiengesellschaft"
+                ],
+                "ground_truth": [
+                    "Groschupf-Jaeger, Louis",
+                    "Ritter-Dreier, Fritz"
+                ],
+                "score": null,
+                "counts": {
+                    "sender_persons_tp": 0,
+                    "sender_persons_fp": 1,
+                    "sender_persons_fn": 2
+                }
+            },
+            "receiver_persons": {
+                "response": [
+                    "Vorstand der Basler Personenschiffahrts-Gesellschaft"
+                ],
+                "ground_truth": [],
+                "score": null,
+                "counts": {
+                    "receiver_persons_tp": 0,
+                    "receiver_persons_fp": 1,
+                    "receiver_persons_fn": 0
+                }
+            }
+        }
+    },
+    "raw_response": "{\"id\":\"p1dBmtB-6z2FuN-a3c726b839013929\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\n  \\\"metadata\\\": {\\n    \\\"send_date\\\": [\\\"1928-02-18\\\"],\\n    \\\"letter_title\\\": null,\\n    \\\"sender_persons\\\": [\\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"],\\n    \\\"receiver_persons\\\": [\\\"Vorstand der Basler Personenschiffahrts-Gesellschaft\\\"]\\n  }\\n}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"metadata\":{\"send_date\":[\"1928-02-18\"],\"letter_title\":null,\"sender_persons\":[\"Basler Rheinschiffahrt-Aktiengesellschaft\"],\"receiver_persons\":[\"Vorstand der Basler Personenschiffahrts-Gesellschaft\"]}},\"reasoning\":\"We need parse images of historical letter, extract keys: letter_title, sender_persons, send_date, receiver_persons. Need examine all pages.\\n\\nWe have letter from Basler Rheinschiffahrt-Aktiengesellschaft? Actually first page header: \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\" with address. Date \\\"Basel, den 18. Februar 1928.\\\" Addressee: \\\"An den Vorstand der Basler Personenschiffahrts-Gesellschaft, Basel.\\\" So sender is Basler Rheinschiffahrt-Aktiengesellschaft? Or maybe signed by representatives at end: \\\"Rheinschiffahrt-Aktiengesellschaft\\\" with signatures? Let's inspect page 6 (last image) has closing \\\"Hochachtend\\\" then \\\"BASLER RHEINSCHIFFFAHRT-AKTIENGESELLSCHAFT\\\" and signatures. So sender_persons likely the company, but they ask \\\"Name(s) of the person(s) who wrote the letter.\\\" Could be company name, or signatories? The signatures appear maybe \\\"Ritter\\\" and another? Let's examine image 6 bottom right signatures: one looks like \\\"Ritter\\\" maybe? Actually need determine exact names if visible. Let's analyze all pages for title, date, sender, receiver.\\n\\nLetter title? Not explicit title like \\\"Petition...\\\". Might be null if not included. But maybe there is subject? First page has \\\"B/M\\\" maybe reference. But no explicit title. So letter_title likely null? Or maybe \\\"Vorschlag\\\" but not title. We'll set null.\\n\\nSend date: \\\"18. Februar 1928\\\" -> 1928-02-18. There are pages dated 18.2.28 consistently.\\n\\nReceiver persons: \\\"An den Vorstand der Basler Personenschiffahrts-Gesellschaft, Basel.\\\" So receiver is Vorstand der Basler Personenschiffahrts-Gesellschaft? Or the board. We'll list \\\"Vorstand der Basler Personenschiffahrts-Gesellschaft\\\" maybe.\\n\\nSender persons: The letter is written by Basler Rheinschiffahrt-Aktiengesellschaft, represented/signatures. At bottom page 6: \\\"BASLER RHEINSCHIFFFAHRT-AKTIENGESELLSCHAFT\\\" and signatures. Might include individual names? Let's zoom mental: signatures include maybe \\\"W. Ritter\\\" and \\\"??\\\". But since not clearly readable and prompt asks name(s) of person(s) who wrote the letter. The letterhead indicates company. Often in these extraction tasks they want the organization as sender if signed on behalf. Let's include \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\". Maybe also signatories if readable. Let's check page 1 left top: \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\". So yes.\\n\\nNeed return JSON only.\\n\\nCheck consistency: page 2 header \\\"An den Vorstand der Basler Personenschiffahrts-Gesellschaft, Basel. 18.2.28.\\\" Page 3 \\\"An den Vorstand der Basler Personenschiffahrts-Gesellschaft, Basel. 18.2.28.\\\" Page 4 same. Page 5 same. Page 6 same.\\n\\nThus:\\nletter_title: null? Or maybe there is implicit title \\\"Vorschlag\\\" on page 3? Actually page 3 has section \\\"Vorschlag.\\\" But that's not letter title. So null.\\n\\nsender_persons: [\\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"] maybe with signatures? Let's keep company.\\n\\nsend_date: [\\\"1928-02-18\\\"]\\n\\nreceiver_persons: [\\\"Vorstand der Basler Personenschiffahrts-Gesellschaft\\\"]\\n\\nNeed list values even if single.\\n\\nLet's provide that.\"},\"seed\":null}],\"created\":1789638048,\"model\":\"thinkingmachines/Inkling\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":\"default\",\"usage\":{\"completion_tokens\":848,\"prompt_tokens\":11884,\"total_tokens\":12732,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":null,\"reasoning_tokens\":772,\"rejected_prediction_tokens\":null},\"prompt_tokens_details\":{\"audio_tokens\":null,\"cached_tokens\":256}},\"prompt\":[]}"
+}

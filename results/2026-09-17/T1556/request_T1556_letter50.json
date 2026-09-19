@@ -1,0 +1,85 @@
+{
+    "text": "{\"metadata\":{\"send_date\":[\"1932-02-16\"],\"letter_title\":null,\"sender_persons\":[\"Dr. W. B\u00fchle-Werth\"],\"receiver_persons\":[\"Dr. Carl Keller\"]}}",
+    "model": "thinkingmachines/Inkling",
+    "provider": "huggingface",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 4180,
+        "output_tokens": 1489,
+        "total_tokens": 5669,
+        "cached_tokens": 256
+    },
+    "duration": 20.524282693862915,
+    "timestamp": "2026-09-17T11:38:19.470474",
+    "parsed": {
+        "metadata": {
+            "send_date": [
+                "1932-02-16"
+            ],
+            "letter_title": null,
+            "sender_persons": [
+                "Dr. W. B\u00fchle-Werth"
+            ],
+            "receiver_persons": [
+                "Dr. Carl Keller"
+            ]
+        }
+    },
+    "conversation_id": "6033d3c0-307d-410b-a032-c46b9aac6399",
+    "score": {
+        "send_date_tp": 0,
+        "send_date_fp": 1,
+        "send_date_fn": 1,
+        "sender_persons_tp": 0,
+        "sender_persons_fp": 1,
+        "sender_persons_fn": 1,
+        "receiver_persons_tp": 0,
+        "receiver_persons_fp": 1,
+        "receiver_persons_fn": 1,
+        "field_scores": {
+            "send_date": {
+                "response": [
+                    "1932-02-16"
+                ],
+                "ground_truth": [
+                    "1932-09-16"
+                ],
+                "score": null,
+                "counts": {
+                    "send_date_tp": 0,
+                    "send_date_fp": 1,
+                    "send_date_fn": 1
+                }
+            },
+            "sender_persons": {
+                "response": [
+                    "Dr. W. B\u00fchle-Werth"
+                ],
+                "ground_truth": [
+                    "Meile-Welti, Wilhelm"
+                ],
+                "score": null,
+                "counts": {
+                    "sender_persons_tp": 0,
+                    "sender_persons_fp": 1,
+                    "sender_persons_fn": 1
+                }
+            },
+            "receiver_persons": {
+                "response": [
+                    "Dr. Carl Keller"
+                ],
+                "ground_truth": [
+                    "Vischer-von Planta, Max"
+                ],
+                "score": null,
+                "counts": {
+                    "receiver_persons_tp": 0,
+                    "receiver_persons_fp": 1,
+                    "receiver_persons_fn": 1
+                }
+            }
+        }
+    },
+    "raw_response": "{\"id\":\"p1dAvby-6z2FuN-a3c722ac3d2e18b8\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\n  \\\"metadata\\\": {\\n    \\\"send_date\\\": [\\\"1932-02-16\\\"],\\n    \\\"letter_title\\\": null,\\n    \\\"sender_persons\\\": [\\\"Dr. W. B\u00fchle-Werth\\\"],\\n    \\\"receiver_persons\\\": [\\\"Dr. Carl Keller\\\"]\\n  }\\n}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"metadata\":{\"send_date\":[\"1932-02-16\"],\"letter_title\":null,\"sender_persons\":[\"Dr. W. B\u00fchle-Werth\"],\"receiver_persons\":[\"Dr. Carl Keller\"]}},\"reasoning\":\"We need parse letter images. Need identify title, sender, date, receiver. Let's analyze image content.\\n\\nImage 1: Letterhead \\\"Dr. W. B\u00dcHLE-WERTH MISSIONSTRASSE 6 BASEL\\\". Handwritten date \\\"Basel, 16. Febr. 32.\\\" Or \\\"Basel, 16. Febr. 32.\\\" Addressed \\\"Herrn Dr. Carl Keller Pr\u00e4s. des Basler Personenschiffahrtsgesellschaft Basel\\\" maybe? Then salutation \\\"Sehr geehrter Herr Dr!\\\" Then body. At bottom signature \\\"Dr. B\u00fchle\\\" maybe? And postscript \\\"P.S. Zum Wallenstein'schen ... in die Basler Rheinschiffahrts-...\\\" Not necessary.\\n\\nImage 2: Continuation of letter? Has \\\"a. g. folgendes:\\\" then paragraphs. At bottom signature \\\"W.B.\\\"? Or \\\"W. B\u00fchle\\\"? Let's determine sender: likely Dr. W. B\u00fchle-Werth? The letterhead says Dr. W. B\u00dcHLE-WERTH. So sender person is Dr. W. B\u00fchle-Werth? Or \\\"Dr. W. B\u00fchle\\\"? Need extract name(s) of person(s) who wrote letter. The signature at end of image 1 looks like \\\"Dr. B\u00fchle\\\" maybe with first initial? Actually in image 1 bottom right signature looks like \\\"W. B\u00fchle\\\" with a flourish? Let's inspect mental: The letterhead is Dr. W. B\u00dcHLE-WERTH. The closing in image 2 ends with \\\"W.B.\\\"? Hmm need be precise.\\n\\nReceiver: \\\"Herrn Dr. Carl Keller\\\" and title \\\"Pr\u00e4s. des Basler Personenschiffahrtsgesellschaft\\\" or \\\"Pr\u00e4sident der Basler Personenschiffahrtsgesellschaft\\\". So receiver is Dr. Carl Keller.\\n\\nSend date: \\\"Basel, 16. Febr. 32.\\\" That is 1932-02-16.\\n\\nLetter title: Not explicit. Might be null since no title given except maybe subject in body? The prompt asks \\\"letter_title: Title of the letter.\\\" If not included, null. There's no title like \\\"Betreff\\\" maybe? Actually there might be subject line? In image 1 after address there's \\\"Basel\\\" then salutation. No explicit title. So null.\\n\\nNeed return JSON with lists.\\n\\nCheck if there are multiple senders? Only one.\\n\\nCheck date format ISO: 1932-02-16.\\n\\nThus:\\n{\\n\\\"letter_title\\\": [null]? Wait they said values stored as list, even if single value. If information not included, set value for corresponding key to \\\"null\\\". Does that mean the list contains null? Or the value is null? In example they have lists of strings. For missing, likely [\\\"null\\\"]? Actually they said \\\"set the value for the corresponding key to 'null'\\\". That could mean the JSON value is null, not in a list? But they said \\\"where the values corresponding to each key should be stored as a list, even if there is only a single value for a key\\\". So probably should be [null] if missing? Or null? Let's examine consistency: They want values stored as a list. So if missing, maybe [null]. But they said \\\"set the value for the corresponding key to 'null'\\\". That sounds like the list should contain the string \\\"null\\\"? Hmm in many extraction prompts they want \\\"null\\\" as the value (not in list) despite list instruction? Let's think carefully.\\n\\nThe instruction: \\\"extract the values of the following keys from the letter and return them in a JSON file where the values corresponding to each key should be stored as a list, even if there is only a single value for a key\\\"\\n\\nThen: \\\"If a piece of information is not included in the letter, set the value for the corresponding key to \\\"null\\\".\\\"\\n\\nThis is ambiguous but likely means the value assigned to the key is null (the JSON null), but they also said store as list... However they might have meant if missing put null inside the list? Actually typical format in these prompts: {\\\"letter_title\\\": [\\\"...\\\"], ...} and if missing {\\\"letter_title\\\": null}. But they said values should be stored as a list. Let's check example: all values are lists. So for consistency, missing might be [null]? But they said \\\"set the value ... to 'null'\\\" with quotes around null, indicating the string? Or JSON null?\\n\\nGiven typical JSON extraction tasks, they often want:\\n\\\"letter_title\\\": null\\nBut that conflicts with list storage. Let's see other prompts: Usually they say \\\"store the values in a list\\\" and \\\"if not present, use null\\\". Often the result is like \\\"sender_persons\\\": null if not present, not in list. But here they explicitly said values corresponding to each key should be stored as a list, even if single value. So I think they want lists always, except maybe null can be the list itself? Actually \\\"the value for the corresponding key\\\" refers to the value of the key in JSON, which should be a list normally. So \\\"set the value ... to null\\\" means replace the list with null. Yes that makes sense: usually list, but if missing then null instead of empty list.\\n\\nThus I will set letter_title to null (not in list). But wait they said \\\"even if there is only a single value for a key\\\" -> list with one element. So yes, default is list. Exception: missing -> null.\\n\\nBut I need be careful: maybe title is present? Let's check image 1 top left has letterhead, not title. No \\\"Betreff\\\". So null.\\n\\nThus JSON:\\n{\\n\\\"letter_title\\\": null,\\n\\\"sender_persons\\\": [\\\"Dr. W. B\u00fchle-Werth\\\"], maybe \\\"Dr. W. B\u00fchle\\\"? Let's determine exact name from signature and letterhead. The letterhead: \\\"Dr. W. B\u00dcHLE-WERTH\\\". The signature in image 1 bottom right: \\\"Dr. B\u00fchle\\\"? Actually looks like \\\"W. B\u00fchle\\\" with capital W? Let's examine mental image: In bottom right of image 1, there's handwritten \\\"Dr. B\u00fchle\\\" maybe? Actually I see \\\"Dr. B\u00fchle\\\" with a long tail? And in image 2 bottom right there's \\\"W.B.\\\"? Hmm but the letterhead clearly identifies sender. So use \\\"Dr. W. B\u00fchle-Werth\\\". Or \\\"Dr. W. B\u00fchle-Werth\\\" is correct.\\n\\nBut wait the address on letterhead is \\\"Dr. W. B\u00dcHLE-WERTH MISSIONSTRASSE 6 BASEL\\\". So full name Dr. W. B\u00fchle-Werth. We'll use that.\\n\\nReceiver persons: [\\\"Dr. Carl Keller\\\"].\\n\\nSend date: [\\\"1932-02-16\\\"].\\n\\nLet's provide that.\"},\"seed\":null}],\"created\":1789637880,\"model\":\"thinkingmachines/Inkling\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":\"default\",\"usage\":{\"completion_tokens\":1489,\"prompt_tokens\":4180,\"total_tokens\":5669,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":null,\"reasoning_tokens\":1423,\"rejected_prediction_tokens\":null},\"prompt_tokens_details\":{\"audio_tokens\":null,\"cached_tokens\":256}},\"prompt\":[]}"
+}

@@ -1,0 +1,82 @@
+{
+    "text": "{\"metadata\":{\"send_date\":[\"1927-09-15\"],\"letter_title\":null,\"sender_persons\":null,\"receiver_persons\":[\"Rupprecht\"]}}",
+    "model": "thinkingmachines/Inkling",
+    "provider": "huggingface",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 4180,
+        "output_tokens": 2506,
+        "total_tokens": 6686,
+        "cached_tokens": 256
+    },
+    "duration": 40.4697539806366,
+    "timestamp": "2026-09-17T11:37:24.517403",
+    "parsed": {
+        "metadata": {
+            "send_date": [
+                "1927-09-15"
+            ],
+            "letter_title": null,
+            "sender_persons": null,
+            "receiver_persons": [
+                "Rupprecht"
+            ]
+        }
+    },
+    "conversation_id": "ff265b97-fc3e-4d8e-a84e-f87b790f9eaa",
+    "score": {
+        "send_date_tp": 1,
+        "send_date_fp": 0,
+        "send_date_fn": 0,
+        "sender_persons_tp": 0,
+        "sender_persons_fp": 0,
+        "sender_persons_fn": 2,
+        "receiver_persons_tp": 0,
+        "receiver_persons_fp": 1,
+        "receiver_persons_fn": 1,
+        "field_scores": {
+            "send_date": {
+                "response": [
+                    "1927-09-15"
+                ],
+                "ground_truth": [
+                    "1927-09-15"
+                ],
+                "score": null,
+                "counts": {
+                    "send_date_tp": 1,
+                    "send_date_fp": 0,
+                    "send_date_fn": 0
+                }
+            },
+            "sender_persons": {
+                "response": [],
+                "ground_truth": [
+                    "Groschupf-Jaeger, Louis",
+                    "Kachelhofer-Gerber, Frederick Charles"
+                ],
+                "score": null,
+                "counts": {
+                    "sender_persons_tp": 0,
+                    "sender_persons_fp": 0,
+                    "sender_persons_fn": 2
+                }
+            },
+            "receiver_persons": {
+                "response": [
+                    "Rupprecht"
+                ],
+                "ground_truth": [
+                    "Rupprecht, Karl"
+                ],
+                "score": null,
+                "counts": {
+                    "receiver_persons_tp": 0,
+                    "receiver_persons_fp": 1,
+                    "receiver_persons_fn": 1
+                }
+            }
+        }
+    },
+    "raw_response": "{\"id\":\"p1dAYJs-6z2FuN-a3c720d76bad92dc\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\n  \\\"metadata\\\": {\\n    \\\"send_date\\\": [\\\"1927-09-15\\\"],\\n    \\\"letter_title\\\": null,\\n    \\\"sender_persons\\\": null,\\n    \\\"receiver_persons\\\": [\\\"Rupprecht\\\"]\\n  }\\n}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"metadata\":{\"send_date\":[\"1927-09-15\"],\"letter_title\":null,\"sender_persons\":null,\"receiver_persons\":[\"Rupprecht\"]}},\"reasoning\":\"We need parse letter images. Need extract letter_title, sender_persons, send_date, receiver_persons. Let's analyze image content.\\n\\nImage 1: Letterhead \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\" address etc. Date \\\"Basel, den 15. September 1927.\\\" Addressee: \\\"Herrn Rupprecht, Hotelier, Seebad \\\"Eden\\\", Rheinfelden.\\\" Salutation \\\"Sehr geehrter Herr Rupprecht,\\\" Then body. At bottom page 1 with \\\". / .\\\" So letter continues.\\n\\nImage 2: Page 2 with header \\\"- 2 -\\\" and address line \\\"Herrn Rupprecht, Hotelier, Rheinfelden. 15.9.27.\\\" Then text \\\"Wir werden uns gestatten...\\\" Closing \\\"Inzwischen verbleiben wir mit vorz\u00fcglicher Hochachtung BASLER RHEINSCHIFFAHRT-AKTIENGESELLSCHAFT\\\" and signatures.\\n\\nThus letter title? Not explicit. Might be null? But maybe there is subject \\\"G/M\\\" on first page? Let's check. There's \\\"G/M\\\" near left center. Could be reference/file number, not title. The prompt asks \\\"letter_title: Title of the letter.\\\" If not present, null. But sometimes letters have no title. We'll set null.\\n\\nSender persons: The letter is from Basler Rheinschiffahrt-Aktiengesellschaft, signed possibly by someone? The signature is illegible but organization is sender. The key asks \\\"Name(s) of the person(s) who wrote the letter.\\\" Could be the organization? Usually person. But signature might be a person representing company. Let's inspect signature: Looks like \\\"W. Oettli\\\"? Wait no, need determine. Actually in body they mention \\\"Herrn Ingenieur Ryniker\\\" and \\\"Herr Dr. Speich\\\". The signatory might be one of them? Let's examine signature image: There's a handwritten signature after company name. Hard to read exactly, maybe \\\"W. Albrecht\\\"? But not necessary if unknown? However we should extract if visible. Let's think: The letterhead is Basler Rheinschiffahrt-Aktiengesellschaft. The closing includes company name printed, then signature(s). One signature looks like \\\"J. M\u00fcller\\\"? Not clear. Given instructions \\\"Name(s) of the person(s) who wrote the letter\\\" - if only organization is clear and individual signatures illegible, maybe list organization? But example lists personal names. Let's examine text for named senders: No explicit \\\"Ich, X\\\". So likely sender is the company, but they ask persons. Might still include company? No, \\\"persons\\\" implies human. But if unknown, null? Let's hold.\\n\\nSend date: \\\"15. September 1927\\\" => 1927-09-15. Also on page 2 \\\"15.9.27\\\". So date is 1927-09-15.\\n\\nReceiver persons: \\\"Herr Rupprecht\\\" or \\\"Herrn Rupprecht, Hotelier\\\" in Rheinfelden. So receiver is Rupprecht. Maybe full name not given, just Rupprecht. We'll list [\\\"Rupprecht\\\"].\\n\\nLetter title: Maybe \\\"G/M\\\" is not title. Could there be subject line? No. So null.\\n\\nBut need be precise with sender. Let's inspect first page top left \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\" is the sender entity. The signatures at bottom right: one is maybe \\\"W. Oettli\\\"? Actually there might be two signatures? Let's zoom mental: There's one long signature and maybe another? The printed text \\\"BASLER RHEINSCHIFFAHRT-AKTIENGESELLSCHAFT\\\" then below left a signature with loop, right another signature? Hmm image shows one signature on right of printed company name, and maybe one on left? Let's not overinterpret. Given typical extraction tasks, they might want sender organization? But key is \\\"sender_persons\\\". Let's check example: \\\"Lisa Simpson\\\" personal. So likely they want the signatory name if readable. Is there any readable name in signature? Let's try decipher: The signature looks like \\\"M. Altenhof\\\"? No.\\n\\nActually in the body they say \\\"Wir kommen heute zur\u00fcck auf die Unterredungen... Wir k\u00f6nnen Ihnen heute mitteilen...\\\" This is plural \\\"Wir\\\". So multiple senders? The signatures might be two people. One might be readable as \\\"O. M\u00fcller\\\"? Not clear.\\n\\nGiven ambiguity, maybe best to put null for sender_persons if not clearly identifiable? But the letter clearly comes from Basler Rheinschiffahrt-Aktiengesellschaft, and maybe they consider that as sender? The key says \\\"person(s)\\\" though.\\n\\nLet's examine page 2 header: \\\"Herrn Rupprecht, Hotelier, Rheinfelden. 15.9.27.\\\" Then body. At end: \\\"Inzwischen verbleiben wir mit vorz\u00fcglicher Hochachtung BASLER RHEINSCHIFFAHRT-AKTIENGESELLSCHAFT\\\" then signatures. So the formal sender is the company. In historical letters, often the organization is the sender. But they said \\\"persons\\\". Still, we might include the company name? No, that's not a person.\\n\\nHowever, there might be named individuals in the signature block that are readable if we look closely. Let's try to read the signature: It starts with capital letter maybe \\\"W\\\" then \\\"ilhelm\\\"? Actually could be \\\"W. Willimann\\\"? Not sure.\\n\\nGiven the task is extraction with keyword knowledge, maybe they expect:\\nletter_title: null\\nsender_persons: [\\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"]? Or maybe [\\\"Ryniker\\\"]? No, Ryniker is mentioned as engineer who worked on plans, not sender.\\n\\nLet's think about context: This is a historical letter in some archive. The extraction keys are standardized. Usually they want the author(s) named in the letter or signature. If signature is illegible, they might still want the organization from letterhead? But \\\"sender_persons\\\" plural of person.\\n\\nLet's check if there's any other name at top: \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\" only.\\n\\nThus I will set sender_persons to null? Or maybe include the readable signatory if I can guess? Let's not guess. But wait, in image 2 there is a signature that might be \\\"Dr. Speich\\\"? No, Dr. Speich is mentioned in body as being away and will take over talks. He might be one of the signatories? Actually they say \\\"Herr Dr. Speich war bis jetzt leider nicht in der Lage... Nach dem er nun zur\u00fcckgekehrt ist... er selbst kann die besprochene F\u00fchlungnahme... aufnehmen.\\\" So Dr. Speich is part of the company, but not necessarily signing.\\n\\nGiven all this, I think safest is:\\nletter_title: null? Or maybe \\\"G/M\\\" is file reference, not title.\\n\\nBut wait, there is \\\"G/M\\\" on first page left of center. Could stand for \\\"Gesch\u00e4ftsmitteilung\\\"? Not a title.\\n\\nThus output:\\n{\\n\\\"letter_title\\\": [null? No, should be list with value or null? The instructions: \\\"If a piece of information is not included in the letter, set the value for the corresponding key to 'null'.\\\" So \\\"letter_title\\\": null? But they said values should be stored as a list, even if single value. So should it be [\\\"null\\\"]? No, they said set the value for the corresponding key to \\\"null\\\". Usually that means the JSON value is null, not inside list? But they also said \\\"where the values corresponding to each key should be stored as a list, even if there is only a single value for a key\\\". So if missing, probably [null]? Or null? Let's check example: all values are lists of strings. For missing, likely [null] doesn't make sense. But they said \\\"set the value for the corresponding key to 'null'\\\". That conflicts with list requirement. Typically in these prompts, they want list always, but if missing put null (not in list?). Let's examine wording precisely: \\\"return them in a JSON file where the values corresponding to each key should be stored as a list, even if there is only a single value for a key\\\" Then \\\"If a piece of information is not included in the letter, set the value for the corresponding key to 'null'.\\\" This suggests that the value (the list?) should be null? Or the element? Usually in these extraction tasks, they want:\\n\\\"letter_title\\\": null\\nBut that violates list rule. However they explicitly say set value to \\\"null\\\". So I think they allow null instead of list for missing keys. But for present ones, use list.\\n\\nThus:\\nletter_title: null\\nsender_persons: maybe [\\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"]? Or null? Let's decide.\\n\\nActually, there might be a specific person named in the signature that is readable: Let's examine image 2 bottom right. The signature is in black ink, somewhat cursive. The first letter could be \\\"A\\\" then \\\"lbert\\\"? Or \\\"M. Allemann\\\"? There's also a printed name? No.\\n\\nGiven that the task mentions \\\"historian with keyword knowledge and expert in field of 20th century Swiss history\\\" - maybe they know that Basler Rheinschiffahrt-Aktiengesellschaft letters were signed by director? But not necessary.\\n\\nLet's provide receiver and date clearly. For sender, since the letter is on behalf of the company and signatures are present but unreadable, I might list the organization? But it's not a person. Let's list null for sender_persons? That feels wrong because we know the sending entity.\\n\\nWait, the prompt says \\\"sender_persons: Name(s) of the person(s) who wrote the letter.\\\" In formal business letters, the writer might be the secretary or director. But if not named, we can't extract.\\n\\nHowever, on page 1 there is \\\"G/M\\\" which might indicate initials of sender? \\\"G/M\\\" could be \\\"G. M\u00fcller\\\"? Not clear.\\n\\nLet's check the address block on page 1: \\\"Herrn Rupprecht, Hotelier, Seebad \\\"Eden\\\", Rheinfelden.\\\" So receiver is Rupprecht.\\n\\nThus I will output:\\n{\\n\\\"letter_title\\\": null,\\n\\\"send_date\\\": [\\\"1927-09-15\\\"],\\n\\\"sender_persons\\\": null,\\n\\\"receiver_persons\\\": [\\\"Rupprecht\\\"]\\n}\\n\\nBut I'm uneasy about sender. Let's reconsider: The closing says \\\"BASLER RHEINSCHIFFAHRT-AKTIENGESELLSCHAFT\\\" and then signatures. In many extraction schemas, they want the organization as sender if it's a corporate letter? But the key name \\\"sender_persons\\\" suggests not.\\n\\nLet's check if there's any hidden name in letterhead? No.\\n\\nGiven all this, I think null is acceptable for unknown persons. But maybe they want [\\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"] despite being organization? Let's think about the phrase \\\"person(s)\\\" - in data extraction, sometimes they use \\\"persons\\\" but allow organizations? Unlikely.\\n\\nActually, I notice in the body they mention \\\"Herrn Oettinger\\\" in first paragraph: \\\"die wir vor einigen Wochen mit Ihnen und mit Herrn Oettinger zu f\u00fchren die Ehre hatten\\\". So Oettinger was present in talks, but not sender.\\n\\nThus I will keep sender_persons null. But wait, there are signatures visible. Let's try harder to read them. The signature on the right might be \\\"W. Oettli\\\"? No.\\n\\nLet's provide the answer with null for title and sender, but include date and receiver.\\n\\nOne more check: The date is \\\"15. September 1927\\\" => 1927-09-15. Yes.\\n\\nThus final JSON.\"},\"seed\":null}],\"created\":1789637805,\"model\":\"thinkingmachines/Inkling\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":\"default\",\"usage\":{\"completion_tokens\":2506,\"prompt_tokens\":4180,\"total_tokens\":6686,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":null,\"reasoning_tokens\":2451,\"rejected_prediction_tokens\":null},\"prompt_tokens_details\":{\"audio_tokens\":null,\"cached_tokens\":256}},\"prompt\":[]}"
+}

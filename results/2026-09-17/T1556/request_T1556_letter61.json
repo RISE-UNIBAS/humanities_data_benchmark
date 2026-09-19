@@ -1,0 +1,81 @@
+{
+    "text": "{\"metadata\":{\"send_date\":[\"1932-12-21\"],\"letter_title\":null,\"sender_persons\":[\"Basler Personenschiffahrtsgesellschaft\"],\"receiver_persons\":[\"Basler Rheinschiffahrt-Aktiengesellschaft\"]}}",
+    "model": "thinkingmachines/Inkling",
+    "provider": "huggingface",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 2254,
+        "output_tokens": 1513,
+        "total_tokens": 3767,
+        "cached_tokens": 256
+    },
+    "duration": 17.114709615707397,
+    "timestamp": "2026-09-17T11:38:40.715862",
+    "parsed": {
+        "metadata": {
+            "send_date": [
+                "1932-12-21"
+            ],
+            "letter_title": null,
+            "sender_persons": [
+                "Basler Personenschiffahrtsgesellschaft"
+            ],
+            "receiver_persons": [
+                "Basler Rheinschiffahrt-Aktiengesellschaft"
+            ]
+        }
+    },
+    "conversation_id": "8bc09e26-33d2-42e2-95e5-94d0b4d05f17",
+    "score": {
+        "send_date_tp": 1,
+        "send_date_fp": 0,
+        "send_date_fn": 0,
+        "sender_persons_tp": 0,
+        "sender_persons_fp": 1,
+        "sender_persons_fn": 0,
+        "receiver_persons_tp": 0,
+        "receiver_persons_fp": 1,
+        "receiver_persons_fn": 0,
+        "field_scores": {
+            "send_date": {
+                "response": [
+                    "1932-12-21"
+                ],
+                "ground_truth": [
+                    "1932-12-21"
+                ],
+                "score": null,
+                "counts": {
+                    "send_date_tp": 1,
+                    "send_date_fp": 0,
+                    "send_date_fn": 0
+                }
+            },
+            "sender_persons": {
+                "response": [
+                    "Basler Personenschiffahrtsgesellschaft"
+                ],
+                "ground_truth": [],
+                "score": null,
+                "counts": {
+                    "sender_persons_tp": 0,
+                    "sender_persons_fp": 1,
+                    "sender_persons_fn": 0
+                }
+            },
+            "receiver_persons": {
+                "response": [
+                    "Basler Rheinschiffahrt-Aktiengesellschaft"
+                ],
+                "ground_truth": [],
+                "score": null,
+                "counts": {
+                    "receiver_persons_tp": 0,
+                    "receiver_persons_fp": 1,
+                    "receiver_persons_fn": 0
+                }
+            }
+        }
+    },
+    "raw_response": "{\"id\":\"p1dB3qw-4i1VM9-a3c723444f7b82b1\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\n  \\\"metadata\\\": {\\n    \\\"send_date\\\": [\\\"1932-12-21\\\"],\\n    \\\"letter_title\\\": null,\\n    \\\"sender_persons\\\": [\\\"Basler Personenschiffahrtsgesellschaft\\\"],\\n    \\\"receiver_persons\\\": [\\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"]\\n  }\\n}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"metadata\":{\"send_date\":[\"1932-12-21\"],\"letter_title\":null,\"sender_persons\":[\"Basler Personenschiffahrtsgesellschaft\"],\"receiver_persons\":[\"Basler Rheinschiffahrt-Aktiengesellschaft\"]}},\"reasoning\":\"We need parse image of historical letter in German. Need extract letter_title, sender_persons, send_date, receiver_persons. Let's analyze visible text.\\n\\nImage shows letter with header \\\"Basel, den 21.Dezember 1932.\\\" Then \\\"ER.\\\" Then \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\" then \\\"BASEL\\\" then \\\"Marktgasse 5.\\\" Then \\\"Namens der Basler Personenschiffahrtsgesellschaft\\\" then body confirming receipt of letter of 19th ds. and forwarding to association for shipping on Oberrhein, expecting direct contact. \\\"In Hochachtung\\\"\\n\\nNeed determine title? Maybe not explicit. Could be null? But maybe letter has no title, except maybe \\\"ER.\\\" is abbreviation? Let's think.\\n\\nWe need identify sender and receiver. The letter is addressed to \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\" in Basel, Marktgasse 5, on behalf of \\\"Basler Personenschiffahrtsgesellschaft\\\". So receiver is Basler Rheinschiffahrt-Aktiengesellschaft? Or the person? The key asks receiver_persons: Name(s) of person(s) who received the letter. Here it's a company, but we can list company name? The example lists persons and institutions? Actually example lists Mayor Joe Quimby, Seymour Skinner (persons). But here receiver is an organization. Still should include \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\". Maybe also \\\"Basler Personenschiffahrtsgesellschaft\\\" is sender? Let's parse carefully.\\n\\nThe letter starts with \\\"ER.\\\" maybe \\\"Euer\\\" no. Then address block:\\nBasler Rheinschiffahrt-Aktiengesellschaft\\nBASEL\\n-----------\\nMarktgasse 5.\\n\\nThen \\\"Namens der Basler Personenschiffahrtsgesellschaft\\\" -> \\\"In the name of the Basler Personenschiffahrtsgesellschaft\\\" So the sender is Basler Personenschiffahrtsgesellschaft, writing on behalf? The body says \\\"best\u00e4tige ich Ihnen den Empfang Ihres Geehrten vom 19.ds. Ich habe dieses Schreiben an den Verein f\u00fcr die Schiffahrt auf dem Oberrhein weitergeleitet und nehme an, dass sich dieser mit Ihnen direkt in Verbindung setzen werde.\\\"\\n\\nThus the writer is representing Basler Personenschiffahrtsgesellschaft, but no individual name is given. So sender_persons might be null? Or should we put the organization? The prompt says \\\"Name(s) of the person(s) who wrote the letter.\\\" Since no individual named, but the organization is named as acting \\\"Namens der...\\\" Maybe we should list \\\"Basler Personenschiffahrtsgesellschaft\\\" as sender? But it's not a person. However in absence of individual, maybe list the entity. Let's examine conventions for such extraction tasks: Usually they want entities mentioned, can include organizations if named as sender/receiver. The receiver is clearly \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\". The sender is \\\"Basler Personenschiffahrtsgesellschaft\\\". The date is 1932-12-21. Title? There is no explicit title like \\\"Betreff\\\". Could be null. But there is \\\"ER.\\\" at top left, maybe stands for \\\"Eingeschrieben\\\"? Not title. So letter_title likely null.\\n\\nBut wait, there might be hidden title in top right \\\"6A\\\" not relevant.\\n\\nThus JSON:\\n{\\n\\\"letter_title\\\": [null]? No, the instructions say values stored as list, even if single value. If information not included, set value for corresponding key to \\\"null\\\". That likely means the list contains null? Or the value is null? In example all values are lists of strings. For missing, probably [\\\"null\\\"]? Actually they said \\\"set the value for the corresponding key to 'null'\\\". That could mean the JSON value is null, not inside list? But they said values corresponding to each key should be stored as a list, even if there is only a single value for a key. So likely [\\\"null\\\"]? Let's check consistency: If missing, should we have \\\"letter_title\\\": null or \\\"letter_title\\\": [\\\"null\\\"]? The instruction: \\\"If a piece of information is not included in the letter, set the value for the corresponding key to 'null'.\\\" Given they want list for values, maybe they want \\\"letter_title\\\": [null]? But JSON can have null inside list. However they said \\\"the values corresponding to each key should be stored as a list\\\" - so the value is a list. Then \\\"set the value ... to 'null'\\\" might conflict. Usually in these prompts they want e.g., \\\"letter_title\\\": null if missing, despite list rule? Let's examine example: all present are lists. For missing they might still want list with null? Let's decide based on typical extraction format: They want list of extracted values. If none, empty list []? But they specifically said set to \\\"null\\\". So likely the value should be the JSON null, not a list. But they also said store as list even if single value. Hmm.\\n\\nLet's parse exactly: \\\"return them in a JSON file where the values corresponding to each key should be stored as a list, even if there is only a single value for a key\\\" -> So value is always a list. Then \\\"If a piece of information is not included in the letter, set the value for the corresponding key to \\\"null\\\".\\\" This might mean put the string \\\"null\\\" inside the list? Or set the list value to null? Actually \\\"value for the corresponding key\\\" refers to the JSON value associated with key. If that value must be a list, then setting it to \\\"null\\\" breaks the list rule. But they might allow exception for missing data: value is null (not a list). Let's think about typical prompts from this dataset. Often they ask: \\\"return them in a JSON file where the values corresponding to each key should be stored as a list... If a piece of information is not included... set the value... to null\\\". In many LLM outputs, they do:\\n\\\"letter_title\\\": null,\\n\\\"sender_persons\\\": [\\\"...\\\"],\\netc. So they relax the list rule for null case. Yes, that sounds right: normally list, but if missing then null.\\n\\nThus we'll output:\\nletter_title: null\\nsend_date: [\\\"1932-12-21\\\"]\\nsender_persons: [\\\"Basler Personenschiffahrtsgesellschaft\\\"]? Or null because no person? Let's think more.\\n\\nThe phrase \\\"Namens der Basler Personenschiffahrtsgesellschaft\\\" indicates the letter is written in the name of that company. So the sender entity is that company. Even though not a person, it's the sender. So include it.\\n\\nBut is there an individual signatory? No signature visible at bottom? The image cuts off bottom? Actually bottom is blank, no signature visible. So indeed only organization.\\n\\nThus receiver_persons: [\\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"].\\n\\nCheck date format: 1932-12-21.\\n\\nThus final JSON.\"},\"seed\":null}],\"created\":1789637904,\"model\":\"thinkingmachines/Inkling\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":\"default\",\"usage\":{\"completion_tokens\":1513,\"prompt_tokens\":2254,\"total_tokens\":3767,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":null,\"reasoning_tokens\":1443,\"rejected_prediction_tokens\":null},\"prompt_tokens_details\":{\"audio_tokens\":null,\"cached_tokens\":256}},\"prompt\":[]}"
+}
