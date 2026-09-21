@@ -8,11 +8,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## v0.5.6-pre1 - Unreleased
 
 ### Added
-- `scripts/analyse_reasoning_gap.py`: reports reasoning tokens billed but absent from `output_tokens`, priced at the run date's rate via the export's `resolve_pricing`. Read-only.
+- `scripts/backfill_costs.py`: records reasoning tokens and fills missing input/output cost on stored results, priced at the rate in force on each run's date. Dry run by default.
 - 2 new models replacing retired ones: `deepseek-flash` (DeepSeek's V4.1-Flash, with vision) and `qwen/qwen3.8-max-0902` (OpenRouter), with 30 benchmark test configurations (T1765-T1794, 15 each).
-- Pricing data for 2026-09-16: 85 priced models across 12 providers, `contour_local` unpriced as before, and for 2026-09-18 (`qwen/qwen3.8-27b` down to $0.214/$2.55 from $0.42/$3.00); `pricing.json` metadata bumped to version 1.50.
+- Pricing data for 2026-09-16: 85 priced models across 12 providers and for 2026-09-18; 2026-06-11 and 2026-06-23 buckets for `cohere/command-r` and `command-r-plus`, recovered from archived snapshots; `pricing.json` metadata bumped to version 1.52.
 
 ### Fixed
+- `results/`: 17,600 requests now record `reasoning_tokens` and `reasoning_cost_usd`; genai and x-ai bill reasoning outside `output_tokens`, so it was never costed.
+- `results/`: 17,398 requests that recorded tokens but no cost are now priced.
+- `pricing.json`: `cohere/command-r-08-2024` at 2026-03-02 corrected to $0.15/$0.60; it held `command-r7b`'s price.
 - `library_cards`: `Publication.year` is optional and accepts a numeric year, coerced to string.
 - `company_lists`: `Entry.location` is optional.
 - `business_letters`: null and blank entries are dropped from the `Metadata` lists; the keys stay required.
@@ -43,11 +46,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Tests on 2026-09-04: T1660-T1674 (15 tests) for gpt-6-astra (OpenAI) across all benchmarks
 - Tests on 2026-09-08: T1690-T1739 and T1750-T1764 (65 tests) — meta/muse-spark-1.3 (T1690-T1704), z-ai/glm-5.3-flash (T1705-T1719), qwen/qwen3.8-flash (T1720-T1734) (OpenRouter), deepseek-v4-flash-vision-exp (T1750-T1764) (DeepSeek) across all benchmarks, and qwen/qwen3.8-27b on 5 of 15 (T1735-T1739) (OpenRouter)
 - Tests on 2026-09-09: T1740-T1749 (10 tests) completing qwen/qwen3.8-27b (OpenRouter).
-- `tests/integrity/test_client_capability_integrity.py`: fails when the installed `ai_client` would silently drop images from a DeepSeek vision model; `dev/DEPENDENCY_PATCHES.md` records the patch to re-apply after a venv rebuild.
+- `tests/integrity/test_client_capability_integrity.py`: fails when the installed `ai_client` would silently drop images from a DeepSeek vision model.
 - `FatalProviderError`: a 402, 401 or 403 now aborts the run instead of being retried per object for every remaining test.
 - `field_scores` in `score_request_answer` for the eight benchmarks that lacked it (`bibliographic_data`, `blacklist_cards`, `book_advert_xml`, `business_letters`, `fraktur_adverts`, `general_meeting_minutes`, `magazine_pages`, `medieval_manuscripts`), so all twelve now record what the scorer compared as `{response, ground_truth, score}`, with `score` set to `null` where a scorer counts true/false positives instead of assigning a similarity. Scores are unchanged: all 77,866 stored inputs re-score identically. Documented on `Benchmark.score_request_answer` and enforced by the new `tests/integrity/test_field_scores_integrity.py`, which also rejects a score that will not serialise, since `save_answer` writes it verbatim into the stored answer.
 - `scripts/offline_scoring.py` and `scripts/rescore.py`: re-run a benchmark's own scorer over stored results with no model call, to prove a scorer change leaves its numbers untouched. Each run's `rules` are applied, because `personnel_cards` selects which fields it scores from them.
-- `scripts/ndr_export/generate_compare_detail.py`, a new `generate_all.py` step (now 8), writing `collected_results/compare_detail/<date>/<test_id>.json` (1,792 files, ~13 MB in git). Only inputs whose stored answer has no `field_scores` are re-scored, so detail recorded at run time is always preferred and `results/` is never rewritten (`dev/DATASET_EXPORT_PLAN.md` §6); each file records its provenance and whether re-scoring still reproduces the stored score. `compare_index.json` marks such runs with `detail: true`.
+- `scripts/ndr_export/generate_compare_detail.py`, a new `generate_all.py` step (now 8), writing `collected_results/compare_detail/<date>/<test_id>.json` (1,792 files, ~13 MB in git). Only inputs whose stored answer has no `field_scores` are re-scored, so detail recorded at run time is always preferred and `results/` is never rewritten; each file records its provenance and whether re-scoring still reproduces the stored score. `compare_index.json` marks such runs with `detail: true`.
 - `timing` on every test run in `test_runs_export.json`: total model time, mean and slowest per input, and inputs timed.
 
 ### Fixed
