@@ -1,10 +1,10 @@
 """Tests for `scripts/backfill_costs.py`.
 
 The script rewrites tracked data in bulk, so these pin the properties that make that
-safe: nothing is written until validation passes, a filtered run cannot alter anything
-outside its scope, a provider-reported cost is never replaced by a derived one, a dry run
-previews exactly what an apply would do, and a touched file differs only in the intended
-keys.
+safe: nothing is written until validation passes, a touched file differs only in the
+intended keys and keeps its byte style, a provider-reported cost is never replaced by a
+derived one, a dry run previews exactly what an apply would do, and a run's totals are
+rewritten only when every one of its requests could be accounted for.
 
 Pricing is stubbed, so these test the script's decisions, not `scripts/data/pricing.json`.
 """
@@ -96,7 +96,7 @@ REASONING_USAGE = {"input_tokens": 100, "output_tokens": 200, "total_tokens": 13
 # ------------------------------------------------------------------- the five findings
 
 def test_nothing_is_written_when_a_mismatch_is_found(tmp_path, prices):
-    """P1: validation must finish before any write, not report a stop afterwards."""
+    """Validation must finish before any write, not report a stop afterwards."""
     prices[("genai", "m")] = price(10.0, 10.0)
     root = tmp_path / "results"
     # a clean file that would otherwise be rewritten, and one whose provider figure
@@ -116,7 +116,7 @@ def test_nothing_is_written_when_a_mismatch_is_found(tmp_path, prices):
 
 
 def test_provider_filter_leaves_other_runs_untouched(tmp_path, prices):
-    """P1: a scoped run must not rewrite the summary of an unscoped run with zeros."""
+    """A scoped run must not rewrite the summary of an unscoped run with zeros."""
     prices[("genai", "m")] = price(10.0, 10.0)
     prices[("openai", "m")] = price(10.0, 10.0)
     root = tmp_path / "results"
@@ -142,7 +142,7 @@ def test_provider_filter_leaves_other_runs_untouched(tmp_path, prices):
 
 
 def test_provider_reported_cost_is_never_replaced(tmp_path, prices):
-    """P1: a billed estimated_cost_usd with no components must survive, in file and run."""
+    """A billed estimated_cost_usd with no components must survive, in file and run."""
     prices[("openrouter", "m")] = price(1.0, 1.0)
     root = tmp_path / "results"
     run = make_run(root, "2026-01-02", "T0001", {
@@ -160,7 +160,7 @@ def test_provider_reported_cost_is_never_replaced(tmp_path, prices):
 
 
 def test_dry_run_matches_apply(tmp_path, prices):
-    """P2: the preview must count exactly what an apply would change."""
+    """The preview must count exactly what an apply would change."""
     prices[("genai", "m")] = price(10.0, 10.0)
     root = tmp_path / "results"
     # a stored reasoning cost that the backfill will replace
@@ -180,7 +180,7 @@ def test_dry_run_matches_apply(tmp_path, prices):
 
 
 def test_verify_honours_filters(tmp_path, prices):
-    """P2: a scoped --verify must not fail on requests outside the scope."""
+    """A scoped --verify must not fail on requests outside the scope."""
     prices[("genai", "m")] = price(10.0, 10.0)
     root = tmp_path / "results"
     make_run(root, "2026-01-02", "T0001", {"a": request_payload(usage=dict(

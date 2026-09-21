@@ -21,6 +21,10 @@ Two rules govern what may be written:
     python scripts/backfill_costs.py --summaries --apply # and roll up per run
     python scripts/backfill_costs.py --verify            # check what landed
 
+A run's `cost_summary` is all-or-nothing: it is rewritten only when every request in the
+run is readable, in scope, writable and priceable. Otherwise the stored totals stand,
+because a partial sum reports the remaining requests as free.
+
 Dry run is the default. Before any write the unmodified document is re-serialised and
 compared with the bytes on disk; a file that cannot be reproduced exactly is skipped, so
 stored files keep their own JSON encoding and line endings.
@@ -274,6 +278,11 @@ def find_mismatches(args):
 
 
 def backfill(args, stats):
+    """Apply each request's decided cost fields, or count what would change.
+
+    Writes nothing unless `args.apply`. A file whose byte style cannot be reproduced is
+    left untouched and recorded in `stats.unreproducible`.
+    """
     dates, test_ids = set(args.date or []), set(args.test_id or [])
     for date, _test_id, path in iter_request_files(args.results, dates, test_ids):
         loaded = load(path)
@@ -345,6 +354,11 @@ def roll_up_summaries(args, apply_changes):
 
     Only keys whose value moved are written, so a run that merely gained reasoning keeps
     its token totals and pricing provenance.
+
+    Three things hold a run back, each because the alternative is a total that silently
+    reports part of the run as free: a request that cannot be read or is filtered out
+    (the run is skipped), a request the writer would skip (likewise), and a request whose
+    cost is unknown rather than zero (the components and total are left as stored).
     """
     changed, runs, unreproducible, retotalled, skipped = 0, 0, [], 0, 0
     dates, test_ids = set(args.date or []), set(args.test_id or [])
