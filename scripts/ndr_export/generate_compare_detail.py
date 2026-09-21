@@ -5,7 +5,7 @@ The comparison view shows what a benchmark's scorer compared, field by field, fr
 re-runs the scorer offline (`scripts/offline_scoring.py`) for the runs that lack it. No
 model call is involved.
 
-Two rules govern the output.
+Three rules govern the output.
 
 **The archive is not rewritten.** `results/` stays the source archive: a recomputed value
 written back into a request file would sit alongside metrics computed at run time with
@@ -18,6 +18,10 @@ genuinely absent detail is computed here, and it is labelled, because ground tru
 revised and re-scored detail reflects today's truth rather than the run's.
 `reproduces_stored_score` records that per input; where it is false both metric sets are
 kept, so the divergence stays visible.
+
+**A re-run that finds nothing new writes nothing.** `rescored` dates the detail on
+file, not the last attempt to recompute it, so a run whose detail comes back identical
+keeps its recorded date and its file stays byte-identical.
 
 Output: collected_results/compare_detail/<date>/<test_id>.json, one file per run that
 needs any, so the view fetches only the run it is showing.
@@ -149,6 +153,10 @@ def detail_for_run(run_dir, test_id, benchmark, scorer, tally):
     return inputs, diagnostics
 
 
+def _unstamped(document):
+    return {key: value for key, value in document.items() if key != "rescored"}
+
+
 def generate_compare_detail(benchmark=None, limit=0, measure=False, only_missing=False):
     """Writes collected_results/compare_detail/<date>/<test_id>.json."""
     tests = read_tests()
@@ -166,6 +174,13 @@ def generate_compare_detail(benchmark=None, limit=0, measure=False, only_missing
         if only_missing and out_path.is_file():
             tally["already present"] += 1
             continue
+
+        previous = None
+        if out_path.is_file():
+            try:
+                previous = json.loads(out_path.read_bytes().decode("utf-8"))
+            except (UnicodeDecodeError, json.JSONDecodeError):
+                previous = None
 
         if name not in scorers:
             try:
@@ -197,12 +212,22 @@ def generate_compare_detail(benchmark=None, limit=0, measure=False, only_missing
         if diagnostics:
             document["diagnostics"] = diagnostics
 
+        # `rescored` is the only field that moves on a re-run that found nothing new.
+        # Left to advance, it rewrites every file in git for no change in content.
+        unchanged = previous is not None and _unstamped(previous) == _unstamped(document)
+        if unchanged:
+            document["rescored"] = previous.get("rescored", today)
+
         blob = json.dumps(document, ensure_ascii=False, sort_keys=True).encode("utf-8")
         raw_bytes += len(blob)
         # git zlib-compresses every blob it stores, so the compressed size is the honest
         # estimate of what this costs the repository -- not the working-tree size.
         gzip_bytes += len(gzip.compress(blob, 6))
         per_benchmark[name] += len(blob)
+
+        if unchanged:
+            tally["unchanged"] += 1
+            continue
         written += 1
 
         if not measure:
@@ -218,7 +243,7 @@ def generate_compare_detail(benchmark=None, limit=0, measure=False, only_missing
         print("  %-22s %.1fx" % ("compression", raw_bytes / max(gzip_bytes, 1)))
     for key in ("reproduces stored", "differs from stored", "no stored score",
                 "kept run-time detail", "no detail produced", "scorer raised",
-                "nothing to write", "already present", "scorer unavailable"):
+                "nothing to write", "unchanged", "already present", "scorer unavailable"):
         if tally[key]:
             print("  %-22s %d" % (key, tally[key]))
     if per_benchmark:
