@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - `scripts/backfill_costs.py`: records reasoning tokens and fills missing input/output cost on stored results, priced at the rate in force on each run's date. Dry run by default.
+- `generate_vars.py`: `total_reasoning_tokens` and `total_reasoning_cost_usd` in `vars.json`; the energy estimate charges reasoning at the output rate.
 - 2 new models replacing retired ones: `deepseek-flash` (DeepSeek's V4.1-Flash, with vision) and `qwen/qwen3.8-max-0902` (OpenRouter), with 30 benchmark test configurations (T1765-T1794, 15 each).
 - Pricing data for 2026-09-16: 85 priced models across 12 providers and for 2026-09-18; 2026-06-11 and 2026-06-23 buckets for `cohere/command-r` and `command-r-plus`, recovered from archived snapshots; `pricing.json` metadata bumped to version 1.52.
 
@@ -24,8 +25,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `benchmark_base.py`: output ceilings for `claude-haiku-4-5`, `claude-opus-4-5` and `claude-sonnet-4-5` (64,000).
 - `update_pricing.py`: reads every text block of the parser's reply, so a leading thinking block no longer raises `KeyError: 'text'` and blanks a provider's models.
 - `update_pricing.py`: Alibaba scraped from `model-studio/model-pricing`.
+- `generate_compare_detail.py`: a run whose detail comes back identical keeps its recorded `rescored` date, so a re-run no longer rewrites every detail file with no change in content.
 
 ### Changed
+- Published totals over 3,417 runs: cost $940.84 → $1,796.42 and the energy estimate up four fifths, from the reasoning backfill, the cost fill and the runs since 2026-09-14.
+- `collected_results/` is no longer committed, apart from `compare_detail/`; the deploy rebuilds it on the VM before it reads anything.
 - `DEFAULT_MAX_OUTPUT_TOKENS` lowered from 32,768 to 16,384.
 - `deepseek-flash` keeps 32,768 via the new `MODEL_LONG_OUTPUT`.
 - Output ceiling of 16,384 for the seven `qwen/qwen3.5-*` and both `meta/muse-spark` models, which binds when a benchmark raises its own cap.
