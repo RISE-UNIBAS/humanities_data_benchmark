@@ -2,8 +2,7 @@
 
 gpt-5 and newer reject `max_tokens` with 400, and `ai_client` 0.4.6 hard-codes that
 name, so a run against them fails on every object. Passes when either side is fixed
--- the client, or the rename in `scripts/benchmark_base.py`. See
-dev/DEPENDENCY_PATCHES.md section 8.
+-- the client, or the rename in `scripts/benchmark_base.py`.
 
 Run logic-only with: pytest -m "not integrity".
 """
@@ -83,6 +82,7 @@ def test_openai_chat_requests_do_not_send_max_tokens():
     assert upstream_ok or repo_ok, (
         "OpenAI chat requests would send 'max_tokens', which gpt-5 and newer reject "
         "with 400 Unsupported parameter, failing every object of every affected test. "
-        "Neither the installed ai_client nor this repository renames it. See "
-        "dev/DEPENDENCY_PATCHES.md section 8 for the upstream fix and the stopgap."
+        "Neither the installed ai_client nor this repository renames it. Fix by "
+        "upgrading ai_client, or by restoring the "
+        "`_send_cap_as_max_completion_tokens` wrapper in scripts/benchmark_base.py."
     )

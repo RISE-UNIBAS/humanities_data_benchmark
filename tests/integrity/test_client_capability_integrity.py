@@ -61,6 +61,6 @@ def test_deepseek_vision_models_pass_the_client_image_gate(non_legacy_rows):
     )
     assert not stripped, (
         f"DeepSeek vision models whose images the installed client will silently "
-        f"drop: {stripped}. Re-apply the _VISION_MODEL_KEYWORDS patch to the "
-        f"installed ai_client -- see dev/DEPENDENCY_PATCHES.md."
+        f"drop: {stripped}. Re-apply the _VISION_MODEL_KEYWORDS patch to "
+        f"ai_client/deepseek_client.py in the installed package."
     )
