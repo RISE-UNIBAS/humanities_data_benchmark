@@ -375,3 +375,137 @@ def test_pricing_window_boundary(tmp_path, monkeypatch):
     assert bc.price_for("genai", "m", "2026-02-28", 30) is None
     assert bc.price_for("genai", "m", "2026-02-02", None).input_price == 1.0
     bc.clear_price_cache()
+
+
+def test_unreadable_request_leaves_the_summary_alone(tmp_path, prices):
+    """A request that will not parse must not be dropped from the run's total."""
+    prices[("genai", "m")] = price(10.0, 10.0)
+    root = tmp_path / "results"
+    run = make_run(root, "2026-01-02", "T0001",
+                   {"a": request_payload(usage=dict(REASONING_USAGE)),
+                    "b": request_payload(usage=dict(REASONING_USAGE))},
+                   summary={"total_input_tokens": 200, "total_output_tokens": 400,
+                            "total_tokens": 600, "input_cost_usd": 0.002,
+                            "output_cost_usd": 0.004, "total_cost_usd": 0.006})
+    with open(os.path.join(run, "request_b.json"), "wb") as fh:
+        fh.write(b"{ this is not json")
+    before = read(os.path.join(run, "scoring.json"))
+
+    args = make_args(root, summaries=True, apply=True)
+    bc.backfill(args, bc.Stats())
+    _runs, changed, _unrep, _ret, skipped = bc.roll_up_summaries(args, True)
+
+    assert read(os.path.join(run, "scoring.json")) == before
+    assert changed == 0 and skipped == 1
+    assert summary_of(run)["total_input_tokens"] == 200, "totalled from the readable half"
+
+
+def test_unwritable_request_leaves_the_summary_alone(tmp_path, prices, monkeypatch):
+    """If the writer skips a file, the run must not be totalled as if it had not."""
+    prices[("genai", "m")] = price(10.0, 10.0)
+    root = tmp_path / "results"
+    run = make_run(root, "2026-01-02", "T0001",
+                   {"a": request_payload(usage=dict(REASONING_USAGE))},
+                   summary={"total_input_tokens": 100, "total_output_tokens": 200,
+                            "total_tokens": 300, "input_cost_usd": 0.001,
+                            "output_cost_usd": 0.002, "total_cost_usd": 0.003})
+    before_req = read(os.path.join(run, "request_a.json"))
+    before_sum = read(os.path.join(run, "scoring.json"))
+    # the formatting safeguard rejects every file
+    monkeypatch.setattr(bc, "detect_style", lambda raw, doc: None)
+
+    args = make_args(root, summaries=True, apply=True)
+    stats = bc.Stats()
+    bc.backfill(args, stats)
+    _runs, changed, _unrep, _ret, skipped = bc.roll_up_summaries(args, True)
+
+    assert len(stats.unreproducible) == 1 and stats.written == 0
+    assert read(os.path.join(run, "request_a.json")) == before_req
+    assert read(os.path.join(run, "scoring.json")) == before_sum
+    assert changed == 0 and skipped == 1
+
+
+def test_a_stale_total_is_corrected_on_its_own(tmp_path, prices):
+    """total_cost_usd is checked even when every other figure already matches."""
+    prices[("openai", "m")] = price(10.0, 10.0)
+    root = tmp_path / "results"
+    run = make_run(root, "2026-01-02", "T0001",
+                   {"a": request_payload(provider="openai", usage={
+                       "input_tokens": 100, "output_tokens": 200, "total_tokens": 300,
+                       "input_cost_usd": 0.001, "output_cost_usd": 0.002,
+                       "estimated_cost_usd": 0.003})},
+                   summary={"total_input_tokens": 100, "total_output_tokens": 200,
+                            "total_tokens": 300, "input_cost_usd": 0.001,
+                            "output_cost_usd": 0.002, "total_cost_usd": 0.0})
+
+    args = make_args(root, summaries=True, apply=True)
+    bc.backfill(args, bc.Stats())
+    _runs, changed, _unrep, _ret, _skip = bc.roll_up_summaries(args, True)
+
+    assert changed == 1
+    assert summary_of(run)["total_cost_usd"] == pytest.approx(0.003)
+
+
+def test_request_without_a_usage_block_does_not_block_the_run(tmp_path, prices):
+    """A request recording no usage contributes zero; it does not make the total unknown."""
+    prices[("genai", "m")] = price(10.0, 10.0)
+    root = tmp_path / "results"
+    run = make_run(root, "2026-01-02", "T0001",
+                   {"a": request_payload(usage=dict(REASONING_USAGE))},
+                   summary={"total_input_tokens": 100, "total_output_tokens": 200,
+                            "total_tokens": 300, "input_cost_usd": 0.001,
+                            "output_cost_usd": 0.002, "total_cost_usd": 0.003})
+    doc = request_payload()
+    doc.pop("usage")
+    write_json(os.path.join(run, "request_b.json"), doc)
+
+    args = make_args(root, summaries=True, apply=True)
+    bc.backfill(args, bc.Stats())
+    _runs, changed, _unrep, _ret, skipped = bc.roll_up_summaries(args, True)
+
+    assert skipped == 0, "a usage-less request blocked the run"
+    assert changed == 1
+    s = summary_of(run)
+    assert s["total_reasoning_tokens"] == 1000
+    assert s["total_input_tokens"] == 100, "the usage-less request added nothing"
+
+
+def test_wholly_unpriced_run_keeps_its_recorded_total(tmp_path, prices):
+    """No price in the window means the contribution is unknown, so the total stands."""
+    root = tmp_path / "results"          # `prices` empty: nothing resolves
+    run = make_run(root, "2026-01-02", "T0001",
+                   {"a": request_payload(usage={"input_tokens": 100, "output_tokens": 200,
+                                                "total_tokens": 300})},
+                   summary={"total_input_tokens": 100, "total_output_tokens": 200,
+                            "total_tokens": 300, "input_cost_usd": 0.001,
+                            "output_cost_usd": 0.002, "total_cost_usd": 0.003})
+
+    args = make_args(root, summaries=True, apply=True)
+    bc.backfill(args, bc.Stats())
+    bc.roll_up_summaries(args, True)
+
+    assert summary_of(run)["total_cost_usd"] == pytest.approx(0.003), \
+        "an unknown contribution was written as zero"
+
+
+def test_one_unpriced_request_preserves_a_mixed_run_total(tmp_path, prices):
+    """A priced request must not let an unpriceable sibling be counted as free."""
+    prices[("genai", "m")] = price(10.0, 10.0)
+    root = tmp_path / "results"
+    run = make_run(root, "2026-01-02", "T0001", {
+        "a": request_payload(usage=dict(REASONING_USAGE)),
+        # different model, so `prices` has no entry for it
+        "b": request_payload(model="unpriced", usage={"input_tokens": 100,
+                                                      "output_tokens": 200,
+                                                      "total_tokens": 300}),
+    }, summary={"total_input_tokens": 200, "total_output_tokens": 400,
+                "total_tokens": 600, "input_cost_usd": 0.002,
+                "output_cost_usd": 0.004, "total_cost_usd": 0.006})
+
+    args = make_args(root, summaries=True, apply=True)
+    bc.backfill(args, bc.Stats())
+    bc.roll_up_summaries(args, True)
+
+    s = summary_of(run)
+    assert s["total_cost_usd"] == pytest.approx(0.006), "partial sum overwrote the total"
+    assert s["total_reasoning_tokens"] == 1000, "the known reasoning is still recorded"

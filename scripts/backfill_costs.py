@@ -145,6 +145,10 @@ class Desired(NamedTuple):
     total: float
     """This request's contribution to its run's total, whatever the components are."""
 
+    total_known: bool
+    """False when the contribution is unknown rather than zero, so a run containing it
+    cannot be totalled."""
+
     components_known: bool
     filled: bool
     unpriced_fill: bool
@@ -208,6 +212,8 @@ def desired(document, date, max_age_days, all_files=False):
     elif components_known:
         total = input_cost + output_cost + (reasoning or 0)
     else:
+        # Tokens but no cost and no price in the window: the contribution is unknown, and
+        # 0.0 is only a placeholder. A request with no tokens at all really did cost 0.
         total = 0.0
 
     # Order sets where new keys land; existing keys keep their position.
@@ -222,7 +228,8 @@ def desired(document, date, max_age_days, all_files=False):
         changes[COST_KEY] = reasoning
 
     return Desired(input_cost, output_cost, tokens, reasoning, total,
-                   components_known, filled, unpriced_fill, gap, reported, changes)
+                   not unpriced_fill, components_known, filled, unpriced_fill,
+                   gap, reported, changes)
 
 
 def load(path):
@@ -356,19 +363,19 @@ def roll_up_summaries(args, apply_changes):
             if test_ids and test_id not in test_ids:
                 continue
 
-            requests, out_of_scope = [], 0
+            # A total is only meaningful over every request in the run. Anything that
+            # cannot be read, is filtered out, or would not be written leaves the
+            # summary alone -- a partial sum silently reports the rest as free.
+            requests, excluded = [], 0
             for name in sorted(os.listdir(test_dir)):
                 if not (name.startswith("request_") and name.endswith(".json")):
                     continue
                 loaded = load(os.path.join(test_dir, name))
-                if loaded is None:
+                if loaded is None or not in_scope(loaded[1], args):
+                    excluded += 1
                     continue
-                if not in_scope(loaded[1], args):
-                    out_of_scope += 1
-                    continue
-                requests.append(loaded[1])
-            # Never total a run partially: the excluded requests did not cost nothing.
-            if out_of_scope:
+                requests.append(loaded)
+            if excluded:
                 skipped += 1
                 continue
             if not requests:
@@ -378,14 +385,24 @@ def roll_up_summaries(args, apply_changes):
             in_tok = out_tok = r_tok = 0
             in_cost = out_cost = r_cost = total = 0.0
             r_priced = unknown_components = 0
-            for request in requests:
+            unusable = total_unknown = False
+            for raw_request, request in requests:
                 d = desired(request, date, args.max_price_age, args.all_files)
+                # No usage block at all: the request recorded no tokens and no cost, so it
+                # contributes nothing. That is known, unlike a file that will not parse.
                 if d is None:
                     continue
+                # A request the writer would skip must not be counted as if it had been
+                # corrected.
+                if d.changes and detect_style(raw_request, request) is None:
+                    unusable = True
+                    break
                 usage = request.get("usage") or {}
                 in_tok += usage.get("input_tokens") or 0
                 out_tok += usage.get("output_tokens") or 0
                 total += d.total
+                if not d.total_known:
+                    total_unknown = True
                 if d.components_known:
                     in_cost += d.input_cost or 0.0
                     out_cost += d.output_cost or 0.0
@@ -395,6 +412,10 @@ def roll_up_summaries(args, apply_changes):
                 if d.reasoning_cost is not None:
                     r_cost += d.reasoning_cost
                     r_priced += 1
+
+            if unusable:
+                skipped += 1
+                continue
 
             loaded = load(scoring_path)
             if loaded is None:
@@ -421,7 +442,10 @@ def roll_up_summaries(args, apply_changes):
                 if moved:
                     retotalled += 1
                     want.update(moved)
-            if want:
+            # Checked even when nothing else moved, since a stale total is wrong on its
+            # own -- but only when every request's contribution is known. One unpriceable
+            # request makes the sum an understatement, not a correction.
+            if not total_unknown:
                 want["total_cost_usd"] = round(total, 10)
 
             if not want or all(not _differs(summary.get(k, _MISSING), v)
@@ -549,8 +573,8 @@ def main_with_args(args):
             print("  %s of those also had component totals re-summed"
                   % f"{retotalled:,}")
         if skipped:
-            print("  %s runs left alone: --provider excludes some of their requests, so "
-                  "any total would be partial" % f"{skipped:,}")
+            print("  %s runs left alone: a request could not be read, was filtered out, "
+                  "or could not be written, so any total would be partial" % f"{skipped:,}")
         if unreproducible:
             print("  %s scoring.json files could not be reproduced and were SKIPPED"
                   % f"{len(unreproducible):,}")
