@@ -1,26 +1,23 @@
 """Field-level comparison detail for runs whose scorer did not record any.
 
-The comparison view shows what a benchmark's scorer compared, field by field, taken from
-`score.field_scores` in the stored answer. Scorers record that themselves -- but only
-four of twelve did so historically, and those four gained it on different dates, so the
-detail is missing for most stored runs. This step fills the gap by re-running each
-scorer offline (see `scripts/offline_scoring.py`); no model call is involved.
+The comparison view shows what a benchmark's scorer compared, field by field, from
+`score.field_scores` in the stored answer. Not every scorer records it, so this step
+re-runs the scorer offline (`scripts/offline_scoring.py`) for the runs that lack it. No
+model call is involved.
 
-Two rules keep the result honest.
+Two rules govern the output.
 
-**The archive is not rewritten.** `dev/DATASET_EXPORT_PLAN.md` §6 keeps `results/` as the
-source archive, and a recomputed value written back into a request file would sit in the
-same object as metrics computed at run time, with nothing marking the seam. The detail
-goes here instead.
+**The archive is not rewritten.** `results/` stays the source archive: a recomputed value
+written back into a request file would sit alongside metrics computed at run time with
+nothing marking the seam. The detail is written here instead.
 
 **Run-time detail wins.** Where the stored answer already carries `field_scores`, it was
-computed against the ground truth as it stood that day, so it is strictly more faithful
-than anything recomputed now. Those inputs are skipped and the view reads them from the
-request file. Only what is genuinely absent is computed here, and it is labelled: ground
-truths are revised (568 stored scores no longer reproduce), so re-scored detail reflects
-today's truth, not the run's. `reproduces_stored_score` records that per input, and where
-it is false both metric sets are kept -- that divergence is a measurement of ground-truth
-revision, which §7.5 requires the documentation to explain.
+computed against the ground truth as it stood that day, so it is more faithful than
+anything recomputed now; those inputs are skipped and read from the request file. Only
+genuinely absent detail is computed here, and it is labelled, because ground truths are
+revised and re-scored detail reflects today's truth rather than the run's.
+`reproduces_stored_score` records that per input; where it is false both metric sets are
+kept, so the divergence stays visible.
 
 Output: collected_results/compare_detail/<date>/<test_id>.json, one file per run that
 needs any, so the view fetches only the run it is showing.
@@ -87,10 +84,8 @@ def is_dirty(path):
 def revisions_for(benchmark, cache):
     """Provenance for one benchmark, resolved once.
 
-    The commit that last touched the scorer does not describe the scorer that ran if the
-    working tree is dirty, and DATASET_EXPORT_PLAN.md §6 is explicit that a working-tree
-    build is not releasable as a commit-only provenance claim. So the dirty state is
-    recorded rather than silently implied. A deploy builds from a clean checkout, which
+    A commit hash does not describe the scorer that ran if the working tree is dirty, so
+    the dirty state is recorded rather than left implied; a build from a clean checkout
     clears it.
     """
     if benchmark not in cache:
