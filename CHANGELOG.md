@@ -5,17 +5,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## v0.6.0-pre1 - Unreleased
+## [v0.6.0] - 2026-09-23
 
 ### Added
 - `scripts/backfill_costs.py`: records reasoning tokens and fills missing input/output cost on stored results, priced at the rate in force on each run's date. Dry run by default.
 - `generate_vars.py`: `total_reasoning_tokens` and `total_reasoning_cost_usd` in `vars.json`; the energy estimate charges reasoning at the output rate.
+- `README.md`: Transkribus User Conference 2026 poster under Publications.
 - 2 new models replacing retired ones: `deepseek-flash` (DeepSeek's V4.1-Flash, with vision) and `qwen/qwen3.8-max-0902` (OpenRouter), with 30 benchmark test configurations (T1765-T1794, 15 each).
 - Pricing data for 2026-09-16: 85 priced models across 12 providers and for 2026-09-18; 2026-06-11 and 2026-06-23 buckets for `cohere/command-r` and `command-r-plus`, recovered from archived snapshots; `pricing.json` metadata bumped to version 1.52.
+- Results for the single-run and never-run backlog: 1,046 runs and 42,623 requests on 2026-09-16 (531 runs), 2026-09-17 (346) and 2026-09-18 (169).
 
 ### Fixed
 - `results/`: 17,600 requests now record `reasoning_tokens` and `reasoning_cost_usd`; genai and x-ai bill reasoning outside `output_tokens`, so it was never costed.
 - `results/`: 17,398 requests that recorded tokens but no cost are now priced.
+- `results/`: 7,922 Hugging Face requests repriced.
 - `pricing.json`: `cohere/command-r-08-2024` at 2026-03-02 corrected to $0.15/$0.60; it held `command-r7b`'s price.
 - `library_cards`: `Publication.year` is optional and accepts a numeric year, coerced to string.
 - `company_lists`: `Entry.location` is optional.
@@ -23,6 +26,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `magazine_pages`: new `prompt_explicit-json.txt` prompt variant stating the JSON format and the `box` key. An unparseable answer scores as a miss instead of being skipped, via the new `score_unparseable_as_miss` opt-in.
 - `publicai` Apertus output ceiling lowered to 4,096.
 - `benchmark_base.py`: output ceilings for `claude-haiku-4-5`, `claude-opus-4-5` and `claude-sonnet-4-5` (64,000).
+- `benchmark_base.py`: sends `max_completion_tokens` on OpenAI chat endpoints, which gpt-5 and newer require in place of `max_tokens`.
 - `update_pricing.py`: reads every text block of the parser's reply, so a leading thinking block no longer raises `KeyError: 'text'` and blanks a provider's models.
 - `update_pricing.py`: Alibaba scraped from `model-studio/model-pricing`.
 - `generate_compare_detail.py`: a run whose detail comes back identical keeps its recorded `rescored` date, so a re-run no longer rewrites every detail file with no change in content.
@@ -38,7 +42,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `CITATION.cff`: expanded keywords for Zenodo discovery.
 
 ### Removed
-- 4 `magazine_pages` tests configured on text-only cohere models (T0798-T0801: `command-r-08-2024`, `command-r-plus-08-2024`, `command-r7b-12-2024`, `command-a-03-2025`); none could ever produce a result. `command-a-vision-07-2025` (T0802) is unaffected.
+- 3 `scoring.json` publishing 0.0 with no request files behind them (`2026-09-16/T1480`, `2026-09-17/T1322`, `2026-09-17/T1335`).
+- 4 `magazine_pages` tests configured on text-only cohere models (T0798-T0801: `command-r-08-2024`, `command-r-plus-08-2024`, `command-r7b-12-2024`, `command-a-03-2025`); none could ever produce a result.
 
 ## [v0.5.5] - 2026-09-14
 
@@ -344,3 +349,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [v0.5.3]: https://github.com/RISE-UNIBAS/humanities_data_benchmark/releases/tag/v0.5.3
 [v0.5.4]: https://github.com/RISE-UNIBAS/humanities_data_benchmark/releases/tag/v0.5.4
 [v0.5.5]: https://github.com/RISE-UNIBAS/humanities_data_benchmark/releases/tag/v0.5.5
+[v0.6.0]: https://github.com/RISE-UNIBAS/humanities_data_benchmark/releases/tag/v0.6.0

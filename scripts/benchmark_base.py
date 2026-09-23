@@ -36,8 +36,8 @@ else:
 def _send_cap_as_max_completion_tokens(client):
     """Rename max_tokens to max_completion_tokens on OpenAI's chat endpoints.
 
-    gpt-5 and newer 400 on max_tokens; ai_client 0.4.6 hard-codes the name. See
-    dev/DEPENDENCY_PATCHES.md section 8.
+    gpt-5 and newer 400 on max_tokens; ai_client 0.4.6 hard-codes the name. Remove once
+    the library sends the parameter the chat endpoint expects.
     """
     api_client = getattr(client, "api_client", None)
     if api_client is None:

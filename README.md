@@ -720,6 +720,8 @@ Hindermann, M., Kasper, L. K., Marti, S., &amp; Bosse, A. (2026). From Experimen
 
 Hindermann, M., Marti, S., Kasper, L. K., & Bosse, A. (2026). The RISE Humanities Data Benchmark: A Framework for Evaluating Large Language Models for Humanities Tasks. *Journal of Open Humanities Data*, *12*(1), 24. https://doi.org/10.5334/johd.481
 
+Hindermann, M., Marti, S., & Decker, E. (2026). "It Depends," But Now We Can Measure Why: Benchmarking Specialised and General-Purpose AI on Humanities Tasks. Transkribus User Conference 2026, Passau, Germany. Zenodo. https://doi.org/10.5281/zenodo.22898343
+
 Hindermann, M., & Marti, S. (2026). The RISE Humanities Data Benchmark: From Anecdote to Evidence. DH Benelux 2026, Maastricht, Netherlands. Zenodo. https://doi.org/10.5281/zenodo.20595263
 
 Hindermann, M., & Marti, S. (2025, March 19). *RISE Crash Course: "AI Benchmarking"*. Zenodo. https://doi.org/10.5281/zenodo.15062831
