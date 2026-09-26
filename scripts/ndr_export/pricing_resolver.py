@@ -1,4 +1,4 @@
-"""Date-aware pricing lookup, for the NDR export only.
+"""Date-aware pricing lookup, for the NDR export and cost analyses over stored results.
 
 This lives in the export, not in the benchmark core, because what it produces is
 *derived* information -- the price in force on a given date -- recomputable at any time

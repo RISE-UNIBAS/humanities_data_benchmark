@@ -1,0 +1,84 @@
+{
+    "text": "{\"metadata\":{\"send_date\":[\"1928-04-23\"],\"letter_title\":null,\"sender_persons\":null,\"receiver_persons\":[\"Herrn Oettinger\"]}}",
+    "model": "qwen/qwen3.7-plus",
+    "provider": "openrouter",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 3127,
+        "output_tokens": 1124,
+        "total_tokens": 4251,
+        "input_cost_usd": 0.0010006400000000001,
+        "output_cost_usd": 0.00143872,
+        "estimated_cost_usd": 0.0024393600000000002
+    },
+    "duration": 23.626499891281128,
+    "timestamp": "2026-09-18T09:42:27.692805",
+    "parsed": {
+        "metadata": {
+            "send_date": [
+                "1928-04-23"
+            ],
+            "letter_title": null,
+            "sender_persons": null,
+            "receiver_persons": [
+                "Herrn Oettinger"
+            ]
+        }
+    },
+    "conversation_id": "71f26b0e-2d2f-457a-8b4d-5645ee47c20c",
+    "score": {
+        "send_date_tp": 1,
+        "send_date_fp": 0,
+        "send_date_fn": 0,
+        "sender_persons_tp": 0,
+        "sender_persons_fp": 0,
+        "sender_persons_fn": 2,
+        "receiver_persons_tp": 1,
+        "receiver_persons_fp": 0,
+        "receiver_persons_fn": 0,
+        "field_scores": {
+            "send_date": {
+                "response": [
+                    "1928-04-23"
+                ],
+                "ground_truth": [
+                    "1928-04-23"
+                ],
+                "score": null,
+                "counts": {
+                    "send_date_tp": 1,
+                    "send_date_fp": 0,
+                    "send_date_fn": 0
+                }
+            },
+            "sender_persons": {
+                "response": [],
+                "ground_truth": [
+                    "Groschupf-Jaeger, Louis",
+                    "Ritter-Dreier, Fritz"
+                ],
+                "score": null,
+                "counts": {
+                    "sender_persons_tp": 0,
+                    "sender_persons_fp": 0,
+                    "sender_persons_fn": 2
+                }
+            },
+            "receiver_persons": {
+                "response": [
+                    "Oettinger-Meili, Artur"
+                ],
+                "ground_truth": [
+                    "Oettinger-Meili, Artur"
+                ],
+                "score": null,
+                "counts": {
+                    "receiver_persons_tp": 1,
+                    "receiver_persons_fp": 0,
+                    "receiver_persons_fn": 0
+                }
+            }
+        }
+    },
+    "raw_response": "{\"id\":\"gen-1789717324-qG7OZiF0e7IKi4NvrX5g\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\n  \\\"metadata\\\": {\\n    \\\"send_date\\\": [\\n      \\\"1928-04-23\\\"\\n    ],\\n    \\\"letter_title\\\": null,\\n    \\\"sender_persons\\\": null,\\n    \\\"receiver_persons\\\": [\\n      \\\"Herrn Oettinger\\\"\\n    ]\\n  }\\n}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"metadata\":{\"send_date\":[\"1928-04-23\"],\"letter_title\":null,\"sender_persons\":null,\"receiver_persons\":[\"Herrn Oettinger\"]}},\"reasoning\":\"The user wants me to extract metadata from a historical letter image and return it as a JSON object.\\nThe JSON schema requires:\\n- `metadata`: an object containing:\\n    - `send_date`: list of strings or null\\n    - `letter_title`: list of strings or null\\n    - `sender_persons`: list of strings or null\\n    - `receiver_persons`: list of strings or null\\n\\nLet's analyze the image:\\n- Date: \\\"Basel, den 23. April 1928.\\\" -> \\\"1928-04-23\\\"\\n- Sender: \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\" (Company, but signed by someone, looks like \\\"G... Sch...\\\"). Wait, the prompt asks for \\\"sender_persons\\\". The letter is from \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\". There is a signature, but it's hard to read. Maybe just the company name or null if it's not a person? Usually, if it's a company, we might put the company name or null. Let's look at the signature: looks like \\\"G... Sch...\\\". Let's use the company name as the sender if no clear person, or maybe just null for persons? Wait, the prompt says \\\"Name(s) of the person(s) who wrote the letter.\\\" The signature is illegible. I will put null or the company name. Let's look at the receiver.\\n- Receiver: \\\"Herrn Oettinger, Verkehrsbureau, Basel.\\\" -> \\\"Herrn Oettinger\\\" or \\\"Oettinger\\\".\\n- Letter title: There is no explicit title. It's a business letter. So null.\\n\\nLet's refine:\\n- `send_date`: [\\\"1928-04-23\\\"]\\n- `letter_title`: null (no title)\\n- `sender_persons`: The letter is signed by a representative of \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\". The signature is hard to read. I'll put null or the company name. Let's put null for persons if it's a company, or maybe the company name is considered the sender. The prompt says \\\"sender_persons\\\". I'll put null. Wait, often in these tasks, the entity is accepted. Let's look at the signature. It looks like \\\"G...\\\". I'll put null.\\n- `receiver_persons`: [\\\"Herrn Oettinger\\\"] or [\\\"Oettinger\\\"]\\n\\nLet's re-read the prompt: \\\"Name(s) of the person(s) who wrote the letter.\\\"\\nThe letterhead is \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\".\\nThe signature is illegible.\\nI will set `sender_persons` to null.\\n`receiver_persons`: [\\\"Herrn Oettinger\\\"]\\n`letter_title`: null\\n`send_date`: [\\\"1928-04-23\\\"]\\n\\nWait, the schema says:\\n```json\\n{\\n  \\\"metadata\\\": {\\n    \\\"send_date\\\": [\\\"1928-04-23\\\"],\\n    \\\"letter_title\\\": null,\\n    \\\"sender_persons\\\": null,\\n    \\\"receiver_persons\\\": [\\\"Herrn Oettinger\\\"]\\n  }\\n}\\n```\\nLet me check the signature again. It looks like \\\"G... Sch...\\\". Maybe \\\"G. Sch...\\\"? I'll just use null for sender_persons to be safe, or maybe the company name. I'll use null.\\nActually, let's look at the receiver: \\\"Herrn Oettinger\\\".\\n\\nLet's construct the JSON.\\n```json\\n{\\n  \\\"metadata\\\": {\\n    \\\"send_date\\\": [\\n      \\\"1928-04-23\\\"\\n    ],\\n    \\\"letter_title\\\": null,\\n    \\\"sender_persons\\\": null,\\n    \\\"receiver_persons\\\": [\\n      \\\"Herrn Oettinger\\\"\\n    ]\\n  }\\n}\\n```\\nWait, the schema requires lists or null.\\n\\\"send_date\\\": [\\\"1928-04-23\\\"]\\n\\\"letter_title\\\": null\\n\\\"sender_persons\\\": null\\n\\\"receiver_persons\\\": [\\\"Herrn Oettinger\\\"]\\n\\nLet's double check the date: \\\"23. April 1928\\\" -> 1928-04-23.\\nReceiver: \\\"Herrn Oettinger\\\"\\nSender: The letter is from \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\". Since it asks for persons, and the signature is just a scribble, I'll put null.\\n\\nOne more check on the schema:\\n`send_date`: array of strings or null.\\n`letter_title`: array of strings or null.\\n`sender_persons`: array of strings or null.\\n`receiver_persons`: array of strings or null.\\n\\nI will output the JSON.\",\"reasoning_details\":[{\"type\":\"reasoning.text\",\"text\":\"The user wants me to extract metadata from a historical letter image and return it as a JSON object.\\nThe JSON schema requires:\\n- `metadata`: an object containing:\\n    - `send_date`: list of strings or null\\n    - `letter_title`: list of strings or null\\n    - `sender_persons`: list of strings or null\\n    - `receiver_persons`: list of strings or null\\n\\nLet's analyze the image:\\n- Date: \\\"Basel, den 23. April 1928.\\\" -> \\\"1928-04-23\\\"\\n- Sender: \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\" (Company, but signed by someone, looks like \\\"G... Sch...\\\"). Wait, the prompt asks for \\\"sender_persons\\\". The letter is from \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\". There is a signature, but it's hard to read. Maybe just the company name or null if it's not a person? Usually, if it's a company, we might put the company name or null. Let's look at the signature: looks like \\\"G... Sch...\\\". Let's use the company name as the sender if no clear person, or maybe just null for persons? Wait, the prompt says \\\"Name(s) of the person(s) who wrote the letter.\\\" The signature is illegible. I will put null or the company name. Let's look at the receiver.\\n- Receiver: \\\"Herrn Oettinger, Verkehrsbureau, Basel.\\\" -> \\\"Herrn Oettinger\\\" or \\\"Oettinger\\\".\\n- Letter title: There is no explicit title. It's a business letter. So null.\\n\\nLet's refine:\\n- `send_date`: [\\\"1928-04-23\\\"]\\n- `letter_title`: null (no title)\\n- `sender_persons`: The letter is signed by a representative of \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\". The signature is hard to read. I'll put null or the company name. Let's put null for persons if it's a company, or maybe the company name is considered the sender. The prompt says \\\"sender_persons\\\". I'll put null. Wait, often in these tasks, the entity is accepted. Let's look at the signature. It looks like \\\"G...\\\". I'll put null.\\n- `receiver_persons`: [\\\"Herrn Oettinger\\\"] or [\\\"Oettinger\\\"]\\n\\nLet's re-read the prompt: \\\"Name(s) of the person(s) who wrote the letter.\\\"\\nThe letterhead is \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\".\\nThe signature is illegible.\\nI will set `sender_persons` to null.\\n`receiver_persons`: [\\\"Herrn Oettinger\\\"]\\n`letter_title`: null\\n`send_date`: [\\\"1928-04-23\\\"]\\n\\nWait, the schema says:\\n```json\\n{\\n  \\\"metadata\\\": {\\n    \\\"send_date\\\": [\\\"1928-04-23\\\"],\\n    \\\"letter_title\\\": null,\\n    \\\"sender_persons\\\": null,\\n    \\\"receiver_persons\\\": [\\\"Herrn Oettinger\\\"]\\n  }\\n}\\n```\\nLet me check the signature again. It looks like \\\"G... Sch...\\\". Maybe \\\"G. Sch...\\\"? I'll just use null for sender_persons to be safe, or maybe the company name. I'll use null.\\nActually, let's look at the receiver: \\\"Herrn Oettinger\\\".\\n\\nLet's construct the JSON.\\n```json\\n{\\n  \\\"metadata\\\": {\\n    \\\"send_date\\\": [\\n      \\\"1928-04-23\\\"\\n    ],\\n    \\\"letter_title\\\": null,\\n    \\\"sender_persons\\\": null,\\n    \\\"receiver_persons\\\": [\\n      \\\"Herrn Oettinger\\\"\\n    ]\\n  }\\n}\\n```\\nWait, the schema requires lists or null.\\n\\\"send_date\\\": [\\\"1928-04-23\\\"]\\n\\\"letter_title\\\": null\\n\\\"sender_persons\\\": null\\n\\\"receiver_persons\\\": [\\\"Herrn Oettinger\\\"]\\n\\nLet's double check the date: \\\"23. April 1928\\\" -> 1928-04-23.\\nReceiver: \\\"Herrn Oettinger\\\"\\nSender: The letter is from \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\". Since it asks for persons, and the signature is just a scribble, I'll put null.\\n\\nOne more check on the schema:\\n`send_date`: array of strings or null.\\n`letter_title`: array of strings or null.\\n`sender_persons`: array of strings or null.\\n`receiver_persons`: array of strings or null.\\n\\nI will output the JSON.\",\"format\":\"unknown\",\"index\":0}]},\"native_finish_reason\":\"stop\"}],\"created\":1789717324,\"model\":\"qwen/qwen3.7-plus\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":null,\"usage\":{\"completion_tokens\":1124,\"prompt_tokens\":3127,\"total_tokens\":4251,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":0,\"reasoning_tokens\":1046,\"rejected_prediction_tokens\":null,\"image_tokens\":0},\"prompt_tokens_details\":{\"audio_tokens\":0,\"cached_tokens\":0,\"cache_write_tokens\":0,\"video_tokens\":0},\"cost\":0.00243936,\"is_byok\":false,\"cost_details\":{\"upstream_inference_cost\":0.00243936,\"upstream_inference_prompt_cost\":0.00100064,\"upstream_inference_completions_cost\":0.00143872}},\"provider\":\"Alibaba\"}"
+}

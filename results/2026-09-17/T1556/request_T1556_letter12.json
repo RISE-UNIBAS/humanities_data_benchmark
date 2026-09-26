@@ -1,0 +1,93 @@
+{
+    "text": "{\"metadata\":{\"send_date\":[\"1926-08-13\"],\"letter_title\":[\"Abschrift\"],\"sender_persons\":[\"Groschopf\",\"J.A. Ritter\"],\"receiver_persons\":[\"Dr. Max Vischer\"]}}",
+    "model": "thinkingmachines/Inkling",
+    "provider": "huggingface",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 6106,
+        "output_tokens": 820,
+        "total_tokens": 6926,
+        "cached_tokens": 256,
+        "input_cost_usd": 0.006106,
+        "output_cost_usd": 0.0033209999999999997,
+        "estimated_cost_usd": 0.009427
+    },
+    "duration": 13.553701877593994,
+    "timestamp": "2026-09-17T11:36:49.020554",
+    "parsed": {
+        "metadata": {
+            "send_date": [
+                "1926-08-13"
+            ],
+            "letter_title": [
+                "Abschrift"
+            ],
+            "sender_persons": [
+                "Groschopf",
+                "J.A. Ritter"
+            ],
+            "receiver_persons": [
+                "Dr. Max Vischer"
+            ]
+        }
+    },
+    "conversation_id": "78c994d8-9feb-4e04-a01d-9b6f74a075d9",
+    "score": {
+        "send_date_tp": 1,
+        "send_date_fp": 0,
+        "send_date_fn": 0,
+        "sender_persons_tp": 2,
+        "sender_persons_fp": 0,
+        "sender_persons_fn": 0,
+        "receiver_persons_tp": 1,
+        "receiver_persons_fp": 0,
+        "receiver_persons_fn": 0,
+        "field_scores": {
+            "send_date": {
+                "response": [
+                    "1926-08-13"
+                ],
+                "ground_truth": [
+                    "1926-08-13"
+                ],
+                "score": null,
+                "counts": {
+                    "send_date_tp": 1,
+                    "send_date_fp": 0,
+                    "send_date_fn": 0
+                }
+            },
+            "sender_persons": {
+                "response": [
+                    "Groschupf-Jaeger, Louis",
+                    "Ritter-Dreier, Fritz"
+                ],
+                "ground_truth": [
+                    "Groschupf-Jaeger, Louis",
+                    "Ritter-Dreier, Fritz"
+                ],
+                "score": null,
+                "counts": {
+                    "sender_persons_tp": 2,
+                    "sender_persons_fp": 0,
+                    "sender_persons_fn": 0
+                }
+            },
+            "receiver_persons": {
+                "response": [
+                    "Vischer-von Planta, Max"
+                ],
+                "ground_truth": [
+                    "Vischer-von Planta, Max"
+                ],
+                "score": null,
+                "counts": {
+                    "receiver_persons_tp": 1,
+                    "receiver_persons_fp": 0,
+                    "receiver_persons_fn": 0
+                }
+            }
+        }
+    },
+    "raw_response": "{\"id\":\"p1dAVsv-6z2FuN-a3c720a3b9c0d6e0\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\n  \\\"metadata\\\": {\\n    \\\"send_date\\\": [\\\"1926-08-13\\\"],\\n    \\\"letter_title\\\": [\\\"Abschrift\\\"],\\n    \\\"sender_persons\\\": [\\\"Groschopf\\\", \\\"J.A. Ritter\\\"],\\n    \\\"receiver_persons\\\": [\\\"Dr. Max Vischer\\\"]\\n  }\\n}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"metadata\":{\"send_date\":[\"1926-08-13\"],\"letter_title\":[\"Abschrift\"],\"sender_persons\":[\"Groschopf\",\"J.A. Ritter\"],\"receiver_persons\":[\"Dr. Max Vischer\"]}},\"reasoning\":\"We need parse images of historical letter, extract keys: letter_title, sender_persons, send_date, receiver_persons. Need inspect all pages.\\n\\nImage 1: Header \\\"ABSCHRIFT\\\" (copy). Left: \\\"Basler Rheinschiffahrt-Aktiengesellschaft Marktgasse 5\\\". Right: \\\"Basel, den 13. August 1926.\\\" Addressee: \\\"Herrn Dr. Max Vischer, Pr\u00e4sident der Basler Personenschiffahrtsgesellschaft Basel\\\". Reference \\\"R/M\\\". So send_date 1926-08-13. Sender is Basler Rheinschiffahrt-Aktiengesellschaft? Or signatory? Need determine sender_persons: likely the company represented by signatories at end. Let's inspect page 3 (last image) for signatures. At bottom: \\\"Hochachtend BASLER RHEINSCHIFFFAHRT - AKTIENGESELLSCHAFT sig. Groschopf J.A.Ritter.\\\" Also \\\"geht zur\u00fcck 14.VIII 26 sig.Vischer\\\". So sender persons might be Groschopf and J.A. Ritter? Or the company? The prompt asks \\\"Name(s) of the person(s) who wrote the letter.\\\" Usually signatories. Let's identify precisely: \\\"sig. Groschopf\\\" and \\\"J.A.Ritter.\\\" Maybe \\\"Groschopf\\\" and \\\"J.A. Ritter\\\". Need check spelling: \\\"sig. Groschopf J.A.Ritter.\\\" So sender_persons: [\\\"Groschopf\\\", \\\"J.A. Ritter\\\"]? Or include full? We'll use visible.\\n\\nReceiver: \\\"Herrn Dr. Max Vischer, Pr\u00e4sident der Basler Personenschiffahrtsgesellschaft\\\" => [\\\"Dr. Max Vischer\\\"].\\n\\nLetter title? Not explicit, but maybe \\\"Abschrift\\\" is title? Actually \\\"ABSCHRIFT\\\" at top right means copy/transcript. Might not be title. Could be null if not included. But maybe the letter concerns \\\"Ben\u00fctzung der Landungsstege\\\" but that's subject, not title. The prompt says \\\"Title of the letter.\\\" In example they used \\\"Petition for Environmental Protection\\\" which sounds like subject/title. Here there might be no explicit title except \\\"ABSCHRIFT\\\". Let's examine if there's a subject line. In image 1, there's \\\"R/M\\\" and then body starts \\\"Wir best\u00e4tigen Ihr Schreiben vom 9. August betreffend Ben\u00fctzung der Landungsstege...\\\" No explicit title. So letter_title might be null, or [\\\"Abschrift\\\"]. But \\\"Abschrift\\\" is document type, not title. I think set to null? However they said if not included set null. Is title included? The word \\\"ABSCHRIFT\\\" is printed prominently at top right, could be considered title of document (copy). But likely not the letter's own title. Let's hold as [\\\"Abschrift\\\"]? Need be careful.\\n\\nLet's parse all for completeness.\\n\\nSend date clearly 1926-08-13.\\n\\nThus JSON:\\n{\\n\\\"letter_title\\\": [\\\"Abschrift\\\"],\\n\\\"send_date\\\": [\\\"1926-08-13\\\"],\\n\\\"sender_persons\\\": [\\\"Groschopf\\\",\\\"J.A. Ritter\\\"],\\n\\\"receiver_persons\\\": [\\\"Dr. Max Vischer\\\"]\\n}\\n\\nBut need check if sender should be company name? The letter is from Basler Rheinschiffahrt-Aktiengesellschaft, signed by Groschopf and Ritter. The key \\\"sender_persons\\\" asks persons, so signatories correct.\\n\\nCheck page 3 also has \\\"geht zur\u00fcck 14.VIII 26 sig.Vischer\\\" indicating received back with Vischer signature, but that's receiver acknowledgment.\\n\\nThus answer.\"},\"seed\":null}],\"created\":1789637797,\"model\":\"thinkingmachines/Inkling\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":\"default\",\"usage\":{\"completion_tokens\":820,\"prompt_tokens\":6106,\"total_tokens\":6926,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":null,\"reasoning_tokens\":750,\"rejected_prediction_tokens\":null},\"prompt_tokens_details\":{\"audio_tokens\":null,\"cached_tokens\":256}},\"prompt\":[]}"
+}

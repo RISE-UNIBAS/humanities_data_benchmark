@@ -1,0 +1,90 @@
+{
+    "text": "{\"metadata\":{\"send_date\":[\"1928-04-26\"],\"letter_title\":[\"null\"],\"sender_persons\":[\"Basler Rheinschiffahrt-Aktiengesellschaft\"],\"receiver_persons\":[\"Max Oettinger\"]}}",
+    "model": "qwen/qwen3.5-397b-a17b",
+    "provider": "openrouter",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 1305,
+        "output_tokens": 1239,
+        "total_tokens": 2544,
+        "input_cost_usd": 0.0007177500000000001,
+        "output_cost_usd": 0.0043365,
+        "estimated_cost_usd": 0.00505425
+    },
+    "duration": 34.2573926448822,
+    "timestamp": "2026-09-17T14:14:24.229237",
+    "parsed": {
+        "metadata": {
+            "send_date": [
+                "1928-04-26"
+            ],
+            "letter_title": [
+                "null"
+            ],
+            "sender_persons": [
+                "Basler Rheinschiffahrt-Aktiengesellschaft"
+            ],
+            "receiver_persons": [
+                "Max Oettinger"
+            ]
+        }
+    },
+    "conversation_id": "80819cd7-75f4-4d92-a476-cbd35c25e3cb",
+    "score": {
+        "send_date_tp": 1,
+        "send_date_fp": 0,
+        "send_date_fn": 0,
+        "sender_persons_tp": 0,
+        "sender_persons_fp": 1,
+        "sender_persons_fn": 2,
+        "receiver_persons_tp": 1,
+        "receiver_persons_fp": 0,
+        "receiver_persons_fn": 0,
+        "field_scores": {
+            "send_date": {
+                "response": [
+                    "1928-04-26"
+                ],
+                "ground_truth": [
+                    "1928-04-26"
+                ],
+                "score": null,
+                "counts": {
+                    "send_date_tp": 1,
+                    "send_date_fp": 0,
+                    "send_date_fn": 0
+                }
+            },
+            "sender_persons": {
+                "response": [
+                    "Basler Rheinschiffahrt-Aktiengesellschaft"
+                ],
+                "ground_truth": [
+                    "Groschupf-Jaeger, Louis",
+                    "Ritter-Dreier, Fritz"
+                ],
+                "score": null,
+                "counts": {
+                    "sender_persons_tp": 0,
+                    "sender_persons_fp": 1,
+                    "sender_persons_fn": 2
+                }
+            },
+            "receiver_persons": {
+                "response": [
+                    "Oettinger-Meili, Artur"
+                ],
+                "ground_truth": [
+                    "Oettinger-Meili, Artur"
+                ],
+                "score": null,
+                "counts": {
+                    "receiver_persons_tp": 1,
+                    "receiver_persons_fp": 0,
+                    "receiver_persons_fn": 0
+                }
+            }
+        }
+    },
+    "raw_response": "{\"id\":\"gen-1789647230-9z2ULq5qigpYoTYjyQMz\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\n    \\\"metadata\\\": {\\n        \\\"send_date\\\": [\\n            \\\"1928-04-26\\\"\\n        ],\\n        \\\"letter_title\\\": [\\n            \\\"null\\\"\\n        ],\\n        \\\"sender_persons\\\": [\\n            \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"\\n        ],\\n        \\\"receiver_persons\\\": [\\n            \\\"Max Oettinger\\\"\\n        ]\\n    }\\n}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"metadata\":{\"send_date\":[\"1928-04-26\"],\"letter_title\":[\"null\"],\"sender_persons\":[\"Basler Rheinschiffahrt-Aktiengesellschaft\"],\"receiver_persons\":[\"Max Oettinger\"]}},\"reasoning\":\"The user wants me to extract specific information from a historical letter image and format it as a JSON object.\\nI need to identify:\\n1.  **letter_title**: The title of the letter. Looking at the document, there isn't a specific \\\"Title\\\" like \\\"Re: Something\\\". It's a business letter. Often, if there's no explicit title, I might look for a subject line or just leave it null or describe the nature. However, the prompt asks for \\\"Title of the letter\\\". In business correspondence of this era, often the letterhead acts as the identifier, or there is no formal title. Let's look closer. There is no \\\"Betreff\\\" (Subject) line. The text starts with \\\"Wir best\u00e4tigen den Empfang...\\\". I will set this to null as there is no explicit title, or perhaps I can infer a descriptive title if appropriate, but strict extraction suggests null if not present. Wait, looking at the example, \\\"Petition for Environmental Protection\\\" is a descriptive title. Here, it's a confirmation of receipt. But usually, \\\"letter_title\\\" refers to a subject line. Since there isn't one, I will set it to \\\"null\\\". Or, I could consider the letterhead \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\" as the source, not the title. Let's stick to null if no specific subject line exists. Actually, looking at the prompt's example, it seems to expect a descriptive title if one exists. Here, there is none. I will use \\\"null\\\".\\n\\n2.  **sender_persons**: Who wrote the letter? The letterhead says \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\". The signature at the bottom is illegible scribbles, but the typed text above says \\\"HOCHACHTEND BASLER RHEINSCHIFFAHRT-AKTIENGESELLSCHAFT\\\". So the sender is the company. The prompt asks for \\\"sender_persons\\\". Since it's a company letter, I should probably list the company name or the individuals if signed. The signature is unreadable. I will list the company name as the sender entity, or perhaps just \\\"null\\\" if it strictly requires persons. However, in historical contexts, the organization is often the sender. Let's look at the signature. It looks like \\\"Ad. [something]\\\" and another signature. It's too illegible to extract specific names confidently. The typed sender is \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\". I will put the company name in the sender list, as it represents the sending entity.\\n\\n3.  **send_date**: The date is clearly visible at the top right: \\\"Basel, den 26. April 1928.\\\" So, \\\"1928-04-26\\\".\\n\\n4.  **receiver_persons**: The address block says \\\"Herrn Max Oettinger, Verkehrsbureau, Basel.\\\" So the receiver is \\\"Max Oettinger\\\".\\n\\nLet's refine the \\\"letter_title\\\". There is no subject line. I will return \\\"null\\\".\\nLet's refine \\\"sender_persons\\\". The letter is from \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\". The signatures are illegible. I will use the company name.\\nLet's refine \\\"receiver_persons\\\". \\\"Max Oettinger\\\".\\n\\nWait, looking closer at the signature. It looks like \\\"Ad. [unclear]\\\" and maybe \\\"G. [unclear]\\\". It's safer to use the company name which is clearly printed.\\nActually, the prompt asks for \\\"sender_persons\\\". If it's a company, is that a person? In entity extraction, usually yes. I will include \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\".\\n\\nLet's re-evaluate the \\\"letter_title\\\". Sometimes the first line or the nature of the document serves as a title. But strictly, there is no title. I'll set it to \\\"null\\\".\\n\\nDate: 26. April 1928 -> 1928-04-26.\\nReceiver: Herrn Max Oettinger.\\nSender: Basler Rheinschiffahrt-Aktiengesellschaft.\\n\\nLet's check the JSON structure requirements. Values must be lists.\\nKeys: letter_title, sender_persons, send_date, receiver_persons.\\n\\nOne detail: \\\"Herrn Max Oettinger\\\". I should extract the name \\\"Max Oettinger\\\".\\nSender: \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\".\\n\\nLet's double check the date. \\\"Basel, den 26. April 1928.\\\" Yes.\\nLet's double check the receiver. \\\"Herrn Max Oettinger, Verkehrsbureau, Basel.\\\" Yes.\\n\\nFinal check on the sender. The letterhead is \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\". The closing is \\\"HOCHACHTEND BASLER RHEINSCHIFFAHRT-AKTIENGESELLSCHAFT\\\". The signatures are present but illegible. I will use the company name.\\n\\nOne more thing: The prompt says \\\"sender_persons\\\". If I put a company name, is it a person? In the context of historical letters, the \\\"sender\\\" is the entity. I will use the company name.\\n\\nWait, is there a title? No subject line (Betreff). So \\\"null\\\".\\n\\nLet's construct the JSON.\\n\",\"reasoning_details\":[{\"type\":\"reasoning.text\",\"text\":\"The user wants me to extract specific information from a historical letter image and format it as a JSON object.\\nI need to identify:\\n1.  **letter_title**: The title of the letter. Looking at the document, there isn't a specific \\\"Title\\\" like \\\"Re: Something\\\". It's a business letter. Often, if there's no explicit title, I might look for a subject line or just leave it null or describe the nature. However, the prompt asks for \\\"Title of the letter\\\". In business correspondence of this era, often the letterhead acts as the identifier, or there is no formal title. Let's look closer. There is no \\\"Betreff\\\" (Subject) line. The text starts with \\\"Wir best\u00e4tigen den Empfang...\\\". I will set this to null as there is no explicit title, or perhaps I can infer a descriptive title if appropriate, but strict extraction suggests null if not present. Wait, looking at the example, \\\"Petition for Environmental Protection\\\" is a descriptive title. Here, it's a confirmation of receipt. But usually, \\\"letter_title\\\" refers to a subject line. Since there isn't one, I will set it to \\\"null\\\". Or, I could consider the letterhead \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\" as the source, not the title. Let's stick to null if no specific subject line exists. Actually, looking at the prompt's example, it seems to expect a descriptive title if one exists. Here, there is none. I will use \\\"null\\\".\\n\\n2.  **sender_persons**: Who wrote the letter? The letterhead says \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\". The signature at the bottom is illegible scribbles, but the typed text above says \\\"HOCHACHTEND BASLER RHEINSCHIFFAHRT-AKTIENGESELLSCHAFT\\\". So the sender is the company. The prompt asks for \\\"sender_persons\\\". Since it's a company letter, I should probably list the company name or the individuals if signed. The signature is unreadable. I will list the company name as the sender entity, or perhaps just \\\"null\\\" if it strictly requires persons. However, in historical contexts, the organization is often the sender. Let's look at the signature. It looks like \\\"Ad. [something]\\\" and another signature. It's too illegible to extract specific names confidently. The typed sender is \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\". I will put the company name in the sender list, as it represents the sending entity.\\n\\n3.  **send_date**: The date is clearly visible at the top right: \\\"Basel, den 26. April 1928.\\\" So, \\\"1928-04-26\\\".\\n\\n4.  **receiver_persons**: The address block says \\\"Herrn Max Oettinger, Verkehrsbureau, Basel.\\\" So the receiver is \\\"Max Oettinger\\\".\\n\\nLet's refine the \\\"letter_title\\\". There is no subject line. I will return \\\"null\\\".\\nLet's refine \\\"sender_persons\\\". The letter is from \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\". The signatures are illegible. I will use the company name.\\nLet's refine \\\"receiver_persons\\\". \\\"Max Oettinger\\\".\\n\\nWait, looking closer at the signature. It looks like \\\"Ad. [unclear]\\\" and maybe \\\"G. [unclear]\\\". It's safer to use the company name which is clearly printed.\\nActually, the prompt asks for \\\"sender_persons\\\". If it's a company, is that a person? In entity extraction, usually yes. I will include \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\".\\n\\nLet's re-evaluate the \\\"letter_title\\\". Sometimes the first line or the nature of the document serves as a title. But strictly, there is no title. I'll set it to \\\"null\\\".\\n\\nDate: 26. April 1928 -> 1928-04-26.\\nReceiver: Herrn Max Oettinger.\\nSender: Basler Rheinschiffahrt-Aktiengesellschaft.\\n\\nLet's check the JSON structure requirements. Values must be lists.\\nKeys: letter_title, sender_persons, send_date, receiver_persons.\\n\\nOne detail: \\\"Herrn Max Oettinger\\\". I should extract the name \\\"Max Oettinger\\\".\\nSender: \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\".\\n\\nLet's double check the date. \\\"Basel, den 26. April 1928.\\\" Yes.\\nLet's double check the receiver. \\\"Herrn Max Oettinger, Verkehrsbureau, Basel.\\\" Yes.\\n\\nFinal check on the sender. The letterhead is \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\". The closing is \\\"HOCHACHTEND BASLER RHEINSCHIFFAHRT-AKTIENGESELLSCHAFT\\\". The signatures are present but illegible. I will use the company name.\\n\\nOne more thing: The prompt says \\\"sender_persons\\\". If I put a company name, is it a person? In the context of historical letters, the \\\"sender\\\" is the entity. I will use the company name.\\n\\nWait, is there a title? No subject line (Betreff). So \\\"null\\\".\\n\\nLet's construct the JSON.\\n\",\"format\":\"unknown\",\"index\":0}]},\"native_finish_reason\":\"stop\"}],\"created\":1789647230,\"model\":\"qwen/qwen3.5-397b-a17b\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":null,\"usage\":{\"completion_tokens\":1239,\"prompt_tokens\":1305,\"total_tokens\":2544,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":0,\"reasoning_tokens\":1104,\"rejected_prediction_tokens\":null,\"image_tokens\":0},\"prompt_tokens_details\":{\"audio_tokens\":0,\"cached_tokens\":0,\"cache_write_tokens\":0,\"video_tokens\":0},\"cost\":0.00430425,\"is_byok\":false,\"cost_details\":{\"upstream_inference_cost\":0.00430425,\"upstream_inference_prompt_cost\":0.00058725,\"upstream_inference_completions_cost\":0.003717}},\"provider\":\"DeepInfra\"}"
+}

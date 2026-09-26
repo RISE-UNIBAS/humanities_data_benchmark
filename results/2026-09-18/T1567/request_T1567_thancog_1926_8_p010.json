@@ -1,0 +1,90 @@
+{
+    "text": "{\"advertisements\":[{\"box\":[800.0,1030.0,1340.0,1440.0]},{\"box\":[180.0,2430.0,1330.0,3320.0]}]}",
+    "model": "thinkingmachines/Inkling",
+    "provider": "huggingface",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 1983,
+        "output_tokens": 837,
+        "total_tokens": 2820,
+        "input_cost_usd": 0.001983,
+        "output_cost_usd": 0.00338985,
+        "estimated_cost_usd": 0.00537285
+    },
+    "duration": 10.031552076339722,
+    "timestamp": "2026-09-18T21:12:37.487897",
+    "parsed": {
+        "advertisements": [
+            {
+                "box": [
+                    800.0,
+                    1030.0,
+                    1340.0,
+                    1440.0
+                ]
+            },
+            {
+                "box": [
+                    180.0,
+                    2430.0,
+                    1330.0,
+                    3320.0
+                ]
+            }
+        ]
+    },
+    "conversation_id": "da9ecfb1-801f-45c8-8c9a-02d7b6003b28",
+    "score": {
+        "field_scores": {
+            "box 0": {
+                "response": null,
+                "ground_truth": [
+                    346,
+                    2537,
+                    2260,
+                    3109
+                ],
+                "score": 0.0
+            },
+            "box 1": {
+                "response": null,
+                "ground_truth": [
+                    1372,
+                    1786,
+                    2293,
+                    2481
+                ],
+                "score": 0.0
+            },
+            "unmatched prediction 0": {
+                "response": [
+                    800.0,
+                    1030.0,
+                    1340.0,
+                    1440.0
+                ],
+                "ground_truth": null,
+                "score": 0.0
+            },
+            "unmatched prediction 1": {
+                "response": [
+                    180.0,
+                    2430.0,
+                    1330.0,
+                    3320.0
+                ],
+                "ground_truth": null,
+                "score": 0.0
+            }
+        },
+        "f1": 0.0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "mean_iou": 0.0,
+        "true_positives": 0,
+        "false_positives": 2,
+        "false_negatives": 2,
+        "iou_threshold": 0.5
+    },
+    "raw_response": "{\"id\":\"p1orQaK-4i1VM9-a3d2a98fbbb1fc74\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\n  \\\"advertisements\\\": [\\n    {\\n      \\\"box\\\": [800, 1030, 1340, 1440]\\n    },\\n    {\\n      \\\"box\\\": [180, 2430, 1330, 3320]\\n    }\\n  ]\\n}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"advertisements\":[{\"box\":[800.0,1030.0,1340.0,1440.0]},{\"box\":[180.0,2430.0,1330.0,3320.0]}]},\"reasoning\":\"We need extract all advertisements and bounding boxes from page image. Need identify ad regions. The page is a magazine page \\\"THE ANGLO-SWISS COMMERCIAL GAZETTE\\\" August 1926, page 10. Contains trade openings column left and right, and bottom large ad for Banque F\u00e9d\u00e9rale S.A., and right middle ad for Fr. Klingelfuss & Co. Need determine bounding boxes in original 2479x3508.\\n\\nLet's analyze layout. Top header with page number and title. Then two columns of text \\\"TRADE OPENINGS.\\\" Left column from about x 180 to 800? Right column from about x 800 to 1400? Then bottom ad spanning across bottom from y about 2450 to 3350? And right side ad box around y 1050 to 1450 x 800? Let's be precise based on image.\\n\\nWe need \\\"Extract all advertisements and return their bounding boxes.\\\" So identify advertisement blocks, not editorial text.\\n\\nAds visible:\\n1. Bottom large rectangular bordered ad: \\\"Banque F\u00e9d\u00e9rale S. A. Eidgen\u00f6ssische Bank A. G.\\\" with details. Bounding box likely near bottom center spanning wide. Let's approximate: left ~180, top ~2450, right ~1320, bottom ~3320? Actually image width 2479, but page content centered? Let's check. The bottom ad is within a decorative border that seems to span from left margin near x=180 to right margin near x=1320? Wait right column ends around x~1400. The bottom ad might span both columns, maybe from x~180 to x~1320? Actually in image, bottom ad is centered horizontally within page content area, not full page width. Let's approximate: left 180, right 1330, top 2430, bottom 3320.\\n\\nBut need be accurate based on pixels. Let's think about image dimensions 2479x3508. The page is vertical. The bottom ad starts around y=2450 and ends near y=3320. Left boundary around x=180, right around x=1330.\\n\\n2. Right middle ad: \\\"Fr. Klingelfuss & Co. BASLE (Switzerland)\\\" with list of apparatus. This is in a box with border? Actually it's in right column lower part, enclosed in a rectangular box with decorative border? Let's check. In the image, there's a box with \\\"Fr. Klingelfuss & Co.\\\" centered, then list. The box seems to start around y=1040 and end around y=1440? Left around x=800? Right around x=1340? Let's approximate: [800, 1040, 1340, 1440]. But need check if left boundary is closer to 790.\\n\\nAlso there might be small ads within trade openings? The column lists enquiries and offers, but those are not display ads, just classified listings. The prompt says \\\"Extract all advertisements\\\" likely means display ads. So include the two display ads.\\n\\nBut also there might be an ad at top? No.\\n\\nThus answer with bounding boxes. Let's provide in [x1, y1, x2, y2] format.\\n\\nNeed be somewhat accurate. Let's refine using mental proportions. The page has margins. Left column starts around x=180, right column starts around x=800? Actually there is a gap. The right column text starts near x=800. The Klingelfuss ad is within right column, so left x maybe 800, right x maybe 1340. Top y maybe 1030, bottom y maybe 1440.\\n\\nThe bottom ad: left x maybe 180, right x maybe 1330, top y maybe 2430, bottom y maybe 3320.\\n\\nLet's provide these.\"},\"seed\":null}],\"created\":1789758748,\"model\":\"thinkingmachines/Inkling\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":\"default\",\"usage\":{\"completion_tokens\":837,\"prompt_tokens\":1983,\"total_tokens\":2820,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":null,\"reasoning_tokens\":776,\"rejected_prediction_tokens\":null},\"prompt_tokens_details\":{\"audio_tokens\":null,\"cached_tokens\":0}},\"prompt\":[]}"
+}

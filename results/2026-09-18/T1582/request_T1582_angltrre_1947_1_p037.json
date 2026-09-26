@@ -1,0 +1,119 @@
+{
+    "text": "{\"advertisements\":[{\"box\":[275.0,60.0,675.0,460.0]},{\"box\":[65.0,490.0,475.0,905.0]},{\"box\":[475.0,490.0,885.0,905.0]}]}",
+    "model": "meta-models/Muse-Glimmer-30B",
+    "provider": "huggingface",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 3916,
+        "output_tokens": 905,
+        "total_tokens": 4821,
+        "cached_tokens": 48,
+        "input_cost_usd": 0.0013706,
+        "output_cost_usd": 0.0013575,
+        "estimated_cost_usd": 0.0027281
+    },
+    "duration": 36.0085244178772,
+    "timestamp": "2026-09-18T21:38:28.722211",
+    "parsed": {
+        "advertisements": [
+            {
+                "box": [
+                    275.0,
+                    60.0,
+                    675.0,
+                    460.0
+                ]
+            },
+            {
+                "box": [
+                    65.0,
+                    490.0,
+                    475.0,
+                    905.0
+                ]
+            },
+            {
+                "box": [
+                    475.0,
+                    490.0,
+                    885.0,
+                    905.0
+                ]
+            }
+        ]
+    },
+    "conversation_id": "4862ed0d-c74a-4330-a8f0-6b865cff6b96",
+    "score": {
+        "field_scores": {
+            "box 0": {
+                "response": null,
+                "ground_truth": [
+                    1202,
+                    1721,
+                    2204,
+                    3190
+                ],
+                "score": 0.0
+            },
+            "box 1": {
+                "response": null,
+                "ground_truth": [
+                    175,
+                    1723,
+                    1169,
+                    3192
+                ],
+                "score": 0.0
+            },
+            "box 2": {
+                "response": null,
+                "ground_truth": [
+                    694,
+                    195,
+                    1680,
+                    1610
+                ],
+                "score": 0.0
+            },
+            "unmatched prediction 0": {
+                "response": [
+                    275.0,
+                    60.0,
+                    675.0,
+                    460.0
+                ],
+                "ground_truth": null,
+                "score": 0.0
+            },
+            "unmatched prediction 1": {
+                "response": [
+                    65.0,
+                    490.0,
+                    475.0,
+                    905.0
+                ],
+                "ground_truth": null,
+                "score": 0.0
+            },
+            "unmatched prediction 2": {
+                "response": [
+                    475.0,
+                    490.0,
+                    885.0,
+                    905.0
+                ],
+                "ground_truth": null,
+                "score": 0.0
+            }
+        },
+        "f1": 0.0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "mean_iou": 0.0,
+        "true_positives": 0,
+        "false_positives": 3,
+        "false_negatives": 3,
+        "iou_threshold": 0.5
+    },
+    "raw_response": "{\"id\":\"p1ozDyM-fdNmn-a3d2cecc2e527d04\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\\"advertisements\\\": [\\n  {\\n    \\\"box\\\": [275, 60, 675, 460]\\n  },\\n  {\\n    \\\"box\\\": [65, 490, 475, 905]\\n  },\\n  {\\n    \\\"box\\\": [475, 490, 885, 905]\\n  }\\n] }\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"advertisements\":[{\"box\":[275.0,60.0,675.0,460.0]},{\"box\":[65.0,490.0,475.0,905.0]},{\"box\":[475.0,490.0,885.0,905.0]}]},\"reasoning\":\"Extract all advertisements and return their bounding boxes.\\nThe original size of the page is 2479 x 3508 pixels.\\n\\nWe need bounding boxes for each advertisement. There are three ads: top W. TRIEBOLD, bottom left A. MURALT, bottom right OMYA / Pl\u00fcss-Staufer.\\n\\nNeed coordinates. Probably normalized? Usually bounding boxes as [x_min, y_min, x_max, y_max] in pixels. Might need relative? The instruction says original size 2479 x 3508 pixels. So return pixel coordinates.\\n\\nEstimate. Let's approximate.\\n\\nTop ad: from about x ~ 270 to 680? Wait image width. Page width 2479. The ad is centered top. Approx x_min ~ 270? Let's estimate. The gate image starts around 260. Ends around 680. y from ~ 50? Actually top margin. The ad top ~ 50? Let's see. The image top about 55? The \\\"Well closed...\\\" at top. Approx y_min ~ 55? Maybe 50. y_max ~ 460? The W. TRIEBOLD text at bottom of that ad. So y_max ~ 460. Let's refine.\\n\\nBetter give approximate bounding box. Might be acceptable with rough.\\n\\nBottom left ad: A. MURALT. x_min ~ 60? Actually left margin ~ 60. x_max ~ 470? y_min ~ 490? y_max ~ 905? Wait bottom line. The ad extends to about 900. Let's say y_min ~ 490, y_max ~ 905.\\n\\nBottom right ad: OMYA. x_min ~ 470? Actually the box starts around 470? The border. x_min ~ 470? Wait the right ad is to the right of left. The left ad ends around 470. The right ad starts around 470? Actually there is a gap. Let's say x_min ~ 470? Might be 470? The border is at ~ 470? Let's estimate x_min ~ 470? Hmm.\\n\\nMaybe better to give normalized coordinates 0-1. But instruction says original size. Could give pixel values.\\n\\nI'll estimate:\\n\\nTop ad: x_min=270, y_min=55, x_max=675, y_max=460\\n\\nBottom left: x_min=60, y_min=490, x_max=470, y_max=905\\n\\nBottom right: x_min=470, y_min=490, x_max=880, y_max=905\\n\\nBut the right ad's border extends a bit lower? The border goes to ~ 905. The ad content inside is higher. Might be same.\\n\\nAlternative: The right ad's bounding box includes the white margin. The box is from ~ 470 to 885 in x, 490 to 905 in y.\\n\\nLet's provide three boxes.\\n\\nMaybe also the page number 35 is not ad.\\n\\nReturn as list.\\n\\nI'll output JSON with labels.\\n\\nProbably format: [{\\\"label\\\": \\\"W. TRIEBOLD advertisement\\\", \\\"bbox\\\": [x_min, y_min, x_max, y_max]}, ...]\\n\\nLet's give approximate.\\n\\nI'll refine estimates using relative percentages.\\n\\nImage width 2479. Top ad width ~ 400 px? Actually gate width ~ 400. From 270 to 675 = 405. Good.\\n\\nHeight ~ 405 px. From 55 to 460 = 405.\\n\\nBottom left ad width ~ 410 px (60 to 470). Height ~ 415 (490 to 905).\\n\\nBottom right ad width ~ 415 (470 to 885). Height ~ 415.\\n\\nLet's output.\\n\\nMaybe use coordinates in [x1, y1, x2, y2].\\n\\nI'll give:\\n\\nW. TRIEBOLD: [275, 60, 675, 460]\\n\\nA. MURALT: [65, 490, 475, 905]\\n\\nOMYA / Pl\u00fcss-Staufer: [475, 490, 885, 905]\\n\\nProvide.\\n\\nLet's answer.\"},\"token_ids\":null,\"routed_experts\":null,\"seed\":null}],\"created\":1789760273,\"model\":\"meta-models/Muse-Glimmer-30B\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":\"vllm-0.1.dev19059+g66826a22d-tp2-46311a71\",\"usage\":{\"completion_tokens\":905,\"prompt_tokens\":3916,\"total_tokens\":4821,\"completion_tokens_details\":null,\"prompt_tokens_details\":{\"audio_tokens\":null,\"cached_tokens\":48,\"created_cache_tokens\":3856,\"multimodal_tokens\":{\"image\":3850}}},\"prompt_token_ids\":null,\"prompt_text\":null,\"kv_transfer_params\":null,\"ec_transfer_params\":null,\"metrics\":null,\"prompt\":[]}"
+}

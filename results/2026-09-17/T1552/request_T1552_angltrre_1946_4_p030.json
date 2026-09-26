@@ -1,0 +1,57 @@
+{
+    "text": "{\"advertisements\":[{\"box\":[185.0,2685.0,2395.0,3275.0]}]}",
+    "model": "thinkingmachines/Inkling-Small",
+    "provider": "huggingface",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 1983,
+        "output_tokens": 1385,
+        "total_tokens": 3368,
+        "input_cost_usd": 0.00089235,
+        "output_cost_usd": 0.0016619999999999998,
+        "estimated_cost_usd": 0.00255435
+    },
+    "duration": 14.154981136322021,
+    "timestamp": "2026-09-17T11:02:06.690889",
+    "parsed": {
+        "advertisements": [
+            {
+                "box": [
+                    185.0,
+                    2685.0,
+                    2395.0,
+                    3275.0
+                ]
+            }
+        ]
+    },
+    "conversation_id": "419604b2-e271-438d-8f3d-9c0a9b4a09a6",
+    "score": {
+        "field_scores": {
+            "box 0": {
+                "response": [
+                    185.0,
+                    2685.0,
+                    2395.0,
+                    3275.0
+                ],
+                "ground_truth": [
+                    314,
+                    2805,
+                    2279,
+                    3218
+                ],
+                "score": 0.622
+            }
+        },
+        "f1": 1.0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "mean_iou": 0.622,
+        "true_positives": 1,
+        "false_positives": 0,
+        "false_negatives": 0,
+        "iou_threshold": 0.5
+    },
+    "raw_response": "{\"id\":\"chatcmpl-RVPOYGfulJFW1MRKvbFUL6bJ\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\n\\n\\n  \\\"advertisements\\\": [\\n    {\\n      \\\"box\\\": [185, 2685, 2395, 3275]\\n    }\\n  ]\\n}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"advertisements\":[{\"box\":[185.0,2685.0,2395.0,3275.0]}]},\"reasoning_content\":\"We need extract all advertisements and return bounding boxes. The page is magazine page with text and at bottom there is an advertisement box: \\\"Modern Printing\\\" by VOGT-SCHILD Ltd., PRINTERS, SOLEURE. Also possibly other ads? Let's scan: Top right \\\"BRITAIN LEADS AT DUTCH FAIR\\\" is article. Middle right \\\"MOST VERSATILE TRACTOR\\\" is article/ad? It says \\\"A new tractor claimed...\\\" likely advertisement or editorial? Could be advertorial. But user asks extract all advertisements and return bounding boxes. We need identify advertisement regions. Likely the bottom banner is definitely ad. The \\\"MOST VERSATILE TRACTOR\\\" section might be an advertisement for Nuffield Motorcar Organisation. It has product description. Could be ad. Let's examine layout: It is under heading \\\"MOST VERSATILE TRACTOR.\\\" and text describes tractor. Could be a sponsored article or advertisement. But the instruction: \\\"Extract all advertisements and return their bounding boxes.\\\" So we should find all distinct ad blocks.\\n\\nLet's parse page: There's a rectangular box at bottom spanning width with \\\"Modern Printing\\\" and company info. That's ad 1.\\n\\nAre there any other boxed ads? The \\\"MOST VERSATILE TRACTOR\\\" is not boxed, just text under heading. Could be part of article. The \\\"ENGINEERING INDUSTRIES ASSOCIATION\\\" is text block, maybe ad? It says \\\"This association, the address of which is...\\\" Could be informational, maybe ad for association.\\n\\nThe \\\"BRITAIN'S BUDGET\\\" is article.\\n\\nThus likely only one advertisement: the bottom banner. But let's be careful: The text \\\"Modern Printing\\\" is in script, inside a bordered rectangle at bottom. Yes.\\n\\nWe need bounding boxes in original size 2479x3508. Let's estimate coordinates.\\n\\nThe bottom ad box starts around y ~ 2700? Let's approximate. The page has text columns. The ad is at very bottom, above page number 140. Let's estimate box: left ~ 190, right ~ 2380, top ~ 2700, bottom ~ 3250? Actually the box seems to start around y=2700 and end around y=3250. Let's measure more carefully.\\n\\nImage: The bottom rectangle is enclosed by thin border. Top border is below the main text, around maybe y=2700. Bottom border is just above page number, around y=3250. Left border near left margin ~190. Right border near right margin ~2380.\\n\\nLet's provide bounding box: [190, 2700, 2380, 3250] approximate.\\n\\nBut maybe also \\\"MOST VERSATILE TRACTOR\\\" is an ad. Let's see: It is positioned in right column under heading. It describes Nuffield tractor. Could be advertisement. But no border. However many magazine pages have ads integrated as text blocks. The user wants all advertisements. We might include it.\\n\\nLet's identify all potential ads:\\n\\n1. Bottom banner: VOGT-SCHILD Ltd. Modern Printing.\\n2. \\\"MOST VERSATILE TRACTOR\\\" - likely ad for Nuffield.\\n3. \\\"ENGINEERING INDUSTRIES ASSOCIATION\\\" - maybe ad.\\n4. \\\"BRITAIN'S BUDGET\\\" - article.\\n\\nBut the headings \\\"MOST VERSATILE TRACTOR\\\" and \\\"ENGINEERING INDUSTRIES ASSOCIATION\\\" and \\\"BRITAIN'S BUDGET\\\" are section headings in the right column, likely articles, not ads. The left column is main article. So only bottom is ad.\\n\\nHowever the text \\\"Our staff and machinery are at the service of all our clients...\\\" is part of the ad.\\n\\nThus return one bounding box.\\n\\nBut to be safe, maybe two: the tractor section is an advertisement because it says \\\"A new tractor claimed to possess exceptional versatility is to be produced by the Nuffield Motorcar Organisation of England.\\\" That is promotional. But it's under a heading like an article. Without clear visual separation, hard.\\n\\nLet's think: The page is from a magazine, likely \\\"The Economist\\\" or similar? The left article is about token imports, relaxation. Right column has \\\"BRITAIN LEADS AT DUTCH FAIR\\\" (news), then \\\"MOST VERSATILE TRACTOR\\\" (maybe product news/ad), then \\\"ENGINEERING INDUSTRIES ASSOCIATION\\\" (association info), then \\\"BRITAIN'S BUDGET\\\" (news). The bottom is definitely a printer's ad.\\n\\nThe user explicitly: \\\"Extract all advertisements and return their bounding boxes.\\\" So we should extract the printer ad. If there are others, include.\\n\\nLet's provide bounding box for the bottom advertisement. Maybe also the tractor block if we consider it ad. But let's examine the tractor text: It starts with \u00abMOST VERSATILE TRACTOR.\u00bb and then describes. It could be a press release/ad. But the heading is in caps and quotes. Could be an advertisement placed as editorial. However without explicit \\\"Advertisement\\\" label, it's ambiguous.\\n\\nGiven the instruction is to extract advertisements, and the only clearly demarcated ad is the bottom box, I will return that one. But I can mention if others are suspected. However user wants bounding boxes. Let's provide one.\\n\\nLet's estimate more precise coordinates by analyzing image proportions. The page width 2479. The border left is about 8% from left: ~200. Right border about 96%: ~2380. Top of ad box is about 77% down: 0.77*3508 = 2701. Bottom is about 93%: 3262. So box: [200, 2700, 2380, 3260].\\n\\nLet's refine: The text \\\"Modern Printing\\\" is centered horizontally in box. The box height seems about 500 pixels. Yes.\\n\\nThus answer: bounding box [190, 2680, 2390, 3270] maybe.\\n\\nI'll provide approximate coordinates.\\n\\nActually let's do: x1=185, y1=2685, x2=2395, y2=3275.\\n\\nReturn as JSON? User didn't specify format, just return bounding boxes. I can list.\\n\\nLet's craft response: The page contains one clear advertisement: the \\\"Modern Printing\\\" banner by Vogt-Schild Ltd. at bottom. Bounding box: [185, 2685, 2395, 3275]. If including the Nuffield tractor promotional block, but I think not.\\n\\nWait, looking at the very bottom right inside ad box: \\\"telephone Soleure 22155\\\". Yes.\\n\\nThus final.\",\"name\":null}}],\"created\":1789635726,\"model\":\"thinkingmachines/Inkling-Small\",\"object\":\"chat.completion\",\"service_tier\":\"default\",\"system_fingerprint\":null,\"usage\":{\"completion_tokens\":1385,\"prompt_tokens\":1983,\"total_tokens\":3368,\"completion_tokens_details\":null,\"prompt_tokens_details\":{\"audio_tokens\":null,\"cached_tokens\":0,\"cache_write_tokens\":null},\"estimated_cost\":0.0025543500000000004,\"reasoning_tokens\":1351}}"
+}

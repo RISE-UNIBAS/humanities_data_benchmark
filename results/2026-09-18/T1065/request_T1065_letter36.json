@@ -1,0 +1,75 @@
+{
+    "text": "{\"metadata\":{\"send_date\":[\"1928-05-15\"],\"letter_title\":null,\"sender_persons\":null,\"receiver_persons\":null}}",
+    "model": "qwen/qwen3.7-plus",
+    "provider": "openrouter",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 3127,
+        "output_tokens": 850,
+        "total_tokens": 3977,
+        "input_cost_usd": 0.0010006400000000001,
+        "output_cost_usd": 0.001088,
+        "estimated_cost_usd": 0.00208864
+    },
+    "duration": 20.84168243408203,
+    "timestamp": "2026-09-18T09:46:07.773856",
+    "parsed": {
+        "metadata": {
+            "send_date": [
+                "1928-05-15"
+            ],
+            "letter_title": null,
+            "sender_persons": null,
+            "receiver_persons": null
+        }
+    },
+    "conversation_id": "da72a3c9-640d-46cc-a32a-9ebc0dcc7bd5",
+    "score": {
+        "send_date_tp": 1,
+        "send_date_fp": 0,
+        "send_date_fn": 0,
+        "sender_persons_tp": 0,
+        "sender_persons_fp": 0,
+        "sender_persons_fn": 0,
+        "receiver_persons_tp": 0,
+        "receiver_persons_fp": 0,
+        "receiver_persons_fn": 0,
+        "field_scores": {
+            "send_date": {
+                "response": [
+                    "1928-05-15"
+                ],
+                "ground_truth": [
+                    "1928-05-15"
+                ],
+                "score": null,
+                "counts": {
+                    "send_date_tp": 1,
+                    "send_date_fp": 0,
+                    "send_date_fn": 0
+                }
+            },
+            "sender_persons": {
+                "response": [],
+                "ground_truth": [],
+                "score": null,
+                "counts": {
+                    "sender_persons_tp": 0,
+                    "sender_persons_fp": 0,
+                    "sender_persons_fn": 0
+                }
+            },
+            "receiver_persons": {
+                "response": [],
+                "ground_truth": [],
+                "score": null,
+                "counts": {
+                    "receiver_persons_tp": 0,
+                    "receiver_persons_fp": 0,
+                    "receiver_persons_fn": 0
+                }
+            }
+        }
+    },
+    "raw_response": "{\"id\":\"gen-1789717547-I01bHMM7AuMzJTX0QZZj\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\n  \\\"metadata\\\": {\\n    \\\"send_date\\\": [\\n      \\\"1928-05-15\\\"\\n    ],\\n    \\\"letter_title\\\": null,\\n    \\\"sender_persons\\\": null,\\n    \\\"receiver_persons\\\": null\\n  }\\n}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"metadata\":{\"send_date\":[\"1928-05-15\"],\"letter_title\":null,\"sender_persons\":null,\"receiver_persons\":null}},\"reasoning\":\"The user wants me to extract metadata from a historical letter image and format it as JSON.\\nThe JSON schema requires:\\n- `metadata`: an object containing:\\n    - `send_date`: list of strings or null\\n    - `letter_title`: list of strings or null\\n    - `sender_persons`: list of strings or null\\n    - `receiver_persons`: list of strings or null\\n\\nLet's analyze the image:\\n- Top right: \\\"ABSCHRIFT 36\\\" (Copy 36)\\n- Date: \\\"Basel, den 15. Mai 1928.\\\" -> send_date: [\\\"1928-05-15\\\"]\\n- Letterhead: \\\"Basler Rheinschiffahrt-Aktiengesellschaft Basel\\\"\\n- Body text mentions: \\\"Nach mehrw\u00f6chiger Abwesenheit nach Basel heimgekehrt, finde ich Ihren Brief vom 3. ds. vor.\\\"\\n- \\\"Der von Ihnen erw\u00e4hnte, von Herrn Jean Richard Frey verfasste Artikel...\\\"\\n- No explicit sender name at the bottom, just \\\"In Hochachtung\\\". However, the letterhead is \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\". Wait, usually there's a signature. There is no signature visible, it's a typed copy (\\\"ABSCHRIFT\\\"). The sender is likely the representative of Basler Rheinschiffahrt-Aktiengesellschaft, but no specific person is named as the sender. Wait, is there a sender? The text says \\\"finde ich Ihren Brief...\\\". The letterhead is the company. I will put the company or null for sender_persons? The prompt asks for \\\"Name(s) of the person(s)\\\". Since no person is named, maybe null? Or \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"? Let's use null for sender_persons if no person is explicitly named, or maybe the company. Let's look closely. \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\" is the letterhead.\\n- Receiver: \\\"Ihren Brief\\\" -> The receiver is not explicitly named in the text, just \\\"Ihnen\\\". Wait, is there an address block? No.\\n- Letter title: None.\\n\\nLet's re-evaluate sender and receiver.\\nSender: The letter is from \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\". Since it asks for \\\"sender_persons\\\", and no specific person is signed (it's a copy), I'll set it to null or the company name? Usually, if it's a company, it might be extracted. But the schema says \\\"sender_persons\\\". I'll put null. Wait, sometimes the letterhead is considered the sender. Let's put null for persons.\\nReceiver: Not mentioned. Null.\\nLetter title: Not mentioned. Null.\\nSend date: \\\"1928-05-15\\\".\\n\\nWait, let's look at the schema again.\\n`send_date`: [\\\"1928-05-15\\\"]\\n`letter_title`: null\\n`sender_persons`: null\\n`receiver_persons`: null\\n\\nLet's check if there's any hidden info. \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\" is an organization.\\nI will output null for persons and title.\\n\\nWait, is \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\" considered a sender? The prompt says \\\"Name(s) of the person(s)\\\". I will use null.\\n\\nLet's refine:\\nsend_date: [\\\"1928-05-15\\\"]\\nletter_title: null\\nsender_persons: null\\nreceiver_persons: null\\n\\nWait, could the sender be inferred? No.\\nI'll output the JSON.\",\"reasoning_details\":[{\"type\":\"reasoning.text\",\"text\":\"The user wants me to extract metadata from a historical letter image and format it as JSON.\\nThe JSON schema requires:\\n- `metadata`: an object containing:\\n    - `send_date`: list of strings or null\\n    - `letter_title`: list of strings or null\\n    - `sender_persons`: list of strings or null\\n    - `receiver_persons`: list of strings or null\\n\\nLet's analyze the image:\\n- Top right: \\\"ABSCHRIFT 36\\\" (Copy 36)\\n- Date: \\\"Basel, den 15. Mai 1928.\\\" -> send_date: [\\\"1928-05-15\\\"]\\n- Letterhead: \\\"Basler Rheinschiffahrt-Aktiengesellschaft Basel\\\"\\n- Body text mentions: \\\"Nach mehrw\u00f6chiger Abwesenheit nach Basel heimgekehrt, finde ich Ihren Brief vom 3. ds. vor.\\\"\\n- \\\"Der von Ihnen erw\u00e4hnte, von Herrn Jean Richard Frey verfasste Artikel...\\\"\\n- No explicit sender name at the bottom, just \\\"In Hochachtung\\\". However, the letterhead is \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\". Wait, usually there's a signature. There is no signature visible, it's a typed copy (\\\"ABSCHRIFT\\\"). The sender is likely the representative of Basler Rheinschiffahrt-Aktiengesellschaft, but no specific person is named as the sender. Wait, is there a sender? The text says \\\"finde ich Ihren Brief...\\\". The letterhead is the company. I will put the company or null for sender_persons? The prompt asks for \\\"Name(s) of the person(s)\\\". Since no person is named, maybe null? Or \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"? Let's use null for sender_persons if no person is explicitly named, or maybe the company. Let's look closely. \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\" is the letterhead.\\n- Receiver: \\\"Ihren Brief\\\" -> The receiver is not explicitly named in the text, just \\\"Ihnen\\\". Wait, is there an address block? No.\\n- Letter title: None.\\n\\nLet's re-evaluate sender and receiver.\\nSender: The letter is from \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\". Since it asks for \\\"sender_persons\\\", and no specific person is signed (it's a copy), I'll set it to null or the company name? Usually, if it's a company, it might be extracted. But the schema says \\\"sender_persons\\\". I'll put null. Wait, sometimes the letterhead is considered the sender. Let's put null for persons.\\nReceiver: Not mentioned. Null.\\nLetter title: Not mentioned. Null.\\nSend date: \\\"1928-05-15\\\".\\n\\nWait, let's look at the schema again.\\n`send_date`: [\\\"1928-05-15\\\"]\\n`letter_title`: null\\n`sender_persons`: null\\n`receiver_persons`: null\\n\\nLet's check if there's any hidden info. \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\" is an organization.\\nI will output null for persons and title.\\n\\nWait, is \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\" considered a sender? The prompt says \\\"Name(s) of the person(s)\\\". I will use null.\\n\\nLet's refine:\\nsend_date: [\\\"1928-05-15\\\"]\\nletter_title: null\\nsender_persons: null\\nreceiver_persons: null\\n\\nWait, could the sender be inferred? No.\\nI'll output the JSON.\",\"format\":\"unknown\",\"index\":0}]},\"native_finish_reason\":\"stop\"}],\"created\":1789717547,\"model\":\"qwen/qwen3.7-plus\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":null,\"usage\":{\"completion_tokens\":850,\"prompt_tokens\":3127,\"total_tokens\":3977,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":0,\"reasoning_tokens\":785,\"rejected_prediction_tokens\":null,\"image_tokens\":0},\"prompt_tokens_details\":{\"audio_tokens\":0,\"cached_tokens\":0,\"cache_write_tokens\":0,\"video_tokens\":0},\"cost\":0.00208864,\"is_byok\":false,\"cost_details\":{\"upstream_inference_cost\":0.00208864,\"upstream_inference_prompt_cost\":0.00100064,\"upstream_inference_completions_cost\":0.001088}},\"provider\":\"Alibaba\"}"
+}

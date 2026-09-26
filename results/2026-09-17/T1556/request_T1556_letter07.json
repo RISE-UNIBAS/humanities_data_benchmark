@@ -1,0 +1,84 @@
+{
+    "text": "{\"metadata\":{\"send_date\":[\"1926-06-22\"],\"letter_title\":null,\"sender_persons\":null,\"receiver_persons\":[\"E. Christ-Weckernagel\"]}}",
+    "model": "thinkingmachines/Inkling",
+    "provider": "huggingface",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 2254,
+        "output_tokens": 2772,
+        "total_tokens": 5026,
+        "input_cost_usd": 0.002254,
+        "output_cost_usd": 0.0112266,
+        "estimated_cost_usd": 0.013480599999999999
+    },
+    "duration": 51.68037819862366,
+    "timestamp": "2026-09-17T11:37:14.487429",
+    "parsed": {
+        "metadata": {
+            "send_date": [
+                "1926-06-22"
+            ],
+            "letter_title": null,
+            "sender_persons": null,
+            "receiver_persons": [
+                "E. Christ-Weckernagel"
+            ]
+        }
+    },
+    "conversation_id": "14603b4d-b035-48fc-aa80-602db1432854",
+    "score": {
+        "send_date_tp": 1,
+        "send_date_fp": 0,
+        "send_date_fn": 0,
+        "sender_persons_tp": 0,
+        "sender_persons_fp": 0,
+        "sender_persons_fn": 2,
+        "receiver_persons_tp": 0,
+        "receiver_persons_fp": 1,
+        "receiver_persons_fn": 1,
+        "field_scores": {
+            "send_date": {
+                "response": [
+                    "1926-06-22"
+                ],
+                "ground_truth": [
+                    "1926-06-22"
+                ],
+                "score": null,
+                "counts": {
+                    "send_date_tp": 1,
+                    "send_date_fp": 0,
+                    "send_date_fn": 0
+                }
+            },
+            "sender_persons": {
+                "response": [],
+                "ground_truth": [
+                    "Groschupf-Jaeger, Louis",
+                    "Ritter-Dreier, Fritz"
+                ],
+                "score": null,
+                "counts": {
+                    "sender_persons_tp": 0,
+                    "sender_persons_fp": 0,
+                    "sender_persons_fn": 2
+                }
+            },
+            "receiver_persons": {
+                "response": [
+                    "E. Christ-Weckernagel"
+                ],
+                "ground_truth": [
+                    "Christ-Wackernagel, Paul"
+                ],
+                "score": null,
+                "counts": {
+                    "receiver_persons_tp": 0,
+                    "receiver_persons_fp": 1,
+                    "receiver_persons_fn": 1
+                }
+            }
+        }
+    },
+    "raw_response": "{\"id\":\"p1dAS1h-4i1VM9-a3c720532af6f3c2\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\n  \\\"metadata\\\": {\\n    \\\"send_date\\\": [\\\"1926-06-22\\\"],\\n    \\\"letter_title\\\": null,\\n    \\\"sender_persons\\\": null,\\n    \\\"receiver_persons\\\": [\\\"E. Christ-Weckernagel\\\"]\\n  }\\n}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"metadata\":{\"send_date\":[\"1926-06-22\"],\"letter_title\":null,\"sender_persons\":null,\"receiver_persons\":[\"E. Christ-Weckernagel\"]}},\"reasoning\":\"We need parse image: letter from Basler Rheinschiffahrt-Aktiengesellschaft? Need extract title, sender, date, receiver.\\n\\nLet's analyze visible text.\\n\\nHeader: \\\"Basler Rheinschiffahrt-Aktiengesellschaft Marktgasse 5III\\\" etc. Date: \\\"Basel, den 22. Juni 1926.\\\" Addressee: \\\"Herrn E. Christ - Weckernagel, Basel.\\\" Salutation \\\"Sehr geehrter Herr Christ,\\\" Body mentions \\\"Abschrift unseres gestrigen Schreibens an Herrn Dr. Max Vischer, Pr\u00e4sident der Basler Personenschiffahrts-Gesellschaft...\\\" Closing \\\"Hochachtend BASELER RHEINSCHIFFAHRT-AKTIENGESELLSCHAFT\\\" with signatures. Attachment \\\"1 Beilage.\\\"\\n\\nSo letter_title? Not explicit title, maybe null? But could be inferred? The prompt says extract values of keys from letter. If not included set null. There's no explicit title like \\\"Petition...\\\". So letter_title: null? Or maybe \\\"Abschrift...\\\" No, that's content. We'll set null.\\n\\nSender persons: The company Basler Rheinschiffahrt-Aktiengesellschaft, but persons? Signatures appear maybe two signatures? Let's inspect mental image: There are two signatures at bottom right, one maybe \\\"J. Huber\\\"? Actually need name(s) of person(s) who wrote letter. The letter is from the company, signed by representatives. The signatures are somewhat readable? One looks like \\\"Rudolf\\\"?? Let's not over-interpret. But sender_persons might be the company? The key says \\\"Name(s) of the person(s) who wrote the letter.\\\" Usually in these extraction tasks, if signed by company representatives with names, extract them. Let's try read signatures: One signature might be \\\"Fritz M\u00fcller\\\"? Hmm not clear. But there is printed \\\"BASELER RHEINSCHIFFAHRT-AKTIENGESELLSCHAFT\\\" not a person. However there might be handwritten signatures with names. Given image resolution, maybe signatures are \\\"G. Keller\\\" and \\\"H. M\u00fcller\\\"? Not sure. Let's examine mental: The bottom right has two signatures, one larger loop maybe \\\"A. Heller\\\"? Actually I think it's safer to put the organization? But key expects persons. If not clearly readable, maybe null? But we can try identify from context? Not necessary.\\n\\nWait the prompt says \\\"Your task is to extract the values of the following keys from the letter...\\\" Usually they want explicit visible names. The sender is \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\" but that's an organization, not person. However in example they used \\\"Lisa Simpson\\\" person. Here the letter is written on behalf of company, signed possibly by directors. Let's see if any printed names near signatures? There's printed \\\"BASELER RHEINSCHIFFAHRT-AKTIENGESELLSCHAFT\\\" then signatures over/around. No printed names visible except in address block.\\n\\nThus sender_persons might be null if individual names not readable? But maybe the signatures correspond to known people? Let's not guess. But we need provide list. Maybe include \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"? That's not a person though.\\n\\nLet's parse receiver_persons: \\\"Herrn E. Christ - Weckernagel\\\" or \\\"E. Christ-Weckernagel\\\"? The address line: \\\"Herrn E. Christ - Weckernagel,\\\" So receiver is \\\"E. Christ-Weckernagel\\\" maybe \\\"E. Christ\\\" and \\\"Weckernagel\\\"? Actually hyphen with spaces might indicate \\\"Christ-Weckernagel\\\" as double surname. So receiver_persons: [\\\"E. Christ-Weckernagel\\\"].\\n\\nSend date: \\\"22. Juni 1926\\\" => 1926-06-22.\\n\\nLetter title: Maybe none, so null.\\n\\nBut wait there might be a subject/title in the letter? The body starts with \\\"Wir erlauben uns, Ihnen in der Beilage Abschrift unseres gestrigen Schreibens an Herrn Dr. Max Vischer...\\\" No explicit title header. So null.\\n\\nHowever, sometimes they consider the letterhead as title? No, letter_title is title of the letter, like \\\"Petition...\\\". Not present.\\n\\nThus JSON:\\n{\\n\\\"letter_title\\\": [null]? Wait instructions: values corresponding to each key should be stored as a list, even if single value. If information not included, set value for corresponding key to \\\"null\\\". Does that mean the list contains null? Or the value is null not in list? The example shows lists with strings. For missing, probably [\\\"null\\\"]? Actually they said \\\"set the value for the corresponding key to 'null'\\\". That could mean the JSON value is null, not a list containing null. But they also said \\\"where the values corresponding to each key should be stored as a list, even if there is only a single value for a key\\\". So likely if missing, use [null]? Or null? Let's check consistency: They want list always. So if missing, maybe [null]. But phrase \\\"set the value ... to 'null'\\\" might mean the list element is the string \\\"null\\\"? Hmm in example they don't show missing case. Usually in these extraction prompts, they want \\\"null\\\" as the value (not in list) despite list instruction? Let's think carefully.\\n\\nThe prompt: \\\"return them in a JSON file where the values corresponding to each key should be stored as a list, even if there is only a single value for a key\\\" Then \\\"If a piece of information is not included in the letter, set the value for the corresponding key to 'null'.\\\" This is ambiguous but likely means the value assigned to the key is null (the JSON null), breaking the list rule for missing info. But they said values should be stored as a list... Hmm maybe they want [\\\"null\\\"]? Actually \\\"set the value ... to 'null'\\\" with quotes around null suggests the string \\\"null\\\". But in JSON, null is without quotes. They wrote 'null' in quotes in instruction. Let's examine typical prompts: They often say \\\"set the value for the corresponding key to null\\\" meaning JSON null. But they also said store as list. In many prior tasks, they still want [null]?? Let's recall similar prompts: \\\"Your task is to extract... return them in a JSON file where the values... should be stored as a list... If a piece of information is not included... set the value... to null.\\\" Usually the output is like {\\\"key\\\": null} not in list. But they said list for values corresponding to each key. Actually maybe they mean each key maps to a list of extracted values; if none, then the list is empty? No, they said set to null.\\n\\nGiven ambiguity, I think safest is to use list with null inside? Or list empty? Let's decide based on logic: If key should always have a list value, then missing should be represented as empty list []? But they specifically said set to \\\"null\\\". So likely they want the key's value to be the JSON null, not a list. But that conflicts with \\\"stored as a list\\\". However they might have meant \\\"the values (plural) corresponding to each key should be stored as a list\\\" i.e., if there are multiple values, list them; if one, still list. For missing, null.\\n\\nThus I will output lists for present ones, and null (not list) for missing? Or [null]? Let's check mental consistency: If I put \\\"letter_title\\\": null, that is not a list. But they said values should be stored as a list. So maybe \\\"letter_title\\\": [null]. That is a list containing null. That satisfies both: it's a list, and the value is null. Yes, that sounds right: store values in a list; if missing, the list contains null? Actually \\\"set the value for the corresponding key to 'null'\\\" could be interpreted as the list's content is null. So [\\\"null\\\"]? No, with quotes it's string. But they said 'null' in quotes in prompt, but in JSON we use null without quotes.\\n\\nThus I will do:\\n\\\"letter_title\\\": [null]\\n\\\"sender_persons\\\": maybe [null] if unknown? Or maybe list with company? Let's try determine signatures.\\n\\nLooking closer at image: At bottom right, there are two signatures. One is large with loops, maybe \\\"R. H. M\u00fcller\\\"? The other smaller, maybe \\\"J. Huber\\\"? Actually I think one might be readable as \\\"F. M\u00fcller\\\". But I'm not sure. Given it's a formal business letter, they might sign with their names printed? No printed names.\\n\\nBut there is also the address block on left: \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\" is the sender organization. The question asks \\\"sender_persons: Name(s) of the person(s) who wrote the letter.\\\" If signatures are illegible, but the letter is from the company, maybe there are no specific persons named except in signatures. Since I can't reliably read them, I might set sender_persons to [null]. However, maybe the signatures are actually readable: Let's examine mental image of signatures. There's one signature that looks like \\\"Gustav\\\"?? Hmm.\\n\\nActually, I notice in the body they mention \\\"Herrn Dr. Max Vischer, Pr\u00e4sident der Basler Personenschiffahrts-Gesellschaft\\\". That's not sender or receiver (receiver is Christ).\\n\\nGiven the task is extraction, they likely expect:\\nletter_title: null\\nsend_date: [\\\"1926-06-22\\\"]\\nsender_persons: [\\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"]? No, that's not person.\\n\\nWait, maybe there is a sender name printed near the bottom left? There's \\\"1 Beilage.\\\" No.\\n\\nLet's consider that in historical letters, the sender is often the entity in the letterhead. But the key specifically says \\\"sender_persons\\\". Still, they might accept the organization if no individual named. But \\\"persons\\\" plural suggests human names.\\n\\nLet's try to decipher signatures using knowledge? The Basler Rheinschiffahrt-Aktiengesellschaft in 1926 might have directors like \\\"Dr. Rudolf Burckhardt\\\"? Not sure.\\n\\nGiven I should not hallucinate. So if not clearly readable, set to null. But I need be honest.\\n\\nHowever, there might be a handwritten name at top left? No.\\n\\nThus:\\n{\\n\\\"letter_title\\\": [null],\\n\\\"send_date\\\": [\\\"1926-06-22\\\"],\\n\\\"sender_persons\\\": [null],\\n\\\"receiver_persons\\\": [\\\"E. Christ-Weckernagel\\\"]\\n}\\n\\nBut wait, there might be two receivers? The salutation is \\\"Sehr geehrter Herr Christ,\\\" and address \\\"Herrn E. Christ - Weckernagel\\\". So just one.\\n\\nLet's refine date format: 1926-06-22.\\n\\nCheck if there is approximate? Exact \\\"den 22. Juni 1926\\\". Yes.\\n\\nThus output JSON. Let's do lists with values, and null inside list for missing? Actually I think it's okay to have [null]. Let's do that for consistency.\\n\\nBut wait, they said \\\"set the value for the corresponding key to 'null'\\\". If I do [null], the value is a list, not null. So maybe they want:\\n\\\"letter_title\\\": null\\n\\\"sender_persons\\\": null\\n\\nBut then not lists. Hmm.\\n\\nLet's examine example: They have lists for all present keys. They don't show missing. The instruction \\\"where the values corresponding to each key should be stored as a list, even if there is only a single value for a key\\\" applies to values that exist. Then \\\"If a piece of information is not included... set the value... to 'null'.\\\" This likely overrides the list format for that specific case. So I should put null without list.\\n\\nBut then there is inconsistency in JSON schema. However it's acceptable.\\n\\nThus:\\n{\\n\\\"letter_title\\\": null,\\n\\\"send_date\\\": [\\\"1926-06-22\\\"],\\n\\\"sender_persons\\\": null,\\n\\\"receiver_persons\\\": [\\\"E. Christ-Weckernagel\\\"]\\n}\\n\\nBut I'm uneasy about sender_persons being null when there are signatures. Let's see if I can read signatures: One signature might be \\\"A. M\u00fcller\\\" and another \\\"E. Huber\\\"? Actually the image shows two signatures, one is quite large and might be \\\"Rudolf H. M\u00fcller\\\"? The other is smaller, maybe \\\"J. B. ...\\\"? Given I can't be sure, null is appropriate.\\n\\nWait, but there is printed text \\\"BASELER RHEINSCHIFFAHRT-AKTIENGESELLSCHAFT\\\" and then signatures. In some extraction tasks, they ask for sender persons and accept the organization representatives if named in signature block with printed names. Here there are no printed names, just signatures. So null is correct.\\n\\nOne more check: Is there a title in the letter? Maybe \\\"Abschrift\\\" is in the body but not title. So null.\\n\\nThus I will return JSON with null for missing and lists for present.\"},\"seed\":null}],\"created\":1789637783,\"model\":\"thinkingmachines/Inkling\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":\"default\",\"usage\":{\"completion_tokens\":2772,\"prompt_tokens\":2254,\"total_tokens\":5026,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":null,\"reasoning_tokens\":2711,\"rejected_prediction_tokens\":null},\"prompt_tokens_details\":{\"audio_tokens\":null,\"cached_tokens\":0}},\"prompt\":[]}"
+}

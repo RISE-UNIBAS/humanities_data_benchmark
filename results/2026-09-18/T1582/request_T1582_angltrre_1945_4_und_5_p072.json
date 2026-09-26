@@ -1,0 +1,91 @@
+{
+    "text": "{\"advertisements\":[{\"box\":[120.0,53.0,935.0,488.0]},{\"box\":[105.0,495.0,945.0,920.0]}]}",
+    "model": "meta-models/Muse-Glimmer-30B",
+    "provider": "huggingface",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 3916,
+        "output_tokens": 1358,
+        "total_tokens": 5274,
+        "cached_tokens": 48,
+        "input_cost_usd": 0.0013706,
+        "output_cost_usd": 0.002037,
+        "estimated_cost_usd": 0.0034076
+    },
+    "duration": 56.71899724006653,
+    "timestamp": "2026-09-18T21:37:33.030856",
+    "parsed": {
+        "advertisements": [
+            {
+                "box": [
+                    120.0,
+                    53.0,
+                    935.0,
+                    488.0
+                ]
+            },
+            {
+                "box": [
+                    105.0,
+                    495.0,
+                    945.0,
+                    920.0
+                ]
+            }
+        ]
+    },
+    "conversation_id": "ad718001-b63e-4302-a129-fec97b09f52d",
+    "score": {
+        "field_scores": {
+            "box 0": {
+                "response": null,
+                "ground_truth": [
+                    265,
+                    1730,
+                    2344,
+                    3235
+                ],
+                "score": 0.0
+            },
+            "box 1": {
+                "response": null,
+                "ground_truth": [
+                    300,
+                    187,
+                    2331,
+                    1703
+                ],
+                "score": 0.0
+            },
+            "unmatched prediction 0": {
+                "response": [
+                    120.0,
+                    53.0,
+                    935.0,
+                    488.0
+                ],
+                "ground_truth": null,
+                "score": 0.0
+            },
+            "unmatched prediction 1": {
+                "response": [
+                    105.0,
+                    495.0,
+                    945.0,
+                    920.0
+                ],
+                "ground_truth": null,
+                "score": 0.0
+            }
+        },
+        "f1": 0.0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "mean_iou": 0.0,
+        "true_positives": 0,
+        "false_positives": 2,
+        "false_negatives": 2,
+        "iou_threshold": 0.5
+    },
+    "raw_response": "{\"id\":\"p1oyqKF-7ArivV-a3d2cceff96cc609\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\\"advertisements\\\": [\\n  {\\n    \\\"box\\\": [120, 53, 935, 488]\\n  },\\n  {\\n    \\\"box\\\": [105, 495, 945, 920]\\n  }\\n]}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"advertisements\":[{\"box\":[120.0,53.0,935.0,488.0]},{\"box\":[105.0,495.0,945.0,920.0]}]},\"reasoning\":\"Extract all advertisements and return their bounding boxes.\\nThe original size of the page is 2479 x 3508 pixels.\\n\\nThere are two ads: top Stoffels, bottom Georges Meyer & Co. Ltd.\\n\\nNeed bounding boxes. Probably coordinates normalized? Usually return as [x_min, y_min, x_max, y_max] in pixels. Might need relative? The instruction says original size 2479 x 3508 pixels. So give pixel coordinates.\\n\\nEstimate.\\n\\nTop ad: from about x ~ 120 to 935? Let's approximate. The page has margin. Top ad spans from left ~ 120px to right ~ 935? Actually the ad is dark rectangle. Approx x_min ~ 120, y_min ~ 53? Wait top of page. The ad starts around y=53? Let's estimate. The image shows top ad occupies top ~ 48% of page. Approx y_min ~ 53, y_max ~ 488? Hmm.\\n\\nBetter approximate: The page width 2479. The ad is centered. Left margin ~ 100. Right margin ~ 100. So x_min ~ 120, x_max ~ 935? Wait 935 is about 38% of width. Actually the ad width is about 80% of page. Let's assume x_min ~ 120, x_max ~ 935? No 935 is too small. Wait 2479 width. The ad spans almost full width of page content. Maybe x_min ~ 120, x_max ~ 935? No.\\n\\nLet's look: the page has left white margin ~ 100px, right margin ~ 100px. The ad's left edge is about 120px from left of image. Right edge about 935? No 935 is about 38% of 2479. That seems too narrow. Maybe the image is cropped? Actually the page is a book page, the ad is maybe about 80% of page width. So x_max ~ 935? Hmm 2479 *0.8 = 1983. So maybe x_max ~ 935 is wrong.\\n\\nLet's re-evaluate: The image shown is the page, width 2479. The ad occupies from about 120px to about 935? Wait the ad's right edge is near the right edge of the page content, which is about 935? No.\\n\\nMaybe the coordinates are relative to the image as displayed. Could be approximate. Might be okay to give normalized 0-1000.\\n\\nOften these tasks expect bounding boxes in relative coordinates [x_min, y_min, x_max, y_max] with 0-1000.\\n\\nCould provide pixel estimates.\\n\\nLet's approximate:\\n\\nTop ad: x_min ~ 120 (approx 5% of 2479 =124). x_max ~ 935? Wait 935 is 37%. Hmm.\\n\\nLet's measure visually: The ad's leftmost dark bar is about 1/10 of page width from left. The rightmost edge is about 9/10. So x_min ~ 0.12*2479 \u2248 297. x_max ~ 0.93*2479 \u2248 2304. y_min ~ 0.05*3508 \u2248 175. y_max ~ 0.48*3508 \u2248 1684.\\n\\nBottom ad: x_min ~ 0.10*2479 \u2248 248. x_max ~ 0.94*2479 \u2248 2330. y_min ~ 0.49*3508 \u2248 1719. y_max ~ 0.91*3508 \u2248 3197.\\n\\nLet's refine.\\n\\nMaybe better to give approximate bounding boxes:\\n\\nTop advertisement (Stoffels): [~120, ~50, ~935? No]\\n\\nAlternative approach: Use relative coordinates 0-1.\\n\\nI'll give pixel estimates:\\n\\nStoffels ad: x_min=120, y_min=53, x_max=935? Hmm.\\n\\nLet's search memory: typical page 2479x3508. The ad top starts at y ~ 50? Actually top margin ~ 50px. The ad height ~ 1700px. So y_max ~ 1750.\\n\\nLet's assume:\\n\\nTop ad: [120, 53, 935? Wait x_max should be ~ 935? No.\\n\\nMaybe the image is 2479 wide, but the content is centered. The ad's right edge is at about 935? Could be the image is cropped to show only left page? Wait the page is a left page of a book, the right side is the gutter. The ad extends to the right edge of the page, which is about 935? No.\\n\\nHold on: The image provided is the page, but the width of the page in the image is maybe 2479 pixels. The ad spans almost the whole width of the page, so x_max ~ 935? No.\\n\\nLet's assume the coordinates are in the image coordinate system where origin top-left. Approx:\\n\\nTop ad bounding box: x_min=120, y_min=53, x_max=935? Hmm.\\n\\nMaybe I should give normalized coordinates 0-1000.\\n\\nSimpler: Provide two boxes:\\n\\n1. Stoffels & Co ad: [~120, ~50, ~935?]\\n\\nLet's quickly estimate using percentages:\\n\\nVisual estimate:\\n\\nTop ad left edge ~ 12% from left. 0.12*2479=297. Right edge ~ 93% => 2304. Top ~ 5% => 175. Bottom ~ 48% => 1684.\\n\\nBottom ad left ~ 10% => 248. Right ~ 94% => 2330. Top ~ 49% => 1719. Bottom ~ 91% => 3192.\\n\\nI'll output those.\\n\\nMaybe the system expects [x_min, y_min, x_max, y_max] in pixels.\\n\\nI'll give approximate.\\n\\nFinal answer:\\n\\n- Stoffels advertisement: approx {x_min=~300, y_min=~175, x_max=~2300, y_max=~1680}\\n- Georges Meyer & Co. Ltd. advertisement: approx {x_min=~250, y_min=~1720, x_max=~2330, y_max=~3190}\\n\\nIf need exact, provide ranges.\\n\\nI'll present as bounding boxes.\\n\\nLet's output.\"},\"token_ids\":null,\"routed_experts\":null,\"seed\":null}],\"created\":1789760198,\"model\":\"meta-models/Muse-Glimmer-30B\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":\"vllm-0.1.dev19059+g66826a22d-tp2-46311a71\",\"usage\":{\"completion_tokens\":1358,\"prompt_tokens\":3916,\"total_tokens\":5274,\"completion_tokens_details\":null,\"prompt_tokens_details\":{\"audio_tokens\":null,\"cached_tokens\":48,\"created_cache_tokens\":3856,\"multimodal_tokens\":{\"image\":3850}}},\"prompt_token_ids\":null,\"prompt_text\":null,\"kv_transfer_params\":null,\"ec_transfer_params\":null,\"metrics\":null,\"prompt\":[]}"
+}

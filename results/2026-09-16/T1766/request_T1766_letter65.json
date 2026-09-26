@@ -1,0 +1,82 @@
+{
+    "text": "{\"metadata\":{\"send_date\":[\"1935-08-17\"],\"letter_title\":null,\"sender_persons\":null,\"receiver_persons\":[\"Fritz Ritter\"]}}",
+    "model": "deepseek-flash",
+    "provider": "deepseek",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 1624,
+        "output_tokens": 949,
+        "total_tokens": 2573,
+        "cached_tokens": 128,
+        "input_cost_usd": 0.00048719999999999997,
+        "output_cost_usd": 0.0011388,
+        "estimated_cost_usd": 0.0016259999999999998
+    },
+    "duration": 6.8637847900390625,
+    "timestamp": "2026-09-16T17:01:30.095673",
+    "parsed": {
+        "metadata": {
+            "send_date": [
+                "1935-08-17"
+            ],
+            "letter_title": null,
+            "sender_persons": null,
+            "receiver_persons": [
+                "Fritz Ritter"
+            ]
+        }
+    },
+    "conversation_id": "2b7d0bfe-25af-4642-9118-2a9fcbd05e78",
+    "score": {
+        "send_date_tp": 1,
+        "send_date_fp": 0,
+        "send_date_fn": 0,
+        "sender_persons_tp": 0,
+        "sender_persons_fp": 0,
+        "sender_persons_fn": 0,
+        "receiver_persons_tp": 1,
+        "receiver_persons_fp": 0,
+        "receiver_persons_fn": 0,
+        "field_scores": {
+            "send_date": {
+                "response": [
+                    "1935-08-17"
+                ],
+                "ground_truth": [
+                    "1935-08-17"
+                ],
+                "score": null,
+                "counts": {
+                    "send_date_tp": 1,
+                    "send_date_fp": 0,
+                    "send_date_fn": 0
+                }
+            },
+            "sender_persons": {
+                "response": [],
+                "ground_truth": [],
+                "score": null,
+                "counts": {
+                    "sender_persons_tp": 0,
+                    "sender_persons_fp": 0,
+                    "sender_persons_fn": 0
+                }
+            },
+            "receiver_persons": {
+                "response": [
+                    "Ritter-Dreier, Fritz"
+                ],
+                "ground_truth": [
+                    "Ritter-Dreier, Fritz"
+                ],
+                "score": null,
+                "counts": {
+                    "receiver_persons_tp": 1,
+                    "receiver_persons_fp": 0,
+                    "receiver_persons_fn": 0
+                }
+            }
+        }
+    },
+    "raw_response": "{\"id\":\"91d95f4a-8c32-414a-bc50-8e45628306fd\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\\"metadata\\\":{\\\"send_date\\\":[\\\"1935-08-17\\\"],\\\"letter_title\\\":null,\\\"sender_persons\\\":null,\\\"receiver_persons\\\":[\\\"Fritz Ritter\\\"]}}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"reasoning_content\":\"We need answer JSON only. Need extract metadata. Letter image. Need not OCR? We can read. It's German letter. Need title? letter_title likely maybe \\\"Letter from Basler Personenschiffahrtsgesellschaft to Fritz Ritter\\\" or no explicit title. The schema keys: letter_title, sender_persons, send_date, receiver_persons. Need values list or null.\\n\\nLet's inspect image content:\\n\\nHeader top left: BASLER PERSONENSCHIFFAHRTSGESELLSCHAFT\\nTop right: Basel, den 17. August 1935.\\nAddressee: Herrn Fritz Ritter, Basler Rheinschiffahrt A.-G., Basel 19\\nBody begins: Wir danken Ihnen f\u00fcr Ihre Antwort vom 16.ct. ...\\\" etc. Signature: Basler Personenschiffahrtsgesellschaft Der Gesch\u00e4ftsf\u00fchrer. No personal name. Sender organization: Basler Personenschiffahrtsgesellschaft. Sender persons? None named as signatory? \\\"Der Gesch\u00e4ftsf\u00fchrer\\\" not name. So sender_persons maybe [\\\"Basler Personenschiffahrtsgesellschaft\\\"]? But key says persons. The sender is organization, not person. Could be null? But letter from company. The example uses persons. We need extract Name(s) of person(s) who wrote letter. No individual name. However company name maybe sender? But key sender_persons means persons, so maybe null. But letter title? There is no title. Could use \\\"Letter from Basler Personenschiffahrtsgesellschaft to Fritz Ritter\\\" or null. The instructions: If piece info not included, set null. letter_title: maybe not explicit. Could title be inferred? \\\"Basler Personenschiffahrtsgesellschaft\\\" as letterhead. But key \\\"letter_title\\\" maybe title of letter. Since no title, null. send_date: Basel, den 17. August 1935 -> 1935-08-17. receiver_persons: Herrn Fritz Ritter -> [\\\"Fritz Ritter\\\"]. sender_persons: The letter is from Basler Personenschiffahrtsgesellschaft, signed by Der Gesch\u00e4ftsf\u00fchrer. No name. If they want person(s), maybe null. But perhaps sender_persons includes \\\"Basler Personenschiffahrtsgesellschaft\\\"? But it's not a person. The schema says sender_persons, but not necessarily only natural persons? In examples, \\\"Lisa Simpson\\\". The letter is from company, no individual. So null. But the organization could be considered sender entity, but key says persons. However if we set null, maybe correct. Need decide. Let's read body: \\\"Wir danken Ihnen...\\\" sender is \\\"Basler Personenschiffahrtsgesellschaft\\\" and signature \\\"Der Gesch\u00e4ftsf\u00fchrer\\\". No name. So sender_persons = null. But perhaps sender_persons = [\\\"Basler Personenschiffahrtsgesellschaft\\\"]? The key \\\"sender_persons\\\" may include organizations? The prompt: \\\"Name(s) of the person(s) who wrote the letter.\\\" So not organization. But letter may be written by company. I'd set null because no person named. However if they consider organization as sender, they might expect [\\\"Basler Personenschiffahrtsgesellschaft\\\"]. We need infer. The instruction: \\\"If a piece of information is not included in the letter, set the value for the corresponding key to 'null'.\\\" Person names not included? The letter includes company name, but not person. So null likely. But maybe the sender is the company and can be listed? But key says persons. I'd lean null for sender_persons.\\n\\nletter_title: There's no title. Could set null. But maybe \\\"Letter to Fritz Ritter\\\" not in letter. So null.\\n\\nsend_date: [\\\"1935-08-17\\\"].\\n\\nreceiver_persons: [\\\"Fritz Ritter\\\"].\\n\\nNeed output exactly JSON schema with metadata object. So:\\n\\n{\\n  \\\"metadata\\\": {\\n    \\\"send_date\\\": [\\\"1935-08-17\\\"],\\n    \\\"letter_title\\\": null,\\n    \\\"sender_persons\\\": null,\\n    \\\"receiver_persons\\\": [\\\"Fritz Ritter\\\"]\\n  }\\n}\\n\\nBut need ensure valid JSON. The schema allows null for anyOf array or null. So yes.\\n\\nNeed not include extra. Final answer only JSON.\"}}],\"created\":1789570884,\"model\":\"deepseek-flash\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":\"aeb56401ca74e127821c4f9126dcb669\",\"usage\":{\"completion_tokens\":949,\"prompt_tokens\":1624,\"total_tokens\":2573,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":null,\"reasoning_tokens\":909,\"rejected_prediction_tokens\":null},\"prompt_tokens_details\":{\"audio_tokens\":null,\"cached_tokens\":128},\"prompt_cache_hit_tokens\":128,\"prompt_cache_miss_tokens\":1496}}"
+}

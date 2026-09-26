@@ -2,84 +2,51 @@
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.16941752.svg)](https://doi.org/10.5281/zenodo.16941752)
 
-This repository contains benchmark datasets (images and text files), prompts, ground truths, and evaluation scripts for
-assessing the performance of large language models (LLMs) on humanities-related tasks. The suite is
-designed as a resource for researchers and practitioners interested in systematically evaluating
-how well various LLMs perform on digital humanities (DH) tasks involving visual and text-like materials.
+This repository contains benchmark datasets (images and text files), prompts, ground truths, and evaluation
+scripts for assessing the performance of large language models (LLMs) on humanities-related tasks. The suite is
+designed as a resource for researchers and practitioners interested in systematically evaluating how well various
+LLMs perform on digital humanities (DH) tasks involving visual and text-like materials.
 
-> **ℹ Looking for benchmark results?**
-> This README provides an overview of the benchmark suite and explains how to use it.
-> For detailed test results and model comparisons, visit our [results dashboard](https://rise-services.rise.unibas.ch/benchmarks/).
+Tasks covered include transcription, structured information extraction, and document layout analysis, each scored
+against ground truths and recorded together with its cost and runtime.
 
-## What is Benchmarking and Why Should You Care?
+**[Explore the results dashboard](https://rise-services.rise.unibas.ch/benchmarks/)**
 
-Benchmarking is the process of systematically evaluating and ranking various models for specific tasks using well-defined ground truths and metrics. For humanities research, benchmarking provides:
+[Why benchmark?](#why-benchmark) · [Results](#results) ·
+[Available benchmarks](#available-benchmarks) · [Quick start](#quick-start) ·
+[Methodology](#methodology) · [Contributing](#contributing) ·
+[Citation and licensing](#citation-and-licensing) · [Contributors](#contributors)
+
+## Why benchmark?
+
+Benchmarking is the process of systematically evaluating and ranking various models for specific tasks using
+well-defined ground truths and metrics. For humanities research, benchmarking provides:
 
 - **Evidence-based decision-making** about which model(s) to use for which humanities-specific task(s)
 - **Quantifiable comparisons** between different AI models on humanities data, including cost efficiency analysis
-- **Standardized evaluation** of model performance on tasks like historical document analysis, transcription, and metadata extraction
+- **Standardized evaluation** of model performance on tasks like document analysis, transcription, and metadata extraction
 
-This benchmark suite focuses on tasks essential to digital humanities work with visual materials, helping researchers make informed choices about which AI systems best suit their specific research needs.
+This benchmark suite focuses on tasks essential to digital humanities work with visual and text-like materials,
+helping researchers make informed choices about which AI systems best suit their specific research needs.
 
-> **ℹ Looking for more background?**
-> 
-> Hindermann, M., Kasper, L. K., Marti, S., &amp; Bosse, A. (2026). From Experiments to Epistemic Practice: The RISE Humanities Data Benchmark. *Journal of Open Humanities Data*, *12*(1), 38. https://doi.org/10.5334/johd.470
-> 
-> Hindermann, M., Marti, S., Kasper, L. K., & Bosse, A. (2026). The RISE Humanities Data Benchmark: A Framework for Evaluating Large Language Models for Humanities Tasks. *Journal of Open Humanities Data*, *12*(1), 24. https://doi.org/10.5334/johd.481
->
-> Hindermann, M., & Marti, S. (2026). The RISE Humanities Data Benchmark: From Anecdote to Evidence. DH Benelux 2026, Maastricht, Netherlands. Zenodo. https://doi.org/10.5281/zenodo.20595263
-> 
-> Hindermann, M., & Marti, S. (2025, March 19). *RISE Crash Course: "AI Benchmarking"*. Zenodo. https://doi.org/10.5281/zenodo.15062831
+## Results
 
-## Table of Contents
+All scored runs are published on the
+**[results dashboard](https://rise-services.rise.unibas.ch/benchmarks/)**, which is the primary way
+to read this benchmark:
 
-- [1. Overview](#1-overview)
-  - [1.1. Terminology](#11-terminology)
-  - [1.2. Available Benchmarks](#12-available-benchmarks)
-  - [1.3. How it Works](#13-how-it-works)
-  - [1.4. Practical Considerations](#14-practical-considerations)
-- [2. Use it!](#2-use-it)
-  - [2.1. Fork and prepare](#21-fork-and-prepare)
-  - [2.2. Run a configured test](#22-run-a-configured-test)
-  - [2.3. Create a new Benchmark](#23-create-a-new-benchmark)
-  - [2.4. Run an adhoc test](#24-run-an-adhoc-test)
-  - [2.5. Generate a result render](#25-generate-a-result-render)
-  - [2.6. Run a local model](#26-run-a-local-model)
-- [3. Share it!](#3-share-it)
-  - [3.1. Before Submitting](#31-before-submitting)
-  - [3.2. Create a pull request](#32-create-a-pull-request)
-  - [3.3. Review & Publication](#33-review--publication)
-- [4. Providers & Models](#4-providers-and-models)
-- [5. Benchmarking Methodology](#5-benchmarking-methodology)
-  - [5.1. Ground Truth](#51-ground-truth)
-  - [5.2. Metrics](#52-metrics)
-- [6. Project Status](#6-project-status)
-  - [6.1. Current Limitations](#61-current-limitations)
-  - [6.2. Outlook](#62-outlook)
-- [7. Contributors](#7-contributors)
+- **[Leaderboard](https://rise-services.rise.unibas.ch/benchmarks/p/leaderboard/)** — aggregated
+  results showing which providers and models perform best on which kinds of data.
+- **[Datasets](https://rise-services.rise.unibas.ch/benchmarks/p/benchmarks/)** — browse the
+  benchmarks and the results recorded for each of them.
+- **[Test runs](https://rise-services.rise.unibas.ch/benchmarks/p/testruns/)** — search individual
+  test runs and compare model output with the ground truths.
 
+Every score shown there traces back to a stored response in this repository, under
+`results/<date>/<test_id>/`, alongside the aggregated `scoring.json` for the run.
 
-## 1. Overview
+## Available benchmarks
 
-### 1.1. Terminology
-- **Adhoc-Test**: A specific instance of a benchmark run which is only run once with the run-tests-tool CLI for testing reasons.
-- **Benchmark**: A task for models to perform, consisting of images, ground truths, prompts, dataclasses, and scoring functions. Each benchmark is stored in a separate directory.
-- **Configured Test**: A specific instance of a benchmark run with a particular configuration (ID, provider, model, temperature, role description, prompt file, dataclass).
-- **Dataclass**: Pydantic models for structured output, supported across all providers.
-- **Ground Truth**: The correct answer used to evaluate the model's response.
-- **Image**: Visual input for the task. Images are paired with ground truth files.
-- **Model**: Specific model used to perform the task.
-- **Prompt**: Text given to the model to guide its response. 
-- **Local Provider**: Provider handled by a local backend instead of an API (`contour_local`, `sam3_local`, `grounding_dino_local`, `doclayout_yolo_local`). Registered in `local/__init__.py`; no API key required.
-- **Provider**: Company or service providing model access (`openai`, `genai`, `anthropic`, `cohere`, `mistral`, `openrouter`, `scicore`, `deepseek`, `x-ai`, or `alibaba`).
-- **Request**: API call(s) made during a test, consisting of images and prompts.
-- **Response**: Model's answer containing metadata and output.
-- **Score**: Evaluation result indicating model performance.
-- **Scoring Function**: Function that evaluates the model's response, implemented via the `score_request_answer` and `score_benchmark` methods.
-- **Test Configuration**: Parameters for running a test, stored in `benchmarks_tests.csv`.
-- **Text file**: Textual input for the task. Text files are paired with ground truth files.
-
-### 1.2. Available Benchmarks
 This benchmark suite currently includes the following benchmarks for evaluating LLM performance on humanities tasks:
 
 | Benchmark | Description |
@@ -96,17 +63,352 @@ This benchmark suite currently includes the following benchmarks for evaluating 
 | **[Magazine Pages](benchmarks/magazine_pages/)** | Detect and locate advertisements on historical magazine pages using bounding boxes |
 | **[Medieval Manuscripts](benchmarks/medieval_manuscripts/)** | Page segmentation and handwritten text extraction from 15th century medieval German manuscripts |
 | **[Personnel Cards](benchmarks/personnel_cards/)** | Extract structured employment data (position, location, salary, dates) from 20th century Swiss personnel card tables |
-| **Test Benchmarks** | System validation and basic functionality testing ([test_benchmark](benchmarks/test_benchmark/), [test_benchmark2](benchmarks/test_benchmark2/)) |
 
-### 1.3. How it Works
-The RISE Humanities Data Benchmark is designed to be modular and extensible. There are a number of datasets which are submitted to tests and their results are saved.
-The whole framework, the datasets and the results are part of this repository.
+The [test_benchmark](benchmarks/test_benchmark/) and [test_benchmark2](benchmarks/test_benchmark2/) fixtures validate the framework itself.
+
+## Quick start
+
+To inspect existing comparisons, open the [results dashboard](https://rise-services.rise.unibas.ch/benchmarks/).
+To run a new evaluation, follow the steps below. Python 3.12 or newer is recommended.
+
+### Install
+
+Clone the repository and create a virtual environment.
+To contribute a benchmark, fork the repository first and clone your fork instead:
+
+```console
+git clone https://github.com/RISE-UNIBAS/humanities_data_benchmark.git
+cd humanities_data_benchmark
+python -m venv .venv
+```
+
+Activate it on macOS or Linux:
+
+```bash
+source .venv/bin/activate
+```
+
+Or in Windows PowerShell:
+
+```powershell
+.venv\Scripts\Activate.ps1
+```
+
+Install the dependencies:
+
+```console
+python -m pip install -r requirements.txt
+```
+
+### Configure a provider and run a test
+
+Create a `.env` file in the repository root with an OpenAI API key:
+
+```dotenv
+OPENAI_API_KEY=<your_openai_api_key>
+```
+
+Run the small validation fixture from the repository root. This sends one image to the provider and incurs API charges.
+
+```console
+python scripts/run_single_test.py --test_id T0001
+```
+
+Results are saved to `results/YYYY-MM-DD/T0001`, using the date of the run.
+For Google instead, set `GENAI_API_KEY` and run the same command with `--test_id T0193`.
+Configurations are stored in [benchmarks/benchmarks_tests.csv](benchmarks/benchmarks_tests.csv).
+
+### Inspect the output
+
+Generate a standalone HTML report, replacing `YYYY-MM-DD` with the date of your run:
+
+```console
+python scripts/generate_test_report.py results/YYYY-MM-DD/T0001
+```
+
+Open `reports/T0001_report.html` in a browser to inspect the results.
+
+<details>
+<summary>Additional provider keys</summary>
+
+Add the keys for the providers you use to your root `.env` file.
+
+```dotenv
+OPENAI_API_KEY=<your_openai_api_key>
+GENAI_API_KEY=<your_genai_api_key>
+ANTHROPIC_API_KEY=<your_anthropic_api_key>
+COHERE_API_KEY=<your_cohere_api_key>
+MISTRAL_API_KEY=<your_mistral_api_key>
+OPENROUTER_API_KEY=<your_openrouter_api_key>
+SCICORE_API_KEY=<your_scicore_api_key>
+DEEPSEEK_API_KEY=<your_deepseek_api_key>
+ALIBABA_API_KEY=<your_alibaba_api_key>
+X-AI_API_KEY=<your_xai_api_key>
+HUGGINGFACE_API_KEY=<your_huggingface_api_key>
+```
+
+The key name is derived from the provider name in `benchmarks/benchmarks_tests.csv` as `<PROVIDER>_API_KEY` (uppercased). Note the hyphen in `X-AI_API_KEY`, which follows from the provider name `x-ai`. Local providers need no API key; see the local backend reference below.
+
+</details>
+
+<details>
+<summary>Configured runs, ad hoc tests, and report options</summary>
+
+**Configured runs**
+
+The `T0001` example runs `test_benchmark` (one image, one request) and saves results to `results/YYYY-MM-DD/T0001`. Existing results are reused on the same day. To regenerate them, run:
+
+```
+python scripts/run_single_test.py --test_id T0001 --regenerate
+```
+
+Run the script without parameters to search for and select a configured test interactively.
+
+Tests marked `legacy_test=true` in `benchmarks/benchmarks_tests.csv` are deprecated and are skipped by both `run_single_test.py` and `run_benchmarks.py`; they are kept only for historical results and cannot be run by ID.
+
+**Ad hoc tests**
+
+Use an ad hoc test to check a new benchmark or experiment with a temporary configuration.
+Run the following command and select from the options to create an on-the-fly configuration to test.
+
+```
+python scripts/run_single_test.py --adhoc
+```
+
+The results are saved to `test_runs/` directory instead of `results/` which you can easily delete and is ignored by the repository.
+Ad hoc tests use the ID format `ADHOC_YYYYMMDD_HHMMSS`.
+
+**HTML reports**
+
+To render a single test run as a standalone HTML report:
+
+```
+python scripts/generate_test_report.py results/YYYY-MM-DD/T0001
+```
+
+The report is written to `reports/<test_id>_report.html` by default; use `-o` to choose another path, `--include-raw`
+to embed the raw API responses, `--no-images` to omit the input images, and `--open` to open the result in a browser.
+
+To render all test runs of a given day into one overview report:
+
+```
+python scripts/generate_date_report.py --date YYYY-MM-DD
+```
+
+</details>
+
+<details>
+<summary>Local model backends</summary>
+
+Local backends are registered in `local/__init__.py` and are used by putting their
+provider name into the `provider` column of `benchmarks/benchmarks_tests.csv`; no API key is required.
+
+| Provider | Backend | Requirements |
+|----------|---------|--------------|
+| `contour_local` | OpenCV contour detection | any OS, no GPU needed |
+| `doclayout_yolo_local` | DocLayout-YOLO | Windows / Linux, NVIDIA GPU |
+| `grounding_dino_local` | Grounding DINO | Windows / Linux, NVIDIA GPU |
+| `sam3_local` | SAM 3 | macOS / Apple Silicon |
+
+To add a new backend, create `local/backends/<name>.py` with a class extending `LocalBackend`, register it in
+`LOCAL_PROVIDERS`, and add a test row with the new provider name.
+
+</details>
+
+<details>
+<summary>Providers and model catalogue</summary>
+
+This benchmark suite currently tests models from the following providers:
+
+| Provider | Model                                 | Notes                                                     |
+|----------|---------------------------------------|-----------------------------------------------------------|
+| **Alibaba** | qwen3.5-plus-2026-02-15                   | Qwen 3.5 Plus (Feb 2026); multimodal                       |
+| | qwen3.5-35b-a3b                           | Qwen 3.5, 35B MoE (3B active)                              |
+| | qwen3.5-27b                               | Qwen 3.5, 27B dense                                        |
+| | qwen3.5-122b-a10b                         | Qwen 3.5, 122B MoE (10B active)                            |
+| | qwen3.5-397b-a17b                         | Qwen 3.5, 397B MoE (17B active)                            |
+| | qwen3.5-flash-2026-02-23                  | Qwen 3.5 Flash (Feb 2026)                                  |
+| **Anthropic** | ~~claude-3-5-sonnet-20241022~~            | ~~Claude 3.5 Sonnet~~ (legacy)                             |
+| | ~~claude-3-7-sonnet-20250219~~            | ~~Claude 3.7 Sonnet~~ (legacy)                             |
+| | ~~claude-3-opus-20240229~~                | ~~Claude 3 Opus~~ (legacy)                                 |
+| | ~~claude-3-5-haiku-20241022~~             | ~~Claude 3.5 Haiku~~ (legacy)                              |
+| | claude-haiku-4-5-20251001                 | Claude Haiku 4.5                                           |
+| | ~~claude-opus-4-1-20250805~~              | ~~Claude Opus 4.1~~ (legacy)                               |
+| | ~~claude-opus-4-20250514~~                | ~~Claude Opus 4~~ (legacy)                                 |
+| | claude-opus-4-5-20251101                  | Claude Opus 4.5                                            |
+| | ~~claude-sonnet-4-20250514~~              | ~~Claude Sonnet 4~~ (legacy)                               |
+| | claude-sonnet-4-5-20250929                | Claude Sonnet 4.5                                          |
+| | claude-opus-4-6                           | Claude Opus 4.6                                            |
+| | claude-opus-4-7                           | Claude Opus 4.7                                            |
+| | claude-opus-4-8                           | Claude Opus 4.8                                            |
+| | claude-sonnet-4-6                         | Claude Sonnet 4.6                                          |
+| | claude-sonnet-5                           | Claude Sonnet 5                                            |
+| | claude-fable-5                            | Claude Fable 5                                             |
+| | claude-fable-5-1                          | Claude Fable 5.1                                           |
+| | claude-opus-5                             | Claude Opus 5                                              |
+| **Cohere** | command-a-03-2025                         | Command A (Mar 2025)                                       |
+| | command-a-vision-07-2025                  | Command A Vision (Jul 2025); multimodal                    |
+| | command-r-08-2024                         | Command R (Aug 2024)                                       |
+| | command-r-plus-08-2024                    | Command R+ (Aug 2024)                                      |
+| | command-r7b-12-2024                       | Command R 7B (Dec 2024)                                    |
+| **DeepSeek** | ~~deepseek-chat~~                         | ~~DeepSeek V3 (chat)~~ (legacy)                            |
+| | ~~deepseek-reasoner~~                     | ~~DeepSeek R1; reasoning~~ (legacy)                        |
+| | ~~deepseek-v4-flash~~                     | ~~DeepSeek V4 Flash~~ (legacy)                             |
+| | deepseek-v4-pro                           | DeepSeek V4 Pro                                            |
+| | ~~deepseek-v4-flash-vision-exp~~          | ~~DeepSeek V4 Flash Vision (experimental); multimodal~~ (legacy) |
+| | deepseek-flash                            | DeepSeek V4.1 Flash; multimodal                            |
+| **Google/Gemini** | ~~gemini-1.5-flash~~                      | ~~Gemini 1.5 Flash~~ (legacy)                              |
+| | ~~gemini-1.5-pro~~                        | ~~Gemini 1.5 Pro~~ (legacy)                                |
+| | ~~gemini-2.0-flash~~                      | ~~Gemini 2.0 Flash~~ (legacy)                              |
+| | ~~gemini-2.0-flash-lite~~                 | ~~Gemini 2.0 Flash-Lite~~ (legacy)                         |
+| | ~~gemini-2.0-pro-exp-02-05~~              | ~~Gemini 2.0 Pro (experimental)~~ (legacy)                 |
+| | gemini-2.5-flash                          | Gemini 2.5 Flash                                           |
+| | gemini-2.5-flash-lite                     | Gemini 2.5 Flash-Lite                                      |
+| | ~~gemini-2.5-flash-lite-preview-09-2025~~ | ~~Gemini 2.5 Flash-Lite (preview, Sep 2025)~~ (legacy)     |
+| | ~~gemini-2.5-flash-preview-04-17~~        | ~~Gemini 2.5 Flash (preview, Apr 2025)~~ (legacy)          |
+| | ~~gemini-2.5-flash-preview-09-2025~~      | ~~Gemini 2.5 Flash (preview, Sep 2025)~~ (legacy)          |
+| | gemini-2.5-pro                            | Gemini 2.5 Pro                                             |
+| | ~~gemini-2.5-pro-exp-03-25~~              | ~~Gemini 2.5 Pro (experimental)~~ (legacy)                 |
+| | ~~gemini-2.5-pro-preview-05-06~~          | ~~Gemini 2.5 Pro (preview, May 2025)~~ (legacy)            |
+| | ~~gemini-exp-1206~~                       | ~~Gemini experimental (Dec 2024)~~ (legacy)                |
+| | gemini-3-flash-preview                    | Gemini 3 Flash (preview)                                   |
+| | ~~gemini-3.1-flash-lite-preview~~         | ~~Gemini 3.1 Flash-Lite (preview)~~ (legacy)               |
+| | gemini-3.1-flash-lite                     | Gemini 3.1 Flash-Lite                                      |
+| | gemini-3.1-pro-preview                    | Gemini 3.1 Pro (preview)                                   |
+| | ~~gemini-3-pro-preview~~                  | ~~Gemini 3 Pro (preview)~~ (legacy)                        |
+| | gemini-3.5-flash                          | Gemini 3.5 Flash                                           |
+| | gemini-3.6-flash                          | Gemini 3.6 Flash                                           |
+| | gemini-3.5-flash-lite                     | Gemini 3.5 Flash-Lite                                      |
+| | gemini-3.7-flash                          | Gemini 3.7 Flash                                           |
+| | gemini-3.8-flash                          | Gemini 3.8 Flash                                           |
+| **Hugging Face** | swiss-ai/Apertus-v1.5-70B:publicai        | Apertus v1.5, 70B (Swiss AI Initiative); multimodal         |
+| | swiss-ai/Apertus-v1.5-8B:publicai         | Apertus v1.5, 8B (Swiss AI Initiative); multimodal          |
+| | Qwen/Qwen3-VL-235B-A22B-Instruct:deepinfra | Qwen3-VL 235B-A22B Instruct (Alibaba); multimodal          |
+| | MiniMaxAI/MiniMax-M3:deepinfra            | MiniMax M3 (MiniMax); multimodal                            |
+| | thinkingmachines/Inkling-Small:deepinfra  | Inkling Small (Thinking Machines); multimodal               |
+| | thinkingmachines/Inkling:together         | Inkling (Thinking Machines); multimodal                     |
+| | meta-models/Muse-Glimmer-30B:together     | Muse Glimmer 30B (Meta Models); multimodal                  |
+| **Mistral AI** | ~~magistral-medium-2509~~                 | ~~Magistral Medium (Sep 2025); reasoning~~ (legacy)        |
+| | ~~magistral-small-2509~~                  | ~~Magistral Small (Sep 2025); reasoning~~ (legacy)         |
+| | ministral-14b-2512                        | Ministral 3 14B (Dec 2025)                                 |
+| | ministral-8b-2512                         | Ministral 3 8B (Dec 2025)                                  |
+| | ~~mistral-large-2411~~                    | ~~Mistral Large (Nov 2024)~~ (legacy)                      |
+| | mistral-large-2512                        | Mistral Large (Dec 2025)                                   |
+| | ~~mistral-medium-2505~~                   | ~~Mistral Medium (May 2025)~~ (legacy)                     |
+| | ~~mistral-medium-2508~~                   | ~~Mistral Medium (Aug 2025)~~ (legacy)                     |
+| | mistral-medium-3.5                        | Mistral Medium 3.5 (Apr 2026)                              |
+| | ~~mistral-small-2506~~                    | ~~Mistral Small (Jun 2025)~~ (legacy)                      |
+| | ~~pixtral-12b~~                           | ~~Pixtral 12B; multimodal~~ (legacy)                       |
+| | ~~pixtral-large-2411~~                    | ~~Pixtral Large (Nov 2024); multimodal~~ (legacy)          |
+| **OpenAI** | gpt-4.1                                   | GPT-4.1                                                    |
+| | gpt-4.1-mini                              | GPT-4.1 Mini                                               |
+| | gpt-4.1-nano                              | GPT-4.1 Nano                                               |
+| | ~~gpt-4.5-preview~~                       | ~~GPT-4.5 (preview)~~ (legacy)                             |
+| | gpt-4o                                    | GPT-4o; multimodal                                         |
+| | gpt-4o-mini                               | GPT-4o Mini; multimodal                                    |
+| | gpt-5                                     | GPT-5                                                      |
+| | gpt-5.1-2025-11-13                        | GPT-5.1 (Nov 2025)                                         |
+| | gpt-5.2-2025-12-11                        | GPT-5.2 (Dec 2025)                                         |
+| | gpt-5.3-codex                             | GPT-5.3 Codex; coding                                      |
+| | gpt-5.4-2026-03-05                        | GPT-5.4 (Mar 2026)                                         |
+| | gpt-5.5-2026-04-23                        | GPT-5.5 (Apr 2026)                                         |
+| | gpt-5.6-sol                               | GPT-5.6 Sol                                                |
+| | gpt-5.6-terra                             | GPT-5.6 Terra                                              |
+| | gpt-5.6-luna                              | GPT-5.6 Luna                                               |
+| | gpt-6-astra                               | GPT-6 Astra                                                |
+| | gpt-5-mini                                | GPT-5 Mini                                                 |
+| | gpt-5-nano                                | GPT-5 Nano                                                 |
+| | o3                                        | OpenAI o3; reasoning                                       |
+| **OpenRouter** | google/gemma-4-26b-a4b-it                 | Gemma 4, 26B MoE (4B active), instruction-tuned            |
+| | google/gemma-4-31b-it                     | Gemma 4, 31B, instruction-tuned                            |
+| | meta-llama/llama-4-maverick               | Llama 4 Maverick                                           |
+| | qwen/qwen3-vl-30b-a3b-instruct            | Qwen3-VL, 30B MoE (3B active), instruction-tuned; multimodal |
+| | qwen/qwen3-vl-8b-instruct                 | Qwen3-VL 8B, instruction-tuned; multimodal                 |
+| | qwen/qwen3-vl-8b-thinking                 | Qwen3-VL 8B, reasoning; multimodal                         |
+| | ~~qwen/qwen3.8-max~~                      | ~~Qwen 3.8 Max; multimodal~~ (legacy)                      |
+| | qwen/qwen3.8-max-0902                     | Qwen 3.8 Max (0902 build); multimodal                      |
+| | qwen/qwen3.8-flash                        | Qwen 3.8 Flash; multimodal                                 |
+| | qwen/qwen3.8-27b                          | Qwen 3.8, 27B dense; multimodal                            |
+| | qwen/qwen3.7-plus                         | Qwen 3.7 Plus                                              |
+| | qwen/qwen3.6-plus                         | Qwen 3.6 Plus                                              |
+| | qwen/qwen3.5-122b-a10b                    | Qwen 3.5, 122B MoE (10B active)                            |
+| | qwen/qwen3.5-27b                          | Qwen 3.5, 27B dense                                        |
+| | qwen/qwen3.5-35b-a3b                      | Qwen 3.5, 35B MoE (3B active)                              |
+| | qwen/qwen3.5-397b-a17b                    | Qwen 3.5, 397B MoE (17B active)                            |
+| | qwen/qwen3.5-plus-02-15                   | Qwen 3.5 Plus (Feb 2026)                                   |
+| | qwen/qwen3.5-flash-02-23                  | Qwen 3.5 Flash (Feb 2026)                                  |
+| | qwen/qwen3.5-9b                           | Qwen 3.5 9B                                                |
+| | ~~x-ai/grok-4~~                           | ~~Grok 4; multimodal~~ (legacy)                            |
+| | meta-llama/llama-4-scout                  | Llama 4 Scout                                              |
+| | stepfun/step-3.7-flash                    | StepFun Step 3.7 Flash                                     |
+| | moonshotai/kimi-k3                        | Kimi K3                                                    |
+| | meta/muse-spark-1.2                       | Muse Spark 1.2 (Meta); multimodal                          |
+| | z-ai/glm-5v-turbo                         | GLM-5V Turbo (Z.ai); multimodal                            |
+| | meta/muse-spark-1.3                       | Muse Spark 1.3 (Meta); multimodal                          |
+| | z-ai/glm-5.3-flash                        | GLM-5.3 Flash (Z.ai); multimodal                           |
+| **sciCORE** | ~~GLM-4.5V-FP8~~                              | ~~GLM-4.5V, FP8 quantization; multimodal (Univ. of Basel HPC)~~ (legacy) |
+| | ~~qwen3-235b-fp8~~                            | ~~Qwen3 235B, FP8 quantization (Univ. of Basel HPC)~~ (legacy)          |
+| | qwen35-397b-a17b-fp8                      | Qwen3.5 397B-A17B, FP8 quantization (Univ. of Basel HPC)   |
+| **xAI** | grok-4.20-0309-reasoning                  | Grok 4.20; reasoning                                       |
+| | grok-4.3                                  | Grok 4.3                                                   |
+| | grok-4.5                                  | Grok 4.5; multimodal                                       |
+| | grok-4.6                                  | Grok 4.6; multimodal                                       |
+
+**Note:** OpenRouter provides access to models from multiple providers through a unified API. Hugging Face routes to third-party inference providers through an OpenAI-compatible API; the suffix on each model name pins the provider that serves it (`:publicai`, `:deepinfra`, `:together`), so that the price and the routing of a benchmark run are reproducible. sciCORE provides access to models hosted on the University of Basel's high-performance computing infrastructure.
+
+</details>
+
+## Methodology
+
+### How it works
+
+The RISE Humanities Data Benchmark is designed to be modular and extensible. Each test applies a model configuration to a benchmark dataset, scores the responses against the ground truths, and stores the results.
+The framework, datasets, and recorded results are included in this repository.
 
 <img width="2279" height="1206" alt="how-it-works" src="https://github.com/user-attachments/assets/ae3197f1-2ea8-4d5f-bb47-94f0cb0e3a69" />
 
-Refer to the [next chapter](#2-use-it) in order to learn about usage in your own research.
+### Ground truths
 
-### 1.4. Practical Considerations
+Model outputs are compared with the ground truth for the same inputs. Consult each benchmark's documentation for its sources, annotation process, and scoring rules. Interpret results in light of the sample size, source selection, and task definition.
+
+### Metrics
+
+Each benchmark defines its own scoring function, so a metric name belongs to a benchmark rather than
+to the suite as a whole.
+
+#### Task performance
+
+Before comparing or combining two scores, check three things about them.
+
+- **What kind of number it is.** A measurement, a count and a setting are not interchangeable.
+  `magazine_pages` records `mean_iou`, the overlap its matched boxes actually achieved, next to
+  `iou_threshold`, the overlap they were required to reach; averaging the two together means nothing.
+- **Which direction is better.** Character error rate is lower-is-better, while fuzzy similarity, F1,
+  precision and recall are higher-is-better. They cannot be pooled without inverting one of them.
+- **Whether it aggregates at all.** Counts sum; ratios do not. Where a benchmark records true and
+  false positives beside its F1, those counts are the sufficient statistic — `library_cards` rebuilds
+  micro precision, recall and F1 from summed counts, which averaging per-request F1 scores would not
+  give.
+
+The same name can also mean different things across benchmarks. `book_advert_xml` records `fuzzy` on
+a 0–100 scale, while every other benchmark reporting `fuzzy` uses 0–1. Rescaling alone does not make
+two tasks comparable.
+
+#### Cost and runtime
+
+- **Compute cost** is estimated per run from recorded token counts and the pricing entry in force on
+  the run date (`scripts/data/pricing.json`), each entry archived as a Wayback Machine snapshot.
+- **Test time** is recorded for each API call.
+- **Cost and time per performance point** ($/point, seconds/point per item) are efficiency ratios,
+  normalised per test, then per benchmark, then globally. What they mean depends on the metric being
+  normalised and on the aggregation rules above.
+
+A blank is not a zero. A missing cost, an unscored run or a failed request records the absence
+of a measurement, and counting it as zero moves any average that includes it.
+
+<details>
+<summary>Practical considerations</summary>
+
 When using this benchmark suite for your own research, consider the following:
 
 | Category | Consideration | Description |
@@ -122,65 +424,47 @@ When using this benchmark suite for your own research, consider the following:
 | | Funder Requirements | Verify if there are any funding agency requirements |
 | | FAIR Data Principles | Consider how to make your benchmark data Findable, Accessible, Interoperable, and Reusable |
 
+</details>
 
-## 2. Use it!
+<details>
+<summary>Terminology</summary>
 
-> **ℹ We welcome your contributions**     
-> The benchmark suite is designed to be extensible and welcomes contributions from the digital humanities community. Whether you're adding new benchmarks, improving existing ones, or enhancing the evaluation framework, your contributions help advance AI evaluation for humanities research.
-> For detailed contribution guidelines, see [CONTRIBUTING.md](CONTRIBUTING.md). To report bugs, suggest features, or discuss improvements, please open an issue on our [GitHub Issues page](https://github.com/rise-unibas/humanities_data_benchmark/issues).
+- **Ad hoc test**: A temporary benchmark configuration run with `scripts/run_single_test.py --adhoc` for experimentation.
+- **Benchmark**: A task for models to perform, consisting of images, ground truths, prompts, dataclasses, and scoring functions. Each benchmark is stored in a separate directory.
+- **Configured Test**: A specific instance of a benchmark run with a particular configuration (ID, provider, model, temperature, role description, prompt file, dataclass).
+- **Dataclass**: Pydantic models for structured output, supported across all providers.
+- **Ground Truth**: The correct answer used to evaluate the model's response.
+- **Image**: Visual input for the task. Images are paired with ground truth files.
+- **Model**: Specific model used to perform the task.
+- **Prompt**: Text given to the model to guide its response.
+- **Local Provider**: Provider handled by a local backend instead of an API (`contour_local`, `sam3_local`, `grounding_dino_local`, `doclayout_yolo_local`). Registered in `local/__init__.py`; no API key required.
+- **Provider**: Company or service providing model access (`openai`, `genai`, `anthropic`, `cohere`, `mistral`, `openrouter`, `scicore`, `deepseek`, `x-ai`, `alibaba`, or `huggingface`).
+- **Request**: API call(s) made during a test, consisting of images and prompts.
+- **Response**: Model's answer containing metadata and output.
+- **Score**: Evaluation result indicating model performance.
+- **Scoring Function**: Function that evaluates the model's response, implemented via the `score_request_answer` and `score_benchmark` methods.
+- **Test Configuration**: Parameters for running a test, stored in `benchmarks/benchmarks_tests.csv`.
+- **Text file**: Textual input for the task. Text files are paired with ground truth files.
 
-### 2.1. Fork and prepare
-In order to start, the following steps are in order:
-- Fork this repository and clone your fork
-- Install the dependencies (Python 3.12 or newer is recommended)
-- Obtain API keys to the providers you want to test
-- Create a `.env` file in the root directory of the repository.
+</details>
 
-```bash
-pip install -r requirements.txt
-```
+## Contributing
 
-Add the following lines to the `.env` file as needed with the obtained API keys.
-```bash
-OPENAI_API_KEY=<your_openai_api_key>
-GENAI_API_KEY=<your_genai_api_key>
-ANTHROPIC_API_KEY=<your_anthropic_api_key>
-COHERE_API_KEY=<your_cohere_api_key>
-MISTRAL_API_KEY=<your_mistral_api_key>
-OPENROUTER_API_KEY=<your_openrouter_api_key>
-SCICORE_API_KEY=<your_scicore_api_key>
-DEEPSEEK_API_KEY=<your_deepseek_api_key>
-ALIBABA_API_KEY=<your_alibaba_api_key>
-X-AI_API_KEY=<your_xai_api_key>
-```
+Contributions can include new datasets, ground truths, scoring methods, model integrations, and documentation.
+See [CONTRIBUTING.md](CONTRIBUTING.md) for contribution roles and requirements, and the
+[benchmark template](benchmarks/README_TEMPLATE.md) for dataset documentation.
+Report bugs, propose benchmarks, or discuss improvements through
+[GitHub Issues](https://github.com/rise-unibas/humanities_data_benchmark/issues).
 
-The key name is derived from the provider name in `benchmarks_tests.csv` as `<PROVIDER>_API_KEY` (uppercased). Note the hyphen in `X-AI_API_KEY`, which follows from the provider name `x-ai`. Local providers (see [2.6.](#26-run-a-local-model)) need no key.
+<details>
+<summary>Create a benchmark: technical guide</summary>
 
-### 2.2. Run a configured test
-To test if your installation works, it's easiest to run one of the configured tests. Define either `OPENAI_API_KEY` (= `T0001`) or `GENAI_API_KEY` (= `T0193`) to get started.
-Start the script from the root of your project, like so:
-
-```
-python scripts/run_single_test.py --test_id T0001
-```
-
-This executes the `test_benchmark` (one image, one request) and saves the results to `results/YYYY-MM-DD/T0001`. Once these results are present, the test will **not** send requests for existing results on the same day. If you want to overwrite the existing results, you can:
-
-```
-python scripts/run_single_test.py --test_id T0001 --regenerate
-```
-
-You also can run the script without any parameters for the interactive interface. It lets you search for and select the test you might be looking for.
-
-Tests marked `legacy_test=true` in `benchmarks_tests.csv` are deprecated and are skipped by both `run_single_test.py` and `run_benchmarks.py`; they are kept only for historical results and cannot be run by ID.
-
-### 2.3. Create a new Benchmark
 Start with the CLI tool to create the basic structure:
 
 ```
 python scripts/create_benchmark.py
 ```
-This creates a new dataset environment, like so:
+The command creates the following benchmark structure:
 
 1. **Directory Structure:**
    - `benchmarks/[your_benchmark_name]/`
@@ -195,7 +479,7 @@ This creates a new dataset environment, like so:
    - `prompts/prompt.txt` - Default prompt
    - `dataclass.py` - Pydantic schema (optional)
 
-#### Step-by-Step Process
+**Step-by-Step Process**
 When starting the `create_benchmark.py` script, you will be guided through the creation of the following data:
 
 **1. Benchmark Name**
@@ -203,7 +487,7 @@ When starting the `create_benchmark.py` script, you will be guided through the c
 - **Important:** Should describe the SOURCE, not the task
   - Good: `personal_letters`, `company_registers`, `manuscript_pages`
   - Bad: `date_recognition`, `entity_extraction`
-- **Cannot be changed later** - choose carefully!
+- Choose a stable name, as test configurations and result paths refer to it.
 - Will be converted to CamelCase for the class name (e.g., `PersonalLetters`)
 
 **2. Basic Information**
@@ -274,8 +558,8 @@ When starting the `create_benchmark.py` script, you will be guided through the c
    - Edit `benchmarks/[name]/dataclass.py`
    - Add fields to your Pydantic model
 
-#### Add Context Data
-You need to add at least one image or text file. This is the context data. 
+**Add Context Data**
+You need to add at least one image or text file. This is the context data.
 Context data are the inputs that will be sent to the LLM. Depending on the benchmark, this may include:
 
 - .txt, .json and other text-only files (historical texts, metadata records, descriptions, OCR fragments)
@@ -286,11 +570,11 @@ _Naming convention_:
 - This means that all files with the same basename in the context directories (images, texts) are sent at the same time
 - For each basename you must provide a ground truth file
 
-#### Implement Scoring
+**Implement Scoring**
 Each benchmark has a corresponding benchmark class in benchmark.py. Two methods have to be implemented in order for the scoring to work:
 
 _Implement the scoring of a single object/request:_
-Implement the scoring for a single request. Most of the times it is not as easy as to ask if the llm-response and the ground truth are equal. 
+Implement the scoring for a single request. The comparison should reflect the task and its ground truths; exact equality is not always an appropriate metric.
 
 ```python
 def score_request_answer(self, object_name, response, ground_truth):
@@ -316,7 +600,7 @@ folios by position, so an independent comparison would contradict the score besi
 JSON-serializable, because the dict is written verbatim into the stored answer.
 
 _Implement the scoring of the whole test run:_
-Take the average or the mean or use any other functionality to score across all requests for the test run.
+Define how request-level scores are aggregated for the test run, for example with an arithmetic mean.
 
 ```python
 def score_benchmark(self, all_scores):
@@ -331,9 +615,9 @@ not log a whole score, which carries every comparison made for that object.
 
 Return at least one metric. Commonly used metrics are fuzzy, f1_score, cer
 
-#### Define Schema
+**Define Schema**
 If you want the model to return structured output, define a Pydantic model in `benchmarks/[name]/dataclass.py` and
-reference its class name in the `dataclass` column of `benchmarks_tests.csv`. Nested models are supported, and field
+reference its class name in the `dataclass` column of `benchmarks/benchmarks_tests.csv`. Nested models are supported, and field
 descriptions are passed on to the provider, so use them to disambiguate fields.
 
 ```python
@@ -366,54 +650,13 @@ Beyond the two mandatory scoring methods, the benchmark class inherits a number 
 | `get_prompt_kwargs(basename, filenames)` | Values interpolated into the prompt file, e.g. file information |
 | `skip_object(object_basename)` | Whether a given object is excluded from the run |
 
+</details>
 
-### 2.4. Run an adhoc test
-When you have created a benchmark you should test it first and ensure that everything works. That's what adhoc-tests are for.
-Run the following command and select from the options to create an on-the-fly configuration to test.
+<details>
+<summary>Submission and review checklist</summary>
 
-```
-python scripts/run_single_test.py --adhoc
-```
+**Before submitting**
 
-The results are saved to `test_runs/` directory instead of `results/` which you can easily delete and is ignored by the repository.
-Perfect for experimentation and quick testing, ID format: `ADHOC_YYYYMMDD_HHMMSS`.
-
-
-### 2.5. Generate a result render
-To render a single test run as a standalone HTML report:
-
-```
-python scripts/generate_test_report.py results/YYYY-MM-DD/T0001
-```
-
-The report is written to `reports/<test_id>_report.html` by default; use `-o` to choose another path, `--include-raw`
-to embed the raw API responses, `--no-images` to omit the input images, and `--open` to open the result in a browser.
-
-To render all test runs of a given day into one overview report:
-
-```
-python scripts/generate_date_report.py results/YYYY-MM-DD
-```
-
-### 2.6. Run a local model
-Not every model needs an API. Local backends are registered in `local/__init__.py` and are used by putting their
-provider name into the `provider` column of `benchmarks_tests.csv`; no API key is required.
-
-| Provider | Backend | Requirements |
-|----------|---------|--------------|
-| `contour_local` | OpenCV contour detection | any OS, no GPU needed |
-| `doclayout_yolo_local` | DocLayout-YOLO | Windows / Linux, NVIDIA GPU |
-| `grounding_dino_local` | Grounding DINO | Windows / Linux, NVIDIA GPU |
-| `sam3_local` | SAM 3 | macOS / Apple Silicon |
-
-To add a new backend, create `local/backends/<name>.py` with a class extending `LocalBackend`, register it in
-`LOCAL_PROVIDERS`, and add a test row with the new provider name.
-
-
-## 3. Share it!
-We welcome contributions to the RISE Humanities Data Benchmark. 
-
-### 3.1. Before submitting
 Before submitting a pull request, please make sure your benchmark meets all of the following criteria:
 
 **Data Requirements**
@@ -438,7 +681,8 @@ Before submitting a pull request, please make sure your benchmark meets all of t
 - The benchmark fills a clear research gap (new task, domain, or corpus)
 - Instructions do not bias the LLM toward “right answers” via over-specification
 
-### 3.2. Create a pull request
+**Create a pull request**
+- Fork `RISE-UNIBAS/humanities_data_benchmark` and push your benchmark to a branch on your fork.
 - Go to your fork on GitHub.
 - Click “Compare & pull request”.
 - Target: `RISE-UNIBAS/humanities_data_benchmark → main`
@@ -450,7 +694,7 @@ Add a short description:
 - How you validated the dataset
 - Any remaining issues or questions
 
-### 3.3. Review & Publication
+**Review and publication**
 The maintainers will:
 
 - run the benchmark locally
@@ -459,203 +703,38 @@ The maintainers will:
 - validate folder structure
 - potentially request revisions
 
-Once everything is green, your benchmark will be merged into the main repository.
+Once the review requirements are met, the maintainers can merge the benchmark into the main repository.
 
-## 4. Providers and Models
+</details>
 
-This benchmark suite currently tests models from the following providers:
+## Citation and licensing
 
-| Provider | Model                                 | Notes                                                     |
-|----------|---------------------------------------|-----------------------------------------------------------|
-| **Alibaba** | qwen3.5-plus-2026-02-15                   | Qwen 3.5 Plus (Feb 2026); multimodal                       |
-| | qwen3.5-35b-a3b                           | Qwen 3.5, 35B MoE (3B active)                              |
-| | qwen3.5-27b                               | Qwen 3.5, 27B dense                                        |
-| | qwen3.5-122b-a10b                         | Qwen 3.5, 122B MoE (10B active)                            |
-| | qwen3.5-397b-a17b                         | Qwen 3.5, 397B MoE (17B active)                            |
-| | qwen3.5-flash-2026-02-23                  | Qwen 3.5 Flash (Feb 2026)                                  |
-| **Anthropic** | ~~claude-3-5-sonnet-20241022~~            | ~~Claude 3.5 Sonnet~~ (legacy)                             |
-| | ~~claude-3-7-sonnet-20250219~~            | ~~Claude 3.7 Sonnet~~ (legacy)                             |
-| | ~~claude-3-opus-20240229~~                | ~~Claude 3 Opus~~ (legacy)                                 |
-| | ~~claude-3-5-haiku-20241022~~             | ~~Claude 3.5 Haiku~~ (legacy)                              |
-| | claude-haiku-4-5-20251001                 | Claude Haiku 4.5                                           |
-| | claude-opus-4-1-20250805                  | Claude Opus 4.1                                            |
-| | ~~claude-opus-4-20250514~~                | ~~Claude Opus 4~~ (legacy)                                 |
-| | claude-opus-4-5-20251101                  | Claude Opus 4.5                                            |
-| | ~~claude-sonnet-4-20250514~~              | ~~Claude Sonnet 4~~ (legacy)                               |
-| | claude-sonnet-4-5-20250929                | Claude Sonnet 4.5                                          |
-| | claude-opus-4-6                           | Claude Opus 4.6                                            |
-| | claude-opus-4-7                           | Claude Opus 4.7                                            |
-| | claude-opus-4-8                           | Claude Opus 4.8                                            |
-| | claude-sonnet-4-6                         | Claude Sonnet 4.6                                          |
-| | claude-sonnet-5                           | Claude Sonnet 5                                            |
-| | claude-fable-5                            | Claude Fable 5                                             |
-| | claude-fable-5-1                          | Claude Fable 5.1                                           |
-| | claude-opus-5                             | Claude Opus 5                                              |
-| **Cohere** | command-a-03-2025                         | Command A (Mar 2025)                                       |
-| | command-a-vision-07-2025                  | Command A Vision (Jul 2025); multimodal                    |
-| | command-r-08-2024                         | Command R (Aug 2024)                                       |
-| | command-r-plus-08-2024                    | Command R+ (Aug 2024)                                      |
-| | command-r7b-12-2024                       | Command R 7B (Dec 2024)                                    |
-| **DeepSeek** | deepseek-chat                             | DeepSeek V3 (chat)                                         |
-| | deepseek-reasoner                         | DeepSeek R1; reasoning                                     |
-| | deepseek-v4-flash                         | DeepSeek V4 Flash                                          |
-| | deepseek-v4-pro                           | DeepSeek V4 Pro                                            |
-| | deepseek-v4-flash-vision-exp              | DeepSeek V4 Flash Vision (experimental); multimodal        |
-| **Google/Gemini** | ~~gemini-1.5-flash~~                      | ~~Gemini 1.5 Flash~~ (legacy)                              |
-| | ~~gemini-1.5-pro~~                        | ~~Gemini 1.5 Pro~~ (legacy)                                |
-| | ~~gemini-2.0-flash~~                      | ~~Gemini 2.0 Flash~~ (legacy)                              |
-| | ~~gemini-2.0-flash-lite~~                 | ~~Gemini 2.0 Flash-Lite~~ (legacy)                         |
-| | ~~gemini-2.0-pro-exp-02-05~~              | ~~Gemini 2.0 Pro (experimental)~~ (legacy)                 |
-| | gemini-2.5-flash                          | Gemini 2.5 Flash                                           |
-| | gemini-2.5-flash-lite                     | Gemini 2.5 Flash-Lite                                      |
-| | ~~gemini-2.5-flash-lite-preview-09-2025~~ | ~~Gemini 2.5 Flash-Lite (preview, Sep 2025)~~ (legacy)     |
-| | ~~gemini-2.5-flash-preview-04-17~~        | ~~Gemini 2.5 Flash (preview, Apr 2025)~~ (legacy)          |
-| | ~~gemini-2.5-flash-preview-09-2025~~      | ~~Gemini 2.5 Flash (preview, Sep 2025)~~ (legacy)          |
-| | gemini-2.5-pro                            | Gemini 2.5 Pro                                             |
-| | ~~gemini-2.5-pro-exp-03-25~~              | ~~Gemini 2.5 Pro (experimental)~~ (legacy)                 |
-| | ~~gemini-2.5-pro-preview-05-06~~          | ~~Gemini 2.5 Pro (preview, May 2025)~~ (legacy)            |
-| | ~~gemini-exp-1206~~                       | ~~Gemini experimental (Dec 2024)~~ (legacy)                |
-| | gemini-3-flash-preview                    | Gemini 3 Flash (preview)                                   |
-| | ~~gemini-3.1-flash-lite-preview~~         | ~~Gemini 3.1 Flash-Lite (preview)~~ (legacy)               |
-| | gemini-3.1-flash-lite                     | Gemini 3.1 Flash-Lite                                      |
-| | gemini-3.1-pro-preview                    | Gemini 3.1 Pro (preview)                                   |
-| | ~~gemini-3-pro-preview~~                  | ~~Gemini 3 Pro (preview)~~ (legacy)                        |
-| | gemini-3.5-flash                          | Gemini 3.5 Flash                                           |
-| | gemini-3.6-flash                          | Gemini 3.6 Flash                                           |
-| | gemini-3.5-flash-lite                     | Gemini 3.5 Flash-Lite                                      |
-| | gemini-3.7-flash                          | Gemini 3.7 Flash                                           |
-| | gemini-3.8-flash                          | Gemini 3.8 Flash                                           |
-| **Hugging Face** | swiss-ai/Apertus-v1.5-70B:publicai        | Apertus v1.5, 70B (Swiss AI Initiative); multimodal         |
-| | swiss-ai/Apertus-v1.5-8B:publicai         | Apertus v1.5, 8B (Swiss AI Initiative); multimodal          |
-| | Qwen/Qwen3-VL-235B-A22B-Instruct:deepinfra | Qwen3-VL 235B-A22B Instruct (Alibaba); multimodal          |
-| | MiniMaxAI/MiniMax-M3:deepinfra            | MiniMax M3 (MiniMax); multimodal                            |
-| | thinkingmachines/Inkling-Small:deepinfra  | Inkling Small (Thinking Machines); multimodal               |
-| | thinkingmachines/Inkling:together         | Inkling (Thinking Machines); multimodal                     |
-| | meta-models/Muse-Glimmer-30B:together     | Muse Glimmer 30B (Meta Models); multimodal                  |
-| **Mistral AI** | ~~magistral-medium-2509~~                 | ~~Magistral Medium (Sep 2025); reasoning~~ (legacy)        |
-| | ~~magistral-small-2509~~                  | ~~Magistral Small (Sep 2025); reasoning~~ (legacy)         |
-| | ministral-14b-2512                        | Ministral 3 14B (Dec 2025)                                 |
-| | ministral-8b-2512                         | Ministral 3 8B (Dec 2025)                                  |
-| | ~~mistral-large-2411~~                    | ~~Mistral Large (Nov 2024)~~ (legacy)                      |
-| | mistral-large-2512                        | Mistral Large (Dec 2025)                                   |
-| | ~~mistral-medium-2505~~                   | ~~Mistral Medium (May 2025)~~ (legacy)                     |
-| | ~~mistral-medium-2508~~                   | ~~Mistral Medium (Aug 2025)~~ (legacy)                     |
-| | mistral-medium-3.5                        | Mistral Medium 3.5 (Apr 2026)                              |
-| | ~~mistral-small-2506~~                    | ~~Mistral Small (Jun 2025)~~ (legacy)                      |
-| | ~~pixtral-12b~~                           | ~~Pixtral 12B; multimodal~~ (legacy)                       |
-| | ~~pixtral-large-2411~~                    | ~~Pixtral Large (Nov 2024); multimodal~~ (legacy)          |
-| **OpenAI** | gpt-4.1                                   | GPT-4.1                                                    |
-| | gpt-4.1-mini                              | GPT-4.1 Mini                                               |
-| | gpt-4.1-nano                              | GPT-4.1 Nano                                               |
-| | ~~gpt-4.5-preview~~                       | ~~GPT-4.5 (preview)~~ (legacy)                             |
-| | gpt-4o                                    | GPT-4o; multimodal                                         |
-| | gpt-4o-mini                               | GPT-4o Mini; multimodal                                    |
-| | gpt-5                                     | GPT-5                                                      |
-| | gpt-5.1-2025-11-13                        | GPT-5.1 (Nov 2025)                                         |
-| | gpt-5.2-2025-12-11                        | GPT-5.2 (Dec 2025)                                         |
-| | gpt-5.3-codex                             | GPT-5.3 Codex; coding                                      |
-| | gpt-5.4-2026-03-05                        | GPT-5.4 (Mar 2026)                                         |
-| | gpt-5.5-2026-04-23                        | GPT-5.5 (Apr 2026)                                         |
-| | gpt-5.6-sol                               | GPT-5.6 Sol                                                |
-| | gpt-5.6-terra                             | GPT-5.6 Terra                                              |
-| | gpt-5.6-luna                              | GPT-5.6 Luna                                               |
-| | gpt-6-astra                               | GPT-6 Astra                                                |
-| | gpt-5-mini                                | GPT-5 Mini                                                 |
-| | gpt-5-nano                                | GPT-5 Nano                                                 |
-| | o3                                        | OpenAI o3; reasoning                                       |
-| **OpenRouter** | google/gemma-4-26b-a4b-it                 | Gemma 4, 26B MoE (4B active), instruction-tuned            |
-| | google/gemma-4-31b-it                     | Gemma 4, 31B, instruction-tuned                            |
-| | meta-llama/llama-4-maverick               | Llama 4 Maverick                                           |
-| | qwen/qwen3-vl-30b-a3b-instruct            | Qwen3-VL, 30B MoE (3B active), instruction-tuned; multimodal |
-| | qwen/qwen3-vl-8b-instruct                 | Qwen3-VL 8B, instruction-tuned; multimodal                 |
-| | qwen/qwen3-vl-8b-thinking                 | Qwen3-VL 8B, reasoning; multimodal                         |
-| | qwen/qwen3.8-max                          | Qwen 3.8 Max; multimodal                                   |
-| | qwen/qwen3.8-flash                        | Qwen 3.8 Flash; multimodal                                 |
-| | qwen/qwen3.8-27b                          | Qwen 3.8, 27B dense; multimodal                            |
-| | qwen/qwen3.7-plus                         | Qwen 3.7 Plus                                              |
-| | qwen/qwen3.6-plus                         | Qwen 3.6 Plus                                              |
-| | qwen/qwen3.5-122b-a10b                    | Qwen 3.5, 122B MoE (10B active)                            |
-| | qwen/qwen3.5-27b                          | Qwen 3.5, 27B dense                                        |
-| | qwen/qwen3.5-35b-a3b                      | Qwen 3.5, 35B MoE (3B active)                              |
-| | qwen/qwen3.5-397b-a17b                    | Qwen 3.5, 397B MoE (17B active)                            |
-| | qwen/qwen3.5-plus-02-15                   | Qwen 3.5 Plus (Feb 2026)                                   |
-| | qwen/qwen3.5-flash-02-23                  | Qwen 3.5 Flash (Feb 2026)                                  |
-| | qwen/qwen3.5-9b                           | Qwen 3.5 9B                                                |
-| | ~~x-ai/grok-4~~                           | ~~Grok 4; multimodal~~ (legacy)                            |
-| | meta-llama/llama-4-scout                  | Llama 4 Scout                                              |
-| | stepfun/step-3.7-flash                    | StepFun Step 3.7 Flash                                     |
-| | moonshotai/kimi-k3                        | Kimi K3                                                    |
-| | meta/muse-spark-1.2                       | Muse Spark 1.2 (Meta); multimodal                          |
-| | z-ai/glm-5v-turbo                         | GLM-5V Turbo (Z.ai); multimodal                            |
-| | meta/muse-spark-1.3                       | Muse Spark 1.3 (Meta); multimodal                          |
-| | z-ai/glm-5.3-flash                        | GLM-5.3 Flash (Z.ai); multimodal                           |
-| **sciCORE** | ~~GLM-4.5V-FP8~~                              | ~~GLM-4.5V, FP8 quantization; multimodal (Univ. of Basel HPC)~~ (legacy) |
-| | ~~qwen3-235b-fp8~~                            | ~~Qwen3 235B, FP8 quantization (Univ. of Basel HPC)~~ (legacy)          |
-| | qwen35-397b-a17b-fp8                      | Qwen3.5 397B-A17B, FP8 quantization (Univ. of Basel HPC)   |
-| **xAI** | grok-4.20-0309-reasoning                  | Grok 4.20; reasoning                                       |
-| | grok-4.3                                  | Grok 4.3                                                   |
-| | grok-4.5                                  | Grok 4.5; multimodal                                       |
-| | grok-4.6                                  | Grok 4.6; multimodal                                       |
+### Cite this work
 
-**Note:** OpenRouter provides access to models from multiple providers through a unified API. Hugging Face routes to third-party inference providers through an OpenAI-compatible API; the suffix on each model name pins the provider that serves it (`:publicai`, `:deepinfra`, `:together`), so that the price and the routing of a benchmark run are reproducible. sciCORE provides access to models hosted on the University of Basel's high-performance computing infrastructure.
+Use the metadata in [CITATION.cff](CITATION.cff) to cite the software and identify the release or commit used.
+Archived releases are available through the [project DOI](https://doi.org/10.5281/zenodo.16941752).
 
+### Publications and background
 
-## 5. Benchmarking Methodology
+Hindermann, M., Kasper, L. K., Marti, S., &amp; Bosse, A. (2026). From Experiments to Epistemic Practice: The RISE Humanities Data Benchmark. *Journal of Open Humanities Data*, *12*(1), 38. https://doi.org/10.5334/johd.470
 
-### 5.1. Ground Truth
-In this benchmark suite, a model's output for a task is compared to the ground truth (gold standard) for that task given the same input. Ground truth is the correct or verified output created by domain experts.
+Hindermann, M., Marti, S., Kasper, L. K., & Bosse, A. (2026). The RISE Humanities Data Benchmark: A Framework for Evaluating Large Language Models for Humanities Tasks. *Journal of Open Humanities Data*, *12*(1), 24. https://doi.org/10.5334/johd.481
 
-When selecting ground truth samples, we ensure:
-- They are representative of the overall dataset
-- They cover various edge cases and scenarios relevant to humanities tasks
-- The sample size is large enough to achieve statistical significance
+Hindermann, M., Marti, S., & Decker, E. (2026). "It Depends," But Now We Can Measure Why: Benchmarking Specialised and General-Purpose AI on Humanities Tasks. Transkribus User Conference 2026, Passau, Germany. Zenodo. https://doi.org/10.5281/zenodo.22898343
 
-### 5.2. Metrics
-We use two categories of metrics to evaluate model performance:
+Hindermann, M., & Marti, S. (2026). The RISE Humanities Data Benchmark: From Anecdote to Evidence. DH Benelux 2026, Maastricht, Netherlands. Zenodo. https://doi.org/10.5281/zenodo.20595263
 
-#### 5.2.1. Internal Metrics (Task Performance)
-These metrics evaluate how well the model performs the specific task. Examples include:
+Hindermann, M., & Marti, S. (2025, March 19). *RISE Crash Course: "AI Benchmarking"*. Zenodo. https://doi.org/10.5281/zenodo.15062831
 
-- **F1 Score**: The harmonic mean of precision and recall, balancing both metrics
-- **Precision**: The ratio of correctly predicted positive observations to all predicted positives
-- **Recall**: The ratio of correctly predicted positive observations to all actual positives
-- **Character/Word Error Rate**: Used for evaluating text generation and transcription accuracy
+### Licensing
 
-#### 5.2.2. External Metrics (Practical Considerations)
-These metrics evaluate factors beyond task performance that impact usability:
+The benchmark software is licensed under [GNU GPL version 3](LICENSE).
+For benchmark input materials and ground truths, consult the relevant benchmark's documentation
+and source attribution for applicable reuse terms.
 
-- **Compute Cost**: Automatically tracked based on token usage and date-based pricing data (`scripts/data/pricing.json`). Each run includes cost breakdown and historical pricing via Wayback Machine snapshots.
-  - **Cost per Performance Point**: Efficiency metric ($/performance point) calculated per test, averaged per benchmark, then globally. Uses multi-level normalization for fair comparison across different test configurations and benchmark scales.
-- **Test Time**: Automatically tracked for each API call.
-  - **Time per Performance Point**: Efficiency metric (seconds/point per item) using the same multi-level normalization as cost calculation for fair comparison across different item counts and benchmark complexities.
-- **Deployment Options**: Whether the model can be run locally or requires API calls
-- **Legal and Ethical Considerations**: Including data privacy, IP compliance, and model bias
+## Contributors
 
-
-## 6. Project Status
-
-### 6.1. Current Limitations
-
-The benchmark suite currently has several limitations that could be addressed in future iterations:
-
-| Category | Limitation | Description |
-|----------|------------|-------------|
-| **Models** | Local/self-hosted models | Local backends exist for vision tasks (see [2.6.](#26-run-a-local-model)), but no locally run generative LLMs are covered yet |
-| **Capabilities** | Domain-specific fine-tuned models | Models specifically optimized for historical research not included |
-| | OCR-specialized models | Models with particular strength in document processing/OCR not included |
-| | Multilingual capabilities | Systematic testing across different languages not covered |
-| **Benchmark Coverage** | Limited benchmark diversity | Currently focused on document analysis; missing art history, archaeology, musicology domains |
-| | Language coverage | Primarily German and English; limited coverage of other European languages and non-Western scripts |
-| | Historical period coverage | Concentrated on 19th-20th century; limited medieval, early modern, or contemporary sources |
-| **Evaluation** | Context window testing | Evaluation across different context window sizes and document lengths not implemented |
-| | Standardized error analysis | More granular error categorization and failure mode analysis needed |
-
-### 6.2. Outlook
-TODO
-
-## 7. Contributors
-
-This project is developed by a multidisciplinary team at the University of Basel's RISE (Research and Infrastructure Support). 
+This project is developed by a multidisciplinary team at the University of Basel's RISE (Research and Infrastructure Support).
 
 | Name                        | GitHub                                                 | ORCID                                                        |
 |-----------------------------|--------------------------------------------------------|--------------------------------------------------------------|
@@ -678,10 +757,3 @@ This project is developed by a multidisciplinary team at the University of Basel
 | Franziska Zúñiga            | —                                                      | [0000-0002-8844-4903](https://orcid.org/0000-0002-8844-4903) |
 
 For detailed attribution by benchmark and contribution type, see our [CONTRIBUTORS.md](CONTRIBUTORS.md) file.
-
-
-
-
-
-
-

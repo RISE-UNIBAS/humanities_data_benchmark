@@ -1,0 +1,87 @@
+{
+    "text": "{\"metadata\":{\"send_date\":[\"1928-03-12\"],\"letter_title\":[\"Letter regarding the receipt of a letter and its treatment on the agenda of the board meeting\"],\"sender_persons\":[\"Basler Personenschiffahrtsgesellschaft\",\"Der Gesch\u00e4ftsf\u00fchrer\"],\"receiver_persons\":[\"Basler Rheinschifffahrt A.G.\"]}}",
+    "model": "qwen/qwen3.5-flash-02-23",
+    "provider": "openrouter",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 3129,
+        "output_tokens": 1362,
+        "total_tokens": 4491,
+        "input_cost_usd": 0.000203385,
+        "output_cost_usd": 0.00035412,
+        "estimated_cost_usd": 0.000557505
+    },
+    "duration": 30.246389389038086,
+    "timestamp": "2026-09-17T19:51:26.196064",
+    "parsed": {
+        "metadata": {
+            "send_date": [
+                "1928-03-12"
+            ],
+            "letter_title": [
+                "Letter regarding the receipt of a letter and its treatment on the agenda of the board meeting"
+            ],
+            "sender_persons": [
+                "Basler Personenschiffahrtsgesellschaft",
+                "Der Gesch\u00e4ftsf\u00fchrer"
+            ],
+            "receiver_persons": [
+                "Basler Rheinschifffahrt A.G."
+            ]
+        }
+    },
+    "conversation_id": "692860ab-3daf-4af7-b938-bcdbc562d50f",
+    "score": {
+        "send_date_tp": 1,
+        "send_date_fp": 0,
+        "send_date_fn": 0,
+        "sender_persons_tp": 0,
+        "sender_persons_fp": 2,
+        "sender_persons_fn": 0,
+        "receiver_persons_tp": 0,
+        "receiver_persons_fp": 1,
+        "receiver_persons_fn": 0,
+        "field_scores": {
+            "send_date": {
+                "response": [
+                    "1928-03-12"
+                ],
+                "ground_truth": [
+                    "1928-03-12"
+                ],
+                "score": null,
+                "counts": {
+                    "send_date_tp": 1,
+                    "send_date_fp": 0,
+                    "send_date_fn": 0
+                }
+            },
+            "sender_persons": {
+                "response": [
+                    "Basler Personenschiffahrtsgesellschaft",
+                    "Der Gesch\u00e4ftsf\u00fchrer"
+                ],
+                "ground_truth": [],
+                "score": null,
+                "counts": {
+                    "sender_persons_tp": 0,
+                    "sender_persons_fp": 2,
+                    "sender_persons_fn": 0
+                }
+            },
+            "receiver_persons": {
+                "response": [
+                    "Basler Rheinschifffahrt A.G."
+                ],
+                "ground_truth": [],
+                "score": null,
+                "counts": {
+                    "receiver_persons_tp": 0,
+                    "receiver_persons_fp": 1,
+                    "receiver_persons_fn": 0
+                }
+            }
+        }
+    },
+    "raw_response": "{\"id\":\"gen-1789667456-BzVAp1ugX54w3IXNEJdW\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\n   \\\"metadata\\\": {\\n   \\\"send_date\\\": [\\\"1928-03-12\\\"],\\n   \\\"letter_title\\\": [\\\"Letter regarding the receipt of a letter and its treatment on the agenda of the board meeting\\\"],\\n   \\\"sender_persons\\\": [\\\"Basler Personenschiffahrtsgesellschaft\\\", \\\"Der Gesch\u00e4ftsf\u00fchrer\\\"],\\n   \\\"receiver_persons\\\": [\\\"Basler Rheinschifffahrt A.G.\\\"]\\n}\\n}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"metadata\":{\"send_date\":[\"1928-03-12\"],\"letter_title\":[\"Letter regarding the receipt of a letter and its treatment on the agenda of the board meeting\"],\"sender_persons\":[\"Basler Personenschiffahrtsgesellschaft\",\"Der Gesch\u00e4ftsf\u00fchrer\"],\"receiver_persons\":[\"Basler Rheinschifffahrt A.G.\"]}},\"reasoning\":\"The user wants me to extract specific metadata from a historical letter image and return it in a JSON format.\\nI need to identify:\\n1.  **letter_title**: The document doesn't have an explicit title like \\\"Letter regarding X\\\". It's a formal business letter. I might need to infer a generic title or leave it null if strictly no title exists, but usually, the subject matter can be used. However, looking at the schema, it expects a list of strings. If there is no explicit title, I should probably set it to null or perhaps describe the nature of the letter. Let's look closer. There is no bold header indicating a title. It starts with \\\"An die Basler Rheinschiffahrt A.G.\\\". This is the recipient line. The content is a response to a previous letter. I will set `letter_title` to null as there isn't a specific title provided on the page. Wait, looking at the example, it seems they want the content. But the instruction says \\\"Title of the letter\\\". Since this is a standard business correspondence without a specific subject line (like \\\"Betreff:\\\"), I will set it to null.\\n\\n2.  **sender_persons**: The letter is signed/stamped at the bottom right. The stamp reads \\\"Basler Personenschiffahrtsgesellschaft\\\" and below that \\\"Der Gesch\u00e4ftsf\u00fchrer\\\". So the sender is the company \\\"Basler Personenschiffahrtsgesellschaft\\\" represented by its managing director. I will list the company name.\\n\\n3.  **send_date**: Top right corner says \\\"Basel, den 12. M\u00e4rz 1928.\\\" So the date is 1928-03-12.\\n\\n4.  **receiver_persons**: The letter is addressed \\\"An die Basler Rheinschiffahrt A.G.\\\". So the receiver is \\\"Basler Rheinschiffahrt A.G.\\\".\\n\\nLet's refine the extraction.\\n-   **Date**: \\\"Basel, den 12. M\u00e4rz 1928.\\\" -> ISO: 1928-03-12.\\n-   **Receiver**: \\\"An die Basler Rheinschiffahrt A.G.\\\" -> [\\\"Basler Rheinschiffahrt A.G.\\\"]\\n-   **Sender**: The stamp at the bottom says \\\"Basler Personenschiffahrtsgesellschaft\\\". The text above says \\\"hochachtungsvoll:\\\". The stamp indicates the organization. -> [\\\"Basler Personenschiffahrtsgesellschaft\\\"]\\n-   **Title**: There is no explicit title. I will use null.\\n\\nWait, let me double check the sender. The stamp is faint but readable. \\\"Basler Personenschiffahrtsgesellschaft\\\". Below it \\\"Der Gesch\u00e4ftsf\u00fchrer\\\". So the entity is the company.\\n\\nLet's construct the JSON.\\n```json\\n{\\n    \\\"metadata\\\": {\\n        \\\"send_date\\\": [\\\"1928-03-12\\\"],\\n        \\\"letter_title\\\": [null],\\n        \\\"sender_persons\\\": [\\\"Basler Personenschiffahrtsgesellschaft\\\"],\\n        \\\"receiver_persons\\\": [\\\"Basler Rheinschiffahrt A.G.\\\"]\\n    }\\n}\\n```\\nActually, looking at the schema, `letter_title` is required. If I put null, it satisfies the type constraint `anyOf: [{\\\"type\\\": \\\"array\\\"}, {\\\"type\\\": \\\"null\\\"}]`. Wait, the schema definition for `Metadata` properties shows `\\\"anyOf\\\": [{\\\"items\\\": {\\\"type\\\": \\\"string\\\"}, \\\"type\\\": \\\"array\\\"}, {\\\"type\\\": \\\"null\\\"}]`. So `null` is allowed for the value itself, or an array containing null? No, the property value can be null OR an array of strings.\\nLet's re-read the prompt instructions: \\\"If a piece of information is not included in the letter, set the value for the corresponding key to 'null'.\\\"\\nSo `letter_title` should be `null`.\\n\\nLet's verify the text again.\\nTop right: \\\"Basel, den 12. M\u00e4rz 1928.\\\"\\nRecipient line: \\\"An die Basler Rheinschiffahrt A.G.\\\"\\nBody: Acknowledges receipt of their letter from the 1st of the month (\\\"vom 1.d.s.\\\") and states it will be on the agenda for the board meeting on March 13th.\\nClosing: \\\"hochachtungsvoll:\\\"\\nStamp: \\\"Basler Personenschiffahrtsgesellschaft / Der Gesch\u00e4ftsf\u00fchrer\\\"\\n\\nSo:\\n- send_date: [\\\"1928-03-12\\\"]\\n- receiver_persons: [\\\"Basler Rheinschiffahrt A.G.\\\"]\\n- sender_persons: [\\\"Basler Personenschiffahrtsgesellschaft\\\"]\\n- letter_title: null (There is no title).\\n\\nOne detail: The prompt asks for values to be stored as a list.\\nExample: `\\\"send_date\\\": [\\\"1993-03-12\\\"]`\\nSo if I have null, do I put `[\\\"null\\\"]` or just `null`?\\nInstruction: \\\"set the value for the corresponding key to 'null'\\\".\\nSchema: `\\\"anyOf\\\": [{\\\"items\\\": {\\\"type\\\": \\\"string\\\"}, \\\"type\\\": \\\"array\\\"}, {\\\"type\\\": \\\"null\\\"}]`\\nThis means the value can be a string array OR null.\\nSo I will use `null` for letter_title.\\n\\nFinal check on Sender/Receiver names.\\nReceiver: \\\"Basler Rheinschiffahrt A.G.\\\"\\nSender: \\\"Basler Personenschiffahrtsgesellschaft\\\" (from the stamp).\\n\\nThe prompt asks for \\\"sender_persons\\\". Usually, this implies people, but in business letters, the organization is often the sender if no individual name is signed. Here, only the stamp \\\"Der Gesch\u00e4ftsf\u00fchrer\\\" (The Managing Director) is present, without a specific name printed under it. So the organization is the best answer.\\n\\nLet's assemble the JSON.\",\"reasoning_details\":[{\"type\":\"reasoning.text\",\"text\":\"The user wants me to extract specific metadata from a historical letter image and return it in a JSON format.\\nI need to identify:\\n1.  **letter_title**: The document doesn't have an explicit title like \\\"Letter regarding X\\\". It's a formal business letter. I might need to infer a generic title or leave it null if strictly no title exists, but usually, the subject matter can be used. However, looking at the schema, it expects a list of strings. If there is no explicit title, I should probably set it to null or perhaps describe the nature of the letter. Let's look closer. There is no bold header indicating a title. It starts with \\\"An die Basler Rheinschiffahrt A.G.\\\". This is the recipient line. The content is a response to a previous letter. I will set `letter_title` to null as there isn't a specific title provided on the page. Wait, looking at the example, it seems they want the content. But the instruction says \\\"Title of the letter\\\". Since this is a standard business correspondence without a specific subject line (like \\\"Betreff:\\\"), I will set it to null.\\n\\n2.  **sender_persons**: The letter is signed/stamped at the bottom right. The stamp reads \\\"Basler Personenschiffahrtsgesellschaft\\\" and below that \\\"Der Gesch\u00e4ftsf\u00fchrer\\\". So the sender is the company \\\"Basler Personenschiffahrtsgesellschaft\\\" represented by its managing director. I will list the company name.\\n\\n3.  **send_date**: Top right corner says \\\"Basel, den 12. M\u00e4rz 1928.\\\" So the date is 1928-03-12.\\n\\n4.  **receiver_persons**: The letter is addressed \\\"An die Basler Rheinschiffahrt A.G.\\\". So the receiver is \\\"Basler Rheinschiffahrt A.G.\\\".\\n\\nLet's refine the extraction.\\n-   **Date**: \\\"Basel, den 12. M\u00e4rz 1928.\\\" -> ISO: 1928-03-12.\\n-   **Receiver**: \\\"An die Basler Rheinschiffahrt A.G.\\\" -> [\\\"Basler Rheinschiffahrt A.G.\\\"]\\n-   **Sender**: The stamp at the bottom says \\\"Basler Personenschiffahrtsgesellschaft\\\". The text above says \\\"hochachtungsvoll:\\\". The stamp indicates the organization. -> [\\\"Basler Personenschiffahrtsgesellschaft\\\"]\\n-   **Title**: There is no explicit title. I will use null.\\n\\nWait, let me double check the sender. The stamp is faint but readable. \\\"Basler Personenschiffahrtsgesellschaft\\\". Below it \\\"Der Gesch\u00e4ftsf\u00fchrer\\\". So the entity is the company.\\n\\nLet's construct the JSON.\\n```json\\n{\\n    \\\"metadata\\\": {\\n        \\\"send_date\\\": [\\\"1928-03-12\\\"],\\n        \\\"letter_title\\\": [null],\\n        \\\"sender_persons\\\": [\\\"Basler Personenschiffahrtsgesellschaft\\\"],\\n        \\\"receiver_persons\\\": [\\\"Basler Rheinschiffahrt A.G.\\\"]\\n    }\\n}\\n```\\nActually, looking at the schema, `letter_title` is required. If I put null, it satisfies the type constraint `anyOf: [{\\\"type\\\": \\\"array\\\"}, {\\\"type\\\": \\\"null\\\"}]`. Wait, the schema definition for `Metadata` properties shows `\\\"anyOf\\\": [{\\\"items\\\": {\\\"type\\\": \\\"string\\\"}, \\\"type\\\": \\\"array\\\"}, {\\\"type\\\": \\\"null\\\"}]`. So `null` is allowed for the value itself, or an array containing null? No, the property value can be null OR an array of strings.\\nLet's re-read the prompt instructions: \\\"If a piece of information is not included in the letter, set the value for the corresponding key to 'null'.\\\"\\nSo `letter_title` should be `null`.\\n\\nLet's verify the text again.\\nTop right: \\\"Basel, den 12. M\u00e4rz 1928.\\\"\\nRecipient line: \\\"An die Basler Rheinschiffahrt A.G.\\\"\\nBody: Acknowledges receipt of their letter from the 1st of the month (\\\"vom 1.d.s.\\\") and states it will be on the agenda for the board meeting on March 13th.\\nClosing: \\\"hochachtungsvoll:\\\"\\nStamp: \\\"Basler Personenschiffahrtsgesellschaft / Der Gesch\u00e4ftsf\u00fchrer\\\"\\n\\nSo:\\n- send_date: [\\\"1928-03-12\\\"]\\n- receiver_persons: [\\\"Basler Rheinschiffahrt A.G.\\\"]\\n- sender_persons: [\\\"Basler Personenschiffahrtsgesellschaft\\\"]\\n- letter_title: null (There is no title).\\n\\nOne detail: The prompt asks for values to be stored as a list.\\nExample: `\\\"send_date\\\": [\\\"1993-03-12\\\"]`\\nSo if I have null, do I put `[\\\"null\\\"]` or just `null`?\\nInstruction: \\\"set the value for the corresponding key to 'null'\\\".\\nSchema: `\\\"anyOf\\\": [{\\\"items\\\": {\\\"type\\\": \\\"string\\\"}, \\\"type\\\": \\\"array\\\"}, {\\\"type\\\": \\\"null\\\"}]`\\nThis means the value can be a string array OR null.\\nSo I will use `null` for letter_title.\\n\\nFinal check on Sender/Receiver names.\\nReceiver: \\\"Basler Rheinschiffahrt A.G.\\\"\\nSender: \\\"Basler Personenschiffahrtsgesellschaft\\\" (from the stamp).\\n\\nThe prompt asks for \\\"sender_persons\\\". Usually, this implies people, but in business letters, the organization is often the sender if no individual name is signed. Here, only the stamp \\\"Der Gesch\u00e4ftsf\u00fchrer\\\" (The Managing Director) is present, without a specific name printed under it. So the organization is the best answer.\\n\\nLet's assemble the JSON.\",\"format\":\"unknown\",\"index\":0}]},\"native_finish_reason\":\"stop\"}],\"created\":1789667456,\"model\":\"qwen/qwen3.5-flash-02-23\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":null,\"usage\":{\"completion_tokens\":1362,\"prompt_tokens\":3129,\"total_tokens\":4491,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":0,\"reasoning_tokens\":1261,\"rejected_prediction_tokens\":null,\"image_tokens\":0},\"prompt_tokens_details\":{\"audio_tokens\":0,\"cached_tokens\":0,\"cache_write_tokens\":0,\"video_tokens\":0},\"cost\":0.000557505,\"is_byok\":false,\"cost_details\":{\"upstream_inference_cost\":0.000557505,\"upstream_inference_prompt_cost\":0.000203385,\"upstream_inference_completions_cost\":0.00035412}},\"provider\":\"Alibaba\"}"
+}

@@ -1,0 +1,61 @@
+{
+    "text": "{\"company\":{\"transcription\":\"Abegg & Cie.\"},\"location\":{\"transcription\":\"Z\u00fcrich\"},\"b_id\":{\"transcription\":\"B.51.322.GB.266\"},\"date\":\"\",\"information\":[]}",
+    "model": "stepfun/step-3.7-flash",
+    "provider": "openrouter",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 1436,
+        "output_tokens": 860,
+        "total_tokens": 2296,
+        "input_cost_usd": 0.0002872,
+        "output_cost_usd": 0.0009889999999999999,
+        "estimated_cost_usd": 0.0012762
+    },
+    "duration": 9.520331382751465,
+    "timestamp": "2026-09-17T22:38:27.538951",
+    "parsed": {
+        "company": {
+            "transcription": "Abegg & Cie."
+        },
+        "location": {
+            "transcription": "Z\u00fcrich"
+        },
+        "b_id": {
+            "transcription": "B.51.322.GB.266"
+        },
+        "date": "",
+        "information": []
+    },
+    "conversation_id": "93c3385a-1d9a-4315-bfd7-3ff0d53dc8b7",
+    "score": {
+        "fuzzy": 0.8,
+        "field_scores": {
+            "b_id.transcription": {
+                "response": "B.51.322.GB.266",
+                "ground_truth": "B.51.322.GB.266",
+                "score": 1.0
+            },
+            "company.transcription": {
+                "response": "Abegg & Cie.",
+                "ground_truth": "Abegg & Cie.",
+                "score": 1.0
+            },
+            "date": {
+                "response": "",
+                "ground_truth": "",
+                "score": 1.0
+            },
+            "information": {
+                "response": [],
+                "ground_truth": "",
+                "score": 0.0
+            },
+            "location.transcription": {
+                "response": "Z\u00fcrich",
+                "ground_truth": "Z\u00fcrich",
+                "score": 1.0
+            }
+        }
+    },
+    "raw_response": "{\"id\":\"gen-1789677498-9t7ruO1qEIQpf1x3OaFt\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\n  \\\"b_id\\\": {\\\"transcription\\\": \\\"B.51.322.GB.266\\\"},\\n  \\\"company\\\": {\\\"transcription\\\": \\\"Abegg & Cie.\\\"},\\n  \\\"date\\\": \\\"\\\",\\n  \\\"information\\\": [],\\n  \\\"location\\\": {\\\"transcription\\\": \\\"Z\u00fcrich\\\"}\\n}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"company\":{\"transcription\":\"Abegg & Cie.\"},\"location\":{\"transcription\":\"Z\u00fcrich\"},\"b_id\":{\"transcription\":\"B.51.322.GB.266\"},\"date\":\"\",\"information\":[]},\"reasoning\":\"The user wants me to extract data from an image of an index card and return it as a JSON object.\\n\\n**1. Analyze the image:**\\n*   **Company Name:** Top left, typed. \\\"Abegg & Cie.\\\"\\n*   **Location:** Top middle, typed. \\\"Z\u00fcrich\\\"\\n*   **B_ID:** Top right, typed. \\\"B.51.322.GB.266\\\"\\n*   **Date:** I don't see any stamped dates on the card itself. The main body is blank.\\n*   **Information:** The main body of the card is blank lined paper. There are no text blocks to extract.\\n\\n**2. Format the data:**\\n*   `company`: \\\"Abegg & Cie.\\\"\\n*   `location`: \\\"Z\u00fcrich\\\"\\n*   `b_id`: \\\"B.51.322.GB.266\\\"\\n*   `date`: \\\"\\\" (empty string)\\n*   `information`: [] (empty list, or list with empty string if strictly following \\\"list of text blocks\\\", but usually empty if nothing is there. The prompt says \\\"A list of text blocks... Each block should be a separate string\\\". If there are none, an empty list is appropriate, but looking at the JSON structure provided in the prompt, it expects a list. Wait, the prompt example shows `{\\\"transcription\\\": \\\"\\\"}` inside the list. If there is no text, I should probably leave the list empty or just have an empty string entry. Let's look at the instruction \\\"If you cannot find a value for a field, leave its transcription value as an empty string.\\\" This applies to the fields. For the list `information`, if there is no text, the list should be empty `[]`.)\\n\\nLet's re-read the JSON structure requirement:\\n```json\\n{\\n  \\\"company\\\": {\\\"transcription\\\": \\\"\\\"},\\n  \\\"location\\\": {\\\"transcription\\\": \\\"\\\"},\\n  \\\"b_id\\\": {\\\"transcription\\\": \\\"\\\"},\\n  \\\"date\\\": \\\"\\\",\\n  \\\"information\\\": [\\n    {\\\"transcription\\\": \\\"\\\"}\\n  ]\\n}\\n```\\nThe prompt asks for \\\"information\\\": A list of text blocks... If the card is blank, there are no text blocks. So `information` should be an empty list `[]`.\\n\\nWait, let's look closer at the image. Is there faint text? No, it looks like blank lined paper.\\nIs there a date stamp? I don't see one.\\n\\n**3. Construct the JSON:**\\n*   `company`: {\\\"transcription\\\": \\\"Abegg & Cie.\\\"}\\n*   `location`: {\\\"transcription\\\": \\\"Z\u00fcrich\\\"}\\n*   `b_id`: {\\\"transcription\\\": \\\"B.51.322.GB.266\\\"}\\n*   `date`: \\\"\\\"\\n*   `information`: [] (Since the card is blank)\\n\\nLet's double check the transcription.\\n\\\"A b e g g & C i e.\\\" -> \\\"Abegg & Cie.\\\"\\n\\\"Z\u00fcrich\\\"\\n\\\"B.51.322.GB.266\\\"\\n\\nThe prompt asks for \\\"valid JSON object\\\".\\n\\nLet's refine the `information` field. The prompt says \\\"A list of text blocks from the main body of the card.\\\" Since the main body is empty, the list is empty.\\n\\nFinal check of the fields:\\n- company: Abegg & Cie.\\n- location: Z\u00fcrich\\n- b_id: B.51.322.GB.266\\n- date: (none found)\\n- information: (none found)\\n\\nOne detail: The prompt says \\\"Return the data ONLY as a valid JSON object.\\\"\\n\\n```json\\n{\\n  \\\"company\\\": {\\\"transcription\\\": \\\"Abegg & Cie.\\\"},\\n  \\\"location\\\": {\\\"transcription\\\": \\\"Z\u00fcrich\\\"},\\n  \\\"b_id\\\": {\\\"transcription\\\": \\\"B.51.322.GB.266\\\"},\\n  \\\"date\\\": \\\"\\\",\\n  \\\"information\\\": []\\n}\\n```\\nThis looks correct.\",\"reasoning_details\":[{\"type\":\"reasoning.text\",\"text\":\"The user wants me to extract data from an image of an index card and return it as a JSON object.\\n\\n**1. Analyze the image:**\\n*   **Company Name:** Top left, typed. \\\"Abegg & Cie.\\\"\\n*   **Location:** Top middle, typed. \\\"Z\u00fcrich\\\"\\n*   **B_ID:** Top right, typed. \\\"B.51.322.GB.266\\\"\\n*   **Date:** I don't see any stamped dates on the card itself. The main body is blank.\\n*   **Information:** The main body of the card is blank lined paper. There are no text blocks to extract.\\n\\n**2. Format the data:**\\n*   `company`: \\\"Abegg & Cie.\\\"\\n*   `location`: \\\"Z\u00fcrich\\\"\\n*   `b_id`: \\\"B.51.322.GB.266\\\"\\n*   `date`: \\\"\\\" (empty string)\\n*   `information`: [] (empty list, or list with empty string if strictly following \\\"list of text blocks\\\", but usually empty if nothing is there. The prompt says \\\"A list of text blocks... Each block should be a separate string\\\". If there are none, an empty list is appropriate, but looking at the JSON structure provided in the prompt, it expects a list. Wait, the prompt example shows `{\\\"transcription\\\": \\\"\\\"}` inside the list. If there is no text, I should probably leave the list empty or just have an empty string entry. Let's look at the instruction \\\"If you cannot find a value for a field, leave its transcription value as an empty string.\\\" This applies to the fields. For the list `information`, if there is no text, the list should be empty `[]`.)\\n\\nLet's re-read the JSON structure requirement:\\n```json\\n{\\n  \\\"company\\\": {\\\"transcription\\\": \\\"\\\"},\\n  \\\"location\\\": {\\\"transcription\\\": \\\"\\\"},\\n  \\\"b_id\\\": {\\\"transcription\\\": \\\"\\\"},\\n  \\\"date\\\": \\\"\\\",\\n  \\\"information\\\": [\\n    {\\\"transcription\\\": \\\"\\\"}\\n  ]\\n}\\n```\\nThe prompt asks for \\\"information\\\": A list of text blocks... If the card is blank, there are no text blocks. So `information` should be an empty list `[]`.\\n\\nWait, let's look closer at the image. Is there faint text? No, it looks like blank lined paper.\\nIs there a date stamp? I don't see one.\\n\\n**3. Construct the JSON:**\\n*   `company`: {\\\"transcription\\\": \\\"Abegg & Cie.\\\"}\\n*   `location`: {\\\"transcription\\\": \\\"Z\u00fcrich\\\"}\\n*   `b_id`: {\\\"transcription\\\": \\\"B.51.322.GB.266\\\"}\\n*   `date`: \\\"\\\"\\n*   `information`: [] (Since the card is blank)\\n\\nLet's double check the transcription.\\n\\\"A b e g g & C i e.\\\" -> \\\"Abegg & Cie.\\\"\\n\\\"Z\u00fcrich\\\"\\n\\\"B.51.322.GB.266\\\"\\n\\nThe prompt asks for \\\"valid JSON object\\\".\\n\\nLet's refine the `information` field. The prompt says \\\"A list of text blocks from the main body of the card.\\\" Since the main body is empty, the list is empty.\\n\\nFinal check of the fields:\\n- company: Abegg & Cie.\\n- location: Z\u00fcrich\\n- b_id: B.51.322.GB.266\\n- date: (none found)\\n- information: (none found)\\n\\nOne detail: The prompt says \\\"Return the data ONLY as a valid JSON object.\\\"\\n\\n```json\\n{\\n  \\\"company\\\": {\\\"transcription\\\": \\\"Abegg & Cie.\\\"},\\n  \\\"location\\\": {\\\"transcription\\\": \\\"Z\u00fcrich\\\"},\\n  \\\"b_id\\\": {\\\"transcription\\\": \\\"B.51.322.GB.266\\\"},\\n  \\\"date\\\": \\\"\\\",\\n  \\\"information\\\": []\\n}\\n```\\nThis looks correct.\",\"format\":\"unknown\",\"index\":0}]},\"native_finish_reason\":\"stop\"}],\"created\":1789677498,\"model\":\"stepfun/step-3.7-flash\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":null,\"usage\":{\"completion_tokens\":860,\"prompt_tokens\":1436,\"total_tokens\":2296,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":0,\"reasoning_tokens\":0,\"rejected_prediction_tokens\":null,\"image_tokens\":0},\"prompt_tokens_details\":{\"audio_tokens\":0,\"cached_tokens\":0,\"cache_write_tokens\":0,\"video_tokens\":0},\"cost\":0.0012762,\"is_byok\":false,\"cost_details\":{\"upstream_inference_cost\":0.0012762,\"upstream_inference_prompt_cost\":0.0002872,\"upstream_inference_completions_cost\":0.000989}},\"provider\":\"Novita\"}"
+}

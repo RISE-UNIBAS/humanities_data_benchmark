@@ -49,15 +49,18 @@ _CARBON = {
 }
 
 
-def _estimate_footprint(n_requests, input_tokens, output_tokens):
-    """Return low/central/high energy, CO₂e, and car-km estimates."""
+def _estimate_footprint(n_requests, input_tokens, output_tokens, reasoning_tokens):
+    """Return low/central/high energy, CO₂e, and car-km estimates.
+
+    Reasoning tokens are decode work, so they are charged at the output rate.
+    """
     p = _CARBON
     result = {}
     for level in ("low", "central", "high"):
         energy_wh = (
             p["alpha_Wh"][level] * n_requests
             + p["beta_in_Wh_per_token"][level] * input_tokens
-            + p["beta_out_Wh_per_token"][level] * output_tokens
+            + p["beta_out_Wh_per_token"][level] * (output_tokens + reasoning_tokens)
         )
         co2e_kg = (energy_wh / 1000) * p["grid_kg_co2e_per_kwh"][level]
         car_km = (co2e_kg * 1000) / p["car_g_co2e_per_km"]
@@ -85,6 +88,8 @@ def generate_vars():
     total_cost_usd = 0.0
     total_input_tokens = 0
     total_output_tokens = 0
+    total_reasoning_tokens = 0
+    total_reasoning_cost_usd = 0.0
     total_duration_seconds = 0.0
     used_providers = set()
     used_models = set()
@@ -110,6 +115,10 @@ def generate_vars():
             total_cost_usd += cost.get("total_cost_usd", 0) or 0
             total_input_tokens += cost.get("total_input_tokens", 0) or 0
             total_output_tokens += cost.get("total_output_tokens", 0) or 0
+            # Reasoning is absent before a run recorded it, and its cost is
+            # null where no price was in force: tokens count, money does not.
+            total_reasoning_tokens += cost.get("total_reasoning_tokens", 0) or 0
+            total_reasoning_cost_usd += cost.get("reasoning_cost_usd", 0) or 0
 
         # Collect providers/models from test configurations
         test_config = tests_by_id.get(run.test_id)
@@ -132,7 +141,9 @@ def generate_vars():
                 number_of_input_files += sum(1 for f in subdir_path.iterdir() if f.is_file())
 
     # Estimated carbon / energy footprint (low / central / high ranges)
-    footprint = _estimate_footprint(number_of_llm_requests, total_input_tokens, total_output_tokens)
+    footprint = _estimate_footprint(
+        number_of_llm_requests, total_input_tokens, total_output_tokens, total_reasoning_tokens
+    )
 
     vars_data = {
         "number_of_datasets": str(len(real_datasets)),
@@ -145,7 +156,9 @@ def generate_vars():
         "number_of_models": str(len(used_models)),
         "total_input_tokens": str(total_input_tokens),
         "total_output_tokens": str(total_output_tokens),
+        "total_reasoning_tokens": str(total_reasoning_tokens),
         "total_cost_usd": f"{total_cost_usd:.2f}",
+        "total_reasoning_cost_usd": f"{total_reasoning_cost_usd:.2f}",
         "total_duration_seconds": str(round(total_duration_seconds)),
         "framework_start_date": first_test_run_date or "",
         "last_test_run": last_test_run_date or "",

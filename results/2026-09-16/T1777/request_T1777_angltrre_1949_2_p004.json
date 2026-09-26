@@ -1,0 +1,80 @@
+{
+    "text": "{\"advertisements\":[{\"box\":[300.0,175.0,2185.0,1720.0]},{\"box\":[285.0,1740.0,2195.0,3250.0]}]}",
+    "model": "deepseek-flash",
+    "provider": "deepseek",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 1288,
+        "output_tokens": 3509,
+        "total_tokens": 4797,
+        "input_cost_usd": 0.0003864,
+        "output_cost_usd": 0.0042108,
+        "estimated_cost_usd": 0.0045972
+    },
+    "duration": 19.553754806518555,
+    "timestamp": "2026-09-16T17:17:30.051497",
+    "parsed": {
+        "advertisements": [
+            {
+                "box": [
+                    300,
+                    175,
+                    2185,
+                    1720
+                ]
+            },
+            {
+                "box": [
+                    285,
+                    1740,
+                    2195,
+                    3250
+                ]
+            }
+        ]
+    },
+    "conversation_id": "abff16a2-7e91-4cfb-a23d-fc100eef90e7",
+    "score": {
+        "field_scores": {
+            "box 0": {
+                "response": [
+                    285,
+                    1740,
+                    2195,
+                    3250
+                ],
+                "ground_truth": [
+                    332,
+                    1772,
+                    2361,
+                    3263
+                ],
+                "score": 0.873
+            },
+            "box 1": {
+                "response": [
+                    300,
+                    175,
+                    2185,
+                    1720
+                ],
+                "ground_truth": [
+                    342,
+                    223,
+                    2368,
+                    1705
+                ],
+                "score": 0.858
+            }
+        },
+        "f1": 1.0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "mean_iou": 0.865,
+        "true_positives": 2,
+        "false_positives": 0,
+        "false_negatives": 0,
+        "iou_threshold": 0.5
+    },
+    "raw_response": "{\"id\":\"b9f54256-f54a-4f75-89e4-cfd4010f7526\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\\"advertisements\\\":[{\\\"box\\\":[300,175,2185,1720]},{\\\"box\\\":[285,1740,2195,3250]}]}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"reasoning_content\":\"We need answer with JSON bounding boxes for all advertisements on page. Need identify ads. Page has two main advertisements? Top: Crowe & Co. Ltd. freight forwarding ad with border. Bottom: Nivada watch ad with border. Need return bounding boxes. Original size 2479 x 3508. Need coordinates [x0,y0,x1,y1] pixel. Need infer from image maybe top box around y 120? Let's estimate.\\n\\nImage dimensions 2479 x 3508. Page shows two bordered advertisements stacked. Top ad roughly from x ~ 300? Let's inspect visually. The top ad border starts near left x maybe 307? right x maybe 2179? Top y maybe 130? Bottom y maybe 1700? Actually top ad maybe includes text \\\"Freight Agents to\\\" and \\\"THE RELIABLE FORWARDING AGENT\\\", Crowe logo, etc. Bordered box ends before bottom Nivada ad. Bottom ad starts y ~ 1740? to bottom ~ 3260? Let's calculate.\\n\\nWe need exact bounding boxes of advertisements. Could be two ads. Need produce JSON.\\n\\nLet's parse image layout. It is a magazine page, dimensions 2479 wide, 3508 tall. Page number 26 at bottom left. There is a black border around entire page? The page has white/off-white with outer dark edge? Actually image is scanned page with black background at edges? The page itself has thin black line around? Let's see: There is an outline border around text? Top ad is enclosed within a rectangular border. The Nivada ad is also enclosed within a border. There is also perhaps outer border around whole page? Let's determine.\\n\\nAt top: \\\"Freight Agents to\\\" etc left, \\\"THE RELIABLE FORWARDING AGENT\\\" right. A horizontal line above? Actually no, but the text \\\"Freight Agents to\\\" is inside top ad. The top ad has a full rectangular border (thin black). It encloses all top content. The border starts maybe near top margin: top line (y ~ 118?) from x ~ 309 to 2190? Then bottom line maybe y ~ 1740. The Nivada ad has a thicker border? It encloses bottom ad from maybe y ~ 1760 to 3260.\\n\\nNeed be precise. Let's estimate based on image coordinates. Original 2479x3508. The image displayed likely scaled; we can estimate proportionally. I can use visual features: The page number \\\"26\\\" at bottom left around x=150? y=3380? The top ad border top maybe around y=112? Let's approximate using typical magazine page: top margin maybe 1/8 of height? 3508/8 = 438, but top ad starts higher maybe y ~ 120? Actually text \\\"Freight Agents to\\\" near top, maybe y ~ 260? Wait image includes black border/margins at top and bottom? The image has a black strip at very top? Actually original page has black background? The page itself maybe beige with a black outer edge? At top, there is a gray horizontal bar? No, it's the page edge? Let's examine: There is a dark band at very top? The page number 26 at bottom left. The top ad border line at y maybe 120? The bottom ad border maybe y 3260? Need return coordinates.\\n\\nCould use relative positions. Let's see if there is a PDF or page? No. Need estimate manually.\\n\\nLet's measure approximate using image pixels from screenshot? I can use mental: The image dimensions in prompt likely 2479 x 3508. I can approximate by object positions. Let's set coordinates.\\n\\nTop advertisement:\\n- Left border: near x = 300? It aligns with \\\"Freight Agents to\\\" text starts at x maybe 323? There is margin before border. The ad border left line maybe x = 304? Right border maybe x = 2180? Top border maybe y = 112? Bottom border maybe y = 1735? Need include all text. Let's estimate more accurately.\\n\\nI can divide page height into sections. The page height 3508. Bottom page number \\\"26\\\" at y ~ 3370. The Nivada ad bottom border maybe y = 3250? There is white margin below and page number. Top ad bottom border maybe y = 1730? Nivada ad top border maybe y = 1765. Gap maybe 35 px. Top ad top border maybe y = 115. Top ad height = 1615. Nivada ad height = 3250-1765 = 1485. Seems plausible.\\n\\nBut need verify with actual text positions:\\n- Top left \\\"Freight Agents to\\\" appears near y ~ 279? Actually that text might be at y ~ 270? In image, top border line is above \\\"Freight Agents to\\\" by some margin. The text \\\"Freight Agents to\\\" baseline maybe 280; border top maybe 180? Let's estimate.\\n\\nLet's use the image's visible coordinates in the prompt perhaps? The image is embedded at a certain size, but original size is 2479 x 3508. I can approximate by looking at the thumbnail proportions. The top border appears around 3% from top? 0.03*3508 = 105. The \\\"Freight Agents to\\\" line appears at y ~ 0.08*3508 = 280. The top border maybe y=120. The bottom ad top border appears around 51%? 0.51*3508 = 1789. The Nivada ad border top appears around y = 1770. The Nivada ad bottom border appears around 93%? 0.93*3508 = 3262. Page number at 96%? 0.96 = 3368. Good.\\n\\nLet's refine with actual image: I see a dark border around entire top ad; top border line maybe y = 200? Let's inspect: At top, \\\"Freight Agents to\\\" is below top border; there is also a horizontal line above \\\"THE RELIABLE\\\" maybe? Actually the top border line is not at very top; there is space above. The top ad border bottom near \\\"ROMANSHORN\\\" and Allied Firms text. The bottom line maybe y = 1750. Nivada ad border top maybe y = 1780. The bottom ad has a rounded rectangle border? Actually it's a rectangular border with image inside. It encloses \\\"Elegance\\\", watches, \\\"Nivada\\\" text. The bottom border maybe y = 3260. There is a horizontal line at very bottom? No.\\n\\nLet's try to derive coordinates from the image if we assume original dimensions and visual positions. I'll mentally overlay grid.\\n\\nPage width 2479. Top ad left border maybe x = 315; right border maybe x = 2175. The text \\\"Freight Agents to\\\" starts at x = 330? Actually left margin inside ad: \\\"London & North Eastern Railway\\\" starts maybe x = 330. So border left x ~ 310. Right border maybe x = 2170. The top ad border is not full width; there is margin left/right. The outer page width 2479; left margin maybe 280? Hmm.\\n\\nBottom ad left border maybe x = 300; right border maybe x = 2185. It appears slightly wider? Maybe same.\\n\\nNeed produce valid JSON. Could be acceptable if approximate, but maybe system wants exact? We need \\\"Extract all advertisements and return their bounding boxes.\\\" No provided boxes. We must estimate. Maybe there is only one? No, two distinct ads. The top ad \\\"Crowe & Co. Ltd.\\\" and bottom \\\"Nivada\\\". Need include both. Maybe also the entire page? No, ads.\\n\\nLet's consider if the top \\\"Crowe\\\" ad is one advertisement, bottom \\\"Nivada\\\" another. There may be no other ads. The top ad has border. The bottom ad has border. So two ads.\\n\\nLet's estimate bounding boxes:\\nAd 1 top Crowe: likely [306, 116, 2186, 1738]? Let's verify with actual text: The border top line at y maybe 112; bottom line at y 1734; left at x 306; right at x 2184. Let's use round numbers: [310, 120, 2185, 1740]. But maybe need more exact. Let's try to calculate by using pixel coordinates from known feature: \\\"CROWE & CO. LTD.\\\" text maybe at y=1320? The logo around y=1000. The bottom border line below \\\"ROMANSHORN\\\" maybe y=1730. Top border line above \\\"Freight Agents to\\\" maybe y=200? Wait \\\"Freight Agents to\\\" maybe at y=280; top border maybe 200; bottom border maybe 1720. If top border 200, bottom 1720, height 1520. That seems plausible. Let's compare Nivada ad: top border maybe y=1760, bottom border y=3260, height 1500. Gap 40. The page number at y=3370. Total page height 3508. Bottom margin 248. Top margin before top ad 200. That works.\\n\\nLet's adjust: The top ad's top border line might be at y = 180? The \\\"Freight Agents to\\\" text baseline at y=255? In image, there's some space above. I think y=180 is plausible. The bottom ad top border y = 1765; bottom y = 3255. The page number y=3375. Let's choose [302, 168, 2188, 1748] for top? Not sure.\\n\\nMaybe use OCR? We can't measure exactly. But perhaps expected bounding boxes from an annotation? Maybe there is a known dataset? The page is from a magazine, with two ads. We need output JSON.\\n\\nLet's see if top ad's box might extend from x=305 to x=2175, y=125 to y=1708. Bottom ad maybe x=288 to x=2190, y=1710 to y=3230. Hmm.\\n\\nLet's use image proportions. I will open mentally: The top border line is visible: it's a thin line that runs horizontally just above the \\\"Freight Agents to\\\" text. The text \\\"Freight Agents to\\\" is in bold? Actually no. The line is about at y=0.05 of page? 0.05*3508=175. The bottom line of top ad is just below \\\"ROMANSHORN\\\" and Allied Firms maybe at y=0.49*3508=1715. Top ad height 1540. The bottom ad top line is at y=0.50*3508=1754. Bottom line at y=0.93*3508=3263. So top ad y: 175 to 1715. Let's use [310, 175, 2180, 1715]. But include border lines maybe 2px. Could be okay.\\n\\nBottom ad x maybe left border at x=288, right border at x=2190. Top y 1745, bottom y 3265. Could be.\\n\\nLet's verify bottom ad border: It has a thicker inner border? Actually bottom ad contains a rounded rectangular border, but it seems the outer bounding box of advertisement (including border) might be slightly larger than the inner border? The entire ad is a rectangular block: there is a thick black border frame around it. It starts below top ad, with margin; the border itself is around x=300 to 2195, y=1745 to 3265. There is a small caption \\\"BIELER\\\" inside? No.\\n\\nLet's look at the image: The bottom ad has a thick outer border with rounded corners? The border is a line around the entire bottom rectangle. It starts at y ~ 1730 maybe. The top left corner of Nivada ad border is around x=280? Actually left border line might be at x=282; right border line at x=2195. The top border line maybe y=1730; bottom border line maybe y=3245. There is a small gap between top ad bottom border and Nivada top border. The top ad bottom border maybe at y=1705; gap 25.\\n\\nLet's settle with precise-ish estimates. Since bounding boxes maybe later used to crop, being slightly tight may omit border; but schema wants bounding box of advertisement. Should include entire ad area. I'll include the border lines.\\n\\nLet's formulate JSON with two objects:\\n{\\\"advertisements\\\":[\\n  {\\\"box\\\":[310, 180, 2185, 1715]},\\n  {\\\"box\\\":[285, 1738, 2195, 3260]}\\n]}\\nBut need consider coordinates order [x0, y0, x1, y1]. y0 top-left, y1 bottom-right. For second, y0 1738, y1 3260. That's fine.\\n\\nHowever, maybe there are 3 ads? Top ad maybe two separate? \\\"Freight Agents to\\\" list and Crowe logo? No, one ad. Bottom Nivada ad. Could there be an ad for \\\"Elegance\\\" etc? No, one.\\n\\nLet's be more accurate by using visible coordinates in the image: The top ad border top-left corner appears at about 12% from left? 0.12*2479=297.5; top y about 0.05*3508=175. Bottom y about 0.49*3508=1719. Right x about 0.88*2479=2181. So top: [298, 175, 2181, 1719]. Bottom ad: left x about 0.115*2479=285; right x about 0.885*2479=2194; top y about 0.495*3508=1736; bottom y about 0.925*3508=3245. So bottom: [285, 1736, 2194, 3245]. That seems reasonable.\\n\\nLet's check bottom ad contains \\\"Nivada\\\" text near bottom; bottom border at y=3245; page number \\\"26\\\" at y=3380; white margin below. Good.\\n\\nLet's decide final with maybe [302, 176, 2184, 1717] and [286, 1740, 2196, 3252]. Need JSON valid. Only include boxes? No other properties. Output as JSON object.\\n\\nPotential issue: The task says \\\"Extract all advertisements and return their bounding boxes.\\\" It might expect all ad elements maybe including \\\"Crowe & Co. Ltd.\\\" and \\\"Nivada\\\" as separate, not the whole page. The top ad perhaps includes both the freight forwarding and \\\"Crowe\\\" logo. Yes.\\n\\nLet's produce final JSON.\\n\\nBut let's not rush. The original size 2479 x 3508. Need maybe coordinates scaled? We have original. Could be from an annotated dataset with exact boxes? Maybe they expect [306, 187, 2187, 1725]? Hmm.\\n\\nLet's see if I can find clues: The page is from \\\"The Motor\\\" or \\\"ILN\\\"? Maybe ads: Crowe & Co. Ltd. freight agents, and Nivada watches. They are both full-page? Actually page has two ads. The top ad has a border. The bottom ad has a border. The page number 26 at bottom left. The layout maybe two advertisements per page. Good.\\n\\nLet's output with reasonable bounding boxes.\\n\\nNeed valid JSON exactly matching schema, no markdown. So final:\\n{\\\"advertisements\\\":[{\\\"box\\\":[300,175,2185,1720]},{\\\"box\\\":[285,1740,2195,3250]}]}\\n\\nBut should we order top to bottom? Yes. Ensure y0 < y1, x0 < x1. Top ad y1 1720, bottom ad y0 1740. Gap 20. Fine.\\n\\nMaybe top ad bottom y should be 1725 to include border; bottom ad top y = 1728? Let's set top y1=1720, bottom y0=1740. Gap 20. Actually in image, top ad border bottom line and bottom ad top border line are distinct with gap. Good.\\n\\nLet's finalize.\"}}],\"created\":1789571831,\"model\":\"deepseek-flash\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":\"aeb56401ca74e127821c4f9126dcb669\",\"usage\":{\"completion_tokens\":3509,\"prompt_tokens\":1288,\"total_tokens\":4797,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":null,\"reasoning_tokens\":3475,\"rejected_prediction_tokens\":null},\"prompt_tokens_details\":{\"audio_tokens\":null,\"cached_tokens\":0},\"prompt_cache_hit_tokens\":0,\"prompt_cache_miss_tokens\":1288}}"
+}

@@ -1,0 +1,85 @@
+{
+    "text": "{\"metadata\":{\"send_date\":[\"1926-07-13\"],\"letter_title\":[\"ALBATROS\"],\"sender_persons\":[\"Bader Personenschiffahrtsgesellschaft\"],\"receiver_persons\":[\"Elektrizit\u00e4tswerk Basel\"]}}",
+    "model": "thinkingmachines/Inkling",
+    "provider": "huggingface",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 2254,
+        "output_tokens": 1041,
+        "total_tokens": 3295,
+        "input_cost_usd": 0.002254,
+        "output_cost_usd": 0.00421605,
+        "estimated_cost_usd": 0.00647005
+    },
+    "duration": 12.649030447006226,
+    "timestamp": "2026-09-17T11:36:35.460855",
+    "parsed": {
+        "metadata": {
+            "send_date": [
+                "1926-07-13"
+            ],
+            "letter_title": [
+                "ALBATROS"
+            ],
+            "sender_persons": [
+                "Bader Personenschiffahrtsgesellschaft"
+            ],
+            "receiver_persons": [
+                "Elektrizit\u00e4tswerk Basel"
+            ]
+        }
+    },
+    "conversation_id": "25de2d64-c925-469b-9eab-315122178b0c",
+    "score": {
+        "send_date_tp": 1,
+        "send_date_fp": 0,
+        "send_date_fn": 0,
+        "sender_persons_tp": 0,
+        "sender_persons_fp": 1,
+        "sender_persons_fn": 0,
+        "receiver_persons_tp": 0,
+        "receiver_persons_fp": 1,
+        "receiver_persons_fn": 0,
+        "field_scores": {
+            "send_date": {
+                "response": [
+                    "1926-07-13"
+                ],
+                "ground_truth": [
+                    "1926-07-13"
+                ],
+                "score": null,
+                "counts": {
+                    "send_date_tp": 1,
+                    "send_date_fp": 0,
+                    "send_date_fn": 0
+                }
+            },
+            "sender_persons": {
+                "response": [
+                    "Bader Personenschiffahrtsgesellschaft"
+                ],
+                "ground_truth": [],
+                "score": null,
+                "counts": {
+                    "sender_persons_tp": 0,
+                    "sender_persons_fp": 1,
+                    "sender_persons_fn": 0
+                }
+            },
+            "receiver_persons": {
+                "response": [
+                    "Elektrizit\u00e4tswerk Basel"
+                ],
+                "ground_truth": [],
+                "score": null,
+                "counts": {
+                    "receiver_persons_tp": 0,
+                    "receiver_persons_fp": 1,
+                    "receiver_persons_fn": 0
+                }
+            }
+        }
+    },
+    "raw_response": "{\"id\":\"p1dAS3o-6z2FuN-a3c720533c7f5774\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\n  \\\"metadata\\\": {\\n    \\\"send_date\\\": [\\\"1926-07-13\\\"],\\n    \\\"letter_title\\\": [\\\"ALBATROS\\\"],\\n    \\\"sender_persons\\\": [\\\"Bader Personenschiffahrtsgesellschaft\\\"],\\n    \\\"receiver_persons\\\": [\\\"Elektrizit\u00e4tswerk Basel\\\"]\\n  }\\n}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"metadata\":{\"send_date\":[\"1926-07-13\"],\"letter_title\":[\"ALBATROS\"],\"sender_persons\":[\"Bader Personenschiffahrtsgesellschaft\"],\"receiver_persons\":[\"Elektrizit\u00e4tswerk Basel\"]}},\"reasoning\":\"We need parse image of historical letter, extract title, sender, date, receiver. Need identify text. Let's analyze image content.\\n\\nWe have yellowish paper with typed text in German. Top right date: \\\"13. Juli 1926.\\\" Top left \\\"O/H.\\\" Or \\\"O/H.\\\" maybe not needed.\\n\\nAddressee block:\\nAn das\\nElektrizit\u00e4tswerk,\\nBasel\\n= = = = = = = = = = = = =\\n\\nBetr. \\\"ALBATROS\\\".\\n\\nThen body: \\\"Die Probefahrten welche unter Leitung des Herrn H. Wylemann, Kontrollingenieur des Eidgen. Eisenbahndepartements, im Auftrage des Polizei-Departements Basel am 12. Juli stattgefunden haben, sind leider unbefriedigend ausgefallen...\\\"\\n\\nThen mentions motor issues, etc. Then \\\"Wir haben das Schiff aus unter dieser Voraussetzung gekauft und bitten Sie, alles zu tun damit in k\u00fcrze etc. die Maschine tadellos l\u00e4uft. Nur dann haben wir Verwendung f\u00fcr den \\\"ALBATROS\\\". -\\\"\\n\\nThen closing: \\\"Ihren gefl. Nachrichten gerne entgegensehend, zeichnen wir hochachtungsvoll :\\\"\\n\\nThen signature block:\\n\\\"Bader Personenschiffahrtsgesellschaft\\nDer Pr\u00e4sident: Der Gesch\u00e4ftsf\u00fchrer:\\\"\\n\\nSo letter is from Bader Personenschiffahrtsgesellschaft? Actually \\\"zeichnen wir\\\" plural, signed by company, with President and Manager. So sender persons: likely Bader Personenschiffahrtsgesellschaft, maybe President and Manager unspecified? Need extract names of person(s) who wrote. The signature lines have \\\"Der Pr\u00e4sident:\\\" and \\\"Der Gesch\u00e4ftsf\u00fchrer:\\\" but no visible names? There might be signatures over them but not readable. So sender_persons might be [\\\"Bader Personenschiffahrtsgesellschaft\\\"] or null if not named? Let's think.\\n\\nThe prompt asks \\\"Name(s) of the person(s) who wrote the letter.\\\" The letter is written on behalf of Bader Personenschiffahrtsgesellschaft, signed by president and manager but names not legible? Actually there may be handwritten signatures over the printed titles, but in image they are somewhat visible? Let's inspect mental: At bottom right, there is a handwritten signature that looks like \\\"E. Bader\\\"? Or maybe \\\"C. Bader\\\"? But not clear. However the printed company name is present. Usually in these extraction tasks, they want explicit named persons. If only company is named, include company? The example uses \\\"Lisa Simpson\\\". But could include organization if that's the sender.\\n\\nLet's determine letter_title: Maybe \\\"ALBATROS\\\" since Betr. \\\"ALBATROS\\\". Or could be no explicit title except subject line. The key \\\"letter_title\\\" might be \\\"ALBATROS\\\" or null? Let's examine: The letter has \\\"Betr. \\\"ALBATROS\\\".\\\" That is subject/re. Not necessarily title. But they ask \\\"Title of the letter.\\\" Might be null since no title like \\\"Petition...\\\". However sometimes they take the subject as title. Let's hold \\\"ALBATROS\\\" maybe in list.\\n\\nSend date: \\\"13. Juli 1926\\\" => 1926-07-13.\\n\\nReceiver persons: \\\"Elektrizit\u00e4tswerk, Basel\\\" addressed \\\"An das Elektrizit\u00e4tswerk, Basel\\\". So receiver is Elektrizit\u00e4tswerk Basel. Maybe also \\\"Herrn H. Wylemann\\\"? No he is mentioned in body as controller, not receiver. So receiver_persons: [\\\"Elektrizit\u00e4tswerk Basel\\\"].\\n\\nSender persons: The letter is from \\\"Bader Personenschiffahrtsgesellschaft\\\". The sign-off \\\"zeichnen wir hochachtungsvoll\\\" and then company name with President and Manager. So sender is Bader Personenschiffahrtsgesellschaft. Might also include unspecified president/manager. But we'll put [\\\"Bader Personenschiffahrtsgesellschaft\\\"].\\n\\nBut wait there might be a specific name in signature: Let's zoom mental bottom right: printed \\\"Bader Personenschiffahrtsgesellschaft\\\" then \\\"Der Pr\u00e4sident:\\\" with a signature that might be \\\"W. Bader\\\"? And \\\"Der Gesch\u00e4ftsf\u00fchrer:\\\" with another signature? Actually there is one large handwritten signature across both? Hmm hard to tell. Given instructions \\\"If a piece of information is not included in the letter, set the value... to null\\\". The names of president and manager are not clearly readable, but the company name is included. So include company.\\n\\nThus JSON:\\n{\\n\\\"letter_title\\\": [\\\"ALBATROS\\\"],\\n\\\"send_date\\\": [\\\"1926-07-13\\\"],\\n\\\"sender_persons\\\": [\\\"Bader Personenschiffahrtsgesellschaft\\\"],\\n\\\"receiver_persons\\\": [\\\"Elektrizit\u00e4tswerk Basel\\\"]\\n}\\n\\nNeed check if any other receiver? The address block says \\\"An das Elektrizit\u00e4tswerk, Basel\\\". Yes.\\n\\nLet's provide that.\"},\"seed\":null}],\"created\":1789637784,\"model\":\"thinkingmachines/Inkling\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":\"default\",\"usage\":{\"completion_tokens\":1041,\"prompt_tokens\":2254,\"total_tokens\":3295,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":null,\"reasoning_tokens\":974,\"rejected_prediction_tokens\":null},\"prompt_tokens_details\":{\"audio_tokens\":null,\"cached_tokens\":0}},\"prompt\":[]}"
+}

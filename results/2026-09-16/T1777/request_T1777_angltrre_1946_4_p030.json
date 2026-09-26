@@ -1,0 +1,62 @@
+{
+    "text": "{\"advertisements\":[{\"box\":[360.0,2950.0,2130.0,3310.0]}]}",
+    "model": "deepseek-flash",
+    "provider": "deepseek",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 1288,
+        "output_tokens": 2421,
+        "total_tokens": 3709,
+        "input_cost_usd": 0.0003864,
+        "output_cost_usd": 0.0029051999999999997,
+        "estimated_cost_usd": 0.0032915999999999996
+    },
+    "duration": 14.903664827346802,
+    "timestamp": "2026-09-16T17:17:07.787497",
+    "parsed": {
+        "advertisements": [
+            {
+                "box": [
+                    360,
+                    2950,
+                    2130,
+                    3310
+                ]
+            }
+        ]
+    },
+    "conversation_id": "c4ba28ad-b86a-4251-a3a9-120fb50fd332",
+    "score": {
+        "field_scores": {
+            "box 0": {
+                "response": null,
+                "ground_truth": [
+                    314,
+                    2805,
+                    2279,
+                    3218
+                ],
+                "score": 0.0
+            },
+            "unmatched prediction 0": {
+                "response": [
+                    360,
+                    2950,
+                    2130,
+                    3310
+                ],
+                "ground_truth": null,
+                "score": 0.0
+            }
+        },
+        "f1": 0.0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "mean_iou": 0.0,
+        "true_positives": 0,
+        "false_positives": 1,
+        "false_negatives": 1,
+        "iou_threshold": 0.5
+    },
+    "raw_response": "{\"id\":\"975157a6-1be2-4919-90de-1ed4afafe670\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\\"advertisements\\\":[{\\\"box\\\":[360,2950,2130,3310]}]}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"reasoning_content\":\"We need answer JSON only. Need extract all advertisements and bounding boxes. Page 140. There is one advertisement at bottom: \\\"Modern Printing\\\" VOGT-SCHILD Ltd., PRINTERS, SOLEURE. Bounding box? Need coordinates in original 2479x3508. The ad is a horizontal rectangular box near bottom. Need estimate bounding box [x0,y0,x1,y1]. Let's inspect image. Page size 2479 wide, 3508 high. Ad appears from left margin around x ~370? to right margin around x ~2130? y top ~2990? bottom ~3310? Need precise. Let's estimate from visual.\\n\\nImage dimensions: 2479 x 3508. The text area: left column starts ~370? right column maybe ~1470? Actually page has two columns. The ad box spans almost full content width below columns. Let's identify pixel coordinates.\\n\\nTop of page has header? \\\"140\\\" bottom left. Ad box: black border rectangle. It contains inside: \\\"Modern Printing\\\" script at left top, \\\"VOGT-SCHILD Ltd., PRINTERS, SOLEURE\\\" bottom left. On right side small text: \\\"Our staff and machinery are at the service...\\\" There are two horizontal lines? It is a rectangular advertisement with border.\\n\\nNeed output just JSON. But maybe there are no other advertisements? The page text mostly articles. The ad only one. Need bounding box. Could include [x0, y0, x1, y1] with x0 ~ 360, y0 ~ 2960? Let's calculate more accurately from the image.\\n\\nGiven full size 2479x3508. The displayed image maybe 1654? But actual. We need scale. Let's use proportions.\\n\\nIn image, page content from left to right: left edge black binding? The white page starts around x ~ 195? The printed text left margin maybe x ~ 375? Right text column ends ~ 1995? The ad rectangle left edge aligns maybe with left text margin? It might extend slightly from x=370 to x=2110? Top of ad maybe at y=2940, bottom y=3295. Let's inspect.\\n\\nThe ad block is at bottom. Below it, page number 140 at left, then bottom margin. The ad box bottom maybe above page number? Actually page number \\\"140\\\" is below ad? In image, \\\"140\\\" at very bottom left, below ad. The ad bottom line maybe y=3375? Then page number below. Let's look: The ad is a rectangle with a thin border. Below it, there is white space then \\\"140\\\" near bottom left. The ad bottom edge maybe around 3300? Page number at y ~ 3410. Hmm.\\n\\nNeed provide valid JSON only, no explanation. We can include only one ad. But maybe they expect all ads: could include \\\"Modern Printing\\\" ad. Need determine bounding box accurately. Let's approximate from visual.\\n\\nLet's measure in the provided image mentally. The image dimensions: 1654 width? It says original 2479 x 3508. The displayed image likely scaled. Let's assign coordinates using original. I'll estimate from image proportions.\\n\\nTop of ad box: In the image, the ad starts just after right column text ends. The right column last paragraph \\\"BRITAIN'S BUDGET\\\" ends with \\\"shows a notable\\\" at about 2/3 page height? Actually text ends around y=2300? No, page has two columns, articles end about y=2400? The ad is below columns. The ad top line likely at y=2925? Need.\\n\\nLet's use text columns: left column text ends at \\\"economy.\\\" around y maybe 2690? Right column ends at \\\"notable\\\" around y maybe 2720? The ad starts below, with a top border line. There is gap. The top border of ad maybe y=2980? bottom y=3370? Let's estimate.\\n\\nLet's look at the ad text: The ad occupies about bottom 15% of page. Page height 3508. 15% = 526. Bottom margin maybe 400. So ad top ~3508 - 400 - 500 = 2608? Not sure.\\n\\nIn the image, the ad is below the text columns. The text columns likely extend to around 2600-2700. The ad box top at ~2890. Let's inspect: The \\\"Modern Printing\\\" line is at top of ad. There is a thin line above? It might have top border. The script \\\"Modern Printing\\\" vertical center ~ 3010? The text below \\\"VOGT-SCHILD...\\\" at bottom left ~ 3240. So ad top maybe 2960, bottom maybe 3300.\\n\\nLet's try scale: In the displayed image, the page width is roughly 1654? Actually if original 2479, displayed maybe 1200? Let's not rely. We'll provide box [360, 2960, 2130, 3300] maybe.\\n\\nBut need exact? The evaluator may compare. We can include bounding box with plausible coordinates. Maybe they expect [354, 2937, 2125, 3294]? There is no way to know exact. We need produce JSON matching schema. Maybe use bounding box that encloses entire ad. I'll try to estimate from image pixel coordinates if I assume displayed image width = 2479? The user says original size 2479 x 3508. So we should output original size coords. I can estimate by ratio.\\n\\nLet's inspect the image: The ad border appears as a black rectangle. Left edge at x ~ 372. Right edge at x ~ 2110. Top edge at y ~ 2946. Bottom edge at y ~ 3312? Let's estimate using known text positions.\\n\\nIn the article column \\\"BRITAIN'S BUDGET\\\" heading: It starts around x=1320? It is in right column. Last line \\\"shows a notable\\\" ends at y maybe 2700. The ad top border is separated by a space of maybe 120 pixels? Top border y ~ 2850? Hmm.\\n\\nLet's use the page number \\\"140\\\" at bottom left: It is located just below ad, aligned left with ad? Actually page number is at x ~ 340? y ~ 3430? If ad bottom at y=3375, page number at y=3440. Top of ad at y=2930. That seems plausible.\\n\\nLet's find y from image: The ad box has height maybe 350 px in original? Actually if original height 3508 and ad height 350 px, that's 10%. In displayed image, ad height maybe 15% of page height? Let's see: The ad box contains multiple lines. It appears a bit shorter than text column width? It spans full width, height maybe 4 lines of text. Line height maybe 45 px? 4 lines = 180 px. Hmm. But in image, the ad box height maybe ~ 300 px. The script \\\"Modern Printing\\\" line and small text. So y top ~ 3000? bottom ~3305.\\n\\nLet's calculate: The ad text \\\"VOGT-SCHILD Ltd., PRINTERS, SOLEURE\\\" is at bottom left of ad, maybe y=3240. The \\\"Modern Printing\\\" script at left top maybe y=3030. If box padding, top y=3000, bottom y=3290. Then page number below at y=3380.\\n\\nThus bounding box [360, 3000, 2120, 3290] maybe.\\n\\nBut maybe the ad includes the entire rectangular area from the horizontal rule at top? There is a thin line above? In the image, the ad box seems to have a border. The top line maybe at y=2960? Actually I see a thin black line above \\\"Modern Printing\\\" maybe not? There is a line under the top? It is a box. So include border. I'll provide [365, 2965, 2130, 3305].\\n\\nLet's see if any other advertisements? The text: \\\"BRITAIN LEADS AT DUTCH FAIR\\\" no. \\\"MOST VERSATILE TRACTOR\\\" no. \\\"ENGINEERING INDUSTRIES ASSOCIATION\\\" no. \\\"BRITAIN'S BUDGET\\\" no. So one ad.\\n\\nNeed respond in JSON. Schema: {\\\"advertisements\\\": [{\\\"box\\\": [x0, y0, x1, y1]}]}. No other fields. Ensure valid JSON.\\n\\nCould include only one ad. Let's output with coordinates. But if evaluator expects exact, maybe compare IoU. We need best estimate. Let's try to be as accurate as possible.\\n\\nI'll use pixel coordinates from visual. Let's view the image mentally: Original 2479x3508. The ad border left edge is aligned with the left edge of the text column? The left text margin is maybe x=370. The ad left edge maybe x=376. Right edge aligns with right text margin x=2100? In image, right column right edge maybe x=2110. The ad right edge maybe x=2115. Top edge y? The bottom of right column text \\\"notable\\\" at maybe y=2680? The ad top border is maybe y=2920. The gap is white. The ad itself has top border. Let's estimate y top = 2900? Let's measure from bottom: Page number 140 at y ~ 3450? The ad bottom line maybe y=3350. Page number below ad at y=3420. The ad height maybe 380. Top y = 2970. Hmm.\\n\\nLet's use known text: The body text font maybe 16-18px in original? No, original DPI. The text line height maybe 50px. The ad text: \\\"Our staff and machinery are...\\\" 4 lines. The ad box height maybe 220px? Actually 4 lines of 50px = 200. Plus padding 60 = 260. \\\"Modern Printing\\\" script bigger. So height maybe 260. Then top y = 3300-260 = 3040. Maybe bottom y=3300. Then page number below. That seems plausible.\\n\\nBut from image, the ad box height seems taller, maybe 330px. Let's check: The script \\\"Modern Printing\\\" is large, around 40px tall? The small text line height maybe 35px. The box contains empty space. Could be 330px.\\n\\nLet's calculate from the image's aspect: The ad border appears in bottom 13% of page from y=2950 to y=3310. That's 360. So top = 2950, bottom = 3310. I'll choose [360, 2950, 2130, 3310]. Or [365, 2945, 2115, 3305].\\n\\nWe need maybe include all ads; maybe the entire bottom rectangular advertisement. I'll output:\\n{\\\"advertisements\\\":[{\\\"box\\\":[360,2950,2130,3310]}]}\\n\\nBut check schema: $defs Advertisement requires box array. Yes.\\n\\nLet's ensure no other ads: The small text \\\"Our staff and machinery...\\\" is part of same ad. So one.\\n\\nThus final JSON only.\"}}],\"created\":1789571814,\"model\":\"deepseek-flash\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":\"aeb56401ca74e127821c4f9126dcb669\",\"usage\":{\"completion_tokens\":2421,\"prompt_tokens\":1288,\"total_tokens\":3709,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":null,\"reasoning_tokens\":2400,\"rejected_prediction_tokens\":null},\"prompt_tokens_details\":{\"audio_tokens\":null,\"cached_tokens\":0},\"prompt_cache_hit_tokens\":0,\"prompt_cache_miss_tokens\":1288}}"
+}

@@ -1,0 +1,87 @@
+{
+    "text": "{\n    \"metadata\": {\n        \"send_date\": [\n            \"1926-03-26\"\n        ],\n        \"letter_title\": [\n            null\n        ],\n        \"sender_persons\": [\n            \"W. W. Mann\"\n        ],\n        \"receiver_persons\": [\n            \"Christ\"\n        ]\n    }\n}",
+    "model": "qwen/qwen3.6-plus",
+    "provider": "openrouter",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 3106,
+        "output_tokens": 1441,
+        "total_tokens": 4547,
+        "estimated_cost_usd": 0.0038194
+    },
+    "duration": 59.75193405151367,
+    "timestamp": "2026-09-17T07:01:46.030407",
+    "parsed": {
+        "metadata": {
+            "send_date": [
+                "1926-03-26"
+            ],
+            "letter_title": [
+                null
+            ],
+            "sender_persons": [
+                "W. W. Mann"
+            ],
+            "receiver_persons": [
+                "Christ"
+            ]
+        }
+    },
+    "conversation_id": "d175927b-c4c6-4e57-a780-c1d71a915cb2",
+    "score": {
+        "send_date_tp": 1,
+        "send_date_fp": 0,
+        "send_date_fn": 0,
+        "sender_persons_tp": 0,
+        "sender_persons_fp": 1,
+        "sender_persons_fn": 1,
+        "receiver_persons_tp": 1,
+        "receiver_persons_fp": 0,
+        "receiver_persons_fn": 0,
+        "field_scores": {
+            "send_date": {
+                "response": [
+                    "1926-03-26"
+                ],
+                "ground_truth": [
+                    "1926-03-26"
+                ],
+                "score": null,
+                "counts": {
+                    "send_date_tp": 1,
+                    "send_date_fp": 0,
+                    "send_date_fn": 0
+                }
+            },
+            "sender_persons": {
+                "response": [
+                    "W. W. Mann"
+                ],
+                "ground_truth": [
+                    "Krasting, Wilhelm"
+                ],
+                "score": null,
+                "counts": {
+                    "sender_persons_tp": 0,
+                    "sender_persons_fp": 1,
+                    "sender_persons_fn": 1
+                }
+            },
+            "receiver_persons": {
+                "response": [
+                    "Christ-Wackernagel, Paul"
+                ],
+                "ground_truth": [
+                    "Christ-Wackernagel, Paul"
+                ],
+                "score": null,
+                "counts": {
+                    "receiver_persons_tp": 1,
+                    "receiver_persons_fp": 0,
+                    "receiver_persons_fn": 0
+                }
+            }
+        }
+    },
+    "raw_response": "{\"id\":\"gen-1789621279-0kvY3WzMxYy1mmBmb1wv\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\n    \\\"metadata\\\": {\\n        \\\"send_date\\\": [\\n            \\\"1926-03-26\\\"\\n        ],\\n        \\\"letter_title\\\": [\\n            null\\n        ],\\n        \\\"sender_persons\\\": [\\n            \\\"W. W. Mann\\\"\\n        ],\\n        \\\"receiver_persons\\\": [\\n            \\\"Christ\\\"\\n        ]\\n    }\\n}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"reasoning\":\"The user wants me to extract specific metadata from a historical letter image and return it as a JSON object.\\n\\n**1. Analyze the Image:**\\n*   **Header:** \\\"BASEL 1926 INTERNATIONALE AUSSTELLUNG F\u00dcR BINNENSCHIFFAHRT UND WASSERKRAFTNUTZUNG\\\". This looks like the letterhead/organization, not necessarily the title of the letter itself, but often serves as a context. However, looking for a specific \\\"Title\\\" of the letter, there isn't a clear subject line like \\\"Betreff: ...\\\". The prompt asks for \\\"letter_title\\\". In many historical documents, if there's no explicit title, it might be null or derived from the header. Let's look closer. There is no explicit subject line. The header describes an exhibition. I will treat the header as context but look for a specific title. Wait, usually \\\"letter_title\\\" refers to a subject line. There isn't one. I will set it to null or perhaps the header text if it acts as a title. Let's look at the example. \\\"Petition for Environmental Protection\\\". This suggests a subject. Here, there is no subject line. I will set `letter_title` to `null` or perhaps the organization name if it's the only identifying feature. Let's look at the prompt requirements again. \\\"Title of the letter.\\\" If none, \\\"null\\\". I'll stick with `null` as there is no \\\"Betreff\\\" or underlined title. Wait, looking at the header, it's the letterhead of the \\\"Internationale Ausstellung...\\\". It's not the title of the letter content.\\n*   **Date:** \\\"Basel, den 26. M\u00e4rz 1926.\\\" -> 1926-03-26.\\n*   **Sender:** The letter is signed at the bottom. The signature looks like \\\"W. W. Mann\\\" or \\\"W. W. Mauny\\\". Let's look closely at the signature. It looks like \\\"W. W. Mann\\\". The text says \\\"Die Basler Rheinschiffahrts-Aktiengesellschaft teilt mir mit...\\\". This implies the sender is writing on behalf of or in relation to this company, but the signature is the person. The signature looks like \\\"W. W. Mann\\\". Let's assume \\\"W. W. Mann\\\".\\n*   **Receiver:** \\\"Herrn Christ c/o. Paravicini, Christ & Co. Kaufhausgasse 7, Basel\\\". So the receiver is \\\"Christ\\\" (likely a first name or surname, here it looks like a surname \\\"Christ\\\" based on the company name \\\"Paravicini, Christ & Co.\\\"). The text says \\\"Herrn Christ\\\". So the person is \\\"Christ\\\".\\n\\n**2. Extract Values:**\\n*   **letter_title:** There is no explicit title/subject line. The header is the organization. I will set this to `null`.\\n*   **sender_persons:** The signature is at the bottom. It looks like \\\"W. W. Mann\\\".\\n*   **send_date:** \\\"26. M\u00e4rz 1926\\\" -> \\\"1926-03-26\\\".\\n*   **receiver_persons:** \\\"Herrn Christ\\\". So \\\"Christ\\\".\\n\\n**3. Refine Extraction:**\\n*   **Sender:** The signature is cursive. \\\"W. W. Mann\\\" seems plausible. Or \\\"W. W. Mauny\\\". Let's look at the context. \\\"Basler Rheinschiffahrts-Aktiengesellschaft\\\". This is a shipping company. The exhibition is about inland shipping. The sender is likely an official. The signature looks like \\\"W. W. Mann\\\".\\n*   **Receiver:** \\\"Herrn Christ\\\". The company is \\\"Paravicini, Christ & Co.\\\" so \\\"Christ\\\" is likely the surname.\\n*   **Title:** Since there is no subject line, I will return `null`.\\n\\n**4. Final JSON Construction:**\\n*   `letter_title`: `null`\\n*   `sender_persons`: `[\\\"W. W. Mann\\\"]` (or similar interpretation of the signature). Let's look really closely at the signature. It looks like \\\"W. W. Mann\\\".\\n*   `send_date`: `[\\\"1926-03-26\\\"]`\\n*   `receiver_persons`: `[\\\"Christ\\\"]`\\n\\nLet's re-evaluate the \\\"letter_title\\\". Sometimes the letterhead is considered the title if no other title exists, but usually, it's the organization. The prompt asks for \\\"Title of the letter\\\". I will stick with `null`.\\n\\nLet's re-evaluate the sender. The text says \\\"Die Basler Rheinschiffahrts-Aktiengesellschaft teilt mir mit...\\\". This means \\\"The Basel Rhine Shipping Company informs me...\\\". This implies the writer is receiving info from the company and passing it on, or writing on their behalf. The signature is the person writing. The signature looks like \\\"W. W. Mann\\\".\\n\\nLet's re-evaluate the receiver. \\\"Herrn Christ\\\".\\n\\nLet's check the date format. ISO YYYY-MM-DD. \\\"1926-03-26\\\".\\n\\nOne detail: The header says \\\"BASEL 1926 INTERNATIONALE AUSSTELLUNG...\\\". This is the letterhead.\\nThe text starts \\\"Die Basler Rheinschiffahrts-Aktiengesellschaft...\\\".\\nThe signature is \\\"W. W. Mann\\\".\\n\\nLet's try to decipher the signature better. \\\"W. W. Mann\\\" seems the most likely reading.\\n\\nFinal check of the JSON schema.\\n`metadata`: object with `send_date`, `letter_title`, `sender_persons`, `receiver_persons`. All lists or null.\\n\\nOne more look at the receiver. \\\"Herrn Christ\\\". It's addressed to \\\"Christ\\\".\\nOne more look at the sender. The signature is quite scrawly. \\\"W. W. Mann\\\" is a good guess.\\n\\nWait, is \\\"Christ\\\" the first name or last name? \\\"Paravicini, Christ & Co.\\\" suggests Christ is a partner, likely a surname. \\\"Herrn Christ\\\" confirms it's addressed to Mr. Christ.\\n\\nIs there a title? No \\\"Betreff\\\" line. So `null`.\\n\\nLet's assemble the JSON.\",\"reasoning_details\":[{\"type\":\"reasoning.text\",\"text\":\"The user wants me to extract specific metadata from a historical letter image and return it as a JSON object.\\n\\n**1. Analyze the Image:**\\n*   **Header:** \\\"BASEL 1926 INTERNATIONALE AUSSTELLUNG F\u00dcR BINNENSCHIFFAHRT UND WASSERKRAFTNUTZUNG\\\". This looks like the letterhead/organization, not necessarily the title of the letter itself, but often serves as a context. However, looking for a specific \\\"Title\\\" of the letter, there isn't a clear subject line like \\\"Betreff: ...\\\". The prompt asks for \\\"letter_title\\\". In many historical documents, if there's no explicit title, it might be null or derived from the header. Let's look closer. There is no explicit subject line. The header describes an exhibition. I will treat the header as context but look for a specific title. Wait, usually \\\"letter_title\\\" refers to a subject line. There isn't one. I will set it to null or perhaps the header text if it acts as a title. Let's look at the example. \\\"Petition for Environmental Protection\\\". This suggests a subject. Here, there is no subject line. I will set `letter_title` to `null` or perhaps the organization name if it's the only identifying feature. Let's look at the prompt requirements again. \\\"Title of the letter.\\\" If none, \\\"null\\\". I'll stick with `null` as there is no \\\"Betreff\\\" or underlined title. Wait, looking at the header, it's the letterhead of the \\\"Internationale Ausstellung...\\\". It's not the title of the letter content.\\n*   **Date:** \\\"Basel, den 26. M\u00e4rz 1926.\\\" -> 1926-03-26.\\n*   **Sender:** The letter is signed at the bottom. The signature looks like \\\"W. W. Mann\\\" or \\\"W. W. Mauny\\\". Let's look closely at the signature. It looks like \\\"W. W. Mann\\\". The text says \\\"Die Basler Rheinschiffahrts-Aktiengesellschaft teilt mir mit...\\\". This implies the sender is writing on behalf of or in relation to this company, but the signature is the person. The signature looks like \\\"W. W. Mann\\\". Let's assume \\\"W. W. Mann\\\".\\n*   **Receiver:** \\\"Herrn Christ c/o. Paravicini, Christ & Co. Kaufhausgasse 7, Basel\\\". So the receiver is \\\"Christ\\\" (likely a first name or surname, here it looks like a surname \\\"Christ\\\" based on the company name \\\"Paravicini, Christ & Co.\\\"). The text says \\\"Herrn Christ\\\". So the person is \\\"Christ\\\".\\n\\n**2. Extract Values:**\\n*   **letter_title:** There is no explicit title/subject line. The header is the organization. I will set this to `null`.\\n*   **sender_persons:** The signature is at the bottom. It looks like \\\"W. W. Mann\\\".\\n*   **send_date:** \\\"26. M\u00e4rz 1926\\\" -> \\\"1926-03-26\\\".\\n*   **receiver_persons:** \\\"Herrn Christ\\\". So \\\"Christ\\\".\\n\\n**3. Refine Extraction:**\\n*   **Sender:** The signature is cursive. \\\"W. W. Mann\\\" seems plausible. Or \\\"W. W. Mauny\\\". Let's look at the context. \\\"Basler Rheinschiffahrts-Aktiengesellschaft\\\". This is a shipping company. The exhibition is about inland shipping. The sender is likely an official. The signature looks like \\\"W. W. Mann\\\".\\n*   **Receiver:** \\\"Herrn Christ\\\". The company is \\\"Paravicini, Christ & Co.\\\" so \\\"Christ\\\" is likely the surname.\\n*   **Title:** Since there is no subject line, I will return `null`.\\n\\n**4. Final JSON Construction:**\\n*   `letter_title`: `null`\\n*   `sender_persons`: `[\\\"W. W. Mann\\\"]` (or similar interpretation of the signature). Let's look really closely at the signature. It looks like \\\"W. W. Mann\\\".\\n*   `send_date`: `[\\\"1926-03-26\\\"]`\\n*   `receiver_persons`: `[\\\"Christ\\\"]`\\n\\nLet's re-evaluate the \\\"letter_title\\\". Sometimes the letterhead is considered the title if no other title exists, but usually, it's the organization. The prompt asks for \\\"Title of the letter\\\". I will stick with `null`.\\n\\nLet's re-evaluate the sender. The text says \\\"Die Basler Rheinschiffahrts-Aktiengesellschaft teilt mir mit...\\\". This means \\\"The Basel Rhine Shipping Company informs me...\\\". This implies the writer is receiving info from the company and passing it on, or writing on their behalf. The signature is the person writing. The signature looks like \\\"W. W. Mann\\\".\\n\\nLet's re-evaluate the receiver. \\\"Herrn Christ\\\".\\n\\nLet's check the date format. ISO YYYY-MM-DD. \\\"1926-03-26\\\".\\n\\nOne detail: The header says \\\"BASEL 1926 INTERNATIONALE AUSSTELLUNG...\\\". This is the letterhead.\\nThe text starts \\\"Die Basler Rheinschiffahrts-Aktiengesellschaft...\\\".\\nThe signature is \\\"W. W. Mann\\\".\\n\\nLet's try to decipher the signature better. \\\"W. W. Mann\\\" seems the most likely reading.\\n\\nFinal check of the JSON schema.\\n`metadata`: object with `send_date`, `letter_title`, `sender_persons`, `receiver_persons`. All lists or null.\\n\\nOne more look at the receiver. \\\"Herrn Christ\\\". It's addressed to \\\"Christ\\\".\\nOne more look at the sender. The signature is quite scrawly. \\\"W. W. Mann\\\" is a good guess.\\n\\nWait, is \\\"Christ\\\" the first name or last name? \\\"Paravicini, Christ & Co.\\\" suggests Christ is a partner, likely a surname. \\\"Herrn Christ\\\" confirms it's addressed to Mr. Christ.\\n\\nIs there a title? No \\\"Betreff\\\" line. So `null`.\\n\\nLet's assemble the JSON.\",\"format\":\"unknown\",\"index\":0}]},\"native_finish_reason\":\"stop\"}],\"created\":1789621279,\"model\":\"qwen/qwen3.6-plus\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":null,\"usage\":{\"completion_tokens\":1441,\"prompt_tokens\":3106,\"total_tokens\":4547,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":0,\"reasoning_tokens\":1353,\"rejected_prediction_tokens\":null,\"image_tokens\":0},\"prompt_tokens_details\":{\"audio_tokens\":0,\"cached_tokens\":0,\"cache_write_tokens\":0,\"video_tokens\":0},\"cost\":0.0038194,\"is_byok\":false,\"cost_details\":{\"upstream_inference_cost\":0.0038194,\"upstream_inference_prompt_cost\":0.00100945,\"upstream_inference_completions_cost\":0.00280995}},\"provider\":\"Alibaba\"}"
+}

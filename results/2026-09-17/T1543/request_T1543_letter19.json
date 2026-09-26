@@ -1,0 +1,89 @@
+{
+    "text": "{\"metadata\":{\"send_date\":[\"1923-03-22\"],\"letter_title\":[\"\"],\"sender_persons\":[\"Basler Rheinschiffahrt-Aktiengesellschaft\"],\"receiver_persons\":[\"Vorstand der Basler Personenschiffahrtsgesellschaft\"]}}",
+    "model": "thinkingmachines/Inkling-Small",
+    "provider": "huggingface",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 8035,
+        "output_tokens": 1450,
+        "total_tokens": 9485,
+        "cached_tokens": 256,
+        "input_cost_usd": 0.0036157500000000005,
+        "output_cost_usd": 0.0017399999999999998,
+        "estimated_cost_usd": 0.00535575
+    },
+    "duration": 19.329141855239868,
+    "timestamp": "2026-09-17T09:53:43.625315",
+    "parsed": {
+        "metadata": {
+            "send_date": [
+                "1923-03-22"
+            ],
+            "letter_title": [
+                ""
+            ],
+            "sender_persons": [
+                "Basler Rheinschiffahrt-Aktiengesellschaft"
+            ],
+            "receiver_persons": [
+                "Vorstand der Basler Personenschiffahrtsgesellschaft"
+            ]
+        }
+    },
+    "conversation_id": "79674040-d98d-42c8-8a3c-8eb9ea5a473f",
+    "score": {
+        "send_date_tp": 0,
+        "send_date_fp": 1,
+        "send_date_fn": 1,
+        "sender_persons_tp": 0,
+        "sender_persons_fp": 1,
+        "sender_persons_fn": 2,
+        "receiver_persons_tp": 0,
+        "receiver_persons_fp": 1,
+        "receiver_persons_fn": 0,
+        "field_scores": {
+            "send_date": {
+                "response": [
+                    "1923-03-22"
+                ],
+                "ground_truth": [
+                    "1928-03-22"
+                ],
+                "score": null,
+                "counts": {
+                    "send_date_tp": 0,
+                    "send_date_fp": 1,
+                    "send_date_fn": 1
+                }
+            },
+            "sender_persons": {
+                "response": [
+                    "Basler Rheinschiffahrt-Aktiengesellschaft"
+                ],
+                "ground_truth": [
+                    "Groschupf-Jaeger, Louis",
+                    "Speich, Rudolf"
+                ],
+                "score": null,
+                "counts": {
+                    "sender_persons_tp": 0,
+                    "sender_persons_fp": 1,
+                    "sender_persons_fn": 2
+                }
+            },
+            "receiver_persons": {
+                "response": [
+                    "Vorstand der Basler Personenschiffahrtsgesellschaft"
+                ],
+                "ground_truth": [],
+                "score": null,
+                "counts": {
+                    "receiver_persons_tp": 0,
+                    "receiver_persons_fp": 1,
+                    "receiver_persons_fn": 0
+                }
+            }
+        }
+    },
+    "raw_response": "{\"id\":\"chatcmpl-RoOH0an88hZXQw5Nryfw1LoI\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\n\\n\\n\\\"metadata\\\": {\\n\\\"send_date\\\": [\\\"1923-03-22\\\"],\\n\\\"letter_title\\\": [\\\"\\\"],\\n\\\"sender_persons\\\": [\\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"],\\n\\\"receiver_persons\\\": [\\\"Vorstand der Basler Personenschiffahrtsgesellschaft\\\"]\\n}\\n}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"metadata\":{\"send_date\":[\"1923-03-22\"],\"letter_title\":[\"\"],\"sender_persons\":[\"Basler Rheinschiffahrt-Aktiengesellschaft\"],\"receiver_persons\":[\"Vorstand der Basler Personenschiffahrtsgesellschaft\"]}},\"reasoning_content\":\"We need parse letter. Identify title? Not explicit title like \\\"Letter\\\" but maybe no title. We have sender: Basler Rheinschiffahrt-Aktiengesellschaft (Basler Personenschiffahrtsgesellschaft? Wait letterhead says \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\". Signature block says \\\"BASLER RHEINSCHIFFAHRT-AKTIENGESELLSCHAFT\\\". So sender is that company. Possibly also signed by individuals? The signature appears \\\"Schmid\\\" and \\\"Gundolf\\\"? Let's inspect last image: signatures: left maybe \\\"Schmid\\\"? Right \\\"Gundolf\\\"? Could be names of signatories. But key sender_persons: Name(s) of person(s) who wrote the letter. Could be the company as entity, but likely individuals signing. However letter is from company to board. The header on first page: \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\" as sender address. The salutation: \\\"An den Vorstand der Basler Personenschiffahrtsgesellschaft, Basel.\\\" So receiver is board of Basler Personenschiffahrtsgesellschaft. The letter is dated \\\"Basel, den 22. M\u00e4rz 1923.\\\" On subsequent pages date \\\"22.3.23.\\\" So send_date: 1923-03-22.\\n\\nLetter title: Not present. Could be null. But maybe \\\"Angebot\\\" or something. The instructions: extract values; if not included set null.\\n\\nSender persons: The company name is Basler Rheinschiffahrt-Aktiengesellschaft. But are there person names? At end: \\\"hochachtend BASLER RHEINSCHIFFAHRT-AKTIENGESELLSCHAFT\\\" with signatures. The signatures likely of two persons, maybe \\\"Schmid\\\" and \\\"Gundolf\\\"? Let's examine: First signature looks like \\\"Schmid\\\" or \\\"Schulz\\\"? Second \\\"Gundolf\\\"? Without OCR, hard. But key asks for person(s) who wrote letter. Could list company as sender? Usually in these tasks, sender_persons are individuals if signed. But letterhead indicates corporate sender. However the example uses individual names. We need decide.\\n\\nLet's look at text: \\\"In der heutigen Besprechung zwischen den Unterzeichneten und Ihrer Delegation...\\\" So \\\"Unterzeichneten\\\" (the undersigned) refers to signatories of this letter, i.e., persons representing Basler Rheinschiffahrt-Aktiengesellschaft. So sender persons are the undersigned individuals. But their names appear only as signatures. We might extract from signature: likely \\\"Schmid\\\" and \\\"Gundolf\\\"? Let's think: The first signature could be \\\"Schmid\\\" (common Swiss name). Second \\\"Gundolf\\\"? Actually \\\"Gundolf\\\" is a first name? Could be \\\"Gundel\\\"? Let's not guess too much. Maybe the signatories are \\\"Dr. ...\\\"? Not visible.\\n\\nAlternative: Since the letter is written by Basler Rheinschiffahrt-Aktiengesellschaft, sender_persons: [\\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"]. But the key is \\\"sender_persons\\\" plural persons. Could include both company and individuals? Usually these extraction tasks from historical letters want entities. Let's inspect first page top left: Letterhead \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\". That is the sender organization. The addressee is \\\"Vorstand der Basler Personenschiffahrtsgesellschaft\\\". So this is a letter from one company to another's board.\\n\\nThus:\\n- letter_title: null (no title)\\n- sender_persons: [\\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"] or maybe individuals if we can read signatures. But to be safe, use organization name because it's explicitly the sender. However \\\"person(s)\\\" suggests human names. But if only org is given, use org? The instructions say \\\"Name(s) of the person(s) who wrote the letter.\\\" Could be interpreted as sender entity. In many similar tasks, they extract company names as sender. Let's provide [\\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"].\\n\\n- send_date: [\\\"1923-03-22\\\"]\\n- receiver_persons: [\\\"Vorstand der Basler Personenschiffahrtsgesellschaft\\\"] or more specifically the board members mentioned: Dr. Vischer, Christ, Oettinger? Wait text says: \\\"bestehend aus Herrn Dr. Vischer, Pr\u00e4sident, Herrn Christ, Vizepr\u00e4sident und Herrn Oettinger\\\". So the delegation of receiver consists of those persons. But the letter is addressed to the board (\\\"An den Vorstand der Basler Personenschiffahrtsgesellschaft\\\"). So receiver_persons could be [\\\"Vorstand der Basler Personenschiffahrtsgesellschaft\\\"] or the individuals mentioned as delegation: [\\\"Dr. Vischer\\\", \\\"Herrn Christ\\\", \\\"Herrn Oettinger\\\"]. Which is correct? The key: \\\"Name(s) of the person(s) who received the letter.\\\" The salutation indicates the board as recipient. But the content mentions their delegation. Usually the receiver is the addressee: Vorstand der Basler Personenschiffahrtsgesellschaft. However if we list individuals, we might include Dr. Vischer, Christ, Oettinger because they are the ones who received? Let's think.\\n\\nThe letter says: \\\"In der heutigen Besprechung zwischen den Unterzeichneten und Ihrer Delegation, bestehend aus Herrn Dr. Vischer, Pr\u00e4sident, Herrn Christ, Vizepr\u00e4sident und Herrn Oettinger konnte \u00fcber die H\u00f6he der Miete keine Einigung erzielt werden.\\\" So \\\"Ihre Delegation\\\" refers to the receiver's delegation. The letter is likely written to the board, but the discussion was with their delegation. So receiver is the board. But the question asks for persons who received the letter. Could be the board as a group, but names not specified except via delegation. However the addressee line is \\\"An den Vorstand der Basler Personenschiffahrtsgesellschaft, Basel.\\\" So receiver_persons: [\\\"Vorstand der Basler Personenschiffahrtsgesellschaft\\\"]. But if we want to be precise, maybe [\\\"Basler Personenschiffahrtsgesellschaft\\\"]? Let's use the addressee as written.\\n\\nLet's decide final JSON:\\n\\n{\\n  \\\"letter_title\\\": [null],\\n  \\\"send_date\\\": [\\\"1923-03-22\\\"],\\n  \\\"sender_persons\\\": [\\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"],\\n  \\\"receiver_persons\\\": [\\\"Vorstand der Basler Personenschiffahrtsgesellschaft\\\"]\\n}\\n\\nBut maybe include date as approximate? It's exact: 22. M\u00e4rz 1923.\\n\\nCheck if any title on page 2: \\\"- 2 -\\\" not title.\\n\\nThus answer.\",\"name\":null}}],\"created\":1789631623,\"model\":\"thinkingmachines/Inkling-Small\",\"object\":\"chat.completion\",\"service_tier\":\"default\",\"system_fingerprint\":null,\"usage\":{\"completion_tokens\":1450,\"prompt_tokens\":8035,\"total_tokens\":9485,\"completion_tokens_details\":null,\"prompt_tokens_details\":{\"audio_tokens\":null,\"cached_tokens\":256,\"cache_write_tokens\":null},\"estimated_cost\":0.005266149999744001,\"reasoning_tokens\":1385}}"
+}

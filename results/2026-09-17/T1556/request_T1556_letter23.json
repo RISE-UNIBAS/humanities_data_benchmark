@@ -1,0 +1,87 @@
+{
+    "text": "{\"metadata\":{\"send_date\":[\"1928-04-03\"],\"letter_title\":null,\"sender_persons\":[\"Basler Rheinschiffahrt-Aktiengesellschaft\"],\"receiver_persons\":[\"Basler Personenschiffahrtsgesellschaft\"]}}",
+    "model": "thinkingmachines/Inkling",
+    "provider": "huggingface",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 4180,
+        "output_tokens": 1693,
+        "total_tokens": 5873,
+        "cached_tokens": 256,
+        "input_cost_usd": 0.00418,
+        "output_cost_usd": 0.00685665,
+        "estimated_cost_usd": 0.011036649999999999
+    },
+    "duration": 21.975319385528564,
+    "timestamp": "2026-09-17T11:37:36.470264",
+    "parsed": {
+        "metadata": {
+            "send_date": [
+                "1928-04-03"
+            ],
+            "letter_title": null,
+            "sender_persons": [
+                "Basler Rheinschiffahrt-Aktiengesellschaft"
+            ],
+            "receiver_persons": [
+                "Basler Personenschiffahrtsgesellschaft"
+            ]
+        }
+    },
+    "conversation_id": "11ec2151-92f3-4668-8af7-37041cd8c709",
+    "score": {
+        "send_date_tp": 1,
+        "send_date_fp": 0,
+        "send_date_fn": 0,
+        "sender_persons_tp": 0,
+        "sender_persons_fp": 1,
+        "sender_persons_fn": 2,
+        "receiver_persons_tp": 0,
+        "receiver_persons_fp": 1,
+        "receiver_persons_fn": 0,
+        "field_scores": {
+            "send_date": {
+                "response": [
+                    "1928-04-03"
+                ],
+                "ground_truth": [
+                    "1928-04-03"
+                ],
+                "score": null,
+                "counts": {
+                    "send_date_tp": 1,
+                    "send_date_fp": 0,
+                    "send_date_fn": 0
+                }
+            },
+            "sender_persons": {
+                "response": [
+                    "Basler Rheinschiffahrt-Aktiengesellschaft"
+                ],
+                "ground_truth": [
+                    "Groschupf-Jaeger, Louis",
+                    "Ritter-Dreier, Fritz"
+                ],
+                "score": null,
+                "counts": {
+                    "sender_persons_tp": 0,
+                    "sender_persons_fp": 1,
+                    "sender_persons_fn": 2
+                }
+            },
+            "receiver_persons": {
+                "response": [
+                    "Basler Personenschiffahrtsgesellschaft"
+                ],
+                "ground_truth": [],
+                "score": null,
+                "counts": {
+                    "receiver_persons_tp": 0,
+                    "receiver_persons_fp": 1,
+                    "receiver_persons_fn": 0
+                }
+            }
+        }
+    },
+    "raw_response": "{\"id\":\"p1dAhQQ-6z2FuN-a3c72196be16d860\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\n  \\\"metadata\\\": {\\n    \\\"send_date\\\": [\\\"1928-04-03\\\"],\\n    \\\"letter_title\\\": null,\\n    \\\"sender_persons\\\": [\\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"],\\n    \\\"receiver_persons\\\": [\\\"Basler Personenschiffahrtsgesellschaft\\\"]\\n  }\\n}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"metadata\":{\"send_date\":[\"1928-04-03\"],\"letter_title\":null,\"sender_persons\":[\"Basler Rheinschiffahrt-Aktiengesellschaft\"],\"receiver_persons\":[\"Basler Personenschiffahrtsgesellschaft\"]}},\"reasoning\":\"We need parse images of historical letter, extract title, sender, date, receiver. Need inspect both pages.\\n\\nPage 1: Header \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\" with address. Date at top right: \\\"Basel, den 3. April 1928.\\\" Addressee on right: \\\"Basler Personenschiffahrtsgesellschaft, Basel.\\\" Then \\\"R/M\\\" maybe reference. Then \\\"Betrifft Kauf \\\"Rheinfelden\\\" Ihr Schreiben vom 24. M\u00e4rz.\\\" So letter concerns purchase \\\"Rheinfelden\\\" referencing letter of 24 March.\\n\\nThus send_date is 1928-04-03. Sender is Basler Rheinschiffahrt-Aktiengesellschaft? Or specific persons? At bottom page 2 there is signature block: \\\"BASLER RHEINSCHIFFAHRT-AKTIENGESELLSCHAFT\\\" with signatures. So sender_persons likely the company, but key asks \\\"Name(s) of the person(s) who wrote the letter.\\\" Could be company name, or signatories? The signature is illegible but printed company name. We'll put sender as [\\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"].\\n\\nReceiver: \\\"Basler Personenschiffahrtsgesellschaft\\\" addressed on page 1 right. So receiver_persons [\\\"Basler Personenschiffahrtsgesellschaft\\\"].\\n\\nLetter title? Maybe \\\"Betrifft Kauf \\\"Rheinfelden\\\"\\\" but they ask \\\"Title of the letter.\\\" Could be null if not explicit? But there might be a title in header? Actually no explicit title except subject line. Might include subject as title? The example used \\\"Petition for Environmental Protection\\\" which sounds like title. Here we have subject \\\"Kauf 'Rheinfelden'\\\" but not a title. However page 2 top has \\\"Basler Personenschiffahrtsgesellschaft, Basel. 3.4.28.\\\" and then \\\"Wiederver\u00e4usserung des Schiffes \\\"Rheinfelden\\\" des Vorkaufsrecht ein.\\\" Hmm maybe title is \\\"Wiederver\u00e4usserung des Schiffes 'Rheinfelden'\\\"? Let's examine.\\n\\nWe need return JSON with lists.\\n\\nLet's determine exact values.\\n\\nletter_title: Maybe null? But there is a subject line on page 1: \\\"Betrifft Kauf \\\"Rheinfelden\\\"\\\". That could serve as title. Or on page 2 first line acts like heading: \\\"Wiederver\u00e4usserung des Schiffes \\\"Rheinfelden\\\" des Vorkaufs-recht ein.\\\" Actually it's part of sentence: \\\"Wiederver\u00e4usserung des Schiffes \\\"Rheinfelden\\\" des Vorkaufsrecht ein.\\\" Not clear.\\n\\nGiven instructions: \\\"letter_title: Title of the letter.\\\" If not present, null. Is there a title? The letterhead includes company name, not title. The subject line \\\"Betrifft Kauf \\\"Rheinfelden\\\"\\\" is more of a subject/re. I think we can set letter_title to null, or include the subject? Let's think carefully.\\n\\nThe prompt says extract values of keys from the letter. Usually in these extraction tasks, they want letter_title if present at top. Here there is no explicit title like \\\"Letter of ...\\\" So null might be correct. But sometimes they consider \\\"Betrifft...\\\" as title? Let's check example: \\\"Petition for Environmental Protection\\\" is clearly a title at top. Here we don't have that. So null.\\n\\nBut wait page 2 has centered heading? Actually top line: \\\"Basler Personenschiffahrtsgesellschaft, Basel. 3.4.28.\\\" Then next lines form paragraph starting with \\\"Wiederver\u00e4usserung des Schiffes...\\\" So no separate title.\\n\\nThus:\\nletter_title: [null]? No, value should be stored as list, even if single value. If not included, set value for corresponding key to \\\"null\\\". So \\\"letter_title\\\": [\\\"null\\\"]? Wait they said set the value for the corresponding key to \\\"null\\\". In example all values are lists of strings. For missing info, likely \\\"letter_title\\\": null? But they said values corresponding to each key should be stored as a list, even if there is only a single value for a key. Then \\\"If a piece of information is not included in the letter, set the value for the corresponding key to 'null'.\\\" This is ambiguous: should it be [\\\"null\\\"] or null? Usually in these prompts they want the value to be null (not in list) or list containing null? Let's examine wording: \\\"return them in a JSON file where the values corresponding to each key should be stored as a list, even if there is only a single value for a key\\\" -> so all values are lists. Then \\\"If a piece of information is not included in the letter, set the value for the corresponding key to 'null'.\\\" This likely means the list should contain the string \\\"null\\\"? Or the JSON value should be null? Given consistency with lists, probably [\\\"null\\\"]. But in many similar prompts, they do \\\"letter_title\\\": null despite list instruction? Let's check mental examples: Usually they say \\\"store as list\\\" and \\\"if not included set value to null\\\". Often the result is \\\"key\\\": [null]?? Hmm no, they say \\\"the values corresponding to each key should be stored as a list\\\" so value is a list. Then \\\"set the value ... to 'null'\\\" could mean the list is [null]. But JSON null inside list is okay: [null]. However they wrote 'null' in quotes, suggesting string \\\"null\\\". Let's see example doesn't show missing case.\\n\\nGiven ambiguity, but I think safest is to use null not in list? Actually they said values should be stored as a list. So value is list. If missing, that list should be [\\\"null\\\"]? Or [null]? The quote marks around null in instruction: to \\\"null\\\". That suggests string. But in JSON, null is a type. They wrote 'null' with single quotes in text. Let's decide: For missing, use [null] or [\\\"null\\\"]? Let's examine logic: If information is not included, you can't have a string value. So you put JSON null inside the list? But then it's not a string. The instruction \\\"set the value for the corresponding key to 'null'\\\" might override the list rule for missing values, allowing the value itself to be null (not a list). But they said \\\"values corresponding to each key should be stored as a list, even if there is only a single value\\\". That applies when there is a value. If there is no value, set to null (the JSON null). So letter_title: null. That seems plausible.\\n\\nBut I think there is a title? Let's not overthink. We'll provide letter_title as null? Or maybe [\\\"Betrifft Kauf 'Rheinfelden'\\\"]? Let's inspect page 1: Under address block, centered \\\"R/M\\\" then left-aligned? Actually \\\"Betrifft Kauf \\\"Rheinfelden\\\" Ihr Schreiben vom 24. M\u00e4rz.\\\" This is like subject line. In German letters, \\\"Betrifft\\\" is subject. So not title.\\n\\nThus I will set letter_title: null.\\n\\nNow sender_persons: The letter is from Basler Rheinschiffahrt-Aktiengesellschaft. The signatures at bottom are two signatures with printed name \\\"BASLER RHEINSCHIFFAHRT-AKTIENGESELLSCHAFT\\\". So sender is the company. We'll list [\\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"].\\n\\nSend date: \\\"Basel, den 3. April 1928.\\\" -> 1928-04-03.\\n\\nReceiver persons: \\\"Basler Personenschiffahrtsgesellschaft, Basel.\\\" -> [\\\"Basler Personenschiffahrtsgesellschaft\\\"].\\n\\nNeed return only JSON.\"},\"seed\":null}],\"created\":1789637836,\"model\":\"thinkingmachines/Inkling\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":\"default\",\"usage\":{\"completion_tokens\":1693,\"prompt_tokens\":4180,\"total_tokens\":5873,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":null,\"reasoning_tokens\":1622,\"rejected_prediction_tokens\":null},\"prompt_tokens_details\":{\"audio_tokens\":null,\"cached_tokens\":256}},\"prompt\":[]}"
+}

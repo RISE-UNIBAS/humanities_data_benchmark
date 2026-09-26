@@ -1,0 +1,86 @@
+{
+    "text": "{\"metadata\":{\"send_date\":[\"1936-06-28\"],\"letter_title\":null,\"sender_persons\":[\"Max Vischer\"],\"receiver_persons\":[\"P. Christ-Wackernagel\"]}}",
+    "model": "qwen/qwen3.8-flash",
+    "provider": "openrouter",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 5666,
+        "output_tokens": 739,
+        "total_tokens": 6405,
+        "cached_tokens": 256,
+        "estimated_cost_usd": 0.001162926
+    },
+    "duration": 29.59661340713501,
+    "timestamp": "2026-09-18T09:52:12.523541",
+    "parsed": {
+        "metadata": {
+            "send_date": [
+                "1936-06-28"
+            ],
+            "letter_title": null,
+            "sender_persons": [
+                "Max Vischer"
+            ],
+            "receiver_persons": [
+                "P. Christ-Wackernagel"
+            ]
+        }
+    },
+    "conversation_id": "0c8ede7e-cc06-4bb9-8d33-448c26e2f34c",
+    "score": {
+        "send_date_tp": 0,
+        "send_date_fp": 1,
+        "send_date_fn": 1,
+        "sender_persons_tp": 1,
+        "sender_persons_fp": 0,
+        "sender_persons_fn": 0,
+        "receiver_persons_tp": 1,
+        "receiver_persons_fp": 0,
+        "receiver_persons_fn": 0,
+        "field_scores": {
+            "send_date": {
+                "response": [
+                    "1936-06-28"
+                ],
+                "ground_truth": [
+                    "1926-06-28"
+                ],
+                "score": null,
+                "counts": {
+                    "send_date_tp": 0,
+                    "send_date_fp": 1,
+                    "send_date_fn": 1
+                }
+            },
+            "sender_persons": {
+                "response": [
+                    "Vischer-von Planta, Max"
+                ],
+                "ground_truth": [
+                    "Vischer-von Planta, Max"
+                ],
+                "score": null,
+                "counts": {
+                    "sender_persons_tp": 1,
+                    "sender_persons_fp": 0,
+                    "sender_persons_fn": 0
+                }
+            },
+            "receiver_persons": {
+                "response": [
+                    "Christ-Wackernagel, Paul"
+                ],
+                "ground_truth": [
+                    "Christ-Wackernagel, Paul"
+                ],
+                "score": null,
+                "counts": {
+                    "receiver_persons_tp": 1,
+                    "receiver_persons_fp": 0,
+                    "receiver_persons_fn": 0
+                }
+            }
+        }
+    },
+    "raw_response": "{\"id\":\"gen-1789717922-Lb62iD1S7cxmYB6uY1l9\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\n  \\\"metadata\\\": {\\n    \\\"send_date\\\": [\\n      \\\"1936-06-28\\\"\\n    ],\\n    \\\"letter_title\\\": null,\\n    \\\"sender_persons\\\": [\\n      \\\"Max Vischer\\\"\\n    ],\\n    \\\"receiver_persons\\\": [\\n      \\\"P. Christ-Wackernagel\\\"\\n    ]\\n  }\\n}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"reasoning\":\"The user wants me to extract metadata from a historical letter. Let me carefully examine the images.\\n\\nThe letterhead shows \\\"DR FRITZ STEIGER / DR MAX VISCHER / ADVOKATEN UND NOTARE / BASEL / FREIESTRASSE 65\\\". This is the law firm letterhead, but the actual sender is the person who signed the letter. The signature at the end reads \\\"Max Vischer\\\". So the sender person is Max Vischer.\\n\\nThe date at the top right: \\\"Basel, den 28. Juni 1925.\\\" So send_date = 1925-06-28.\\n\\nThe receiver: \\\"Herrn / P. Christ-Wackernagel, / vom Hause Paravicini, Christ & Co., / Basel / Kaufhausgasse\\\". So receiver_persons = \\\"P. Christ-Wackernagel\\\".\\n\\nLetter title: There's no explicit title. The letter is about correspondence regarding Basler Rheinschiffahrt Aktiengesellschaft, an exhibition commission, etc. No formal title given. So letter_title = null.\\n\\nLet me double check the signature. The handwritten signature looks like \\\"Max Vischer\\\". Yes.\\n\\nNow the schema requires a \\\"metadata\\\" object wrapping these fields. The example in the prompt shows a flat JSON but the final schema requires {\\\"metadata\\\": {...}}. I must follow the exact schema given at the end.\\n\\nSo output:\\n\\n{\\\"metadata\\\": {\\\"send_date\\\": [\\\"1925-06-28\\\"], \\\"letter_title\\\": null, \\\"sender_persons\\\": [\\\"Max Vischer\\\"], \\\"receiver_persons\\\": [\\\"P. Christ-Wackernagel\\\"]}}\\n\\nWait, the schema says each value should be a list even if single. For letter_title, if not included, set to \\\"null\\\". The schema allows null for the whole field (anyOf array or null). The instruction: \\\"If a piece of information is not included in the letter, set the value for the corresponding key to \\\"null\\\".\\\" So letter_title should be null. But should it be the string \\\"null\\\" or JSON null? The example uses null for missing? The instruction says set to \\\"null\\\" with quotes, but the schema type for null is JSON null. Hmm. The schema anyOf allows array of strings or null (JSON null). I'll use JSON null for letter_title.\\n\\nActually the instruction text says set the value to \\\"null\\\" - ambiguous. The schema's anyOf includes {\\\"type\\\": \\\"null\\\"} which is JSON null. So I'll use null.\\n\\nLet me confirm sender. The letterhead lists two lawyers but the body is written in first person singular \\\"Ich\\\" and signed by Max Vischer. The text mentions \\\"den von mir entworfenen Brief\\\" and references \\\"Herrn Stauffacher und Oettinger\\\". The signature is Max Vischer. So sender_persons = [\\\"Max Vischer\\\"].\\n\\nReceiver = [\\\"P. Christ-Wackernagel\\\"].\\n\\nDate = [\\\"1925-06-28\\\"].\\n\\nTitle = null.\\n\\nFinal JSON.\",\"reasoning_details\":[{\"type\":\"reasoning.text\",\"text\":\"The user wants me to extract metadata from a historical letter. Let me carefully examine the images.\\n\\nThe letterhead shows \\\"DR FRITZ STEIGER / DR MAX VISCHER / ADVOKATEN UND NOTARE / BASEL / FREIESTRASSE 65\\\". This is the law firm letterhead, but the actual sender is the person who signed the letter. The signature at the end reads \\\"Max Vischer\\\". So the sender person is Max Vischer.\\n\\nThe date at the top right: \\\"Basel, den 28. Juni 1925.\\\" So send_date = 1925-06-28.\\n\\nThe receiver: \\\"Herrn / P. Christ-Wackernagel, / vom Hause Paravicini, Christ & Co., / Basel / Kaufhausgasse\\\". So receiver_persons = \\\"P. Christ-Wackernagel\\\".\\n\\nLetter title: There's no explicit title. The letter is about correspondence regarding Basler Rheinschiffahrt Aktiengesellschaft, an exhibition commission, etc. No formal title given. So letter_title = null.\\n\\nLet me double check the signature. The handwritten signature looks like \\\"Max Vischer\\\". Yes.\\n\\nNow the schema requires a \\\"metadata\\\" object wrapping these fields. The example in the prompt shows a flat JSON but the final schema requires {\\\"metadata\\\": {...}}. I must follow the exact schema given at the end.\\n\\nSo output:\\n\\n{\\\"metadata\\\": {\\\"send_date\\\": [\\\"1925-06-28\\\"], \\\"letter_title\\\": null, \\\"sender_persons\\\": [\\\"Max Vischer\\\"], \\\"receiver_persons\\\": [\\\"P. Christ-Wackernagel\\\"]}}\\n\\nWait, the schema says each value should be a list even if single. For letter_title, if not included, set to \\\"null\\\". The schema allows null for the whole field (anyOf array or null). The instruction: \\\"If a piece of information is not included in the letter, set the value for the corresponding key to \\\"null\\\".\\\" So letter_title should be null. But should it be the string \\\"null\\\" or JSON null? The example uses null for missing? The instruction says set to \\\"null\\\" with quotes, but the schema type for null is JSON null. Hmm. The schema anyOf allows array of strings or null (JSON null). I'll use JSON null for letter_title.\\n\\nActually the instruction text says set the value to \\\"null\\\" - ambiguous. The schema's anyOf includes {\\\"type\\\": \\\"null\\\"} which is JSON null. So I'll use null.\\n\\nLet me confirm sender. The letterhead lists two lawyers but the body is written in first person singular \\\"Ich\\\" and signed by Max Vischer. The text mentions \\\"den von mir entworfenen Brief\\\" and references \\\"Herrn Stauffacher und Oettinger\\\". The signature is Max Vischer. So sender_persons = [\\\"Max Vischer\\\"].\\n\\nReceiver = [\\\"P. Christ-Wackernagel\\\"].\\n\\nDate = [\\\"1925-06-28\\\"].\\n\\nTitle = null.\\n\\nFinal JSON.\",\"format\":\"unknown\",\"index\":0}]},\"native_finish_reason\":\"stop\"}],\"created\":1789717922,\"model\":\"qwen/qwen3.8-flash\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":null,\"usage\":{\"completion_tokens\":739,\"prompt_tokens\":5666,\"total_tokens\":6405,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":0,\"reasoning_tokens\":650,\"rejected_prediction_tokens\":null,\"image_tokens\":0},\"prompt_tokens_details\":{\"audio_tokens\":0,\"cached_tokens\":256,\"cache_write_tokens\":0,\"video_tokens\":0},\"cost\":0.001162926,\"is_byok\":false,\"cost_details\":{\"upstream_inference_cost\":0.001162926,\"upstream_inference_prompt_cost\":0.000815596,\"upstream_inference_completions_cost\":0.00034733}},\"provider\":\"Alibaba\"}"
+}

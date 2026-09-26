@@ -1,0 +1,83 @@
+{
+    "text": "{\"metadata\":{\"send_date\":[\"1928-03-24\"],\"letter_title\":[\"Verkauf.\"],\"sender_persons\":[\"Basler Personenschiffahrtsgesellschaft\"],\"receiver_persons\":[\"Basler Rheinschiffahrt A.-G.\"]}}",
+    "model": "qwen/qwen3.7-plus",
+    "provider": "openrouter",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 5628,
+        "output_tokens": 745,
+        "total_tokens": 6373,
+        "estimated_cost_usd": 0.00275456
+    },
+    "duration": 105.24655294418335,
+    "timestamp": "2026-09-18T09:47:00.472803",
+    "parsed": {
+        "metadata": {
+            "send_date": [
+                "1928-03-24"
+            ],
+            "letter_title": [
+                "Verkauf."
+            ],
+            "sender_persons": [
+                "Basler Personenschiffahrtsgesellschaft"
+            ],
+            "receiver_persons": [
+                "Basler Rheinschiffahrt A.-G."
+            ]
+        }
+    },
+    "conversation_id": "e194b2b0-7271-4fe2-80e6-c688172c5f3b",
+    "score": {
+        "send_date_tp": 1,
+        "send_date_fp": 0,
+        "send_date_fn": 0,
+        "sender_persons_tp": 0,
+        "sender_persons_fp": 1,
+        "sender_persons_fn": 0,
+        "receiver_persons_tp": 0,
+        "receiver_persons_fp": 1,
+        "receiver_persons_fn": 0,
+        "field_scores": {
+            "send_date": {
+                "response": [
+                    "1928-03-24"
+                ],
+                "ground_truth": [
+                    "1928-03-24"
+                ],
+                "score": null,
+                "counts": {
+                    "send_date_tp": 1,
+                    "send_date_fp": 0,
+                    "send_date_fn": 0
+                }
+            },
+            "sender_persons": {
+                "response": [
+                    "Basler Personenschiffahrtsgesellschaft"
+                ],
+                "ground_truth": [],
+                "score": null,
+                "counts": {
+                    "sender_persons_tp": 0,
+                    "sender_persons_fp": 1,
+                    "sender_persons_fn": 0
+                }
+            },
+            "receiver_persons": {
+                "response": [
+                    "Basler Rheinschiffahrt A.-G."
+                ],
+                "ground_truth": [],
+                "score": null,
+                "counts": {
+                    "receiver_persons_tp": 0,
+                    "receiver_persons_fp": 1,
+                    "receiver_persons_fn": 0
+                }
+            }
+        }
+    },
+    "raw_response": "{\"id\":\"gen-1789717603-iifNO2YvqXjaTB5828aM\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\n  \\\"metadata\\\": {\\n    \\\"send_date\\\": [\\n      \\\"1928-03-24\\\"\\n    ],\\n    \\\"letter_title\\\": [\\n      \\\"Verkauf.\\\"\\n    ],\\n    \\\"sender_persons\\\": [\\n      \\\"Basler Personenschiffahrtsgesellschaft\\\"\\n    ],\\n    \\\"receiver_persons\\\": [\\n      \\\"Basler Rheinschiffahrt A.-G.\\\"\\n    ]\\n  }\\n}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"reasoning\":\"The user wants me to extract metadata from a historical letter written in German.\\nI need to identify:\\n- `letter_title`: Title of the letter.\\n- `sender_persons`: Name(s) of the person(s) who wrote the letter.\\n- `send_date`: The exact or approximate date the letter was written.\\n- `receiver_persons`: Name(s) of the person(s) who received the letter.\\n\\nLooking at the first image:\\n- Top right: \\\"24. M\u00e4rz 1928,\\\" -> send_date: \\\"1928-03-24\\\"\\n- Top left: \\\"Verkauf.\\\" -> letter_title: \\\"Verkauf.\\\"\\n- Addressed to: \\\"An die Basler Rheinschiffahrt A.-G., Basel.\\\" -> receiver_persons: [\\\"Basler Rheinschiffahrt A.-G.\\\"]\\n- Bottom of second image: \\\"Basler Personenschiffahrtsgesellschaft\\\" and \\\"Der Gesch\u00e4ftsf\u00fchrer\\\" (stamped). The text says \\\"Der Unterzeichnete ist wegen Abreise der andern Zeichnungsberechtigten allein beauftragt...\\\" (The undersigned is solely authorized due to the departure of the other authorized signatories...). The stamp says \\\"Basler Personenschiffahrtsgesellschaft\\\". So the sender is the \\\"Basler Personenschiffahrtsgesellschaft\\\".\\n\\nLet's refine the fields:\\n- `letter_title`: [\\\"Verkauf.\\\"]\\n- `send_date`: [\\\"1928-03-24\\\"]\\n- `sender_persons`: [\\\"Basler Personenschiffahrtsgesellschaft\\\"] (or \\\"Der Gesch\u00e4ftsf\u00fchrer\\\" but the company is the main entity). Let's use \\\"Basler Personenschiffahrtsgesellschaft\\\".\\n- `receiver_persons`: [\\\"Basler Rheinschiffahrt A.-G.\\\"]\\n\\nWait, the prompt says \\\"Name(s) of the person(s) who wrote the letter\\\". The stamp is \\\"Basler Personenschiffahrtsgesellschaft\\\". The text says \\\"Der Unterzeichnete...\\\" (The undersigned). There is no specific person's name signed, just the company stamp. I will use the company name.\\n\\nLet's check the date format: YYYY-MM-DD. \\\"1928-03-24\\\".\\n\\nJSON structure:\\n```json\\n{\\n  \\\"metadata\\\": {\\n    \\\"letter_title\\\": [\\\"Verkauf.\\\"],\\n    \\\"send_date\\\": [\\\"1928-03-24\\\"],\\n    \\\"sender_persons\\\": [\\\"Basler Personenschiffahrtsgesellschaft\\\"],\\n    \\\"receiver_persons\\\": [\\\"Basler Rheinschiffahrt A.-G.\\\"]\\n  }\\n}\\n```\\nDouble check the receiver: \\\"An die Basler Rheinschiffahrt A.-G., Basel.\\\" -> \\\"Basler Rheinschiffahrt A.-G.\\\"\\nDouble check the sender: \\\"Basler Personenschiffahrtsgesellschaft\\\" (stamped at the bottom).\\n\\nLooks good.\\n\",\"reasoning_details\":[{\"type\":\"reasoning.text\",\"text\":\"The user wants me to extract metadata from a historical letter written in German.\\nI need to identify:\\n- `letter_title`: Title of the letter.\\n- `sender_persons`: Name(s) of the person(s) who wrote the letter.\\n- `send_date`: The exact or approximate date the letter was written.\\n- `receiver_persons`: Name(s) of the person(s) who received the letter.\\n\\nLooking at the first image:\\n- Top right: \\\"24. M\u00e4rz 1928,\\\" -> send_date: \\\"1928-03-24\\\"\\n- Top left: \\\"Verkauf.\\\" -> letter_title: \\\"Verkauf.\\\"\\n- Addressed to: \\\"An die Basler Rheinschiffahrt A.-G., Basel.\\\" -> receiver_persons: [\\\"Basler Rheinschiffahrt A.-G.\\\"]\\n- Bottom of second image: \\\"Basler Personenschiffahrtsgesellschaft\\\" and \\\"Der Gesch\u00e4ftsf\u00fchrer\\\" (stamped). The text says \\\"Der Unterzeichnete ist wegen Abreise der andern Zeichnungsberechtigten allein beauftragt...\\\" (The undersigned is solely authorized due to the departure of the other authorized signatories...). The stamp says \\\"Basler Personenschiffahrtsgesellschaft\\\". So the sender is the \\\"Basler Personenschiffahrtsgesellschaft\\\".\\n\\nLet's refine the fields:\\n- `letter_title`: [\\\"Verkauf.\\\"]\\n- `send_date`: [\\\"1928-03-24\\\"]\\n- `sender_persons`: [\\\"Basler Personenschiffahrtsgesellschaft\\\"] (or \\\"Der Gesch\u00e4ftsf\u00fchrer\\\" but the company is the main entity). Let's use \\\"Basler Personenschiffahrtsgesellschaft\\\".\\n- `receiver_persons`: [\\\"Basler Rheinschiffahrt A.-G.\\\"]\\n\\nWait, the prompt says \\\"Name(s) of the person(s) who wrote the letter\\\". The stamp is \\\"Basler Personenschiffahrtsgesellschaft\\\". The text says \\\"Der Unterzeichnete...\\\" (The undersigned). There is no specific person's name signed, just the company stamp. I will use the company name.\\n\\nLet's check the date format: YYYY-MM-DD. \\\"1928-03-24\\\".\\n\\nJSON structure:\\n```json\\n{\\n  \\\"metadata\\\": {\\n    \\\"letter_title\\\": [\\\"Verkauf.\\\"],\\n    \\\"send_date\\\": [\\\"1928-03-24\\\"],\\n    \\\"sender_persons\\\": [\\\"Basler Personenschiffahrtsgesellschaft\\\"],\\n    \\\"receiver_persons\\\": [\\\"Basler Rheinschiffahrt A.-G.\\\"]\\n  }\\n}\\n```\\nDouble check the receiver: \\\"An die Basler Rheinschiffahrt A.-G., Basel.\\\" -> \\\"Basler Rheinschiffahrt A.-G.\\\"\\nDouble check the sender: \\\"Basler Personenschiffahrtsgesellschaft\\\" (stamped at the bottom).\\n\\nLooks good.\\n\",\"format\":\"unknown\",\"index\":0}]},\"native_finish_reason\":\"stop\"}],\"created\":1789717603,\"model\":\"qwen/qwen3.7-plus\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":null,\"usage\":{\"completion_tokens\":745,\"prompt_tokens\":5628,\"total_tokens\":6373,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":0,\"reasoning_tokens\":640,\"rejected_prediction_tokens\":null,\"image_tokens\":0},\"prompt_tokens_details\":{\"audio_tokens\":0,\"cached_tokens\":0,\"cache_write_tokens\":0,\"video_tokens\":0},\"cost\":0.00275456,\"is_byok\":false,\"cost_details\":{\"upstream_inference_cost\":0.00275456,\"upstream_inference_prompt_cost\":0.00180096,\"upstream_inference_completions_cost\":0.0009536}},\"provider\":\"Alibaba\"}"
+}

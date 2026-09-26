@@ -1,0 +1,80 @@
+{
+    "text": "{\"metadata\":{\"send_date\":[\"1926-03-29\"],\"letter_title\":null,\"sender_persons\":null,\"receiver_persons\":[\"Basler Rheinschiffahrt-Aktiengesellschaft\"]}}",
+    "model": "qwen/qwen3.8-flash",
+    "provider": "openrouter",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 3165,
+        "output_tokens": 1154,
+        "total_tokens": 4319,
+        "cached_tokens": 512,
+        "input_cost_usd": 0.00047474999999999997,
+        "output_cost_usd": 0.00054238,
+        "estimated_cost_usd": 0.00101713
+    },
+    "duration": 25.068410634994507,
+    "timestamp": "2026-09-18T09:48:13.124359",
+    "parsed": {
+        "metadata": {
+            "send_date": [
+                "1926-03-29"
+            ],
+            "letter_title": null,
+            "sender_persons": null,
+            "receiver_persons": [
+                "Basler Rheinschiffahrt-Aktiengesellschaft"
+            ]
+        }
+    },
+    "conversation_id": "8f84f8ae-a06d-485f-9071-6a2bf5795ea5",
+    "score": {
+        "send_date_tp": 1,
+        "send_date_fp": 0,
+        "send_date_fn": 0,
+        "sender_persons_tp": 0,
+        "sender_persons_fp": 0,
+        "sender_persons_fn": 0,
+        "receiver_persons_tp": 0,
+        "receiver_persons_fp": 1,
+        "receiver_persons_fn": 0,
+        "field_scores": {
+            "send_date": {
+                "response": [
+                    "1926-03-29"
+                ],
+                "ground_truth": [
+                    "1926-03-29"
+                ],
+                "score": null,
+                "counts": {
+                    "send_date_tp": 1,
+                    "send_date_fp": 0,
+                    "send_date_fn": 0
+                }
+            },
+            "sender_persons": {
+                "response": [],
+                "ground_truth": [],
+                "score": null,
+                "counts": {
+                    "sender_persons_tp": 0,
+                    "sender_persons_fp": 0,
+                    "sender_persons_fn": 0
+                }
+            },
+            "receiver_persons": {
+                "response": [
+                    "Basler Rheinschiffahrt-Aktiengesellschaft"
+                ],
+                "ground_truth": [],
+                "score": null,
+                "counts": {
+                    "receiver_persons_tp": 0,
+                    "receiver_persons_fp": 1,
+                    "receiver_persons_fn": 0
+                }
+            }
+        }
+    },
+    "raw_response": "{\"id\":\"gen-1789717668-FuDS0PLy0QzoGbGzY7Ck\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\n  \\\"metadata\\\": {\\n    \\\"send_date\\\": [\\n      \\\"1926-03-29\\\"\\n    ],\\n    \\\"letter_title\\\": null,\\n    \\\"sender_persons\\\": null,\\n    \\\"receiver_persons\\\": [\\n      \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"\\n    ]\\n  }\\n}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"metadata\":{\"send_date\":[\"1926-03-29\"],\"letter_title\":null,\"sender_persons\":null,\"receiver_persons\":[\"Basler Rheinschiffahrt-Aktiengesellschaft\"]}},\"reasoning\":\"We need answer user's request. Need extract metadata from image letter into JSON schema. Need think step by step but final only JSON. Need ensure schema: top-level object with metadata object containing send_date array, letter_title array, sender_persons array, receiver_persons array. Required. If missing null. Need no OCR? They say do not use OCR, but we can read visually. Need output JSON only. Need infer values.\\n\\nImage text:\\nBasel, den 29. M\u00e4rz 1926.\\nT\\nBasler Rheinschiffahrt-Aktiengesellschaft\\nMarktgasse 5, III\\nBasel.\\nZur\u00fcckkommend auf Ihre beiden Schreiben vom 16.Februar und 4.M\u00e4rz,welch letzteres ich erst am 10.dies erhalten habe, best\u00e4tige ich Ihnen den Empfang Ihrer Zeilen vom 24.crt., womit Sie mir Copie Ihres Briefes an die Internationale Ausstellung f\u00fcr Binnenschiffahrt und Wasserkraftnutzung Basel 1926 \u00fcbermachen.\\nIch teile Ihnen mit, dass ich meine Bem\u00fchungen f\u00fcr den Abschluss einer Betriebsgemeinschaft fortsetze, und dass ich hoffe, in der n\u00e4chsten Zeit hierauf zur\u00fcckkommen zu k\u00f6nnen.Immerhin muss ich Ihnen doch jetzt schon sagen, dass die Widerst\u00e4nde gr\u00f6sser zu sein scheinen, als ich glaube.\\nHochachtungsvoll\\n\\nNo signature visible? The letter has no sender name in image. Recipient: Basler Rheinschiffahrt-Aktiengesellschaft, Marktgasse 5, III, Basel. Is that receiver persons? It's organization, not person? The key says person(s) who received. But in metadata maybe can include organization? Example persons. Need decide. If only organization, maybe receiver_persons: [\\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"]? But persons? Could set null if not person? However task expects names of persons who received letter. The address line is recipient organization. It might be considered receiver. In historical letters, receiver can be institution. But key says persons. Need maybe include organization as receiver? Let's inspect schema: receiver_persons items type string. Could be names. Need likely extract recipient as Basler Rheinschiffahrt-Aktiengesellschaft. But \\\"person(s)\\\" maybe not strict. Need sender_persons: no signature, maybe null. letter_title: no title, null. send_date: [\\\"1926-03-29\\\"]. Need ensure ISO.\\n\\nNeed final JSON:\\n{\\n \\\"metadata\\\": {\\n   \\\"send_date\\\": [\\\"1926-03-29\\\"],\\n   \\\"letter_title\\\": null,\\n   \\\"sender_persons\\\": null,\\n   \\\"receiver_persons\\\": [\\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"]\\n }\\n}\\nBut schema: anyOf array or null. letter_title required. If null allowed. Yes.\\n\\nNeed consider if sender is \\\"T\\\"? At top left T maybe typist? Not sender. Maybe no sender. Could sender_persons null.\\n\\nNeed consider letter_title: maybe \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"? No title absent. null.\\n\\nNeed final only JSON. Ensure valid JSON no trailing. Use double quotes. Need maybe if receiver_persons should be null because organization not person. But user likely wants names of persons who received; if no person named, null. However historical letter addressed to company. In many metadata extraction tasks, receiver_persons may include organization? The key explicitly persons. But example uses persons. Could include \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\" as receiver (entity). Which is better? Need infer from instructions: \\\"Name(s) of the person(s) who received the letter.\\\" If recipient is organization, not person. But no personal name. Could set null. But then lose obvious recipient. They might expect receiver_persons: [\\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"]? In such datasets, receiver_persons often includes addressee even if institution? The schema field says persons, but might accept organization names. Need maximize correctness. The letter is from someone (no name) to Basler Rheinschiffahrt-Aktiengesellschaft. If they ask person(s), but only organization, maybe include organization as receiver because it's the addressed party. But if strict, null. Let's examine wording: \\\"sender_persons: Name(s) of the person(s) who wrote the letter.\\\" If letter signed by an organization? Here no signature. Receiver: address block is \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\". That's not a person but a company. In historical documents, addressee can be institution. The task might expect extracting receiver from address line. They didn't provide field for receiver organizations. But maybe they use persons loosely. I'd include it.\\n\\nNeed maybe sender_persons could be \\\"Hochachtungsvoll\\\"? no.\\n\\nNeed maybe letter_title: \\\"Basel, den 29. M\u00e4rz 1926.\\\"? No.\\n\\nNeed final JSON only. Ensure metadata key.\",\"reasoning_details\":[{\"type\":\"reasoning.text\",\"text\":\"We need answer user's request. Need extract metadata from image letter into JSON schema. Need think step by step but final only JSON. Need ensure schema: top-level object with metadata object containing send_date array, letter_title array, sender_persons array, receiver_persons array. Required. If missing null. Need no OCR? They say do not use OCR, but we can read visually. Need output JSON only. Need infer values.\\n\\nImage text:\\nBasel, den 29. M\u00e4rz 1926.\\nT\\nBasler Rheinschiffahrt-Aktiengesellschaft\\nMarktgasse 5, III\\nBasel.\\nZur\u00fcckkommend auf Ihre beiden Schreiben vom 16.Februar und 4.M\u00e4rz,welch letzteres ich erst am 10.dies erhalten habe, best\u00e4tige ich Ihnen den Empfang Ihrer Zeilen vom 24.crt., womit Sie mir Copie Ihres Briefes an die Internationale Ausstellung f\u00fcr Binnenschiffahrt und Wasserkraftnutzung Basel 1926 \u00fcbermachen.\\nIch teile Ihnen mit, dass ich meine Bem\u00fchungen f\u00fcr den Abschluss einer Betriebsgemeinschaft fortsetze, und dass ich hoffe, in der n\u00e4chsten Zeit hierauf zur\u00fcckkommen zu k\u00f6nnen.Immerhin muss ich Ihnen doch jetzt schon sagen, dass die Widerst\u00e4nde gr\u00f6sser zu sein scheinen, als ich glaube.\\nHochachtungsvoll\\n\\nNo signature visible? The letter has no sender name in image. Recipient: Basler Rheinschiffahrt-Aktiengesellschaft, Marktgasse 5, III, Basel. Is that receiver persons? It's organization, not person? The key says person(s) who received. But in metadata maybe can include organization? Example persons. Need decide. If only organization, maybe receiver_persons: [\\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"]? But persons? Could set null if not person? However task expects names of persons who received letter. The address line is recipient organization. It might be considered receiver. In historical letters, receiver can be institution. But key says persons. Need maybe include organization as receiver? Let's inspect schema: receiver_persons items type string. Could be names. Need likely extract recipient as Basler Rheinschiffahrt-Aktiengesellschaft. But \\\"person(s)\\\" maybe not strict. Need sender_persons: no signature, maybe null. letter_title: no title, null. send_date: [\\\"1926-03-29\\\"]. Need ensure ISO.\\n\\nNeed final JSON:\\n{\\n \\\"metadata\\\": {\\n   \\\"send_date\\\": [\\\"1926-03-29\\\"],\\n   \\\"letter_title\\\": null,\\n   \\\"sender_persons\\\": null,\\n   \\\"receiver_persons\\\": [\\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"]\\n }\\n}\\nBut schema: anyOf array or null. letter_title required. If null allowed. Yes.\\n\\nNeed consider if sender is \\\"T\\\"? At top left T maybe typist? Not sender. Maybe no sender. Could sender_persons null.\\n\\nNeed consider letter_title: maybe \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"? No title absent. null.\\n\\nNeed final only JSON. Ensure valid JSON no trailing. Use double quotes. Need maybe if receiver_persons should be null because organization not person. But user likely wants names of persons who received; if no person named, null. However historical letter addressed to company. In many metadata extraction tasks, receiver_persons may include organization? The key explicitly persons. But example uses persons. Could include \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\" as receiver (entity). Which is better? Need infer from instructions: \\\"Name(s) of the person(s) who received the letter.\\\" If recipient is organization, not person. But no personal name. Could set null. But then lose obvious recipient. They might expect receiver_persons: [\\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"]? In such datasets, receiver_persons often includes addressee even if institution? The schema field says persons, but might accept organization names. Need maximize correctness. The letter is from someone (no name) to Basler Rheinschiffahrt-Aktiengesellschaft. If they ask person(s), but only organization, maybe include organization as receiver because it's the addressed party. But if strict, null. Let's examine wording: \\\"sender_persons: Name(s) of the person(s) who wrote the letter.\\\" If letter signed by an organization? Here no signature. Receiver: address block is \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\". That's not a person but a company. In historical documents, addressee can be institution. The task might expect extracting receiver from address line. They didn't provide field for receiver organizations. But maybe they use persons loosely. I'd include it.\\n\\nNeed maybe sender_persons could be \\\"Hochachtungsvoll\\\"? no.\\n\\nNeed maybe letter_title: \\\"Basel, den 29. M\u00e4rz 1926.\\\"? No.\\n\\nNeed final JSON only. Ensure metadata key.\",\"format\":\"unknown\",\"index\":0}]},\"native_finish_reason\":\"stop\"}],\"created\":1789717668,\"model\":\"qwen/qwen3.8-flash\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":null,\"usage\":{\"completion_tokens\":1154,\"prompt_tokens\":3165,\"total_tokens\":4319,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":0,\"reasoning_tokens\":1071,\"rejected_prediction_tokens\":null,\"image_tokens\":0},\"prompt_tokens_details\":{\"audio_tokens\":0,\"cached_tokens\":512,\"cache_write_tokens\":0,\"video_tokens\":0},\"cost\":0.000948522,\"is_byok\":false,\"cost_details\":{\"upstream_inference_cost\":0.000948522,\"upstream_inference_prompt_cost\":0.000406142,\"upstream_inference_completions_cost\":0.00054238}},\"provider\":\"Alibaba\"}"
+}

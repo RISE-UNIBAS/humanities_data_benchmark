@@ -1,0 +1,90 @@
+{
+    "text": "{\"metadata\":{\"send_date\":[\"1926-03-24\"],\"letter_title\":[\"\"],\"sender_persons\":[\"Basler Rheinschiffahrt-Aktiengesellschaft\"],\"receiver_persons\":[\"P. Christ - Wackernagel\"]}}",
+    "model": "thinkingmachines/Inkling",
+    "provider": "huggingface",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 2254,
+        "output_tokens": 2016,
+        "total_tokens": 4270,
+        "input_cost_usd": 0.002254,
+        "output_cost_usd": 0.0081648,
+        "estimated_cost_usd": 0.010418799999999999
+    },
+    "duration": 25.300618171691895,
+    "timestamp": "2026-09-17T11:36:48.107166",
+    "parsed": {
+        "metadata": {
+            "send_date": [
+                "1926-03-24"
+            ],
+            "letter_title": [
+                ""
+            ],
+            "sender_persons": [
+                "Basler Rheinschiffahrt-Aktiengesellschaft"
+            ],
+            "receiver_persons": [
+                "P. Christ - Wackernagel"
+            ]
+        }
+    },
+    "conversation_id": "280e0331-78f9-4f20-9460-230237873e07",
+    "score": {
+        "send_date_tp": 1,
+        "send_date_fp": 0,
+        "send_date_fn": 0,
+        "sender_persons_tp": 0,
+        "sender_persons_fp": 1,
+        "sender_persons_fn": 2,
+        "receiver_persons_tp": 1,
+        "receiver_persons_fp": 0,
+        "receiver_persons_fn": 0,
+        "field_scores": {
+            "send_date": {
+                "response": [
+                    "1926-03-24"
+                ],
+                "ground_truth": [
+                    "1926-03-24"
+                ],
+                "score": null,
+                "counts": {
+                    "send_date_tp": 1,
+                    "send_date_fp": 0,
+                    "send_date_fn": 0
+                }
+            },
+            "sender_persons": {
+                "response": [
+                    "Basler Rheinschiffahrt-Aktiengesellschaft"
+                ],
+                "ground_truth": [
+                    "Kachelhofer-Gerber, Frederick Charles",
+                    "Ritter-Dreier, Fritz"
+                ],
+                "score": null,
+                "counts": {
+                    "sender_persons_tp": 0,
+                    "sender_persons_fp": 1,
+                    "sender_persons_fn": 2
+                }
+            },
+            "receiver_persons": {
+                "response": [
+                    "Christ-Wackernagel, Paul"
+                ],
+                "ground_truth": [
+                    "Christ-Wackernagel, Paul"
+                ],
+                "score": null,
+                "counts": {
+                    "receiver_persons_tp": 1,
+                    "receiver_persons_fp": 0,
+                    "receiver_persons_fn": 0
+                }
+            }
+        }
+    },
+    "raw_response": "{\"id\":\"p1dAS2g-6z2FuN-a3c720523926bacb\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\n  \\\"metadata\\\": {\\n    \\\"send_date\\\": [\\\"1926-03-24\\\"],\\n    \\\"letter_title\\\": [\\\"\\\"],\\n    \\\"sender_persons\\\": [\\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"],\\n    \\\"receiver_persons\\\": [\\\"P. Christ - Wackernagel\\\"]\\n  }\\n}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"metadata\":{\"send_date\":[\"1926-03-24\"],\"letter_title\":[\"\"],\"sender_persons\":[\"Basler Rheinschiffahrt-Aktiengesellschaft\"],\"receiver_persons\":[\"P. Christ - Wackernagel\"]}},\"reasoning\":\"We need parse image: letter from Basler Rheinschiffahrt-Aktiengesellschaft dated Basel, den 24. M\u00e4rz 1926. Addressee: Herrn P. Christ - Wackernagel, i/Fa. Paravicini, Christ & Co., Basel. Need extract letter_title, sender_persons, send_date, receiver_persons. No explicit title, maybe null. Sender is Basler Rheinschiffahrt-Aktiengesellschaft? Or person? The letter signed \\\"BASLER RHEINSCHIFFAHRT-AKTIENGESELLSCHAFT\\\" with signature. So sender_persons likely organization? But key says persons. Might be null or organization name? Usually in these tasks they want names of persons. The letterhead is organization, but no individual sender named except signature illegible. So sender_persons maybe null? But we can include organization? The prompt says Name(s) of the person(s) who wrote the letter. Since not clear, maybe null. However sometimes they accept the company as sender. Let's think carefully.\\n\\nWe need return JSON only.\\n\\nLetter title: none visible, so null.\\n\\nSend date: 1926-03-24.\\n\\nReceiver persons: P. Christ - Wackernagel? Or \\\"Herrn P. Christ - Wackernagel\\\" and maybe \\\"Paravicini, Christ & Co.\\\"? The receiver is Herrn P. Christ - Wackernagel, i/Fa. Paravicini, Christ & Co. So receiver_persons: [\\\"P. Christ - Wackernagel\\\"] maybe also include firm? But person is P. Christ-Wackernagel.\\n\\nSender persons: The letter is from Basler Rheinschiffahrt-Aktiengesellschaft, but not a person. Could put [\\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"]? The key is sender_persons, but they said persons. Still might accept entity. But I think better to put the organization since it's the sender. However example uses personal names. Let's examine signature: there is a handwritten signature over printed \\\"BASLER RHEINSCHIFFAHRT-AKTIENGESELLSCHAFT\\\". The signatory might be a person, but unreadable. So we can't extract name. Thus sender_persons should be null? Or include the printed company? Usually in extraction tasks from letters, if letterhead present and no individual named, they might still list the organization under sender? But key specifically \\\"sender_persons\\\". Given instructions \\\"Name(s) of the person(s) who wrote the letter.\\\" If unknown, null.\\n\\nBut let's check consistency: They ask \\\"If a piece of information is not included in the letter, set the value for the corresponding key to 'null'.\\\" The company name is included in letterhead, but it's not a person. Still it's the sender. I think include [\\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"]? Hmm.\\n\\nLet's decide: letter_title: [null]? Actually value should be stored as list, even if null? The example shows lists with values. For missing, probably [\\\"null\\\"]? Or null? The instruction: \\\"set the value for the corresponding key to 'null'.\\\" Usually in JSON that means the value is null, not a list containing null? But they said \\\"where the values corresponding to each key should be stored as a list, even if there is only a single value for a key\\\". So if missing, should it be [\\\"null\\\"]? Or null? Let's parse: \\\"If a piece of information is not included in the letter, set the value for the corresponding key to 'null'.\\\" Given they want list values, likely they want [\\\"null\\\"]? But \\\"value ... to 'null'\\\" could mean the list contains the string \\\"null\\\"? Actually in example they have lists of strings. For missing, probably [null] but JSON can't have null inside? Yes it can: [null]. But they said set value to \\\"null\\\" (with quotes), maybe meaning the JSON null value, but then it's not a list. However they said values should be stored as a list. So conflict. Usually in these prompts they want e.g., \\\"letter_title\\\": [\\\"null\\\"]? Let's check mental examples from similar tasks: Often they say \\\"set the value for the corresponding key to null\\\" and then output JSON with \\\"key\\\": null, despite list instruction? But they explicitly said stored as a list. Let's examine wording precisely: \\\"return them in a JSON file where the values corresponding to each key should be stored as a list, even if there is only a single value for a key\\\" Then \\\"If a piece of information is not included in the letter, set the value for the corresponding key to \\\"null\\\".\\\"\\n\\nThis suggests that for missing info, the list should contain the string \\\"null\\\"? Or the value should be null breaking list rule? I think safest is to use [null] but that's not \\\"null\\\" quoted. Or [\\\"null\\\"]. Let's think: In programming, \\\"null\\\" with quotes is a string. They wrote \\\"null\\\" in quotes in the instruction. So they likely want the string \\\"null\\\" inside the list? Actually they said set the value ... to \\\"null\\\". If value must be a list, then value is [\\\"null\\\"]. Yes, that makes sense: the list's sole element is the string null. But sometimes people write \\\"null\\\" meaning JSON null. Given quotes around null in instruction, it's a string. So we'll use [\\\"null\\\"] for missing? Wait but they said \\\"value for the corresponding key to 'null'\\\" not \\\"list containing 'null'\\\". But since value must be list, it's [\\\"null\\\"].\\n\\nHowever in many prior prompts I've seen they want e.g., {\\\"letter_title\\\": null} despite list instruction? Let's not overthink. We'll provide lists for present values, and for missing title maybe [\\\"null\\\"]? Or null? Let's provide [\\\"null\\\"]? Actually I think it's more correct JSON with lists always: \\\"letter_title\\\": [\\\"null\\\"]? That looks weird. Let's check example: they have lists with actual values. If missing, they might want \\\"letter_title\\\": null. But that violates list rule. But they said \\\"set the value ... to 'null'\\\" which could override the list rule for missing cases. So maybe \\\"letter_title\\\": null. Let's do that? Hmm.\\n\\nLet's examine other keys: send_date is present. sender_persons: maybe [\\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"] or null. receiver_persons: [\\\"P. Christ - Wackernagel\\\"].\\n\\nGiven ambiguity, I will provide lists for all present, and for missing title use null (not in list). But wait they said values corresponding to each key should be stored as a list. So I should make it [\\\"null\\\"]? Let's decide on [\\\"null\\\"] for consistency of being a list. Actually no, \\\"null\\\" as string is not correct semantic. But it's okay.\\n\\nLet's also consider date format: 1926-03-24.\\n\\nThus output:\\n{\\n  \\\"letter_title\\\": null,\\n  \\\"send_date\\\": [\\\"1926-03-24\\\"],\\n  \\\"sender_persons\\\": [\\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"],\\n  \\\"receiver_persons\\\": [\\\"P. Christ - Wackernagel\\\"]\\n}\\n\\nBut if they want list for null too: [\\\"null\\\"]. Let's go with null for missing? Actually I think it's safer to put [\\\"null\\\"]? No, that seems wrong.\\n\\nLet's recall similar extraction prompts: \\\"If a piece of information is not included in the letter, set the value for the corresponding key to null.\\\" Usually in those prompts they don't require list for missing? But here they do require list for values. So maybe they want [null]. Let's do [null] for letter_title? But JSON [null] is a list containing null. That might be correct: value is a list, and the element is null indicating missing. Yes! That respects both: value is a list, and inside is null (not string). The instruction said set value to \\\"null\\\" (with quotes indicating the null literal). So \\\"letter_title\\\": [null]. That sounds right.\\n\\nFor sender_persons, if we include company, it's a list with string. If we think it's missing person, then [null]. But I think company is present as sender entity, but not person. Still it's the sender. Let's include it.\\n\\nBut wait, there might be a specific person name in signature? The signature is illegible, but printed below is \\\"BASLER RHEINSCHIFFAHRT-AKTIENGESELLSCHAFT\\\". So the sender is the company. We'll list that.\\n\\nThus:\\n{\\n  \\\"letter_title\\\": [null],\\n  \\\"send_date\\\": [\\\"1926-03-24\\\"],\\n  \\\"sender_persons\\\": [\\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"],\\n  \\\"receiver_persons\\\": [\\\"P. Christ - Wackernagel\\\"]\\n}\\n\\nBut should receiver include firm? The address is \\\"Herrn P. Christ - Wackernagel, i/Fa. Paravicini,Christ & Co., Basel.\\\" So the person is P. Christ-Wackernagel at the firm. We'll just list the person.\\n\\nOne more check: The letter is dated \\\"Basel, den 24. M\u00e4rz 1926.\\\" So send_date 1926-03-24.\\n\\nThus final.\"},\"seed\":null}],\"created\":1789637784,\"model\":\"thinkingmachines/Inkling\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":\"default\",\"usage\":{\"completion_tokens\":2016,\"prompt_tokens\":2254,\"total_tokens\":4270,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":null,\"reasoning_tokens\":1944,\"rejected_prediction_tokens\":null},\"prompt_tokens_details\":{\"audio_tokens\":null,\"cached_tokens\":0}},\"prompt\":[]}"
+}

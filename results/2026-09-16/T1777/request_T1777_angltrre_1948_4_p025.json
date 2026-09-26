@@ -1,0 +1,146 @@
+{
+    "text": "{\"advertisements\":[{\"box\":[80.0,140.0,2350.0,520.0]},{\"box\":[80.0,570.0,1070.0,1400.0]},{\"box\":[1120.0,570.0,2350.0,1400.0]},{\"box\":[80.0,1460.0,2350.0,2200.0]}]}",
+    "model": "deepseek-flash",
+    "provider": "deepseek",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 1288,
+        "output_tokens": 2530,
+        "total_tokens": 3818,
+        "input_cost_usd": 0.0003864,
+        "output_cost_usd": 0.003036,
+        "estimated_cost_usd": 0.0034224
+    },
+    "duration": 12.919365406036377,
+    "timestamp": "2026-09-16T17:17:19.649288",
+    "parsed": {
+        "advertisements": [
+            {
+                "box": [
+                    80,
+                    140,
+                    2350,
+                    520
+                ]
+            },
+            {
+                "box": [
+                    80,
+                    570,
+                    1070,
+                    1400
+                ]
+            },
+            {
+                "box": [
+                    1120,
+                    570,
+                    2350,
+                    1400
+                ]
+            },
+            {
+                "box": [
+                    80,
+                    1460,
+                    2350,
+                    2200
+                ]
+            }
+        ]
+    },
+    "conversation_id": "01b3db56-6f35-4957-b3aa-aefec72324a3",
+    "score": {
+        "field_scores": {
+            "box 0": {
+                "response": null,
+                "ground_truth": [
+                    93,
+                    211,
+                    2139,
+                    935
+                ],
+                "score": 0.0
+            },
+            "box 1": {
+                "response": null,
+                "ground_truth": [
+                    93,
+                    2495,
+                    2137,
+                    3219
+                ],
+                "score": 0.0
+            },
+            "box 2": {
+                "response": null,
+                "ground_truth": [
+                    93,
+                    977,
+                    1086,
+                    2458
+                ],
+                "score": 0.0
+            },
+            "box 3": {
+                "response": null,
+                "ground_truth": [
+                    1133,
+                    977,
+                    2137,
+                    2379
+                ],
+                "score": 0.0
+            },
+            "unmatched prediction 0": {
+                "response": [
+                    80,
+                    140,
+                    2350,
+                    520
+                ],
+                "ground_truth": null,
+                "score": 0.0
+            },
+            "unmatched prediction 1": {
+                "response": [
+                    80,
+                    570,
+                    1070,
+                    1400
+                ],
+                "ground_truth": null,
+                "score": 0.0
+            },
+            "unmatched prediction 2": {
+                "response": [
+                    1120,
+                    570,
+                    2350,
+                    1400
+                ],
+                "ground_truth": null,
+                "score": 0.0
+            },
+            "unmatched prediction 3": {
+                "response": [
+                    80,
+                    1460,
+                    2350,
+                    2200
+                ],
+                "ground_truth": null,
+                "score": 0.0
+            }
+        },
+        "f1": 0.0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "mean_iou": 0.0,
+        "true_positives": 0,
+        "false_positives": 4,
+        "false_negatives": 4,
+        "iou_threshold": 0.5
+    },
+    "raw_response": "{\"id\":\"04b89ce6-0533-4e9d-87f1-d426187b58de\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\\"advertisements\\\": [{\\\"box\\\": [80, 140, 2350, 520]}, {\\\"box\\\": [80, 570, 1070, 1400]}, {\\\"box\\\": [1120, 570, 2350, 1400]}, {\\\"box\\\": [80, 1460, 2350, 2200]}]}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"reasoning_content\":\"We need to identify bounding boxes of advertisements on the page. The page contains multiple advertisements. Let's list them:\\n\\n1. Top advertisement: \\\"South Wales Anthracite ...\\\" It occupies roughly top portion. Coordinates: x0 around 80, y0 around 140, x1 around 2130, y1 around 520. But need precise? We can estimate based on image size 2479x3508. Let's look: the ad has a border. From top left of page, the border starts near x=80, y=140. Right edge near x=2130, bottom near y=520.\\n\\n2. Middle left advertisement: \\\"Speditions A.-G., Basle 13\\\" with picture of harbor. It has a border. Coordinates: x0 ~ 80, y0 ~ 570, x1 ~ 1070, y1 ~ 1400? Actually the border goes down to about y=1400. But let's check: The ad includes text and image. The bottom of that ad's border is around y=1400? Actually the page height is 3508. The middle section: left ad from y~570 to y~1400. Right ad: \\\"Sindaco S.A. Locarno\\\" with clock and watch. It has a border. Coordinates: x0 ~ 1120, y0 ~ 570, x1 ~ 2130, y1 ~ 1400? Let's see: The right ad's border: top around y=570, bottom around y=1400. But the right ad might extend a bit lower? Actually it ends near the same line as left ad. \\n\\n3. Bottom advertisement: \\\"JACKY, MAEDER & Co.\\\" with border. Coordinates: x0 ~ 80, y0 ~ 1460, x1 ~ 2130, y1 ~ 2200? Actually bottom ad ends near y=2200. The page number 91 is at bottom right, not part of ad.\\n\\nWe need to output bounding boxes as [x0, y0, x1, y1] pixel coordinates. Since the original size is 2479 x 3508, we can approximate based on visual inspection. But we need to be reasonably accurate. Let's try to measure from the image.\\n\\nI'll assume the image is displayed at some resolution. But we can scale. The coordinates given are for the original size. So we need to estimate in that coordinate system.\\n\\nLet's open the image in mind. The page is portrait. The top ad: The border starts a bit from the top edge. The top edge of the ad border is around y=140? The left border is around x=80. The right border is around x=2130 (since page width 2479, some margin). The bottom border of top ad is around y=520. Let's check: The text \\\"South Wales Anthracite\\\" is large. The ad includes CICA logo. The bottom line \\\"Telephone 5 18 18\\\" is near the bottom. So box: [80, 140, 2130, 520].\\n\\nMiddle left ad: \\\"Speditions A.-G., Basle 13\\\" with picture. The border starts at x=80, y=570? But there's a gap between top ad and this one. The top of this ad's border is around y=570. The left border x=80. The right border: It is narrower than top ad? Actually it's about half width. The right border of left ad is around x=1070. The bottom border: It ends around y=1400. So box: [80, 570, 1070, 1400].\\n\\nMiddle right ad: \\\"Sindaco S.A. Locarno\\\" with clock and watch. It has a border. Starts at x=1120? There's a gap between left and right ads. The right ad's left border is around x=1120. Top border around y=570. Right border around x=2130. Bottom border around y=1400. So box: [1120, 570, 2130, 1400].\\n\\nBottom ad: \\\"JACKY, MAEDER & Co.\\\" with border. It starts at x=80, y=1460? The top border is below the middle ads. There's a gap. The top border is around y=1460. Left x=80. Right x=2130. Bottom border around y=2200? Actually the ad includes \\\"Branches at: ...\\\" which is near the bottom. The bottom border is around y=2200. So box: [80, 1460, 2130, 2200].\\n\\nWe should check if there are any other ads. The page seems to have these three main ads. The side margins have some text? There's a thin strip on left with some text \\\"EC...\\\" maybe not an ad. The page number 91 is not an ad.\\n\\nThus, three advertisements.\\n\\nBut wait: The top ad might be considered one ad. The middle left and middle right are separate ads. The bottom is one ad. So total 3.\\n\\nWe need to output JSON with list of advertisements, each with box. Ensure coordinates are numbers.\\n\\nLet's refine coordinates. Since original size 2479x3508, we can estimate proportionally. I'll try to get more precise by considering the image dimensions in the provided view. The image is likely 2479x3508. But we can approximate.\\n\\nLet's assume the page has margins. The left margin is about 80 pixels. The right margin is about 2479-2130=349? But top ad right edge is near 2130? Actually looking at the image, the top ad border extends almost to the right edge of the page content area. The page content area might be from x=80 to x=2400? But there is a right margin. The top ad's right border is at about x=2130? That seems too low. Let's check: The CICA logo is near the right edge. The text \\\"Imported by:\\\" is aligned. The border is a rectangle. The right border of the top ad is close to the right edge of the page. The page width is 2479. There is a narrow margin. The right border might be around x=2350? Let's measure from the image: The page has a visible right edge. The ad border is a bit inside. In the image, the top ad's right border is near the right edge of the page, but there is some margin. Actually, looking at the image, the top ad's right border is at about 90% of width. 2479*0.9=2231. But the CICA logo is near the border. I'd say x1=2350? Let's look at the provided image: The right edge of the ad border is close to the right edge of the page. The page number 91 is at bottom right, which is near the right edge but slightly inside. The top ad border is aligned with the bottom ad border? Actually all ads seem to have the same width? No, the middle ads are two columns. The top ad spans full width of content area. The bottom ad also spans full width. The content area might be from x=80 to x=2400? But the right margin: The page number is at x=2400? Actually the page number \\\"91\\\" is at the bottom right, likely near x=2400, y=3400. But the ad borders might be at x=80 and x=2400. Let's check: In the image, the top ad's right border is not at the very edge; there is a small margin. I'd estimate x1=2350. Similarly, left x0=80. But to be safe, we can use the same for all full-width ads.\\n\\nLet's use the following approximate boxes:\\n\\nTop ad: [80, 140, 2350, 520]\\nMiddle left ad: [80, 570, 1070, 1400] (but right border might be 1070? Actually the left ad's right border is around x=1070? The image shows the left ad's right border is at about 43% of width? 2479*0.43=1066. So okay.)\\nMiddle right ad: [1120, 570, 2350, 1400] (left border at 1120, right at 2350)\\nBottom ad: [80, 1460, 2350, 2200]\\n\\nBut note: The middle right ad might have left border at 1120, but there is a gap between left and right ads. The left ad's right border is at 1070, so gap from 1070 to 1120 is 50 pixels. That seems reasonable.\\n\\nAlso, the bottom ad's top border might be slightly lower, say 1480? But okay.\\n\\nWe need to be as accurate as possible. Since the task is to extract all advertisements and return their bounding boxes, we can provide these coordinates.\\n\\nBut let's double-check: The top ad's bottom border: It might end around y=520. The text ends around y=500. So 520 is fine.\\n\\nMiddle ads: The top border is below the top ad. There's a gap. The top ad bottom is 520, then gap, then middle ads start at y=570? That's 50 pixels gap. That seems plausible. The middle ads bottom: The left ad's image ends around y=1350? Actually the text below the image? The left ad has no text below the image? It ends with the image. The border continues a bit below the image? Looking at the image, the left ad's border bottom is just below the image, around y=1400. The right ad's border bottom is also around y=1400. So okay.\\n\\nBottom ad: Top border at y=1460, gap from middle ads bottom 1400 is 60 pixels. That seems fine. Bottom border at y=2200. The ad includes the branches list. That might extend to y=2200. The page number is at y=3400, far below. So okay.\\n\\nNow, we need to output JSON. The schema requires an object with \\\"advertisements\\\" array. Each advertisement has a \\\"box\\\" array of four numbers.\\n\\nSo final answer: {\\\"advertisements\\\": [{\\\"box\\\": [80, 140, 2350, 520]}, {\\\"box\\\": [80, 570, 1070, 1400]}, {\\\"box\\\": [1120, 570, 2350, 1400]}, {\\\"box\\\": [80, 1460, 2350, 2200]}]}\\n\\nBut wait, is the top ad one advertisement? Yes. The middle left and middle right are separate. The bottom is one. So total 4? Actually I listed 4? No, I listed three? Let's recount: Top, middle left, middle right, bottom = 4 advertisements. But earlier I said three? I said top, middle left, middle right, bottom = 4. But in my description I said \\\"three main ads\\\"? Actually I said \\\"three advertisements\\\" but then listed top, middle left, middle right, bottom = 4. Let's check the page: It has a top ad, then a middle section with two ads side by side, then a bottom ad. So total 4 advertisements. So correct.\\n\\nThus output 4 advertisements.\\n\\nNow, ensure coordinates are integers? They can be numbers. Use exact integers.\\n\\nI'll output as JSON.\"}}],\"created\":1789571827,\"model\":\"deepseek-flash\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":\"aeb56401ca74e127821c4f9126dcb669\",\"usage\":{\"completion_tokens\":2530,\"prompt_tokens\":1288,\"total_tokens\":3818,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":null,\"reasoning_tokens\":2450,\"rejected_prediction_tokens\":null},\"prompt_tokens_details\":{\"audio_tokens\":null,\"cached_tokens\":0},\"prompt_cache_hit_tokens\":0,\"prompt_cache_miss_tokens\":1288}}"
+}

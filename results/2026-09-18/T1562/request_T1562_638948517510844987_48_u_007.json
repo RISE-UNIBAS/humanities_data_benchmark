@@ -1,0 +1,74 @@
+{
+    "text": "{\"company\":{\"transcription\":\"Sacom (S.a.)\"},\"location\":{\"transcription\":\"LUGANO\"},\"b_id\":{\"transcription\":\"B.51.322.GB.397.\"},\"date\":\"1941-10-02, 1945-11-23\",\"information\":[{\"transcription\":\"Britische Schwarze Liste\\nAmendment 16, vom 2.10.1941.\"},{\"transcription\":\"gestrichen:\\nAmendment 13, 23.11.1945.\"}]}",
+    "model": "thinkingmachines/Inkling",
+    "provider": "huggingface",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 2187,
+        "output_tokens": 881,
+        "total_tokens": 3068,
+        "cached_tokens": 256,
+        "input_cost_usd": 0.002187,
+        "output_cost_usd": 0.0035680499999999997,
+        "estimated_cost_usd": 0.005755049999999999
+    },
+    "duration": 28.290736198425293,
+    "timestamp": "2026-09-18T21:17:07.895172",
+    "parsed": {
+        "company": {
+            "transcription": "Sacom (S.a.)"
+        },
+        "location": {
+            "transcription": "LUGANO"
+        },
+        "b_id": {
+            "transcription": "B.51.322.GB.397."
+        },
+        "date": "1941-10-02, 1945-11-23",
+        "information": [
+            {
+                "transcription": "Britische Schwarze Liste\nAmendment 16, vom 2.10.1941."
+            },
+            {
+                "transcription": "gestrichen:\nAmendment 13, 23.11.1945."
+            }
+        ]
+    },
+    "conversation_id": "3dd80a18-2359-4b31-81c3-c6cb8c9d0652",
+    "score": {
+        "fuzzy": 0.8333333333333334,
+        "field_scores": {
+            "b_id.transcription": {
+                "response": "B.51.322.GB.397.",
+                "ground_truth": "B.51.322.GB.397.",
+                "score": 1.0
+            },
+            "company.transcription": {
+                "response": "Sacom (S.a.)",
+                "ground_truth": "Sacom (S.a.)",
+                "score": 1.0
+            },
+            "date": {
+                "response": "1941-10-02, 1945-11-23",
+                "ground_truth": "",
+                "score": 0.0
+            },
+            "information[0].transcription": {
+                "response": "Britische Schwarze Liste\nAmendment 16, vom 2.10.1941.",
+                "ground_truth": "Britische Schwarze Liste\nAmendment 16, vom 2.10.1941.",
+                "score": 1.0
+            },
+            "information[1].transcription": {
+                "response": "gestrichen:\nAmendment 13, 23.11.1945.",
+                "ground_truth": "gestrichen:\nAmendment 13, 23.11.1945.",
+                "score": 1.0
+            },
+            "location.transcription": {
+                "response": "LUGANO",
+                "ground_truth": "LUGANO",
+                "score": 1.0
+            }
+        }
+    },
+    "raw_response": "{\"id\":\"p1oshUD-4i1VM9-a3d2afb6794c0132\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\n  \\\"company\\\": {\\\"transcription\\\": \\\"Sacom (S.a.)\\\"},\\n  \\\"location\\\": {\\\"transcription\\\": \\\"LUGANO\\\"},\\n  \\\"b_id\\\": {\\\"transcription\\\": \\\"B.51.322.GB.397.\\\"},\\n  \\\"date\\\": \\\"1941-10-02, 1945-11-23\\\",\\n  \\\"information\\\": [\\n    {\\\"transcription\\\": \\\"Britische Schwarze Liste\\\\nAmendment 16, vom 2.10.1941.\\\"},\\n    {\\\"transcription\\\": \\\"gestrichen:\\\\nAmendment 13, 23.11.1945.\\\"}\\n  ]\\n}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"company\":{\"transcription\":\"Sacom (S.a.)\"},\"location\":{\"transcription\":\"LUGANO\"},\"b_id\":{\"transcription\":\"B.51.322.GB.397.\"},\"date\":\"1941-10-02, 1945-11-23\",\"information\":[{\"transcription\":\"Britische Schwarze Liste\\nAmendment 16, vom 2.10.1941.\"},{\"transcription\":\"gestrichen:\\nAmendment 13, 23.11.1945.\"}]},\"reasoning\":\"We need extract data from image. Let's parse.\\n\\nTop left: \\\"Sacom (S.a.), LUGANO\\\" -> company \\\"Sacom (S.a.)\\\", location \\\"LUGANO\\\". There's handwritten \\\"(in liquidazione?)\\\" maybe not needed? The prompt says information list from main body. We'll include relevant blocks.\\n\\nTop right: \\\"B.51.322.GB.397.\\\" -> b_id.\\n\\nMain body text blocks:\\n\\\"Britische Schwarze Liste\\\"\\n\\\"Amendment 16, vom 2.10.1941.\\\"\\n\\nThen:\\n\\\"gestrichen:\\\"\\n\\\"Amendment 13, 23.11.1945.\\\"\\n\\nNeed date stamped? There's \\\"2.10.1941\\\" and \\\"23.11.1945\\\". The prompt: \\\"Any stamped dates on the card in YYYY-MM-DD format.\\\" Which ones are stamped? The card has printed/text \\\"vom 2.10.1941\\\" and \\\"23.11.1945\\\". Might include both? Usually \\\"date\\\" field singular? The format says \\\"date\\\": Any stamped dates... If no date present, empty string. But there are two. Maybe list? No, it's a single string field \\\"date\\\". Perhaps include both? Or the main date? Let's examine typical extraction: they ask \\\"Any stamped dates on the card in YYYY-MM-DD format.\\\" If multiple, maybe separate by comma? But field is string. Let's include both separated by comma? Or maybe only stamped date is none? Actually these are printed in the text, not stamped separately. But they are dates on card. Let's include \\\"1941-10-02\\\" maybe also \\\"1945-11-23\\\". Let's see if there's an actual stamp elsewhere? No visible stamp besides printed. We'll put \\\"1941-10-02, 1945-11-23\\\"? But need valid JSON. Let's think.\\n\\nThe information blocks should be separate strings maintaining line breaks with \\\\n. So we can have:\\n[\\n  \\\"Britische Schwarze Liste\\\\nAmendment 16, vom 2.10.1941.\\\",\\n  \\\"gestrichen:\\\\nAmendment 13, 23.11.1945.\\\"\\n]\\n\\nBut they said each block should be a separate string in the list. So maybe:\\n{\\\"transcription\\\": \\\"Britische Schwarze Liste\\\\nAmendment 16, vom 2.10.1941.\\\"}\\n{\\\"transcription\\\": \\\"gestrichen:\\\\nAmendment 13, 23.11.1945.\\\"}\\n\\nAlso there is handwritten text \\\"(in liquidazione?)\\\" between lines? Actually it's handwritten in the header area: \\\"(in liquidazione?)\\\" maybe part of company? But not in main body? Let's include in information? The prompt says \\\"A list of text blocks from the main body of the card.\\\" The handwritten is near top, maybe part of header. But we can include if visible. However likely not required.\\n\\nLet's construct JSON exactly.\\n\\ncompany: \\\"Sacom (S.a.)\\\"\\nlocation: \\\"LUGANO\\\"\\nb_id: \\\"B.51.322.GB.397.\\\"\\ndate: \\\"1941-10-02\\\" ??? Or include both. Let's provide \\\"1941-10-02\\\" as primary? But there is also 1945-11-23. The prompt singular \\\"date\\\" but \\\"Any stamped dates\\\" plural. Maybe concatenate with comma. Let's do \\\"1941-10-02, 1945-11-23\\\". That captures all.\\n\\nBut wait, there might be a stamped date at bottom left \\\"47019\\\" not date.\\n\\nThus final JSON.\"},\"seed\":null}],\"created\":1789759001,\"model\":\"thinkingmachines/Inkling\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":\"default\",\"usage\":{\"completion_tokens\":881,\"prompt_tokens\":2187,\"total_tokens\":3068,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":null,\"reasoning_tokens\":743,\"rejected_prediction_tokens\":null},\"prompt_tokens_details\":{\"audio_tokens\":null,\"cached_tokens\":256}},\"prompt\":[]}"
+}

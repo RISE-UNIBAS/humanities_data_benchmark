@@ -1,0 +1,91 @@
+{
+    "text": "{\"metadata\":{\"send_date\":[\"1932-10-04\"],\"letter_title\":[\"null\"],\"sender_persons\":[\"Basler Rheinschiffahrt Aktiengesellschaft\"],\"receiver_persons\":[\"Dr. Max Vischer\"]}}",
+    "model": "thinkingmachines/Inkling",
+    "provider": "huggingface",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 6106,
+        "output_tokens": 1995,
+        "total_tokens": 8101,
+        "cached_tokens": 256,
+        "input_cost_usd": 0.006106,
+        "output_cost_usd": 0.008079749999999998,
+        "estimated_cost_usd": 0.014185749999999999
+    },
+    "duration": 28.73168158531189,
+    "timestamp": "2026-09-17T11:38:38.487205",
+    "parsed": {
+        "metadata": {
+            "send_date": [
+                "1932-10-04"
+            ],
+            "letter_title": [
+                "null"
+            ],
+            "sender_persons": [
+                "Basler Rheinschiffahrt Aktiengesellschaft"
+            ],
+            "receiver_persons": [
+                "Dr. Max Vischer"
+            ]
+        }
+    },
+    "conversation_id": "6b485e93-b607-42f1-8b03-a87894a4330e",
+    "score": {
+        "send_date_tp": 1,
+        "send_date_fp": 0,
+        "send_date_fn": 0,
+        "sender_persons_tp": 0,
+        "sender_persons_fp": 1,
+        "sender_persons_fn": 2,
+        "receiver_persons_tp": 1,
+        "receiver_persons_fp": 0,
+        "receiver_persons_fn": 0,
+        "field_scores": {
+            "send_date": {
+                "response": [
+                    "1932-10-04"
+                ],
+                "ground_truth": [
+                    "1932-10-04"
+                ],
+                "score": null,
+                "counts": {
+                    "send_date_tp": 1,
+                    "send_date_fp": 0,
+                    "send_date_fn": 0
+                }
+            },
+            "sender_persons": {
+                "response": [
+                    "Basler Rheinschiffahrt Aktiengesellschaft"
+                ],
+                "ground_truth": [
+                    "Groschupf-Jaeger, Louis",
+                    "Ritter-Dreier, Fritz"
+                ],
+                "score": null,
+                "counts": {
+                    "sender_persons_tp": 0,
+                    "sender_persons_fp": 1,
+                    "sender_persons_fn": 2
+                }
+            },
+            "receiver_persons": {
+                "response": [
+                    "Vischer-von Planta, Max"
+                ],
+                "ground_truth": [
+                    "Vischer-von Planta, Max"
+                ],
+                "score": null,
+                "counts": {
+                    "receiver_persons_tp": 1,
+                    "receiver_persons_fp": 0,
+                    "receiver_persons_fn": 0
+                }
+            }
+        }
+    },
+    "raw_response": "{\"id\":\"p1dAytU-6z2FuN-a3c722f0bd4ac98b\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\n  \\\"metadata\\\": {\\n    \\\"send_date\\\": [\\\"1932-10-04\\\"],\\n    \\\"letter_title\\\": [\\\"null\\\"],\\n    \\\"sender_persons\\\": [\\\"Basler Rheinschiffahrt Aktiengesellschaft\\\"],\\n    \\\"receiver_persons\\\": [\\\"Dr. Max Vischer\\\"]\\n  }\\n}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"metadata\":{\"send_date\":[\"1932-10-04\"],\"letter_title\":[\"null\"],\"sender_persons\":[\"Basler Rheinschiffahrt Aktiengesellschaft\"],\"receiver_persons\":[\"Dr. Max Vischer\"]}},\"reasoning\":\"We need extract values from letter images. Need identify letter title, sender persons, send date, receiver persons. Let's analyze images.\\n\\nImage 1: Letterhead \\\"BASLER RHEINSCHIFFFAHRT AKTIENGESELLSCHAFT BASEL * MARKTGASSE 5\\\". Date \\\"Basel, den 4.Oktober 1932\\\". Addressed to \\\"Herrn Dr. Max Vischer, Advokat und Notar, Basel. St. Albangraben 8.\\\" So receiver is Dr. Max Vischer. Sender? At bottom of page 3 there is signature and printed \\\"BASLER RHEINSCHIFFFAHRT-AKTIENGESELLSCHAFT\\\" with signatures. So sender is Basler Rheinschiffahrt Aktiengesellschaft? Or specific persons? The letter is written on behalf of company, signed by representatives. Need \\\"Name(s) of the person(s) who wrote the letter.\\\" The signatures are present but not clearly readable except maybe one. However the letterhead indicates company. But likely sender_persons should be the company? Or the signatories? Let's examine page 3 bottom: \\\"Mit vorz\u00fcglicher Hochachtung BASLER RHEINSCHIFFFAHRT-AKTIENGESELLSCHAFT\\\" then two signatures. One might be \\\"M\u00fcller\\\"? Actually hard to tell. But since they ask \\\"person(s) who wrote the letter\\\" and it's a corporate letter signed by representatives, maybe list the company? But example uses personal names. Let's inspect all pages for explicit sender name. Page 1 has no sender name except letterhead. Page 2 header \\\"Herrn Dr. Max Vischer, Basel. 4.10.32.\\\" Page 3 same header and closing with company name and signatures. Given typical extraction for historical letters, sender might be \\\"Basler Rheinschiffahrt Aktiengesellschaft\\\". But they said \\\"persons\\\". Hmm.\\n\\nLet's determine letter_title: Not explicitly given, but maybe null? Or could be inferred? The letter discusses receiving letter of 23 September, loan of Fr. 20/25,000, personenschiffahrt, new boat \\\"Rheinfelden\\\" with stronger motors, etc. There's no explicit title like \\\"Betreff\\\". So letter_title likely null.\\n\\nSend date: \\\"Basel, den 4.Oktober 1932\\\" -> 1932-10-04.\\n\\nReceiver persons: [\\\"Dr. Max Vischer\\\"] maybe with address but just name.\\n\\nSender persons: Need determine signatories. Let's zoom mental on signatures in image 3. There are two signatures. One looks like \\\"Rudolf\\\"?? Actually first signature might be \\\"R. M\u00fcller\\\"? Let's not overinterpret. But there might be printed names near signatures? No, only company name printed. So perhaps sender is the company represented by unknown signatories. But the prompt asks \\\"Name(s) of the person(s) who wrote the letter.\\\" If not readable, maybe null? But we have letterhead identifying the organization. However they want persons. Let's think: In page 1, the letter starts \\\"Wir best\u00e4tigen...\\\" It's from the company. The signatures at end are likely directors. Without being able to read them clearly, but maybe one is readable: Looks like \\\"Keller\\\"? Actually second signature might be \\\"J. G. ???\\\". Given difficulty, but we need provide values. Let's check if there's any other mention. No.\\n\\nGiven instructions: \\\"If a piece of information is not included in the letter, set the value for the corresponding key to 'null'.\\\" The sender persons are somewhat included via signatures but unreadable. However the company name is included. But they specifically ask \\\"sender_persons\\\" not \\\"sender_organization\\\". Still, in absence of readable personal names, maybe use company? But that'd be inaccurate category.\\n\\nLet's examine image quality: The signatures are somewhat visible. First signature: maybe \\\"M. Brunner\\\"? Let's try to decipher. The first signature has a capital letter maybe \\\"H\\\" then \\\"einrich\\\"? Actually looks like \\\"Heinrich\\\" with a long loop? The second signature might be \\\"W. Staehelin\\\"? Hmm not clear.\\n\\nBut maybe the sender is actually \\\"Herrn Dr. Max Vischer\\\" is receiver, and the sender is implied by letterhead \\\"Basler Rheinschiffahrt Aktiengesellschaft\\\". For extraction tasks, they often want the organization if personal names absent? Let's check example: \\\"sender_persons\\\": [\\\"Lisa Simpson\\\"]. So personal.\\n\\nHowever, there might be a name in the letter body? No.\\n\\nGiven we must return JSON only. Let's provide:\\nletter_title: null? Or maybe \\\"Best\u00e4tigung des Empfangs\\\"? But not explicit title. So null.\\nsend_date: [\\\"1932-10-04\\\"]\\nsender_persons: [\\\"Basler Rheinschiffahrt Aktiengesellschaft\\\"]? Or null? Let's decide.\\n\\nActually on page 3, above signatures, printed \\\"BASLER RHEINSCHIFFFAHRT-AKTIENGESELLSCHAFT\\\". This is the sender entity. The signatures are just authorization. In many archival descriptions, sender is the company. So I will put that as sender_person, even though it's an organization. But the key says persons plural. Still okay.\\n\\nWait, but there might be specific names in signatures readable: Let's examine image 3 closer mental. The signatures are in the bottom right. One looks like \\\"Rudolf\\\" with capital R and then \\\"M\u00fcller\\\"? Actually there is a well-known figure? Not necessary.\\n\\nGiven the instructions \\\"Name(s) of the person(s) who wrote the letter\\\" - if it's a company letter, the writers are the signatories. But since unreadable, maybe null is safer? But we do have the company name clearly. Let's include both? No, should be list of values.\\n\\nLet's also check if there's a title in the letter like \\\"B/M\\\" on page 1? That's reference maybe \\\"B/M\\\". Not title.\\n\\nThus:\\n{\\n\\\"letter_title\\\": [null]? Wait they said values stored as list, even if single value. If null, should it be [\\\"null\\\"]? In example they don't show null case. The instruction: \\\"If a piece of information is not included in the letter, set the value for the corresponding key to 'null'.\\\" Usually that means the value is null, not in a list? But they said \\\"values corresponding to each key should be stored as a list, even if there is only a single value for a key\\\". So if missing, probably [\\\"null\\\"]? Or null? Let's interpret: The value for the key should be a list. If information missing, set value to \\\"null\\\". But since it must be a list, maybe [null]. However in JSON, null is a value. So likely:\\n\\\"letter_title\\\": [null]\\nBut they said \\\"set the value for the corresponding key to 'null'\\\". That conflicts with list requirement. Let's see example: all values are lists of strings. For missing, probably [null] is wrong because null inside list? Or maybe they want \\\"letter_title\\\": null despite list instruction? Let's adhere to list format for consistency, but include null inside? Actually they said \\\"where the values corresponding to each key should be stored as a list, even if there is only a single value for a key\\\". So the value is always a list. Then \\\"If a piece of information is not included... set the value for the corresponding key to 'null'.\\\" This likely means the list contains the string \\\"null\\\"? Or the list is null? Hmm.\\n\\nLet's check typical prompts: They often want {\\\"key\\\": [null]}? No, usually they want {\\\"key\\\": null}. But they said store as list. Let's think: If key is missing, they might want [\\\"null\\\"] meaning list with one element the string null? That seems odd.\\n\\nGiven ambiguity, but for present values we use lists. For missing title, maybe [\\\"null\\\"]? Or null? Let's decide on [null] is not valid? Actually [null] is valid JSON (array containing null). But they said \\\"set the value... to 'null'\\\" with quotes, implying string \\\"null\\\". So maybe [\\\"null\\\"]. Yes, that makes sense: the list contains the string \\\"null\\\". Let's do that for missing.\\n\\nBut wait, send_date is present. Receiver: [\\\"Dr. Max Vischer\\\"]. Sender: maybe [\\\"Basler Rheinschiffahrt Aktiengesellschaft\\\"]. Or if we think it's persons, maybe signatures are \\\"R. M\u00fcller\\\" and another? Let's try to read signatures from image 3: There are two signatures. The left one might be \\\"Rudolf M\u00fcller\\\"? Actually in 1932 Basler Rheinschiffahrt directors? Let's not guess.\\n\\nThus I will output:\\n{\\n\\\"letter_title\\\": [\\\"null\\\"],\\n\\\"send_date\\\": [\\\"1932-10-04\\\"],\\n\\\"sender_persons\\\": [\\\"Basler Rheinschiffahrt Aktiengesellschaft\\\"],\\n\\\"receiver_persons\\\": [\\\"Dr. Max Vischer\\\"]\\n}\\n\\nBut wait, page 1 address includes \\\"Herrn Dr. Max Vischer, Advokat und Notar, Basel. St. Albangraben 8.\\\" So receiver is Dr. Max Vischer.\\n\\nCheck date on page 2 and 3: \\\"4.10.32\\\" -> 1932-10-04.\\n\\nThus answer.\"},\"seed\":null}],\"created\":1789637892,\"model\":\"thinkingmachines/Inkling\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":\"default\",\"usage\":{\"completion_tokens\":1995,\"prompt_tokens\":6106,\"total_tokens\":8101,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":null,\"reasoning_tokens\":1927,\"rejected_prediction_tokens\":null},\"prompt_tokens_details\":{\"audio_tokens\":null,\"cached_tokens\":256}},\"prompt\":[]}"
+}

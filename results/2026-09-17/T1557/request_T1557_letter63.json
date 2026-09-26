@@ -1,0 +1,84 @@
+{
+    "text": "{\"metadata\":{\"send_date\":[\"1938-08-15\"],\"letter_title\":null,\"sender_persons\":[\"Basler Personenschiffahrts-Gesellschaft\"],\"receiver_persons\":[\"Basler Rheinschiffahrts A.-G.\"]}}",
+    "model": "thinkingmachines/Inkling",
+    "provider": "huggingface",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 2254,
+        "output_tokens": 1424,
+        "total_tokens": 3678,
+        "cached_tokens": 256,
+        "input_cost_usd": 0.002254,
+        "output_cost_usd": 0.005767199999999999,
+        "estimated_cost_usd": 0.0080212
+    },
+    "duration": 16.422184228897095,
+    "timestamp": "2026-09-17T11:40:07.776721",
+    "parsed": {
+        "metadata": {
+            "send_date": [
+                "1938-08-15"
+            ],
+            "letter_title": null,
+            "sender_persons": [
+                "Basler Personenschiffahrts-Gesellschaft"
+            ],
+            "receiver_persons": [
+                "Basler Rheinschiffahrts A.-G."
+            ]
+        }
+    },
+    "conversation_id": "614f5d9e-c175-4728-81e0-b80e7ed22d0e",
+    "score": {
+        "send_date_tp": 0,
+        "send_date_fp": 1,
+        "send_date_fn": 1,
+        "sender_persons_tp": 0,
+        "sender_persons_fp": 1,
+        "sender_persons_fn": 0,
+        "receiver_persons_tp": 0,
+        "receiver_persons_fp": 1,
+        "receiver_persons_fn": 0,
+        "field_scores": {
+            "send_date": {
+                "response": [
+                    "1938-08-15"
+                ],
+                "ground_truth": [
+                    "1933-08-15"
+                ],
+                "score": null,
+                "counts": {
+                    "send_date_tp": 0,
+                    "send_date_fp": 1,
+                    "send_date_fn": 1
+                }
+            },
+            "sender_persons": {
+                "response": [
+                    "Basler Personenschiffahrts-Gesellschaft"
+                ],
+                "ground_truth": [],
+                "score": null,
+                "counts": {
+                    "sender_persons_tp": 0,
+                    "sender_persons_fp": 1,
+                    "sender_persons_fn": 0
+                }
+            },
+            "receiver_persons": {
+                "response": [
+                    "Basler Rheinschiffahrts A.-G."
+                ],
+                "ground_truth": [],
+                "score": null,
+                "counts": {
+                    "receiver_persons_tp": 0,
+                    "receiver_persons_fp": 1,
+                    "receiver_persons_fn": 0
+                }
+            }
+        }
+    },
+    "raw_response": "{\"id\":\"p1dBVy8-6z2FuN-a3c725690f57eb77\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\n  \\\"metadata\\\": {\\n    \\\"send_date\\\": [\\\"1938-08-15\\\"],\\n    \\\"letter_title\\\": null,\\n    \\\"sender_persons\\\": [\\\"Basler Personenschiffahrts-Gesellschaft\\\"],\\n    \\\"receiver_persons\\\": [\\\"Basler Rheinschiffahrts A.-G.\\\"]\\n  }\\n}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"metadata\":{\"send_date\":[\"1938-08-15\"],\"letter_title\":null,\"sender_persons\":[\"Basler Personenschiffahrts-Gesellschaft\"],\"receiver_persons\":[\"Basler Rheinschiffahrts A.-G.\"]}},\"reasoning\":\"We need parse image of historical letter. Need extract letter_title, sender_persons, send_date, receiver_persons. Let's analyze image content.\\n\\nImage shows letterhead \\\"BASLER PERSONENSCHIFFAHRTSGESELLSCHAFT\\\" at top left. Date \\\"Basel, den 15. Aug. 1938.\\\" Address block: \\\"An die basler Rheinschiffahrts A.-G.- Marktgasse 5 Basel\\\". Salutation \\\"Sehr geehrte Herren,\\\". Then body mentions brief of 4 July containing 4 complaints raised in general assembly 24 June. They ask for statement. Closing \\\"Mit vorz\u00fcglicher Hochachtung\\\" then \\\"Basler Personenschiffahrts-Gesellschaft\\\" maybe signature line? At bottom handwritten signature maybe \\\"Eugen ...\\\"? But sender is Basler Personenschiffahrts-Gesellschaft? Need determine sender_persons: likely the organization \\\"Basler Personenschiffahrts-Gesellschaft\\\" or maybe a person signing. The letterhead indicates sender organization. The closing printed \\\"Basler Personenschiffahrts-Gesellschaft\\\" and handwritten signature below. But key asks \\\"Name(s) of the person(s) who wrote the letter.\\\" Could be organization? Usually person. However we might list the organization if no individual clear? Let's inspect signature: handwritten looks like \\\"Eugen von ...\\\"? Hard to tell. But likely sender is \\\"Basler Personenschiffahrts-Gesellschaft\\\". Let's hold that.\\n\\nLetter title? Not explicit. Might be null? Or could derive from letterhead? The prompt says \\\"Title of the letter.\\\" Often letters don't have title. So null.\\n\\nSend date: \\\"1938-08-15\\\" (Basel, den 15. Aug. 1938).\\n\\nReceiver persons: \\\"basler Rheinschiffahrts A.-G.\\\" addressed \\\"An die basler Rheinschiffahrts A.-G.\\\" So receiver is \\\"Basler Rheinschiffahrts A.-G.\\\" Maybe also address Marktgasse 5 Basel but that's location.\\n\\nThus JSON:\\n{\\n\\\"letter_title\\\": [null? Wait values should be stored as list, even if single. If not included set value to \\\"null\\\". But they said set value for corresponding key to \\\"null\\\". In example they have lists of strings. For missing, probably [\\\"null\\\"]? Actually they said \\\"set the value for the corresponding key to 'null'\\\". But also said values corresponding to each key should be stored as a list. So likely [\\\"null\\\"]? Let's check example: all values are lists. For missing information, probably [null] but JSON null is not quoted. They said set the value ... to \\\"null\\\" (quoted?). Hmm need be precise. Usually in these extraction tasks, if missing, put null inside list? Let's examine wording: \\\"If a piece of information is not included in the letter, set the value for the corresponding key to \\\"null\\\". Do not return anything except the JSON file.\\\" Given they want list values, maybe \\\"letter_title\\\": [\\\"null\\\"]? But that is string \\\"null\\\". Or \\\"letter_title\\\": [null]. I think they intend JSON null within list? Actually they said value ... to \\\"null\\\" with quotes indicating string literal? Let's decide based on consistency: They want values stored as list. If missing, list containing null? In JSON, null is a value. So [\\\"null\\\"] is list with string null. But they wrote \\\"null\\\" in quotes in instruction, maybe meaning the JSON null value. However they said \\\"set the value for the corresponding key to \\\"null\\\"\\\" not \\\"to a list containing null\\\". But they also said values should be stored as a list. So conflict. Usually resolution: the value (the list) should be [null]? No, that'd be list containing null. Or maybe they allow breaking list rule for null? Let's check similar prompts. Often they say \\\"store as a list, even if there is only a single value... If not included, set value to null\\\". That usually means the key maps to null, not a list. But they said values corresponding to each key should be stored as a list. Hmm.\\n\\nLet's provide lists for present ones, and for missing title maybe [null]? Actually I think safest: \\\"letter_title\\\": null? But violates list rule. Let's think: They said \\\"return them in a JSON file where the values corresponding to each key should be stored as a list, even if there is only a single value for a key\\\". This applies to extracted values. Then \\\"If a piece of information is not included in the letter, set the value for the corresponding key to \\\"null\\\".\\\" This might override the list rule for missing keys. So letter_title: null (not in list). But to be safe? Let's examine example: they show all four keys with lists. They don't show missing case.\\n\\nGiven typical extraction format in these prompts, they want:\\n{\\n\\\"letter_title\\\": null,\\n...\\n}\\nBut they said store as list... Hmm.\\n\\nLet's provide lists for all except maybe title as null not in list? Actually I can put \\\"letter_title\\\": [null] but that's weird.\\n\\nLet's inspect if there is implicit title? The letter might be about complaint response, but no title line. So missing.\\n\\nThus:\\nletter_title: null? Or [\\\"null\\\"]?\\n\\nI'll choose [null]?? No, JSON [null] is list with null element. That respects both: value is list, containing null indicating missing. But instruction said set value to \\\"null\\\" (the null value). If I put [null], the value is a list, not null. So not matching.\\n\\nThus likely they want:\\n\\\"letter_title\\\": null\\n\\nBut then not list. However they said \\\"values corresponding to each key should be stored as a list\\\" - maybe they mean the values you extract (the data) go in lists, but if none, then null.\\n\\nGiven ambiguity, I think best is:\\n{\\n\\\"letter_title\\\": null,\\n\\\"sender_persons\\\": [\\\"Basler Personenschiffahrts-Gesellschaft\\\"],\\n\\\"send_date\\\": [\\\"1938-08-15\\\"],\\n\\\"receiver_persons\\\": [\\\"Basler Rheinschiffahrts A.-G.\\\"]\\n}\\n\\nBut wait sender_persons might include signature name? Let's examine bottom handwritten: \\\"Eugen von ...\\\"? Actually could be \\\"Eugen von ...\\\"? Let's not overinterpret. The printed closing is \\\"Basler Personenschiffahrts-Gesellschaft\\\". So that's the sender entity.\\n\\nCheck date format: 1938-08-15 correct.\\n\\nThus output.\"},\"seed\":null}],\"created\":1789637992,\"model\":\"thinkingmachines/Inkling\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":\"default\",\"usage\":{\"completion_tokens\":1424,\"prompt_tokens\":2254,\"total_tokens\":3678,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":null,\"reasoning_tokens\":1350,\"rejected_prediction_tokens\":null},\"prompt_tokens_details\":{\"audio_tokens\":null,\"cached_tokens\":256}},\"prompt\":[]}"
+}

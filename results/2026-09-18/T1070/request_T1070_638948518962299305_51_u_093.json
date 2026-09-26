@@ -1,0 +1,65 @@
+{
+    "text": "{\"company\":{\"transcription\":\"Schweizerische Sodafabrik\"},\"location\":{\"transcription\":\"ZURZACH\"},\"b_id\":{\"transcription\":\"B.51.322.01\"},\"date\":\"\",\"information\":[{\"transcription\":\"(\u00dc'Chemise)\"}]}",
+    "model": "qwen/qwen3.7-plus",
+    "provider": "openrouter",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 3028,
+        "output_tokens": 1210,
+        "total_tokens": 4238,
+        "input_cost_usd": 0.0009689599999999999,
+        "output_cost_usd": 0.0015488,
+        "estimated_cost_usd": 0.00251776
+    },
+    "duration": 24.484736919403076,
+    "timestamp": "2026-09-18T10:18:31.356786",
+    "parsed": {
+        "company": {
+            "transcription": "Schweizerische Sodafabrik"
+        },
+        "location": {
+            "transcription": "ZURZACH"
+        },
+        "b_id": {
+            "transcription": "B.51.322.01"
+        },
+        "date": "",
+        "information": [
+            {
+                "transcription": "(\u00dc'Chemise)"
+            }
+        ]
+    },
+    "conversation_id": "30109a07-7d4c-4cc4-8b56-d6468b33a832",
+    "score": {
+        "fuzzy": 0.9818181818181818,
+        "field_scores": {
+            "b_id.transcription": {
+                "response": "B.51.322.01",
+                "ground_truth": "B.51.322.01",
+                "score": 1.0
+            },
+            "company.transcription": {
+                "response": "Schweizerische Sodafabrik",
+                "ground_truth": "Schweizerische Sodafabrik",
+                "score": 1.0
+            },
+            "date": {
+                "response": "",
+                "ground_truth": "",
+                "score": 1.0
+            },
+            "information[0].transcription": {
+                "response": "(\u00dc'Chemise)",
+                "ground_truth": "(U'Chemise)",
+                "score": 0.9090909090909091
+            },
+            "location.transcription": {
+                "response": "ZURZACH",
+                "ground_truth": "ZURZACH",
+                "score": 1.0
+            }
+        }
+    },
+    "raw_response": "{\"id\":\"gen-1789719486-FVqb8FHbnS5QS86oX7AL\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\n  \\\"company\\\": {\\n    \\\"transcription\\\": \\\"Schweizerische Sodafabrik\\\"\\n  },\\n  \\\"location\\\": {\\n    \\\"transcription\\\": \\\"ZURZACH\\\"\\n  },\\n  \\\"b_id\\\": {\\n    \\\"transcription\\\": \\\"B.51.322.01\\\"\\n  },\\n  \\\"date\\\": \\\"\\\",\\n  \\\"information\\\": [\\n    {\\n      \\\"transcription\\\": \\\"(\u00dc'Chemise)\\\"\\n    }\\n  ]\\n}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"company\":{\"transcription\":\"Schweizerische Sodafabrik\"},\"location\":{\"transcription\":\"ZURZACH\"},\"b_id\":{\"transcription\":\"B.51.322.01\"},\"date\":\"\",\"information\":[{\"transcription\":\"(\u00dc'Chemise)\"}]},\"reasoning\":\"The user wants me to extract information from an image of an index card and return it as a JSON object.\\n\\n1.  **Analyze the image:**\\n    *   **Top-left text:** \\\"Schweizerische Sodafabrik, ZURZACH\\\"\\n    *   **Top-right text:** \\\"B.51.322.01\\\" and below it \\\"(\u00dc'Chemise)\\\"\\n    *   **Main body:** Empty.\\n\\n2.  **Extract fields:**\\n    *   **company:** \\\"Schweizerische Sodafabrik\\\" (excluding location)\\n    *   **location:** \\\"ZURZACH\\\"\\n    *   **b_id:** \\\"B.51.322.01\\\"\\n    *   **date:** No date visible. Use empty string.\\n    *   **information:** There is some text in the top right under the B-ID: \\\"(\u00dc'Chemise)\\\". Wait, the instructions say \\\"A list of text blocks from the main body of the card.\\\" The main body is empty. However, sometimes text near the top right is considered part of the information or just metadata. Let's look at the structure. The red line separates the header from the body. The text \\\"(\u00dc'Chemise)\\\" is right under the B-ID, crossing the red line slightly or just below it. It might be considered information. Let's include it as an information block just in case, or leave it out if it's strictly header. Actually, looking closely, it's under the B-ID. Let's include it in information. Wait, the prompt says \\\"main body of the card\\\". The main body is blank. I will leave information as an empty list or maybe include the text if it's considered part of the card's content. Let's look at the text \\\"(\u00dc'Chemise)\\\". It's typed. I'll include it as an entry.\\n\\n    Let's refine the extraction:\\n    *   company: \\\"Schweizerische Sodafabrik\\\"\\n    *   location: \\\"ZURZACH\\\"\\n    *   b_id: \\\"B.51.322.01\\\"\\n    *   date: \\\"\\\"\\n    *   information: [\\\"(\u00dc'Chemise)\\\"] - actually, looking at the layout, it's in the top right corner area. Often these cards have notes there. I'll include it.\\n\\n    Wait, the schema requires `information` to be a list of objects with `transcription`.\\n    Let's check the text again: \\\"(\u00dc'Chemise)\\\". The '\u00dc' has an umlaut. The 'i' has an acute accent? No, it looks like `\u00dc'Chemise`. Actually, it looks like `(\u00dc'Chemise)`. Let's transcribe it as `(\u00dc'Chemise)`.\\n\\n    Let's re-evaluate \\\"information\\\". The prompt says \\\"A list of text blocks from the main body of the card.\\\" The main body is the large blank area. The text \\\"(\u00dc'Chemise)\\\" is in the header area (top right). I will assume the main body is empty, so `information` should be an empty list `[]` or null? The schema says `{\\\"items\\\": {\\\"$ref\\\": \\\"#/$defs/Entry\\\"}, \\\"type\\\": \\\"array\\\"}` or `null`. I'll use an empty list `[]` if there's nothing in the main body. Wait, usually these extractions include all text. Let's look at the position. It's right under the B-ID. I'll include it to be safe, or maybe not. Let's look at similar tasks. Usually, text in the body is extracted. The body is empty. I will set information to an empty list. Wait, looking at the crop, the text `(\u00dc'Chemise)` is right there. I'll include it as an entry just in case. Actually, let's look at the red line. The red horizontal line is below \\\"Schweizerische Sodafabrik...\\\". The text \\\"(\u00dc'Chemise)\\\" is slightly below the B-ID, crossing the red line? No, it's just below the B-ID. The B-ID is \\\"B.51.322.01\\\". The text \\\"(\u00dc'Chemise)\\\" is below it. It looks like it belongs to the header section. I will leave information empty.\\n\\n    Wait, let's look at the schema again. `information` can be null or array. I'll provide an empty array `[]`.\\n    Actually, let's look at the text `(\u00dc'Chemise)`. It might be a category. I'll include it in `information` just to be thorough, as it's text on the card.\\n    Let's try to include it. `{\\\"transcription\\\": \\\"(\u00dc'Chemise)\\\"}`.\\n\\n    Let's reconsider the \\\"main body\\\". The main body is the lined area. It is completely empty. So `information` should be `[]`.\\n\\n    Let's refine the company name. \\\"Schweizerische Sodafabrik\\\".\\n    Location: \\\"ZURZACH\\\".\\n    B-ID: \\\"B.51.322.01\\\".\\n\\n    Final check of the JSON structure.\",\"reasoning_details\":[{\"type\":\"reasoning.text\",\"text\":\"The user wants me to extract information from an image of an index card and return it as a JSON object.\\n\\n1.  **Analyze the image:**\\n    *   **Top-left text:** \\\"Schweizerische Sodafabrik, ZURZACH\\\"\\n    *   **Top-right text:** \\\"B.51.322.01\\\" and below it \\\"(\u00dc'Chemise)\\\"\\n    *   **Main body:** Empty.\\n\\n2.  **Extract fields:**\\n    *   **company:** \\\"Schweizerische Sodafabrik\\\" (excluding location)\\n    *   **location:** \\\"ZURZACH\\\"\\n    *   **b_id:** \\\"B.51.322.01\\\"\\n    *   **date:** No date visible. Use empty string.\\n    *   **information:** There is some text in the top right under the B-ID: \\\"(\u00dc'Chemise)\\\". Wait, the instructions say \\\"A list of text blocks from the main body of the card.\\\" The main body is empty. However, sometimes text near the top right is considered part of the information or just metadata. Let's look at the structure. The red line separates the header from the body. The text \\\"(\u00dc'Chemise)\\\" is right under the B-ID, crossing the red line slightly or just below it. It might be considered information. Let's include it as an information block just in case, or leave it out if it's strictly header. Actually, looking closely, it's under the B-ID. Let's include it in information. Wait, the prompt says \\\"main body of the card\\\". The main body is blank. I will leave information as an empty list or maybe include the text if it's considered part of the card's content. Let's look at the text \\\"(\u00dc'Chemise)\\\". It's typed. I'll include it as an entry.\\n\\n    Let's refine the extraction:\\n    *   company: \\\"Schweizerische Sodafabrik\\\"\\n    *   location: \\\"ZURZACH\\\"\\n    *   b_id: \\\"B.51.322.01\\\"\\n    *   date: \\\"\\\"\\n    *   information: [\\\"(\u00dc'Chemise)\\\"] - actually, looking at the layout, it's in the top right corner area. Often these cards have notes there. I'll include it.\\n\\n    Wait, the schema requires `information` to be a list of objects with `transcription`.\\n    Let's check the text again: \\\"(\u00dc'Chemise)\\\". The '\u00dc' has an umlaut. The 'i' has an acute accent? No, it looks like `\u00dc'Chemise`. Actually, it looks like `(\u00dc'Chemise)`. Let's transcribe it as `(\u00dc'Chemise)`.\\n\\n    Let's re-evaluate \\\"information\\\". The prompt says \\\"A list of text blocks from the main body of the card.\\\" The main body is the large blank area. The text \\\"(\u00dc'Chemise)\\\" is in the header area (top right). I will assume the main body is empty, so `information` should be an empty list `[]` or null? The schema says `{\\\"items\\\": {\\\"$ref\\\": \\\"#/$defs/Entry\\\"}, \\\"type\\\": \\\"array\\\"}` or `null`. I'll use an empty list `[]` if there's nothing in the main body. Wait, usually these extractions include all text. Let's look at the position. It's right under the B-ID. I'll include it to be safe, or maybe not. Let's look at similar tasks. Usually, text in the body is extracted. The body is empty. I will set information to an empty list. Wait, looking at the crop, the text `(\u00dc'Chemise)` is right there. I'll include it as an entry just in case. Actually, let's look at the red line. The red horizontal line is below \\\"Schweizerische Sodafabrik...\\\". The text \\\"(\u00dc'Chemise)\\\" is slightly below the B-ID, crossing the red line? No, it's just below the B-ID. The B-ID is \\\"B.51.322.01\\\". The text \\\"(\u00dc'Chemise)\\\" is below it. It looks like it belongs to the header section. I will leave information empty.\\n\\n    Wait, let's look at the schema again. `information` can be null or array. I'll provide an empty array `[]`.\\n    Actually, let's look at the text `(\u00dc'Chemise)`. It might be a category. I'll include it in `information` just to be thorough, as it's text on the card.\\n    Let's try to include it. `{\\\"transcription\\\": \\\"(\u00dc'Chemise)\\\"}`.\\n\\n    Let's reconsider the \\\"main body\\\". The main body is the lined area. It is completely empty. So `information` should be `[]`.\\n\\n    Let's refine the company name. \\\"Schweizerische Sodafabrik\\\".\\n    Location: \\\"ZURZACH\\\".\\n    B-ID: \\\"B.51.322.01\\\".\\n\\n    Final check of the JSON structure.\",\"format\":\"unknown\",\"index\":0}]},\"native_finish_reason\":\"stop\"}],\"created\":1789719486,\"model\":\"qwen/qwen3.7-plus\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":null,\"usage\":{\"completion_tokens\":1210,\"prompt_tokens\":3028,\"total_tokens\":4238,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":0,\"reasoning_tokens\":1096,\"rejected_prediction_tokens\":null,\"image_tokens\":0},\"prompt_tokens_details\":{\"audio_tokens\":0,\"cached_tokens\":0,\"cache_write_tokens\":0,\"video_tokens\":0},\"cost\":0.00251776,\"is_byok\":false,\"cost_details\":{\"upstream_inference_cost\":0.00251776,\"upstream_inference_prompt_cost\":0.00096896,\"upstream_inference_completions_cost\":0.0015488}},\"provider\":\"Alibaba\"}"
+}

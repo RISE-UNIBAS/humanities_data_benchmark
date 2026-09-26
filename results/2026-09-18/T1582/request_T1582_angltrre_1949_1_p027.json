@@ -1,0 +1,127 @@
+{
+    "text": "{\"advertisements\":[{\"box\":[150.0,70.0,1050.0,1700.0]},{\"box\":[1150.0,70.0,2200.0,1700.0]},{\"box\":[150.0,1700.0,1050.0,3100.0]},{\"box\":[1150.0,1700.0,2200.0,3100.0]}]}",
+    "model": "meta-models/Muse-Glimmer-30B",
+    "provider": "huggingface",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 3916,
+        "output_tokens": 982,
+        "total_tokens": 4898,
+        "cached_tokens": 48,
+        "input_cost_usd": 0.0013706,
+        "output_cost_usd": 0.001473,
+        "estimated_cost_usd": 0.0028436
+    },
+    "duration": 36.808562994003296,
+    "timestamp": "2026-09-18T21:39:00.247217",
+    "parsed": {
+        "advertisements": [
+            {
+                "box": [
+                    150.0,
+                    70.0,
+                    1050.0,
+                    1700.0
+                ]
+            },
+            {
+                "box": [
+                    1150.0,
+                    70.0,
+                    2200.0,
+                    1700.0
+                ]
+            },
+            {
+                "box": [
+                    150.0,
+                    1700.0,
+                    1050.0,
+                    3100.0
+                ]
+            },
+            {
+                "box": [
+                    1150.0,
+                    1700.0,
+                    2200.0,
+                    3100.0
+                ]
+            }
+        ]
+    },
+    "conversation_id": "99fbd17b-8e89-409a-a783-cd4171fbe241",
+    "score": {
+        "field_scores": {
+            "box 1": {
+                "response": [
+                    1150.0,
+                    70.0,
+                    2200.0,
+                    1700.0
+                ],
+                "ground_truth": [
+                    1209,
+                    221,
+                    2212,
+                    1654
+                ],
+                "score": 0.821
+            },
+            "box 3": {
+                "response": [
+                    1150.0,
+                    1700.0,
+                    2200.0,
+                    3100.0
+                ],
+                "ground_truth": [
+                    1214,
+                    1849,
+                    2216,
+                    3144
+                ],
+                "score": 0.804
+            },
+            "box 0": {
+                "response": [
+                    150.0,
+                    70.0,
+                    1050.0,
+                    1700.0
+                ],
+                "ground_truth": [
+                    146,
+                    226,
+                    1163,
+                    1723
+                ],
+                "score": 0.798
+            },
+            "box 2": {
+                "response": [
+                    150.0,
+                    1700.0,
+                    1050.0,
+                    3100.0
+                ],
+                "ground_truth": [
+                    158,
+                    1767,
+                    1167,
+                    3179
+                ],
+                "score": 0.795
+            }
+        },
+        "f1": 1.0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "mean_iou": 0.805,
+        "true_positives": 4,
+        "false_positives": 0,
+        "false_negatives": 0,
+        "iou_threshold": 0.5
+    },
+    "raw_response": "{\"id\":\"p1ozP6g-7ArivV-a3d2cf8c3fd70cf8\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\\"advertisements\\\": [\\n  {\\n    \\\"box\\\": [150, 70, 1050, 1700]\\n  },\\n  {\\n    \\\"box\\\": [1150, 70, 2200, 1700]\\n  },\\n  {\\n    \\\"box\\\": [150, 1700, 1050, 3100]\\n  },\\n  {\\n    \\\"box\\\": [1150, 1700, 2200, 3100]\\n  }\\n] }\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"advertisements\":[{\"box\":[150.0,70.0,1050.0,1700.0]},{\"box\":[1150.0,70.0,2200.0,1700.0]},{\"box\":[150.0,1700.0,1050.0,3100.0]},{\"box\":[1150.0,1700.0,2200.0,3100.0]}]},\"reasoning\":\"Extract all advertisements and return their bounding boxes. The original size of the page is 2479 x 3508 pixels.\\n\\nWe need bounding boxes for each advertisement. There are four ads: top left Langford's Technical and Commercial Dictionary, top right W. Triebold watch, bottom left Sindaco S.A. Locarno, bottom right Rodana.\\n\\nNeed coordinates. Probably normalized? Usually bounding boxes as [x_min, y_min, x_max, y_max] in pixels. Original size 2479 x 3508. Need estimate.\\n\\nLet's approximate. Image shows page with left margin. The ads are within.\\n\\nTop left ad: from about x ~ 60 to ~ 460? Wait page width 2479. The leftmost visible page starts maybe ~ 100? Let's estimate relative.\\n\\nBetter to give approximate coordinates. Might be expected as normalized 0-1000? Usually bounding boxes in pixels.\\n\\nI'll estimate:\\n\\nTop left dictionary ad: x_min ~ 150, y_min ~ 70, x_max ~ 460, y_max ~ 500? Actually top left box extends to about half width. The page width maybe 2479. The left ad occupies left half. Approx x 150 to 460? Wait 460 is too small. Let's think: image width ~ 2479. The left column is about 40% of width. So x_max ~ 1000. Let's approximate.\\n\\nBetter to use relative percentages.\\n\\nTop left ad: left ~ 5% of width = 124, right ~ 45% = 1116. Top ~ 6% = 210, bottom ~ 50% = 1754.\\n\\nTop right ad: left ~ 48% = 1189, right ~ 88% = 2185. Top ~ 6% = 210, bottom ~ 50% = 1754.\\n\\nBottom left ad: left ~ 5% =124, right ~ 45% =1116. Top ~ 50% =1754, bottom ~ 92% =3227.\\n\\nBottom right ad: left ~ 48% =1189, right ~ 88% =2185. Top ~ 50% =1754, bottom ~ 92% =3227.\\n\\nLet's refine.\\n\\nMaybe use pixel estimates more precise.\\n\\nI'll assume page content starts at x=100. The left ad box border is at x~150, x~ 460? Hmm.\\n\\nAlternative: Could provide normalized coordinates 0-1.\\n\\nMight be acceptable to give approximate bounding boxes.\\n\\nI'll give four boxes:\\n\\n1. Langford's Technical and Commercial Dictionary: [~140, ~70, ~460? Wait]. Let's pick [150, 70, 460?]. Hmm.\\n\\nLet's search mental: The image width 2479. The left ad width about 900 px. So x_min ~ 150, x_max ~ 1050. y_min ~ 70, y_max ~ 1700.\\n\\nTop right ad: x_min ~ 1150, x_max ~ 2200, y_min ~ 70, y_max ~ 1700.\\n\\nBottom left: x_min ~ 150, x_max ~ 1050, y_min ~ 1700, y_max ~ 3100.\\n\\nBottom right: x_min ~ 1150, x_max ~ 2200, y_min ~ 1700, y_max ~ 3100.\\n\\nLet's give those.\\n\\nMaybe better to give coordinates in [x_min, y_min, x_max, y_max].\\n\\nI'll output:\\n\\n- Langford's Dictionary ad: {x_min=150, y_min=70, x_max=1050, y_max=1700}\\n- W. Triebold watch ad: {x_min=1150, y_min=70, x_max=2200, y_max=1700}\\n- Sindaco S.A. Locarno ad: {x_min=150, y_min=1700, x_max=1050, y_max=3100}\\n- Rodana ad: {x_min=1150, y_min=1700, x_max=2200, y_max=3100}\\n\\nIf need more precise, could adjust.\\n\\nI'll present as approximate.\\n\\nLet's output list.\\n\\n\"},\"token_ids\":null,\"routed_experts\":null,\"seed\":null}],\"created\":1789760304,\"model\":\"meta-models/Muse-Glimmer-30B\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":\"vllm-0.1.dev19059+g66826a22d-tp2-46311a71\",\"usage\":{\"completion_tokens\":982,\"prompt_tokens\":3916,\"total_tokens\":4898,\"completion_tokens_details\":null,\"prompt_tokens_details\":{\"audio_tokens\":null,\"cached_tokens\":48,\"created_cache_tokens\":3856,\"multimodal_tokens\":{\"image\":3850}}},\"prompt_token_ids\":null,\"prompt_text\":null,\"kv_transfer_params\":null,\"ec_transfer_params\":null,\"metrics\":null,\"prompt\":[]}"
+}

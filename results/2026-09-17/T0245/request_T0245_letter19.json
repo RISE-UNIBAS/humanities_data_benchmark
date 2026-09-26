@@ -1,0 +1,88 @@
+{
+    "text": "{\"metadata\":{\"send_date\":[\"1928-03-22\"],\"letter_title\":null,\"sender_persons\":[\"Sulich\",\"Gundolf\"],\"receiver_persons\":[\"Basler Personenschiffahrtsgesellschaft\"]}}",
+    "model": "qwen/qwen3-vl-8b-thinking",
+    "provider": "openrouter",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 10681,
+        "output_tokens": 1643,
+        "total_tokens": 12324,
+        "input_cost_usd": 0.00192258,
+        "output_cost_usd": 0.0034503,
+        "estimated_cost_usd": 0.00537288
+    },
+    "duration": 17.23881459236145,
+    "timestamp": "2026-09-17T22:21:58.722974",
+    "parsed": {
+        "metadata": {
+            "send_date": [
+                "1928-03-22"
+            ],
+            "letter_title": null,
+            "sender_persons": [
+                "Sulich",
+                "Gundolf"
+            ],
+            "receiver_persons": [
+                "Basler Personenschiffahrtsgesellschaft"
+            ]
+        }
+    },
+    "conversation_id": "d0504bf0-b234-40ae-84f5-628800ee4d1f",
+    "score": {
+        "send_date_tp": 1,
+        "send_date_fp": 0,
+        "send_date_fn": 0,
+        "sender_persons_tp": 0,
+        "sender_persons_fp": 2,
+        "sender_persons_fn": 2,
+        "receiver_persons_tp": 0,
+        "receiver_persons_fp": 1,
+        "receiver_persons_fn": 0,
+        "field_scores": {
+            "send_date": {
+                "response": [
+                    "1928-03-22"
+                ],
+                "ground_truth": [
+                    "1928-03-22"
+                ],
+                "score": null,
+                "counts": {
+                    "send_date_tp": 1,
+                    "send_date_fp": 0,
+                    "send_date_fn": 0
+                }
+            },
+            "sender_persons": {
+                "response": [
+                    "Gundolf",
+                    "Sulich"
+                ],
+                "ground_truth": [
+                    "Groschupf-Jaeger, Louis",
+                    "Speich, Rudolf"
+                ],
+                "score": null,
+                "counts": {
+                    "sender_persons_tp": 0,
+                    "sender_persons_fp": 2,
+                    "sender_persons_fn": 2
+                }
+            },
+            "receiver_persons": {
+                "response": [
+                    "Basler Personenschiffahrtsgesellschaft"
+                ],
+                "ground_truth": [],
+                "score": null,
+                "counts": {
+                    "receiver_persons_tp": 0,
+                    "receiver_persons_fp": 1,
+                    "receiver_persons_fn": 0
+                }
+            }
+        }
+    },
+    "raw_response": "{\"id\":\"gen-1789676502-UeTxmQNd3UD9nQ14ZTpF\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\n    \\\"metadata\\\": {\\n        \\\"letter_title\\\": null,\\n        \\\"receiver_persons\\\": [\\n            \\\"Basler Personenschiffahrtsgesellschaft\\\"\\n        ],\\n        \\\"send_date\\\": [\\n            \\\"1928-03-22\\\"\\n        ],\\n        \\\"sender_persons\\\": [\\n            \\\"Sulich\\\",\\n            \\\"Gundolf\\\"\\n        ]\\n    }\\n}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"metadata\":{\"send_date\":[\"1928-03-22\"],\"letter_title\":null,\"sender_persons\":[\"Sulich\",\"Gundolf\"],\"receiver_persons\":[\"Basler Personenschiffahrtsgesellschaft\"]}},\"reasoning\":\"let's tackle this problem step by step. I need to extract the metadata from the historical letter images provided. The required fields are letter_title, sender_persons, send_date, and receiver_persons, each as a list (even if single value). Let's go through each image to gather the info.\\n\\nFirst, looking at the first image. The top left has \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\", which is the sender. The date is \\\"Basel, den 22. M\u00e4rz 1928.\\\" So send_date is 1928-03-22. The receiver is \\\"An den Vorstand der Basler Personenschiffahrtsgesellschaft, Basel.\\\" So receiver_persons would be [\\\"Basler Personenschiffahrtsgesellschaft\\\"].\\n\\nNow, the sender_persons. The letter is from Basler Rheinschiffahrt-Aktiengesellschaft, but looking at the last page (image 4), the signature is \\\"Sulich\\\" and \\\"Gundolf\\\", and the company name is there. Wait, the sender is the company, but do we have the specific person names? Wait, the example shows sender_persons as names, but in this case, the letter is from the company. However, the first image has the company name at the top, and the last page has signatures. Let's check the images.\\n\\nImage 1: Header shows the sender company name. Image 4 has signatures \\\"Sulich\\\" and \\\"Gundolf\\\", so those are the senders. Wait, the company is the sender, so sender_persons would be the individuals who signed? But the example has \\\"Lisa Simpson\\\" as a name. Wait, the problem says \\\"Name(s) of the person(s) who wrote the letter.\\\" So in a business letter, the sender is the company, but the people who wrote it would be the signatories. In image 4, it's signed by Sulich and Gundolf, so sender_persons are [\\\"Sulich\\\", \\\"Gundolf\\\"].\\n\\nWait, let's confirm. The letter is from the Basler Rheinschiffahrt-Aktiengesellschaft, but the actual writers are the signatories. So sender_persons should be the names of the individuals who signed, which are Sulich and Gundolf as per image 4.\\n\\nNow, letter_title: what's the title of the letter? The images don't have a specific title line, but it's a business letter about negotiations between the two companies. However, the problem says \\\"Title of the letter.\\\" If there's no explicit title, maybe we need to infer. Wait, looking at the example, it's \\\"Petition for Environmental Protection\\\". But in this case, the letter is a proposal/offer regarding the purchase of a ship. Let's see the content: they're offering to buy the ship \\\"Rheinfelden\\\", discuss rental, etc. But maybe there's no title. Wait, the problem says \\\"If a piece of information is not included in the letter, set the value for the corresponding key to 'null'.\\\" So if there's no title, it's null? Wait, but the example includes a title. Wait, the problem says \\\"the values corresponding to each key should be stored as a list\\\". So for letter_title, if it's not present, it's null. But do we have a title?\\n\\nLooking at the images: the first page has the sender's name, then the date, then \\\"An den Vorstand...\\\" (receiver), then the body. There's no explicit title line. So letter_title would be null? Wait, but the example has a title. Hmm. Wait, the problem says \\\"extract the values of the following keys from the letter\\\". So if the letter doesn't have a title, then it's null.\\n\\nWait, but maybe the letter title is the subject, but the problem says \\\"Title of the letter\\\", which is usually a line at the top. Since the images don't show a title line, we have to go with null for letter_title.\\n\\nWait, let's check all fields:\\n\\nsend_date: The first image has \\\"Basel, den 22. M\u00e4rz 1928.\\\" So that's 1928-03-22.\\n\\nreceiver_persons: \\\"An den Vorstand der Basler Personenschiffahrtsgesellschaft, Basel.\\\" So the receiver is the Vorstand (board) of that company. So receiver_persons is [\\\"Basler Personenschiffahrtsgesellschaft\\\"].\\n\\nsender_persons: The letter is signed by Sulich and Gundolf (from image 4). The company is the sender, but the specific persons who wrote it are the signatories. So sender_persons is [\\\"Sulich\\\", \\\"Gundolf\\\"].\\n\\nletter_title: No explicit title in the letter, so it's null.\\n\\nWait, but the problem says \\\"Name(s) of the person(s) who wrote the letter.\\\" So the signatories are the writers. So yes, Sulich and Gundolf are the senders (people who wrote the letter).\\n\\nLet's confirm send_date: \\\"22. M\u00e4rz 1928\\\" is March 22, 1928. So ISO format is 1928-03-22.\\n\\nNow, check if all required fields are present:\\n\\n- send_date: yes, 1928-03-22.\\n\\n- letter_title: no title, so null.\\n\\n- sender_persons: Sulich and Gundolf.\\n\\n- receiver_persons: Basler Personenschiffahrtsgesellschaft.\\n\\nWait, but let's check the receiver_persons. The letter is addressed to \\\"An den Vorstand der Basler Personenschiffahrtsgesellschaft, Basel.\\\" So the receiver is the Vorstand (board) of the Basler Personenschiffahrtsgesellschaft. So the name of the receiver is \\\"Basler Personenschiffahrtsgesellschaft\\\", so the list would be [\\\"Basler Personenschiffahrtsgesellschaft\\\"].\\n\\nNow, letter_title: The problem says if not included, it's null. Since there's no title line, it's null.\\n\\nSo putting it all together:\\n\\n{\\n    \\\"metadata\\\": {\\n        \\\"letter_title\\\": null,\\n        \\\"sender_persons\\\": [\\\"Sulich\\\", \\\"Gundolf\\\"],\\n        \\\"send_date\\\": [\\\"1928-03-22\\\"],\\n        \\\"receiver_persons\\\": [\\\"Basler Personenschiffahrtsgesellschaft\\\"]\\n    }\\n}\\n\\nWait, but wait: the receiver_persons should be the people who received, but the letter is addressed to the Vorstand (a group), so the company name is the receiver. So yes.\\n\\nCheck the images again. Image 4 has \\\"An den Vorstand der Basler Personenschiffahrtsgesellschaft, Basel.\\\" So the receiver is the Vorstand of that company, so the entity is Basler Personenschiffahrtsgesellschaft. So receiver_persons is [\\\"Basler Personenschiffahrtsgesellschaft\\\"].\\n\\nSender_persons: the signatures are \\\"Sulich\\\" and \\\"Gundolf\\\", so those are the people who wrote the letter. Therefore, sender_persons is a list with those two names.\\n\\nSend_date: 1928-03-22.\\n\\nLetter_title: no title, so null.\\n\\nYes, that seems correct.\\n\",\"reasoning_details\":[{\"type\":\"reasoning.text\",\"text\":\"let's tackle this problem step by step. I need to extract the metadata from the historical letter images provided. The required fields are letter_title, sender_persons, send_date, and receiver_persons, each as a list (even if single value). Let's go through each image to gather the info.\\n\\nFirst, looking at the first image. The top left has \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\", which is the sender. The date is \\\"Basel, den 22. M\u00e4rz 1928.\\\" So send_date is 1928-03-22. The receiver is \\\"An den Vorstand der Basler Personenschiffahrtsgesellschaft, Basel.\\\" So receiver_persons would be [\\\"Basler Personenschiffahrtsgesellschaft\\\"].\\n\\nNow, the sender_persons. The letter is from Basler Rheinschiffahrt-Aktiengesellschaft, but looking at the last page (image 4), the signature is \\\"Sulich\\\" and \\\"Gundolf\\\", and the company name is there. Wait, the sender is the company, but do we have the specific person names? Wait, the example shows sender_persons as names, but in this case, the letter is from the company. However, the first image has the company name at the top, and the last page has signatures. Let's check the images.\\n\\nImage 1: Header shows the sender company name. Image 4 has signatures \\\"Sulich\\\" and \\\"Gundolf\\\", so those are the senders. Wait, the company is the sender, so sender_persons would be the individuals who signed? But the example has \\\"Lisa Simpson\\\" as a name. Wait, the problem says \\\"Name(s) of the person(s) who wrote the letter.\\\" So in a business letter, the sender is the company, but the people who wrote it would be the signatories. In image 4, it's signed by Sulich and Gundolf, so sender_persons are [\\\"Sulich\\\", \\\"Gundolf\\\"].\\n\\nWait, let's confirm. The letter is from the Basler Rheinschiffahrt-Aktiengesellschaft, but the actual writers are the signatories. So sender_persons should be the names of the individuals who signed, which are Sulich and Gundolf as per image 4.\\n\\nNow, letter_title: what's the title of the letter? The images don't have a specific title line, but it's a business letter about negotiations between the two companies. However, the problem says \\\"Title of the letter.\\\" If there's no explicit title, maybe we need to infer. Wait, looking at the example, it's \\\"Petition for Environmental Protection\\\". But in this case, the letter is a proposal/offer regarding the purchase of a ship. Let's see the content: they're offering to buy the ship \\\"Rheinfelden\\\", discuss rental, etc. But maybe there's no title. Wait, the problem says \\\"If a piece of information is not included in the letter, set the value for the corresponding key to 'null'.\\\" So if there's no title, it's null? Wait, but the example includes a title. Wait, the problem says \\\"the values corresponding to each key should be stored as a list\\\". So for letter_title, if it's not present, it's null. But do we have a title?\\n\\nLooking at the images: the first page has the sender's name, then the date, then \\\"An den Vorstand...\\\" (receiver), then the body. There's no explicit title line. So letter_title would be null? Wait, but the example has a title. Hmm. Wait, the problem says \\\"extract the values of the following keys from the letter\\\". So if the letter doesn't have a title, then it's null.\\n\\nWait, but maybe the letter title is the subject, but the problem says \\\"Title of the letter\\\", which is usually a line at the top. Since the images don't show a title line, we have to go with null for letter_title.\\n\\nWait, let's check all fields:\\n\\nsend_date: The first image has \\\"Basel, den 22. M\u00e4rz 1928.\\\" So that's 1928-03-22.\\n\\nreceiver_persons: \\\"An den Vorstand der Basler Personenschiffahrtsgesellschaft, Basel.\\\" So the receiver is the Vorstand (board) of that company. So receiver_persons is [\\\"Basler Personenschiffahrtsgesellschaft\\\"].\\n\\nsender_persons: The letter is signed by Sulich and Gundolf (from image 4). The company is the sender, but the specific persons who wrote it are the signatories. So sender_persons is [\\\"Sulich\\\", \\\"Gundolf\\\"].\\n\\nletter_title: No explicit title in the letter, so it's null.\\n\\nWait, but the problem says \\\"Name(s) of the person(s) who wrote the letter.\\\" So the signatories are the writers. So yes, Sulich and Gundolf are the senders (people who wrote the letter).\\n\\nLet's confirm send_date: \\\"22. M\u00e4rz 1928\\\" is March 22, 1928. So ISO format is 1928-03-22.\\n\\nNow, check if all required fields are present:\\n\\n- send_date: yes, 1928-03-22.\\n\\n- letter_title: no title, so null.\\n\\n- sender_persons: Sulich and Gundolf.\\n\\n- receiver_persons: Basler Personenschiffahrtsgesellschaft.\\n\\nWait, but let's check the receiver_persons. The letter is addressed to \\\"An den Vorstand der Basler Personenschiffahrtsgesellschaft, Basel.\\\" So the receiver is the Vorstand (board) of the Basler Personenschiffahrtsgesellschaft. So the name of the receiver is \\\"Basler Personenschiffahrtsgesellschaft\\\", so the list would be [\\\"Basler Personenschiffahrtsgesellschaft\\\"].\\n\\nNow, letter_title: The problem says if not included, it's null. Since there's no title line, it's null.\\n\\nSo putting it all together:\\n\\n{\\n    \\\"metadata\\\": {\\n        \\\"letter_title\\\": null,\\n        \\\"sender_persons\\\": [\\\"Sulich\\\", \\\"Gundolf\\\"],\\n        \\\"send_date\\\": [\\\"1928-03-22\\\"],\\n        \\\"receiver_persons\\\": [\\\"Basler Personenschiffahrtsgesellschaft\\\"]\\n    }\\n}\\n\\nWait, but wait: the receiver_persons should be the people who received, but the letter is addressed to the Vorstand (a group), so the company name is the receiver. So yes.\\n\\nCheck the images again. Image 4 has \\\"An den Vorstand der Basler Personenschiffahrtsgesellschaft, Basel.\\\" So the receiver is the Vorstand of that company, so the entity is Basler Personenschiffahrtsgesellschaft. So receiver_persons is [\\\"Basler Personenschiffahrtsgesellschaft\\\"].\\n\\nSender_persons: the signatures are \\\"Sulich\\\" and \\\"Gundolf\\\", so those are the people who wrote the letter. Therefore, sender_persons is a list with those two names.\\n\\nSend_date: 1928-03-22.\\n\\nLetter_title: no title, so null.\\n\\nYes, that seems correct.\\n\",\"format\":\"unknown\",\"index\":0}]},\"native_finish_reason\":\"stop\"}],\"created\":1789676502,\"model\":\"qwen/qwen3-vl-8b-thinking\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":null,\"usage\":{\"completion_tokens\":1643,\"prompt_tokens\":10681,\"total_tokens\":12324,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":0,\"reasoning_tokens\":1558,\"rejected_prediction_tokens\":null,\"image_tokens\":0},\"prompt_tokens_details\":{\"audio_tokens\":0,\"cached_tokens\":0,\"cache_write_tokens\":0,\"video_tokens\":0},\"cost\":0.00537288,\"is_byok\":false,\"cost_details\":{\"upstream_inference_cost\":0.00537288,\"upstream_inference_prompt_cost\":0.00192258,\"upstream_inference_completions_cost\":0.0034503}},\"provider\":\"Alibaba\"}"
+}

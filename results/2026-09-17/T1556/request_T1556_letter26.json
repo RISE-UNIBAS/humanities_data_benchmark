@@ -1,0 +1,80 @@
+{
+    "text": "{\"metadata\":{\"send_date\":[\"1928-04-23\"],\"letter_title\":null,\"sender_persons\":[\"Basler Personenschiffahrtsgesellschaft\"],\"receiver_persons\":null}}",
+    "model": "thinkingmachines/Inkling",
+    "provider": "huggingface",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 4180,
+        "output_tokens": 1964,
+        "total_tokens": 6144,
+        "cached_tokens": 256,
+        "input_cost_usd": 0.00418,
+        "output_cost_usd": 0.0079542,
+        "estimated_cost_usd": 0.0121342
+    },
+    "duration": 25.202728033065796,
+    "timestamp": "2026-09-17T11:37:46.480824",
+    "parsed": {
+        "metadata": {
+            "send_date": [
+                "1928-04-23"
+            ],
+            "letter_title": null,
+            "sender_persons": [
+                "Basler Personenschiffahrtsgesellschaft"
+            ],
+            "receiver_persons": null
+        }
+    },
+    "conversation_id": "2211bde5-bf6d-4ab9-a1e4-f0748b50fb64",
+    "score": {
+        "send_date_tp": 1,
+        "send_date_fp": 0,
+        "send_date_fn": 0,
+        "sender_persons_tp": 0,
+        "sender_persons_fp": 1,
+        "sender_persons_fn": 0,
+        "receiver_persons_tp": 0,
+        "receiver_persons_fp": 0,
+        "receiver_persons_fn": 0,
+        "field_scores": {
+            "send_date": {
+                "response": [
+                    "1928-04-23"
+                ],
+                "ground_truth": [
+                    "1928-04-23"
+                ],
+                "score": null,
+                "counts": {
+                    "send_date_tp": 1,
+                    "send_date_fp": 0,
+                    "send_date_fn": 0
+                }
+            },
+            "sender_persons": {
+                "response": [
+                    "Basler Personenschiffahrtsgesellschaft"
+                ],
+                "ground_truth": [],
+                "score": null,
+                "counts": {
+                    "sender_persons_tp": 0,
+                    "sender_persons_fp": 1,
+                    "sender_persons_fn": 0
+                }
+            },
+            "receiver_persons": {
+                "response": [],
+                "ground_truth": [],
+                "score": null,
+                "counts": {
+                    "receiver_persons_tp": 0,
+                    "receiver_persons_fp": 0,
+                    "receiver_persons_fn": 0
+                }
+            }
+        }
+    },
+    "raw_response": "{\"id\":\"p1dAjLD-4i1VM9-a3c721bf2a9864fb\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\n  \\\"metadata\\\": {\\n    \\\"send_date\\\": [\\\"1928-04-23\\\"],\\n    \\\"letter_title\\\": null,\\n    \\\"sender_persons\\\": [\\\"Basler Personenschiffahrtsgesellschaft\\\"],\\n    \\\"receiver_persons\\\": null\\n  }\\n}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"metadata\":{\"send_date\":[\"1928-04-23\"],\"letter_title\":null,\"sender_persons\":[\"Basler Personenschiffahrtsgesellschaft\"],\"receiver_persons\":null}},\"reasoning\":\"We need parse image of historical letter, extract title, sender, date, receiver. Need inspect both pages.\\n\\nPage 1: Top right \\\"26\\\" maybe page number. Then \\\"Basel, den 23. April 1928.\\\" Then \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\" then \\\"Basel\\\" then dashed line \\\"Marktgasse 5.\\\" Then body: \\\"Wir sind im Besitze Ihres Geehrten vom 28. M\u00e4rz...\\\" So sender is Basler Rheinschiffahrt-Aktiengesellschaft? Or maybe \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\" is the organization writing. Need determine letter_title? Maybe none explicit, but could be null? Let's examine page 2: \\\"- 2 -\\\" then text continues with articles, then \\\"In Hochachtung Basler Personenschiffahrtsgesellschaft\\\" Wait \\\"Basler Personenschiffahrtsgesellschaft\\\" at bottom right? Actually image shows \\\"In Hochachtung\\\" then \\\"Basler Personenschiffahrtsgesellschaft\\\". So sender might be Basler Personenschiffahrtsgesellschaft. But page 1 header says \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\" with address Marktgasse 5, Basel. Hmm discrepancy? Let's read carefully.\\n\\nWe need identify letter title: maybe not present, so null. Send date: \\\"Basel, den 23. April 1928\\\" => 1928-04-23. Sender persons: The signing entity is \\\"Basler Personenschiffahrtsgesellschaft\\\" on page 2. But letterhead on page 1 is \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\". Which one is correct? Let's analyze context: The letter discusses purchase contract for boat \\\"Rheinfelden\\\" and mentions \\\"Personenschiffahrt\\\" and \\\"Personenschiffahrtsgesellschaft\\\". At bottom they sign \\\"Basler Personenschiffahrtsgesellschaft\\\". So sender is Basler Personenschiffahrtsgesellschaft. However the letterhead might indicate they are part of that? Actually \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\" could be the company name, but they sign as \\\"Basler Personenschiffahrtsgesellschaft\\\". Need determine correct extraction. Let's inspect page 1 header precisely: \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\" then \\\"B a s e l\\\" then \\\"--------\\\" \\\"Marktgasse 5.\\\" That looks like letterhead of sender. Then page 2 closing \\\"In Hochachtung Basler Personenschiffahrtsgesellschaft\\\". Maybe \\\"Rheinschiffahrt-Aktiengesellschaft\\\" is the full legal name, and \\\"Personenschiffahrtsgesellschaft\\\" is abbreviation? But they are different: Rheinschiffahrt vs Personenschiffahrt. Let's think: In Basel there was \\\"Basler Personenschiffahrts-Gesellschaft\\\" founded 1924? Actually Basler Personenschifffahrt AG (BPG) founded 1924 as Basler Personenschiffahrtsgesellschaft? Let's check mental knowledge: Basler Personenschifffahrt AG (BPG) was founded in 1924 as \\\"Basler Personenschiffahrtsgesellschaft\\\". There might also be \\\"Basler Rheinschiffahrt AG\\\" for cargo? So likely the sender is Basler Personenschiffahrtsgesellschaft, and the letterhead on page 1 might actually read \\\"Basler Personenschiffahrt-Aktiengesellschaft\\\"? Let's examine image: The text looks like \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\" but could be \\\"Basler Personenschiffahrt-Aktiengesellschaft\\\" with \\\"Personen\\\" misread? Let's zoom mental: The word after Basler starts with R? Actually \\\"Rheinschiffahrt\\\" vs \\\"Personenschiffahrt\\\". Given context of passenger boat \\\"Rheinfelden\\\" and \\\"Personenschiffahrt\\\" in body and signature, it's likely \\\"Basler Personenschiffahrt-Aktiengesellschaft\\\". The letters might be \\\"Personenschiffahrt\\\" but due to font looks like \\\"Rheinschiffahrt\\\"? Let's examine: \\\"Personenschiffahrt\\\" is longer. In the image, the word seems about same length? Hmm. But the signature clearly says \\\"Basler Personenschiffahrtsgesellschaft\\\". So I will use that as sender, maybe include both? The prompt asks name(s) of person(s) who wrote the letter. Could be organization. We'll list \\\"Basler Personenschiffahrtsgesellschaft\\\". Or maybe include both? Let's hold.\\n\\nReceiver persons: The letter addresses \\\"Ihr Geehrten vom 28. M\u00e4rz...\\\" and mentions \\\"mit dem Entwurfe einverstanden\\\" and \\\"Wir sind bereit, den Kaufvertrag mit den vorerw\u00e4hnten Aenderungen rein formeller Natur zu unterzeichnen.\\\" So it's a reply to some party with whom they negotiate purchase of boat. The recipient is not named explicitly in visible parts except maybe in address block? There's no address block visible except sender's address. So receiver is unknown, null? But maybe the recipient is implied in salutation? There's no \\\"Sehr geehrte Herren\\\" visible? Actually the body starts \\\"Wir sind im Besitze Ihres Geehrten vom 28. M\u00e4rz...\\\" which addresses \\\"Ihr Geehrten\\\" but no name. So receiver_persons should be null? Or maybe there is a name on another page not shown? Only two pages shown. So null.\\n\\nLetter title: Not present, null? Or could be \\\"Kaufvertrag\\\" but not title. We'll set null.\\n\\nBut wait, there might be a title at top? No.\\n\\nThus JSON:\\n{\\n\\\"letter_title\\\": [null? Actually they said if not included set value to \\\"null\\\". But they want values stored as list, even if single value. So \\\"letter_title\\\": [\\\"null\\\"]? No, they said set the value for corresponding key to \\\"null\\\". In example they have lists of strings. If information not included, set value to \\\"null\\\" (probably the JSON null inside list? Or the list containing null?). Usually in these extraction tasks, they want [\\\"null\\\"]? Let's check instruction: \\\"If a piece of information is not included in the letter, set the value for the corresponding key to \\\"null\\\". Do not return anything except the JSON file.\\\" Given they said values corresponding to each key should be stored as a list, even if there is only a single value for a key. So likely they want \\\"letter_title\\\": null? But that conflicts with \\\"stored as a list\\\". However they said \\\"set the value for the corresponding key to 'null'\\\" which might mean the list is null? Or the value inside is null? Let's examine example: all values are lists. So probably they want [\\\"null\\\"]? But they said \\\"set the value ... to 'null'\\\" not \\\"['null']\\\". Let's think: In JSON, you can have \\\"letter_title\\\": null. But they said store values as list. Hmm. Usually in these prompts they want list always, and if missing then [\\\"null\\\"]? Actually I've seen similar prompts where they say \\\"store as a list, even if there is only a single value\\\" and \\\"if not included set value to null\\\". That often results in \\\"letter_title\\\": null despite list instruction? Let's check consistency: If value must be list, then null is not a list. So likely they intend the list to contain the string \\\"null\\\"? No, they said set the value ... to \\\"null\\\" (the JSON null value). But then it's not a list. However they might not be strictly enforcing list for null case. Let's decide: For missing values, use null (not in list). But for present values, use list. Let's do that: \\\"letter_title\\\": null, \\\"receiver_persons\\\": null. But wait they said \\\"values corresponding to each key should be stored as a list, even if there is only a single value for a key\\\". This applies to values that exist. For missing, exception. So yes.\\n\\nBut need be precise about sender: \\\"Basler Personenschiffahrtsgesellschaft\\\". Date: \\\"1928-04-23\\\". Let's also consider if there is a specific person signing? The bottom says \\\"In Hochachtung\\\" then \\\"Basler Personenschiffahrtsgesellschaft\\\". No individual name. So sender_persons: [\\\"Basler Personenschiffahrtsgesellschaft\\\"].\\n\\nBut wait page 1 header \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\" might be the actual sender name, and page 2 signature might be \\\"Basler Personenschiffahrtsgesellschaft\\\" but maybe misread. Let's examine image text on page 2 bottom: \\\"In Hochachtung\\\" then on next line \\\"Basler Personenschiffahrtsgesellschaft\\\". Yes.\\n\\nThus output:\\n{\\n\\\"letter_title\\\": null,\\n\\\"send_date\\\": [\\\"1928-04-23\\\"],\\n\\\"sender_persons\\\": [\\\"Basler Personenschiffahrtsgesellschaft\\\"],\\n\\\"receiver_persons\\\": null\\n}\\n\\nBut I want to double-check date format: 1928-04-23 correct.\\n\\nOne more check: Is there any hidden receiver name in salutation? The body starts \\\"Wir sind im Besitze Ihres Geehrten vom 28. M\u00e4rz...\\\" No name. So null.\\n\\nTherefore return JSON.\"},\"seed\":null}],\"created\":1789637842,\"model\":\"thinkingmachines/Inkling\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":\"default\",\"usage\":{\"completion_tokens\":1964,\"prompt_tokens\":4180,\"total_tokens\":6144,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":null,\"reasoning_tokens\":1905,\"rejected_prediction_tokens\":null},\"prompt_tokens_details\":{\"audio_tokens\":null,\"cached_tokens\":256}},\"prompt\":[]}"
+}

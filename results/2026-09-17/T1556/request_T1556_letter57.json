@@ -1,0 +1,90 @@
+{
+    "text": "{\"metadata\":{\"send_date\":[\"1932-10-15\"],\"letter_title\":[\"Betrifft Darlehen f\u00fcr den Bau des neuen Personenschiffes\"],\"sender_persons\":[\"Basler Rheinschiffahrt Aktiengesellschaft\"],\"receiver_persons\":[\"Dr. Max Vischer\"]}}",
+    "model": "thinkingmachines/Inkling",
+    "provider": "huggingface",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 4180,
+        "output_tokens": 785,
+        "total_tokens": 4965,
+        "cached_tokens": 256,
+        "input_cost_usd": 0.00418,
+        "output_cost_usd": 0.00317925,
+        "estimated_cost_usd": 0.0073592499999999995
+    },
+    "duration": 10.836179733276367,
+    "timestamp": "2026-09-17T11:38:30.180924",
+    "parsed": {
+        "metadata": {
+            "send_date": [
+                "1932-10-15"
+            ],
+            "letter_title": [
+                "Betrifft Darlehen f\u00fcr den Bau des neuen Personenschiffes"
+            ],
+            "sender_persons": [
+                "Basler Rheinschiffahrt Aktiengesellschaft"
+            ],
+            "receiver_persons": [
+                "Dr. Max Vischer"
+            ]
+        }
+    },
+    "conversation_id": "ddc51c44-cc18-4204-9dde-c58b06e75f29",
+    "score": {
+        "send_date_tp": 1,
+        "send_date_fp": 0,
+        "send_date_fn": 0,
+        "sender_persons_tp": 0,
+        "sender_persons_fp": 1,
+        "sender_persons_fn": 1,
+        "receiver_persons_tp": 1,
+        "receiver_persons_fp": 0,
+        "receiver_persons_fn": 0,
+        "field_scores": {
+            "send_date": {
+                "response": [
+                    "1932-10-15"
+                ],
+                "ground_truth": [
+                    "1932-10-15"
+                ],
+                "score": null,
+                "counts": {
+                    "send_date_tp": 1,
+                    "send_date_fp": 0,
+                    "send_date_fn": 0
+                }
+            },
+            "sender_persons": {
+                "response": [
+                    "Basler Rheinschiffahrt Aktiengesellschaft"
+                ],
+                "ground_truth": [
+                    "Ritter-Dreier, Fritz"
+                ],
+                "score": null,
+                "counts": {
+                    "sender_persons_tp": 0,
+                    "sender_persons_fp": 1,
+                    "sender_persons_fn": 1
+                }
+            },
+            "receiver_persons": {
+                "response": [
+                    "Vischer-von Planta, Max"
+                ],
+                "ground_truth": [
+                    "Vischer-von Planta, Max"
+                ],
+                "score": null,
+                "counts": {
+                    "receiver_persons_tp": 1,
+                    "receiver_persons_fp": 0,
+                    "receiver_persons_fn": 0
+                }
+            }
+        }
+    },
+    "raw_response": "{\"id\":\"p1dB2a5-4i1VM9-a3c72329ad6d99ad\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\n  \\\"metadata\\\": {\\n    \\\"send_date\\\": [\\\"1932-10-15\\\"],\\n    \\\"letter_title\\\": [\\\"Betrifft Darlehen f\u00fcr den Bau des neuen Personenschiffes\\\"],\\n    \\\"sender_persons\\\": [\\\"Basler Rheinschiffahrt Aktiengesellschaft\\\"],\\n    \\\"receiver_persons\\\": [\\\"Dr. Max Vischer\\\"]\\n  }\\n}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"metadata\":{\"send_date\":[\"1932-10-15\"],\"letter_title\":[\"Betrifft Darlehen f\u00fcr den Bau des neuen Personenschiffes\"],\"sender_persons\":[\"Basler Rheinschiffahrt Aktiengesellschaft\"],\"receiver_persons\":[\"Dr. Max Vischer\"]}},\"reasoning\":\"We need parse images of historical letter, extract keys: letter_title, sender_persons, send_date, receiver_persons. Need return JSON list values.\\n\\nWe need identify letter title? Maybe none explicit, but letterhead \\\"BASLER RHEINSCHIFFFAHRT AKTIENGESELLSCHAFT\\\" not title. The letter might have subject \\\"Betrifft Darlehen f\u00fcr den Bau des neuen Personenschiffes.\\\" That could be title? The prompt says \\\"letter_title: Title of the letter.\\\" Might be null if not present? But there is a subject line \\\"Betrifft Darlehen f\u00fcr den Bau des neuen Personenschiffes.\\\" Could be considered title. Let's examine.\\n\\nImage 1: Header with company name and address. Date \\\"Basel, den 15.Oktober 1932.\\\" Addressee: \\\"Herrn Dr. Max Vischer, Advokat, Pr\u00e4sident der Personenschiffahrtsgesellschaft, Basel.\\\" Then body about loan for new passenger ship. Signed at bottom of page 2 \\\"BASLER RHEINSCHIFFFAHRT-AKTIENGESELLSCHAFT\\\" with signature.\\n\\nThus sender is Basler Rheinschiffahrt Aktiengesellschaft? Or maybe represented by someone? The signature is company name, not individual. So sender_persons likely [\\\"Basler Rheinschiffahrt Aktiengesellschaft\\\"].\\n\\nReceiver: \\\"Dr. Max Vischer\\\" maybe also \\\"Herrn Ad. Ryniker\\\" mentioned in body \\\"Wir haben mit Ihren Vice-Pr\u00e4sidenten, Herrn Ad. Ryniker...\\\" but receiver is the addressee Dr. Max Vischer.\\n\\nSend date: 1932-10-15.\\n\\nLetter title: Maybe \\\"Betrifft Darlehen f\u00fcr den Bau des neuen Personenschiffes\\\" or null? The example had \\\"Petition for Environmental Protection\\\" which sounds like subject/title. Here there is explicit \\\"Betrifft...\\\" line acting as subject. I think include that as title? But key is \\\"letter_title\\\" not \\\"subject\\\". However often in these extraction tasks they want the title if present at top. Here no explicit title except company letterhead. The \\\"Betrifft\\\" line is subject/re. Might be appropriate to include as title? Let's think carefully.\\n\\nWe need map all claims. The letter is from Basler Rheinschiffahrt AG to Dr. Max Vischer dated 15 Oct 1932 regarding loan for construction of new passenger ship. So values:\\n\\nletter_title: maybe null? Or [\\\"Darlehen f\u00fcr den Bau des neuen Personenschiffes\\\"]? Let's check typical extraction patterns for historical letters: They ask for letter_title, which might be present as heading like \\\"Petition...\\\". In this image, there is no separate title, but there is a subject line \\\"Betrifft Darlehen f\u00fcr den Bau des neuen Personenschiffes.\\\" That functions as title/subject. I think include it.\\n\\nBut need be precise: \\\"Betrifft Darlehen f\u00fcr den Bau des neuen Personenschiffes\\\" maybe list.\\n\\nSender persons: The letter is written on behalf of company, signed \\\"BASLER RHEINSCHIFFFAHRT-AKTIENGESELLSCHAFT\\\". So [\\\"Basler Rheinschiffahrt Aktiengesellschaft\\\"].\\n\\nSend date: [\\\"1932-10-15\\\"].\\n\\nReceiver persons: [\\\"Dr. Max Vischer\\\"].\\n\\nNeed JSON only. Let's provide that.\"},\"seed\":null}],\"created\":1789637900,\"model\":\"thinkingmachines/Inkling\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":\"default\",\"usage\":{\"completion_tokens\":785,\"prompt_tokens\":4180,\"total_tokens\":4965,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":null,\"reasoning_tokens\":704,\"rejected_prediction_tokens\":null},\"prompt_tokens_details\":{\"audio_tokens\":null,\"cached_tokens\":256}},\"prompt\":[]}"
+}

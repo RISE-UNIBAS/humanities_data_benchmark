@@ -1,0 +1,80 @@
+{
+    "text": "{\"advertisements\":[{\"box\":[180.0,190.0,2300.0,1650.0]},{\"box\":[180.0,1750.0,2300.0,3400.0]}]}",
+    "model": "deepseek-flash",
+    "provider": "deepseek",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 1288,
+        "output_tokens": 2008,
+        "total_tokens": 3296,
+        "input_cost_usd": 0.0003864,
+        "output_cost_usd": 0.0024095999999999996,
+        "estimated_cost_usd": 0.0027959999999999994
+    },
+    "duration": 10.775609731674194,
+    "timestamp": "2026-09-16T17:17:24.346194",
+    "parsed": {
+        "advertisements": [
+            {
+                "box": [
+                    180,
+                    190,
+                    2300,
+                    1650
+                ]
+            },
+            {
+                "box": [
+                    180,
+                    1750,
+                    2300,
+                    3400
+                ]
+            }
+        ]
+    },
+    "conversation_id": "224563da-dc00-49c9-acf2-596a04bb51c5",
+    "score": {
+        "field_scores": {
+            "box 0": {
+                "response": [
+                    180,
+                    190,
+                    2300,
+                    1650
+                ],
+                "ground_truth": [
+                    330,
+                    204,
+                    2365,
+                    1716
+                ],
+                "score": 0.857
+            },
+            "box 1": {
+                "response": [
+                    180,
+                    1750,
+                    2300,
+                    3400
+                ],
+                "ground_truth": [
+                    347,
+                    1774,
+                    2337,
+                    3253
+                ],
+                "score": 0.813
+            }
+        },
+        "f1": 1.0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "mean_iou": 0.835,
+        "true_positives": 2,
+        "false_positives": 0,
+        "false_negatives": 0,
+        "iou_threshold": 0.5
+    },
+    "raw_response": "{\"id\":\"ac6935cc-6e55-4066-bae3-5d32e0afa5e6\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\n  \\\"advertisements\\\": [\\n    {\\n      \\\"box\\\": [180, 190, 2300, 1650]\\n    },\\n    {\\n      \\\"box\\\": [180, 1750, 2300, 3400]\\n    }\\n  ]\\n}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"reasoning_content\":\"We need to find bounding boxes for advertisements on the page. Page size 2479 x 3508. There appear to be two advertisements: top one for Swiss Bank Corporation, bottom one for Crowe & Co. Ltd. Need to determine bounding boxes.\\n\\nTop ad: Swiss Bank Corporation. It's enclosed in a rectangle border. Looking at the image, the border starts near top of page. Let's estimate coordinates.\\n\\nThe page is 2479 wide, 3508 tall. The image displayed is scaled. I'll estimate based on relative positions.\\n\\nTop ad: The outer box appears to start at about x=170, y=180? Actually, looking at the image, there is a border around the Swiss Bank ad. The top edge is near y=150 maybe. Left edge near x=170. Right edge near x=2300. Bottom edge near y=1650? Let's look more carefully.\\n\\nThe page has a black background around the page content. The page itself is white. The top ad box: The outer border of the Swiss Bank ad starts at roughly x=180, y=190 and ends at x=2300, y=1650? But I need to be more precise.\\n\\nAlternatively, I can estimate based on typical layout. The top ad is a large rectangle. The bottom ad is another rectangle below it. The bottom ad starts around y=1750 and goes to near bottom y=3400? But there's a border around Crowe & Co. ad. Actually, the Crowe ad also has a border? Looking at the image, the Crowe ad seems to have a border too? The top ad has a clear border. The bottom ad has a border? It seems there's a border around the Crowe ad as well. Yes, there is a thin border around the Crowe ad. So both are separate advertisements.\\n\\nSo we have two advertisements. Let's try to approximate bounding boxes.\\n\\nI'll load the image mentally. The page is 2479x3508. The aspect ratio is 2479/3508 \u2248 0.707 (portrait). In the displayed image, the page is centered with black margins. The white page area is roughly from x=100 to x=2400? But actually the page edges are visible: left edge of page at around x=100? The black background is visible on left and right. The page itself is from about x=90 to x=2400? But the bounding boxes should be relative to the original page size, i.e., 2479x3508. So we need to map coordinates to that.\\n\\nLet's assume the image provided is the full page. In the image, there is a black border at left and right. The actual page content (white) starts after that black border. But the coordinates given are for the original size of the page, which includes the black margins? Actually, \\\"original size of the page\\\" likely means the entire scanned page including any margins. So the black borders are part of the page? Typically, a magazine page scan includes the whole page. The black areas might be from scanning the edge of the page. So the page is 2479x3508 pixels, and the content is within.\\n\\nI need to estimate the bounding boxes of the advertisements within this coordinate system. Since I don't have the exact pixel values, I'll estimate based on visual proportions.\\n\\nLet's assume the image shown is the full page. In the displayed image, the white page area occupies most of the width except for black strips on left and right. The black strips are maybe 100 pixels wide each? Let's measure roughly: The left black strip is from x=0 to about x=100? Actually, the image shows a black frame around the white page. The white page starts at around x=90 and ends at around x=2390? The page is 2479 wide, so black strip left is about 90, right about 90? That seems plausible.\\n\\nVertically, the page starts at y=0 and ends at y=3508. There is a black border at top and bottom? The image shows white content all the way top to bottom? Actually, the top has some black? The image shows a black band at top? Probably not. The page is scanned from edge to edge. So the coordinates are just the page coordinates.\\n\\nNow, the top ad: Swiss Bank Corporation. It's enclosed in a rectangular border. In the image, the border starts at roughly x=180, y=190? Let's look at the image: The top of the border is near the top of the page but with some margin. The left edge of the border is at around x=180. The right edge is at around x=2300. The bottom edge is at around y=1650. Let's check: The Swiss Bank ad occupies about the top half of the page. The page is 3508 tall, so half is 1754. The border seems to end around y=1650, leaving space below for the second ad.\\n\\nThe second ad: Crowe & Co. Ltd. It also has a border. The top of that border is at around y=1780? Actually, there is a gap between the two ads. The first ad bottom is at ~1650. The second ad top is at ~1780. The second ad bottom is at around y=3400. The left edge is same as first ad, x=180. Right edge same, x=2300.\\n\\nBut we need to be precise. Let's try to estimate using proportional reasoning. The image is 2479x3508. In the displayed image (which I can't measure directly), I can estimate based on typical layout.\\n\\nAlternatively, I can use the fact that the top ad has a border that is clearly visible. I can approximate the coordinates by looking at the text positions. For example, the title \\\"SWISS BANK CORPORATION\\\" is at the top. The left edge of the border is roughly aligned with the left edge of the text \\\"SWISS BANK\\\". The left edge of that text is at about x=200. So the border is slightly left of that, maybe x=180. The top of the border is above the text, maybe y=150. The bottom of the border is below the text \\\"We are particularly well placed...\\\", that text ends around y=1550. So border bottom maybe y=1650.\\n\\nSimilarly for the second ad, the border top is just below the first ad, maybe y=1750. The bottom is below the text \\\"ROMANSHORN\\\", which is near the bottom, maybe y=3400.\\n\\nI'll try to be more precise by considering the image dimensions. Since the image is 2479x3508, I can assume the page is scanned at 300 DPI? Not sure.\\n\\nI'll estimate the bounding boxes as follows:\\n\\nTop ad: [180, 190, 2300, 1650]\\nBottom ad: [180, 1750, 2300, 3400]\\n\\nBut these are rough. I need to be as accurate as possible.\\n\\nLet's look at the image again. The top ad's border: The left edge is at about x=180. The right edge is at about x=2300. The top edge is at about y=190. The bottom edge is at about y=1650.\\n\\nThe bottom ad: The left edge is at the same x=180. The right edge is at x=2300. The top edge is at about y=1750. The bottom edge is at about y=3400.\\n\\nBut wait, the bottom ad's border seems to end before the bottom of the page. There is some white space below it. The page ends at y=3508. So bottom edge of ad is around y=3400.\\n\\nI could also check if there are any other advertisements. The page seems to have only these two. The right side has some text that might be part of the magazine, not an ad. So only two ads.\\n\\nThus, I'll return:\\n\\n{\\\"advertisements\\\": [{\\\"box\\\": [180, 190, 2300, 1650]}, {\\\"box\\\": [180, 1750, 2300, 3400]}]}\\n\\nBut I want to be more precise. Let's try to refine.\\n\\nI'll use the fact that the image is 2479x3508. I can estimate the coordinates by looking at the image and using ratios.\\n\\nFor the top ad: The left edge is at about 7% of the width? 0.07*2479 \u2248 173. So 180 is reasonable. The right edge is at about 93%? 0.93*2479 \u2248 2305. So 2300 is fine. The top edge is at about 5% of the height? 0.05*3508 \u2248 175. So 190 is close. The bottom edge is at about 47%? 0.47*3508 \u2248 1649. So 1650.\\n\\nFor the bottom ad: The top edge is at about 50%? 0.50*3508 = 1754. So 1750. The bottom edge is at about 97%? 0.97*3508 \u2248 3403. So 3400.\\n\\nThus, these are good approximations.\\n\\nI'll output the JSON.\"}}],\"created\":1789571834,\"model\":\"deepseek-flash\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":\"aeb56401ca74e127821c4f9126dcb669\",\"usage\":{\"completion_tokens\":2008,\"prompt_tokens\":1288,\"total_tokens\":3296,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":null,\"reasoning_tokens\":1952,\"rejected_prediction_tokens\":null},\"prompt_tokens_details\":{\"audio_tokens\":null,\"cached_tokens\":0},\"prompt_cache_hit_tokens\":0,\"prompt_cache_miss_tokens\":1288}}"
+}

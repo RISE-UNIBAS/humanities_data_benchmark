@@ -1,0 +1,88 @@
+{
+    "text": "{\"metadata\":{\"send_date\":[\"1932-04-16\"],\"letter_title\":null,\"sender_persons\":[\"Dr. W. Meile-Welti\"],\"receiver_persons\":[\"Dr. Kas Kistler\"]}}",
+    "model": "meta-models/Muse-Glimmer-30B",
+    "provider": "huggingface",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 8036,
+        "output_tokens": 1156,
+        "total_tokens": 9192,
+        "cached_tokens": 320,
+        "input_cost_usd": 0.0028125999999999997,
+        "output_cost_usd": 0.0017339999999999999,
+        "estimated_cost_usd": 0.0045466
+    },
+    "duration": 43.01821327209473,
+    "timestamp": "2026-09-18T22:17:06.149656",
+    "parsed": {
+        "metadata": {
+            "send_date": [
+                "1932-04-16"
+            ],
+            "letter_title": null,
+            "sender_persons": [
+                "Dr. W. Meile-Welti"
+            ],
+            "receiver_persons": [
+                "Dr. Kas Kistler"
+            ]
+        }
+    },
+    "conversation_id": "557cb53e-27cc-4c5c-ae0e-f1c57573b7f5",
+    "score": {
+        "send_date_tp": 0,
+        "send_date_fp": 1,
+        "send_date_fn": 1,
+        "sender_persons_tp": 1,
+        "sender_persons_fp": 0,
+        "sender_persons_fn": 0,
+        "receiver_persons_tp": 0,
+        "receiver_persons_fp": 1,
+        "receiver_persons_fn": 1,
+        "field_scores": {
+            "send_date": {
+                "response": [
+                    "1932-04-16"
+                ],
+                "ground_truth": [
+                    "1932-09-16"
+                ],
+                "score": null,
+                "counts": {
+                    "send_date_tp": 0,
+                    "send_date_fp": 1,
+                    "send_date_fn": 1
+                }
+            },
+            "sender_persons": {
+                "response": [
+                    "Meile-Welti, Wilhelm"
+                ],
+                "ground_truth": [
+                    "Meile-Welti, Wilhelm"
+                ],
+                "score": null,
+                "counts": {
+                    "sender_persons_tp": 1,
+                    "sender_persons_fp": 0,
+                    "sender_persons_fn": 0
+                }
+            },
+            "receiver_persons": {
+                "response": [
+                    "Dr. Kas Kistler"
+                ],
+                "ground_truth": [
+                    "Vischer-von Planta, Max"
+                ],
+                "score": null,
+                "counts": {
+                    "receiver_persons_tp": 0,
+                    "receiver_persons_fp": 1,
+                    "receiver_persons_fn": 1
+                }
+            }
+        }
+    },
+    "raw_response": "{\"id\":\"p1pC4tS-fdNmn-a3d307356b63979d\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\n  \\\"metadata\\\": {\\n    \\\"send_date\\\": [\\\"1932-04-16\\\"],\\n    \\\"letter_title\\\": null,\\n    \\\"sender_persons\\\": [\\\"Dr. W. Meile-Welti\\\"],\\n    \\\"receiver_persons\\\": [\\\"Dr. Kas Kistler\\\"]\\n  }\\n}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"metadata\":{\"send_date\":[\"1932-04-16\"],\"letter_title\":null,\"sender_persons\":[\"Dr. W. Meile-Welti\"],\"receiver_persons\":[\"Dr. Kas Kistler\"]}},\"reasoning\":\"IDENTITY and PURPOSE:\\n\\nWe need extract values of keys from letter and return JSON where values corresponding to each key should be stored as a list, even if single value.\\n\\nKeys:\\n- letter_title: Title of the letter.\\n- sender_persons: Name(s) of the person(s) who wrote the letter.\\n- send_date: The exact or approximate date the letter was written.\\n- receiver_persons: Name(s) of the person(s) who received the letter.\\n\\nTake deep breath... Do not use OCR. Use ISO format YYYY-MM-DD for dates. If info not included, set value to \\\"null\\\". Do not return anything except JSON.\\n\\nWe have two images: first page front, second page back? The letter is on first page, second page is maybe continuation? The first page shows letterhead Dr. W. Meile-Welti Missionsstrasse 6 Basel. Date: Basel, 16. Apr 32. So 1932 April 16. Probably 1932-04-16.\\n\\nSender: Dr. W. Meile-Welti. Signature at bottom: W. Meily? Wait signature \\\"W. Meily\\\"? The letterhead says Dr. W. Meile-Welti. Signature looks like \\\"W. Meily\\\"? Might be W. Meile. The second page signature \\\"W.M.\\\" So sender is Dr. W. Meile-Welti. Possibly W. Meile. Might be Wilhelm Meile? Let's assume sender_persons: [\\\"Dr. W. Meile-Welti\\\"] or [\\\"W. Meile\\\"].\\n\\nReceiver: \\\"Herrn Dr. Kas Kistler Pr\u00e4s. der Basler Personen-Schiffahrtsgesellschaft Basel\\\". So receiver is Dr. Kas Kistler? Or the company? The address is to Herrn Dr. Kas Kistler Pr\u00e4s. der Basler Personen-Schiffahrtsgesellschaft Basel. So receiver person is Dr. Kas Kistler. Possibly also the company? The key is receiver_persons: Name(s) of person(s) who received the letter. So Dr. Kas Kistler.\\n\\nLetter title: Title of the letter. Is there a title? Maybe none. The letter starts with date and address. No explicit title. Could be null. Or maybe \\\"a.g. ferneres:\\\" on second page? That's a continuation. Might be no title. So letter_title: null? Or maybe empty list? The example shows list. If not included, set value to \\\"null\\\". The instruction: If a piece of information is not included in the letter, set the value for the corresponding key to \\\"null\\\". So letter_title should be null (not a list?). The example shows values as list. But null is not a list. Hmm conflict. It says values corresponding to each key should be stored as a list, even if there is only a single value for a key. If a piece of information is not included, set the value for the corresponding key to \\\"null\\\". So maybe the value is null, not a list containing null. Might be [\\\"null\\\"]? Probably set to null. Might be better to set to null. Could be [\\\"null\\\"]? Let's interpret: set the value to \\\"null\\\". So the JSON value is null. But they said store as list. Hmm.\\n\\nMaybe letter_title is not present. So null.\\n\\nSender_persons: [\\\"Dr. W. Meile-Welti\\\"] or [\\\"W. Meile\\\"]? The signature is \\\"W. Meily\\\"? The letterhead is Dr. W. Meile-Welti. The signature at bottom is \\\"W. Meily\\\"? Could be W. Meile. The second page ends with \\\"W.M.\\\" So likely W. Meile. I'll use Dr. W. Meile-Welti.\\n\\nSend_date: \\\"Basel, 16. Apr 32.\\\" So 1932-04-16.\\n\\nReceiver_persons: [\\\"Herrn Dr. Kas Kistler\\\"] or [\\\"Dr. Kas Kistler\\\"]. The address line: \\\"Herrn Dr. Kas Kistler Pr\u00e4s. der Basler Personen-Schiffahrtsgesellschaft Basel\\\". So person is Dr. Kas Kistler. Might include title. I'll give [\\\"Dr. Kas Kistler\\\"].\\n\\nLetter_title: null.\\n\\nReturn JSON.\\n\\nPotential nuance: The letter might be about \\\"P.S. zum Traktandum...\\\" but no title.\\n\\nThus output:\\n\\n{\\n  \\\"letter_title\\\": null,\\n  \\\"sender_persons\\\": [\\\"Dr. W. Meile-Welti\\\"],\\n  \\\"send_date\\\": [\\\"1932-04-16\\\"],\\n  \\\"receiver_persons\\\": [\\\"Dr. Kas Kistler\\\"]\\n}\\n\\nBut send_date should be list. So [\\\"1932-04-16\\\"].\\n\\nIf they want null as list? Could be \\\"letter_title\\\": [null]? Hmm.\\n\\nInstruction: values corresponding to each key should be stored as a list, even if there is only a single value for a key. If a piece of information is not included in the letter, set the value for the corresponding key to \\\"null\\\". Contradiction. Maybe they want the value to be null, not a list. I'll assume null is allowed.\\n\\nAlternative: set letter_title to null, but keep others as lists.\\n\\nLet's output JSON.\\n\\nMake sure no extra text.\\n\\n\"},\"token_ids\":null,\"routed_experts\":null,\"seed\":null}],\"created\":1789762584,\"model\":\"meta-models/Muse-Glimmer-30B\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":\"vllm-0.1.dev19059+g66826a22d-tp2-46311a71\",\"usage\":{\"completion_tokens\":1156,\"prompt_tokens\":8036,\"total_tokens\":9192,\"completion_tokens_details\":null,\"prompt_tokens_details\":{\"audio_tokens\":null,\"cached_tokens\":320,\"created_cache_tokens\":7712,\"multimodal_tokens\":{\"image\":7700}}},\"prompt_token_ids\":null,\"prompt_text\":null,\"kv_transfer_params\":null,\"ec_transfer_params\":null,\"metrics\":null,\"prompt\":[]}"
+}

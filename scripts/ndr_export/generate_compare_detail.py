@@ -1,25 +1,27 @@
 """Field-level comparison detail for runs whose scorer did not record any.
 
-The comparison view shows what a benchmark's scorer compared, field by field, taken from
-`score.field_scores` in the stored answer. Scorers record that themselves -- but only
-four of twelve did so historically, and those four gained it on different dates, so the
-detail is missing for most stored runs. This step fills the gap by re-running each
-scorer offline (see `scripts/offline_scoring.py`); no model call is involved.
+The comparison view shows what a benchmark's scorer compared, field by field, from
+`score.field_scores` in the stored answer. Not every scorer records it, so this step
+re-runs the scorer offline (`scripts/offline_scoring.py`) for the runs that lack it. No
+model call is involved.
 
-Two rules keep the result honest.
+Three rules govern the output.
 
-**The archive is not rewritten.** `results/` is the source archive, and a recomputed
-value written back into a request file would sit in the same object as metrics computed at
-run time, with nothing marking the seam. The detail goes here instead.
+**The archive is not rewritten.** `results/` stays the source archive: a recomputed value
+written back into a request file would sit alongside metrics computed at run time with
+nothing marking the seam. The detail is written here instead.
 
 **Run-time detail wins.** Where the stored answer already carries `field_scores`, it was
-computed against the ground truth as it stood that day, so it is strictly more faithful
-than anything recomputed now. Those inputs are skipped and the view reads them from the
-request file. Only what is genuinely absent is computed here, and it is labelled: ground
-truths are revised (568 stored scores no longer reproduce), so re-scored detail reflects
-today's truth, not the run's. `reproduces_stored_score` records that per input, and where
-it is false both metric sets are kept -- that divergence is a measurement of ground-truth
-revision, and the dataset's README explains it to anyone reading the exported table.
+computed against the ground truth as it stood that day, so it is more faithful than
+anything recomputed now; those inputs are skipped and read from the request file. Only
+genuinely absent detail is computed here, and it is labelled, because ground truths are
+revised and re-scored detail reflects today's truth rather than the run's.
+`reproduces_stored_score` records that per input; where it is false both metric sets are
+kept, so the divergence stays visible.
+
+**A re-run that finds nothing new writes nothing.** `rescored` dates the detail on
+file, not the last attempt to recompute it, so a run whose detail comes back identical
+keeps its recorded date and its file stays byte-identical.
 
 Output: collected_results/compare_detail/<date>/<test_id>.json, one file per run that
 needs any, so the view fetches only the run it is showing.
@@ -86,10 +88,9 @@ def is_dirty(path):
 def revisions_for(benchmark, cache):
     """Provenance for one benchmark, resolved once.
 
-    The commit that last touched the scorer does not describe the scorer that ran if the
-    working tree is dirty, so a commit-only provenance claim from a dirty tree is not one.
-    The dirty state is recorded rather than silently implied. A deploy builds from a clean
-    checkout, which clears it.
+    A commit hash does not describe the scorer that ran if the working tree is dirty, so
+    the dirty state is recorded rather than left implied; a build from a clean checkout
+    clears it.
     """
     if benchmark not in cache:
         scorer_path = BENCHMARKS_PATH / benchmark / "benchmark.py"
@@ -152,6 +153,10 @@ def detail_for_run(run_dir, test_id, benchmark, scorer, tally):
     return inputs, diagnostics
 
 
+def _unstamped(document):
+    return {key: value for key, value in document.items() if key != "rescored"}
+
+
 def generate_compare_detail(benchmark=None, limit=0, measure=False, only_missing=False):
     """Writes collected_results/compare_detail/<date>/<test_id>.json."""
     tests = read_tests()
@@ -169,6 +174,13 @@ def generate_compare_detail(benchmark=None, limit=0, measure=False, only_missing
         if only_missing and out_path.is_file():
             tally["already present"] += 1
             continue
+
+        previous = None
+        if out_path.is_file():
+            try:
+                previous = json.loads(out_path.read_bytes().decode("utf-8"))
+            except (UnicodeDecodeError, json.JSONDecodeError):
+                previous = None
 
         if name not in scorers:
             try:
@@ -200,12 +212,22 @@ def generate_compare_detail(benchmark=None, limit=0, measure=False, only_missing
         if diagnostics:
             document["diagnostics"] = diagnostics
 
+        # `rescored` is the only field that moves on a re-run that found nothing new.
+        # Left to advance, it rewrites every file in git for no change in content.
+        unchanged = previous is not None and _unstamped(previous) == _unstamped(document)
+        if unchanged:
+            document["rescored"] = previous.get("rescored", today)
+
         blob = json.dumps(document, ensure_ascii=False, sort_keys=True).encode("utf-8")
         raw_bytes += len(blob)
         # git zlib-compresses every blob it stores, so the compressed size is the honest
         # estimate of what this costs the repository -- not the working-tree size.
         gzip_bytes += len(gzip.compress(blob, 6))
         per_benchmark[name] += len(blob)
+
+        if unchanged:
+            tally["unchanged"] += 1
+            continue
         written += 1
 
         if not measure:
@@ -221,7 +243,7 @@ def generate_compare_detail(benchmark=None, limit=0, measure=False, only_missing
         print("  %-22s %.1fx" % ("compression", raw_bytes / max(gzip_bytes, 1)))
     for key in ("reproduces stored", "differs from stored", "no stored score",
                 "kept run-time detail", "no detail produced", "scorer raised",
-                "nothing to write", "already present", "scorer unavailable"):
+                "nothing to write", "unchanged", "already present", "scorer unavailable"):
         if tally[key]:
             print("  %-22s %d" % (key, tally[key]))
     if per_benchmark:

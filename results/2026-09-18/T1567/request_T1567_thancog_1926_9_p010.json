@@ -1,0 +1,80 @@
+{
+    "text": "{\"advertisements\":[{\"box\":[1300.0,1900.0,2100.0,2400.0]},{\"box\":[200.0,2600.0,2250.0,3400.0]}]}",
+    "model": "thinkingmachines/Inkling",
+    "provider": "huggingface",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 1983,
+        "output_tokens": 1617,
+        "total_tokens": 3600,
+        "input_cost_usd": 0.001983,
+        "output_cost_usd": 0.006548849999999999,
+        "estimated_cost_usd": 0.008531849999999999
+    },
+    "duration": 18.078129053115845,
+    "timestamp": "2026-09-18T21:12:49.861879",
+    "parsed": {
+        "advertisements": [
+            {
+                "box": [
+                    1300.0,
+                    1900.0,
+                    2100.0,
+                    2400.0
+                ]
+            },
+            {
+                "box": [
+                    200.0,
+                    2600.0,
+                    2250.0,
+                    3400.0
+                ]
+            }
+        ]
+    },
+    "conversation_id": "0c4e6a15-196e-4672-b939-8ff35b134692",
+    "score": {
+        "field_scores": {
+            "box 0": {
+                "response": [
+                    200.0,
+                    2600.0,
+                    2250.0,
+                    3400.0
+                ],
+                "ground_truth": [
+                    328,
+                    2516,
+                    2309,
+                    3188
+                ],
+                "score": 0.614
+            },
+            "box 1": {
+                "response": [
+                    1300.0,
+                    1900.0,
+                    2100.0,
+                    2400.0
+                ],
+                "ground_truth": [
+                    1375,
+                    1809,
+                    2314,
+                    2509
+                ],
+                "score": 0.522
+            }
+        },
+        "f1": 1.0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "mean_iou": 0.568,
+        "true_positives": 2,
+        "false_positives": 0,
+        "false_negatives": 0,
+        "iou_threshold": 0.5
+    },
+    "raw_response": "{\"id\":\"p1orRr7-6z2FuN-a3d2a9a9d9b705b1\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\\"advertisements\\\": [{\\\"box\\\": [1300, 1900, 2100, 2400]}, {\\\"box\\\": [200, 2600, 2250, 3400]}]}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"advertisements\":[{\"box\":[1300.0,1900.0,2100.0,2400.0]},{\"box\":[200.0,2600.0,2250.0,3400.0]}]},\"reasoning\":\"We need extract advertisements and bounding boxes from image. Need identify ad regions. The page is magazine page with trade openings and ads. There are two prominent advertisements with borders: one on right middle \\\"Fr. Klingelfuss & Co. BASLE (Switzerland)\\\" with products list, and one bottom large \\\"Banque F\u00e9d\u00e9rale S.A. Eidgen\u00f6ssische Bank A.G.\\\" Need bounding boxes in original 2479x3508.\\n\\nLet's determine coordinates approximately.\\n\\nImage layout: page width ~2479, height 3508. Top header \\\"10 THE ANGLO-SWISS COMMERCIAL GAZETTE September, 1926.\\\" Then two columns of text \\\"TRADE OPENINGS.\\\" Left column from about x 200 to 800? Right column x 800 to 1350? Then bottom right ad box starts around y 1050? Actually need inspect mental layout.\\n\\nThe right middle ad is enclosed in rectangular border. Let's approximate: left edge around x=800? Wait right column of trade openings ends near x~1350. The ad box is below right column? Let's examine image: There is a box with \\\"Fr. Klingelfuss & Co.\\\" centered in right lower quadrant. Its left border maybe around x=800? No, likely spanning from about x=800 to x=1350? Actually the box is aligned with right column? Let's approximate bounding box: x from about 800 to 1350? y from about 1050 to 1450? Need more precise.\\n\\nThe bottom ad \\\"Banque F\u00e9d\u00e9rale S.A.\\\" is large rectangular box near bottom spanning almost full width of text area, maybe x from 180 to 1350, y from 1480 to 1850? Let's approximate.\\n\\nBut need \\\"all advertisements\\\" - maybe also small ones? The page mainly contains trade openings (not ads) and these two display ads. So return both.\\n\\nNeed bounding boxes in [x1,y1,x2,y2]. Let's estimate using image proportions.\\n\\nLet's determine page margins: left margin about 50 px? Actually image includes page with some black borders at top and bottom. The content area starts near y=100 and ends near y=1900? Wait original size 2479x3508, but displayed image is smaller? No, need use original size. The visible page occupies maybe y from 80 to 1950? Actually there is black area at bottom with some object. So content height maybe ~1800 px within 3508? That seems wrong; likely the page is scanned at high resolution and displayed scaled. But we need bounding boxes in original pixels. We need approximate relative positions multiplied by dimensions? Actually we can estimate based on visible layout in the image shown, but need map to 2479x3508. The image shown is probably scaled down. But we can provide approximate boxes based on visible proportions multiplied.\\n\\nLet's analyze visible image dimensions: The image shown has width maybe around 1000 px? But we don't have direct. However we can approximate using standard page proportions. But better to provide boxes that cover the ad regions in original resolution using relative positions.\\n\\nLet's identify ad 1 (Klingelfuss): In the image, it's in lower right quadrant, with border. Top of box near y ~ 1040? Bottom near y ~ 1440? Left near x ~ 800? Right near x ~ 1340? So in original 2479x3508, scaling factor maybe about 2.5? Actually if displayed width is about 1000, scale factor ~2.48. So x1 \u2248 800*2.48 \u2248 1984? That can't be right because max width 2479. So displayed image width might be around 1200. Let's not overanalyze.\\n\\nInstead provide bounding boxes in approximate original coordinates: For Klingelfuss ad: [800, 1050, 1350, 1450]? No that uses displayed coords. But they said original size 2479x3508, so boxes should be within that range. Given the page content is centered with margins, likely x ranges 200-1400? Wait 2479 is quite wide (like A4 at 300dpi? A4 is 2480x3508 at 300dpi indeed!). Yes! So original is A4 at 300dpi. The content area is within about x 150 to 2300? Actually margins maybe 150 each side. So the ad boxes likely within x ~ 800 to 2300? Let's think: The page has two columns, each maybe 800 wide with gap. So left column x ~ 200-1050, right column x ~ 1100-1950? Or centered.\\n\\nGiven A4 width 2479, with margins maybe 200 left, 200 right, content width ~2079. Two columns with gap: each column ~950. So left column x ~200-1150, right column x ~1250-2200. That sounds right.\\n\\nThus the Klingelfuss ad is in right column lower part, so x likely 1250-2200, y maybe 1800-2400? And bottom bank ad spans both columns near bottom, x ~200-2200, y ~2500-3200?\\n\\nLet's refine using visible layout: The trade openings text fills top half. The right column lists items up to \\\"E 1519 Artificial silk yarn.\\\" Then there is some space, then the Klingelfuss box. Then below that, the bank ad at very bottom. So in A4 height 3508, top header at y ~150. Trade openings text from y ~300 to y ~1700? Then Klingelfuss box y ~1800 to y ~2400? Then bank ad y ~2500 to y ~3200? That seems plausible.\\n\\nThus bounding boxes:\\n1. Klingelfuss: [1250, 1800, 2200, 2400] maybe.\\n2. Banque F\u00e9d\u00e9rale: [200, 2550, 2200, 3350].\\n\\nBut need be somewhat accurate. Let's examine the image: The bank ad has decorative border and text \\\"Banque F\u00e9d\u00e9rale S.A. \u00b7 Eidgen\u00f6ssische Bank A. G.\\\" centered. It occupies bottom portion with some margin. Its top border is visible with decorative corners. So y1 maybe around 2550, y2 around 3350. x1 maybe around 180? x2 around 2300? Let's use [180, 2550, 2300, 3350].\\n\\nFor Klingelfuss, box has border with corners. Text inside lists products. Its bottom is just above the bank ad? There's some gap. So y2 maybe around 2450, y1 around 1850. x1 maybe 1250, x2 2200.\\n\\nBut we need \\\"Extract all advertisements and return their bounding boxes.\\\" So just list them.\\n\\nLet's provide:\\n- Fr. Klingelfuss & Co. advertisement: [1250, 1850, 2200, 2450]\\n- Banque F\u00e9d\u00e9rale S.A. advertisement: [180, 2550, 2300, 3350]\\n\\nWe should be somewhat precise. Let's adjust x for Klingelfuss: The box seems narrower, maybe centered in right half. So x1=1300, x2=2100. y1=1900, y2=2400.\\n\\nFor bank: x1=200, x2=2250, y1=2600, y2=3400.\\n\\nI'll present both.\"},\"seed\":null}],\"created\":1789758753,\"model\":\"thinkingmachines/Inkling\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":\"default\",\"usage\":{\"completion_tokens\":1617,\"prompt_tokens\":1983,\"total_tokens\":3600,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":null,\"reasoning_tokens\":1570,\"rejected_prediction_tokens\":null},\"prompt_tokens_details\":{\"audio_tokens\":null,\"cached_tokens\":0}},\"prompt\":[]}"
+}

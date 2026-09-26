@@ -1,0 +1,78 @@
+{
+    "text": "{\"metadata\":{\"send_date\":[\"1928-02-27\"],\"letter_title\":null,\"sender_persons\":null,\"receiver_persons\":[\"Basler Rheinschifffahrt A.-G.\"]}}",
+    "model": "qwen/qwen3.8-flash",
+    "provider": "openrouter",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 3144,
+        "output_tokens": 758,
+        "total_tokens": 3902,
+        "cached_tokens": 256,
+        "estimated_cost_usd": 0.000793556
+    },
+    "duration": 51.89177203178406,
+    "timestamp": "2026-09-18T09:48:39.946193",
+    "parsed": {
+        "metadata": {
+            "send_date": [
+                "1928-02-27"
+            ],
+            "letter_title": null,
+            "sender_persons": null,
+            "receiver_persons": [
+                "Basler Rheinschifffahrt A.-G."
+            ]
+        }
+    },
+    "conversation_id": "ee52ec2c-45a6-433b-869c-7cd241017ef9",
+    "score": {
+        "send_date_tp": 1,
+        "send_date_fp": 0,
+        "send_date_fn": 0,
+        "sender_persons_tp": 0,
+        "sender_persons_fp": 0,
+        "sender_persons_fn": 0,
+        "receiver_persons_tp": 0,
+        "receiver_persons_fp": 1,
+        "receiver_persons_fn": 0,
+        "field_scores": {
+            "send_date": {
+                "response": [
+                    "1928-02-27"
+                ],
+                "ground_truth": [
+                    "1928-02-27"
+                ],
+                "score": null,
+                "counts": {
+                    "send_date_tp": 1,
+                    "send_date_fp": 0,
+                    "send_date_fn": 0
+                }
+            },
+            "sender_persons": {
+                "response": [],
+                "ground_truth": [],
+                "score": null,
+                "counts": {
+                    "sender_persons_tp": 0,
+                    "sender_persons_fp": 0,
+                    "sender_persons_fn": 0
+                }
+            },
+            "receiver_persons": {
+                "response": [
+                    "Basler Rheinschifffahrt A.-G."
+                ],
+                "ground_truth": [],
+                "score": null,
+                "counts": {
+                    "receiver_persons_tp": 0,
+                    "receiver_persons_fp": 1,
+                    "receiver_persons_fn": 0
+                }
+            }
+        }
+    },
+    "raw_response": "{\"id\":\"gen-1789717708-JZ3rLjvo3DTsBILdxqDr\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\\"metadata\\\": {\\\"send_date\\\": [\\\"1928-02-27\\\"], \\\"letter_title\\\": null, \\\"sender_persons\\\": null, \\\"receiver_persons\\\": [\\\"Basler Rheinschifffahrt A.-G.\\\"]}}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"reasoning\":\"The user wants me to extract metadata from a historical Swiss letter image. Let me carefully read the document.\\n\\nThe letter is typed on yellow paper. Top right has a red handwritten \\\"16\\\".\\n\\nDate line: \\\"Basel, den 27. Februar 1928.\\\"\\n\\nRecipient line: \\\"An die Basler Rheinschifffahrt A.-G. / Basel.\\\"\\n\\nBody text discusses a proposal from a letter of 18 February, board meeting, cooperation between two companies, operation community vs chartering of a ship, request for an offer.\\n\\nClosing: \\\"Hochachtungsvoll\\\" followed by a faint stamp/signature: \\\"Basler Personenschifffahrtsgesellschaft / Der Gesch\u00e4ftsf\u00fchrer\\\" (the stamp is faint but readable as Basler Personenschifffahrtsgesellschaft).\\n\\nSo sender is the Basler Personenschifffahrtsgesellschaft (a company, not a person per se). The key is \\\"sender_persons\\\" - names of person(s) who wrote the letter. The stamp shows the company name and \\\"Der Gesch\u00e4ftsf\u00fchrer\\\" (the managing director), but no individual name is given. Hmm. The instructions say values as list. The sender is the company. But the key is \\\"sender_persons\\\". Should I include the company? The example shows person names. But the letter is from an organization. The stamp reads \\\"Basler Personenschifffahrtsgesellschaft\\\". There's no individual name. I think the sender should be the company name as it's the entity writing. But the key says \\\"sender_persons\\\". I'll put the company name since that's the sender entity. Actually, \\\"Der Gesch\u00e4ftsf\u00fchrer\\\" is a role, not a name. There's no personal name. So sender_persons could be the company. Hmm, but the key specifically asks for person(s). The instruction: \\\"Name(s) of the person(s) who wrote the letter.\\\" If no person name, perhaps null? But the company wrote it. The example uses person names but the schema is flexible. I think the most accurate is to put the company name as the sender, since that's who signed. But the key is \\\"persons\\\". Let me think about typical historical letter extraction. Usually the sender is the entity. I'll include \\\"Basler Personenschifffahrtsgesellschaft\\\" as the sender. Actually wait, the stamp is faint. Let me look: \\\"Basler Personenschifffahrtsgesellschaft\\\" then \\\"Der Gesch\u00e4ftsf\u00fchrer\\\". Yes.\\n\\nReceiver: \\\"Basler Rheinschifffahrt A.-G.\\\" (also an entity). The key \\\"receiver_persons\\\" - again entity. I'll put the company.\\n\\nLetter title: There's no explicit title. So null.\\n\\nSend date: 1928-02-27.\\n\\nLet me decide on sender/receiver. The keys say persons but the document has organizations. In many of these tasks, the expected answer would put the organization names. I'll go with the organization names.\\n\\nSender: [\\\"Basler Personenschifffahrtsgesellschaft\\\"]\\nReceiver: [\\\"Basler Rheinschifffahrt A.-G.\\\"]\\n\\nHmm but maybe they want the role \\\"Der Gesch\u00e4ftsf\u00fchrer\\\"? No, that's not a name.\\n\\nTitle: null.\\n\\nLet me produce JSON.\",\"reasoning_details\":[{\"type\":\"reasoning.text\",\"text\":\"The user wants me to extract metadata from a historical Swiss letter image. Let me carefully read the document.\\n\\nThe letter is typed on yellow paper. Top right has a red handwritten \\\"16\\\".\\n\\nDate line: \\\"Basel, den 27. Februar 1928.\\\"\\n\\nRecipient line: \\\"An die Basler Rheinschifffahrt A.-G. / Basel.\\\"\\n\\nBody text discusses a proposal from a letter of 18 February, board meeting, cooperation between two companies, operation community vs chartering of a ship, request for an offer.\\n\\nClosing: \\\"Hochachtungsvoll\\\" followed by a faint stamp/signature: \\\"Basler Personenschifffahrtsgesellschaft / Der Gesch\u00e4ftsf\u00fchrer\\\" (the stamp is faint but readable as Basler Personenschifffahrtsgesellschaft).\\n\\nSo sender is the Basler Personenschifffahrtsgesellschaft (a company, not a person per se). The key is \\\"sender_persons\\\" - names of person(s) who wrote the letter. The stamp shows the company name and \\\"Der Gesch\u00e4ftsf\u00fchrer\\\" (the managing director), but no individual name is given. Hmm. The instructions say values as list. The sender is the company. But the key is \\\"sender_persons\\\". Should I include the company? The example shows person names. But the letter is from an organization. The stamp reads \\\"Basler Personenschifffahrtsgesellschaft\\\". There's no individual name. I think the sender should be the company name as it's the entity writing. But the key says \\\"sender_persons\\\". I'll put the company name since that's the sender entity. Actually, \\\"Der Gesch\u00e4ftsf\u00fchrer\\\" is a role, not a name. There's no personal name. So sender_persons could be the company. Hmm, but the key specifically asks for person(s). The instruction: \\\"Name(s) of the person(s) who wrote the letter.\\\" If no person name, perhaps null? But the company wrote it. The example uses person names but the schema is flexible. I think the most accurate is to put the company name as the sender, since that's who signed. But the key is \\\"persons\\\". Let me think about typical historical letter extraction. Usually the sender is the entity. I'll include \\\"Basler Personenschifffahrtsgesellschaft\\\" as the sender. Actually wait, the stamp is faint. Let me look: \\\"Basler Personenschifffahrtsgesellschaft\\\" then \\\"Der Gesch\u00e4ftsf\u00fchrer\\\". Yes.\\n\\nReceiver: \\\"Basler Rheinschifffahrt A.-G.\\\" (also an entity). The key \\\"receiver_persons\\\" - again entity. I'll put the company.\\n\\nLetter title: There's no explicit title. So null.\\n\\nSend date: 1928-02-27.\\n\\nLet me decide on sender/receiver. The keys say persons but the document has organizations. In many of these tasks, the expected answer would put the organization names. I'll go with the organization names.\\n\\nSender: [\\\"Basler Personenschifffahrtsgesellschaft\\\"]\\nReceiver: [\\\"Basler Rheinschifffahrt A.-G.\\\"]\\n\\nHmm but maybe they want the role \\\"Der Gesch\u00e4ftsf\u00fchrer\\\"? No, that's not a name.\\n\\nTitle: null.\\n\\nLet me produce JSON.\",\"format\":\"unknown\",\"index\":0}]},\"native_finish_reason\":\"stop\"}],\"created\":1789717708,\"model\":\"qwen/qwen3.8-flash\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":null,\"usage\":{\"completion_tokens\":758,\"prompt_tokens\":3144,\"total_tokens\":3902,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":0,\"reasoning_tokens\":703,\"rejected_prediction_tokens\":null,\"image_tokens\":0},\"prompt_tokens_details\":{\"audio_tokens\":0,\"cached_tokens\":256,\"cache_write_tokens\":0,\"video_tokens\":0},\"cost\":0.000793556,\"is_byok\":false,\"cost_details\":{\"upstream_inference_cost\":0.000793556,\"upstream_inference_prompt_cost\":0.000437296,\"upstream_inference_completions_cost\":0.00035626}},\"provider\":\"Alibaba\"}"
+}

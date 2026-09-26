@@ -116,6 +116,8 @@ def _extract_boxes(response: Optional[dict]) -> list:
 class MagazinePages(Benchmark):
     """Benchmark for magazine page advertisement detection."""
 
+    score_unparseable_as_miss = True
+
     def get_prompt_kwargs(self, basename: str, filenames: List[str]) -> Dict:
         """Return image dimensions so the prompt can state the coordinate space."""
         image_path = os.path.join(filenames[0])

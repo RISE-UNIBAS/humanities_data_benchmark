@@ -1,0 +1,84 @@
+{
+    "text": "{\"metadata\":{\"send_date\":[\"1939-09-09\"],\"letter_title\":[\"\"],\"sender_persons\":[\"\"],\"receiver_persons\":[\"Basler Rheinschiffahrts-Aktiengesellschaft Direktion\"]}}",
+    "model": "thinkingmachines/Inkling",
+    "provider": "huggingface",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 2254,
+        "output_tokens": 820,
+        "total_tokens": 3074,
+        "cached_tokens": 256,
+        "input_cost_usd": 0.002254,
+        "output_cost_usd": 0.0033209999999999997,
+        "estimated_cost_usd": 0.005575
+    },
+    "duration": 12.490937232971191,
+    "timestamp": "2026-09-17T11:38:09.748374",
+    "parsed": {
+        "metadata": {
+            "send_date": [
+                "1939-09-09"
+            ],
+            "letter_title": [
+                ""
+            ],
+            "sender_persons": [
+                ""
+            ],
+            "receiver_persons": [
+                "Basler Rheinschiffahrts-Aktiengesellschaft Direktion"
+            ]
+        }
+    },
+    "conversation_id": "a7b4e2c6-90c2-44f3-99a6-2b7b172b3360",
+    "score": {
+        "send_date_tp": 0,
+        "send_date_fp": 1,
+        "send_date_fn": 1,
+        "sender_persons_tp": 0,
+        "sender_persons_fp": 0,
+        "sender_persons_fn": 0,
+        "receiver_persons_tp": 0,
+        "receiver_persons_fp": 1,
+        "receiver_persons_fn": 0,
+        "field_scores": {
+            "send_date": {
+                "response": [
+                    "1939-09-09"
+                ],
+                "ground_truth": [
+                    "1932-09-09"
+                ],
+                "score": null,
+                "counts": {
+                    "send_date_tp": 0,
+                    "send_date_fp": 1,
+                    "send_date_fn": 1
+                }
+            },
+            "sender_persons": {
+                "response": [],
+                "ground_truth": [],
+                "score": null,
+                "counts": {
+                    "sender_persons_tp": 0,
+                    "sender_persons_fp": 0,
+                    "sender_persons_fn": 0
+                }
+            },
+            "receiver_persons": {
+                "response": [
+                    "Basler Rheinschiffahrts-Aktiengesellschaft Direktion"
+                ],
+                "ground_truth": [],
+                "score": null,
+                "counts": {
+                    "receiver_persons_tp": 0,
+                    "receiver_persons_fp": 1,
+                    "receiver_persons_fn": 0
+                }
+            }
+        }
+    },
+    "raw_response": "{\"id\":\"p1dAv2f-4i1VM9-a3c722a01ea212c6\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\n  \\\"metadata\\\": {\\n    \\\"send_date\\\": [\\\"1939-09-09\\\"],\\n    \\\"letter_title\\\": [\\\"\\\"],\\n    \\\"sender_persons\\\": [\\\"\\\"],\\n    \\\"receiver_persons\\\": [\\\"Basler Rheinschiffahrts-Aktiengesellschaft Direktion\\\"]\\n  }\\n}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"metadata\":{\"send_date\":[\"1939-09-09\"],\"letter_title\":[\"\"],\"sender_persons\":[\"\"],\"receiver_persons\":[\"Basler Rheinschiffahrts-Aktiengesellschaft Direktion\"]}},\"reasoning\":\"We need parse image of letter. Need extract letter_title, sender_persons, send_date, receiver_persons. Let's analyze visible text.\\n\\nImage shows typed letter in German. Top right: \\\"Basel, den 9. September 1939.\\\" So send_date 1939-09-09.\\n\\nAddressee block:\\n\\\"AE\\\" maybe? Then \\\"Basler Rheinschiffahrts-Aktiengesellschaft\\\" then \\\"Direktion\\\" then \\\"Basel\\\" then \\\"----------------\\\" then \\\"Marktgasse 5\\\"\\n\\nThen salutation: \\\"Mit bestem Danke best\u00e4tige ich Ihnen den Empfang Ihres Geehrten vom 7.ds.\\\" Then body mentions proposal of Mr. 33'000,- by board of Basler Personenschiffahrtsgesellschaft with request to submit and report back. \\\"In Hochachtung\\\"\\n\\nSo this is a letter (maybe acknowledgment/confirmation). Need letter_title? Not explicit title, but maybe there is none. Could be null? Or maybe \\\"AE\\\" is not title. The prompt asks \\\"Title of the letter.\\\" Often letters don't have titles. So null.\\n\\nSender persons: Not explicitly named? The letter is signed? At bottom maybe signature not visible? Let's inspect mental image: The letter ends with \\\"In Hochachtung\\\" but no visible signature name in the image? Might be missing or obscured. So sender_persons null? But maybe the sender is implied by letterhead? There's no letterhead visible except address block of receiver. Actually top left maybe blank. So sender unknown => null.\\n\\nReceiver persons: \\\"Basler Rheinschiffahrts-Aktiengesellschaft Direktion\\\" maybe addressed to them. Specifically \\\"Basler Rheinschiffahrts-Aktiengesellschaft\\\" and \\\"Direktion\\\". So receiver_persons could be [\\\"Basler Rheinschiffahrts-Aktiengesellschaft Direktion\\\"] or separate? Let's include organization and maybe directorate. But need name(s) of person(s). Since it's addressed to company/directorate, not individual names. Still can list as receiver. Maybe \\\"Basler Rheinschiffahrts-Aktiengesellschaft\\\". Let's include that.\\n\\nCheck if any sender name hidden in salutation? \\\"Mit bestem Danke best\u00e4tige ich Ihnen...\\\" No name.\\n\\nThus JSON:\\n{\\n\\\"letter_title\\\": [null]? Wait instructions: values stored as list, even if single value. If information not included, set value for corresponding key to \\\"null\\\". Does that mean the list contains null? Or the value is null? Example shows lists of strings. For missing, probably [\\\"null\\\"]? Actually they said \\\"set the value for the corresponding key to 'null'\\\". In JSON that could be null not in list? But they said values corresponding to each key should be stored as a list, even if there is only a single value for a key. So likely [\\\"null\\\"]? Or maybe the list is [null]. Let's examine consistency: If missing, value should be \\\"null\\\" (string?) But they said set the value ... to \\\"null\\\". Given they want list, maybe [null]. But in example all are lists of strings. For missing, I think use [null]. Let's do that.\\n\\nBut wait letter_title might be absent => [null]. Sender_persons absent => [null]. Send_date present => [\\\"1939-09-09\\\"]. Receiver_persons => [\\\"Basler Rheinschiffahrts-Aktiengesellschaft\\\"] maybe also \\\"Direktion\\\"? Let's include both? The address block lists company then Direktion then Basel. So receiver is the company directorate. We'll put [\\\"Basler Rheinschiffahrts-Aktiengesellschaft Direktion\\\"].\\n\\nNeed ensure no extra text.\"},\"seed\":null}],\"created\":1789637878,\"model\":\"thinkingmachines/Inkling\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":\"default\",\"usage\":{\"completion_tokens\":820,\"prompt_tokens\":2254,\"total_tokens\":3074,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":null,\"reasoning_tokens\":752,\"rejected_prediction_tokens\":null},\"prompt_tokens_details\":{\"audio_tokens\":null,\"cached_tokens\":256}},\"prompt\":[]}"
+}

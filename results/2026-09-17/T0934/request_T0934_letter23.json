@@ -1,0 +1,88 @@
+{
+    "text": "{\"metadata\":{\"send_date\":[\"1928-04-03\"],\"letter_title\":[\"Kauf \\\"Rheinfelden\\\"\"],\"sender_persons\":[\"Basler Rheinschiffahrt-Aktiengesellschaft\"],\"receiver_persons\":[\"Basler Personenschiffahrtsgesellschaft\"]}}",
+    "model": "qwen/qwen3.5-35b-a3b",
+    "provider": "openrouter",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 6105,
+        "output_tokens": 1427,
+        "total_tokens": 7532,
+        "input_cost_usd": 0.0009920625,
+        "output_cost_usd": 0.0018551000000000002,
+        "estimated_cost_usd": 0.0028471625
+    },
+    "duration": 29.26089644432068,
+    "timestamp": "2026-09-17T11:01:16.239170",
+    "parsed": {
+        "metadata": {
+            "send_date": [
+                "1928-04-03"
+            ],
+            "letter_title": [
+                "Kauf \"Rheinfelden\""
+            ],
+            "sender_persons": [
+                "Basler Rheinschiffahrt-Aktiengesellschaft"
+            ],
+            "receiver_persons": [
+                "Basler Personenschiffahrtsgesellschaft"
+            ]
+        }
+    },
+    "conversation_id": "c0971dfe-d620-48e2-b5cf-07d6db80241d",
+    "score": {
+        "send_date_tp": 1,
+        "send_date_fp": 0,
+        "send_date_fn": 0,
+        "sender_persons_tp": 0,
+        "sender_persons_fp": 1,
+        "sender_persons_fn": 2,
+        "receiver_persons_tp": 0,
+        "receiver_persons_fp": 1,
+        "receiver_persons_fn": 0,
+        "field_scores": {
+            "send_date": {
+                "response": [
+                    "1928-04-03"
+                ],
+                "ground_truth": [
+                    "1928-04-03"
+                ],
+                "score": null,
+                "counts": {
+                    "send_date_tp": 1,
+                    "send_date_fp": 0,
+                    "send_date_fn": 0
+                }
+            },
+            "sender_persons": {
+                "response": [
+                    "Basler Rheinschiffahrt-Aktiengesellschaft"
+                ],
+                "ground_truth": [
+                    "Groschupf-Jaeger, Louis",
+                    "Ritter-Dreier, Fritz"
+                ],
+                "score": null,
+                "counts": {
+                    "sender_persons_tp": 0,
+                    "sender_persons_fp": 1,
+                    "sender_persons_fn": 2
+                }
+            },
+            "receiver_persons": {
+                "response": [
+                    "Basler Personenschiffahrtsgesellschaft"
+                ],
+                "ground_truth": [],
+                "score": null,
+                "counts": {
+                    "receiver_persons_tp": 0,
+                    "receiver_persons_fp": 1,
+                    "receiver_persons_fn": 0
+                }
+            }
+        }
+    },
+    "raw_response": "{\"id\":\"gen-1789635647-qBtCEOPib0uIjrzsyEbn\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\n    \\\"metadata\\\": {\\n        \\\"send_date\\\": [\\n            \\\"1928-04-03\\\"\\n        ],\\n        \\\"letter_title\\\": [\\n            \\\"Kauf \\\\\\\"Rheinfelden\\\\\\\"\\\"\\n        ],\\n        \\\"sender_persons\\\": [\\n            \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"\\n        ],\\n        \\\"receiver_persons\\\": [\\n            \\\"Basler Personenschiffahrtsgesellschaft\\\"\\n        ]\\n    }\\n}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"metadata\":{\"send_date\":[\"1928-04-03\"],\"letter_title\":[\"Kauf \\\"Rheinfelden\\\"\"],\"sender_persons\":[\"Basler Rheinschiffahrt-Aktiengesellschaft\"],\"receiver_persons\":[\"Basler Personenschiffahrtsgesellschaft\"]}},\"reasoning\":\"The user wants me to extract specific information from a historical letter and format it as a JSON object.\\n\\n**1. Analyze the Request:**\\n*   **Role:** Historian expert in 20th-century Swiss history.\\n*   **Task:** Extract `letter_title`, `sender_persons`, `send_date`, `receiver_persons`.\\n*   **Format:** JSON.\\n*   **Constraints:**\\n    *   Values must be lists.\\n    *   Use ISO format YYYY-MM-DD for dates.\\n    *   If info is missing, use \\\"null\\\".\\n    *   No OCR, just visual extraction.\\n    *   No extra text, just the JSON.\\n\\n**2. Analyze the Image:**\\n*   **Header (Sender):** \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\", \\\"Marktgasse 5\\\", \\\"Postfach Basel I\\\", etc. This is the letterhead.\\n*   **Date:** Top right corner: \\\"Basel, den 3. April 1928.\\\"\\n*   **Recipient:** Below the date: \\\"Basler Personenschiffahrtsgesellschaft, Basel.\\\"\\n*   **Subject/Title:** \\\"Betrifft Kauf 'Rheinfelden' Ihr Schreiben vom 24. M\u00e4rz.\\\" This acts as the subject line or title of the correspondence.\\n*   **Body:** Discusses the purchase of the boat \\\"Rheinfelden\\\", price adjustments, free tickets, etc.\\n*   **Footer (Sender Signature):** \\\"Hochachtend BASLER RHEINSCHIFFAHRT-AKTIENGESELLSCHAFT\\\" followed by signatures. The signatures are hard to read clearly as individual names (one looks like \\\"M. Keller\\\" or similar, the other \\\"Gundlach\\\" or similar), but the entity is clearly the company. The prompt asks for \\\"sender_persons\\\". Since it's a corporate letter, the \\\"person\\\" is the entity itself unless specific individuals are named as signatories. The prompt example shows \\\"Lisa Simpson\\\" (a person). Here, the sender is the company. I will list the company name. Wait, looking closely at the signature, it's illegible. I will stick to the company name as the sender.\\n*   **Receiver:** \\\"Basler Personenschiffahrtsgesellschaft\\\".\\n\\n**3. Extract Values:**\\n*   `letter_title`: The subject line is \\\"Betrifft Kauf 'Rheinfelden'\\\". I'll use that. Or perhaps \\\"Kauf 'Rheinfelden'\\\". Let's look at the second page header: \\\"Wiederver\u00e4usserung des Schiffes 'Rheinfelden' das Vorkaufsrecht ein.\\\" This is a continuation. The first page has \\\"Betrifft Kauf 'Rheinfelden'\\\". I will use \\\"Betrifft Kauf 'Rheinfelden'\\\".\\n*   `sender_persons`: \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\".\\n*   `send_date`: \\\"3. April 1928\\\" -> \\\"1928-04-03\\\".\\n*   `receiver_persons`: \\\"Basler Personenschiffahrtsgesellschaft\\\".\\n\\n**4. Refine Values:**\\n*   `letter_title`: The text \\\"Betrifft Kauf 'Rheinfelden'\\\" is the subject. I will extract \\\"Kauf 'Rheinfelden'\\\" or the full line. Let's go with \\\"Kauf 'Rheinfelden'\\\". Actually, looking at the second page, the header says \\\"Wiederver\u00e4usserung des Schiffes 'Rheinfelden' das Vorkaufsrecht ein.\\\" This looks like a subject line for the second page. The first page has \\\"Betrifft Kauf 'Rheinfelden'\\\". I will use \\\"Kauf 'Rheinfelden'\\\" as the core title.\\n*   `sender_persons`: The letterhead says \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\".\\n*   `send_date`: \\\"1928-04-03\\\".\\n*   `receiver_persons`: \\\"Basler Personenschiffahrtsgesellschaft\\\".\\n\\n**5. Construct JSON:**\\n```json\\n{\\n    \\\"letter_title\\\": [\\\"Kauf \\\\\\\"Rheinfelden\\\\\\\"\\\"],\\n    \\\"sender_persons\\\": [\\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"],\\n    \\\"send_date\\\": [\\\"1928-04-03\\\"],\\n    \\\"receiver_persons\\\": [\\\"Basler Personenschiffahrtsgesellschaft\\\"]\\n}\\n```\\nWait, let me double check the \\\"letter_title\\\". The prompt asks for \\\"Title of the letter\\\". In business correspondence, the \\\"Betrifft\\\" line serves this purpose. \\\"Betrifft Kauf 'Rheinfelden'\\\". I will include the full subject line or just the core topic. \\\"Kauf 'Rheinfelden'\\\" seems appropriate.\\n\\nLet's look at the sender again. The signature block says \\\"BASLER RHEINSCHIFFAHRT-AKTIENGESELLSCHAFT\\\". So the sender is the company.\\n\\nLet's look at the receiver. \\\"Basler Personenschiffahrtsgesellschaft, Basel.\\\"\\n\\nLet's look at the date. \\\"Basel, den 3. April 1928.\\\" -> 1928-04-03.\\n\\nFinal check of the JSON structure. Keys must be lists.\\n\\nOne detail: The prompt asks for \\\"sender_persons\\\". Since it's a company, is it a \\\"person\\\"? In historical document analysis, the entity sending the letter is the sender. I will list the company name.\\n\\nLet's refine the title. The text \\\"Betrifft Kauf 'Rheinfelden'\\\" is clearly the subject. I will use \\\"Kauf 'Rheinfelden'\\\".\\n\\nOne more look at the second page header: \\\"Wiederver\u00e4usserung des Schiffes 'Rheinfelden' das Vorkaufsrecht ein.\\\" This is likely the continuation of the subject or a new point. The first page \\\"Betrifft Kauf 'Rheinfelden'\\\" is the primary subject.\\n\\nLet's finalize the JSON.\\n\",\"reasoning_details\":[{\"type\":\"reasoning.text\",\"text\":\"The user wants me to extract specific information from a historical letter and format it as a JSON object.\\n\\n**1. Analyze the Request:**\\n*   **Role:** Historian expert in 20th-century Swiss history.\\n*   **Task:** Extract `letter_title`, `sender_persons`, `send_date`, `receiver_persons`.\\n*   **Format:** JSON.\\n*   **Constraints:**\\n    *   Values must be lists.\\n    *   Use ISO format YYYY-MM-DD for dates.\\n    *   If info is missing, use \\\"null\\\".\\n    *   No OCR, just visual extraction.\\n    *   No extra text, just the JSON.\\n\\n**2. Analyze the Image:**\\n*   **Header (Sender):** \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\", \\\"Marktgasse 5\\\", \\\"Postfach Basel I\\\", etc. This is the letterhead.\\n*   **Date:** Top right corner: \\\"Basel, den 3. April 1928.\\\"\\n*   **Recipient:** Below the date: \\\"Basler Personenschiffahrtsgesellschaft, Basel.\\\"\\n*   **Subject/Title:** \\\"Betrifft Kauf 'Rheinfelden' Ihr Schreiben vom 24. M\u00e4rz.\\\" This acts as the subject line or title of the correspondence.\\n*   **Body:** Discusses the purchase of the boat \\\"Rheinfelden\\\", price adjustments, free tickets, etc.\\n*   **Footer (Sender Signature):** \\\"Hochachtend BASLER RHEINSCHIFFAHRT-AKTIENGESELLSCHAFT\\\" followed by signatures. The signatures are hard to read clearly as individual names (one looks like \\\"M. Keller\\\" or similar, the other \\\"Gundlach\\\" or similar), but the entity is clearly the company. The prompt asks for \\\"sender_persons\\\". Since it's a corporate letter, the \\\"person\\\" is the entity itself unless specific individuals are named as signatories. The prompt example shows \\\"Lisa Simpson\\\" (a person). Here, the sender is the company. I will list the company name. Wait, looking closely at the signature, it's illegible. I will stick to the company name as the sender.\\n*   **Receiver:** \\\"Basler Personenschiffahrtsgesellschaft\\\".\\n\\n**3. Extract Values:**\\n*   `letter_title`: The subject line is \\\"Betrifft Kauf 'Rheinfelden'\\\". I'll use that. Or perhaps \\\"Kauf 'Rheinfelden'\\\". Let's look at the second page header: \\\"Wiederver\u00e4usserung des Schiffes 'Rheinfelden' das Vorkaufsrecht ein.\\\" This is a continuation. The first page has \\\"Betrifft Kauf 'Rheinfelden'\\\". I will use \\\"Betrifft Kauf 'Rheinfelden'\\\".\\n*   `sender_persons`: \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\".\\n*   `send_date`: \\\"3. April 1928\\\" -> \\\"1928-04-03\\\".\\n*   `receiver_persons`: \\\"Basler Personenschiffahrtsgesellschaft\\\".\\n\\n**4. Refine Values:**\\n*   `letter_title`: The text \\\"Betrifft Kauf 'Rheinfelden'\\\" is the subject. I will extract \\\"Kauf 'Rheinfelden'\\\" or the full line. Let's go with \\\"Kauf 'Rheinfelden'\\\". Actually, looking at the second page, the header says \\\"Wiederver\u00e4usserung des Schiffes 'Rheinfelden' das Vorkaufsrecht ein.\\\" This looks like a subject line for the second page. The first page has \\\"Betrifft Kauf 'Rheinfelden'\\\". I will use \\\"Kauf 'Rheinfelden'\\\" as the core title.\\n*   `sender_persons`: The letterhead says \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\".\\n*   `send_date`: \\\"1928-04-03\\\".\\n*   `receiver_persons`: \\\"Basler Personenschiffahrtsgesellschaft\\\".\\n\\n**5. Construct JSON:**\\n```json\\n{\\n    \\\"letter_title\\\": [\\\"Kauf \\\\\\\"Rheinfelden\\\\\\\"\\\"],\\n    \\\"sender_persons\\\": [\\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"],\\n    \\\"send_date\\\": [\\\"1928-04-03\\\"],\\n    \\\"receiver_persons\\\": [\\\"Basler Personenschiffahrtsgesellschaft\\\"]\\n}\\n```\\nWait, let me double check the \\\"letter_title\\\". The prompt asks for \\\"Title of the letter\\\". In business correspondence, the \\\"Betrifft\\\" line serves this purpose. \\\"Betrifft Kauf 'Rheinfelden'\\\". I will include the full subject line or just the core topic. \\\"Kauf 'Rheinfelden'\\\" seems appropriate.\\n\\nLet's look at the sender again. The signature block says \\\"BASLER RHEINSCHIFFAHRT-AKTIENGESELLSCHAFT\\\". So the sender is the company.\\n\\nLet's look at the receiver. \\\"Basler Personenschiffahrtsgesellschaft, Basel.\\\"\\n\\nLet's look at the date. \\\"Basel, den 3. April 1928.\\\" -> 1928-04-03.\\n\\nFinal check of the JSON structure. Keys must be lists.\\n\\nOne detail: The prompt asks for \\\"sender_persons\\\". Since it's a company, is it a \\\"person\\\"? In historical document analysis, the entity sending the letter is the sender. I will list the company name.\\n\\nLet's refine the title. The text \\\"Betrifft Kauf 'Rheinfelden'\\\" is clearly the subject. I will use \\\"Kauf 'Rheinfelden'\\\".\\n\\nOne more look at the second page header: \\\"Wiederver\u00e4usserung des Schiffes 'Rheinfelden' das Vorkaufsrecht ein.\\\" This is likely the continuation of the subject or a new point. The first page \\\"Betrifft Kauf 'Rheinfelden'\\\" is the primary subject.\\n\\nLet's finalize the JSON.\\n\",\"format\":\"unknown\",\"index\":0}]},\"native_finish_reason\":\"stop\"}],\"created\":1789635647,\"model\":\"qwen/qwen3.5-35b-a3b\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":null,\"usage\":{\"completion_tokens\":1427,\"prompt_tokens\":6105,\"total_tokens\":7532,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":0,\"reasoning_tokens\":1134,\"rejected_prediction_tokens\":null,\"image_tokens\":0},\"prompt_tokens_details\":{\"audio_tokens\":0,\"cached_tokens\":0,\"cache_write_tokens\":0,\"video_tokens\":0},\"cost\":0.00234275,\"is_byok\":false,\"cost_details\":{\"upstream_inference_cost\":0.00234275,\"upstream_inference_prompt_cost\":0.00091575,\"upstream_inference_completions_cost\":0.001427}},\"provider\":\"Parasail\"}"
+}

@@ -21,7 +21,7 @@ CER_BENCHMARKS = ("fraktur_adverts", "medieval_manuscripts")
 F1_COUNT_BENCHMARKS = ("company_lists", "duty_rosters", "library_cards", "personnel_cards")
 """Benchmarks with run-level micro/macro F1 and request-level F1 and TP/FP/FN counts."""
 
-FIELD_SCORE_BENCHMARKS = F1_COUNT_BENCHMARKS
+FIELD_SCORE_BENCHMARKS = F1_COUNT_BENCHMARKS + FUZZY_BENCHMARKS
 """Benchmarks with registered field-level metrics in the stored-score dictionary."""
 
 BUSINESS_LETTER_CATEGORIES = ("send_date", "sender_persons", "receiver_persons")
@@ -116,6 +116,15 @@ def _build():
                    "Per-field similarity from the scorer's own `field_scores`. The field "
                    "path is preserved literally, including the empty-string key that "
                    "6,080 stored records use."))
+
+    add(_entry("book_advert_xml", "field", "score", "performance", "ratio_0_100",
+               "higher_better", 0.0, 100.0, "not_summable",
+               "rapidfuzz.fuzz.ratio of the whole normalised XML, keyed `fixed_xml`; "
+               "0-100 like the request-level `fuzzy`."))
+    add(_entry("magazine_pages", "field", "score", "performance", "iou",
+               "higher_better", 0.0, 1.0, "not_summable",
+               "IoU of the prediction matched to one ground-truth box, keyed `box <n>`; "
+               "0.0 where nothing matched it."))
 
     # --- business letters: counts only ----------------------------------------
     for metric in ("f1_macro", "f1_micro"):

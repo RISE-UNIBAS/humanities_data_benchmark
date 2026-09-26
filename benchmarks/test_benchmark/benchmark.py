@@ -9,6 +9,8 @@ from scripts.benchmark_base import Benchmark
 class TestBenchmark(Benchmark):
 
     def score_benchmark(self, all_scores):
+        if not all_scores:
+            return {"fuzzy": 0.0}
         total_score = 0
         for score in all_scores:
             logging.debug(f"Fuzzy score: {score['fuzzy']}")
@@ -18,6 +20,8 @@ class TestBenchmark(Benchmark):
 
     def score_request_answer(self, object_basename, response, ground_truth):
         structured_response = response.parsed
+        if structured_response is None:
+            return {"fuzzy": 0.0}
 
         persons_found = 0
         if structured_response["persons_mentioned"] is None:

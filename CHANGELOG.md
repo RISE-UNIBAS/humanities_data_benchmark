@@ -19,6 +19,46 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - `benchmark_export.json` and `test_runs_export.json`: run order no longer depends on filesystem order.
 
+## [v0.6.0] - 2026-09-23
+
+### Added
+- `scripts/backfill_costs.py`: records reasoning tokens and fills missing input/output cost on stored results, priced at the rate in force on each run's date. Dry run by default.
+- `generate_vars.py`: `total_reasoning_tokens` and `total_reasoning_cost_usd` in `vars.json`; the energy estimate charges reasoning at the output rate.
+- `README.md`: Transkribus User Conference 2026 poster under Publications.
+- 2 new models replacing retired ones: `deepseek-flash` (DeepSeek's V4.1-Flash, with vision) and `qwen/qwen3.8-max-0902` (OpenRouter), with 30 benchmark test configurations (T1765-T1794, 15 each).
+- Pricing data for 2026-09-16: 85 priced models across 12 providers and for 2026-09-18; 2026-06-11 and 2026-06-23 buckets for `cohere/command-r` and `command-r-plus`, recovered from archived snapshots; `pricing.json` metadata bumped to version 1.52.
+- Results for the single-run and never-run backlog: 1,046 runs and 42,623 requests on 2026-09-16 (531 runs), 2026-09-17 (346) and 2026-09-18 (169).
+
+### Fixed
+- `results/`: 17,600 requests now record `reasoning_tokens` and `reasoning_cost_usd`; genai and x-ai bill reasoning outside `output_tokens`, so it was never costed.
+- `results/`: 17,398 requests that recorded tokens but no cost are now priced.
+- `results/`: 7,922 Hugging Face requests repriced.
+- `pricing.json`: `cohere/command-r-08-2024` at 2026-03-02 corrected to $0.15/$0.60; it held `command-r7b`'s price.
+- `library_cards`: `Publication.year` is optional and accepts a numeric year, coerced to string.
+- `company_lists`: `Entry.location` is optional.
+- `business_letters`: null and blank entries are dropped from the `Metadata` lists; the keys stay required.
+- `magazine_pages`: new `prompt_explicit-json.txt` prompt variant stating the JSON format and the `box` key. An unparseable answer scores as a miss instead of being skipped, via the new `score_unparseable_as_miss` opt-in.
+- `publicai` Apertus output ceiling lowered to 4,096.
+- `benchmark_base.py`: output ceilings for `claude-haiku-4-5`, `claude-opus-4-5` and `claude-sonnet-4-5` (64,000).
+- `benchmark_base.py`: sends `max_completion_tokens` on OpenAI chat endpoints, which gpt-5 and newer require in place of `max_tokens`.
+- `update_pricing.py`: reads every text block of the parser's reply, so a leading thinking block no longer raises `KeyError: 'text'` and blanks a provider's models.
+- `update_pricing.py`: Alibaba scraped from `model-studio/model-pricing`.
+- `generate_compare_detail.py`: a run whose detail comes back identical keeps its recorded `rescored` date, so a re-run no longer rewrites every detail file with no change in content.
+
+### Changed
+- Published totals over 3,417 runs: cost $940.84 → $1,796.42 and the energy estimate up four fifths, from the reasoning backfill, the cost fill and the runs since 2026-09-14.
+- `collected_results/` is no longer committed, apart from `compare_detail/`; the deploy rebuilds it on the VM before it reads anything.
+- `DEFAULT_MAX_OUTPUT_TOKENS` lowered from 32,768 to 16,384.
+- `deepseek-flash` keeps 32,768 via the new `MODEL_LONG_OUTPUT`.
+- Output ceiling of 16,384 for the seven `qwen/qwen3.5-*` and both `meta/muse-spark` models, which binds when a benchmark raises its own cap.
+- `legacy_test=true` for six models their providers no longer serve: `deepseek-chat`, `deepseek-reasoner`, `deepseek-v4-flash`, `deepseek-v4-flash-vision-exp` (DeepSeek now serves `deepseek-flash` and `deepseek-v4-pro` only), `qwen/qwen3.8-max` (OpenRouter now lists `qwen/qwen3.8-max-0902`) and `claude-opus-4-1-20250805` (Anthropic).
+- `README.md`: task-oriented sections, with the results dashboard up front, metrics rewritten around what each benchmark records, and reference material in collapsed blocks.
+- `CITATION.cff`: expanded keywords for Zenodo discovery.
+
+### Removed
+- 3 `scoring.json` publishing 0.0 with no request files behind them (`2026-09-16/T1480`, `2026-09-17/T1322`, `2026-09-17/T1335`).
+- 4 `magazine_pages` tests configured on text-only cohere models (T0798-T0801: `command-r-08-2024`, `command-r-plus-08-2024`, `command-r7b-12-2024`, `command-a-03-2025`); none could ever produce a result.
+
 ## [v0.5.5] - 2026-09-14
 
 ### Added
@@ -27,9 +67,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Tests on 2026-08-18: T1585-T1644 (60 tests) for the 4 new models across all benchmarks — gemini-3.7-flash (T1585-T1599) (GenAI), grok-4.6 (T1600-T1614) (x-ai), meta/muse-spark-1.2 (T1615-T1629) and z-ai/glm-5v-turbo (T1630-T1644) (OpenRouter)
 - Tests on 2026-09-03: T1645-T1659 (15 tests) for gemini-3.8-flash (GenAI) across all benchmarks
 - Tests on 2026-09-04: T1660-T1674 (15 tests) for gpt-6-astra (OpenAI) across all benchmarks
-- Tests on 2026-09-08: T1690-T1739 and T1750-T1764 (50 tests) — meta/muse-spark-1.3 (T1690-T1704), z-ai/glm-5.3-flash (T1705-T1719), qwen/qwen3.8-flash (T1720-T1734) (OpenRouter), deepseek-v4-flash-vision-exp (T1750-T1764) (DeepSeek) across all benchmarks, and qwen/qwen3.8-27b on 5 of 15 (T1735-T1739) (OpenRouter)
+- Tests on 2026-09-08: T1690-T1739 and T1750-T1764 (65 tests) — meta/muse-spark-1.3 (T1690-T1704), z-ai/glm-5.3-flash (T1705-T1719), qwen/qwen3.8-flash (T1720-T1734) (OpenRouter), deepseek-v4-flash-vision-exp (T1750-T1764) (DeepSeek) across all benchmarks, and qwen/qwen3.8-27b on 5 of 15 (T1735-T1739) (OpenRouter)
 - Tests on 2026-09-09: T1740-T1749 (10 tests) completing qwen/qwen3.8-27b (OpenRouter).
-- `tests/integrity/test_client_capability_integrity.py`: fails when the installed `ai_client` would silently drop images from a DeepSeek vision model; `dev/DEPENDENCY_PATCHES.md` records the patch to re-apply after a venv rebuild.
+- `tests/integrity/test_client_capability_integrity.py`: fails when the installed `ai_client` would silently drop images from a DeepSeek vision model.
 - `FatalProviderError`: a 402, 401 or 403 now aborts the run instead of being retried per object for every remaining test.
 - `field_scores` in `score_request_answer` for the eight benchmarks that lacked it (`bibliographic_data`, `blacklist_cards`, `book_advert_xml`, `business_letters`, `fraktur_adverts`, `general_meeting_minutes`, `magazine_pages`, `medieval_manuscripts`), so all twelve now record what the scorer compared as `{response, ground_truth, score}`, with `score` set to `null` where a scorer counts true/false positives instead of assigning a similarity. Scores are unchanged: all 77,866 stored inputs re-score identically. Documented on `Benchmark.score_request_answer` and enforced by the new `tests/integrity/test_field_scores_integrity.py`, which also rejects a score that will not serialise, since `save_answer` writes it verbatim into the stored answer.
 - `scripts/offline_scoring.py` and `scripts/rescore.py`: re-run a benchmark's own scorer over stored results with no model call, to prove a scorer change leaves its numbers untouched. Each run's `rules` are applied, because `personnel_cards` selects which fields it scores from them.
@@ -322,3 +362,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [v0.5.2]: https://github.com/RISE-UNIBAS/humanities_data_benchmark/releases/tag/v0.5.2
 [v0.5.3]: https://github.com/RISE-UNIBAS/humanities_data_benchmark/releases/tag/v0.5.3
 [v0.5.4]: https://github.com/RISE-UNIBAS/humanities_data_benchmark/releases/tag/v0.5.4
+[v0.5.5]: https://github.com/RISE-UNIBAS/humanities_data_benchmark/releases/tag/v0.5.5
+[v0.6.0]: https://github.com/RISE-UNIBAS/humanities_data_benchmark/releases/tag/v0.6.0

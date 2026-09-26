@@ -1,0 +1,82 @@
+{
+    "text": "{\"metadata\":{\"send_date\":[\"1928-03-12\"],\"letter_title\":null,\"sender_persons\":[\"Basler Personenschifffahrtsgesellschaft\"],\"receiver_persons\":[\"Basler Rheinschiffahrt A.G.\"]}}",
+    "model": "z-ai/glm-5v-turbo",
+    "provider": "openrouter",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 4363,
+        "output_tokens": 979,
+        "total_tokens": 5342,
+        "cached_tokens": 256,
+        "estimated_cost_usd": 0.00890584
+    },
+    "duration": 95.66991758346558,
+    "timestamp": "2026-09-17T22:16:00.636815",
+    "parsed": {
+        "metadata": {
+            "letter_title": null,
+            "sender_persons": [
+                "Basler Personenschifffahrtsgesellschaft"
+            ],
+            "send_date": [
+                "1928-03-12"
+            ],
+            "receiver_persons": [
+                "Basler Rheinschiffahrt A.G."
+            ]
+        }
+    },
+    "conversation_id": "0fd05e64-19d6-4b8d-94e6-5b7fe6d86f5e",
+    "score": {
+        "send_date_tp": 1,
+        "send_date_fp": 0,
+        "send_date_fn": 0,
+        "sender_persons_tp": 0,
+        "sender_persons_fp": 1,
+        "sender_persons_fn": 0,
+        "receiver_persons_tp": 0,
+        "receiver_persons_fp": 1,
+        "receiver_persons_fn": 0,
+        "field_scores": {
+            "send_date": {
+                "response": [
+                    "1928-03-12"
+                ],
+                "ground_truth": [
+                    "1928-03-12"
+                ],
+                "score": null,
+                "counts": {
+                    "send_date_tp": 1,
+                    "send_date_fp": 0,
+                    "send_date_fn": 0
+                }
+            },
+            "sender_persons": {
+                "response": [
+                    "Basler Personenschifffahrtsgesellschaft"
+                ],
+                "ground_truth": [],
+                "score": null,
+                "counts": {
+                    "sender_persons_tp": 0,
+                    "sender_persons_fp": 1,
+                    "sender_persons_fn": 0
+                }
+            },
+            "receiver_persons": {
+                "response": [
+                    "Basler Rheinschiffahrt A.G."
+                ],
+                "ground_truth": [],
+                "score": null,
+                "counts": {
+                    "receiver_persons_tp": 0,
+                    "receiver_persons_fp": 1,
+                    "receiver_persons_fn": 0
+                }
+            }
+        }
+    },
+    "raw_response": "{\"id\":\"gen-1789676126-iPeXskYKSSxYF7NBdPdR\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\n  \\\"metadata\\\": {\\n    \\\"letter_title\\\": null,\\n    \\\"sender_persons\\\": [\\n      \\\"Basler Personenschifffahrtsgesellschaft\\\"\\n    ],\\n    \\\"send_date\\\": [\\n      \\\"1928-03-12\\\"\\n    ],\\n    \\\"receiver_persons\\\": [\\n      \\\"Basler Rheinschiffahrt A.G.\\\"\\n    ]\\n  }\\n}\\n\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"reasoning\":\"The user wants me to extract specific information from the provided image of a historical letter.\\n\\n**1. Analyze the image:**\\n- **Date:** \\\"Basel, den 12. M\u00e4rz 1928.\\\" -> 1928-03-12\\n- **Sender:** The letter is signed by \\\"Basler Personenschifffahrtsgesellschaft\\\" (or similar, it's a bit faint but looks like \\\"Basler Personenschifffahrtsges... Der Gesch\u00e4ftsf\u00fchrer\\\"). Let's look closer. It says \\\"Basler Personenschifffahrts... Der Gesch\u00e4ftsf\u00fchrer\\\". Actually, looking at the context, it's a response from a company. The signature at the bottom is \\\"Basler Personenschifffahrtsgesellschaft\\\" (Basel Passenger Shipping Company) or similar, and \\\"Der Gesch\u00e4ftsf\u00fchrer\\\" (The Managing Director). Since no individual name is clearly visible as the signer, I should use the organization name if possible, or null if it's not clear enough. Wait, let me re-examine the bottom text. It looks like \\\"Basler Personenschifffahrtsgesellschaft\\\" and below that \\\"Der Gesch\u00e4ftsf\u00fchrer\\\". I'll use \\\"Basler Personenschifffahrtsgesellschaft\\\".\\n- **Receiver:** \\\"An die Basler Rheinschiffahrt A.G.,\\\" (To the Basel Rhine Shipping AG).\\n- **Title:** There isn't a explicit title like \\\"Re: ...\\\". The content is an acknowledgment of receipt of a letter from the 1st and informing them about an agenda item for a board meeting on March 13th. I'll set this to `null` or try to infer a descriptive title if appropriate, but usually, if there's no subject line, `null` is safer. However, looking at the example, they used a descriptive title. I'll stick to `null` if there's no clear subject line.\\n\\n**2. Map to JSON keys:**\\n- `letter_title`: `null` (No subject line visible)\\n- `sender_persons`: [\\\"Basler Personenschifffahrtsgesellschaft\\\"] (Based on the letterhead/signature at the bottom)\\n- `send_date`: [\\\"1928-03-12\\\"]\\n- `receiver_persons`: [\\\"Basler Rheinschiffahrt A.G.\\\"]\\n\\nLet's double check the sender. The text at the bottom right is \\\"Basler Personenschifffahrtsgesellschaft\\\" (partially obscured but recognizable) and \\\"Der Gesch\u00e4ftsf\u00fchrer\\\".\\n\\nFinal check of the schema:\\n```json\\n{\\n  \\\"metadata\\\": {\\n    \\\"letter_title\\\": null,\\n    \\\"sender_persons\\\": [\\\"Basler Personenschifffahrtsgesellschaft\\\"],\\n    \\\"send_date\\\": [\\\"1928-03-12\\\"],\\n    \\\"receiver_persons\\\": [\\\"Basler Rheinschiffahrt A.G.\\\"]\\n  }\\n}\\n```\\nWait, the prompt says \\\"set the value for the corresponding key to 'null'\\\". In JSON, `null` is a literal, not a string.\\nThe schema provided in the prompt allows for `null`.\\n`\\\"letter_title\\\": {\\\"anyOf\\\": [{\\\"items\\\": {\\\"type\\\": \\\"string\\\"}, \\\"type\\\": \\\"array\\\"}, {\\\"type\\\": \\\"null\\\"}]}`\\n\\nLet's re-read the sender. It looks like \\\"Basler Personenschifffahrtsgesellschaft\\\".\\nReceiver: \\\"Basler Rheinschiffahrt A.G.\\\"\\nDate: \\\"12. M\u00e4rz 1928\\\" -> \\\"1928-03-12\\\".\\n\\nOne more look at the image for the title. Sometimes it's the first line of the body if it's bolded or centered. Here, the first line is \\\"An die Basler Rheinschiffahrt A.G.,\\\", which is the salutation. So `null` is correct.\\n\\nFinal JSON structure:\\n```json\\n{\\n  \\\"metadata\\\": {\\n    \\\"letter_title\\\": null,\\n    \\\"sender_persons\\\": [\\n      \\\"Basler Personenschifffahrtsgesellschaft\\\"\\n    ],\\n    \\\"send_date\\\": [\\n      \\\"1928-03-12\\\"\\n    ],\\n    \\\"receiver_persons\\\": [\\n      \\\"Basler Rheinschiffahrt A.G.\\\"\\n    ]\\n  }\\n}\\n```\\nI will output exactly this.\",\"reasoning_details\":[{\"type\":\"reasoning.text\",\"text\":\"The user wants me to extract specific information from the provided image of a historical letter.\\n\\n**1. Analyze the image:**\\n- **Date:** \\\"Basel, den 12. M\u00e4rz 1928.\\\" -> 1928-03-12\\n- **Sender:** The letter is signed by \\\"Basler Personenschifffahrtsgesellschaft\\\" (or similar, it's a bit faint but looks like \\\"Basler Personenschifffahrtsges... Der Gesch\u00e4ftsf\u00fchrer\\\"). Let's look closer. It says \\\"Basler Personenschifffahrts... Der Gesch\u00e4ftsf\u00fchrer\\\". Actually, looking at the context, it's a response from a company. The signature at the bottom is \\\"Basler Personenschifffahrtsgesellschaft\\\" (Basel Passenger Shipping Company) or similar, and \\\"Der Gesch\u00e4ftsf\u00fchrer\\\" (The Managing Director). Since no individual name is clearly visible as the signer, I should use the organization name if possible, or null if it's not clear enough. Wait, let me re-examine the bottom text. It looks like \\\"Basler Personenschifffahrtsgesellschaft\\\" and below that \\\"Der Gesch\u00e4ftsf\u00fchrer\\\". I'll use \\\"Basler Personenschifffahrtsgesellschaft\\\".\\n- **Receiver:** \\\"An die Basler Rheinschiffahrt A.G.,\\\" (To the Basel Rhine Shipping AG).\\n- **Title:** There isn't a explicit title like \\\"Re: ...\\\". The content is an acknowledgment of receipt of a letter from the 1st and informing them about an agenda item for a board meeting on March 13th. I'll set this to `null` or try to infer a descriptive title if appropriate, but usually, if there's no subject line, `null` is safer. However, looking at the example, they used a descriptive title. I'll stick to `null` if there's no clear subject line.\\n\\n**2. Map to JSON keys:**\\n- `letter_title`: `null` (No subject line visible)\\n- `sender_persons`: [\\\"Basler Personenschifffahrtsgesellschaft\\\"] (Based on the letterhead/signature at the bottom)\\n- `send_date`: [\\\"1928-03-12\\\"]\\n- `receiver_persons`: [\\\"Basler Rheinschiffahrt A.G.\\\"]\\n\\nLet's double check the sender. The text at the bottom right is \\\"Basler Personenschifffahrtsgesellschaft\\\" (partially obscured but recognizable) and \\\"Der Gesch\u00e4ftsf\u00fchrer\\\".\\n\\nFinal check of the schema:\\n```json\\n{\\n  \\\"metadata\\\": {\\n    \\\"letter_title\\\": null,\\n    \\\"sender_persons\\\": [\\\"Basler Personenschifffahrtsgesellschaft\\\"],\\n    \\\"send_date\\\": [\\\"1928-03-12\\\"],\\n    \\\"receiver_persons\\\": [\\\"Basler Rheinschiffahrt A.G.\\\"]\\n  }\\n}\\n```\\nWait, the prompt says \\\"set the value for the corresponding key to 'null'\\\". In JSON, `null` is a literal, not a string.\\nThe schema provided in the prompt allows for `null`.\\n`\\\"letter_title\\\": {\\\"anyOf\\\": [{\\\"items\\\": {\\\"type\\\": \\\"string\\\"}, \\\"type\\\": \\\"array\\\"}, {\\\"type\\\": \\\"null\\\"}]}`\\n\\nLet's re-read the sender. It looks like \\\"Basler Personenschifffahrtsgesellschaft\\\".\\nReceiver: \\\"Basler Rheinschiffahrt A.G.\\\"\\nDate: \\\"12. M\u00e4rz 1928\\\" -> \\\"1928-03-12\\\".\\n\\nOne more look at the image for the title. Sometimes it's the first line of the body if it's bolded or centered. Here, the first line is \\\"An die Basler Rheinschiffahrt A.G.,\\\", which is the salutation. So `null` is correct.\\n\\nFinal JSON structure:\\n```json\\n{\\n  \\\"metadata\\\": {\\n    \\\"letter_title\\\": null,\\n    \\\"sender_persons\\\": [\\n      \\\"Basler Personenschifffahrtsgesellschaft\\\"\\n    ],\\n    \\\"send_date\\\": [\\n      \\\"1928-03-12\\\"\\n    ],\\n    \\\"receiver_persons\\\": [\\n      \\\"Basler Rheinschiffahrt A.G.\\\"\\n    ]\\n  }\\n}\\n```\\nI will output exactly this.\",\"format\":\"unknown\",\"index\":0}]},\"native_finish_reason\":\"stop\"}],\"created\":1789676126,\"model\":\"z-ai/glm-5v-turbo\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":null,\"usage\":{\"completion_tokens\":979,\"prompt_tokens\":4363,\"total_tokens\":5342,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":0,\"reasoning_tokens\":895,\"rejected_prediction_tokens\":null,\"image_tokens\":0},\"prompt_tokens_details\":{\"audio_tokens\":0,\"cached_tokens\":256,\"cache_write_tokens\":0,\"video_tokens\":0},\"cost\":0.00890584,\"is_byok\":false,\"cost_details\":{\"upstream_inference_cost\":0.00890584,\"upstream_inference_prompt_cost\":0.00498984,\"upstream_inference_completions_cost\":0.003916}},\"provider\":\"Z.AI\"}"
+}

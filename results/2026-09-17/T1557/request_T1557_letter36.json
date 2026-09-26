@@ -1,0 +1,76 @@
+{
+    "text": "{\"metadata\":{\"send_date\":[\"1928-05-15\"],\"letter_title\":null,\"sender_persons\":null,\"receiver_persons\":null}}",
+    "model": "thinkingmachines/Inkling",
+    "provider": "huggingface",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 2254,
+        "output_tokens": 1423,
+        "total_tokens": 3677,
+        "cached_tokens": 256,
+        "input_cost_usd": 0.002254,
+        "output_cost_usd": 0.00576315,
+        "estimated_cost_usd": 0.00801715
+    },
+    "duration": 13.483999490737915,
+    "timestamp": "2026-09-17T11:39:44.940055",
+    "parsed": {
+        "metadata": {
+            "send_date": [
+                "1928-05-15"
+            ],
+            "letter_title": null,
+            "sender_persons": null,
+            "receiver_persons": null
+        }
+    },
+    "conversation_id": "124835d5-3f21-4687-bf14-6d21440d6068",
+    "score": {
+        "send_date_tp": 1,
+        "send_date_fp": 0,
+        "send_date_fn": 0,
+        "sender_persons_tp": 0,
+        "sender_persons_fp": 0,
+        "sender_persons_fn": 0,
+        "receiver_persons_tp": 0,
+        "receiver_persons_fp": 0,
+        "receiver_persons_fn": 0,
+        "field_scores": {
+            "send_date": {
+                "response": [
+                    "1928-05-15"
+                ],
+                "ground_truth": [
+                    "1928-05-15"
+                ],
+                "score": null,
+                "counts": {
+                    "send_date_tp": 1,
+                    "send_date_fp": 0,
+                    "send_date_fn": 0
+                }
+            },
+            "sender_persons": {
+                "response": [],
+                "ground_truth": [],
+                "score": null,
+                "counts": {
+                    "sender_persons_tp": 0,
+                    "sender_persons_fp": 0,
+                    "sender_persons_fn": 0
+                }
+            },
+            "receiver_persons": {
+                "response": [],
+                "ground_truth": [],
+                "score": null,
+                "counts": {
+                    "receiver_persons_tp": 0,
+                    "receiver_persons_fp": 0,
+                    "receiver_persons_fn": 0
+                }
+            }
+        }
+    },
+    "raw_response": "{\"id\":\"p1dBQ2n-4i1VM9-a3c724eceeb3b2b6\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\n  \\\"metadata\\\": {\\n    \\\"send_date\\\": [\\\"1928-05-15\\\"],\\n    \\\"letter_title\\\": null,\\n    \\\"sender_persons\\\": null,\\n    \\\"receiver_persons\\\": null\\n  }\\n}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"metadata\":{\"send_date\":[\"1928-05-15\"],\"letter_title\":null,\"sender_persons\":null,\"receiver_persons\":null}},\"reasoning\":\"We need parse image: historical letter, extract title, sender, date, receiver.\\nImage shows \\\"ABSCHRIFT 36\\\" at top right. Then \\\"Basel, den 15. Mai 1928.\\\" Then organization \\\"Basler Rheinschiffahrt -Aktiengesellschaft Basel\\\". Then text \\\"Nach mehrw\u00f6chiger Abwesenheit nach Basel heimgekehrt, finde ich Ihren Brief vom 3. ds. vor. Der von Ihnen erw\u00e4hnte, von Herrn Jean Richard Frey verfasste Artikel...\\\" etc. \\\"In Hochachtung\\\" but no signature visible? Need determine sender and receiver.\\nWe need identify letter title? Maybe \\\"Abschrift\\\" but likely not. Let's analyze context: It's a copy (Abschrift) of a letter dated Basel 15 May 1928, from Basler Rheinschiffahrt-Aktiengesellschaft? Or sent by them? The salutation is missing? Actually text starts \\\"Nach mehrw\u00f6chiger Abwesenheit...\\\" This sounds like reply from someone who was away, finding their letter of 3rd of this month. The mentioned article by Jean Richard Frey was published, author unknown, no direct or indirect responsibility taken. \\\"Ich habe weder Zeit noch Veranlassung...\\\" Signed \\\"In Hochachtung\\\" but name not visible in image? Maybe signature below bottom cut off? The image ends with \\\"In Hochachtung\\\" and blank space, maybe signature is missing or cut off.\\nWe need extract values present. Let's determine sender_persons: likely the writer is representing Basler Rheinschiffahrt-Aktiengesellschaft? But the text says \\\"Ich habe weder Zeit...\\\" singular. Could be a specific person, but name not shown. However letterhead is \\\"Basler Rheinschiffahrt -Aktiengesellschaft Basel\\\" which might indicate sender organization, but key asks \\\"Name(s) of the person(s) who wrote the letter.\\\" If not present, null? But maybe the sender is implied by letterhead? Usually in these extraction tasks, if organization is on letterhead and no individual name, might still list organization? The key says \\\"sender_persons\\\" - persons, so likely individual names. Since not visible, null? But wait there might be a signature at bottom not visible due to crop? The image shows bottom blank with \\\"In Hochachtung\\\" centered near bottom, then large blank. Maybe signature is there but faded? Let's inspect mental: The bottom part is mostly blank white paper, no visible text. So sender name absent.\\nReceiver_persons: The letter addresses \\\"Ihren Brief\\\" - \\\"your letter\\\". So receiver is the one who sent the letter of 3rd. Not named explicitly except maybe in address block missing? There's no address block visible. So receiver unknown? But maybe the letter is addressed to someone implied? Actually there is no salutation like \\\"Sehr geehrter Herr X\\\". So receiver name not present.\\nSend_date: \\\"Basel, den 15. Mai 1928\\\" -> 1928-05-15.\\nLetter_title: Maybe \\\"Abschrift\\\" is title? Or maybe there is no title. The document is labeled \\\"ABSCHRIFT\\\" (copy) with number 36. Could be title \\\"Abschrift 36\\\". But \\\"letter_title\\\" likely the title of the letter content, maybe none. Let's set null? Or [\\\"Abschrift\\\"]? Need think.\\nWe need return JSON only.\\nLet's recall instructions: \\\"extract the values of the following keys from the letter... If a piece of information is not included in the letter, set the value for the corresponding key to 'null'.\\\" So we should include only what's present.\\nPresent: date 1928-05-15. The organization \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\" is present but not a person. The mentioned person \\\"Jean Richard Frey\\\" is mentioned as author of article, not sender/receiver. The mentioned \\\"Herrn Jean Richard Frey\\\" is mentioned in text. But not sender or receiver.\\nThus likely:\\nletter_title: null? Or [\\\"Abschrift\\\"]? The top has \\\"ABSCHRIFT 36\\\" which is a document type/title. Might be considered title of the letter copy. Let's include [\\\"Abschrift\\\"]? But need be accurate.\\nActually in historical archives, \\\"Abschrift\\\" means copy/transcript. The number 36 might be file number. So letter_title could be null since it's not the letter's own title but document classification.\\nSender_persons: null? Or maybe [\\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"]? But that's not a person. The instructions say \\\"Name(s) of the person(s) who wrote the letter.\\\" If unknown, null.\\nReceiver_persons: null.\\nBut maybe the sender is the company represented by an unnamed official. Still no name.\\nThus JSON:\\n{\\n\\\"letter_title\\\": null,\\n\\\"send_date\\\": [\\\"1928-05-15\\\"],\\n\\\"sender_persons\\\": null,\\n\\\"receiver_persons\\\": null\\n}\\nBut they said values should be stored as a list, even if single value, but if null? The example shows lists for all except maybe null should be \\\"null\\\" not list? The instruction: \\\"set the value for the corresponding key to 'null'.\\\" So use null, not [\\\"null\\\"].\\nLet's double-check if there's hidden sender name in text? \\\"Der von Ihnen erw\u00e4hnte, von Herrn Jean Richard Frey verfasste Artikel...\\\" No. \\\"Ich habe weder Zeit...\\\" No name.\\nThus answer likely that. But wait there might be address at top left? No.\\nTherefore I will output with date only, others null. However maybe letter_title is absent, but there is \\\"ABSCHRIFT\\\" printed prominently. Let's include [\\\"Abschrift\\\"]? Hmm.\\nLet's examine image layout: At top right \\\"ABSCHRIFT\\\" and \\\"36\\\" in red. This is likely the archival title/label for this document image, not part of letter. The letter itself starts with location/date then organization name centered, then body. So no explicit title.\\nThus I go with null for title, sender, receiver; date list.\\nBut wait, the organization \\\"Basler Rheinschiffahrt-Aktiengesellschaft Basel\\\" could be the sender entity (corporate sender). The key \\\"sender_persons\\\" might accept organization? The word \\\"persons\\\" suggests no. But sometimes extraction tasks are loose. However they specifically said \\\"person(s)\\\". So avoid.\\nOne more check: Is there a signature at the very bottom outside visible frame? The image shows bottom edge of paper near bottom of frame, with \\\"In Hochachtung\\\" somewhat above bottom edge, then blank space to bottom edge. No signature visible.\\nThus final.\"},\"seed\":null}],\"created\":1789637972,\"model\":\"thinkingmachines/Inkling\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":\"default\",\"usage\":{\"completion_tokens\":1423,\"prompt_tokens\":2254,\"total_tokens\":3677,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":null,\"reasoning_tokens\":1371,\"rejected_prediction_tokens\":null},\"prompt_tokens_details\":{\"audio_tokens\":null,\"cached_tokens\":256}},\"prompt\":[]}"
+}

@@ -3,7 +3,6 @@
 Both mechanisms exist because of the qwen/qwen3.8-27b run of 2026-09-08, which billed
 roughly $100 for 5 of 15 benchmarks: uncapped generations ran to the model's full
 131,072-token ceiling, and a 402 was retried for hours after the credits were gone.
-See dev/DEPENDENCY_PATCHES.md.
 """
 import threading
 from pathlib import Path

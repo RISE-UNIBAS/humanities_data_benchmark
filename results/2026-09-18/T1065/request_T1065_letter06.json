@@ -1,0 +1,79 @@
+{
+    "text": "{\"metadata\":{\"send_date\":[\"1926-03-29\"],\"letter_title\":null,\"sender_persons\":null,\"receiver_persons\":[\"Basler Rheinschiffahrt-Aktiengesellschaft\"]}}",
+    "model": "qwen/qwen3.7-plus",
+    "provider": "openrouter",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 3127,
+        "output_tokens": 1401,
+        "total_tokens": 4528,
+        "input_cost_usd": 0.0010006400000000001,
+        "output_cost_usd": 0.00179328,
+        "estimated_cost_usd": 0.00279392
+    },
+    "duration": 27.090259313583374,
+    "timestamp": "2026-09-18T09:45:42.306982",
+    "parsed": {
+        "metadata": {
+            "send_date": [
+                "1926-03-29"
+            ],
+            "letter_title": null,
+            "sender_persons": null,
+            "receiver_persons": [
+                "Basler Rheinschiffahrt-Aktiengesellschaft"
+            ]
+        }
+    },
+    "conversation_id": "a06d5a39-4190-4942-b1e7-7d12529aa71b",
+    "score": {
+        "send_date_tp": 1,
+        "send_date_fp": 0,
+        "send_date_fn": 0,
+        "sender_persons_tp": 0,
+        "sender_persons_fp": 0,
+        "sender_persons_fn": 0,
+        "receiver_persons_tp": 0,
+        "receiver_persons_fp": 1,
+        "receiver_persons_fn": 0,
+        "field_scores": {
+            "send_date": {
+                "response": [
+                    "1926-03-29"
+                ],
+                "ground_truth": [
+                    "1926-03-29"
+                ],
+                "score": null,
+                "counts": {
+                    "send_date_tp": 1,
+                    "send_date_fp": 0,
+                    "send_date_fn": 0
+                }
+            },
+            "sender_persons": {
+                "response": [],
+                "ground_truth": [],
+                "score": null,
+                "counts": {
+                    "sender_persons_tp": 0,
+                    "sender_persons_fp": 0,
+                    "sender_persons_fn": 0
+                }
+            },
+            "receiver_persons": {
+                "response": [
+                    "Basler Rheinschiffahrt-Aktiengesellschaft"
+                ],
+                "ground_truth": [],
+                "score": null,
+                "counts": {
+                    "receiver_persons_tp": 0,
+                    "receiver_persons_fp": 1,
+                    "receiver_persons_fn": 0
+                }
+            }
+        }
+    },
+    "raw_response": "{\"id\":\"gen-1789717515-NNoTQF5mFX5qJ26YwVNT\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\n  \\\"metadata\\\": {\\n    \\\"send_date\\\": [\\n      \\\"1926-03-29\\\"\\n    ],\\n    \\\"letter_title\\\": null,\\n    \\\"sender_persons\\\": null,\\n    \\\"receiver_persons\\\": [\\n      \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"\\n    ]\\n  }\\n}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"metadata\":{\"send_date\":[\"1926-03-29\"],\"letter_title\":null,\"sender_persons\":null,\"receiver_persons\":[\"Basler Rheinschiffahrt-Aktiengesellschaft\"]}},\"reasoning\":\"The user wants me to extract metadata from a historical letter image and format it as JSON.\\nThe JSON schema requires:\\n- `metadata`: an object containing:\\n    - `send_date`: list of strings or null\\n    - `letter_title`: list of strings or null\\n    - `sender_persons`: list of strings or null\\n    - `receiver_persons`: list of strings or null\\n\\nLet's analyze the image:\\n- Date: \\\"Basel, den 29. M\u00e4rz 1926.\\\" -> \\\"1926-03-29\\\"\\n- Receiver: \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\" (This is an organization, but often treated as the receiver entity. The prompt asks for \\\"receiver_persons\\\". I will put the organization name here as it's the addressee). Wait, the prompt says \\\"Name(s) of the person(s) who received the letter.\\\" If it's an organization, I can list it or put null. Usually, in these tasks, the addressee is listed. Let's list \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\".\\n- Sender: The letter ends with \\\"Hochachtungsvoll\\\" but there is no signature or printed name below it. The sender is not explicitly named in the text, though it mentions \\\"ich\\\". So sender_persons should be null.\\n- Letter title: There is no explicit title. So letter_title should be null.\\n\\nLet's refine the receiver: \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\".\\nLet's refine the date: \\\"1926-03-29\\\".\\nSender: null.\\nTitle: null.\\n\\nWait, looking closely at the top left, there is a \\\"T\\\". This might be an initial, but it's not a full name. I'll stick with null for sender.\\n\\nLet's construct the JSON.\\n```json\\n{\\n  \\\"metadata\\\": {\\n    \\\"send_date\\\": [\\\"1926-03-29\\\"],\\n    \\\"letter_title\\\": null,\\n    \\\"sender_persons\\\": null,\\n    \\\"receiver_persons\\\": [\\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"]\\n  }\\n}\\n```\\nWait, the schema says:\\n`\\\"send_date\\\": {\\\"anyOf\\\": [{\\\"items\\\": {\\\"type\\\": \\\"string\\\"}, \\\"type\\\": \\\"array\\\"}, {\\\"type\\\": \\\"null\\\"}]}`\\nSo null is allowed.\\n\\nLet's double check the receiver. \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\" is the addressee.\\nThe text says \\\"Zur\u00fcckkommend auf Ihre beiden Schreiben...\\\" addressing \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\".\\n\\nFinal check of the schema structure:\\n```json\\n[\\n  {\\n    \\\"metadata\\\": {\\n      \\\"send_date\\\": [\\\"1926-03-29\\\"],\\n      \\\"letter_title\\\": null,\\n      \\\"sender_persons\\\": null,\\n      \\\"receiver_persons\\\": [\\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"]\\n    }\\n  }\\n]\\n```\\nWait, the schema provided is:\\n```json\\n[{\\\"$defs\\\": {\\\"Metadata\\\": {\\\"properties\\\": {\\\"send_date\\\": {\\\"anyOf\\\": [{\\\"items\\\": {\\\"type\\\": \\\"string\\\"}, \\\"type\\\": \\\"array\\\"}, {\\\"type\\\": \\\"null\\\"}], \\\"title\\\": \\\"Send Date\\\"}, \\\"letter_title\\\": {\\\"anyOf\\\": [{\\\"items\\\": {\\\"type\\\": \\\"string\\\"}, \\\"type\\\": \\\"array\\\"}, {\\\"type\\\": \\\"null\\\"}], \\\"title\\\": \\\"Letter Title\\\"}, \\\"sender_persons\\\": {\\\"anyOf\\\": [{\\\"items\\\": {\\\"type\\\": \\\"string\\\"}, \\\"type\\\": \\\"array\\\"}, {\\\"type\\\": \\\"null\\\"}], \\\"title\\\": \\\"Sender Persons\\\"}, \\\"receiver_persons\\\": {\\\"anyOf\\\": [{\\\"items\\\": {\\\"type\\\": \\\"string\\\"}, \\\"type\\\": \\\"array\\\"}, {\\\"type\\\": \\\"null\\\"}], \\\"title\\\": \\\"Receiver Persons\\\"}}, \\\"required\\\": [\\\"send_date\\\", \\\"letter_title\\\", \\\"sender_persons\\\", \\\"receiver_persons\\\"], \\\"title\\\": \\\"Metadata\\\", \\\"type\\\": \\\"object\\\", \\\"additionalProperties\\\": false}}, \\\"properties\\\": {\\\"metadata\\\": {\\\"$ref\\\": \\\"#/$defs/Metadata\\\"}}, \\\"required\\\": [\\\"metadata\\\"], \\\"title\\\": \\\"Document\\\", \\\"type\\\": \\\"object\\\", \\\"additionalProperties\\\": false}]\\n```\\nThis is a list containing a single object schema. The output should be a JSON object matching this schema.\\nSo:\\n```json\\n{\\n  \\\"metadata\\\": {\\n    \\\"send_date\\\": [\\\"1926-03-29\\\"],\\n    \\\"letter_title\\\": null,\\n    \\\"sender_persons\\\": null,\\n    \\\"receiver_persons\\\": [\\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"]\\n  }\\n}\\n```\\nThe prompt says \\\"return them in a JSON file\\\". I will output just the JSON.\\nThe example output format is:\\n```json\\n{\\n    \\\"letter_title\\\": [\\\"Petition for Environmental Protection\\\"],\\n    \\\"send_date\\\": [\\\"1993-03-12\\\"],\\n    \\\"sender_persons\\\": [\\\"Lisa Simpson\\\"],\\n    \\\"receiver_persons\\\": [\\\"Mayor Joe Quimby\\\", \\\"Seymour Skinner\\\"],\\n}\\n```\\nWait, the example doesn't have the `metadata` wrapper, but the schema strictly requires `metadata` wrapper.\\n\\\"Here's the json schema you must adhere to:\\\"\\nThe schema has `properties: { metadata: { $ref: ... } }`.\\nSo I must use the `metadata` wrapper.\\n\\n```json\\n{\\n  \\\"metadata\\\": {\\n    \\\"send_date\\\": [\\n      \\\"1926-03-29\\\"\\n    ],\\n    \\\"letter_title\\\": null,\\n    \\\"sender_persons\\\": null,\\n    \\\"receiver_persons\\\": [\\n      \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"\\n    ]\\n  }\\n}\\n```\\nThe receiver is an organization, but it's the entity receiving the letter. I'll include it.\\nThe sender is not named.\\nThe title is not present.\\nDate is 29. M\u00e4rz 1926.\\nAll good.\",\"reasoning_details\":[{\"type\":\"reasoning.text\",\"text\":\"The user wants me to extract metadata from a historical letter image and format it as JSON.\\nThe JSON schema requires:\\n- `metadata`: an object containing:\\n    - `send_date`: list of strings or null\\n    - `letter_title`: list of strings or null\\n    - `sender_persons`: list of strings or null\\n    - `receiver_persons`: list of strings or null\\n\\nLet's analyze the image:\\n- Date: \\\"Basel, den 29. M\u00e4rz 1926.\\\" -> \\\"1926-03-29\\\"\\n- Receiver: \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\" (This is an organization, but often treated as the receiver entity. The prompt asks for \\\"receiver_persons\\\". I will put the organization name here as it's the addressee). Wait, the prompt says \\\"Name(s) of the person(s) who received the letter.\\\" If it's an organization, I can list it or put null. Usually, in these tasks, the addressee is listed. Let's list \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\".\\n- Sender: The letter ends with \\\"Hochachtungsvoll\\\" but there is no signature or printed name below it. The sender is not explicitly named in the text, though it mentions \\\"ich\\\". So sender_persons should be null.\\n- Letter title: There is no explicit title. So letter_title should be null.\\n\\nLet's refine the receiver: \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\".\\nLet's refine the date: \\\"1926-03-29\\\".\\nSender: null.\\nTitle: null.\\n\\nWait, looking closely at the top left, there is a \\\"T\\\". This might be an initial, but it's not a full name. I'll stick with null for sender.\\n\\nLet's construct the JSON.\\n```json\\n{\\n  \\\"metadata\\\": {\\n    \\\"send_date\\\": [\\\"1926-03-29\\\"],\\n    \\\"letter_title\\\": null,\\n    \\\"sender_persons\\\": null,\\n    \\\"receiver_persons\\\": [\\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"]\\n  }\\n}\\n```\\nWait, the schema says:\\n`\\\"send_date\\\": {\\\"anyOf\\\": [{\\\"items\\\": {\\\"type\\\": \\\"string\\\"}, \\\"type\\\": \\\"array\\\"}, {\\\"type\\\": \\\"null\\\"}]}`\\nSo null is allowed.\\n\\nLet's double check the receiver. \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\" is the addressee.\\nThe text says \\\"Zur\u00fcckkommend auf Ihre beiden Schreiben...\\\" addressing \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\".\\n\\nFinal check of the schema structure:\\n```json\\n[\\n  {\\n    \\\"metadata\\\": {\\n      \\\"send_date\\\": [\\\"1926-03-29\\\"],\\n      \\\"letter_title\\\": null,\\n      \\\"sender_persons\\\": null,\\n      \\\"receiver_persons\\\": [\\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"]\\n    }\\n  }\\n]\\n```\\nWait, the schema provided is:\\n```json\\n[{\\\"$defs\\\": {\\\"Metadata\\\": {\\\"properties\\\": {\\\"send_date\\\": {\\\"anyOf\\\": [{\\\"items\\\": {\\\"type\\\": \\\"string\\\"}, \\\"type\\\": \\\"array\\\"}, {\\\"type\\\": \\\"null\\\"}], \\\"title\\\": \\\"Send Date\\\"}, \\\"letter_title\\\": {\\\"anyOf\\\": [{\\\"items\\\": {\\\"type\\\": \\\"string\\\"}, \\\"type\\\": \\\"array\\\"}, {\\\"type\\\": \\\"null\\\"}], \\\"title\\\": \\\"Letter Title\\\"}, \\\"sender_persons\\\": {\\\"anyOf\\\": [{\\\"items\\\": {\\\"type\\\": \\\"string\\\"}, \\\"type\\\": \\\"array\\\"}, {\\\"type\\\": \\\"null\\\"}], \\\"title\\\": \\\"Sender Persons\\\"}, \\\"receiver_persons\\\": {\\\"anyOf\\\": [{\\\"items\\\": {\\\"type\\\": \\\"string\\\"}, \\\"type\\\": \\\"array\\\"}, {\\\"type\\\": \\\"null\\\"}], \\\"title\\\": \\\"Receiver Persons\\\"}}, \\\"required\\\": [\\\"send_date\\\", \\\"letter_title\\\", \\\"sender_persons\\\", \\\"receiver_persons\\\"], \\\"title\\\": \\\"Metadata\\\", \\\"type\\\": \\\"object\\\", \\\"additionalProperties\\\": false}}, \\\"properties\\\": {\\\"metadata\\\": {\\\"$ref\\\": \\\"#/$defs/Metadata\\\"}}, \\\"required\\\": [\\\"metadata\\\"], \\\"title\\\": \\\"Document\\\", \\\"type\\\": \\\"object\\\", \\\"additionalProperties\\\": false}]\\n```\\nThis is a list containing a single object schema. The output should be a JSON object matching this schema.\\nSo:\\n```json\\n{\\n  \\\"metadata\\\": {\\n    \\\"send_date\\\": [\\\"1926-03-29\\\"],\\n    \\\"letter_title\\\": null,\\n    \\\"sender_persons\\\": null,\\n    \\\"receiver_persons\\\": [\\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"]\\n  }\\n}\\n```\\nThe prompt says \\\"return them in a JSON file\\\". I will output just the JSON.\\nThe example output format is:\\n```json\\n{\\n    \\\"letter_title\\\": [\\\"Petition for Environmental Protection\\\"],\\n    \\\"send_date\\\": [\\\"1993-03-12\\\"],\\n    \\\"sender_persons\\\": [\\\"Lisa Simpson\\\"],\\n    \\\"receiver_persons\\\": [\\\"Mayor Joe Quimby\\\", \\\"Seymour Skinner\\\"],\\n}\\n```\\nWait, the example doesn't have the `metadata` wrapper, but the schema strictly requires `metadata` wrapper.\\n\\\"Here's the json schema you must adhere to:\\\"\\nThe schema has `properties: { metadata: { $ref: ... } }`.\\nSo I must use the `metadata` wrapper.\\n\\n```json\\n{\\n  \\\"metadata\\\": {\\n    \\\"send_date\\\": [\\n      \\\"1926-03-29\\\"\\n    ],\\n    \\\"letter_title\\\": null,\\n    \\\"sender_persons\\\": null,\\n    \\\"receiver_persons\\\": [\\n      \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"\\n    ]\\n  }\\n}\\n```\\nThe receiver is an organization, but it's the entity receiving the letter. I'll include it.\\nThe sender is not named.\\nThe title is not present.\\nDate is 29. M\u00e4rz 1926.\\nAll good.\",\"format\":\"unknown\",\"index\":0}]},\"native_finish_reason\":\"stop\"}],\"created\":1789717515,\"model\":\"qwen/qwen3.7-plus\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":null,\"usage\":{\"completion_tokens\":1401,\"prompt_tokens\":3127,\"total_tokens\":4528,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":0,\"reasoning_tokens\":1318,\"rejected_prediction_tokens\":null,\"image_tokens\":0},\"prompt_tokens_details\":{\"audio_tokens\":0,\"cached_tokens\":0,\"cache_write_tokens\":0,\"video_tokens\":0},\"cost\":0.00279392,\"is_byok\":false,\"cost_details\":{\"upstream_inference_cost\":0.00279392,\"upstream_inference_prompt_cost\":0.00100064,\"upstream_inference_completions_cost\":0.00179328}},\"provider\":\"Alibaba\"}"
+}

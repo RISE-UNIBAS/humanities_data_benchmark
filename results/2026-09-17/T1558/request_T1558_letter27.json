@@ -1,0 +1,91 @@
+{
+    "text": "{\"metadata\":{\"send_date\":[\"1928-04-23\"],\"letter_title\":[\"\"],\"sender_persons\":[\"Rheinschiffahrt-Aktiengesellschaft\"],\"receiver_persons\":[\"Herr Oettinger\"]}}",
+    "model": "thinkingmachines/Inkling",
+    "provider": "huggingface",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 2254,
+        "output_tokens": 722,
+        "total_tokens": 2976,
+        "cached_tokens": 256,
+        "input_cost_usd": 0.002254,
+        "output_cost_usd": 0.0029241,
+        "estimated_cost_usd": 0.0051781
+    },
+    "duration": 8.97756290435791,
+    "timestamp": "2026-09-17T11:41:27.219194",
+    "parsed": {
+        "metadata": {
+            "send_date": [
+                "1928-04-23"
+            ],
+            "letter_title": [
+                ""
+            ],
+            "sender_persons": [
+                "Rheinschiffahrt-Aktiengesellschaft"
+            ],
+            "receiver_persons": [
+                "Herr Oettinger"
+            ]
+        }
+    },
+    "conversation_id": "a8f631b4-2fd5-466f-9828-00ebcf20d901",
+    "score": {
+        "send_date_tp": 1,
+        "send_date_fp": 0,
+        "send_date_fn": 0,
+        "sender_persons_tp": 0,
+        "sender_persons_fp": 1,
+        "sender_persons_fn": 2,
+        "receiver_persons_tp": 1,
+        "receiver_persons_fp": 0,
+        "receiver_persons_fn": 0,
+        "field_scores": {
+            "send_date": {
+                "response": [
+                    "1928-04-23"
+                ],
+                "ground_truth": [
+                    "1928-04-23"
+                ],
+                "score": null,
+                "counts": {
+                    "send_date_tp": 1,
+                    "send_date_fp": 0,
+                    "send_date_fn": 0
+                }
+            },
+            "sender_persons": {
+                "response": [
+                    "Rheinschiffahrt-Aktiengesellschaft"
+                ],
+                "ground_truth": [
+                    "Groschupf-Jaeger, Louis",
+                    "Ritter-Dreier, Fritz"
+                ],
+                "score": null,
+                "counts": {
+                    "sender_persons_tp": 0,
+                    "sender_persons_fp": 1,
+                    "sender_persons_fn": 2
+                }
+            },
+            "receiver_persons": {
+                "response": [
+                    "Oettinger-Meili, Artur"
+                ],
+                "ground_truth": [
+                    "Oettinger-Meili, Artur"
+                ],
+                "score": null,
+                "counts": {
+                    "receiver_persons_tp": 1,
+                    "receiver_persons_fp": 0,
+                    "receiver_persons_fn": 0
+                }
+            }
+        }
+    },
+    "raw_response": "{\"id\":\"p1dBwmq-4i1VM9-a3c727885886fc18\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\n  \\\"metadata\\\": {\\n    \\\"send_date\\\": [\\\"1928-04-23\\\"],\\n    \\\"letter_title\\\": [\\\"\\\"],\\n    \\\"sender_persons\\\": [\\\"Rheinschiffahrt-Aktiengesellschaft\\\"],\\n    \\\"receiver_persons\\\": [\\\"Herr Oettinger\\\"]\\n  }\\n}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"metadata\":{\"send_date\":[\"1928-04-23\"],\"letter_title\":[\"\"],\"sender_persons\":[\"Rheinschiffahrt-Aktiengesellschaft\"],\"receiver_persons\":[\"Herr Oettinger\"]}},\"reasoning\":\"We need parse image of historical letter. Need extract letter_title, sender_persons, send_date, receiver_persons. Let's analyze visible text.\\n\\nImage shows letterhead \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\" etc. Date at top right: \\\"Basel, den 23. April 1928.\\\" So send_date 1928-04-23.\\n\\nAddressee on right: \\\"Herrn Oettinger, Verkehrsbureau, Basel.\\\" So receiver_persons likely [\\\"Oettinger\\\"] or [\\\"Herrn Oettinger\\\"]. Need name(s) of person(s) who received. \\\"Herrn Oettinger\\\" -> Oettinger.\\n\\nSender: bottom right \\\"Hochachtend BASEL RHEINSCHIFFFAHRT-AKTIENGESELLSCHAFT\\\" with signatures. So sender_persons [\\\"Basel Rheinschiffahrt-Aktiengesellschaft\\\"]? Or maybe specific signatories? The signatures are illegible, but organization is sender. The prompt asks \\\"Name(s) of the person(s) who wrote the letter.\\\" Could be the company/organization? Usually in these extraction tasks, sender is the entity writing, here \\\"Rheinschiffahrt-Aktiengesellschaft\\\" represented by signatures. But we might list organization since individual names not readable. Let's include [\\\"Rheinschiffahrt-Aktiengesellschaft\\\"]? Or [\\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"]. Let's check letterhead: \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\". At bottom \\\"BASEL RHEINSCHIFFFAHRT-AKTIENGESELLSCHAFT\\\". So sender_persons [\\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"].\\n\\nLetter title: There might be no explicit title except maybe subject? The letter mentions \\\"Die Bau-Direktion Liestal schreibt uns wie folgt:\\\" then quote. But no title like \\\"Betreff\\\". Could be null? However sometimes they want the title of the letter, maybe from header? There's no explicit title. So letter_title [\\\"null\\\"]? Wait instructions: \\\"If a piece of information is not included in the letter, set the value for the corresponding key to 'null'.\\\" But they want values stored as a list, even if single value. So letter_title: [null]? Or maybe omit? No, include key with list containing null? The example shows lists with strings. Usually if missing, set value to \\\"null\\\" (probably as string inside list?). Let's do [\\\"null\\\"]? Actually they said set the value for the corresponding key to \\\"null\\\". Since values should be stored as a list, likely [\\\"null\\\"]. But maybe they want null without quotes? In JSON, null is a value. So \\\"letter_title\\\": [null]. Yes.\\n\\nBut check if there is implicit title? The number \\\"27\\\" in red at top right might be file number, not title. So likely no title.\\n\\nThus:\\n{\\n\\\"letter_title\\\": [null],\\n\\\"sender_persons\\\": [\\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"],\\n\\\"send_date\\\": [\\\"1928-04-23\\\"],\\n\\\"receiver_persons\\\": [\\\"Oettinger\\\"]\\n}\\n\\nNeed ensure correct formatting.\"},\"seed\":null}],\"created\":1789638079,\"model\":\"thinkingmachines/Inkling\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":\"default\",\"usage\":{\"completion_tokens\":722,\"prompt_tokens\":2254,\"total_tokens\":2976,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":null,\"reasoning_tokens\":656,\"rejected_prediction_tokens\":null},\"prompt_tokens_details\":{\"audio_tokens\":null,\"cached_tokens\":256}},\"prompt\":[]}"
+}

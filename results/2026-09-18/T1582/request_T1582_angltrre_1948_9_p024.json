@@ -1,0 +1,58 @@
+{
+    "text": "{\"advertisements\":[{\"box\":[95.0,75.0,2375.0,2905.0]}]}",
+    "model": "meta-models/Muse-Glimmer-30B",
+    "provider": "huggingface",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 3916,
+        "output_tokens": 1179,
+        "total_tokens": 5095,
+        "cached_tokens": 48,
+        "input_cost_usd": 0.0013706,
+        "output_cost_usd": 0.0017684999999999999,
+        "estimated_cost_usd": 0.0031390999999999997
+    },
+    "duration": 43.93177819252014,
+    "timestamp": "2026-09-18T21:39:02.425588",
+    "parsed": {
+        "advertisements": [
+            {
+                "box": [
+                    95.0,
+                    75.0,
+                    2375.0,
+                    2905.0
+                ]
+            }
+        ]
+    },
+    "conversation_id": "16a2dcfc-b661-4304-96f7-347940d4bdd5",
+    "score": {
+        "field_scores": {
+            "box 0": {
+                "response": [
+                    95.0,
+                    75.0,
+                    2375.0,
+                    2905.0
+                ],
+                "ground_truth": [
+                    240,
+                    265,
+                    2325,
+                    3142
+                ],
+                "score": 0.792
+            }
+        },
+        "f1": 1.0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "mean_iou": 0.792,
+        "true_positives": 1,
+        "false_positives": 0,
+        "false_negatives": 0,
+        "iou_threshold": 0.5
+    },
+    "raw_response": "{\"id\":\"p1ozMe6-7ArivV-a3d2cf6d8ae9d677\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\\"advertisements\\\": [{\\\"box\\\": [95, 75, 2375, 2905]}]}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"advertisements\":[{\"box\":[95.0,75.0,2375.0,2905.0]}]},\"reasoning\":\"Extract all advertisements and return their bounding boxes.\\nThe original size of the page is 2479 x 3508 pixels.\\n\\nThe page shows an aerial view with CIBA text and a box with text. Likely the whole page is an advertisement for CIBA Limited. So bounding box maybe the whole image area. The advertisement includes the aerial photo and the text box and CIBA letters. Might be the entire page content. Could be the main ad area from about 100 to 930? Let's estimate.\\n\\nThe image shows a page with white margins. The ad occupies most of the page. The aerial photo is from about x ~ 100 to 930? Wait width 2479. The photo left edge ~ 100 px, right edge ~ 930? Actually the photo is wide. Let's approximate. The photo top ~ 75? The photo bottom ~ 890? Hmm.\\n\\nBetter give bounding box covering the ad: the aerial photo plus overlay. Approx coordinates: x_min ~ 100, y_min ~ 75, x_max ~ 930? Wait 2479 width, the photo is centered. Let's estimate: left margin ~ 100 px, right margin ~ 100 px? Actually the page is 2479 wide. The photo seems about 90% width. So left ~ 100, right ~ 2379? Wait 2479 - 100 = 2379. Hmm.\\n\\nMaybe the ad is the whole page content. Could give bounding box [100, 75, 930? No.\\n\\nLet's assume coordinates in pixels. The image is 2479 x 3508. The ad occupies from about x=100 to x=930? No 930 is too small. The photo spans almost full width. Let's estimate: left edge ~ 100, right edge ~ 930? Wait 930 is about 1/3 of 2479. So no.\\n\\nMaybe the image is portrait, width 2479, height 3508. The photo is roughly from x=100 to x=930? Actually the photo is wide, maybe x=100 to x=930? No.\\n\\nLet's look: the page has white border left ~ 100 px, right ~ 100 px. So photo width ~ 2479 - 200 = 2279. So x_max ~ 2379? Wait 100+2279=2379. So x_min ~100, x_max ~2379.\\n\\nY: top margin ~ 30? Photo top ~ 75, bottom ~ 890? Wait bottom of photo is about 890? The page height 3508. The photo is about 80% height. Top ~ 75, bottom ~ 2900? Actually the photo goes down to about 2900? The bottom white margin is about 600 px. So photo bottom ~ 2900. Let's estimate y_min ~ 75, y_max ~ 2900.\\n\\nThe text box overlay is at top center: x ~ 250 to 780? Actually the box is centered. Could be separate? But the advertisement is the whole thing.\\n\\nMaybe the advertisement is just the white box with text and logo. That is a typical ad. But the aerial photo with CIBA is also part of ad.\\n\\nI think the entire page is one advertisement. So bounding box is the whole image area containing the ad: approx [100, 75, 930? Hmm.\\n\\nLet's give a reasonable estimate: x_min=100, y_min=75, x_max=930? No.\\n\\nBetter to give coordinates normalized? The instruction says return bounding boxes. Probably in pixel coordinates [x_min, y_min, x_max, y_max].\\n\\nI'll estimate: left ~ 100, top ~ 75, right ~ 930? Wait 2479 width, the photo right edge is near right margin. The right margin is about 100 px. So right ~ 2379. So x_max=2379.\\n\\nTop of photo ~ 75, bottom ~ 2900. So y_max=2900.\\n\\nSo box = [100, 75, 2379, 2900].\\n\\nMaybe also the small printer text at bottom is not part of ad. So y_max maybe 2900.\\n\\nAlternatively, the ad could be considered the central white box with text: x ~ 250, y ~ 170, x_max ~ 780, y_max ~ 380. And the CIBA letters overlay. Hmm.\\n\\nGiven typical extraction, the advertisement is the whole page. I'll provide one bounding box covering the aerial image and text.\\n\\nI'll output: [{\\\"x_min\\\": 100, \\\"y_min\\\": 75, \\\"x_max\\\": 2379, \\\"y_max\\\": 2900}].\\n\\nIf need more precise, maybe x_min=100, y_min=75, x_max=930? No.\\n\\nI'll give approximate.\\n\\nLet's refine: looking at image, left edge of photo is about 100 px from left of image. Right edge about 930? Wait the image width is 2479, the photo seems to occupy about 85% of width. 0.85*2479\u22482105. So width ~2105. So x_max = x_min + 2105. If x_min=100, x_max=2205. Maybe 2300.\\n\\nI'll give [95, 75, 935? Hmm.\\n\\nMaybe better to give normalized 0-1. But instruction says original size pixels.\\n\\nI'll provide a single bounding box: [100, 75, 2370, 2900].\\n\\nLet's output.\"},\"token_ids\":null,\"routed_experts\":null,\"seed\":null}],\"created\":1789760299,\"model\":\"meta-models/Muse-Glimmer-30B\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":\"vllm-0.1.dev19059+g66826a22d-tp2-46311a71\",\"usage\":{\"completion_tokens\":1179,\"prompt_tokens\":3916,\"total_tokens\":5095,\"completion_tokens_details\":null,\"prompt_tokens_details\":{\"audio_tokens\":null,\"cached_tokens\":48,\"created_cache_tokens\":3856,\"multimodal_tokens\":{\"image\":3850}}},\"prompt_token_ids\":null,\"prompt_text\":null,\"kv_transfer_params\":null,\"ec_transfer_params\":null,\"metrics\":null,\"prompt\":[]}"
+}

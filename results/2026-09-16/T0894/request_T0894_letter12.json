@@ -1,0 +1,88 @@
+{
+    "text": "{\"metadata\":{\"send_date\":[\"1926-08-13\"],\"letter_title\":null,\"sender_persons\":[\"Groschopf\",\"J.A. Ritter\"],\"receiver_persons\":[\"Dr. Max Vischer\"]}}",
+    "model": "qwen/qwen3.6-plus",
+    "provider": "openrouter",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 8150,
+        "output_tokens": 1887,
+        "total_tokens": 10037,
+        "estimated_cost_usd": 0.0063284
+    },
+    "duration": 133.42530012130737,
+    "timestamp": "2026-09-17T06:58:36.304102",
+    "parsed": {
+        "metadata": {
+            "send_date": [
+                "1926-08-13"
+            ],
+            "letter_title": null,
+            "sender_persons": [
+                "Groschopf",
+                "J.A. Ritter"
+            ],
+            "receiver_persons": [
+                "Dr. Max Vischer"
+            ]
+        }
+    },
+    "conversation_id": "1d7c8add-ec5e-478a-befe-6f7e6ff8096b",
+    "score": {
+        "send_date_tp": 1,
+        "send_date_fp": 0,
+        "send_date_fn": 0,
+        "sender_persons_tp": 2,
+        "sender_persons_fp": 0,
+        "sender_persons_fn": 0,
+        "receiver_persons_tp": 1,
+        "receiver_persons_fp": 0,
+        "receiver_persons_fn": 0,
+        "field_scores": {
+            "send_date": {
+                "response": [
+                    "1926-08-13"
+                ],
+                "ground_truth": [
+                    "1926-08-13"
+                ],
+                "score": null,
+                "counts": {
+                    "send_date_tp": 1,
+                    "send_date_fp": 0,
+                    "send_date_fn": 0
+                }
+            },
+            "sender_persons": {
+                "response": [
+                    "Groschupf-Jaeger, Louis",
+                    "Ritter-Dreier, Fritz"
+                ],
+                "ground_truth": [
+                    "Groschupf-Jaeger, Louis",
+                    "Ritter-Dreier, Fritz"
+                ],
+                "score": null,
+                "counts": {
+                    "sender_persons_tp": 2,
+                    "sender_persons_fp": 0,
+                    "sender_persons_fn": 0
+                }
+            },
+            "receiver_persons": {
+                "response": [
+                    "Vischer-von Planta, Max"
+                ],
+                "ground_truth": [
+                    "Vischer-von Planta, Max"
+                ],
+                "score": null,
+                "counts": {
+                    "receiver_persons_tp": 1,
+                    "receiver_persons_fp": 0,
+                    "receiver_persons_fn": 0
+                }
+            }
+        }
+    },
+    "raw_response": "{\"id\":\"gen-1789621080-YZQGelKqmDX8gqApg7Am\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\n    \\\"metadata\\\": {\\n        \\\"send_date\\\": [\\n            \\\"1926-08-13\\\"\\n        ],\\n        \\\"letter_title\\\": null,\\n        \\\"sender_persons\\\": [\\n            \\\"Groschopf\\\",\\n            \\\"J.A. Ritter\\\"\\n        ],\\n        \\\"receiver_persons\\\": [\\n            \\\"Dr. Max Vischer\\\"\\n        ]\\n    }\\n}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"reasoning\":\"The user wants me to extract specific metadata from a historical letter provided as images.\\n\\n**1. Analyze the input:**\\n- I have three images of a typewritten letter in German.\\n- The letter is from \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\".\\n- The date is \\\"Basel, den 13. August 1926\\\".\\n- The recipient is \\\"Herrn Dr. Max Vischer, Pr\u00e4sident der Basler Personenschiffahrtsgesellschaft\\\".\\n- The letter is signed by \\\"sig. Groschopf\\\" and \\\"J.A. Ritter\\\".\\n- There is a stamp \\\"ABSCHRIFT\\\" (Copy) and a handwritten number \\\"12\\\".\\n- There is a note at the bottom \\\"geht zur\u00fcck 14.VIII 26 sig. Vischer\\\". This indicates the letter was received and processed by Vischer.\\n\\n**2. Extract the required fields:**\\n\\n*   **letter_title:** There is no explicit title like \\\"Subject: ...\\\". However, the first paragraph mentions \\\"Wir best\u00e4tigen Ihr Schreiben vom 9. August betreffend Ben\u00fctzung der Landungsstege\\\" (We confirm your letter of August 9 regarding the use of the landing stages). This is the subject matter. Often, in these extractions, if there's no formal title, I might look for a subject line. There isn't one. I will leave it as null or perhaps infer a title if appropriate, but the instructions say \\\"Title of the letter\\\". Usually, if there's no \\\"Betreff\\\" line, it's null. Let's look closer. No \\\"Betreff\\\" line. I will set it to null. Wait, looking at the prompt example, it had a title. Let's re-read the letter. It's a response to a previous letter. It doesn't have a formal title. I will set it to `null`.\\n\\n*   **sender_persons:**\\n    *   The letterhead says \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\". This is the organization.\\n    *   The signature block at the end (page 3) says:\\n        *   \\\"BASLER RHEINSCHIFFAHRT - AKTIENGESELLSCHAFT\\\"\\n        *   \\\"sig. Groschopf\\\"\\n        *   \\\"J.A. Ritter.\\\"\\n    *   So the senders are Groschopf and J.A. Ritter.\\n\\n*   **send_date:**\\n    *   Top right corner: \\\"Basel, den 13. August 1926.\\\"\\n    *   Format: YYYY-MM-DD -> 1926-08-13.\\n\\n*   **receiver_persons:**\\n    *   Address block: \\\"Herrn Dr. Max Vischer, Pr\u00e4sident der Basler Personenschiffahrtsgesellschaft\\\".\\n    *   So the receiver is Dr. Max Vischer.\\n\\n**3. Format the output:**\\n- JSON format.\\n- Values must be lists.\\n- Date in ISO format.\\n\\n**Refining the extraction:**\\n- **Sender:** The letter is signed by \\\"Groschopf\\\" and \\\"J.A. Ritter\\\". The organization is \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\". The prompt asks for \\\"Name(s) of the person(s)\\\". So \\\"Groschopf\\\" and \\\"J.A. Ritter\\\" are the persons.\\n- **Receiver:** \\\"Dr. Max Vischer\\\".\\n- **Date:** \\\"1926-08-13\\\".\\n- **Title:** No explicit title found. I will use `null`.\\n\\nLet's double check the signature.\\nPage 3:\\n\\\"Hochachtend\\\"\\n\\\"BASLER\\\"\\n\\\"RHEINSCHIFFAHRT - AKTIENGESELLSCHAFT\\\"\\n\\\"sig. Groschopf      J.A.Ritter.\\\"\\n\\nSo senders are Groschopf and J.A. Ritter.\\n\\nLet's double check the receiver.\\nPage 1:\\n\\\"Herrn Dr. Max Vischer,\\\"\\n\\\"Pr\u00e4sident der\\\"\\n\\\"Basler Personenschiffahrtsgesellschaft\\\"\\n\\nSo receiver is Dr. Max Vischer.\\n\\nLet's double check the date.\\nPage 1:\\n\\\"Basel, den 13. August 1926.\\\"\\n\\nSo date is 1926-08-13.\\n\\nLet's check for a title again.\\nSometimes the first line acts as a title, but here it's the letterhead.\\nSometimes there is a \\\"Betreff\\\" line. I don't see one.\\nThe text starts \\\"Wir best\u00e4tigen Ihr Schreiben...\\\"\\nSo `letter_title` is likely `null`.\\n\\nWait, looking at the very bottom left of page 3:\\n\\\"geht zur\u00fcck\\\"\\n\\\"14.VIII 26\\\"\\n\\\"sig. Vischer\\\"\\nThis is an internal note by the receiver (Vischer) indicating he received it on Aug 14, 1926. This confirms the date and receiver.\\n\\nFinal check of the JSON structure required.\\n```json\\n{\\n  \\\"metadata\\\": {\\n    \\\"letter_title\\\": [null], // or just null? The schema says \\\"anyOf\\\": [{\\\"items\\\": {\\\"type\\\": \\\"string\\\"}, \\\"type\\\": \\\"array\\\"}, {\\\"type\\\": \\\"null\\\"}]. So if null, it should be just null, not [null]. Wait, the prompt says \\\"values corresponding to each key should be stored as a list, even if there is only a single value for a key\\\". But the schema allows null. If the value is null, it's not a list. The prompt says \\\"If a piece of information is not included in the letter, set the value for the corresponding key to 'null'\\\". This implies the value itself is null, not a list containing null.\\n    Let's look at the example:\\n    \\\"letter_title\\\": [\\\"Petition for Environmental Protection\\\"] -> List of strings.\\n    If null, the schema says `{\\\"type\\\": \\\"null\\\"}`. So the value should be `null`.\\n    \\n    Actually, let's re-read carefully: \\\"values corresponding to each key should be stored as a list... If a piece of information is not included... set the value... to 'null'\\\".\\n    This is slightly contradictory if interpreted strictly. Usually, it means if present, it's a list. If absent, it's null.\\n    The schema: `\\\"send_date\\\": {\\\"anyOf\\\": [{\\\"items\\\": {\\\"type\\\": \\\"string\\\"}, \\\"type\\\": \\\"array\\\"}, {\\\"type\\\": \\\"null\\\"}]}`.\\n    So if I have a date, it's `[\\\"1926-08-13\\\"]`. If I don't, it's `null`.\\n    \\n    Okay, I will follow the schema.\\n    \\n    Sender persons: [\\\"Groschopf\\\", \\\"J.A. Ritter\\\"]\\n    Receiver persons: [\\\"Dr. Max Vischer\\\"]\\n    Send date: [\\\"1926-08-13\\\"]\\n    Letter title: null (since there is no title).\\n```\\n\\nOne detail: \\\"sig. Groschopf\\\". \\\"sig.\\\" stands for \\\"signiert\\\" (signed) or signature. The name is Groschopf.\\n\\\"J.A. Ritter.\\\" is the other name.\\n\\nSo,\\nsender_persons: [\\\"Groschopf\\\", \\\"J.A. Ritter\\\"]\\nreceiver_persons: [\\\"Dr. Max Vischer\\\"]\\nsend_date: [\\\"1926-08-13\\\"]\\nletter_title: null\\n\\nLet's verify the text again to see if I missed a title.\\nTop right: ABSCHRIFT 12.\\nLetterhead: Basler Rheinschiffahrt-Aktiengesellschaft Marktgasse 5.\\nDate: Basel, den 13. August 1926.\\nReference: R/M (top left).\\nRecipient block.\\nBody text.\\nNo subject line.\\n\\nOkay, I'm confident.\\n\\nOne small check on the sender. The letter is from the company \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\". The people signing are Groschopf and J.A. Ritter. The prompt asks for \\\"sender_persons\\\". So I list the people.\\n\\nOne small check on the receiver. \\\"Herrn Dr. Max Vischer\\\". I will include the title \\\"Dr.\\\" as it's part of how he is addressed.\\n\\nFinal JSON construction.\",\"reasoning_details\":[{\"type\":\"reasoning.text\",\"text\":\"The user wants me to extract specific metadata from a historical letter provided as images.\\n\\n**1. Analyze the input:**\\n- I have three images of a typewritten letter in German.\\n- The letter is from \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\".\\n- The date is \\\"Basel, den 13. August 1926\\\".\\n- The recipient is \\\"Herrn Dr. Max Vischer, Pr\u00e4sident der Basler Personenschiffahrtsgesellschaft\\\".\\n- The letter is signed by \\\"sig. Groschopf\\\" and \\\"J.A. Ritter\\\".\\n- There is a stamp \\\"ABSCHRIFT\\\" (Copy) and a handwritten number \\\"12\\\".\\n- There is a note at the bottom \\\"geht zur\u00fcck 14.VIII 26 sig. Vischer\\\". This indicates the letter was received and processed by Vischer.\\n\\n**2. Extract the required fields:**\\n\\n*   **letter_title:** There is no explicit title like \\\"Subject: ...\\\". However, the first paragraph mentions \\\"Wir best\u00e4tigen Ihr Schreiben vom 9. August betreffend Ben\u00fctzung der Landungsstege\\\" (We confirm your letter of August 9 regarding the use of the landing stages). This is the subject matter. Often, in these extractions, if there's no formal title, I might look for a subject line. There isn't one. I will leave it as null or perhaps infer a title if appropriate, but the instructions say \\\"Title of the letter\\\". Usually, if there's no \\\"Betreff\\\" line, it's null. Let's look closer. No \\\"Betreff\\\" line. I will set it to null. Wait, looking at the prompt example, it had a title. Let's re-read the letter. It's a response to a previous letter. It doesn't have a formal title. I will set it to `null`.\\n\\n*   **sender_persons:**\\n    *   The letterhead says \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\". This is the organization.\\n    *   The signature block at the end (page 3) says:\\n        *   \\\"BASLER RHEINSCHIFFAHRT - AKTIENGESELLSCHAFT\\\"\\n        *   \\\"sig. Groschopf\\\"\\n        *   \\\"J.A. Ritter.\\\"\\n    *   So the senders are Groschopf and J.A. Ritter.\\n\\n*   **send_date:**\\n    *   Top right corner: \\\"Basel, den 13. August 1926.\\\"\\n    *   Format: YYYY-MM-DD -> 1926-08-13.\\n\\n*   **receiver_persons:**\\n    *   Address block: \\\"Herrn Dr. Max Vischer, Pr\u00e4sident der Basler Personenschiffahrtsgesellschaft\\\".\\n    *   So the receiver is Dr. Max Vischer.\\n\\n**3. Format the output:**\\n- JSON format.\\n- Values must be lists.\\n- Date in ISO format.\\n\\n**Refining the extraction:**\\n- **Sender:** The letter is signed by \\\"Groschopf\\\" and \\\"J.A. Ritter\\\". The organization is \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\". The prompt asks for \\\"Name(s) of the person(s)\\\". So \\\"Groschopf\\\" and \\\"J.A. Ritter\\\" are the persons.\\n- **Receiver:** \\\"Dr. Max Vischer\\\".\\n- **Date:** \\\"1926-08-13\\\".\\n- **Title:** No explicit title found. I will use `null`.\\n\\nLet's double check the signature.\\nPage 3:\\n\\\"Hochachtend\\\"\\n\\\"BASLER\\\"\\n\\\"RHEINSCHIFFAHRT - AKTIENGESELLSCHAFT\\\"\\n\\\"sig. Groschopf      J.A.Ritter.\\\"\\n\\nSo senders are Groschopf and J.A. Ritter.\\n\\nLet's double check the receiver.\\nPage 1:\\n\\\"Herrn Dr. Max Vischer,\\\"\\n\\\"Pr\u00e4sident der\\\"\\n\\\"Basler Personenschiffahrtsgesellschaft\\\"\\n\\nSo receiver is Dr. Max Vischer.\\n\\nLet's double check the date.\\nPage 1:\\n\\\"Basel, den 13. August 1926.\\\"\\n\\nSo date is 1926-08-13.\\n\\nLet's check for a title again.\\nSometimes the first line acts as a title, but here it's the letterhead.\\nSometimes there is a \\\"Betreff\\\" line. I don't see one.\\nThe text starts \\\"Wir best\u00e4tigen Ihr Schreiben...\\\"\\nSo `letter_title` is likely `null`.\\n\\nWait, looking at the very bottom left of page 3:\\n\\\"geht zur\u00fcck\\\"\\n\\\"14.VIII 26\\\"\\n\\\"sig. Vischer\\\"\\nThis is an internal note by the receiver (Vischer) indicating he received it on Aug 14, 1926. This confirms the date and receiver.\\n\\nFinal check of the JSON structure required.\\n```json\\n{\\n  \\\"metadata\\\": {\\n    \\\"letter_title\\\": [null], // or just null? The schema says \\\"anyOf\\\": [{\\\"items\\\": {\\\"type\\\": \\\"string\\\"}, \\\"type\\\": \\\"array\\\"}, {\\\"type\\\": \\\"null\\\"}]. So if null, it should be just null, not [null]. Wait, the prompt says \\\"values corresponding to each key should be stored as a list, even if there is only a single value for a key\\\". But the schema allows null. If the value is null, it's not a list. The prompt says \\\"If a piece of information is not included in the letter, set the value for the corresponding key to 'null'\\\". This implies the value itself is null, not a list containing null.\\n    Let's look at the example:\\n    \\\"letter_title\\\": [\\\"Petition for Environmental Protection\\\"] -> List of strings.\\n    If null, the schema says `{\\\"type\\\": \\\"null\\\"}`. So the value should be `null`.\\n    \\n    Actually, let's re-read carefully: \\\"values corresponding to each key should be stored as a list... If a piece of information is not included... set the value... to 'null'\\\".\\n    This is slightly contradictory if interpreted strictly. Usually, it means if present, it's a list. If absent, it's null.\\n    The schema: `\\\"send_date\\\": {\\\"anyOf\\\": [{\\\"items\\\": {\\\"type\\\": \\\"string\\\"}, \\\"type\\\": \\\"array\\\"}, {\\\"type\\\": \\\"null\\\"}]}`.\\n    So if I have a date, it's `[\\\"1926-08-13\\\"]`. If I don't, it's `null`.\\n    \\n    Okay, I will follow the schema.\\n    \\n    Sender persons: [\\\"Groschopf\\\", \\\"J.A. Ritter\\\"]\\n    Receiver persons: [\\\"Dr. Max Vischer\\\"]\\n    Send date: [\\\"1926-08-13\\\"]\\n    Letter title: null (since there is no title).\\n```\\n\\nOne detail: \\\"sig. Groschopf\\\". \\\"sig.\\\" stands for \\\"signiert\\\" (signed) or signature. The name is Groschopf.\\n\\\"J.A. Ritter.\\\" is the other name.\\n\\nSo,\\nsender_persons: [\\\"Groschopf\\\", \\\"J.A. Ritter\\\"]\\nreceiver_persons: [\\\"Dr. Max Vischer\\\"]\\nsend_date: [\\\"1926-08-13\\\"]\\nletter_title: null\\n\\nLet's verify the text again to see if I missed a title.\\nTop right: ABSCHRIFT 12.\\nLetterhead: Basler Rheinschiffahrt-Aktiengesellschaft Marktgasse 5.\\nDate: Basel, den 13. August 1926.\\nReference: R/M (top left).\\nRecipient block.\\nBody text.\\nNo subject line.\\n\\nOkay, I'm confident.\\n\\nOne small check on the sender. The letter is from the company \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\". The people signing are Groschopf and J.A. Ritter. The prompt asks for \\\"sender_persons\\\". So I list the people.\\n\\nOne small check on the receiver. \\\"Herrn Dr. Max Vischer\\\". I will include the title \\\"Dr.\\\" as it's part of how he is addressed.\\n\\nFinal JSON construction.\",\"format\":\"unknown\",\"index\":0}]},\"native_finish_reason\":\"stop\"}],\"created\":1789621080,\"model\":\"qwen/qwen3.6-plus\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":null,\"usage\":{\"completion_tokens\":1887,\"prompt_tokens\":8150,\"total_tokens\":10037,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":0,\"reasoning_tokens\":1793,\"rejected_prediction_tokens\":null,\"image_tokens\":0},\"prompt_tokens_details\":{\"audio_tokens\":0,\"cached_tokens\":0,\"cache_write_tokens\":0,\"video_tokens\":0},\"cost\":0.0063284,\"is_byok\":false,\"cost_details\":{\"upstream_inference_cost\":0.0063284,\"upstream_inference_prompt_cost\":0.00264875,\"upstream_inference_completions_cost\":0.00367965}},\"provider\":\"Alibaba\"}"
+}

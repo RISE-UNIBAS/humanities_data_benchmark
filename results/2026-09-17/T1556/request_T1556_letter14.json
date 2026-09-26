@@ -1,0 +1,89 @@
+{
+    "text": "{\"metadata\":{\"send_date\":[\"1928-02-18\"],\"letter_title\":[\"\"],\"sender_persons\":[\"Basler Rheinschiffahrt-Aktiengesellschaft\"],\"receiver_persons\":[\"Vorstand der Basler Personenschiffahrts-Gesellschaft\"]}}",
+    "model": "thinkingmachines/Inkling",
+    "provider": "huggingface",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 11884,
+        "output_tokens": 1489,
+        "total_tokens": 13373,
+        "cached_tokens": 256,
+        "input_cost_usd": 0.011884,
+        "output_cost_usd": 0.00603045,
+        "estimated_cost_usd": 0.01791445
+    },
+    "duration": 27.916545629501343,
+    "timestamp": "2026-09-17T11:37:16.029714",
+    "parsed": {
+        "metadata": {
+            "send_date": [
+                "1928-02-18"
+            ],
+            "letter_title": [
+                ""
+            ],
+            "sender_persons": [
+                "Basler Rheinschiffahrt-Aktiengesellschaft"
+            ],
+            "receiver_persons": [
+                "Vorstand der Basler Personenschiffahrts-Gesellschaft"
+            ]
+        }
+    },
+    "conversation_id": "c1126692-8d46-44e5-92cc-57780a313de4",
+    "score": {
+        "send_date_tp": 1,
+        "send_date_fp": 0,
+        "send_date_fn": 0,
+        "sender_persons_tp": 0,
+        "sender_persons_fp": 1,
+        "sender_persons_fn": 2,
+        "receiver_persons_tp": 0,
+        "receiver_persons_fp": 1,
+        "receiver_persons_fn": 0,
+        "field_scores": {
+            "send_date": {
+                "response": [
+                    "1928-02-18"
+                ],
+                "ground_truth": [
+                    "1928-02-18"
+                ],
+                "score": null,
+                "counts": {
+                    "send_date_tp": 1,
+                    "send_date_fp": 0,
+                    "send_date_fn": 0
+                }
+            },
+            "sender_persons": {
+                "response": [
+                    "Basler Rheinschiffahrt-Aktiengesellschaft"
+                ],
+                "ground_truth": [
+                    "Groschupf-Jaeger, Louis",
+                    "Ritter-Dreier, Fritz"
+                ],
+                "score": null,
+                "counts": {
+                    "sender_persons_tp": 0,
+                    "sender_persons_fp": 1,
+                    "sender_persons_fn": 2
+                }
+            },
+            "receiver_persons": {
+                "response": [
+                    "Vorstand der Basler Personenschiffahrts-Gesellschaft"
+                ],
+                "ground_truth": [],
+                "score": null,
+                "counts": {
+                    "receiver_persons_tp": 0,
+                    "receiver_persons_fp": 1,
+                    "receiver_persons_fn": 0
+                }
+            }
+        }
+    },
+    "raw_response": "{\"id\":\"p1dAZjj-4i1VM9-a3c720f569982d76\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\n  \\\"metadata\\\": {\\n    \\\"send_date\\\": [\\\"1928-02-18\\\"],\\n    \\\"letter_title\\\": [\\\"\\\"],\\n    \\\"sender_persons\\\": [\\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"],\\n    \\\"receiver_persons\\\": [\\\"Vorstand der Basler Personenschiffahrts-Gesellschaft\\\"]\\n  }\\n}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"metadata\":{\"send_date\":[\"1928-02-18\"],\"letter_title\":[\"\"],\"sender_persons\":[\"Basler Rheinschiffahrt-Aktiengesellschaft\"],\"receiver_persons\":[\"Vorstand der Basler Personenschiffahrts-Gesellschaft\"]}},\"reasoning\":\"We need parse images of historical letter, extract keys: letter_title, sender_persons, send_date, receiver_persons. Need examine all pages.\\n\\nWe have letter from Basler Rheinschiffahrt-Aktiengesellschaft? Actually first page header: Basler Rheinschiffahrt-Aktiengesellschaft, Markgasse 5, etc. Date: Basel, den 18. Februar 1928. Addressee: An den Vorstand der Basler Personenschiffahrts-Gesellschaft, Basel.\\n\\nThen pages 2-6 continue with same addressee \\\"An den Vorstand der Basler Personenschiffahrts-Gesellschaft, Basel. 18.2.28.\\\" So it's one letter with date 1928-02-18. Need letter title? Maybe none explicit, but could be proposal/offer? The prompt asks \\\"letter_title: Title of the letter.\\\" In the letter there might be a subject line? Let's inspect. First page has \\\"B/M\\\" maybe reference. There's no explicit title like \\\"Proposal\\\". But maybe \\\"Vorschlag\\\" in page 3 heading \\\"Vorschlag.\\\" That is a section heading, not letter title. The example had \\\"Petition for Environmental Protection\\\". Here maybe no title, so null? But need check if there's any title at top. First page has company name, not title. So letter_title likely null.\\n\\nSender persons: The letter is signed at end page 6: \\\"Hochachtend BASLER RHEINSCHIFFFAHRT-AKTIENGESELLSCHAFT\\\" with signatures. So sender is Basler Rheinschiffahrt-Aktiengesellschaft, possibly represented by signatories? The signatures appear maybe two names? Let's examine page 6 bottom right: signatures with printed? There's \\\"RHEINSCHIFFFAHRT-AKTIENGESELLSCHAFT\\\" and signatures. Might be individuals but not readable clearly. However the letterhead indicates sender organization. The key \\\"sender_persons\\\" expects name(s) of person(s) who wrote the letter. Could be the company? But \\\"persons\\\" implies people. Let's see if there's a named sender elsewhere. First page left has \\\"B/M\\\" maybe initials. But likely the signatories are not clearly readable in image. However we can identify organization as sender? The instruction says \\\"Name(s) of the person(s) who wrote the letter.\\\" If not readable, maybe null? But we have company name in letterhead and signature block. Let's think.\\n\\nActually page 1 top left: \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\". Then on right \\\"An den Vorstand der Basler Personenschiffahrts-Gesellschaft, Basel.\\\" So sender is Basler Rheinschiffahrt-Aktiengesellschaft. At bottom page 6 they sign \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\" with signatures. So sender_persons might be [\\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"]? But that's an organization, not person. Still acceptable? The example used \\\"Lisa Simpson\\\" person. But could include organization if person unknown.\\n\\nReceiver persons: \\\"An den Vorstand der Basler Personenschiffahrts-Gesellschaft\\\" -> receiver is the board of Basler Personenschiffahrts-Gesellschaft, maybe in Basel. So receiver_persons: [\\\"Vorstand der Basler Personenschiffahrts-Gesellschaft\\\"] or [\\\"Basler Personenschiffahrts-Gesellschaft\\\"].\\n\\nSend date: 1928-02-18 (from \\\"Basel, den 18. Februar 1928\\\" and repeated on pages).\\n\\nLetter title: Maybe null, but check page 3 has \\\"II. Vorschlag.\\\" Not title. So null.\\n\\nBut need be precise with lists.\\n\\nLet's verify page 6 date: \\\"18.2.28.\\\" Yes.\\n\\nThus JSON:\\n{\\n\\\"letter_title\\\": [null? Or empty? The instruction says if not included set value to \\\"null\\\". But they want values stored as list, even if single value. So \\\"letter_title\\\": [\\\"null\\\"? No, the value should be null? Actually they said set the value for corresponding key to \\\"null\\\". Since values should be stored as a list, probably [\\\"null\\\"]? Or just null? The example shows lists of strings. For missing info, likely [null] or null? Let's check wording: \\\"return them in a JSON file where the values corresponding to each key should be stored as a list, even if there is only a single value for a key\\\" and \\\"If a piece of information is not included in the letter, set the value for the corresponding key to 'null'.\\\" This is ambiguous whether list containing null or null itself. Usually in these extraction tasks they want list with null inside? Let's examine example: all values are lists of strings. For missing, they might want [\\\"null\\\"]? But they said set the value ... to \\\"null\\\". Given list requirement, I think they want [null] but JSON null is not quoted. However they wrote \\\"null\\\" in quotes in instruction? They said \\\"null\\\" with quotes? Actually they wrote: set the value for the corresponding key to \\\"null\\\". In JSON that could be null (without quotes) but since list required, maybe [\\\"null\\\"]? Hmm.\\n\\nLet's decide: \\\"letter_title\\\": null? But then not a list. The instruction \\\"values corresponding to each key should be stored as a list\\\" applies generally. So I should make it a list: if missing, [null]. But they said set value to \\\"null\\\" (string?). Let's check consistency: If I put [null], the value is a list containing null. That satisfies list and null. I think that's correct.\\n\\nBut maybe there is a title: The letter is about renting ship \\\"Rheinfelden\\\" and merging operations. Could title be \\\"Vorschlag zur Miete des Schiffes Rheinfelden\\\"? Not explicit. So [null].\\n\\nSender persons: The signatures at bottom might include names. Let's zoom mental on page 6 bottom: There is printed \\\"Hochachtend\\\" then \\\"BASLER RHEINSCHIFFFAHRT-AKTIENGESELLSCHAFT\\\" then two signatures. One might be \\\"W. M\u00fcller\\\"? Not readable. So we can't extract personal names. Thus sender_persons should be the organization? Or [null]? But the letterhead clearly identifies sender organization. The prompt asks \\\"Name(s) of the person(s) who wrote the letter.\\\" If we can't identify persons, but we can identify the entity writing. I think include [\\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"].\\n\\nReceiver persons: [\\\"Vorstand der Basler Personenschiffahrts-Gesellschaft\\\"].\\n\\nSend date: [\\\"1928-02-18\\\"].\\n\\nLet's also check if there's any other date? No.\\n\\nThus output JSON.\"},\"seed\":null}],\"created\":1789637811,\"model\":\"thinkingmachines/Inkling\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":\"default\",\"usage\":{\"completion_tokens\":1489,\"prompt_tokens\":11884,\"total_tokens\":13373,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":null,\"reasoning_tokens\":1411,\"rejected_prediction_tokens\":null},\"prompt_tokens_details\":{\"audio_tokens\":null,\"cached_tokens\":256}},\"prompt\":[]}"
+}

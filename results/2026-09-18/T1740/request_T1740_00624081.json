@@ -1,0 +1,111 @@
+{
+    "text": "{\"type\":{\"type\":\"Reference\"},\"author\":{\"last_name\":\"van der Loeff\",\"first_name\":\"Michael Rutgers\"},\"publication\":{\"title\":\"\",\"year\":null,\"place\":\"\",\"pages\":\"\",\"publisher\":\"\",\"format\":\"\",\"editor\":\"\"},\"library_reference\":{\"shelfmark\":\"\",\"subjects\":\"\"}}",
+    "model": "qwen/qwen3.8-27b",
+    "provider": "openrouter",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 1094,
+        "output_tokens": 638,
+        "total_tokens": 1732,
+        "input_cost_usd": 0.00023411599999999998,
+        "output_cost_usd": 0.0016269,
+        "estimated_cost_usd": 0.0018610159999999998
+    },
+    "duration": 7.676943778991699,
+    "timestamp": "2026-09-18T12:42:00.668382",
+    "parsed": {
+        "type": {
+            "type": "Reference"
+        },
+        "author": {
+            "last_name": "van der Loeff",
+            "first_name": "Michael Rutgers"
+        },
+        "publication": {
+            "title": "",
+            "year": null,
+            "place": "",
+            "pages": "",
+            "publisher": "",
+            "format": "",
+            "editor": ""
+        },
+        "library_reference": {
+            "shelfmark": "",
+            "subjects": ""
+        }
+    },
+    "conversation_id": "0fd810f1-bc54-4814-9998-5cca14f13da4",
+    "score": {
+        "f1_score": 0.33,
+        "precision": 0.3333333333333333,
+        "recall": 0.3333333333333333,
+        "true_positives": 1,
+        "false_positives": 2,
+        "false_negatives": 2,
+        "field_scores": {
+            "publication.place": {
+                "response": null,
+                "ground_truth": null,
+                "score": 1.0
+            },
+            "publication.publisher": {
+                "response": null,
+                "ground_truth": null,
+                "score": 1.0
+            },
+            "library_reference.subjects": {
+                "response": null,
+                "ground_truth": null,
+                "score": 1.0
+            },
+            "publication.pages": {
+                "response": null,
+                "ground_truth": null,
+                "score": 1.0
+            },
+            "publication.title": {
+                "response": null,
+                "ground_truth": null,
+                "score": 1.0
+            },
+            "publication.editor": {
+                "response": null,
+                "ground_truth": null,
+                "score": 1.0
+            },
+            "publication.format": {
+                "response": null,
+                "ground_truth": null,
+                "score": 1.0
+            },
+            "author.first_name": {
+                "response": "Michael Rutgers",
+                "ground_truth": "Michael",
+                "score": 0.6363636363636364
+            },
+            "publication.year": {
+                "response": null,
+                "ground_truth": null,
+                "score": 1.0
+            },
+            "author.last_name": {
+                "response": "van der Loeff",
+                "ground_truth": "Rutgers van der Loeff",
+                "score": 0.7647058823529411
+            },
+            "type.type": {
+                "response": "Reference",
+                "ground_truth": "Reference",
+                "score": 1.0
+            },
+            "library_reference.shelfmark": {
+                "response": null,
+                "ground_truth": null,
+                "score": 1.0
+            }
+        },
+        "total_fields": 12
+    },
+    "raw_response": "{\"id\":\"gen-1789728113-mzk9LA0WB391VCdy9s1K\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\n  \\\"type\\\": {\\n    \\\"type\\\": \\\"Reference\\\"\\n  },\\n  \\\"author\\\": {\\n    \\\"last_name\\\": \\\"van der Loeff\\\",\\n    \\\"first_name\\\": \\\"Michael Rutgers\\\"\\n  },\\n  \\\"publication\\\": {\\n    \\\"title\\\": \\\"\\\",\\n    \\\"year\\\":  null,\\n    \\\"place\\\": \\\"\\\",\\n    \\\"pages\\\": \\\"\\\",\\n    \\\"publisher\\\": \\\"\\\",\\n    \\\"format\\\": \\\"\\\"\\n  ,\\n  \\\"editor\\\": \\\"\\\"\\n  },\\n  \\\"library_reference\\\": {\\n    \\\"shelfmark\\\": \\\"\\\",\\n    \\\"subjects\\\": \\\"\\\"\\n  }\\n}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"type\":{\"type\":\"Reference\"},\"author\":{\"last_name\":\"van der Loeff\",\"first_name\":\"Michael Rutgers\"},\"publication\":{\"title\":\"\",\"year\":null,\"place\":\"\",\"pages\":\"\",\"publisher\":\"\",\"format\":\"\",\"editor\":\"\"},\"library_reference\":{\"shelfmark\":\"\",\"subjects\":\"\"}},\"reasoning\":\"The user wants a structured JSON extraction from an index card image. Let me carefully examine the image.\\n\\nThe image shows:\\n- Line 1: \\\"van der Loeff, Michael Rutgers\\\"\\n- Line 2: \\\"s.\\\" (on a separate line)\\n- Line 3: \\\"R u t g e r s van der Loeff, Michael\\\"\\n\\nAccording to the rules:\\n1. Card Type: The card contains \\\"s.\\\" on a separate line, so it is a \\\"Reference\\\".\\n2. Author: The first line gives \\\"van der Loeff, Michael Rutgers\\\". So last_name = \\\"van der Loeff\\\", first_name = \\\"Michael Rutgers\\\". The third line is an alternate name form (Rutgers van der Loeff, Michael) which is just a cross-reference/alternate spelling, not additional author info. I'll use the primary name from line 1.\\n3. Publication: There is no title, year, place, pages, publisher, or format visible. So all empty strings, and year omitted entirely.\\n4. Library Reference: No shelfmark, no subjects visible. Empty strings.\\n\\nWait, the rule says \\\"omit year fields entirely if not present.\\\" So I should not include the \\\"year\\\" key in the publication object.\\n\\nLet me construct the JSON. The format requires \\\"publication\\\" object. If year is omitted, then publication has title, place, pages, publisher, format all empty strings.\\n\\nLet me double check the author. The card is a Reference card. The author name is \\\"van der Loeff, Michael Rutgers\\\". So last_name = \\\"van der Loeff\\\", first_name = \\\"Michael Rutgers\\\".\\n\\nThe third line \\\"Rutgers van der Loeff, Michael\\\" is an alternate name entry, which doesn't fit the categories, so ignore.\\n\\nThus final JSON:\\n\\n{\\n  \\\"type\\\": {\\n    \\\"type\\\": \\\"Reference\\\"\\n  },\\n  \\\"author\\\": {\\n    \\\"last_name\\\": \\\"van der Loeff\\\",\\n    \\\"first_name\\\": \\\"Michael Rutgers\\\"\\n  },\\n  \\\"publication\\\": {\\n    \\\"title\\\": \\\"\\\",\\n    \\\"place\\\": \\\"\\\",\\n    \\\"pages\\\": \\\"\\\",\\n    \\\"publisher\\\": \\\"\\\",\\n    \\\"format\\\": \\\"\\\"\\n  },\\n  \\\"library_reference\\\": {\\n    \\\"shelfmark\\\": \\\"\\\",\\n    \\\"subjects\\\": \\\"\\\"\\n  }\\n}\\n\\nThat's it. No year key.\\n\",\"reasoning_details\":[{\"type\":\"reasoning.text\",\"text\":\"The user wants a structured JSON extraction from an index card image. Let me carefully examine the image.\\n\\nThe image shows:\\n- Line 1: \\\"van der Loeff, Michael Rutgers\\\"\\n- Line 2: \\\"s.\\\" (on a separate line)\\n- Line 3: \\\"R u t g e r s van der Loeff, Michael\\\"\\n\\nAccording to the rules:\\n1. Card Type: The card contains \\\"s.\\\" on a separate line, so it is a \\\"Reference\\\".\\n2. Author: The first line gives \\\"van der Loeff, Michael Rutgers\\\". So last_name = \\\"van der Loeff\\\", first_name = \\\"Michael Rutgers\\\". The third line is an alternate name form (Rutgers van der Loeff, Michael) which is just a cross-reference/alternate spelling, not additional author info. I'll use the primary name from line 1.\\n3. Publication: There is no title, year, place, pages, publisher, or format visible. So all empty strings, and year omitted entirely.\\n4. Library Reference: No shelfmark, no subjects visible. Empty strings.\\n\\nWait, the rule says \\\"omit year fields entirely if not present.\\\" So I should not include the \\\"year\\\" key in the publication object.\\n\\nLet me construct the JSON. The format requires \\\"publication\\\" object. If year is omitted, then publication has title, place, pages, publisher, format all empty strings.\\n\\nLet me double check the author. The card is a Reference card. The author name is \\\"van der Loeff, Michael Rutgers\\\". So last_name = \\\"van der Loeff\\\", first_name = \\\"Michael Rutgers\\\".\\n\\nThe third line \\\"Rutgers van der Loeff, Michael\\\" is an alternate name entry, which doesn't fit the categories, so ignore.\\n\\nThus final JSON:\\n\\n{\\n  \\\"type\\\": {\\n    \\\"type\\\": \\\"Reference\\\"\\n  },\\n  \\\"author\\\": {\\n    \\\"last_name\\\": \\\"van der Loeff\\\",\\n    \\\"first_name\\\": \\\"Michael Rutgers\\\"\\n  },\\n  \\\"publication\\\": {\\n    \\\"title\\\": \\\"\\\",\\n    \\\"place\\\": \\\"\\\",\\n    \\\"pages\\\": \\\"\\\",\\n    \\\"publisher\\\": \\\"\\\",\\n    \\\"format\\\": \\\"\\\"\\n  },\\n  \\\"library_reference\\\": {\\n    \\\"shelfmark\\\": \\\"\\\",\\n    \\\"subjects\\\": \\\"\\\"\\n  }\\n}\\n\\nThat's it. No year key.\\n\",\"format\":\"unknown\",\"index\":0}]},\"native_finish_reason\":\"stop\"}],\"created\":1789728113,\"model\":\"qwen/qwen3.8-27b\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":null,\"usage\":{\"completion_tokens\":638,\"prompt_tokens\":1094,\"total_tokens\":1732,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":0,\"reasoning_tokens\":506,\"rejected_prediction_tokens\":null,\"image_tokens\":0},\"prompt_tokens_details\":{\"audio_tokens\":0,\"cached_tokens\":0,\"cache_write_tokens\":0,\"video_tokens\":0},\"cost\":0.0016771,\"is_byok\":false,\"cost_details\":{\"upstream_inference_cost\":0.0016771,\"upstream_inference_prompt_cost\":0.0002735,\"upstream_inference_completions_cost\":0.0014036}},\"provider\":\"AkashML\"}"
+}

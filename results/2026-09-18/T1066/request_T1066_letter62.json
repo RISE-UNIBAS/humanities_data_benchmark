@@ -1,0 +1,88 @@
+{
+    "text": "{\"metadata\":{\"send_date\":[\"1933-07-04\"],\"letter_title\":null,\"sender_persons\":[\"Dr. W. Vischer\",\"Arthur Oettinger-Heili\"],\"receiver_persons\":[\"Basler Rheinschiffahrts A.-G.\"]}}",
+    "model": "qwen/qwen3.7-plus",
+    "provider": "openrouter",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 5649,
+        "output_tokens": 803,
+        "total_tokens": 6452,
+        "input_cost_usd": 0.00180768,
+        "output_cost_usd": 0.00102784,
+        "estimated_cost_usd": 0.0028355200000000002
+    },
+    "duration": 17.170158863067627,
+    "timestamp": "2026-09-18T09:49:13.554717",
+    "parsed": {
+        "metadata": {
+            "send_date": [
+                "1933-07-04"
+            ],
+            "letter_title": null,
+            "sender_persons": [
+                "Dr. W. Vischer",
+                "Arthur Oettinger-Heili"
+            ],
+            "receiver_persons": [
+                "Basler Rheinschiffahrts A.-G."
+            ]
+        }
+    },
+    "conversation_id": "5a14950d-428c-4200-8117-a11bf8c90fb4",
+    "score": {
+        "send_date_tp": 1,
+        "send_date_fp": 0,
+        "send_date_fn": 0,
+        "sender_persons_tp": 0,
+        "sender_persons_fp": 2,
+        "sender_persons_fn": 2,
+        "receiver_persons_tp": 0,
+        "receiver_persons_fp": 1,
+        "receiver_persons_fn": 0,
+        "field_scores": {
+            "send_date": {
+                "response": [
+                    "1933-07-04"
+                ],
+                "ground_truth": [
+                    "1933-07-04"
+                ],
+                "score": null,
+                "counts": {
+                    "send_date_tp": 1,
+                    "send_date_fp": 0,
+                    "send_date_fn": 0
+                }
+            },
+            "sender_persons": {
+                "response": [
+                    "Arthur Oettinger-Heili",
+                    "Dr. W. Vischer"
+                ],
+                "ground_truth": [
+                    "Oettinger-Meili, Artur",
+                    "Vischer-von Planta, Max"
+                ],
+                "score": null,
+                "counts": {
+                    "sender_persons_tp": 0,
+                    "sender_persons_fp": 2,
+                    "sender_persons_fn": 2
+                }
+            },
+            "receiver_persons": {
+                "response": [
+                    "Basler Rheinschiffahrts A.-G."
+                ],
+                "ground_truth": [],
+                "score": null,
+                "counts": {
+                    "receiver_persons_tp": 0,
+                    "receiver_persons_fp": 1,
+                    "receiver_persons_fn": 0
+                }
+            }
+        }
+    },
+    "raw_response": "{\"id\":\"gen-1789717736-HNWJIzEEZdSJwcsfJtxA\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\n  \\\"metadata\\\": {\\n    \\\"send_date\\\": [\\n      \\\"1933-07-04\\\"\\n    ],\\n    \\\"letter_title\\\": null,\\n    \\\"sender_persons\\\": [\\n      \\\"Dr. W. Vischer\\\",\\n      \\\"Arthur Oettinger-Heili\\\"\\n    ],\\n    \\\"receiver_persons\\\": [\\n      \\\"Basler Rheinschiffahrts A.-G.\\\"\\n    ]\\n  }\\n}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"metadata\":{\"send_date\":[\"1933-07-04\"],\"letter_title\":null,\"sender_persons\":[\"Dr. W. Vischer\",\"Arthur Oettinger-Heili\"],\"receiver_persons\":[\"Basler Rheinschiffahrts A.-G.\"]}},\"reasoning\":\"The user wants me to extract metadata from a historical letter written in German.\\nI need to identify:\\n- `letter_title`: The title of the letter. Looking at the document, there isn't a specific title like \\\"Petition for...\\\". It's a letter from \\\"BASLER PERSONENSCHIFFFAHRTSGESELLSCHAFT\\\". I can use the organization name or leave it null if no specific title exists. Wait, usually letters don't have titles unless specified. I'll set it to null or maybe the subject if there is one. There is no explicit subject line. I will set it to null.\\n- `sender_persons`: The people who wrote the letter. At the bottom of the second page, there are signatures: \\\"sig. Dr. W. Vischer\\\" (Der Pr\u00e4sident) and \\\"sig. Arthur Oettinger-Heili\\\" (Der Gesch\u00e4ftsf\u00fchrer). The organization is \\\"Basler Personenschiffahrtsgesellschaft\\\". I should list the names.\\n- `send_date`: The date is at the top right of the first page: \\\"Basel, den 4. Juli 1933.\\\" -> 1933-07-04.\\n- `receiver_persons`: The letter is addressed to \\\"An die Basler Rheinschiffahrts A.-G.\\\". This is a company, not a specific person, but often treated as the receiver. I will list \\\"Basler Rheinschiffahrts A.-G.\\\".\\n\\nLet's refine the sender persons. The signatures are \\\"Dr. W. Vischer\\\" and \\\"Arthur Oettinger-Heili\\\".\\nLet's refine the receiver. \\\"Basler Rheinschiffahrts A.-G.\\\"\\n\\nSchema check:\\n- `send_date`: [\\\"1933-07-04\\\"]\\n- `letter_title`: [null] (or maybe just null as per schema \\\"anyOf\\\": [{\\\"items\\\": {\\\"type\\\": \\\"string\\\"}, \\\"type\\\": \\\"array\\\"}, {\\\"type\\\": \\\"null\\\"}]) -> actually the schema says `letter_title` can be an array of strings or null. Wait, the schema says `{\\\"anyOf\\\": [{\\\"items\\\": {\\\"type\\\": \\\"string\\\"}, \\\"type\\\": \\\"array\\\"}, {\\\"type\\\": \\\"null\\\"}]}`. So if null, it should be just `null`, not `[null]`. Wait, the example shows `[\\\"Petition...\\\"]`. If no title, I should probably put `null`.\\n- `sender_persons`: [\\\"Dr. W. Vischer\\\", \\\"Arthur Oettinger-Heili\\\"] (or the organization name? The prompt asks for \\\"Name(s) of the person(s)\\\". So the signatories.)\\n- `receiver_persons`: [\\\"Basler Rheinschiffahrts A.-G.\\\"] (It's an entity, but acts as receiver).\\n\\nLet's look at the signatures again.\\n\\\"sig. Dr. W. Vischer\\\" -> Dr. W. Vischer\\n\\\"sig. Arthur Oettinger-Heili\\\" -> Arthur Oettinger-Heili\\n\\nThe letter is a copy (\\\"Copie.\\\").\\nSender organization: BASLER PERSONENSCHIFFFAHRTSGESELLSCHAFT.\\nReceiver: Basler Rheinschiffahrts A.-G.\\n\\nI will formulate the JSON.\",\"reasoning_details\":[{\"type\":\"reasoning.text\",\"text\":\"The user wants me to extract metadata from a historical letter written in German.\\nI need to identify:\\n- `letter_title`: The title of the letter. Looking at the document, there isn't a specific title like \\\"Petition for...\\\". It's a letter from \\\"BASLER PERSONENSCHIFFFAHRTSGESELLSCHAFT\\\". I can use the organization name or leave it null if no specific title exists. Wait, usually letters don't have titles unless specified. I'll set it to null or maybe the subject if there is one. There is no explicit subject line. I will set it to null.\\n- `sender_persons`: The people who wrote the letter. At the bottom of the second page, there are signatures: \\\"sig. Dr. W. Vischer\\\" (Der Pr\u00e4sident) and \\\"sig. Arthur Oettinger-Heili\\\" (Der Gesch\u00e4ftsf\u00fchrer). The organization is \\\"Basler Personenschiffahrtsgesellschaft\\\". I should list the names.\\n- `send_date`: The date is at the top right of the first page: \\\"Basel, den 4. Juli 1933.\\\" -> 1933-07-04.\\n- `receiver_persons`: The letter is addressed to \\\"An die Basler Rheinschiffahrts A.-G.\\\". This is a company, not a specific person, but often treated as the receiver. I will list \\\"Basler Rheinschiffahrts A.-G.\\\".\\n\\nLet's refine the sender persons. The signatures are \\\"Dr. W. Vischer\\\" and \\\"Arthur Oettinger-Heili\\\".\\nLet's refine the receiver. \\\"Basler Rheinschiffahrts A.-G.\\\"\\n\\nSchema check:\\n- `send_date`: [\\\"1933-07-04\\\"]\\n- `letter_title`: [null] (or maybe just null as per schema \\\"anyOf\\\": [{\\\"items\\\": {\\\"type\\\": \\\"string\\\"}, \\\"type\\\": \\\"array\\\"}, {\\\"type\\\": \\\"null\\\"}]) -> actually the schema says `letter_title` can be an array of strings or null. Wait, the schema says `{\\\"anyOf\\\": [{\\\"items\\\": {\\\"type\\\": \\\"string\\\"}, \\\"type\\\": \\\"array\\\"}, {\\\"type\\\": \\\"null\\\"}]}`. So if null, it should be just `null`, not `[null]`. Wait, the example shows `[\\\"Petition...\\\"]`. If no title, I should probably put `null`.\\n- `sender_persons`: [\\\"Dr. W. Vischer\\\", \\\"Arthur Oettinger-Heili\\\"] (or the organization name? The prompt asks for \\\"Name(s) of the person(s)\\\". So the signatories.)\\n- `receiver_persons`: [\\\"Basler Rheinschiffahrts A.-G.\\\"] (It's an entity, but acts as receiver).\\n\\nLet's look at the signatures again.\\n\\\"sig. Dr. W. Vischer\\\" -> Dr. W. Vischer\\n\\\"sig. Arthur Oettinger-Heili\\\" -> Arthur Oettinger-Heili\\n\\nThe letter is a copy (\\\"Copie.\\\").\\nSender organization: BASLER PERSONENSCHIFFFAHRTSGESELLSCHAFT.\\nReceiver: Basler Rheinschiffahrts A.-G.\\n\\nI will formulate the JSON.\",\"format\":\"unknown\",\"index\":0}]},\"native_finish_reason\":\"stop\"}],\"created\":1789717736,\"model\":\"qwen/qwen3.7-plus\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":null,\"usage\":{\"completion_tokens\":803,\"prompt_tokens\":5649,\"total_tokens\":6452,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":0,\"reasoning_tokens\":697,\"rejected_prediction_tokens\":null,\"image_tokens\":0},\"prompt_tokens_details\":{\"audio_tokens\":0,\"cached_tokens\":0,\"cache_write_tokens\":0,\"video_tokens\":0},\"cost\":0.00283552,\"is_byok\":false,\"cost_details\":{\"upstream_inference_cost\":0.00283552,\"upstream_inference_prompt_cost\":0.00180768,\"upstream_inference_completions_cost\":0.00102784}},\"provider\":\"Alibaba\"}"
+}

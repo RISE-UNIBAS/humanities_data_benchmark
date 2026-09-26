@@ -1,0 +1,89 @@
+{
+    "text": "{\"metadata\":{\"send_date\":[\"1932-10-10\"],\"letter_title\":[\"Letter from Verein f\u00fcr die Schifffahrt auf dem Oberrhein to Dr. Max Vischer\"],\"sender_persons\":[\"Jean Drey\"],\"receiver_persons\":[\"Dr. Max Vischer\"]}}",
+    "model": "qwen/qwen3.5-flash-02-23",
+    "provider": "openrouter",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 3129,
+        "output_tokens": 845,
+        "total_tokens": 3974,
+        "input_cost_usd": 0.000203385,
+        "output_cost_usd": 0.00021970000000000003,
+        "estimated_cost_usd": 0.000423085
+    },
+    "duration": 18.498680353164673,
+    "timestamp": "2026-09-17T19:55:55.605101",
+    "parsed": {
+        "metadata": {
+            "send_date": [
+                "1932-10-10"
+            ],
+            "letter_title": [
+                "Letter from Verein f\u00fcr die Schifffahrt auf dem Oberrhein to Dr. Max Vischer"
+            ],
+            "sender_persons": [
+                "Jean Drey"
+            ],
+            "receiver_persons": [
+                "Dr. Max Vischer"
+            ]
+        }
+    },
+    "conversation_id": "2cf62533-d250-42f0-acfb-ad41c0190678",
+    "score": {
+        "send_date_tp": 1,
+        "send_date_fp": 0,
+        "send_date_fn": 0,
+        "sender_persons_tp": 0,
+        "sender_persons_fp": 1,
+        "sender_persons_fn": 1,
+        "receiver_persons_tp": 1,
+        "receiver_persons_fp": 0,
+        "receiver_persons_fn": 0,
+        "field_scores": {
+            "send_date": {
+                "response": [
+                    "1932-10-10"
+                ],
+                "ground_truth": [
+                    "1932-10-10"
+                ],
+                "score": null,
+                "counts": {
+                    "send_date_tp": 1,
+                    "send_date_fp": 0,
+                    "send_date_fn": 0
+                }
+            },
+            "sender_persons": {
+                "response": [
+                    "Jean Drey"
+                ],
+                "ground_truth": [
+                    "Frey-Weber, Jean Richard"
+                ],
+                "score": null,
+                "counts": {
+                    "sender_persons_tp": 0,
+                    "sender_persons_fp": 1,
+                    "sender_persons_fn": 1
+                }
+            },
+            "receiver_persons": {
+                "response": [
+                    "Vischer-von Planta, Max"
+                ],
+                "ground_truth": [
+                    "Vischer-von Planta, Max"
+                ],
+                "score": null,
+                "counts": {
+                    "receiver_persons_tp": 1,
+                    "receiver_persons_fp": 0,
+                    "receiver_persons_fn": 0
+                }
+            }
+        }
+    },
+    "raw_response": "{\"id\":\"gen-1789667737-0RrdO19YvJ1vVsjMxqLE\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\n   \\\"metadata\\\": {\\n\\\"send_date\\\": [\\\"1932-10-10\\\"],\\n\\\"letter_title\\\": [\\\"Letter from Verein f\u00fcr die Schifffahrt auf dem Oberrhein to Dr. Max Vischer\\\"],\\n\\\"sender_persons\\\": [\\\"Jean Drey\\\"],\\n\\\"receiver_persons\\\": [\\\"Dr. Max Vischer\\\"]\\n}\\n}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"metadata\":{\"send_date\":[\"1932-10-10\"],\"letter_title\":[\"Letter from Verein f\u00fcr die Schifffahrt auf dem Oberrhein to Dr. Max Vischer\"],\"sender_persons\":[\"Jean Drey\"],\"receiver_persons\":[\"Dr. Max Vischer\"]}},\"reasoning\":\"The user wants me to extract specific metadata from a historical letter image and return it in a JSON format.\\n\\n**1. Analyze the Image:**\\n*   **Header/Letterhead:** \\\"VEREIN F\u00dcR DIE SCHIFFAHRT AUF DEM OBERRHEIN\\\" (Association for Navigation on the Upper Rhine). This looks like the organization sending the letter, but I need to find the specific sender's name.\\n*   **Date:** Top right corner: \\\"BASEL, DEN 10. Oktober 1932.\\\"\\n*   **Recipient:** \\\"An den Herrn Pr\u00e4sidenten der Basler Personenschiffahrtsgesellschaft Herrn Dr. Max Vischer, Advokat Basel.\\\" -> Receiver is Dr. Max Vischer.\\n*   **Sender:** The signature at the bottom is \\\"Jean Frey\\\". The letterhead mentions \\\"ST\u00c4NDIGES SEKRETARIAT\\\" (Permanent Secretariat) of the association. So the sender is Jean Frey, likely acting as secretary or representative.\\n*   **Title:** There isn't a formal title like \\\"Subject:\\\" or a document title at the top. It's a standard business letter. However, looking closely at the content, it's a response to a circular letter (\\\"Kreisschreiben\\\"). Often, if there's no explicit title, I might leave it null or infer one based on context, but the instructions say \\\"If a piece of information is not included... set the value... to 'null'\\\". Wait, looking at the example, `letter_title` is present. Let's look for a subject line. There isn't one explicitly labeled \\\"Betreff\\\". The text starts \\\"Sehr geehrter Herr!\\\". Then \\\"Auf das Kreisschreiben vom 7 d.M. teile ich Ihnen ergebenst mit...\\\". It's a reply regarding an \\\"Expos\u00e9\\\". Since there is no explicit title, I will set it to null.\\n\\n**2. Extract Values:**\\n*   **send_date:** \\\"10. Oktober 1932\\\". Convert to ISO: 1932-10-10.\\n*   **sender_persons:** The signature is \\\"Jean Frey\\\". The letterhead implies he represents the \\\"Verein f\u00fcr die Schifffahrt auf dem Oberrhein\\\", but the specific person signing is Jean Frey. I will list \\\"Jean Frey\\\".\\n*   **receiver_persons:** \\\"Herrn Dr. Max Vischer\\\". I will list \\\"Dr. Max Vischer\\\".\\n*   **letter_title:** No explicit title found. Set to null.\\n\\n**3. Format Output:**\\n*   JSON structure as requested.\\n*   Values must be lists.\\n*   Dates in YYYY-MM-DD.\\n\\n**4. Refine Extraction:**\\n*   **Date:** \\\"BASEL, DEN 10. Oktober 1932.\\\" -> `[\\\"1932-10-10\\\"]`\\n*   **Sender:** Signature looks like \\\"Jean Frey\\\". The letterhead is \\\"VEREIN F\u00dcR DIE SCHIFFAHRT AUF DEM OBERRHEIN\\\". Usually, the signer is the sender. So `[\\\"Jean Frey\\\"]`.\\n*   **Receiver:** \\\"Herrn Dr. Max Vischer, Advokat\\\". So `[\\\"Dr. Max Vischer\\\"]`.\\n*   **Title:** Null.\\n\\nLet's double check the signature. It looks cursive. \\\"Jean Frey\\\". Yes, that seems correct.\\nLet's double check the receiver. \\\"Herrn Dr. Max Vischer, Advokat\\\". Yes.\\n\\nFinal JSON construction.\",\"reasoning_details\":[{\"type\":\"reasoning.text\",\"text\":\"The user wants me to extract specific metadata from a historical letter image and return it in a JSON format.\\n\\n**1. Analyze the Image:**\\n*   **Header/Letterhead:** \\\"VEREIN F\u00dcR DIE SCHIFFAHRT AUF DEM OBERRHEIN\\\" (Association for Navigation on the Upper Rhine). This looks like the organization sending the letter, but I need to find the specific sender's name.\\n*   **Date:** Top right corner: \\\"BASEL, DEN 10. Oktober 1932.\\\"\\n*   **Recipient:** \\\"An den Herrn Pr\u00e4sidenten der Basler Personenschiffahrtsgesellschaft Herrn Dr. Max Vischer, Advokat Basel.\\\" -> Receiver is Dr. Max Vischer.\\n*   **Sender:** The signature at the bottom is \\\"Jean Frey\\\". The letterhead mentions \\\"ST\u00c4NDIGES SEKRETARIAT\\\" (Permanent Secretariat) of the association. So the sender is Jean Frey, likely acting as secretary or representative.\\n*   **Title:** There isn't a formal title like \\\"Subject:\\\" or a document title at the top. It's a standard business letter. However, looking closely at the content, it's a response to a circular letter (\\\"Kreisschreiben\\\"). Often, if there's no explicit title, I might leave it null or infer one based on context, but the instructions say \\\"If a piece of information is not included... set the value... to 'null'\\\". Wait, looking at the example, `letter_title` is present. Let's look for a subject line. There isn't one explicitly labeled \\\"Betreff\\\". The text starts \\\"Sehr geehrter Herr!\\\". Then \\\"Auf das Kreisschreiben vom 7 d.M. teile ich Ihnen ergebenst mit...\\\". It's a reply regarding an \\\"Expos\u00e9\\\". Since there is no explicit title, I will set it to null.\\n\\n**2. Extract Values:**\\n*   **send_date:** \\\"10. Oktober 1932\\\". Convert to ISO: 1932-10-10.\\n*   **sender_persons:** The signature is \\\"Jean Frey\\\". The letterhead implies he represents the \\\"Verein f\u00fcr die Schifffahrt auf dem Oberrhein\\\", but the specific person signing is Jean Frey. I will list \\\"Jean Frey\\\".\\n*   **receiver_persons:** \\\"Herrn Dr. Max Vischer\\\". I will list \\\"Dr. Max Vischer\\\".\\n*   **letter_title:** No explicit title found. Set to null.\\n\\n**3. Format Output:**\\n*   JSON structure as requested.\\n*   Values must be lists.\\n*   Dates in YYYY-MM-DD.\\n\\n**4. Refine Extraction:**\\n*   **Date:** \\\"BASEL, DEN 10. Oktober 1932.\\\" -> `[\\\"1932-10-10\\\"]`\\n*   **Sender:** Signature looks like \\\"Jean Frey\\\". The letterhead is \\\"VEREIN F\u00dcR DIE SCHIFFAHRT AUF DEM OBERRHEIN\\\". Usually, the signer is the sender. So `[\\\"Jean Frey\\\"]`.\\n*   **Receiver:** \\\"Herrn Dr. Max Vischer, Advokat\\\". So `[\\\"Dr. Max Vischer\\\"]`.\\n*   **Title:** Null.\\n\\nLet's double check the signature. It looks cursive. \\\"Jean Frey\\\". Yes, that seems correct.\\nLet's double check the receiver. \\\"Herrn Dr. Max Vischer, Advokat\\\". Yes.\\n\\nFinal JSON construction.\",\"format\":\"unknown\",\"index\":0}]},\"native_finish_reason\":\"stop\"}],\"created\":1789667737,\"model\":\"qwen/qwen3.5-flash-02-23\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":null,\"usage\":{\"completion_tokens\":845,\"prompt_tokens\":3129,\"total_tokens\":3974,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":0,\"reasoning_tokens\":763,\"rejected_prediction_tokens\":null,\"image_tokens\":0},\"prompt_tokens_details\":{\"audio_tokens\":0,\"cached_tokens\":0,\"cache_write_tokens\":0,\"video_tokens\":0},\"cost\":0.000423085,\"is_byok\":false,\"cost_details\":{\"upstream_inference_cost\":0.000423085,\"upstream_inference_prompt_cost\":0.000203385,\"upstream_inference_completions_cost\":0.0002197}},\"provider\":\"Alibaba\"}"
+}

@@ -1,0 +1,73 @@
+{
+    "text": "{\"company\":{\"transcription\":\"Beatus A.G.\"},\"location\":{\"transcription\":\"Basel.\"},\"b_id\":{\"transcription\":\"B.51.322.GB.608\"},\"date\":\"1945-11-23\",\"information\":[{\"transcription\":\"Britische schwarze Liste\\n10. Amendment vom Juli 1942.\"},{\"transcription\":\"gestrichen:\\nAmendment 13, 23. November 1945.\"}]}",
+    "model": "deepseek-flash",
+    "provider": "deepseek",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 1609,
+        "output_tokens": 1459,
+        "total_tokens": 3068,
+        "input_cost_usd": 0.00048269999999999997,
+        "output_cost_usd": 0.0017508,
+        "estimated_cost_usd": 0.0022335000000000002
+    },
+    "duration": 8.553115367889404,
+    "timestamp": "2026-09-16T17:10:27.637871",
+    "parsed": {
+        "company": {
+            "transcription": "Beatus A.G."
+        },
+        "location": {
+            "transcription": "Basel."
+        },
+        "b_id": {
+            "transcription": "B.51.322.GB.608"
+        },
+        "date": "1945-11-23",
+        "information": [
+            {
+                "transcription": "Britische schwarze Liste\n10. Amendment vom Juli 1942."
+            },
+            {
+                "transcription": "gestrichen:\nAmendment 13, 23. November 1945."
+            }
+        ]
+    },
+    "conversation_id": "ab529a7e-4f51-4b47-8713-c8c173bd199c",
+    "score": {
+        "fuzzy": 0.8181818181818182,
+        "field_scores": {
+            "b_id.transcription": {
+                "response": "B.51.322.GB.608",
+                "ground_truth": "B.51.322.GB.608",
+                "score": 1.0
+            },
+            "company.transcription": {
+                "response": "Beatus A.G.",
+                "ground_truth": "Beatus A.G.",
+                "score": 1.0
+            },
+            "date": {
+                "response": "1945-11-23",
+                "ground_truth": "",
+                "score": 0.0
+            },
+            "information[0].transcription": {
+                "response": "Britische schwarze Liste\n10. Amendment vom Juli 1942.",
+                "ground_truth": "Britische schwarze Liste\n10. Amendment vom Juli 1942.",
+                "score": 1.0
+            },
+            "information[1].transcription": {
+                "response": "gestrichen:\nAmendment 13, 23. November 1945.",
+                "ground_truth": "gestrichen:\nAmendment 13, 23. November 1945.",
+                "score": 1.0
+            },
+            "location.transcription": {
+                "response": "Basel.",
+                "ground_truth": "Basel",
+                "score": 0.9090909090909091
+            }
+        }
+    },
+    "raw_response": "{\"id\":\"140ddaef-3675-4d18-8831-27821242ced5\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\\"company\\\":{\\\"transcription\\\":\\\"Beatus A.G.\\\"},\\\"location\\\":{\\\"transcription\\\":\\\"Basel.\\\"},\\\"b_id\\\":{\\\"transcription\\\":\\\"B.51.322.GB.608\\\"},\\\"date\\\":\\\"1945-11-23\\\",\\\"information\\\":[{\\\"transcription\\\":\\\"Britische schwarze Liste\\\\n10. Amendment vom Juli 1942.\\\"},{\\\"transcription\\\":\\\"gestrichen:\\\\nAmendment 13, 23. November 1945.\\\"}]}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"reasoning_content\":\"We need answer JSON only. Need extract from image. Fields: company top-left \\\"Beatus A.G.\\\" Exclude location. location \\\"Basel.\\\" maybe city. b_id top-right \\\"B.51.322.GB.608\\\". date stamped dates? There is \\\"10. Amendment vom Juli 1942.\\\" and \\\"Amendment 13, 23. November 1945.\\\" But date field asks \\\"Any stamped dates on the card in YYYY-MM-DD format. If no date is present, use empty string.\\\" Hmm There are dates in text. \\\"Juli 1942\\\" not exact day. \\\"23. November 1945\\\" exact date. Should date be \\\"1945-11-23\\\"? It says stamped dates, likely date field for stamped date, but no stamped date? The card has typed dates. The schema date any string/null. We need decide. Maybe date should be empty because no stamped date? But instruction says any stamped dates on card. The date \\\"23. November 1945.\\\" could be a date in text, not necessarily stamped. It appears typed. There's no separate stamp. Could be considered date. They specifically say \\\"Any stamped dates on the card in YYYY-MM-DD format.\\\" If no date present, empty string. There is a date present in text, but not stamped. However likely expected extract the date mentioned: 1945-11-23? Need examine. The card: main body:\\nBritische schwarze Liste\\n10. Amendment vom Juli 1942.\\n\\ngestrichen:\\nAmendment 13, 23. November 1945.\\n\\nSo information list likely includes blocks:\\n\\\"Britische schwarze Liste\\\\n10. Amendment vom Juli 1942.\\\"\\n\\\"gestrichen:\\\\nAmendment 13, 23. November 1945.\\\"\\nOr maybe each line separate. User says \\\"A list of text blocks from the main body of the card. Each block should be a separate string in the list. Maintain line breaks with \\\\\\\\n.\\\" Could group as logical blocks. We need decide. Probably two blocks: first two lines, second two lines? \\\"gestrichen:\\\" line and \\\"Amendment 13...\\\" line maybe one block. Or each line separate? \\\"Each block should be a separate string in the list\\\" likely paragraphs. I'll use two entries: one for first paragraph, one for second. Or maybe four lines? The instruction: \\\"A list of text blocks from the main body of the card. Each block should be a separate string in the list. Maintain line breaks with \\\\\\\\n.\\\" Usually if text block contains multiple lines, maintain line breaks. Could be:\\n[\\n \\\"Britische schwarze Liste\\\\n10. Amendment vom Juli 1942.\\\",\\n \\\"gestrichen:\\\\nAmendment 13, 23. November 1945.\\\"\\n]\\nBut there is underline under \\\"gestrichen:\\\" not relevant. Could also include \\\"gestrichen:\\\" as separate block. Need decide likely from dataset. The main body has two distinct sections: one about black list and amendment, then \\\"gestrichen:\\\" and amendment. I'd combine each section's lines.\\n\\nDate: Should be \\\"1945-11-23\\\" because exact date in text. But is it \\\"stamped date\\\"? Could be typed, not stamped. Hmm. If the dataset expects date field for any date on card, they might want \\\"1945-11-23\\\". The instruction \\\"Any stamped dates\\\" maybe because cards have stamps. However if no stamped date, use empty. But there's a date. Given schema date is string, and they mention YYYY-MM-DD, likely extract the date that appears. The only full date is \\\"23. November 1945.\\\" So date = \\\"1945-11-23\\\". Should we also include Juli 1942? It's month/year, not full date. Could not format. So use the full date.\\n\\nCompany: \\\"Beatus A.G.\\\" location: \\\"Basel.\\\" b_id: \\\"B.51.322.GB.608\\\"\\n\\nNeed output valid JSON according to schema. It requires company, location, b_id objects with transcription. date string or null. information array of entries with transcription. We'll set date \\\"1945-11-23\\\". Information as array of two objects.\\n\\nNeed ensure no extra text. Use JSON only. Include escaped newlines. Let's craft.\\n\\n{\\n  \\\"company\\\": {\\\"transcription\\\": \\\"Beatus A.G.\\\"},\\n  \\\"location\\\": {\\\"transcription\\\": \\\"Basel.\\\"},\\n  \\\"b_id\\\": {\\\"transcription\\\": \\\"B.51.322.GB.608\\\"},\\n  \\\"date\\\": \\\"1945-11-23\\\",\\n  \\\"information\\\": [\\n    {\\\"transcription\\\": \\\"Britische schwarze Liste\\\\n10. Amendment vom Juli 1942.\\\"},\\n    {\\\"transcription\\\": \\\"gestrichen:\\\\nAmendment 13, 23. November 1945.\\\"}\\n  ]\\n}\\n\\nCheck if location \\\"Basel.\\\" with period? Image shows \\\"B a s e l .\\\" with period. So \\\"Basel.\\\" correct. Company \\\"Beatus A.G.\\\" exact. b_id \\\"B.51.322.GB.608\\\" no spaces. Information line breaks: In image: \\\"Britische schwarze Liste\\\" line then \\\"10. Amendment vom Juli 1942.\\\" then blank, then \\\"gestrichen:\\\" underlined, then \\\"Amendment 13, 23. November 1945.\\\" So first block includes two lines. Second block includes \\\"gestrichen:\\\" and \\\"Amendment 13...\\\" Could also include \\\"gestrichen:\\\" as separate? But I think grouped.\\n\\nAlternatively, maybe information list should be each line separately:\\n[\\n {\\\"transcription\\\": \\\"Britische schwarze Liste\\\"},\\n {\\\"transcription\\\": \\\"10. Amendment vom Juli 1942.\\\"},\\n {\\\"transcription\\\": \\\"gestrichen:\\\"},\\n {\\\"transcription\\\": \\\"Amendment 13, 23. November 1945.\\\"}\\n]\\nThe instruction \\\"Each block should be a separate string in the list. Maintain line breaks with \\\\\\\\n.\\\" This suggests if there were multiple lines in a block, combine with \\\\n. But what constitutes a \\\"block\\\"? Hard. In previous similar tasks, they often group contiguous lines that belong to same entry. The \\\"gestrichen:\\\" is a label, and amendment follows. The first two lines are one entry. So two blocks.\\n\\nNeed ensure JSON valid. Use proper quotes. No trailing commas. Fine.\\n\\nBut the schema: required company, location, b_id. date and info optional. We include. Because $defs. Our output matches.\\n\\nLet's final.\"}}],\"created\":1789571420,\"model\":\"deepseek-flash\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":\"aeb56401ca74e127821c4f9126dcb669\",\"usage\":{\"completion_tokens\":1459,\"prompt_tokens\":1609,\"total_tokens\":3068,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":null,\"reasoning_tokens\":1365,\"rejected_prediction_tokens\":null},\"prompt_tokens_details\":{\"audio_tokens\":null,\"cached_tokens\":0},\"prompt_cache_hit_tokens\":0,\"prompt_cache_miss_tokens\":1609}}"
+}

@@ -1,0 +1,103 @@
+{
+    "text": "{\"type\":{\"type\":\"Reference\"},\"author\":{\"last_name\":\"van der Loeff\",\"first_name\":\"Michael Rutgers\"},\"publication\":{\"title\":\"\",\"year\":null,\"place\":\"\",\"pages\":\"\",\"publisher\":\"\",\"format\":\"\",\"editor\":null},\"library_reference\":{\"shelfmark\":\"\",\"subjects\":\"\"}}",
+    "model": "z-ai/glm-5v-turbo",
+    "provider": "openrouter",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 1971,
+        "output_tokens": 1037,
+        "total_tokens": 3008,
+        "cached_tokens": 384,
+        "estimated_cost_usd": 0.00614456
+    },
+    "duration": 42.49839663505554,
+    "timestamp": "2026-09-17T23:29:21.998601",
+    "parsed": {
+        "type": {
+            "type": "Reference"
+        },
+        "author": {
+            "last_name": "van der Loeff",
+            "first_name": "Michael Rutgers"
+        },
+        "publication": {
+            "title": "",
+            "place": "",
+            "pages": "",
+            "publisher": "",
+            "format": ""
+        },
+        "library_reference": {
+            "shelfmark": "",
+            "subjects": ""
+        }
+    },
+    "conversation_id": "c7bc1dfa-d06c-4e97-ad31-86bbdcd84a9d",
+    "score": {
+        "f1_score": 0.33,
+        "precision": 0.3333333333333333,
+        "recall": 0.3333333333333333,
+        "true_positives": 1,
+        "false_positives": 2,
+        "false_negatives": 2,
+        "field_scores": {
+            "publication.title": {
+                "response": null,
+                "ground_truth": null,
+                "score": 1.0
+            },
+            "publication.publisher": {
+                "response": null,
+                "ground_truth": null,
+                "score": 1.0
+            },
+            "publication.year": {
+                "response": null,
+                "ground_truth": null,
+                "score": 1.0
+            },
+            "author.first_name": {
+                "response": "Michael Rutgers",
+                "ground_truth": "Michael",
+                "score": 0.6363636363636364
+            },
+            "publication.place": {
+                "response": null,
+                "ground_truth": null,
+                "score": 1.0
+            },
+            "library_reference.subjects": {
+                "response": null,
+                "ground_truth": null,
+                "score": 1.0
+            },
+            "publication.pages": {
+                "response": null,
+                "ground_truth": null,
+                "score": 1.0
+            },
+            "author.last_name": {
+                "response": "van der Loeff",
+                "ground_truth": "Rutgers van der Loeff",
+                "score": 0.7647058823529411
+            },
+            "publication.format": {
+                "response": null,
+                "ground_truth": null,
+                "score": 1.0
+            },
+            "library_reference.shelfmark": {
+                "response": null,
+                "ground_truth": null,
+                "score": 1.0
+            },
+            "type.type": {
+                "response": "Reference",
+                "ground_truth": "Reference",
+                "score": 1.0
+            }
+        },
+        "total_fields": 11
+    },
+    "raw_response": "{\"id\":\"gen-1789680536-FT917o4Y04yxHUS9wTrL\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\n  \\\"type\\\": {\\n    \\\"type\\\": \\\"Reference\\\"\\n  },\\n  \\\"author\\\": {\\n    \\\"last_name\\\": \\\"van der Loeff\\\",\\n    \\\"first_name\\\": \\\"Michael Rutgers\\\"\\n  },\\n  \\\"publication\\\": {\\n    \\\"title\\\": \\\"\\\",\\n    \\\"place\\\": \\\"\\\",\\n    \\\"pages\\\": \\\"\\\",\\n    \\\"publisher\\\": \\\"\\\",\\n    \\\"format\\\": \\\"\\\"\\n  },\\n  \\\"library_reference\\\": {\\n    \\\"shelfmark\\\": \\\"\\\",\\n    \\\"subjects\\\": \\\"\\\"\\n  }\\n}\\n\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"reasoning\":\"The user wants me to extract bibliographic information from an image of an index card and format it as a JSON object.\\n\\n**1. Analyze the image:**\\n- The card contains text:\\n    - \\\"van der Loeff, Michael Rutgers\\\"\\n    - \\\"s.\\\"\\n    - \\\"Rutgers van der Loeff, Michael\\\"\\n- There's a black dot at the bottom.\\n\\n**2. Apply the extraction rules:**\\n\\n*   **Rule 1: Card Type**: The card has \\\"s.\\\" on a separate line. Therefore, `type` is \\\"Reference\\\".\\n*   **Rule 2: Author**:\\n    - The name is given in two formats: \\\"van der Loeff, Michael Rutgers\\\" and \\\"Rutgers van der Loeff, Michael\\\".\\n    - Usually, the last part before the comma is the last name.\\n    - Let's look at the first line: \\\"van der Loeff, Michael Rutgers\\\". Last name: \\\"van der Loeff\\\", First name: \\\"Michael Rutgers\\\".\\n    - Let's look at the third line: \\\"Rutgers van der Loeff, Michael\\\". Last name: \\\"Rutgers van der Loeff\\\", First name: \\\"Michael\\\".\\n    - I'll use the first one as it's the primary entry. Last name: \\\"van der Loeff\\\", First name: \\\"Michael Rutgers\\\".\\n*   **Rule 3: Publication**:\\n    - `title`: Not present. Empty string \\\"\\\".\\n    - `year`: Not present. Omit (or use null/empty string based on schema, but instructions say \\\"omit year fields entirely if not present\\\" for missing info, though the schema requires it or allows null. The prompt says \\\"Use empty string '' for missing text fields, omit year fields entirely if not present.\\\" Wait, the schema provided in the prompt has `\\\"year\\\": integer`. If it's missing, I should probably leave it out or use null if the schema allows. Let's re-read: \\\"omit year fields entirely if not present\\\". Okay, I will omit it from the JSON object if possible, but the schema shows it under publication. Actually, looking at the final schema block, `year` is optional (`anyOf`: string or null). I'll use null or empty string. Let's stick to the instruction \\\"omit year fields entirely\\\".)\\n    - `place`: Not present. Empty string \\\"\\\".\\n    - `pages`: Not present. Empty string \\\"\\\".\\n    - `publisher`: Not present. Empty string \\\"\\\".\\n    - `format`: Not present. Empty string \\\"\\\".\\n*   **Rule 4: Library Reference**:\\n    - `shelfmark`: Not present. Empty string \\\"\\\".\\n    - `subjects`: Not present. Empty string \\\"\\\".\\n\\n**3. Construct the JSON object:**\\n\\n```json\\n{\\n  \\\"type\\\": {\\n    \\\"type\\\": \\\"Reference\\\"\\n  },\\n  \\\"author\\\": {\\n    \\\"last_name\\\": \\\"van der Loeff\\\",\\n    \\\"first_name\\\": \\\"Michael Rutgers\\\"\\n  },\\n  \\\"publication\\\": {\\n    \\\"title\\\": \\\"\\\",\\n    \\\"place\\\": \\\"\\\",\\n    \\\"pages\\\": \\\"\\\",\\n    \\\"publisher\\\": \\\"\\\",\\n    \\\"format\\\": \\\"\\\"\\n  },\\n  \\\"library_reference\\\": {\\n    \\\"shelfmark\\\": \\\"\\\",\\n    \\\"subjects\\\": \\\"\\\"\\n  }\\n}\\n```\\n\\nWait, let me re-check the author name.\\n\\\"van der Loeff, Michael Rutgers\\\" -> Last: van der Loeff, First: Michael Rutgers.\\n\\\"Rutgers van der Loeff, Michael\\\" -> Last: Rutgers van der Loeff, First: Michael.\\nUsually, \\\"van der\\\" is a prefix. I'll go with the first line's structure.\\n\\nLet's double check the rules.\\n- \\\"s.\\\" on separate line -> \\\"Reference\\\". Correct.\\n- Author: last_name, first_name. Correct.\\n- Publication: title, year (omit if missing), place, pages, publisher, format. Correct.\\n- Library Reference: shelfmark, subjects. Correct.\\n- Missing info: empty string \\\"\\\". Correct.\\n\\nFinal check of the JSON structure against the requested format.\\n```json\\n{\\n  \\\"type\\\": {\\n    \\\"type\\\": \\\"Reference\\\"\\n  },\\n  \\\"author\\\": {\\n    \\\"last_name\\\": \\\"van der Loeff\\\",\\n    \\\"first_name\\\": \\\"Michael Rutgers\\\"\\n  },\\n  \\\"publication\\\": {\\n    \\\"title\\\": \\\"\\\",\\n    \\\"place\\\": \\\"\\\",\\n    \\\"pages\\\": \\\"\\\",\\n    \\\"publisher\\\": \\\"\\\",\\n    \\\"format\\\": \\\"\\\"\\n  },\\n  \\\"library_reference\\\": {\\n    \\\"shelfmark\\\": \\\"\\\",\\n    \\\"subjects\\\": \\\"\\\"\\n  }\\n}\\n```\\nLooks good. I will output only this.\",\"reasoning_details\":[{\"type\":\"reasoning.text\",\"text\":\"The user wants me to extract bibliographic information from an image of an index card and format it as a JSON object.\\n\\n**1. Analyze the image:**\\n- The card contains text:\\n    - \\\"van der Loeff, Michael Rutgers\\\"\\n    - \\\"s.\\\"\\n    - \\\"Rutgers van der Loeff, Michael\\\"\\n- There's a black dot at the bottom.\\n\\n**2. Apply the extraction rules:**\\n\\n*   **Rule 1: Card Type**: The card has \\\"s.\\\" on a separate line. Therefore, `type` is \\\"Reference\\\".\\n*   **Rule 2: Author**:\\n    - The name is given in two formats: \\\"van der Loeff, Michael Rutgers\\\" and \\\"Rutgers van der Loeff, Michael\\\".\\n    - Usually, the last part before the comma is the last name.\\n    - Let's look at the first line: \\\"van der Loeff, Michael Rutgers\\\". Last name: \\\"van der Loeff\\\", First name: \\\"Michael Rutgers\\\".\\n    - Let's look at the third line: \\\"Rutgers van der Loeff, Michael\\\". Last name: \\\"Rutgers van der Loeff\\\", First name: \\\"Michael\\\".\\n    - I'll use the first one as it's the primary entry. Last name: \\\"van der Loeff\\\", First name: \\\"Michael Rutgers\\\".\\n*   **Rule 3: Publication**:\\n    - `title`: Not present. Empty string \\\"\\\".\\n    - `year`: Not present. Omit (or use null/empty string based on schema, but instructions say \\\"omit year fields entirely if not present\\\" for missing info, though the schema requires it or allows null. The prompt says \\\"Use empty string '' for missing text fields, omit year fields entirely if not present.\\\" Wait, the schema provided in the prompt has `\\\"year\\\": integer`. If it's missing, I should probably leave it out or use null if the schema allows. Let's re-read: \\\"omit year fields entirely if not present\\\". Okay, I will omit it from the JSON object if possible, but the schema shows it under publication. Actually, looking at the final schema block, `year` is optional (`anyOf`: string or null). I'll use null or empty string. Let's stick to the instruction \\\"omit year fields entirely\\\".)\\n    - `place`: Not present. Empty string \\\"\\\".\\n    - `pages`: Not present. Empty string \\\"\\\".\\n    - `publisher`: Not present. Empty string \\\"\\\".\\n    - `format`: Not present. Empty string \\\"\\\".\\n*   **Rule 4: Library Reference**:\\n    - `shelfmark`: Not present. Empty string \\\"\\\".\\n    - `subjects`: Not present. Empty string \\\"\\\".\\n\\n**3. Construct the JSON object:**\\n\\n```json\\n{\\n  \\\"type\\\": {\\n    \\\"type\\\": \\\"Reference\\\"\\n  },\\n  \\\"author\\\": {\\n    \\\"last_name\\\": \\\"van der Loeff\\\",\\n    \\\"first_name\\\": \\\"Michael Rutgers\\\"\\n  },\\n  \\\"publication\\\": {\\n    \\\"title\\\": \\\"\\\",\\n    \\\"place\\\": \\\"\\\",\\n    \\\"pages\\\": \\\"\\\",\\n    \\\"publisher\\\": \\\"\\\",\\n    \\\"format\\\": \\\"\\\"\\n  },\\n  \\\"library_reference\\\": {\\n    \\\"shelfmark\\\": \\\"\\\",\\n    \\\"subjects\\\": \\\"\\\"\\n  }\\n}\\n```\\n\\nWait, let me re-check the author name.\\n\\\"van der Loeff, Michael Rutgers\\\" -> Last: van der Loeff, First: Michael Rutgers.\\n\\\"Rutgers van der Loeff, Michael\\\" -> Last: Rutgers van der Loeff, First: Michael.\\nUsually, \\\"van der\\\" is a prefix. I'll go with the first line's structure.\\n\\nLet's double check the rules.\\n- \\\"s.\\\" on separate line -> \\\"Reference\\\". Correct.\\n- Author: last_name, first_name. Correct.\\n- Publication: title, year (omit if missing), place, pages, publisher, format. Correct.\\n- Library Reference: shelfmark, subjects. Correct.\\n- Missing info: empty string \\\"\\\". Correct.\\n\\nFinal check of the JSON structure against the requested format.\\n```json\\n{\\n  \\\"type\\\": {\\n    \\\"type\\\": \\\"Reference\\\"\\n  },\\n  \\\"author\\\": {\\n    \\\"last_name\\\": \\\"van der Loeff\\\",\\n    \\\"first_name\\\": \\\"Michael Rutgers\\\"\\n  },\\n  \\\"publication\\\": {\\n    \\\"title\\\": \\\"\\\",\\n    \\\"place\\\": \\\"\\\",\\n    \\\"pages\\\": \\\"\\\",\\n    \\\"publisher\\\": \\\"\\\",\\n    \\\"format\\\": \\\"\\\"\\n  },\\n  \\\"library_reference\\\": {\\n    \\\"shelfmark\\\": \\\"\\\",\\n    \\\"subjects\\\": \\\"\\\"\\n  }\\n}\\n```\\nLooks good. I will output only this.\",\"format\":\"unknown\",\"index\":0}]},\"native_finish_reason\":\"stop\"}],\"created\":1789680536,\"model\":\"z-ai/glm-5v-turbo\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":null,\"usage\":{\"completion_tokens\":1037,\"prompt_tokens\":1971,\"total_tokens\":3008,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":0,\"reasoning_tokens\":937,\"rejected_prediction_tokens\":null,\"image_tokens\":0},\"prompt_tokens_details\":{\"audio_tokens\":0,\"cached_tokens\":384,\"cache_write_tokens\":0,\"video_tokens\":0},\"cost\":0.00614456,\"is_byok\":false,\"cost_details\":{\"upstream_inference_cost\":0.00614456,\"upstream_inference_prompt_cost\":0.00199656,\"upstream_inference_completions_cost\":0.004148}},\"provider\":\"Z.AI\"}"
+}

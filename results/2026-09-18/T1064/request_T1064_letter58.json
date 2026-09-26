@@ -1,0 +1,87 @@
+{
+    "text": "{\"metadata\":{\"send_date\":[\"1932-11-24\"],\"letter_title\":null,\"sender_persons\":[\"Max Vischer\"],\"receiver_persons\":[\"A. Oettinger\"]}}",
+    "model": "qwen/qwen3.7-plus",
+    "provider": "openrouter",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 3127,
+        "output_tokens": 957,
+        "total_tokens": 4084,
+        "input_cost_usd": 0.0010006400000000001,
+        "output_cost_usd": 0.00122496,
+        "estimated_cost_usd": 0.0022256000000000003
+    },
+    "duration": 20.064335823059082,
+    "timestamp": "2026-09-18T09:44:09.224280",
+    "parsed": {
+        "metadata": {
+            "send_date": [
+                "1932-11-24"
+            ],
+            "letter_title": null,
+            "sender_persons": [
+                "Max Vischer"
+            ],
+            "receiver_persons": [
+                "A. Oettinger"
+            ]
+        }
+    },
+    "conversation_id": "b780f19e-3d7b-436e-8347-27da3dd8abff",
+    "score": {
+        "send_date_tp": 1,
+        "send_date_fp": 0,
+        "send_date_fn": 0,
+        "sender_persons_tp": 1,
+        "sender_persons_fp": 0,
+        "sender_persons_fn": 0,
+        "receiver_persons_tp": 1,
+        "receiver_persons_fp": 0,
+        "receiver_persons_fn": 0,
+        "field_scores": {
+            "send_date": {
+                "response": [
+                    "1932-11-24"
+                ],
+                "ground_truth": [
+                    "1932-11-24"
+                ],
+                "score": null,
+                "counts": {
+                    "send_date_tp": 1,
+                    "send_date_fp": 0,
+                    "send_date_fn": 0
+                }
+            },
+            "sender_persons": {
+                "response": [
+                    "Vischer-von Planta, Max"
+                ],
+                "ground_truth": [
+                    "Vischer-von Planta, Max"
+                ],
+                "score": null,
+                "counts": {
+                    "sender_persons_tp": 1,
+                    "sender_persons_fp": 0,
+                    "sender_persons_fn": 0
+                }
+            },
+            "receiver_persons": {
+                "response": [
+                    "Oettinger-Meili, Artur"
+                ],
+                "ground_truth": [
+                    "Oettinger-Meili, Artur"
+                ],
+                "score": null,
+                "counts": {
+                    "receiver_persons_tp": 1,
+                    "receiver_persons_fp": 0,
+                    "receiver_persons_fn": 0
+                }
+            }
+        }
+    },
+    "raw_response": "{\"id\":\"gen-1789717429-cdVa8MOEyjKqxw27c7Bv\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\n  \\\"metadata\\\": {\\n    \\\"send_date\\\": [\\n      \\\"1932-11-24\\\"\\n    ],\\n    \\\"letter_title\\\": null,\\n    \\\"sender_persons\\\": [\\n      \\\"Max Vischer\\\"\\n    ],\\n    \\\"receiver_persons\\\": [\\n      \\\"A. Oettinger\\\"\\n    ]\\n  }\\n}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"metadata\":{\"send_date\":[\"1932-11-24\"],\"letter_title\":null,\"sender_persons\":[\"Max Vischer\"],\"receiver_persons\":[\"A. Oettinger\"]}},\"reasoning\":\"The user wants me to extract metadata from a historical letter image and format it as JSON.\\nThe JSON schema requires:\\n- `metadata`: an object containing:\\n    - `send_date`: list of strings or null\\n    - `letter_title`: list of strings or null\\n    - `sender_persons`: list of strings or null\\n    - `receiver_persons`: list of strings or null\\n\\nLet's analyze the image:\\n- Header: \\\"DR MAX VISCHER\\\", \\\"DR P. C. von PLANTA\\\", \\\"ADVOKATEN UND NOTARE\\\", \\\"BASEL\\\".\\n- Date: \\\"BASEL, DEN 24. November 1932.\\\" (The year is stamped as 193 2.)\\n- Receiver: \\\"Herrn A. Oettinger\\\", \\\"Aeschenvorstadt 34\\\", \\\"BASEL\\\".\\n- Content: Discusses a meeting regarding a loan for the Basler Personenschifffahrtsgesellschaft.\\n- Signature: \\\"Max Vischer\\\" (handwritten, looks like \\\"Max Vischer\\\" or similar, matching the header).\\n- P.S.: Mentions \\\"Herrn Prof. F. Mangold\\\".\\n\\nExtracting fields:\\n- `letter_title`: There is no explicit title, but the subject is \\\"Die Besprechung mit den Herren Direktor Ritter und Ing. Ryniker betr. Darlehen der Basler Personenschifffahrtsgesellschaft\\\". Usually, if there's no title, it's null. Let's look for a title. None. So `null`.\\n- `sender_persons`: \\\"Max Vischer\\\" (and possibly \\\"P. C. von Planta\\\" from the letterhead, but the signature is just Max Vischer). Let's use \\\"Max Vischer\\\".\\n- `send_date`: \\\"1932-11-24\\\"\\n- `receiver_persons`: \\\"A. Oettinger\\\"\\n\\nWait, the schema says:\\n`send_date`: list of strings or null.\\n`letter_title`: list of strings or null.\\n`sender_persons`: list of strings or null.\\n`receiver_persons`: list of strings or null.\\n\\nLet's refine the extracted values:\\n- `send_date`: [\\\"1932-11-24\\\"]\\n- `letter_title`: null (or maybe the subject line? \\\"Die Besprechung mit den Herren Direktor Ritter und Ing. Ryniker betr. Darlehen der Basler Personenschifffahrtsgesellschaft\\\". Usually, letters without a formal title have null. I'll put null.)\\n- `sender_persons`: [\\\"Max Vischer\\\"]\\n- `receiver_persons`: [\\\"A. Oettinger\\\"]\\n\\nLet's check the date again: \\\"24. November 193 2.\\\" -> 1932-11-24.\\nSender: Max Vischer (signed).\\nReceiver: A. Oettinger.\\n\\nJSON structure:\\n```json\\n{\\n  \\\"metadata\\\": {\\n    \\\"send_date\\\": [\\\"1932-11-24\\\"],\\n    \\\"letter_title\\\": null,\\n    \\\"sender_persons\\\": [\\\"Max Vischer\\\"],\\n    \\\"receiver_persons\\\": [\\\"A. Oettinger\\\"]\\n  }\\n}\\n```\\nWait, the schema says `letter_title` can be `null` or a list of strings.\\n\\\"letter_title\\\": null\\n\\nLet's double check the signature. It looks like \\\"Max Vischer\\\".\\nThe letterhead has \\\"DR MAX VISCHER\\\" and \\\"DR P. C. von PLANTA\\\".\\nI will include \\\"Max Vischer\\\".\\n\\nIs there a title? No.\\nSo `letter_title`: null.\\n\\nFinal check of the schema:\\n```json\\n{\\n  \\\"metadata\\\": {\\n    \\\"send_date\\\": [\\\"1932-11-24\\\"],\\n    \\\"letter_title\\\": null,\\n    \\\"sender_persons\\\": [\\\"Max Vischer\\\"],\\n    \\\"receiver_persons\\\": [\\\"A. Oettinger\\\"]\\n  }\\n}\\n```\\nLooks good.\",\"reasoning_details\":[{\"type\":\"reasoning.text\",\"text\":\"The user wants me to extract metadata from a historical letter image and format it as JSON.\\nThe JSON schema requires:\\n- `metadata`: an object containing:\\n    - `send_date`: list of strings or null\\n    - `letter_title`: list of strings or null\\n    - `sender_persons`: list of strings or null\\n    - `receiver_persons`: list of strings or null\\n\\nLet's analyze the image:\\n- Header: \\\"DR MAX VISCHER\\\", \\\"DR P. C. von PLANTA\\\", \\\"ADVOKATEN UND NOTARE\\\", \\\"BASEL\\\".\\n- Date: \\\"BASEL, DEN 24. November 1932.\\\" (The year is stamped as 193 2.)\\n- Receiver: \\\"Herrn A. Oettinger\\\", \\\"Aeschenvorstadt 34\\\", \\\"BASEL\\\".\\n- Content: Discusses a meeting regarding a loan for the Basler Personenschifffahrtsgesellschaft.\\n- Signature: \\\"Max Vischer\\\" (handwritten, looks like \\\"Max Vischer\\\" or similar, matching the header).\\n- P.S.: Mentions \\\"Herrn Prof. F. Mangold\\\".\\n\\nExtracting fields:\\n- `letter_title`: There is no explicit title, but the subject is \\\"Die Besprechung mit den Herren Direktor Ritter und Ing. Ryniker betr. Darlehen der Basler Personenschifffahrtsgesellschaft\\\". Usually, if there's no title, it's null. Let's look for a title. None. So `null`.\\n- `sender_persons`: \\\"Max Vischer\\\" (and possibly \\\"P. C. von Planta\\\" from the letterhead, but the signature is just Max Vischer). Let's use \\\"Max Vischer\\\".\\n- `send_date`: \\\"1932-11-24\\\"\\n- `receiver_persons`: \\\"A. Oettinger\\\"\\n\\nWait, the schema says:\\n`send_date`: list of strings or null.\\n`letter_title`: list of strings or null.\\n`sender_persons`: list of strings or null.\\n`receiver_persons`: list of strings or null.\\n\\nLet's refine the extracted values:\\n- `send_date`: [\\\"1932-11-24\\\"]\\n- `letter_title`: null (or maybe the subject line? \\\"Die Besprechung mit den Herren Direktor Ritter und Ing. Ryniker betr. Darlehen der Basler Personenschifffahrtsgesellschaft\\\". Usually, letters without a formal title have null. I'll put null.)\\n- `sender_persons`: [\\\"Max Vischer\\\"]\\n- `receiver_persons`: [\\\"A. Oettinger\\\"]\\n\\nLet's check the date again: \\\"24. November 193 2.\\\" -> 1932-11-24.\\nSender: Max Vischer (signed).\\nReceiver: A. Oettinger.\\n\\nJSON structure:\\n```json\\n{\\n  \\\"metadata\\\": {\\n    \\\"send_date\\\": [\\\"1932-11-24\\\"],\\n    \\\"letter_title\\\": null,\\n    \\\"sender_persons\\\": [\\\"Max Vischer\\\"],\\n    \\\"receiver_persons\\\": [\\\"A. Oettinger\\\"]\\n  }\\n}\\n```\\nWait, the schema says `letter_title` can be `null` or a list of strings.\\n\\\"letter_title\\\": null\\n\\nLet's double check the signature. It looks like \\\"Max Vischer\\\".\\nThe letterhead has \\\"DR MAX VISCHER\\\" and \\\"DR P. C. von PLANTA\\\".\\nI will include \\\"Max Vischer\\\".\\n\\nIs there a title? No.\\nSo `letter_title`: null.\\n\\nFinal check of the schema:\\n```json\\n{\\n  \\\"metadata\\\": {\\n    \\\"send_date\\\": [\\\"1932-11-24\\\"],\\n    \\\"letter_title\\\": null,\\n    \\\"sender_persons\\\": [\\\"Max Vischer\\\"],\\n    \\\"receiver_persons\\\": [\\\"A. Oettinger\\\"]\\n  }\\n}\\n```\\nLooks good.\",\"format\":\"unknown\",\"index\":0}]},\"native_finish_reason\":\"stop\"}],\"created\":1789717429,\"model\":\"qwen/qwen3.7-plus\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":null,\"usage\":{\"completion_tokens\":957,\"prompt_tokens\":3127,\"total_tokens\":4084,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":0,\"reasoning_tokens\":871,\"rejected_prediction_tokens\":null,\"image_tokens\":0},\"prompt_tokens_details\":{\"audio_tokens\":0,\"cached_tokens\":0,\"cache_write_tokens\":0,\"video_tokens\":0},\"cost\":0.0022256,\"is_byok\":false,\"cost_details\":{\"upstream_inference_cost\":0.0022256,\"upstream_inference_prompt_cost\":0.00100064,\"upstream_inference_completions_cost\":0.00122496}},\"provider\":\"Alibaba\"}"
+}

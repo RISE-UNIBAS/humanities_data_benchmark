@@ -1,0 +1,90 @@
+{
+    "text": "{\"metadata\":{\"send_date\":[\"1928-05-03\"],\"letter_title\":null,\"sender_persons\":[\"Ritter\",\"Groschupf\"],\"receiver_persons\":[\"W. Stauffacher\"]}}",
+    "model": "qwen/qwen3-vl-8b-thinking",
+    "provider": "openrouter",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 3115,
+        "output_tokens": 1129,
+        "total_tokens": 4244,
+        "input_cost_usd": 0.0005607,
+        "output_cost_usd": 0.0023709,
+        "estimated_cost_usd": 0.0029316
+    },
+    "duration": 10.718762397766113,
+    "timestamp": "2026-09-17T22:15:18.139741",
+    "parsed": {
+        "metadata": {
+            "send_date": [
+                "1928-05-03"
+            ],
+            "letter_title": null,
+            "sender_persons": [
+                "Ritter",
+                "Groschupf"
+            ],
+            "receiver_persons": [
+                "W. Stauffacher"
+            ]
+        }
+    },
+    "conversation_id": "11312049-4cd5-4709-9749-d1fcd77eab08",
+    "score": {
+        "send_date_tp": 1,
+        "send_date_fp": 0,
+        "send_date_fn": 0,
+        "sender_persons_tp": 2,
+        "sender_persons_fp": 0,
+        "sender_persons_fn": 0,
+        "receiver_persons_tp": 1,
+        "receiver_persons_fp": 0,
+        "receiver_persons_fn": 0,
+        "field_scores": {
+            "send_date": {
+                "response": [
+                    "1928-05-03"
+                ],
+                "ground_truth": [
+                    "1928-05-03"
+                ],
+                "score": null,
+                "counts": {
+                    "send_date_tp": 1,
+                    "send_date_fp": 0,
+                    "send_date_fn": 0
+                }
+            },
+            "sender_persons": {
+                "response": [
+                    "Groschupf-Jaeger, Louis",
+                    "Ritter-Dreier, Fritz"
+                ],
+                "ground_truth": [
+                    "Groschupf-Jaeger, Louis",
+                    "Ritter-Dreier, Fritz"
+                ],
+                "score": null,
+                "counts": {
+                    "sender_persons_tp": 2,
+                    "sender_persons_fp": 0,
+                    "sender_persons_fn": 0
+                }
+            },
+            "receiver_persons": {
+                "response": [
+                    "Stauffacher, Werner"
+                ],
+                "ground_truth": [
+                    "Stauffacher, Werner"
+                ],
+                "score": null,
+                "counts": {
+                    "receiver_persons_tp": 1,
+                    "receiver_persons_fp": 0,
+                    "receiver_persons_fn": 0
+                }
+            }
+        }
+    },
+    "raw_response": "{\"id\":\"gen-1789676107-ZMMvAr1QcCprofc14Yzj\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\n    \\\"metadata\\\": {\\n        \\\"letter_title\\\": null,\\n        \\\"receiver_persons\\\": [\\\"W. Stauffacher\\\"],\\n        \\\"send_date\\\": [\\\"1928-05-03\\\"],\\n        \\\"sender_persons\\\": [\\\"Ritter\\\", \\\"Groschupf\\\"]\\n    }\\n}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"metadata\":{\"send_date\":[\"1928-05-03\"],\"letter_title\":null,\"sender_persons\":[\"Ritter\",\"Groschupf\"],\"receiver_persons\":[\"W. Stauffacher\"]}},\"reasoning\":\", let's tackle this problem step by step. The task is to extract specific metadata from a historical letter image. First, I need to identify each required field: letter_title, sender_persons, send_date, receiver_persons.\\n\\nStarting with send_date: The letter has a date line that says \\\"Basel, den 3. Mai 1928.\\\" In ISO format, that's 1928-05-03. So send_date should be [\\\"1928-05-03\\\"].\\n\\nReceiver_persons: The letter is addressed to \\\"Herrn W. Stauffacher, Pr\u00e4sident des Vereins f\u00fcr die Schifffahrt auf dem Ober rhein,\\\" so the recipient is W. Stauffacher. Since it's a single person, receiver_persons is [\\\"W. Stauffacher\\\"].\\n\\nSender_persons: At the bottom, it's signed \\\"Hochachtend BASLER RHEINSCHIFFFAHRT-AKTIEGSELLSCHAFT sig. Ritter sig. Groschupf\\\". The sender is the company, but also has signatures. However, in the context of letter sending, the sender person(s) are likely the signatories. So Ritter and Groschupf are the individuals. Wait, the company is the entity, but the question is about \\\"name(s) of the person(s) who wrote the letter\\\". The signatures are \\\"sig. Ritter\\\" and \\\"sig. Groschupf\\\", so those are the individuals. So sender_persons would be [\\\"Ritter\\\", \\\"Groschupf\\\"].\\n\\nLetter_title: There's no explicit title mentioned in the letter. The top has \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\" which is the sender's name, but the letter itself doesn't have a title. The example shows that if not included, set to \\\"null\\\". Wait, the problem says \\\"If a piece of information is not included in the letter, set the value for the corresponding key to 'null'.\\\" So letter_title: since there's no title, it's null.\\n\\nWait, let's check again. The letter's header: \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\" is the company name, then the date. The body is the content. There's no title like \\\"Re: Something\\\" or a title at the top. So letter_title should be null.\\n\\nNow, let's verify each field:\\n\\n- letter_title: Not present in the letter \u2192 null.\\n\\n- sender_persons: Signatures at the end: \\\"sig. Ritter\\\" and \\\"sig. Groschupf\\\" \u2192 [\\\"Ritter\\\", \\\"Groschupf\\\"].\\n\\n- send_date: \\\"den 3. Mai 1928\\\" \u2192 1928-05-03.\\n\\n- receiver_persons: \\\"Herrn W. Stauffacher, Pr\u00e4sident des Vereins...\\\" \u2192 [\\\"W. Stauffacher\\\"].\\n\\nWait, but in the example, if it's a single person, it's a list with one element. So receiver_persons is [\\\"W. Stauffacher\\\"].\\n\\nLet me check the exact text:\\n\\nReceiver: \\\"Herrn W. Stauffacher, Pr\u00e4sident des Vereins f\u00fcr die Schifffahrt auf dem Ober rhein,\\\" \u2192 so the recipient is W. Stauffacher.\\n\\nSender: \\\"sig. Ritter\\\" and \\\"sig. Groschupf\\\" \u2192 so the persons who wrote the letter are Ritter and Groschupf.\\n\\nSend date: \\\"den 3. Mai 1928\\\" \u2192 ISO is 1928-05-03.\\n\\nLetter title: no title, so null.\\n\\nWait, but in the example, the letter_title is a string in a list. But if there's no title, it's null. The schema says \\\"anyOf: [{items: string, type: array}, null]\\\".\\n\\nSo for letter_title, since it's not included, it's null.\\n\\nSo putting it all together:\\n\\nmetadata:\\n\\n- letter_title: null\\n\\n- send_date: [\\\"1928-05-03\\\"]\\n\\n- sender_persons: [\\\"Ritter\\\", \\\"Groschupf\\\"]\\n\\n- receiver_persons: [\\\"W. Stauffacher\\\"]\\n\\nWait, but let's check the exact text for sender_persons. The letter ends with \\\"Hochachtend BASLER RHEINSCHIFFFAHRT-AKTIEGSELLSCHAFT sig. Ritter sig. Groschupf\\\". So \\\"sig.\\\" means signature, so the persons are Ritter and Groschupf.\\n\\nReceiver_persons: the addressee is Herrn W. Stauffacher, so the recipient's name is W. Stauffacher.\\n\\nSend date: \\\"Basel, den 3. Mai 1928.\\\" \u2192 3rd May 1928 \u2192 1928-05-03.\\n\\nLetter title: no title, so null.\\n\\nYes, that seems correct.\\n\",\"reasoning_details\":[{\"type\":\"reasoning.text\",\"text\":\", let's tackle this problem step by step. The task is to extract specific metadata from a historical letter image. First, I need to identify each required field: letter_title, sender_persons, send_date, receiver_persons.\\n\\nStarting with send_date: The letter has a date line that says \\\"Basel, den 3. Mai 1928.\\\" In ISO format, that's 1928-05-03. So send_date should be [\\\"1928-05-03\\\"].\\n\\nReceiver_persons: The letter is addressed to \\\"Herrn W. Stauffacher, Pr\u00e4sident des Vereins f\u00fcr die Schifffahrt auf dem Ober rhein,\\\" so the recipient is W. Stauffacher. Since it's a single person, receiver_persons is [\\\"W. Stauffacher\\\"].\\n\\nSender_persons: At the bottom, it's signed \\\"Hochachtend BASLER RHEINSCHIFFFAHRT-AKTIEGSELLSCHAFT sig. Ritter sig. Groschupf\\\". The sender is the company, but also has signatures. However, in the context of letter sending, the sender person(s) are likely the signatories. So Ritter and Groschupf are the individuals. Wait, the company is the entity, but the question is about \\\"name(s) of the person(s) who wrote the letter\\\". The signatures are \\\"sig. Ritter\\\" and \\\"sig. Groschupf\\\", so those are the individuals. So sender_persons would be [\\\"Ritter\\\", \\\"Groschupf\\\"].\\n\\nLetter_title: There's no explicit title mentioned in the letter. The top has \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\" which is the sender's name, but the letter itself doesn't have a title. The example shows that if not included, set to \\\"null\\\". Wait, the problem says \\\"If a piece of information is not included in the letter, set the value for the corresponding key to 'null'.\\\" So letter_title: since there's no title, it's null.\\n\\nWait, let's check again. The letter's header: \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\" is the company name, then the date. The body is the content. There's no title like \\\"Re: Something\\\" or a title at the top. So letter_title should be null.\\n\\nNow, let's verify each field:\\n\\n- letter_title: Not present in the letter \u2192 null.\\n\\n- sender_persons: Signatures at the end: \\\"sig. Ritter\\\" and \\\"sig. Groschupf\\\" \u2192 [\\\"Ritter\\\", \\\"Groschupf\\\"].\\n\\n- send_date: \\\"den 3. Mai 1928\\\" \u2192 1928-05-03.\\n\\n- receiver_persons: \\\"Herrn W. Stauffacher, Pr\u00e4sident des Vereins...\\\" \u2192 [\\\"W. Stauffacher\\\"].\\n\\nWait, but in the example, if it's a single person, it's a list with one element. So receiver_persons is [\\\"W. Stauffacher\\\"].\\n\\nLet me check the exact text:\\n\\nReceiver: \\\"Herrn W. Stauffacher, Pr\u00e4sident des Vereins f\u00fcr die Schifffahrt auf dem Ober rhein,\\\" \u2192 so the recipient is W. Stauffacher.\\n\\nSender: \\\"sig. Ritter\\\" and \\\"sig. Groschupf\\\" \u2192 so the persons who wrote the letter are Ritter and Groschupf.\\n\\nSend date: \\\"den 3. Mai 1928\\\" \u2192 ISO is 1928-05-03.\\n\\nLetter title: no title, so null.\\n\\nWait, but in the example, the letter_title is a string in a list. But if there's no title, it's null. The schema says \\\"anyOf: [{items: string, type: array}, null]\\\".\\n\\nSo for letter_title, since it's not included, it's null.\\n\\nSo putting it all together:\\n\\nmetadata:\\n\\n- letter_title: null\\n\\n- send_date: [\\\"1928-05-03\\\"]\\n\\n- sender_persons: [\\\"Ritter\\\", \\\"Groschupf\\\"]\\n\\n- receiver_persons: [\\\"W. Stauffacher\\\"]\\n\\nWait, but let's check the exact text for sender_persons. The letter ends with \\\"Hochachtend BASLER RHEINSCHIFFFAHRT-AKTIEGSELLSCHAFT sig. Ritter sig. Groschupf\\\". So \\\"sig.\\\" means signature, so the persons are Ritter and Groschupf.\\n\\nReceiver_persons: the addressee is Herrn W. Stauffacher, so the recipient's name is W. Stauffacher.\\n\\nSend date: \\\"Basel, den 3. Mai 1928.\\\" \u2192 3rd May 1928 \u2192 1928-05-03.\\n\\nLetter title: no title, so null.\\n\\nYes, that seems correct.\\n\",\"format\":\"unknown\",\"index\":0}]},\"native_finish_reason\":\"stop\"}],\"created\":1789676107,\"model\":\"qwen/qwen3-vl-8b-thinking\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":null,\"usage\":{\"completion_tokens\":1129,\"prompt_tokens\":3115,\"total_tokens\":4244,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":0,\"reasoning_tokens\":1061,\"rejected_prediction_tokens\":null,\"image_tokens\":0},\"prompt_tokens_details\":{\"audio_tokens\":0,\"cached_tokens\":0,\"cache_write_tokens\":0,\"video_tokens\":0},\"cost\":0.0029316,\"is_byok\":false,\"cost_details\":{\"upstream_inference_cost\":0.0029316,\"upstream_inference_prompt_cost\":0.0005607,\"upstream_inference_completions_cost\":0.0023709}},\"provider\":\"Alibaba\"}"
+}

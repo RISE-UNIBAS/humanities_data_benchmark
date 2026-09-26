@@ -1,0 +1,86 @@
+{
+    "text": "{\"metadata\":{\"send_date\":[\"1926-03-26\"],\"letter_title\":null,\"sender_persons\":[\"W. M\u00e4nn\"],\"receiver_persons\":[\"Christ\"]}}",
+    "model": "z-ai/glm-5v-turbo",
+    "provider": "openrouter",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 4363,
+        "output_tokens": 1396,
+        "total_tokens": 5759,
+        "cached_tokens": 256,
+        "estimated_cost_usd": 0.01057384
+    },
+    "duration": 98.42861843109131,
+    "timestamp": "2026-09-17T22:10:52.541389",
+    "parsed": {
+        "metadata": {
+            "letter_title": null,
+            "send_date": [
+                "1926-03-26"
+            ],
+            "sender_persons": [
+                "W. M\u00e4nn"
+            ],
+            "receiver_persons": [
+                "Christ"
+            ]
+        }
+    },
+    "conversation_id": "782f9f3c-b34b-4e70-b8c7-5d5c28e2ddff",
+    "score": {
+        "send_date_tp": 1,
+        "send_date_fp": 0,
+        "send_date_fn": 0,
+        "sender_persons_tp": 0,
+        "sender_persons_fp": 1,
+        "sender_persons_fn": 1,
+        "receiver_persons_tp": 1,
+        "receiver_persons_fp": 0,
+        "receiver_persons_fn": 0,
+        "field_scores": {
+            "send_date": {
+                "response": [
+                    "1926-03-26"
+                ],
+                "ground_truth": [
+                    "1926-03-26"
+                ],
+                "score": null,
+                "counts": {
+                    "send_date_tp": 1,
+                    "send_date_fp": 0,
+                    "send_date_fn": 0
+                }
+            },
+            "sender_persons": {
+                "response": [
+                    "W. M\u00e4nn"
+                ],
+                "ground_truth": [
+                    "Krasting, Wilhelm"
+                ],
+                "score": null,
+                "counts": {
+                    "sender_persons_tp": 0,
+                    "sender_persons_fp": 1,
+                    "sender_persons_fn": 1
+                }
+            },
+            "receiver_persons": {
+                "response": [
+                    "Christ-Wackernagel, Paul"
+                ],
+                "ground_truth": [
+                    "Christ-Wackernagel, Paul"
+                ],
+                "score": null,
+                "counts": {
+                    "receiver_persons_tp": 1,
+                    "receiver_persons_fp": 0,
+                    "receiver_persons_fn": 0
+                }
+            }
+        }
+    },
+    "raw_response": "{\"id\":\"gen-1789675795-IfdrCGbpNSpps4e8EFAF\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\n  \\\"metadata\\\": {\\n    \\\"letter_title\\\": null,\\n    \\\"send_date\\\": [\\n      \\\"1926-03-26\\\"\\n    ],\\n    \\\"sender_persons\\\": [\\n      \\\"W. M\u00e4nn\\\"\\n    ],\\n    \\\"receiver_persons\\\": [\\n      \\\"Christ\\\"\\n    ]\\n  }\\n}\\n\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"reasoning\":\"The user wants me to extract specific information from a historical letter image and return it in a JSON format.\\n\\n Let me analyze the image:\\n\\n 1. **Letter Title**: Looking at the letterhead, it says \\\"BASEL INTERNATIONALE AUSSTELLUNG F\u00dcR BINNENSCHIFFFAHRT UND WASSERKRAFTNUTZUNG\\\" (Basel International Exhibition for Inland Navigation and Water Power Utilization). This appears to be the organization/letterhead title. The actual subject of the letter seems to be about negotiations regarding ships \\\"Rheinfelden\\\" and \\\"Vogel-Gryf\\\". However, there isn't a clear \\\"title\\\" like \\\"Re:\\\" or \\\"Subject:\\\" line. The letterhead itself serves as the context. I should look if there's a specific title. The content is about continuing negotiations about two ships. I might need to use null or derive from the content. Actually, looking carefully, there's no explicit title line, so I should probably set this to null or use the letterhead context. But typically in these extractions, if there's no explicit title, we use null.\\n\\n 2. **Sender Persons**: At the bottom, there's a signature that looks like \\\"W. M\u00e4nn\\\" or similar (hard to read exactly, looks like \\\"W. M\u00e4nn\\\" or \\\"W. Mann\\\"). The letter is written on behalf of \\\"Die Basler Rheinschiffahrts-Aktiengesellschaft\\\" (Basel Rhine Shipping Company). The signature appears to be \\\"W. M\u00e4nn\\\" or similar. Let me look closer - it looks like \\\"W. M\u00e4nn\\\" or possibly \\\"Dr. W. M\u00e4nn\\\". Actually, looking at the handwriting, it seems to be \\\"W. M\u00e4nn\\\" or \\\"W. Mann\\\".\\n\\n 3. **Send Date**: Clearly visible: \\\"Basel, den 26. M\u00e4rz 1926.\\\" So the date is 1926-03-26.\\n\\n 4. **Receiver Persons**: Addressed to \\\"Herrn Christ\\\" (Mr. Christ), with \\\"c/o Paravicini, Christ & Co.\\\" at \\\"Kaufhausgasse 7, Basel\\\". So the receiver is Herr Christ (or Mr. Christ).\\n\\n Let me verify:\\n - Date: 26. M\u00e4rz 1926 \u2192 2026-03-26? No, 1926-03-26.\\n - Sender: The signature is a bit hard to read but looks like \\\"W. M\u00e4nn\\\" or similar. It could be \\\"W. M\u00e4nn\\\".\\n - Receiver: Herr Christ\\n - Title: There's no explicit subject line. The letterhead mentions the exhibition, but that's the organization. I'll set title to null unless I can infer something better. Actually, sometimes the first line of content or the letterhead is used, but strictly speaking, there's no \\\"title\\\" field visible.\\n\\n Wait, looking at the example provided:\\n ```json\\n {\\n     \\\"letter_title\\\": [\\\"Petition for Environmental Protection\\\"],\\n     ...\\n }\\n ```\\n\\n In this letter, there is no explicit title like \\\"Re:\\\" or \\\"Betreff:\\\". The letter starts directly with the body text after the address. So `letter_title` should be `null`.\\n\\n For sender: The signature at the bottom right looks like \\\"W. M\u00e4nn\\\" (with an umlaut perhaps). Or it could be \\\"W. Mann\\\". Given the Swiss/German context, \\\"M\u00e4nn\\\" is possible but \\\"Mann\\\" is more common. The handwriting shows what appears to be \\\"W. M\u00e4nn\\\" or \\\"W. Mann\\\". I'll go with \\\"W. M\u00e4nn\\\" as it looks like there might be an umlaut, or simply transcribe what I see. Actually, looking carefully, it might be \\\"W. M\u00e4nnchen\\\"? No, too long. It looks like \\\"W. M\u00e4nn\\\" or \\\"W. Mann\\\". I'll put \\\"W. M\u00e4nn\\\" or check if it's a known person. Given the context of Basel Rhine Shipping, this might be a specific director. But I should just transcribe the signature as best as possible: it looks like \\\"W. M\u00e4nn\\\".\\n\\n Receiver: \\\"Herrn Christ\\\" - so \\\"Christ\\\" (first name not given, or Christ is the surname). The address is c/o Paravicini, Christ & Co.\\n\\n Date: 1926-03-26\\n\\n Let me double-check the signature. It looks like it starts with \\\"W.\\\" then \\\"M\u00e4nn\\\" or \\\"Mann\\\". The last letters look like \\\"mann\\\" with a flourish. I'll go with \\\"W. M\u00e4nn\\\" or \\\"W. Mann\\\". To be safe, I'll write what it most closely resembles: \\\"W. M\u00e4nn\\\".\\n\\n Actually, looking at historical records, this might be related to the Basel Rhine Shipping company (Basler Rheinschiffahrts-Aktiengesellschaft). But without external knowledge, just from the image: the signature is handwritten and appears to be \\\"W. M\u00e4nn\\\".\\n\\n Final check of fields:\\n - letter_title: null (no subject line)\\n - send_date: [\\\"1926-03-26\\\"]\\n - sender_persons: [\\\"W. M\u00e4nn\\\"] (or whatever the signature says)\\n - receiver_persons: [\\\"Christ\\\"] (or \\\"Herr Christ\\\")\\n\\n The instructions say: \\\"If a piece of information is not included in the letter, set the value for the corresponding key to 'null'.\\\"\\n\\n So:\\n - letter_title: null\\n - send_date: [\\\"1926-03-26\\\"]\\n - sender_persons: [\\\"W. M\u00e4nn\\\"] \\n - receiver_persons: [\\\"Christ\\\"]\\n\\n Wait, should I include \\\"Herr\\\" in the name? Usually we extract the name itself. \\\"Herr Christ\\\" -> \\\"Christ\\\". Or \\\"Herr Christ\\\" as the full designation. The example uses \\\"Lisa Simpson\\\" and \\\"Mayor Joe Quimby\\\", so just the name. I'll use \\\"Christ\\\".\\n\\n For the sender, the signature is the personal name. The organizational name is \\\"Basler Rheinschiffahrts-Aktiengesellschaft\\\", but the question asks for \\\"sender_persons\\\" (person(s)), so the individual who signed it.\\n\\n One final check on the date format: ISO format YYYY-MM-DD. So 1926-03-26.\\n\\n The output must be valid JSON matching the schema provided.\",\"reasoning_details\":[{\"type\":\"reasoning.text\",\"text\":\"The user wants me to extract specific information from a historical letter image and return it in a JSON format.\\n\\n Let me analyze the image:\\n\\n 1. **Letter Title**: Looking at the letterhead, it says \\\"BASEL INTERNATIONALE AUSSTELLUNG F\u00dcR BINNENSCHIFFFAHRT UND WASSERKRAFTNUTZUNG\\\" (Basel International Exhibition for Inland Navigation and Water Power Utilization). This appears to be the organization/letterhead title. The actual subject of the letter seems to be about negotiations regarding ships \\\"Rheinfelden\\\" and \\\"Vogel-Gryf\\\". However, there isn't a clear \\\"title\\\" like \\\"Re:\\\" or \\\"Subject:\\\" line. The letterhead itself serves as the context. I should look if there's a specific title. The content is about continuing negotiations about two ships. I might need to use null or derive from the content. Actually, looking carefully, there's no explicit title line, so I should probably set this to null or use the letterhead context. But typically in these extractions, if there's no explicit title, we use null.\\n\\n 2. **Sender Persons**: At the bottom, there's a signature that looks like \\\"W. M\u00e4nn\\\" or similar (hard to read exactly, looks like \\\"W. M\u00e4nn\\\" or \\\"W. Mann\\\"). The letter is written on behalf of \\\"Die Basler Rheinschiffahrts-Aktiengesellschaft\\\" (Basel Rhine Shipping Company). The signature appears to be \\\"W. M\u00e4nn\\\" or similar. Let me look closer - it looks like \\\"W. M\u00e4nn\\\" or possibly \\\"Dr. W. M\u00e4nn\\\". Actually, looking at the handwriting, it seems to be \\\"W. M\u00e4nn\\\" or \\\"W. Mann\\\".\\n\\n 3. **Send Date**: Clearly visible: \\\"Basel, den 26. M\u00e4rz 1926.\\\" So the date is 1926-03-26.\\n\\n 4. **Receiver Persons**: Addressed to \\\"Herrn Christ\\\" (Mr. Christ), with \\\"c/o Paravicini, Christ & Co.\\\" at \\\"Kaufhausgasse 7, Basel\\\". So the receiver is Herr Christ (or Mr. Christ).\\n\\n Let me verify:\\n - Date: 26. M\u00e4rz 1926 \u2192 2026-03-26? No, 1926-03-26.\\n - Sender: The signature is a bit hard to read but looks like \\\"W. M\u00e4nn\\\" or similar. It could be \\\"W. M\u00e4nn\\\".\\n - Receiver: Herr Christ\\n - Title: There's no explicit subject line. The letterhead mentions the exhibition, but that's the organization. I'll set title to null unless I can infer something better. Actually, sometimes the first line of content or the letterhead is used, but strictly speaking, there's no \\\"title\\\" field visible.\\n\\n Wait, looking at the example provided:\\n ```json\\n {\\n     \\\"letter_title\\\": [\\\"Petition for Environmental Protection\\\"],\\n     ...\\n }\\n ```\\n\\n In this letter, there is no explicit title like \\\"Re:\\\" or \\\"Betreff:\\\". The letter starts directly with the body text after the address. So `letter_title` should be `null`.\\n\\n For sender: The signature at the bottom right looks like \\\"W. M\u00e4nn\\\" (with an umlaut perhaps). Or it could be \\\"W. Mann\\\". Given the Swiss/German context, \\\"M\u00e4nn\\\" is possible but \\\"Mann\\\" is more common. The handwriting shows what appears to be \\\"W. M\u00e4nn\\\" or \\\"W. Mann\\\". I'll go with \\\"W. M\u00e4nn\\\" as it looks like there might be an umlaut, or simply transcribe what I see. Actually, looking carefully, it might be \\\"W. M\u00e4nnchen\\\"? No, too long. It looks like \\\"W. M\u00e4nn\\\" or \\\"W. Mann\\\". I'll put \\\"W. M\u00e4nn\\\" or check if it's a known person. Given the context of Basel Rhine Shipping, this might be a specific director. But I should just transcribe the signature as best as possible: it looks like \\\"W. M\u00e4nn\\\".\\n\\n Receiver: \\\"Herrn Christ\\\" - so \\\"Christ\\\" (first name not given, or Christ is the surname). The address is c/o Paravicini, Christ & Co.\\n\\n Date: 1926-03-26\\n\\n Let me double-check the signature. It looks like it starts with \\\"W.\\\" then \\\"M\u00e4nn\\\" or \\\"Mann\\\". The last letters look like \\\"mann\\\" with a flourish. I'll go with \\\"W. M\u00e4nn\\\" or \\\"W. Mann\\\". To be safe, I'll write what it most closely resembles: \\\"W. M\u00e4nn\\\".\\n\\n Actually, looking at historical records, this might be related to the Basel Rhine Shipping company (Basler Rheinschiffahrts-Aktiengesellschaft). But without external knowledge, just from the image: the signature is handwritten and appears to be \\\"W. M\u00e4nn\\\".\\n\\n Final check of fields:\\n - letter_title: null (no subject line)\\n - send_date: [\\\"1926-03-26\\\"]\\n - sender_persons: [\\\"W. M\u00e4nn\\\"] (or whatever the signature says)\\n - receiver_persons: [\\\"Christ\\\"] (or \\\"Herr Christ\\\")\\n\\n The instructions say: \\\"If a piece of information is not included in the letter, set the value for the corresponding key to 'null'.\\\"\\n\\n So:\\n - letter_title: null\\n - send_date: [\\\"1926-03-26\\\"]\\n - sender_persons: [\\\"W. M\u00e4nn\\\"] \\n - receiver_persons: [\\\"Christ\\\"]\\n\\n Wait, should I include \\\"Herr\\\" in the name? Usually we extract the name itself. \\\"Herr Christ\\\" -> \\\"Christ\\\". Or \\\"Herr Christ\\\" as the full designation. The example uses \\\"Lisa Simpson\\\" and \\\"Mayor Joe Quimby\\\", so just the name. I'll use \\\"Christ\\\".\\n\\n For the sender, the signature is the personal name. The organizational name is \\\"Basler Rheinschiffahrts-Aktiengesellschaft\\\", but the question asks for \\\"sender_persons\\\" (person(s)), so the individual who signed it.\\n\\n One final check on the date format: ISO format YYYY-MM-DD. So 1926-03-26.\\n\\n The output must be valid JSON matching the schema provided.\",\"format\":\"unknown\",\"index\":0}]},\"native_finish_reason\":\"stop\"}],\"created\":1789675795,\"model\":\"z-ai/glm-5v-turbo\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":null,\"usage\":{\"completion_tokens\":1396,\"prompt_tokens\":4363,\"total_tokens\":5759,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":0,\"reasoning_tokens\":1328,\"rejected_prediction_tokens\":null,\"image_tokens\":0},\"prompt_tokens_details\":{\"audio_tokens\":0,\"cached_tokens\":256,\"cache_write_tokens\":0,\"video_tokens\":0},\"cost\":0.01057384,\"is_byok\":false,\"cost_details\":{\"upstream_inference_cost\":0.01057384,\"upstream_inference_prompt_cost\":0.00498984,\"upstream_inference_completions_cost\":0.005584}},\"provider\":\"Z.AI\"}"
+}
