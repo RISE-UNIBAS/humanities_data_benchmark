@@ -196,6 +196,11 @@ def generate_compare_detail(benchmark=None, limit=0, measure=False, only_missing
         inputs, diagnostics = detail_for_run(run_dir, test_id, name, scorer, tally)
         if not inputs and not diagnostics:
             tally["nothing to write"] += 1
+            # A file from an earlier pass, e.g. a scorer error since fixed, is now false.
+            if out_path.is_file():
+                tally["removed"] += 1
+                if not measure:
+                    out_path.unlink()
             continue
 
         document = {
@@ -243,7 +248,8 @@ def generate_compare_detail(benchmark=None, limit=0, measure=False, only_missing
         print("  %-22s %.1fx" % ("compression", raw_bytes / max(gzip_bytes, 1)))
     for key in ("reproduces stored", "differs from stored", "no stored score",
                 "kept run-time detail", "no detail produced", "scorer raised",
-                "nothing to write", "unchanged", "already present", "scorer unavailable"):
+                "nothing to write", "removed", "unchanged", "already present",
+                "scorer unavailable"):
         if tally[key]:
             print("  %-22s %d" % (key, tally[key]))
     if per_benchmark:

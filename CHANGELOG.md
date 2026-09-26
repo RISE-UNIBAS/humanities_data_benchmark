@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - `benchmark_export.json` and `test_runs_export.json`: run order no longer depends on filesystem order.
+- `generate_compare_detail.py`: removes a detail file once its run needs none, instead of keeping a since-fixed scorer error.
 
 ## [v0.6.0] - 2026-09-23
 
