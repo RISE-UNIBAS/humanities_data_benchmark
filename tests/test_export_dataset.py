@@ -517,6 +517,17 @@ def test_gzip_output_is_byte_stable(tmp_path):
     assert digests[0] == digests[1]
 
 
+@pytest.mark.parametrize("run_id,month", [
+    ("T0001@2025-03-01", "2025-03"),
+    ("T0001@2026-09-18", "2026-09"),
+    ("T0001@backup", "undated"),
+    ("T0001@2026", "undated"),
+])
+def test_payloads_are_filed_by_the_month_of_their_run(run_id, month):
+    from scripts.export_dataset.__main__ import _run_month
+    assert _run_month(run_id) == month
+
+
 def test_a_failed_build_leaves_the_previous_one_intact(tmp_path):
     final = tmp_path / "dataset"
     final.mkdir()

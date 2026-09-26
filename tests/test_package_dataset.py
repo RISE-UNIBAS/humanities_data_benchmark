@@ -147,6 +147,18 @@ def test_packaging_refuses_a_tree_that_cannot_be_pushed(built, tmp_path, monkeyp
                 "--skip-payloads"])
 
 
+def test_packaging_refuses_a_payload_that_cannot_be_pushed(built, tmp_path, monkeypatch):
+    """The sidecars are committed to a repository too, so they are held to the same limit."""
+    payload = built / "payloads" / "business_letters.jsonl.gz"
+    payload.write_bytes(b"x" * 20_000)
+    manifest = json.loads((built / "manifest.json").read_text(encoding="utf-8"))
+    manifest["output_sha256"]["payloads/business_letters.jsonl.gz"] = P.sha256_of(payload)
+    (built / "manifest.json").write_text(json.dumps(manifest), encoding="utf-8")
+    monkeypatch.setattr(P, "GITHUB_FILE_LIMIT", 10_000)
+    with pytest.raises(SystemExit, match="payload file"):
+        P.main(["--dataset", str(built), "--out", str(tmp_path / "dist")])
+
+
 def test_checksums_are_written_beside_the_output_not_inside_it(built, tmp_path):
     dist = tmp_path / "dist"
     P.main(["--dataset", str(built), "--out", str(dist), "--skip-payloads"])

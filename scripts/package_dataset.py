@@ -16,7 +16,8 @@ from a finished ``dataset/``:
 Packaging stops before writing anything when the inputs do not match
 ``manifest.output_sha256``, when an output path would overwrite an input, or, unless
 ``--development`` is given, when the build is partial, carries a blocking diagnostic, or
-does not reconcile against the frontend export.
+does not reconcile against the frontend export. It also refuses any release file or payload
+sidecar over GitHub's 100 MB per-file limit.
 
     python -m scripts.package_dataset [--dataset dataset] [--out dist] [--development]
 """
@@ -346,6 +347,20 @@ def main(argv=None):
         archive = pack_payloads(dataset, out, version)
         if archive:
             print("  %s  %.1f MB" % (archive, archive.stat().st_size / 1048576))
+            # Each sidecar is committed to a repository of its own, so the same limits hold.
+            payloads = dataset / PAYLOAD_DIR
+            blocked, warned = check_sizes(payloads)
+            for path, size in warned:
+                print("  note: %s is %.1f MB, over GitHub's %d MB warning threshold"
+                      % (path.relative_to(dataset), size / 1048576,
+                         GITHUB_WARN_LIMIT // 1048576))
+            if blocked:
+                raise SystemExit(
+                    "Refusing to package: %d payload file(s) exceed GitHub's %d MB hard "
+                    "limit:\n  %s"
+                    % (len(blocked), GITHUB_FILE_LIMIT // 1048576,
+                       "\n  ".join("%s (%.1f MB)" % (p.relative_to(dataset), s / 1048576)
+                                   for p, s in blocked)))
 
     print("Release tree ...")
     _manifest, packaging = build_release_tree(dataset, release,

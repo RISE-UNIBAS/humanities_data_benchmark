@@ -159,7 +159,7 @@ values from empty strings without additional parsing rules.
 | File or directory | Contents |
 |---|---|
 | [datapackage.json](datapackage.json) | Table schemas, column definitions, and primary keys |
-| [payloads/](payloads/) | Original request and scoring JSON, plus supplementary re-scoring records, in compressed sidecar files |
+| [payloads/](payloads/) | Original request and scoring JSON as `<benchmark>/<YYYY-MM>.jsonl.gz`, one file per benchmark and run month, plus `run_scoring.jsonl.gz` and the supplementary re-scoring records in `rescored_detail.jsonl.gz` |
 | [coverage.csv](coverage.csv) | Column completeness and validity statistics |
 | [source_manifest.jsonl](source_manifest.jsonl) | Source paths and SHA-256 hashes for the {files:,} files consumed |
 | [diagnostics.jsonl](diagnostics.jsonl) | Export issues, severity levels, and handling decisions |

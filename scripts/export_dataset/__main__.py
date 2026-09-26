@@ -10,6 +10,7 @@ subsets and mark the resulting manifest with ``partial: true``.
 import argparse
 import json
 import platform
+import re
 import shutil
 import subprocess
 import sys
@@ -126,13 +127,20 @@ def build(source=RESULTS_PATH, out=DATASET_PATH, date=None, benchmark=None, limi
 
     print("Write payloads ...")
     payload_counts = {}
+    # One file per benchmark and month keeps each under GitHub's per-file limit, and a
+    # closed month's file unchanged from one release to the next.
     for bench in sorted(extractor.payloads):
-        sidecar = writers.JsonlGz(staging / "payloads" / ("%s.jsonl.gz" % bench))
-        for record in sorted(extractor.payloads[bench],
-                             key=lambda r: (r["run_id"], r["object_id"] or "")):
-            sidecar.write(record)
-        sidecar.close()
-        payload_counts[bench] = sidecar.count
+        by_month = {}
+        for record in extractor.payloads[bench]:
+            by_month.setdefault(_run_month(record["run_id"]), []).append(record)
+        for month in sorted(by_month):
+            name = "%s/%s" % (bench, month)
+            sidecar = writers.JsonlGz(staging / "payloads" / ("%s.jsonl.gz" % name))
+            for record in sorted(by_month[month],
+                                 key=lambda r: (r["run_id"], r["object_id"] or "")):
+                sidecar.write(record)
+            sidecar.close()
+            payload_counts[name] = sidecar.count
 
     if rescored_payloads:
         detail_sidecar = writers.JsonlGz(staging / "payloads" / "rescored_detail.jsonl.gz")
@@ -191,7 +199,8 @@ def build(source=RESULTS_PATH, out=DATASET_PATH, date=None, benchmark=None, limi
             outputs[path.relative_to(staging).as_posix()] = inventory.sha256_of(path)
 
     commit, commit_error = _git("rev-parse", "HEAD")
-    status, status_error = _git("status", "--porcelain")
+    # Untracked files are not part of the source commit and cannot change what it built.
+    status, status_error = _git("status", "--porcelain", "--untracked-files=no")
     dirty = None if status_error is not None else bool(status)
     provenance = "verified" if commit and status_error is None else "unknown"
     if provenance == "unknown":
@@ -273,6 +282,12 @@ def _software_citation():
     except Exception as error:
         print("  (could not read CITATION.cff: %s)" % error)
         return None
+
+
+def _run_month(run_id):
+    """`YYYY-MM` of a `<test_id>@<date>` run id; `undated` when the date has none."""
+    month = run_id.rsplit("@", 1)[-1][:7]
+    return month if re.fullmatch(r"\d{4}-\d{2}", month) else "undated"
 
 
 def _tally(diagnostics):
