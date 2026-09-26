@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
 """Complete the cost record on stored results. Makes no API calls.
 
-Fills two gaps in `results/*/*/request_*.json`: `reasoning_tokens` and
-`reasoning_cost_usd` for reasoning a provider billed outside `output_tokens`, and
-`input_cost_usd` / `output_cost_usd` where a run recorded no cost. `estimated_cost_usd`
-is then input + output + reasoning throughout, and `--summaries` rolls the totals into
-each run's `scoring.json`.
+Fills three gaps in `results/*/*/request_*.json`: `reasoning_tokens` and
+`reasoning_cost_usd` for reasoning a provider billed outside `output_tokens`,
+`input_cost_usd` / `output_cost_usd` where a run recorded no cost, and the same two
+components beside a provider-billed total, taken from the provider's own split. A
+list-priced `estimated_cost_usd` is then input + output + reasoning throughout, and
+`--summaries` rolls the totals into each run's `scoring.json`.
 
 Two rules govern what may be written:
 
@@ -13,7 +14,10 @@ Two rules govern what may be written:
   *before* the run. Otherwise the cost is unknown rather than zero: the token count is
   recorded and the cost is left null.
 - A cost the provider reported is never replaced by a derived one. An
-  `estimated_cost_usd` with no component fields is a provider-billed total.
+  `estimated_cost_usd` with no component fields is a provider-billed total. Its
+  components come only from the provider's `usage.cost_details`, and only when the prompt
+  and completion costs add up to the billed total; a remainder is a charge that belongs
+  to neither, so the components stay unknown.
 
     python scripts/backfill_costs.py                     # dry run, whole corpus
     python scripts/backfill_costs.py --provider genai    # narrow it
@@ -72,6 +76,47 @@ def price_for(provider, model, run_date, max_age_days=None):
 def clear_price_cache():
     """For tests that swap the pricing table underneath."""
     _price_cache.clear()
+
+
+def _raw_usage(raw_response):
+    """The provider's own usage block, from a stored dict or JSON string."""
+    if isinstance(raw_response, str):
+        try:
+            raw_response = json.loads(raw_response)
+        except ValueError:
+            return None
+    usage = raw_response.get("usage") if isinstance(raw_response, dict) else None
+    return usage if isinstance(usage, dict) else None
+
+
+def _is_amount(value):
+    return isinstance(value, (int, float)) and not isinstance(value, bool)
+
+
+def _same_amount(a, b):
+    return abs(a - b) <= max(1e-12, 1e-9 * abs(b))
+
+
+def billed_components(raw_response, billed):
+    """(input_cost, output_cost) from the provider's split of a billed total, or None.
+
+    OpenRouter itemises `cost` as `upstream_inference_prompt_cost` and
+    `..._completions_cost`. The split is used only when it adds up to the billed cost
+    and that cost is the one stored. With a bring-your-own-key route `cost` is
+    OpenRouter's fee alone, so the split describes a different bill.
+    """
+    usage = _raw_usage(raw_response)
+    details = usage.get("cost_details") if usage else None
+    if not isinstance(details, dict) or usage.get("is_byok"):
+        return None
+    prompt = details.get("upstream_inference_prompt_cost")
+    completion = details.get("upstream_inference_completions_cost")
+    cost = usage.get("cost")
+    if not (_is_amount(prompt) and _is_amount(completion) and _is_amount(cost)):
+        return None
+    if not (_same_amount(prompt + completion, cost) and _same_amount(cost, billed)):
+        return None
+    return prompt, completion
 
 
 def detect_style(raw_bytes, document):
@@ -137,6 +182,8 @@ class Stats:
         self.cost_filled_usd = 0.0
         self.cost_unpriced = 0
         self.stale_reasoning = 0
+        self.billed_split = 0
+        self.billed_split_usd = 0.0
 
 
 class Desired(NamedTuple):
@@ -161,6 +208,8 @@ class Desired(NamedTuple):
     gap: Optional[int]
     reported: Optional[int]
     changes: dict
+    billed_split: bool = False
+    """Components taken from the provider's split of a billed total."""
 
 
 def desired(document, date, max_age_days, all_files=False):
@@ -204,9 +253,17 @@ def desired(document, date, max_age_days, all_files=False):
         else:
             unpriced_fill = True
 
+    billed_split = False
+    if stored_est is not None and input_cost is None and output_cost is None:
+        split = billed_components(document.get("raw_response"), stored_est)
+        if split is not None:
+            input_cost, output_cost = split
+            billed_split = True
+
     components_known = input_cost is not None and output_cost is not None
     estimated = None
-    if components_known and (filled or tokens or stored_est is None):
+    # A billed total stands even when its components are now known.
+    if components_known and not billed_split and (filled or tokens or stored_est is None):
         estimated = input_cost + output_cost + (reasoning or 0)
 
     if estimated is not None:
@@ -222,7 +279,7 @@ def desired(document, date, max_age_days, all_files=False):
 
     # Order sets where new keys land; existing keys keep their position.
     changes = {}
-    if filled:
+    if filled or billed_split:
         changes["input_cost_usd"] = input_cost
         changes["output_cost_usd"] = output_cost
     if estimated is not None:
@@ -233,7 +290,7 @@ def desired(document, date, max_age_days, all_files=False):
 
     return Desired(input_cost, output_cost, tokens, reasoning, total,
                    not unpriced_fill, components_known, filled, unpriced_fill,
-                   gap, reported, changes)
+                   gap, reported, changes, billed_split)
 
 
 def load(path):
@@ -317,9 +374,14 @@ def backfill(args, stats):
             stats.cost_filled_usd += (d.input_cost or 0) + (d.output_cost or 0)
         elif d.unpriced_fill:
             stats.cost_unpriced += 1
+        if d.billed_split:
+            stats.billed_split += 1
+            stats.billed_split_usd += d.input_cost + d.output_cost
 
         usage = document["usage"]
-        if not d.changes or all(usage.get(k) == v for k, v in d.changes.items()):
+        # Tolerant: a file the client priced unrounded is already correct.
+        if not d.changes or not any(_differs(usage.get(k, _MISSING), v)
+                                    for k, v in d.changes.items()):
             if d.changes:
                 stats.already += 1
             continue
@@ -564,6 +626,9 @@ def main_with_args(args):
     if stats.cost_unpriced:
         print("  %s requests left uncosted: no price within %d days of the run date"
               % (f"{stats.cost_unpriced:,}", args.max_price_age))
+    if stats.billed_split:
+        print("  %s provider-billed totals given their components from the provider's own "
+              "split, $%.2f" % (f"{stats.billed_split:,}", stats.billed_split_usd))
     if stats.stale_reasoning:
         print("  %s carry reasoning_tokens with a null cost for the same reason"
               % f"{stats.stale_reasoning:,}")

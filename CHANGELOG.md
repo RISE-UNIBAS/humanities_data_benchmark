@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Unreleased
 
 ### Fixed
-- `generic-llm-api-client` 0.5.0: reasoning, failed and discarded attempts are recorded and priced, and priced on the requested model; resumed runs keep them and never reprice a stored or billed cost.
+- `generic-llm-api-client` 0.5.0: reasoning, failed and discarded attempts are recorded and priced, and priced on the requested model; resumed runs keep them and never reprice a stored or billed cost. `backfill_costs.py` gives a billed total its input and output cost from the provider's own split.
 
 ## [v0.6.0] - 2026-09-23
 
