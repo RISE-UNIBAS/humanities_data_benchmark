@@ -41,10 +41,11 @@ def prices(make_pricing):
                                                        "output_price": 5.0}}}})
 
 
-def _derive(input_tokens, output_tokens):
+def _derive(input_tokens, output_tokens, reasoning_tokens=0):
     tokens = dict(input_tokens=input_tokens, output_tokens=output_tokens,
                   total_tokens=None, cached_tokens=None,
-                  cache_creation_tokens=None, cache_read_tokens=None)
+                  cache_creation_tokens=None, cache_read_tokens=None,
+                  reasoning_tokens=reasoning_tokens)
     return Extractor._derive_cost("2026-01-01", "openai", "gpt-4o", {}, tokens)
 
 
@@ -83,6 +84,20 @@ def test_f01_explicit_zeros_are_measurements_not_absences():
     assert row["derived_total_cost_usd"] == 0.0
     assert row["cost_provenance"] == "derived", (
         "a recorded zero is a measurement; only an absent count is partial")
+
+
+def test_reasoning_is_charged_at_the_output_price_and_totalled():
+    row = _derive(1_000_000, 1_000_000, reasoning_tokens=2_000_000)
+    assert row["derived_reasoning_cost_usd"] == 10.0
+    assert row["derived_total_cost_usd"] == 17.0
+    assert row["cost_provenance"] == "derived"
+
+
+def test_unknown_reasoning_totals_input_and_output_and_says_so():
+    row = _derive(1_000_000, 1_000_000, reasoning_tokens=None)
+    assert row["derived_reasoning_cost_usd"] is None
+    assert row["derived_total_cost_usd"] == 7.0
+    assert row["cost_provenance"] == "derived_reasoning_unknown"
 
 
 def test_f01_no_tokens_still_reports_the_price_in_force():

@@ -20,7 +20,7 @@ DATASET_PATH = PROJECT_ROOT / "dataset"
 
 STAGING_SUFFIX = ".staging"
 
-SCHEMA_VERSION = "1.1.0"
+SCHEMA_VERSION = "1.2.0"
 """Semantic version of the table and column contract.
 
 Additive columns require a minor version increment; incompatible changes to

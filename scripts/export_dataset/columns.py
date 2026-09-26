@@ -63,7 +63,14 @@ RUNS = {
                       "`niy`), `no_numeric_metrics`, `numeric_metrics_present`.",
     "recorded_total_input_tokens": "Copied verbatim from the run's own cost summary.",
     "recorded_total_output_tokens": "Copied verbatim from the run's own cost summary.",
-    "recorded_total_tokens": "Copied verbatim from the run's own cost summary.",
+    "recorded_total_tokens": "Copied verbatim from the run's own cost summary. Excludes "
+                             "reasoning billed outside output tokens.",
+    "recorded_total_reasoning_tokens": "Copied verbatim from the run's own cost summary. "
+                                       "The runner does not write it, so null does not "
+                                       "mean zero; sum the request-level "
+                                       "`reasoning_tokens` instead.",
+    "recorded_reasoning_cost_usd": "Copied verbatim from the run's own cost summary. Null "
+                                   "where reasoning was recorded but no price was in force.",
     "recorded_input_cost_usd": "Copied verbatim from the run's own cost summary. Not "
                                "recomputed, and its completeness is unknown.",
     "recorded_output_cost_usd": "Copied verbatim from the run's own cost summary.",
@@ -144,23 +151,39 @@ REQUESTS = {
     "cached_tokens": "Cached prompt tokens, where the provider reported them.",
     "cache_creation_tokens": "Cache-write tokens, where reported.",
     "cache_read_tokens": "Cache-read tokens, where reported.",
-    "stored_input_cost_usd": "Input cost exactly as the run recorded it. Never recomputed.",
-    "stored_output_cost_usd": "Output cost exactly as the run recorded it.",
-    "stored_estimated_cost_usd": "Total cost exactly as the run recorded it. Costed against "
-                                 "whatever price table was live at run time, which varies "
-                                 "across the corpus.",
+    "reasoning_tokens": "Billed reasoning tokens not already counted in `output_tokens`: "
+                        "the provider's own reasoning count, clamped to `total_tokens - "
+                        "input_tokens - output_tokens`, so input + output + reasoning = "
+                        "total. Zero for providers that count reasoning inside output "
+                        "tokens. Null when no total was recorded.",
+    "stored_input_cost_usd": "Input cost as the request file holds it. Never recomputed "
+                             "here.",
+    "stored_output_cost_usd": "Output cost as the request file holds it.",
+    "stored_estimated_cost_usd": "Total cost as the request file holds it, reasoning "
+                                 "included. Costed at run time against the price table "
+                                 "then live, or filled in afterwards at the price in force "
+                                 "on the run's date where the run recorded none.",
+    "stored_reasoning_cost_usd": "Reasoning cost as the request file holds it: reasoning "
+                                 "tokens at the output price in force on the run's date. "
+                                 "Null where there was no reasoning outside output tokens "
+                                 "or no price was in force.",
     "derived_input_cost_usd": "Recomputed here: `input_tokens / 1e6 × the input price in "
                               "force on the run's date`.",
     "derived_output_cost_usd": "Recomputed here, from output tokens and the output price.",
-    "derived_total_cost_usd": "Sum of the two derived costs, and null unless both were "
-                              "derivable -- see `cost_provenance`. Uniform across the "
-                              "corpus and reproducible from the price table, but it is "
-                              "what the run would have cost at that date's prices, not "
-                              "what was charged.",
-    "cost_provenance": "`derived` when both token counts were recorded and priced. "
-                       "`partial_tokens` when only one was: the known component is "
-                       "exported, the total is null, and the missing side is never "
-                       "assumed to be zero. Otherwise why no cost could be derived at "
+    "derived_reasoning_cost_usd": "Recomputed here, from `reasoning_tokens` and the output "
+                                  "price. Null when reasoning tokens are unknown.",
+    "derived_total_cost_usd": "Sum of the derived input, output and reasoning costs, and "
+                              "null unless input and output were both derivable -- see "
+                              "`cost_provenance`. Uniform across the corpus and "
+                              "reproducible from the price table, but it is what the run "
+                              "would have cost at that date's prices, not what was "
+                              "charged.",
+    "cost_provenance": "`derived` when input, output and reasoning tokens were all known "
+                       "and priced. `derived_reasoning_unknown` when no total was recorded, "
+                       "so reasoning is unknown and the total covers input and output only. "
+                       "`partial_tokens` when only one of input and output was: the known "
+                       "component is exported, the total is null, and the missing side is "
+                       "never assumed to be zero. Otherwise why no cost could be derived at "
                        "all: `no_price_in_table`, `no_tokens`, `no_model_identity`.",
     "pricing_bucket_date": "Which dated entry in the price table was used. Not the run's "
                            "date: the nearest entry at or before it.",

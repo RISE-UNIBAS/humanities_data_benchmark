@@ -82,6 +82,8 @@ RUNS = pa.schema([
     ("recorded_total_input_tokens", pa.int64()),
     ("recorded_total_output_tokens", pa.int64()),
     ("recorded_total_tokens", pa.int64()),
+    ("recorded_total_reasoning_tokens", pa.int64()),
+    ("recorded_reasoning_cost_usd", pa.float64()),
     ("recorded_input_cost_usd", pa.float64()),
     ("recorded_output_cost_usd", pa.float64()),
     ("recorded_total_cost_usd", pa.float64()),
@@ -134,16 +136,19 @@ REQUESTS = pa.schema([
     ("cached_tokens", pa.int64()),
     ("cache_creation_tokens", pa.int64()),
     ("cache_read_tokens", pa.int64()),
+    ("reasoning_tokens", pa.int64()),
 
-    # What the run recorded, verbatim. Never recomputed, never backfilled.
+    # What the request file holds, verbatim. Never recomputed here.
     ("stored_input_cost_usd", pa.float64()),
     ("stored_output_cost_usd", pa.float64()),
     ("stored_estimated_cost_usd", pa.float64()),
+    ("stored_reasoning_cost_usd", pa.float64()),
 
     # Recomputed here from the recorded tokens and the price in force on the run's date.
     # A different claim from the stored figure, so a different set of columns.
     ("derived_input_cost_usd", pa.float64()),
     ("derived_output_cost_usd", pa.float64()),
+    ("derived_reasoning_cost_usd", pa.float64()),
     ("derived_total_cost_usd", pa.float64()),
     ("cost_provenance", pa.string()),
     ("pricing_bucket_date", pa.string()),

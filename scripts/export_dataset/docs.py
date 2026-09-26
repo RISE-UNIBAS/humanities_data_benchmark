@@ -271,8 +271,16 @@ Request-level costs are provided in two separate column families:
 
 | Columns | Interpretation |
 |---|---|
-| `stored_*` | Cost estimates copied from the original request record, using the pricing information available to the runner at the time; absent for many requests |
+| `stored_*` | Cost estimates copied from the request record: priced by the runner at the time, or filled in afterwards at the price in force on the run's date where the runner recorded none |
 | `derived_*` | Cost estimates recalculated during export from recorded token counts and dated pricing entries, using a consistent method across the archive |
+
+Some providers bill reasoning tokens outside `output_tokens`. `reasoning_tokens` holds
+that uncounted remainder, so `input_tokens + output_tokens + reasoning_tokens` equals
+`total_tokens`, and it is zero for providers that count reasoning inside the output.
+Reasoning is charged at the output price and included in both total-cost columns. Where no
+`total_tokens` was recorded the remainder is unknown: `reasoning_tokens` is null and
+`cost_provenance` is `derived_reasoning_unknown`, with a total covering input and output
+only.
 
 **Derived costs are estimates, not verified billing amounts.** The exporter selects the
 most recent matching price-table entry on or before the run date, with no maximum age.
@@ -436,8 +444,9 @@ Initial export. Schema {schema}. Data through {cutoff}, built from source commit
 
 - {runs:,} runs, {requests:,} requests, {scores:,} metric observations, {metrics} metric
   definitions.{rescored}
-- Per-request cost is exported twice: as the run recorded it, and as derived from recorded
-  tokens and the price in force on the run's date.
+- Per-request cost is exported twice: as the request file records it, and as derived from
+  recorded tokens and the price in force on the run's date. Both include reasoning billed
+  outside output tokens.
 - `timestamp_utc` is null throughout: every stored timestamp is naive and no source
   timezone is recorded.
 - Licensed CC BY 4.0, separately from the software's GPL-3.0. The payload

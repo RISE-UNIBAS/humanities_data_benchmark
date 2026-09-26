@@ -120,7 +120,9 @@ def compare(runs, requests, scores, frontend):
         ours = by_id[run_id]
         for key, column in (("total_cost_usd", "recorded_total_cost_usd"),
                             ("total_input_tokens", "recorded_total_input_tokens"),
-                            ("total_output_tokens", "recorded_total_output_tokens")):
+                            ("total_output_tokens", "recorded_total_output_tokens"),
+                            ("total_reasoning_tokens", "recorded_total_reasoning_tokens"),
+                            ("reasoning_cost_usd", "recorded_reasoning_cost_usd")):
             theirs = summary.get(key)
             mine = ours[column]
             if theirs is None and mine is None:

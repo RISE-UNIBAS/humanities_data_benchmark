@@ -6,7 +6,7 @@ is missing or invalid, and record the relevant status and diagnostics.
 
 Preserve recorded costs and export derived estimates in separate columns. Derived
 costs use recorded token counts and dated entries selected by the shared pricing
-resolver. Missing quantities remain null; timestamps are converted to UTC only
+resolver; reasoning billed outside `output_tokens` is charged at the output price. Missing quantities remain null; timestamps are converted to UTC only
 when their source value contains a timezone offset.
 """
 import json
@@ -18,6 +18,7 @@ from scripts.export_dataset import metrics as M
 from scripts.export_dataset.inventory import relative_path
 from scripts.export_dataset.schema import empty_string_is_null
 from scripts.ndr_export.pricing_resolver import resolve_pricing
+from scripts.reasoning_tokens import uncounted_reasoning
 from scripts.results_index import (TestCatalog, benchmark_meta, iter_request_records,
                                    iter_run_dirs, read_run, read_scoring)
 
@@ -268,7 +269,14 @@ class Extractor:
             cached_tokens=_int(usage.get("cached_tokens")),
             cache_creation_tokens=_int(usage.get("cache_creation_tokens")),
             cache_read_tokens=_int(usage.get("cache_read_tokens")),
+            reasoning_tokens=uncounted_reasoning(
+                usage, record.get("raw_response") if record else None),
         )
+        stored_reasoning = _int(usage.get("reasoning_tokens"))
+        if stored_reasoning is not None and stored_reasoning != tokens["reasoning_tokens"]:
+            self._diag(source, "reasoning_tokens_disagree", "warning",
+                       "stored reasoning_tokens %d, derived %r; the derived value is "
+                       "exported" % (stored_reasoning, tokens["reasoning_tokens"]))
         derived = self._derive_cost(run.date, response_provider, response_model,
                                     typed, tokens)
 
@@ -296,6 +304,7 @@ class Extractor:
             "stored_input_cost_usd": _number(usage.get("input_cost_usd")),
             "stored_output_cost_usd": _number(usage.get("output_cost_usd")),
             "stored_estimated_cost_usd": _number(usage.get("estimated_cost_usd")),
+            "stored_reasoning_cost_usd": _number(usage.get("reasoning_cost_usd")),
             "conversation_id": _text(record.get("conversation_id")) if record else None,
             "has_parsed": None if record is None else record.get("parsed") is not None,
             "has_raw_response": (None if record is None
@@ -332,11 +341,13 @@ class Extractor:
         price on or before the run date, with no maximum age, and report its date and age.
 
         Retain each cost component only when its token count is available. A total
-        requires both components. Return provenance explaining the result or its absence.
+        requires input and output; reasoning is added where known and flagged where not.
+        Return provenance explaining the result or its absence.
         """
         blank = {
             "derived_input_cost_usd": None,
             "derived_output_cost_usd": None,
+            "derived_reasoning_cost_usd": None,
             "derived_total_cost_usd": None,
             "pricing_bucket_date": None,
             "pricing_age_days": None,
@@ -384,13 +395,24 @@ class Extractor:
                       else tokens["input_tokens"] / 1e6 * price.input_price)
         output_cost = (None if tokens["output_tokens"] is None
                        else tokens["output_tokens"] / 1e6 * price.output_price)
+        reasoning_cost = (None if tokens["reasoning_tokens"] is None
+                          else tokens["reasoning_tokens"] / 1e6 * price.output_price)
         complete = input_cost is not None and output_cost is not None
+        if not complete:
+            provenance = "partial_tokens"
+        elif reasoning_cost is None:
+            # No total_tokens recorded, so the uncounted remainder cannot be computed.
+            provenance = "derived_reasoning_unknown"
+        else:
+            provenance = "derived"
 
         return dict(resolved, **{
             "derived_input_cost_usd": input_cost,
             "derived_output_cost_usd": output_cost,
-            "derived_total_cost_usd": (input_cost + output_cost) if complete else None,
-            "cost_provenance": "derived" if complete else "partial_tokens",
+            "derived_reasoning_cost_usd": reasoning_cost,
+            "derived_total_cost_usd": ((input_cost + output_cost + (reasoning_cost or 0.0))
+                                       if complete else None),
+            "cost_provenance": provenance,
             "pricing_identity_source": origin,
         })
 
@@ -451,6 +473,8 @@ class Extractor:
             "recorded_total_input_tokens": _int(cost.get("total_input_tokens")),
             "recorded_total_output_tokens": _int(cost.get("total_output_tokens")),
             "recorded_total_tokens": _int(cost.get("total_tokens")),
+            "recorded_total_reasoning_tokens": _int(cost.get("total_reasoning_tokens")),
+            "recorded_reasoning_cost_usd": _number(cost.get("reasoning_cost_usd")),
             "recorded_input_cost_usd": _number(cost.get("input_cost_usd")),
             "recorded_output_cost_usd": _number(cost.get("output_cost_usd")),
             "recorded_total_cost_usd": _number(cost.get("total_cost_usd")),

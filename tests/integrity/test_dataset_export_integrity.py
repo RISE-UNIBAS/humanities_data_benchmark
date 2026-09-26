@@ -145,6 +145,22 @@ def test_stored_costs_were_not_backfilled_from_the_derived_ones(extracted):
         "column had been filled in from the derived one. They are separate claims.")
 
 
+def test_reasoning_closes_the_token_total(extracted):
+    """input + output + reasoning == total wherever all four are known."""
+    broken = [r["source_path"] for r in extracted.requests
+              if None not in (r["input_tokens"], r["output_tokens"], r["total_tokens"],
+                              r["reasoning_tokens"])
+              and r["total_tokens"] > 0
+              and r["input_tokens"] + r["output_tokens"] + r["reasoning_tokens"]
+              != r["total_tokens"]]
+    assert not broken, (
+        "%d requests where input + output + reasoning != total, e.g. %s. A provider "
+        "reports reasoning inside output_tokens in a way scripts/reasoning_tokens.py "
+        "does not clamp." % (len(broken), broken[:3]))
+    assert any(r["reasoning_tokens"] for r in extracted.requests), (
+        "no request has reasoning outside output_tokens; genai and x-ai runs do")
+
+
 def test_timestamps_were_not_given_an_invented_timezone(extracted):
     """Every stored timestamp is naive, so timestamp_utc is null throughout.
 

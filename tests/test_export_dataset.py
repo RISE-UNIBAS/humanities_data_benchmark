@@ -281,14 +281,46 @@ def test_derived_cost_is_tokens_times_the_price_in_force(extract, make_pricing):
     make_pricing(PRICES)
     e = extract({"2026-01-01": {"T0001": {"requests": {"a": {
         "provider": "openai", "model": "gpt-4o",
-        "usage": {"input_tokens": 1_000_000, "output_tokens": 500_000},
+        "usage": {"input_tokens": 1_000_000, "output_tokens": 500_000,
+                  "total_tokens": 1_500_000},
     }}}}})
     row = e.requests[0]
+    assert row["reasoning_tokens"] == 0
     assert row["derived_input_cost_usd"] == 2.5
     assert row["derived_output_cost_usd"] == 5.0
     assert row["derived_total_cost_usd"] == 7.5
     assert row["cost_provenance"] == "derived"
     assert row["pricing_bucket_date"] == "2026-01-01" and row["pricing_age_days"] == 0
+
+
+def test_reasoning_outside_output_tokens_is_exported_and_costed(extract, make_pricing):
+    """genai reports thoughts outside candidates; total = input + output + reasoning."""
+    make_pricing(PRICES)
+    e = extract({"2026-01-01": {"T0001": {"requests": {"a": {
+        "provider": "openai", "model": "gpt-4o",
+        "usage": {"input_tokens": 1_000_000, "output_tokens": 100_000,
+                  "total_tokens": 1_500_000, "reasoning_tokens": 400_000,
+                  "reasoning_cost_usd": 4.0},
+        "raw_response": {"usage_metadata": {"thoughts_token_count": 400_000}},
+    }}}}})
+    row = e.requests[0]
+    assert row["reasoning_tokens"] == 400_000
+    assert row["stored_reasoning_cost_usd"] == 4.0
+    assert row["derived_reasoning_cost_usd"] == 4.0
+    assert row["derived_total_cost_usd"] == 2.5 + 1.0 + 4.0
+    assert row["cost_provenance"] == "derived"
+    assert not [d for d in e.diagnostics if d["issue"] == "reasoning_tokens_disagree"]
+
+
+def test_a_stored_reasoning_count_that_disagrees_is_diagnosed(extract, make_pricing):
+    make_pricing(PRICES)
+    e = extract({"2026-01-01": {"T0001": {"requests": {"a": {
+        "provider": "openai", "model": "gpt-4o",
+        "usage": {"input_tokens": 10, "output_tokens": 10, "total_tokens": 20,
+                  "reasoning_tokens": 5},
+    }}}}})
+    assert e.requests[0]["reasoning_tokens"] == 0
+    assert "reasoning_tokens_disagree" in [d["issue"] for d in e.diagnostics]
 
 
 def test_the_stored_cost_is_never_overwritten_by_the_derived_one(extract, make_pricing):
