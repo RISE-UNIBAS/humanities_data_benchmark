@@ -117,6 +117,37 @@ def extract(root=None, benchmark_of=None):
     return rows, payloads, diagnostics
 
 
+def restrict(rows, payloads, requests, partial):
+    """Return ``(rows, payloads, diagnostics)`` limited to the exported requests.
+
+    Keep only records whose ``(run_id, object_id)`` names an exported request, so
+    every rescored row joins to ``requests``. A dropped record whose run is outside a
+    partial build's selection is out of scope and passes silently; any other dropped
+    record is orphaned detail and yields one warning per detail file.
+    """
+    request_ids = set((r["run_id"], r["object_id"]) for r in requests)
+    run_ids = set(r["run_id"] for r in requests)
+
+    def exported(record):
+        return (record["run_id"], record["object_id"]) in request_ids
+
+    orphans = {}
+    for record in payloads:
+        if exported(record) or (partial and record["run_id"] not in run_ids):
+            continue
+        orphans[record["source_path"]] = orphans.get(record["source_path"], 0) + 1
+
+    diagnostics = [{
+        "source_path": source,
+        "issue": "rescored_detail_orphan",
+        "severity": "warning",
+        "handling": "%d input(s) name no exported request; their rows and payloads are "
+                    "left out" % count,
+    } for source, count in sorted(orphans.items())]
+    return ([r for r in rows if exported(r)], [p for p in payloads if exported(p)],
+            diagnostics)
+
+
 def coverage_diagnostics(rows, runs, stored_field_run_ids):
     """Return run-level diagnostics for absent, stale, or incomplete field detail.
 
@@ -185,5 +216,6 @@ def coverage_diagnostics(rows, runs, stored_field_run_ids):
 def _by_benchmark(runs):
     counts = {}
     for run in runs:
-        counts[run["benchmark"]] = counts.get(run["benchmark"], 0) + 1
+        name = run["benchmark"] or "unresolved benchmark"
+        counts[name] = counts.get(name, 0) + 1
     return ", ".join("%s %d" % (name, counts[name]) for name in sorted(counts))

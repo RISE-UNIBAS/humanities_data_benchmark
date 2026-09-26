@@ -170,7 +170,7 @@ class Extractor:
             self.invalid_sources.append(files.scoring_path)
 
         cost = {}
-        if scoring.status == "ok" and isinstance(scoring.value, dict):
+        if scoring.status == "ok":
             self.run_payloads.append({
                 "run_id": run.run_id,
                 # The scoring file, not the run directory. `source` is the directory,
@@ -180,6 +180,12 @@ class Extractor:
                 "source_path": relative_path(files.scoring_path),
                 "source_record": scoring.value,
             })
+        if scoring.status == "ok" and not isinstance(scoring.value, dict):
+            self._diag(relative_path(files.scoring_path), "unsupported_scoring_shape",
+                       "warning", "row kept with scoring_status=invalid; value preserved "
+                       "in run_scoring.jsonl.gz, but it is a %s, not an object, so no "
+                       "metrics or cost are read from it" % type(scoring.value).__name__)
+        elif scoring.status == "ok":
             raw_cost = scoring.value.get(COST_SUMMARY_KEY)
             cost = raw_cost if isinstance(raw_cost, dict) else {}
             if benchmark:

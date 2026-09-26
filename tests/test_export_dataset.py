@@ -94,6 +94,25 @@ def test_a_malformed_scoring_file_keeps_its_run(extract):
     assert e.runs[0]["scoring_status"] == "invalid"
     assert e.runs[0]["has_scoring"] is True
     assert [d["issue"] for d in e.diagnostics] == ["unparseable_scoring_json"]
+    assert e.run_payloads == []
+    assert [p.name for p in e.invalid_sources] == ["scoring.json"]
+
+
+@pytest.mark.parametrize("scoring", ["[1, 2]", '"text"', "42", "true", "null"])
+def test_a_non_object_scoring_value_is_preserved_and_diagnosed(extract, scoring):
+    e = extract({"2026-01-01": {"T0001": {"requests": {"a": {}}, "scoring": scoring}}})
+    run = e.runs[0]
+    assert run["scoring_status"] == "invalid" and run["has_scoring"] is True
+    assert [p["source_record"] for p in e.run_payloads] == [json.loads(scoring)]
+    assert e.run_payloads[0]["source_path"].endswith("scoring.json")
+    assert [d["issue"] for d in e.diagnostics] == ["unsupported_scoring_shape"]
+    assert e.invalid_sources == [] and e.scores == []
+
+
+def test_a_missing_scoring_file_is_not_a_stored_null(extract):
+    e = extract({"2026-01-01": {"T0001": {"requests": {"a": {}}}}})
+    assert e.runs[0]["scoring_status"] == "missing"
+    assert e.run_payloads == [] and e.diagnostics == []
 
 
 def test_an_unresolvable_filename_is_a_blocking_diagnostic_not_a_deletion(extract):
@@ -578,3 +597,128 @@ def test_relative_path_falls_back_for_a_path_outside_the_repository():
     outside = Path(PROJECT_ROOT.anchor) / "definitely-not-the-repo" / "runs"
     assert not str(outside).startswith(str(PROJECT_ROOT))
     assert relative_path(outside) == outside.as_posix()
+
+
+# --------------------------------------------------------------------------------
+# Supplementary detail follows the build's selection
+# --------------------------------------------------------------------------------
+
+@pytest.fixture
+def build_with_detail(tmp_path, make_corpus, write_tests_csv, make_benchmarks, monkeypatch):
+    """A whole build over two runs, with comparison detail for both plus one stale input.
+
+    Git is stubbed; selection, detail extraction, table writing and publication are real.
+    """
+    from scripts.export_dataset import __main__ as build_module
+    from scripts.export_dataset import rescored
+
+    corpus = {"2026-01-01": {"T0001": {"requests": {"a": {}}, "scoring": {"f1_micro": 1}}},
+              "2026-01-02": {"T0002": {"requests": {"b": {}}, "scoring": {"f1_micro": 1}}}}
+    make_corpus(corpus)
+    make_benchmarks({"company_lists": {}, "library_cards": {}})
+    catalog = TestCatalog.load(write_tests_csv([
+        {"id": "T0001", "name": "company_lists", "provider": "openai", "model": "gpt-4o",
+         "legacy_test": "false"},
+        {"id": "T0002", "name": "library_cards", "provider": "openai", "model": "gpt-4o",
+         "legacy_test": "false"}]))
+    monkeypatch.setattr(build_module.TestCatalog, "load", classmethod(lambda cls: catalog))
+    monkeypatch.setattr(build_module, "_git", lambda *args: ("", None))
+
+    detail = tmp_path / "compare_detail"
+    for date, test_id, benchmark, objects in [
+            ("2026-01-01", "T0001", "company_lists", ["a", "gone"]),
+            ("2026-01-02", "T0002", "library_cards", ["b"])]:
+        (detail / date).mkdir(parents=True)
+        (detail / date / ("%s.json" % test_id)).write_text(json.dumps({
+            "benchmark": benchmark, "date": date, "test_id": test_id,
+            "rescored": "2026-09-14",
+            "inputs": dict((o, {"field_scores": {"f": {"score": 1.0}}}) for o in objects),
+        }), encoding="utf-8")
+    monkeypatch.setattr(rescored, "DETAIL_DIR", detail)
+
+    def _build(source=None, **selection):
+        out = tmp_path / "dataset"
+        build_module.build(source=source or tmp_path / "results", out=out, **selection)
+        import pyarrow.parquet as pq
+        requests = set((r["run_id"], r["object_id"]) for r in
+                       pq.read_table(out / "requests.parquet").to_pylist())
+        rescored_ids = set((r["run_id"], r["object_id"]) for r in
+                           pq.read_table(out / "rescored_fields.parquet").to_pylist())
+        sidecar = out / "payloads" / "rescored_detail.jsonl.gz"
+        payload_ids = set()
+        if sidecar.exists():
+            with gzip.open(sidecar, "rt") as handle:
+                payload_ids = set((json.loads(line)["run_id"], json.loads(line)["object_id"])
+                                  for line in handle)
+        orphans = [json.loads(line)["source_path"] for line in
+                   (out / "diagnostics.jsonl").read_text(encoding="utf-8").splitlines()
+                   if json.loads(line)["issue"] == "rescored_detail_orphan"]
+        return requests, rescored_ids, payload_ids, orphans
+    return _build
+
+
+@pytest.mark.parametrize("selection,expected", [
+    ({}, {("T0001@2026-01-01", "a"), ("T0002@2026-01-02", "b")}),
+    ({"limit": 1}, {("T0001@2026-01-01", "a")}),
+    ({"date": "2026-01-02"}, {("T0002@2026-01-02", "b")}),
+    ({"benchmark": "company_lists"}, {("T0001@2026-01-01", "a")}),
+])
+def test_rescored_detail_is_limited_to_the_exported_requests(build_with_detail, selection,
+                                                             expected):
+    requests, rescored_ids, payload_ids, orphans = build_with_detail(**selection)
+    assert rescored_ids == payload_ids == expected
+    assert rescored_ids <= requests
+    if ("T0001@2026-01-01", "a") in expected:
+        assert [path.endswith("T0001.json") for path in orphans] == [True], (
+            "detail for a request that no longer exists is diagnosed, not exported")
+    else:
+        assert orphans == [], "an unselected run is out of scope, not orphaned"
+
+
+def test_an_alternate_source_does_not_inherit_unrelated_detail(build_with_detail, tmp_path,
+                                                                make_corpus):
+    source = make_corpus({"2026-01-02": {"T0002": {"requests": {"b": {}}}}},
+                         root="elsewhere")
+    requests, rescored_ids, _payload_ids, orphans = build_with_detail(source=source)
+    assert rescored_ids == {("T0002@2026-01-02", "b")} <= requests
+    assert [path.endswith("T0001.json") for path in orphans] == [True]
+
+
+# --------------------------------------------------------------------------------
+# A source that is not there never replaces a build
+# --------------------------------------------------------------------------------
+
+@pytest.mark.parametrize("kind", ["missing", "file"])
+def test_an_absent_source_leaves_the_existing_build_untouched(tmp_path, kind):
+    from scripts.export_dataset import __main__ as build_module
+    source = tmp_path / "resutls"
+    if kind == "file":
+        source.write_text("not a directory", encoding="utf-8")
+    out = tmp_path / "dataset"
+    for folder in (out, tmp_path / "dataset.staging", tmp_path / "dataset.previous"):
+        folder.mkdir()
+        (folder / "sentinel").write_text(folder.name, encoding="utf-8")
+    before = dict((p, p.read_bytes()) for p in tmp_path.rglob("*") if p.is_file())
+
+    with pytest.raises(FileNotFoundError, match="No source directory"):
+        build_module.main(["--source", str(source), "--out", str(out)])
+    assert dict((p, p.read_bytes()) for p in tmp_path.rglob("*") if p.is_file()) == before
+
+
+def test_an_existing_empty_source_still_builds(build_with_detail, tmp_path):
+    empty = tmp_path / "empty"
+    empty.mkdir()
+    requests, rescored_ids, _payload_ids, _orphans = build_with_detail(source=empty)
+    assert requests == set() and rescored_ids == set()
+
+
+def test_an_unknown_test_id_survives_a_build_with_rescored_detail(build_with_detail,
+                                                                   make_corpus):
+    """Uncovered runs of a known benchmark and of none must share one diagnostic."""
+    source = make_corpus({"2026-01-01": {"T0001": {"requests": {"a": {}}}},
+                          "2026-01-02": {"T0002": {"requests": {"b": {}}},
+                                         "T9999": {"requests": {"c": {}}}},
+                          "2026-01-03": {"T0001": {"requests": {"d": {}}}}},
+                         root="mixed")
+    requests, _rescored_ids, _payload_ids, _orphans = build_with_detail(source=source)
+    assert ("T9999@2026-01-02", "c") in requests

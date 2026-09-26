@@ -276,6 +276,7 @@ def check_sizes(out):
 
 def pack_payloads(dataset, out, version):
     dataset, out = Path(dataset), Path(out)
+    check_paths(source=dataset, out=out)
     payloads = dataset / PAYLOAD_DIR
     if not payloads.is_dir():
         return None
@@ -310,6 +311,9 @@ def main(argv=None):
     if not (dataset / "manifest.json").is_file():
         raise SystemExit("No built dataset at %s. Run `python -m scripts.export_dataset` "
                          "first." % dataset.resolve())
+    # The archive, release tree and SHA256SUMS all land under `out`: one check covers them,
+    # and it must precede the first write.
+    check_paths(source=dataset, out=out)
     manifest = json.loads((dataset / "manifest.json").read_bytes().decode("utf-8"))
     version = manifest.get("dataset_version") or "unknown"
 

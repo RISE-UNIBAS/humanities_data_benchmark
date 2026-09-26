@@ -145,6 +145,42 @@ def test_f02_a_normal_destination_is_allowed():
     assert P.check(source="results", out="dataset", staging="dataset.staging")
 
 
+@pytest.mark.parametrize("role", ["out", "staging", "previous"])
+@pytest.mark.parametrize("destination", [
+    "collected_results/compare_detail",
+    "collected_results/compare_detail/2026-01-01",
+    "collected_results",
+    "scripts",
+])
+def test_a_destination_may_not_equal_enter_or_contain_an_input(role, destination):
+    from scripts.results_index import PROJECT_ROOT
+    with pytest.raises(P.UnsafePaths, match="the build reads"):
+        P.check(source=PROJECT_ROOT / "results", **{role: PROJECT_ROOT / destination})
+
+
+@pytest.mark.parametrize("destination", ["collected_results/other", "scripts/export"])
+def test_a_sibling_of_an_input_is_allowed(destination):
+    from scripts.results_index import PROJECT_ROOT
+    assert P.check(source=PROJECT_ROOT / "results", out=PROJECT_ROOT / destination)
+
+
+def test_a_destination_containing_an_input_is_refused_before_the_build_writes(
+        tmp_path, monkeypatch):
+    """Against a stand-in input, so a regression cannot reach the real one."""
+    from scripts.export_dataset import __main__ as build_module
+    parent = tmp_path / "collected"
+    protected = parent / "compare_detail"
+    protected.mkdir(parents=True)
+    (protected / "sentinel").write_text("intact", encoding="utf-8")
+    monkeypatch.setattr(P, "PROTECTED_INPUTS", (protected,))
+    before = sorted(p.relative_to(tmp_path) for p in tmp_path.rglob("*"))
+
+    with pytest.raises(P.UnsafePaths, match="contains"):
+        build_module.build(source=tmp_path / "results", out=parent)
+    assert sorted(p.relative_to(tmp_path) for p in tmp_path.rglob("*")) == before
+    assert (protected / "sentinel").read_text(encoding="utf-8") == "intact"
+
+
 def test_f02_refusal_happens_before_anything_is_deleted(tmp_path):
     """A sentinel proves the input survived, which is the whole point of checking early."""
     from scripts import package_dataset as PD

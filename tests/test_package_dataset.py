@@ -22,6 +22,7 @@ import json
 import pytest
 
 from scripts import package_dataset as P
+from scripts.export_dataset.paths import UnsafePaths
 
 
 @pytest.fixture(autouse=True)
@@ -183,6 +184,31 @@ def test_a_development_package_is_labelled_and_not_told_to_deposit(built, tmp_pa
     out = capsys.readouterr().out
     assert (dist / "release-development").is_dir()
     assert "deposit" not in out and "Not releasable" in out
+
+
+def _snapshot(root):
+    return dict((p.relative_to(root).as_posix(), p.read_bytes())
+                for p in sorted(root.rglob("*")) if p.is_file())
+
+
+@pytest.mark.parametrize("flags", [[], ["--development"]])
+@pytest.mark.parametrize("out", ["dataset", "dataset/dist", "."])
+def test_an_overlapping_out_is_refused_before_anything_is_written(built, tmp_path, out,
+                                                                   flags):
+    """Payloads enabled: the archive was the write that used to precede the check."""
+    (tmp_path / "SHA256SUMS").write_text("existing output", encoding="utf-8")
+    before = _snapshot(tmp_path)
+    with pytest.raises(UnsafePaths):
+        P.main(["--dataset", str(built), "--out", str(tmp_path / out)] + flags)
+    assert _snapshot(tmp_path) == before
+    assert P.verify_inputs(built, json.loads((built / "manifest.json").read_text())) == []
+
+
+def test_pack_payloads_refuses_an_archive_inside_its_source(built):
+    before = _snapshot(built)
+    with pytest.raises(UnsafePaths):
+        P.pack_payloads(built, built, "2026-09-09.2")
+    assert _snapshot(built) == before
 
 
 def test_a_missing_dataset_is_refused_with_a_usable_message(tmp_path):

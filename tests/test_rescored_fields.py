@@ -227,3 +227,52 @@ def test_undated_detail_cannot_be_judged_and_says_so():
     assert "rescored_detail_undated" in issues
     assert "rescored_detail_stale" not in issues, (
         "without a generation date there is nothing to compare the run date against")
+
+
+# --- restriction to the exported requests ----------------------------------------
+
+def _record(run_id, object_id, source="compare_detail/x.json"):
+    return {"run_id": run_id, "object_id": object_id, "source_path": source}
+
+
+def _restrict(requests, partial, records):
+    return rescored.restrict([dict(r) for r in records], [dict(r) for r in records],
+                             [{"run_id": run, "object_id": obj} for run, obj in requests],
+                             partial)
+
+
+def test_only_records_that_join_to_an_exported_request_are_kept():
+    rows, payloads, diagnostics = _restrict(
+        [("T0001@2026-01-01", "a")], False,
+        [_record("T0001@2026-01-01", "a"), _record("T0002@2026-01-02", "b")])
+    assert [(r["run_id"], r["object_id"]) for r in rows] == [("T0001@2026-01-01", "a")]
+    assert [(p["run_id"], p["object_id"]) for p in payloads] == [("T0001@2026-01-01", "a")]
+    assert list(_issues(diagnostics)) == ["rescored_detail_orphan"]
+
+
+def test_an_unselected_run_is_out_of_scope_not_orphaned():
+    _rows, _payloads, diagnostics = _restrict(
+        [("T0001@2026-01-01", "a")], True, [_record("T0002@2026-01-02", "b")])
+    assert diagnostics == []
+
+
+def test_detail_for_a_removed_request_is_orphaned_even_in_a_partial_build():
+    rows, _payloads, diagnostics = _restrict(
+        [("T0001@2026-01-01", "a")], True,
+        [_record("T0001@2026-01-01", "a"), _record("T0001@2026-01-01", "gone")])
+    assert [r["object_id"] for r in rows] == ["a"]
+    assert list(_issues(diagnostics)) == ["rescored_detail_orphan"]
+    assert diagnostics[0]["handling"].startswith("1 input(s)")
+
+
+@pytest.mark.parametrize("rescored_date", ["2026-09-14", None])
+def test_uncovered_runs_with_and_without_a_benchmark_are_counted_together(rescored_date):
+    runs = [_run("T0001", "2026-01-01"), _run("T0002", "2026-01-01"),
+            _run("T9999", "2026-01-01", benchmark=None)]
+    diagnostics = _issues(rescored.coverage_diagnostics(
+        [_row("T0001@2026-01-01", rescored_date)], runs, set()))
+    if rescored_date:
+        handling = diagnostics["rescored_detail_incomplete"]["handling"]
+        assert "library_cards 1" in handling and "unresolved benchmark 1" in handling
+    else:
+        assert "rescored_detail_undated" in diagnostics

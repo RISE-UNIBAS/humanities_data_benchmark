@@ -1,22 +1,25 @@
 """Validate source and output paths before dataset filesystem operations.
 
 Reject identical or nested paths assigned to different roles, including source,
-output, staging, and backup. Reject writable destinations inside the protected
-results, benchmark, and shared-data directories.
+output, staging, and backup. Reject writable destinations that equal, lie inside,
+or contain a protected input: results, benchmarks, shared data, and the
+comparison-detail artifacts.
 
 Resolve paths before comparison to account for relative paths and filesystem
 links. Builders call these checks before creating or replacing output directories.
 """
 from pathlib import Path
 
-from scripts.results_index import BENCHMARKS_PATH, PROJECT_ROOT, RESULTS_PATH
+from scripts.results_index import (BENCHMARKS_PATH, COLLECTED_RESULTS_PATH, PROJECT_ROOT,
+                                   RESULTS_PATH)
 
 PROTECTED_INPUTS = (
     RESULTS_PATH,
     BENCHMARKS_PATH,
     PROJECT_ROOT / "scripts" / "data",
+    COLLECTED_RESULTS_PATH / "compare_detail",
 )
-"""Repository input directories that cannot contain generated output destinations."""
+"""Repository inputs that no generated output destination may equal, enter, or contain."""
 
 
 class UnsafePaths(RuntimeError):
@@ -65,9 +68,14 @@ def check(**paths):
     for name, path in writable:
         for protected in PROTECTED_INPUTS:
             resolved_protected = _resolved(protected)
-            if _contains(resolved_protected, path) or path == resolved_protected:
+            if _contains(resolved_protected, path):
                 raise UnsafePaths(
                     "%s (%s) is inside %s, which the build reads. Generated output must "
                     "never replace the stored corpus -- results/ in particular cannot be "
                     "regenerated." % (name, path, resolved_protected))
+            if _contains(path, resolved_protected):
+                raise UnsafePaths(
+                    "%s (%s) contains %s, which the build reads. Publishing replaces the "
+                    "whole destination, so the input would be deleted with it."
+                    % (name, path, resolved_protected))
     return True

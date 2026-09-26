@@ -70,6 +70,10 @@ def build(source=RESULTS_PATH, out=DATASET_PATH, date=None, benchmark=None, limi
     previous = out.with_name(out.name + ".previous")
     # Before any mkdir or rmtree: a refusal must leave the filesystem untouched.
     check_paths(source=source, out=out, staging=staging, previous=previous)
+    # The reader yields no runs for a missing root, which would publish an empty build.
+    if not Path(source).is_dir():
+        raise FileNotFoundError("No source directory at %s; refusing to replace %s with "
+                                "an empty build." % (Path(source).resolve(), out))
 
     if staging.exists():
         shutil.rmtree(staging)
@@ -107,6 +111,11 @@ def build(source=RESULTS_PATH, out=DATASET_PATH, date=None, benchmark=None, limi
     else:
         print("  none: collected_results/compare_detail/ is absent, so the dataset's "
               "field detail covers only the benchmarks that recorded it at run time")
+    rescored_rows, rescored_payloads, restrict_diagnostics = rescored.restrict(
+        rescored_rows, rescored_payloads, extractor.requests, partial)
+    rescored_diagnostics += restrict_diagnostics
+    print("  %d observations from %d inputs join to exported requests"
+          % (len(rescored_rows), len(rescored_payloads)))
     rescored_diagnostics += rescored.coverage_diagnostics(
         rescored_rows, extractor.runs,
         set(s["run_id"] for s in extractor.scores if s.get("level") == "field"))
