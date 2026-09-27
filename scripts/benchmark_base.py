@@ -13,6 +13,7 @@ from typing import Dict, List, Union, Pattern, Optional, Iterable, Set
 from data_loader import read_file, write_file
 from ai_client import create_ai_client, LLMResponse, Usage
 from ai_client.pricing import apply_costs, set_pricing_file
+import ai_client.openai_client as _openai_client
 from local import is_local_provider, get_backend
 from local.backends.base import LocalRequest
 
@@ -24,6 +25,11 @@ if _PRICING_FILE.exists():
 else:
     logger.warning("Pricing table not found at %s; falling back to the ai_client bundled "
                    "table, which may not price newer models at all.", _PRICING_FILE)
+
+# gpt-6 accepts only its default temperature; unlisted, every request is refused once before the
+# client retries without it. Drop once generic-llm-api-client lists the family itself.
+if "gpt-6" not in _openai_client.FIXED_TEMPERATURE_FAMILIES:
+    _openai_client.FIXED_TEMPERATURE_FAMILIES += ("gpt-6",)
 
 
 DEFAULT_MAX_OUTPUT_TOKENS = 16384
@@ -366,6 +372,9 @@ class Benchmark(ABC):
         kwargs = {
             "temperature": self.temperature
         }
+        # The client strips it on the chat path only; the Responses path sends it regardless.
+        if self.provider == "openai" and _openai_client.OpenAIClient._rejects_custom_temperature(self.model):
+            del kwargs["temperature"]
         image_paths = self.get_image_paths(object_basename)
         text_paths = self.get_text_paths(object_basename)
         prompt = self.load_prompt(object_basename)  # local var avoids race condition in parallel runs

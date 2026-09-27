@@ -72,6 +72,8 @@ class PricingUpdater:
         'gpt-5.6-terra':       'https://developers.openai.com/api/docs/models/gpt-5.6-terra',
         'gpt-5.6-luna':        'https://developers.openai.com/api/docs/models/gpt-5.6-luna',
         'gpt-6-astra':         'https://developers.openai.com/api/docs/models/gpt-6-astra',
+        'gpt-6-sol':           'https://developers.openai.com/api/docs/models/gpt-6-sol',
+        'gpt-6-luna':          'https://developers.openai.com/api/docs/models/gpt-6-luna',
         'o3':                  'https://developers.openai.com/api/docs/models/o3',
     }
 
@@ -956,6 +958,7 @@ Return only JSON:"""
         'grok-4.3':                 'https://docs.x.ai/developers/models/grok-4.3',
         'grok-4.5':                 'https://docs.x.ai/developers/models/grok-4.5',
         'grok-4.6':                 'https://docs.x.ai/developers/models/grok-4.6',
+        'grok-4.7':                 'https://docs.x.ai/developers/models/grok-4.7',
     }
 
     ALIBABA_MODEL_URLS = {
