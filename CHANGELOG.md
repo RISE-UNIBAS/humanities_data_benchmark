@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [v0.6.1-pre] - Unreleased
+## [v0.6.1] - 2026-09-29
 
 ### Added
 - 6 new models: `claude-opus-5-5`, `claude-sonnet-5-5` (Anthropic), `gpt-6-sol`, `gpt-6-luna` (OpenAI), `grok-4.7` (x-ai) and `Qwen3.8-Flash-Next-FP8` (sciCORE), with 90 benchmark test configurations (T1795-T1884); `pricing.json` metadata bumped to version 1.55.
@@ -364,4 +364,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [v0.5.4]: https://github.com/RISE-UNIBAS/humanities_data_benchmark/releases/tag/v0.5.4
 [v0.5.5]: https://github.com/RISE-UNIBAS/humanities_data_benchmark/releases/tag/v0.5.5
 [v0.6.0]: https://github.com/RISE-UNIBAS/humanities_data_benchmark/releases/tag/v0.6.0
-[v0.6.1-pre]: https://github.com/RISE-UNIBAS/humanities_data_benchmark/releases/tag/v0.6.1-pre
+[v0.6.1]: https://github.com/RISE-UNIBAS/humanities_data_benchmark/releases/tag/v0.6.1
