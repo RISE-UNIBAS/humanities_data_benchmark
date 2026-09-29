@@ -80,6 +80,8 @@ FATAL_ERROR_MARKERS = (
     "Error code: 401",
     "Error code: 403",
     "Insufficient credits",
+    # Anthropic reports an empty balance as a 400, not a 402.
+    "credit balance is too low",
     "invalid_api_key",
 )
 
