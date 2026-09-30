@@ -1,0 +1,113 @@
+{
+    "text": "{\"type\":{\"type\":\"Reference\"},\"author\":{\"last_name\":\"van der Loeff\",\"first_name\":\"Michael Rutgers\"},\"publication\":{\"title\":\"\",\"year\":\"\",\"place\":\"\",\"pages\":\"\",\"publisher\":\"\",\"format\":\"\",\"editor\":\"\"},\"library_reference\":{\"shelfmark\":\"\",\"subjects\":\"\"}}",
+    "model": "Qwen3.8-Flash-Next-FP8",
+    "provider": "scicore",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 1094,
+        "output_tokens": 819,
+        "total_tokens": 1913,
+        "reasoning_tokens": 0,
+        "input_cost_usd": 0.0,
+        "output_cost_usd": 0.0,
+        "reasoning_cost_usd": 0.0,
+        "estimated_cost_usd": 0.0
+    },
+    "duration": 6.7443132400512695,
+    "timestamp": "2026-09-29T21:39:47.054806",
+    "parsed": {
+        "type": {
+            "type": "Reference"
+        },
+        "author": {
+            "last_name": "van der Loeff",
+            "first_name": "Michael Rutgers"
+        },
+        "publication": {
+            "title": "",
+            "year": "",
+            "place": "",
+            "pages": "",
+            "publisher": "",
+            "format": "",
+            "editor": ""
+        },
+        "library_reference": {
+            "shelfmark": "",
+            "subjects": ""
+        }
+    },
+    "conversation_id": "f6e9825a-94dd-4712-a0dd-64737f26af77",
+    "score": {
+        "f1_score": 0.33,
+        "precision": 0.3333333333333333,
+        "recall": 0.3333333333333333,
+        "true_positives": 1,
+        "false_positives": 2,
+        "false_negatives": 2,
+        "field_scores": {
+            "publication.place": {
+                "response": null,
+                "ground_truth": null,
+                "score": 1.0
+            },
+            "type.type": {
+                "response": "Reference",
+                "ground_truth": "Reference",
+                "score": 1.0
+            },
+            "publication.year": {
+                "response": null,
+                "ground_truth": null,
+                "score": 1.0
+            },
+            "author.first_name": {
+                "response": "Michael Rutgers",
+                "ground_truth": "Michael",
+                "score": 0.6363636363636364
+            },
+            "publication.title": {
+                "response": null,
+                "ground_truth": null,
+                "score": 1.0
+            },
+            "library_reference.shelfmark": {
+                "response": null,
+                "ground_truth": null,
+                "score": 1.0
+            },
+            "library_reference.subjects": {
+                "response": null,
+                "ground_truth": null,
+                "score": 1.0
+            },
+            "publication.format": {
+                "response": null,
+                "ground_truth": null,
+                "score": 1.0
+            },
+            "author.last_name": {
+                "response": "van der Loeff",
+                "ground_truth": "Rutgers van der Loeff",
+                "score": 0.7647058823529411
+            },
+            "publication.pages": {
+                "response": null,
+                "ground_truth": null,
+                "score": 1.0
+            },
+            "publication.editor": {
+                "response": null,
+                "ground_truth": null,
+                "score": 1.0
+            },
+            "publication.publisher": {
+                "response": null,
+                "ground_truth": null,
+                "score": 1.0
+            }
+        },
+        "total_fields": 12
+    },
+    "raw_response": "{\"id\":\"chatcmpl-aed9cb08234d373c\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\n  \\\"type\\\": {\\n    \\\"type\\\": \\\"Reference\\\"\\n  },\\n  \\\"author\\\": {\\n    \\\"last_name\\\": \\\"van der Loeff\\\",\\n    \\\"first_name\\\": \\\"Michael Rutgers\\\"\\n  },\\n  \\\"publication\\\": {\\n    \\\"title\\\": \\\"\\\",\\n    \\\"year\\\": \\\"\\\",\\n    \\\"place\\\": \\\"\\\",\\n    \\\"pages\\\": \\\"\\\",\\n    \\\"publisher\\\": \\\"\\\",\\n    \\\"format\\\": \\\"\\\"\\n  ,\\n    \\\"editor\\\": \\\"\\\"\\n  },\\n  \\\"library_reference\\\": {\\n    \\\"shelfmark\\\": \\\"\\\",\\n    \\\"subjects\\\": \\\"\\\"\\n  }\\n}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"type\":{\"type\":\"Reference\"},\"author\":{\"last_name\":\"van der Loeff\",\"first_name\":\"Michael Rutgers\"},\"publication\":{\"title\":\"\",\"year\":\"\",\"place\":\"\",\"pages\":\"\",\"publisher\":\"\",\"format\":\"\",\"editor\":\"\"},\"library_reference\":{\"shelfmark\":\"\",\"subjects\":\"\"}},\"reasoning\":\"Thinking Process:\\n1.  **Analyze the Request:**\\n    *   Goal: Extract bibliographic info from an index card into a specific JSON structure.\\n    *   Input: An image of an index card.\\n    *   Rules:\\n        *   Type: \\\"Reference\\\" if \\\"s.\\\" is on a separate line, else \\\"Dissertation or thesis\\\".\\n        *   Author: `last_name`, `first_name`.\\n        *   Publication: `title`, `year` (integer), `place`, `pages`, `publisher`, `format`.\\n        *   Library Reference: `shelfmark`, `subjects`.\\n        *   Missing info: empty string `\\\"\\\"` for text, omit `year` if missing.\\n        *   Ignore irrelevant info.\\n        *   Output: ONLY JSON.\\n\\n2.  **Analyze the Image:**\\n    *   Line 1: `van der Loeff, Michael Rutgers`\\n    *   Line 2: `s.`\\n    *   Line 3: `Rutgers van der Loeff, Michael`\\n    *   Bottom: A black dot (likely a punch hole or artifact).\\n\\n3.  **Apply Extraction Rules:**\\n    *   **Type:** The card contains \\\"s.\\\" on a separate line. Therefore, `type` is \\\"Reference\\\".\\n    *   **Author:**\\n        *   Line 1: `van der Loeff, Michael Rutgers` -> `last_name`: \\\"van der Loeff\\\", `first_name`: \\\"Michael Rutgers\\\".\\n        *   Line 3: `Rutgers van der Loeff, Michael` -> This is a cross-reference. The primary author entry is usually the first one. Let's use the first one.\\n    *   **Publication:**\\n        *   `title`: Not present.\\n        *   `year`: Not present. (Omit entirely).\\n        *   `place`: Not present.\\n        *   `pages`: Not present.\\n        *   `publisher`: Not present.\\n        *   `format`: Not present.\\n    *   **Library Reference:**\\n        *   `shelfmark`: Not present.\\n        *   `subjects`: Not present.\\n\\n4.  **Construct JSON:**\\n    ```json\\n    {\\n      \\\"type\\\": {\\n        \\\"type\\\": \\\"Reference\\\"\\n      },\\n      \\\"author\\\": {\\n        \\\"last_name\\\": \\\"van der Loeff\\\",\\n        \\\"first_name\\\": \\\"Michael Rutgers\\\"\\n      },\\n      \\\"publication\\\": {\\n        \\\"title\\\": \\\"\\\",\\n        \\\"place\\\": \\\"\\\",\\n        \\\"pages\\\": \\\"\\\",\\n        \\\"publisher\\\": \\\"\\\",\\n        \\\"format\\\": \\\"\\\"\\n      },\\n      \\\"library_reference\\\": {\\n        \\\"shelfmark\\\": \\\"\\\",\\n        \\\"subjects\\\": \\\"\\\"\\n      }\\n    }\\n    ```\\n\\n5.  **Review against constraints:**\\n    *   Exact format? Yes.\\n    *   Type correct? Yes (\\\"Reference\\\" due to \\\"s.\\\").\\n    *   Author correct? Yes.\\n    *   Missing info handled? Yes, empty strings used, `year` omitted.\\n    *   ONLY JSON? Yes.\\n\\n6.  **Final Output Generation:** (Produce the JSON block).\\n\"},\"stop_reason\":null,\"token_ids\":null,\"routed_experts\":null}],\"created\":1790710780,\"model\":\"Qwen3.8-Flash-Next-FP8\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":\"vllm-0.29.0-tp4-ep-873e7112\",\"usage\":{\"completion_tokens\":819,\"prompt_tokens\":1094,\"total_tokens\":1913,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":null,\"reasoning_tokens\":689,\"rejected_prediction_tokens\":null},\"prompt_tokens_details\":null},\"prompt_logprobs\":null,\"prompt_token_ids\":null,\"prompt_text\":null,\"kv_transfer_params\":null,\"ec_transfer_params\":null,\"metrics\":null}"
+}
