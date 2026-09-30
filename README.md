@@ -246,6 +246,8 @@ This benchmark suite currently tests models from the following providers:
 | | claude-fable-5                            | Claude Fable 5                                             |
 | | claude-fable-5-1                          | Claude Fable 5.1                                           |
 | | claude-opus-5                             | Claude Opus 5                                              |
+| | claude-opus-5-5                           | Claude Opus 5.5                                            |
+| | claude-sonnet-5-5                         | Claude Sonnet 5.5                                          |
 | **Cohere** | command-a-03-2025                         | Command A (Mar 2025)                                       |
 | | command-a-vision-07-2025                  | Command A Vision (Jul 2025); multimodal                    |
 | | command-r-08-2024                         | Command R (Aug 2024)                                       |
@@ -316,6 +318,8 @@ This benchmark suite currently tests models from the following providers:
 | | gpt-5.6-terra                             | GPT-5.6 Terra                                              |
 | | gpt-5.6-luna                              | GPT-5.6 Luna                                               |
 | | gpt-6-astra                               | GPT-6 Astra                                                |
+| | gpt-6-sol                                 | GPT-6 Sol                                                  |
+| | gpt-6-luna                                | GPT-6 Luna                                                 |
 | | gpt-5-mini                                | GPT-5 Mini                                                 |
 | | gpt-5-nano                                | GPT-5 Nano                                                 |
 | | o3                                        | OpenAI o3; reasoning                                       |
@@ -348,11 +352,13 @@ This benchmark suite currently tests models from the following providers:
 | | z-ai/glm-5.3-flash                        | GLM-5.3 Flash (Z.ai); multimodal                           |
 | **sciCORE** | ~~GLM-4.5V-FP8~~                              | ~~GLM-4.5V, FP8 quantization; multimodal (Univ. of Basel HPC)~~ (legacy) |
 | | ~~qwen3-235b-fp8~~                            | ~~Qwen3 235B, FP8 quantization (Univ. of Basel HPC)~~ (legacy)          |
-| | qwen35-397b-a17b-fp8                      | Qwen3.5 397B-A17B, FP8 quantization (Univ. of Basel HPC)   |
+| | ~~qwen35-397b-a17b-fp8~~                  | ~~Qwen3.5 397B-A17B, FP8 quantization (Univ. of Basel HPC)~~ (legacy) |
+| | Qwen3.8-Flash-Next-FP8                    | Qwen3.8 Flash Next, FP8 quantization (Univ. of Basel HPC)  |
 | **xAI** | grok-4.20-0309-reasoning                  | Grok 4.20; reasoning                                       |
 | | grok-4.3                                  | Grok 4.3                                                   |
 | | grok-4.5                                  | Grok 4.5; multimodal                                       |
 | | grok-4.6                                  | Grok 4.6; multimodal                                       |
+| | grok-4.7                                  | Grok 4.7; multimodal                                       |
 
 **Note:** OpenRouter provides access to models from multiple providers through a unified API. Hugging Face routes to third-party inference providers through an OpenAI-compatible API; the suffix on each model name pins the provider that serves it (`:publicai`, `:deepinfra`, `:together`), so that the price and the routing of a benchmark run are reproducible. sciCORE provides access to models hosted on the University of Basel's high-performance computing infrastructure.
 

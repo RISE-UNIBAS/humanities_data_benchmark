@@ -4,7 +4,8 @@ from types import SimpleNamespace
 
 import pytest
 
-from ai_client import Usage
+from ai_client import LLMResponse, Usage
+from ai_client import pricing as ai_pricing
 from benchmark_base import Benchmark
 
 
@@ -115,3 +116,93 @@ class TestCalculateCost:
             "output_cost_usd": 0.0,
             "total_cost_usd": 0.0,
         }
+
+
+class TestCalculateCostReasoning:
+    def test_reasoning_is_totalled_beside_the_existing_keys(self):
+        answers = [
+            _answer(input_tokens=10, output_tokens=5, reasoning_tokens=100,
+                    reasoning_cost_usd=0.01, estimated_cost_usd=0.02),
+            _answer(input_tokens=10, output_tokens=5, reasoning_tokens=0,
+                    reasoning_cost_usd=0.0, estimated_cost_usd=0.01),
+        ]
+        result = Benchmark.calculate_cost(answers)
+        assert result["total_reasoning_tokens"] == 100
+        assert result["reasoning_cost_usd"] == pytest.approx(0.01)
+        assert result["total_tokens"] == 30, "total_tokens stays input + output"
+        assert result["total_cost_usd"] == pytest.approx(0.03)
+
+    def test_unpriced_reasoning_is_null_not_free(self):
+        result = Benchmark.calculate_cost([_answer(input_tokens=1, reasoning_tokens=50)])
+        assert result["total_reasoning_tokens"] == 50
+        assert result["reasoning_cost_usd"] is None
+
+    def test_no_reasoning_adds_no_keys(self):
+        result = Benchmark.calculate_cost([_answer(input_tokens=1, reasoning_tokens=0)])
+        assert "total_reasoning_tokens" not in result and "reasoning_cost_usd" not in result
+
+
+class _Stored(Benchmark):
+    """Enough of a Benchmark to reload an answer file."""
+
+    def score_request_answer(self, object_basename, response, ground_truth):
+        return {}
+
+    def score_benchmark(self, all_scores):
+        return {}
+
+
+@pytest.fixture
+def stored(tmp_path, monkeypatch):
+    """Write a request file as save_request_answer would, and reload it."""
+    table = tmp_path / "pricing.json"
+    table.write_text('{"pricing": {"2026-09-01": {"huggingface": {"org/Model:prov": '
+                     '{"input_price": 1.0, "output_price": 2.0}}}}}', encoding="utf-8")
+    monkeypatch.setattr(ai_pricing, "_pricing_manager", ai_pricing.PricingManager(str(table)))
+
+    benchmark = _Stored.__new__(_Stored)
+    benchmark.provider, benchmark.model = "huggingface", "org/Model:prov"
+    path = tmp_path / "request.json"
+    monkeypatch.setattr(benchmark, "get_request_answer_file_name", lambda name: str(path))
+
+    def _reload(usage, model="org/model-echoed"):
+        answer = LLMResponse(text="{}", model=model, provider="huggingface",
+                             finish_reason="stop", usage=usage, raw_response={})
+        path.write_text(__import__("json").dumps(dict(answer.to_dict(), score={"f1": 1})),
+                        encoding="utf-8")
+        reloaded, score = benchmark.load_saved_answer("object")
+        assert score == {"f1": 1}
+        return reloaded.usage
+    return _reload
+
+
+class TestLoadSavedAnswer:
+    def test_every_recorded_field_survives_a_resume(self, stored):
+        original = Usage(input_tokens=10, output_tokens=5, total_tokens=115, reasoning_tokens=100,
+                         cache_creation_tokens=7, cache_read_tokens=3, input_cost_usd=0.1,
+                         output_cost_usd=0.2, reasoning_cost_usd=0.3, estimated_cost_usd=0.6,
+                         attempts=2, discarded_input_tokens=9, discarded_output_tokens=4,
+                         discarded_cost_usd=0.05)
+        assert stored(original) == original
+
+    def test_a_billed_total_without_components_is_not_repriced(self, stored):
+        usage = stored(Usage(input_tokens=1000, output_tokens=1000, total_tokens=2000,
+                             estimated_cost_usd=0.1234), model="org/Model:prov")
+        assert usage.estimated_cost_usd == 0.1234
+        assert usage.input_cost_usd is None and usage.output_cost_usd is None
+
+    def test_a_stored_total_is_what_the_run_observed(self, stored):
+        usage = stored(Usage(input_tokens=1000, output_tokens=1000, total_tokens=2000,
+                             input_cost_usd=0.5, output_cost_usd=0.5, estimated_cost_usd=1.0))
+        assert usage.estimated_cost_usd == 1.0
+
+    def test_a_missing_total_is_priced_on_the_configured_model(self, stored):
+        usage = stored(Usage(input_tokens=1000, output_tokens=1000, total_tokens=3000,
+                             reasoning_tokens=1000))
+        assert usage.estimated_cost_usd == pytest.approx((1000 * 1 + 1000 * 2 + 1000 * 2) / 1e6)
+        assert usage.reasoning_cost_usd == pytest.approx(0.002)
+
+    def test_a_pre_0_5_record_still_loads(self, stored):
+        usage = stored(Usage(input_tokens=1000, output_tokens=1000, total_tokens=2000))
+        assert usage.reasoning_tokens is None
+        assert usage.estimated_cost_usd == pytest.approx(0.003)

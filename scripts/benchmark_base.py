@@ -11,18 +11,13 @@ from datetime import datetime
 from pathlib import Path
 from typing import Dict, List, Union, Pattern, Optional, Iterable, Set
 from data_loader import read_file, write_file
-from ai_client import create_ai_client, LLMResponse, Usage, deepseek_client
-from ai_client.pricing import calculate_cost, set_pricing_file
+from ai_client import create_ai_client, LLMResponse, Usage
+from ai_client.pricing import apply_costs, set_pricing_file
+import ai_client.openai_client as _openai_client
 from local import is_local_provider, get_backend
 from local.backends.base import LocalRequest
 
 logger = logging.getLogger(__name__)
-
-# TODO: hotfix, to be fixed in generic-llm-api-client
-# 0.4.6 ships ("vl", "vision"), which misses deepseek-flash.
-DEEPSEEK_VISION_MODEL_KEYWORDS = ("deepseek-flash",)
-deepseek_client._VISION_MODEL_KEYWORDS = tuple(dict.fromkeys(
-    deepseek_client._VISION_MODEL_KEYWORDS + DEEPSEEK_VISION_MODEL_KEYWORDS))
 
 _PRICING_FILE = Path(__file__).parent / "data" / "pricing.json"
 if _PRICING_FILE.exists():
@@ -31,42 +26,10 @@ else:
     logger.warning("Pricing table not found at %s; falling back to the ai_client bundled "
                    "table, which may not price newer models at all.", _PRICING_FILE)
 
-
-# TODO: hotfix, to be fixed in generic-llm-api-client
-def _send_cap_as_max_completion_tokens(client):
-    """Rename max_tokens to max_completion_tokens on OpenAI's chat endpoints.
-
-    gpt-5 and newer 400 on max_tokens; ai_client 0.4.6 hard-codes the name. Remove once
-    the library sends the parameter the chat endpoint expects.
-    """
-    api_client = getattr(client, "api_client", None)
-    if api_client is None:
-        return
-    endpoints = []
-    for attribute in ("chat", "beta"):
-        section = getattr(api_client, attribute, None)
-        completions = getattr(getattr(section, "chat", section), "completions", None)
-        if completions is not None:
-            endpoints.append(completions)
-
-    for endpoint in endpoints:
-        for method_name in ("create", "parse"):
-            original = getattr(endpoint, method_name, None)
-            if original is None or getattr(original, "_renames_token_cap", False):
-                continue
-
-            def renaming(*args, _original=original, **kwargs):
-                if "max_tokens" in kwargs:
-                    kwargs["max_completion_tokens"] = kwargs.pop("max_tokens")
-                return _original(*args, **kwargs)
-
-            renaming._renames_token_cap = True
-            try:
-                setattr(endpoint, method_name, renaming)
-            except AttributeError:
-                logger.warning("Could not rename max_tokens on %s.%s; gpt-5 class models "
-                               "will fail with 400 Unsupported parameter",
-                               type(endpoint).__name__, method_name)
+# gpt-6 accepts only its default temperature; unlisted, every request is refused once before the
+# client retries without it. Drop once generic-llm-api-client lists the family itself.
+if "gpt-6" not in _openai_client.FIXED_TEMPERATURE_FAMILIES:
+    _openai_client.FIXED_TEMPERATURE_FAMILIES += ("gpt-6",)
 
 
 DEFAULT_MAX_OUTPUT_TOKENS = 16384
@@ -117,6 +80,8 @@ FATAL_ERROR_MARKERS = (
     "Error code: 401",
     "Error code: 403",
     "Insufficient credits",
+    # Anthropic reports an empty balance as a 400, not a 402.
+    "credit balance is too low",
     "invalid_api_key",
 )
 
@@ -155,11 +120,10 @@ class Benchmark(ABC):
         except (ValueError, TypeError):
             self.temperature = 0.5
 
-        # TODO: hotfix, to be fixed in generic-llm-api-client
+        # These models accept a custom temperature, but every stored result of theirs was
+        # produced at 1; overriding the CSV keeps new runs comparable with them.
         if self.model in ["gpt-5", "gpt-5-mini", "gpt-5-nano", "gpt-5.1-2025-11-13", "gpt-5.2", "o3", "gpt-5.5-2026-04-23", "gpt-5.3-codex", "gpt-5.6-sol", "gpt-5.6-terra", "gpt-5.6-luna", "gpt-6-astra"]:
             self.temperature = 1
-        if self.model in ["claude-opus-4-7", "claude-opus-4-8", "claude-sonnet-5", "claude-fable-5", "claude-fable-5-1", "claude-opus-5"]:
-            self.temperature = None
 
         # Prompt
         if self.prompt_file is None or self.prompt_file == "":
@@ -208,8 +172,6 @@ class Benchmark(ABC):
                                            system_prompt=self.role_description,
                                            base_url=base_url,
                                            **kwargs)
-            if self.provider == "openai":
-                _send_cap_as_max_completion_tokens(self.client)
 
         # Shared context support (for multi-stage requests)
         self.conversation_id = None  # Track conversation for subsequent requests
@@ -412,6 +374,9 @@ class Benchmark(ABC):
         kwargs = {
             "temperature": self.temperature
         }
+        # The client strips it on the chat path only; the Responses path sends it regardless.
+        if self.provider == "openai" and _openai_client.OpenAIClient._rejects_custom_temperature(self.model):
+            del kwargs["temperature"]
         image_paths = self.get_image_paths(object_basename)
         text_paths = self.get_text_paths(object_basename)
         prompt = self.load_prompt(object_basename)  # local var avoids race condition in parallel runs
@@ -473,33 +438,18 @@ class Benchmark(ABC):
             answer_data = json.loads(answer_json_str)
             score = answer_data.get('score', None)
 
-            # Reconstruct Usage object
-            usage_data = answer_data.get('usage', {})
+            # Every stored Usage field, so reasoning, cache and discarded-attempt counts
+            # survive a resume.
+            usage_data = answer_data.get('usage') or {}
+            usage = Usage(**{key: value for key, value in usage_data.items()
+                             if key in Usage.__dataclass_fields__})
 
-            input_cost = usage_data.get('input_cost_usd')
-            output_cost = usage_data.get('output_cost_usd')
-            estimated_cost = usage_data.get('estimated_cost_usd')
-
-            # Recalculate costs if missing
-            if input_cost is None or output_cost is None or estimated_cost is None:
-                provider = answer_data.get('provider', '')
-                model = answer_data.get('model', '')
-                input_tokens = usage_data.get('input_tokens', 0)
-                output_tokens = usage_data.get('output_tokens', 0)
-
-                cost_result = calculate_cost(provider, model, input_tokens, output_tokens)
-                if cost_result:
-                    input_cost, output_cost, estimated_cost = cost_result
-
-            usage = Usage(
-                input_tokens=usage_data.get('input_tokens', 0),
-                output_tokens=usage_data.get('output_tokens', 0),
-                total_tokens=usage_data.get('total_tokens', 0),
-                cached_tokens=usage_data.get('cached_tokens'),
-                input_cost_usd=input_cost,
-                output_cost_usd=output_cost,
-                estimated_cost_usd=estimated_cost
-            )
+            # Price only a record with no total. A total without components is what the
+            # provider billed, and a stored total is what the run observed: neither is
+            # replaced by today's list price. Priced on the configured model, not the
+            # name the response echoed.
+            if usage.estimated_cost_usd is None:
+                apply_costs(usage, self.provider, self.model)
 
             # Reconstruct LLMResponse object
             timestamp_str = answer_data.get('timestamp')
@@ -814,6 +764,9 @@ class Benchmark(ABC):
         total_input_cost = 0.0
         total_output_cost = 0.0
         total_cost = 0.0
+        total_reasoning_tokens = 0
+        total_reasoning_cost = 0.0
+        reasoning_priced = False
 
         for answer in all_answers:
             if answer is None:
@@ -828,8 +781,13 @@ class Benchmark(ABC):
                 total_output_cost += answer.usage.output_cost_usd
             if answer.usage.estimated_cost_usd:
                 total_cost += answer.usage.estimated_cost_usd
+            total_reasoning_tokens += getattr(answer.usage, 'reasoning_tokens', None) or 0
+            reasoning_cost = getattr(answer.usage, 'reasoning_cost_usd', None)
+            if reasoning_cost is not None:
+                total_reasoning_cost += reasoning_cost
+                reasoning_priced = True
 
-        return {
+        summary = {
             'total_input_tokens': total_input_tokens,
             'total_output_tokens': total_output_tokens,
             'total_tokens': total_input_tokens + total_output_tokens,
@@ -837,6 +795,12 @@ class Benchmark(ABC):
             'output_cost_usd': total_output_cost,
             'total_cost_usd': total_cost,
         }
+        # The shape scripts/backfill_costs.py wrote into the corpus: present only when there
+        # was reasoning, and a null cost when none of it could be priced, never a free 0.0.
+        if total_reasoning_tokens:
+            summary['total_reasoning_tokens'] = total_reasoning_tokens
+            summary['reasoning_cost_usd'] = total_reasoning_cost if reasoning_priced else None
+        return summary
 
     def get_request_name(self, object_basename: str) -> str:
         """ Get the name of the request. """

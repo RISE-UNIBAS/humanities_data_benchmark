@@ -20,6 +20,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `benchmark_export.json` and `test_runs_export.json`: run order no longer depends on filesystem order.
 - `generate_compare_detail.py`: removes a detail file once its run needs none, instead of keeping a since-fixed scorer error.
 
+## [v0.6.1] - 2026-09-29
+
+### Added
+- 6 new models: `claude-opus-5-5`, `claude-sonnet-5-5` (Anthropic), `gpt-6-sol`, `gpt-6-luna` (OpenAI), `grok-4.7` (x-ai) and `Qwen3.8-Flash-Next-FP8` (sciCORE), with 90 benchmark test configurations (T1795-T1884); `pricing.json` metadata bumped to version 1.55.
+- Results for 2026-09-27: T1810-T1869 (60 tests, 2,596 requests) for `claude-opus-5-5`, `gpt-6-sol`, `gpt-6-luna` and `grok-4.7`; `library_cards` for the gpt-6 models (T1830, T1845) on `prompt_year-string.txt`. Results for 2026-09-29: T1870-T1884, T1675-T1689 and T1810-T1824 (45 tests, 1,947 requests) for `claude-sonnet-5-5`, `claude-fable-5-1` and `claude-opus-5-5` on `generic-llm-api-client` 0.5.2.
+
+### Changed
+- sciCORE moved to `https://ai-api.scicore.unibas.ch/v1`, set per test via `base_url`; `qwen35-397b-a17b-fp8` marked legacy, no longer served.
+
+### Fixed
+- `benchmark_base.py`: `gpt-6` sends no temperature, which it rejects, on the Responses path too; a run stops on Anthropic's credit-balance 400.
+- `library_cards`: new `prompt_year-string.txt` prompt variant asking for `year` as a string; `prompt.txt` asks for an integer the schema forbids, which loops constrained decoding on whitespace.
+- `generic-llm-api-client` 0.5.1 and 0.5.2: reasoning, failed and discarded attempts are recorded and priced, and priced on the requested model, a billed total keeps the provider's own input and output split, and a schema echoed back is a failed parse; resumed runs keep them and never reprice a stored or billed cost. `backfill_costs.py` applies the same split to stored results. Claude models that reject forced tool use get the schema as an optional tool instead of plain text.
+
 ## [v0.6.0] - 2026-09-23
 
 ### Added
@@ -365,3 +379,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [v0.5.4]: https://github.com/RISE-UNIBAS/humanities_data_benchmark/releases/tag/v0.5.4
 [v0.5.5]: https://github.com/RISE-UNIBAS/humanities_data_benchmark/releases/tag/v0.5.5
 [v0.6.0]: https://github.com/RISE-UNIBAS/humanities_data_benchmark/releases/tag/v0.6.0
+
+[v0.6.1]: https://github.com/RISE-UNIBAS/humanities_data_benchmark/releases/tag/v0.6.1

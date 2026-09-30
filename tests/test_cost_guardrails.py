@@ -77,6 +77,8 @@ class TestFatalProviderErrorDetection:
         "Error code: 402 - {'error': {'message': 'Insufficient credits.'}}",
         "Error code: 401 - invalid_api_key",
         "Error code: 403 - forbidden",
+        "Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', "
+        "'message': 'Your credit balance is too low to access the Anthropic API.'}}",
     ])
     def test_unrecoverable_errors_are_fatal(self, message):
         assert bb.Benchmark._is_fatal_provider_error(_error(message)) is True

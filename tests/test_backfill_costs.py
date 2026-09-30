@@ -509,3 +509,97 @@ def test_one_unpriced_request_preserves_a_mixed_run_total(tmp_path, prices):
     s = summary_of(run)
     assert s["total_cost_usd"] == pytest.approx(0.006), "partial sum overwrote the total"
     assert s["total_reasoning_tokens"] == 1000, "the known reasoning is still recorded"
+
+
+# ------------------------------------------------- the components of a billed total
+
+def billed(cost=0.00092005, prompt=0.0002725, completion=0.00064755, stored=None, **usage):
+    """An OpenRouter request: a billed total, no components, the split in raw_response."""
+    raw = {"usage": dict({"prompt_tokens": 2725, "completion_tokens": 4317,
+                          "total_tokens": 7042, "cost": cost,
+                          "cost_details": {"upstream_inference_cost": cost,
+                                           "upstream_inference_prompt_cost": prompt,
+                                           "upstream_inference_completions_cost": completion}},
+                         **usage)}
+    return request_payload(provider="openai", model="qwen/qwen3.5-9b", usage={
+        "input_tokens": 2725, "output_tokens": 4317, "total_tokens": 7042,
+        "estimated_cost_usd": cost if stored is None else stored}, raw_response=raw)
+
+
+def test_a_billed_total_gets_the_providers_own_split(tmp_path, prices):
+    run = make_run(tmp_path / "results", "2026-09-26", "T0983", {"a": billed()})
+    path = os.path.join(run, "request_a.json")
+    bc.main_with_args(make_args(tmp_path / "results", apply=True))
+    usage = usage_of(path)
+    assert usage["input_cost_usd"] == 0.0002725
+    assert usage["output_cost_usd"] == 0.00064755
+    assert usage["estimated_cost_usd"] == 0.00092005, "the billed total is never recomputed"
+
+
+def test_the_split_needs_no_list_price(tmp_path, prices):
+    """prices is empty: nothing in the pricing table is consulted for a billed total."""
+    run = make_run(tmp_path / "results", "2026-09-26", "T0983", {"a": billed()})
+    bc.main_with_args(make_args(tmp_path / "results", apply=True))
+    assert usage_of(os.path.join(run, "request_a.json"))["input_cost_usd"] == 0.0002725
+
+
+@pytest.mark.parametrize("case", [
+    dict(prompt=0.0002725, completion=0.0005), # a per-request fee belongs to neither
+    dict(stored=0.5),                          # the stored total is not what was billed
+    dict(is_byok=True),                        # cost is OpenRouter's fee, not the bill
+    dict(prompt=None),                         # no split to take
+])
+def test_a_split_that_does_not_account_for_the_bill_is_not_used(tmp_path, prices, case):
+    run = make_run(tmp_path / "results", "2026-09-26", "T0983", {"a": billed(**case)})
+    path = os.path.join(run, "request_a.json")
+    before = read(path)
+    bc.main_with_args(make_args(tmp_path / "results", apply=True))
+    assert read(path) == before
+
+
+def test_a_run_of_billed_totals_gets_component_totals(tmp_path, prices):
+    summary = {"total_input_tokens": 5450, "total_output_tokens": 8634, "total_tokens": 14084,
+               "input_cost_usd": 0.0, "output_cost_usd": 0.0, "total_cost_usd": 0.0018401}
+    run = make_run(tmp_path / "results", "2026-09-26", "T0983",
+                   {"a": billed(), "b": billed()}, summary=summary)
+    bc.main_with_args(make_args(tmp_path / "results", apply=True, summaries=True))
+    after = summary_of(run)
+    assert after["input_cost_usd"] == pytest.approx(0.000545)
+    assert after["output_cost_usd"] == pytest.approx(0.0012951)
+    assert after["total_cost_usd"] == pytest.approx(0.0018401)
+
+
+def test_one_unsplit_request_keeps_the_run_components_as_stored(tmp_path, prices):
+    summary = {"total_input_tokens": 5450, "total_output_tokens": 8634, "total_tokens": 14084,
+               "input_cost_usd": 0.0, "output_cost_usd": 0.0, "total_cost_usd": 0.0018401}
+    run = make_run(tmp_path / "results", "2026-09-26", "T0983",
+                   {"a": billed(), "b": billed(completion=0.0005)}, summary=summary)
+    bc.main_with_args(make_args(tmp_path / "results", apply=True, summaries=True))
+    after = summary_of(run)
+    assert (after["input_cost_usd"], after["output_cost_usd"]) == (0.0, 0.0), (
+        "a partial component sum would understate the run")
+    assert after["total_cost_usd"] == pytest.approx(0.0018401)
+
+
+def test_a_second_apply_leaves_split_files_alone(tmp_path, prices):
+    run = make_run(tmp_path / "results", "2026-09-26", "T0983", {"a": billed()})
+    path = os.path.join(run, "request_a.json")
+    bc.main_with_args(make_args(tmp_path / "results", apply=True))
+    once = read(path)
+    bc.main_with_args(make_args(tmp_path / "results", apply=True))
+    assert read(path) == once
+
+
+def test_a_file_the_client_priced_unrounded_is_left_alone(tmp_path, prices):
+    """ai_client 0.5.0 writes reasoning cost unrounded; the backfill rounds to 10 places."""
+    prices[("genai", "m")] = price(0.5, 2.5)
+    usage = {"input_tokens": 1000, "output_tokens": 1000, "total_tokens": 11378,
+             "reasoning_tokens": 9378, "input_cost_usd": 0.0005, "output_cost_usd": 0.0025,
+             "reasoning_cost_usd": 0.023444999999999997,
+             "estimated_cost_usd": 0.0005 + 0.0025 + 0.023444999999999997}
+    run = make_run(tmp_path / "results", "2026-09-26", "T0718",
+                   {"a": request_payload(usage=usage)})
+    path = os.path.join(run, "request_a.json")
+    before = read(path)
+    bc.main_with_args(make_args(tmp_path / "results", apply=True))
+    assert read(path) == before
