@@ -16,6 +16,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `scripts/package_dataset.py`: the release tree, a separate payload archive and `SHA256SUMS`, refusing anything that is not releasable, any file over GitHub's 100 MB limit, or an output that overlaps the dataset before writing anything.
 - `scripts/export_dataset/crosscheck.py`: reconciles the dataset export against `test_runs_export.json`; a release will not package until it does.
 
+### Removed
+- `collected_results/compare_detail/` is no longer committed; the deploy regenerates it on the VM and copies it into the comparison widget's media directory, which now reads it from there instead of raw.githubusercontent.
+
 ### Fixed
 - `benchmark_export.json` and `test_runs_export.json`: run order no longer depends on filesystem order.
 - `generate_compare_detail.py`: removes a detail file once its run needs none, instead of keeping a since-fixed scorer error.
