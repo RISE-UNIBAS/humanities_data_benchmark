@@ -456,7 +456,7 @@ class BusinessLetters(Benchmark):
 
         for identifier, rows in grouped_persons:
             first_row = rows.iloc[0]
-            logging.debug(f"Added person {first_row["identifier_value"]}...")
+            logging.debug(f"Added person {first_row['identifier_value']}...")
             person = {
                 "@context": "http://schema.org",
                 "@type": "Person",
