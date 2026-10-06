@@ -5,6 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+### Removed
+- `collected_results/compare_detail/` is no longer committed; the deploy regenerates it on the VM and copies it into the comparison widget's media directory, which now reads it from there instead of raw.githubusercontent. `export_dataset` still hashes it into `source_manifest.jsonl` as if committed (see `dev/COLLECTED_RESULTS_PLAN.md`).
+
 ## [v0.6.1] - 2026-09-29
 
 ### Added
