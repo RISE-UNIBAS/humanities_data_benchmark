@@ -8,20 +8,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Unreleased
 
 ### Added
-- `scripts/results_index.py`: one read-only walk of `results/` and one reader for `benchmarks_tests.csv`, shared by the frontend and dataset exports; `collected_results/` output is unchanged.
-- `scripts/export_dataset/`: builds `dataset/` — typed `runs`, `requests`, `scores_long` and `rescored_fields` tables in Parquet and CSV, a metric dictionary, lossless payload sidecars (one per benchmark and month), coverage, manifests and diagnostics, blocking a release whose field detail has fallen behind `results/`. Every run directory and request file becomes exactly one row, every decoded scoring file is kept whatever its shape, and `rescored_fields` holds only rows that join to an exported request. No output path may equal, enter or contain an input it reads, and a missing `--source` is refused rather than published as an empty build.
-- Per-request cost derived from recorded tokens and the price in force on the run's date, reasoning included, exported beside the stored figure rather than replacing it; `reasoning_tokens` and reasoning cost columns on `requests` and `runs`.
-- `dataset/` ships `datapackage.json`, a README, a dataset changelog and `CITATION.cff`, generated from the schema and a column dictionary; licensed CC BY 4.0, separately from the software. The README documents formats, loading, missing values, metric aggregation, cost derivation and comparison limits, and the provenance, joins and coverage of the supplementary field evaluations.
-- `dataset/examples/business_letters_cost.py`: cost per correct extraction by provider and date, withholding a ratio with a reason where the data cannot support one.
-- `scripts/package_dataset.py`: the release tree, a separate payload archive and `SHA256SUMS`, refusing anything that is not releasable, any file over GitHub's 100 MB limit, or an output that overlaps the dataset before writing anything.
-- `scripts/export_dataset/crosscheck.py`: reconciles the dataset export against `test_runs_export.json`; a release will not package until it does.
+- `scripts/export_dataset/`: builds `dataset/`, with `runs`, `requests`, `scores_long` and `rescored_fields` tables in Parquet and CSV, a metric dictionary, payload sidecars, coverage, diagnostics and a source manifest of hashed inputs.
+- Per-request cost from recorded tokens at the price in force on the run's date, reasoning included, beside the stored cost; `reasoning_tokens` and reasoning cost columns on `requests` and `runs`.
+- `dataset/` documentation: `datapackage.json`, README, changelog and `CITATION.cff`; data licensed CC BY 4.0.
+- `dataset/examples/business_letters_cost.py`: cost per correct extraction by provider and date.
+- `scripts/package_dataset.py`: packages a release with a separate payload archive and `SHA256SUMS`.
+- `scripts/export_dataset/crosscheck.py`: reconciles the dataset with `test_runs_export.json` before packaging.
+- `scripts/results_index.py`: one shared reader for `results/` and `benchmarks_tests.csv`.
 
 ### Removed
-- `collected_results/compare_detail/` is no longer committed; the deploy regenerates it on the VM and copies it into the comparison widget's media directory, which now reads it from there instead of raw.githubusercontent.
+- `collected_results/compare_detail/` is no longer committed; the deploy regenerates it.
 
 ### Fixed
 - `benchmark_export.json` and `test_runs_export.json`: run order no longer depends on filesystem order.
-- `generate_compare_detail.py`: removes a detail file once its run needs none, instead of keeping a since-fixed scorer error.
+- `generate_compare_detail.py`: removes a detail file once its run no longer needs one.
 
 ## [v0.6.1] - 2026-09-29
 

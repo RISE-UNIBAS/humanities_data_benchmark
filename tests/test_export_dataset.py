@@ -705,6 +705,55 @@ def test_an_absent_source_leaves_the_existing_build_untouched(tmp_path, kind):
     assert dict((p, p.read_bytes()) for p in tmp_path.rglob("*") if p.is_file()) == before
 
 
+def test_absent_comparison_detail_stops_the_build_before_it_writes(tmp_path, make_corpus,
+                                                                    monkeypatch):
+    from scripts.export_dataset import __main__ as build_module
+    from scripts.export_dataset import rescored
+    make_corpus({"2026-01-01": {"T0001": {"requests": {"a": {}}}}})
+    monkeypatch.setattr(rescored, "DETAIL_DIR", tmp_path / "compare_detail")
+    out = tmp_path / "dataset"
+
+    with pytest.raises(FileNotFoundError, match="generate_compare_detail"):
+        build_module.build(source=tmp_path / "results", out=out)
+    assert not out.exists() and not (tmp_path / "dataset.staging").exists()
+
+
+def test_generated_inputs_are_labelled_in_the_source_manifest(build_with_detail, tmp_path):
+    build_with_detail()
+    rows = [json.loads(line) for line in (tmp_path / "dataset" / "source_manifest.jsonl")
+            .read_text(encoding="utf-8").splitlines()]
+    generated = [r for r in rows if r["origin"] == "generated"]
+    assert sorted(r["path"].rsplit("/", 1)[-1] for r in generated) == ["T0001.json",
+                                                                       "T0002.json"]
+    assert all("scorer_revision" in r for r in generated)
+    assert all(r["origin"] == "source" for r in rows if r not in generated)
+
+
+@pytest.mark.parametrize("ls_files,diff,expected", [
+    ("results/a.json\0results/b.json\0", "results/b.json\0", {"results/a.json"}),
+    (None, "", None),
+])
+def test_committed_paths_exclude_changed_files_and_admit_ignorance(monkeypatch, ls_files,
+                                                                   diff, expected):
+    from scripts.export_dataset import __main__ as build_module
+    answers = {"ls-files": (ls_files, None if ls_files is not None else "no git"),
+               "diff": (diff, None)}
+    monkeypatch.setattr(build_module, "_git", lambda *args: answers[args[0]])
+    assert build_module._committed_paths() == expected
+
+
+def test_the_manifest_records_commit_membership_per_input(tmp_path, make_corpus,
+                                                          monkeypatch):
+    from scripts.export_dataset import inventory, rescored
+    monkeypatch.setattr(rescored, "DETAIL_DIR", tmp_path / "compare_detail")
+    make_corpus({"2026-01-01": {"T0001": {"requests": {"a": {}}}}})
+    rows, _summary, _diagnostics = inventory.build(tmp_path / "results",
+                                                   committed_paths=set())
+    assert rows and all(r["committed"] is False for r in rows)
+    rows, _summary, _diagnostics = inventory.build(tmp_path / "results")
+    assert all(r["committed"] is None for r in rows)
+
+
 def test_an_existing_empty_source_still_builds(build_with_detail, tmp_path):
     empty = tmp_path / "empty"
     empty.mkdir()

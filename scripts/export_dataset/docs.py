@@ -391,10 +391,16 @@ To rebuild this dataset, use the source repository at the commit recorded in
 `manifest.json`, with the recorded inputs and dependencies. Run from the repository root:
 
 ```console
+python -m scripts.ndr_export.generate_compare_detail
 python -m scripts.export_dataset --dataset-version {version}
 ```
 
-`source_manifest.jsonl` records a SHA-256 hash for each consumed input. `manifest.json`
+`source_manifest.jsonl` records a SHA-256 hash for each consumed input. `committed` says
+whether Git held the file unchanged at the source commit (null where Git could not be
+asked); only those inputs can be recovered from the commit. `origin` `generated` marks the
+re-scored field detail written by the first command, with the scorer and ground-truth
+revisions it was produced from; `source` marks everything else. `source_worktree_dirty` in
+`manifest.json` covers tracked files only. `manifest.json`
 records output hashes and build metadata; the manifest itself is excluded from the output
 hash list. These records support verification of the files and identification of changes
 between builds. Builds using selection filters are marked as partial and are not releases.

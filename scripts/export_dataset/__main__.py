@@ -49,6 +49,15 @@ def _git(*args):
     return out.stdout.strip(), None
 
 
+def _committed_paths():
+    """Tracked paths whose working copy matches HEAD, or None if Git cannot say."""
+    tracked, error = _git("ls-files", "-z")
+    changed, changed_error = _git("diff", "--name-only", "-z", "HEAD")
+    if error is not None or changed_error is not None:
+        return None
+    return set(filter(None, tracked.split("\0"))) - set(filter(None, changed.split("\0")))
+
+
 def _selected_runs(results_path, date, benchmark, limit, catalog):
     runs = list(iter_run_dirs(results_path))
     if date:
@@ -74,6 +83,12 @@ def build(source=RESULTS_PATH, out=DATASET_PATH, date=None, benchmark=None, limi
     if not Path(source).is_dir():
         raise FileNotFoundError("No source directory at %s; refusing to replace %s with "
                                 "an empty build." % (Path(source).resolve(), out))
+    # Untracked, so a fresh checkout has none; without it the build would ship no
+    # rescored detail and say nothing.
+    if not rescored.detail_files():
+        raise FileNotFoundError("No comparison detail at %s; run python -m "
+                                "scripts.ndr_export.generate_compare_detail first."
+                                % rescored.DETAIL_DIR)
 
     if staging.exists():
         shutil.rmtree(staging)
@@ -82,7 +97,8 @@ def build(source=RESULTS_PATH, out=DATASET_PATH, date=None, benchmark=None, limi
     columns.check_complete(SCHEMAS_FOR_DOCS)
 
     print("Inventory ...")
-    manifest_rows, summary, inv_diagnostics = inventory.build(source)
+    manifest_rows, summary, inv_diagnostics = inventory.build(
+        source, committed_paths=_committed_paths())
     print("  %d files hashed, %d run directories, %d request files, %d scoring files"
           % (summary["files_hashed"], summary["run_dirs"], summary["request_files"],
              summary["scoring_files"]))
@@ -105,12 +121,8 @@ def build(source=RESULTS_PATH, out=DATASET_PATH, date=None, benchmark=None, limi
     print("Rescored field detail ...")
     rescored_rows, rescored_payloads, rescored_diagnostics = rescored.extract(
         benchmark_of=catalog.benchmark_map())
-    if rescored_rows:
-        print("  %d observations from %d inputs, produced by the frontend pipeline"
-              % (len(rescored_rows), len(rescored_payloads)))
-    else:
-        print("  none: collected_results/compare_detail/ is absent, so the dataset's "
-              "field detail covers only the benchmarks that recorded it at run time")
+    print("  %d observations from %d inputs, produced by the frontend pipeline"
+          % (len(rescored_rows), len(rescored_payloads)))
     rescored_rows, rescored_payloads, restrict_diagnostics = rescored.restrict(
         rescored_rows, rescored_payloads, extractor.requests, partial)
     rescored_diagnostics += restrict_diagnostics
@@ -208,7 +220,7 @@ def build(source=RESULTS_PATH, out=DATASET_PATH, date=None, benchmark=None, limi
             outputs[path.relative_to(staging).as_posix()] = inventory.sha256_of(path)
 
     commit, commit_error = _git("rev-parse", "HEAD")
-    # Untracked files are not part of the source commit and cannot change what it built.
+    # Blind to untracked and ignored inputs; source_manifest's per-row "committed" is not.
     status, status_error = _git("status", "--porcelain", "--untracked-files=no")
     dirty = None if status_error is not None else bool(status)
     provenance = "verified" if commit and status_error is None else "unknown"

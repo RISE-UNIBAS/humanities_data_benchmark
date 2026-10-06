@@ -4,10 +4,17 @@ Include files immediately within recognized run directories, benchmark metadata,
 shared configuration and pricing files, citation metadata, and comparison-detail
 artifacts. Record source paths, file sizes, SHA-256 hashes, counts, and date bounds.
 
+Each row records ``committed``: whether the file is tracked at the source commit with
+its contents unchanged, as Git reports it, or null where Git could not say. Separately,
+``origin`` is ``generated`` for comparison-detail artifacts, which a pipeline step writes
+rather than a benchmark run, with the scorer and ground-truth revisions each file records,
+and ``source`` for everything else.
+
 Report unexpected run contents as blocking diagnostics. Hashing records file
 contents at read time; it does not lock inputs or create an immutable snapshot.
 """
 import hashlib
+import json
 from pathlib import Path
 
 from scripts.results_index import (BENCHMARKS_PATH, PROJECT_ROOT, RESULTS_PATH, TESTS_CSV,
@@ -62,15 +69,38 @@ def consumed_files(results_path=RESULTS_PATH):
     for path in METADATA_FILES:
         if path.is_file():
             paths.append(path)
-    # The frontend's re-scored field detail is an input now, so it is hashed like any
-    # other. Absent in a checkout where the frontend pipeline has not run, which is fine.
-    paths.extend(sorted((PROJECT_ROOT / "collected_results" / "compare_detail")
-                        .glob("*/*.json")))
+    paths.extend(_detail_files())
     return sorted(set(p for p in paths if p.is_file()), key=_relative)
 
 
-def build(results_path=RESULTS_PATH):
+def _detail_files():
+    from scripts.export_dataset import rescored
+    return rescored.detail_files()
+
+
+def _generated_provenance(path):
+    """Provenance a comparison-detail file records about itself."""
+    try:
+        with open(path, encoding="utf-8") as handle:
+            detail = json.load(handle)
+    except (OSError, ValueError):
+        detail = {}
+    if not isinstance(detail, dict):
+        detail = {}
+    return {
+        "origin": "generated",
+        "scorer_revision": detail.get("scorer_revision"),
+        "ground_truth_revision": detail.get("ground_truth_revision"),
+        "uncommitted_changes": detail.get("uncommitted_changes"),
+    }
+
+
+def build(results_path=RESULTS_PATH, committed_paths=None):
     """Return ``(manifest_rows, summary, diagnostics)`` for the source archive.
+
+    committed_paths is the set of repository-relative paths Git holds unchanged at
+    the source commit; None when Git could not be asked, which records ``committed``
+    as null rather than guessing.
 
     Count run directories and their immediate contents, compute date bounds, and
     hash inventoried files. Nested directories and unexpected filenames within a
@@ -106,12 +136,19 @@ def build(results_path=RESULTS_PATH):
                     "handling": "not exported; expected request_*.json or scoring.json",
                 })
 
+    generated = set(_detail_files())
     for path in consumed_files(results_path):
-        rows.append({
+        row = {
             "path": _relative(path),
             "sha256": sha256_of(path),
             "size_bytes": path.stat().st_size,
-        })
+            "committed": (None if committed_paths is None
+                          else _relative(path) in committed_paths),
+            "origin": "source",
+        }
+        if path in generated:
+            row.update(_generated_provenance(path))
+        rows.append(row)
 
     summary = dict(counts)
     summary["dates"] = len(dates)
