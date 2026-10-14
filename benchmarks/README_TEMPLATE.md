@@ -1,81 +1,99 @@
-# [Benchmark Name]
+# [Benchmark Title]
 
-## Table of Contents
-- [Overview](#overview)
-- [Creator](#creator)
-- [Dataset Description](#dataset-description)
-- [Task Description](#task-description)
-- [Ground Truth](#ground-truth)
-- [Evaluation Criteria](#evaluation-criteria)
-- [Results](#results)
-- [Observations](#observations)
-- [Limitations and Future Work](#limitations-and-future-work)
+This README is a BenchmarkCard (Sokol et al., NeurIPS 2025, arXiv 2410.12974), schema as in evaleval/auto-benchmarkcard v0.2.0.
 
-## Overview
-This benchmark evaluates the performance of large language models on [describe the specific task - e.g., "extracting bibliographic information from historical documents"]. The benchmark consists of [number] images containing [describe the content of the images, e.g., "19th century newspaper articles", "handwritten letters", etc.].
+<!-- Every field stays, in this order; write 'Not specified' when unknown. Fields marked
+     (generated) are filled from meta.json and the benchmark's files by
+     `python scripts/benchmark_cards.py <name>`; edit meta.json, not the README, to change them. -->
 
-## Creator
-This benchmark was created by [individual/organization name] ([contact information]) in [year]. [Include any additional information about the creators or contributors].
+## Benchmark Details
 
-## Dataset Description
+**Name:** (generated)
 
-### Source
-- **Collection**: [Name of collection or source]
-- **Time Period**: [e.g., "1880-1920"]
-- **Language**: [e.g., "German", "English", "Mixed"]
-- **Format**: [e.g., "Typewritten", "Handwritten", "Printed", "Mixed"]
-- **Link**: [If available, link to the original dataset]
-- **License**: [License information for the dataset]
+**Overview:** (generated)
 
-### Contents
-The dataset contains [number] images of [describe what the images contain]. Each image [describe relevant characteristics, e.g., "contains a single page from a historical newspaper", "consists of multiple pages of correspondence", etc.].
+**Data Type:** (generated)
 
-## Ground Truth
+**Domains:** (generated)
 
-### Ground Truth Creation
-[Explain how the ground truth was created and which guidelines were used, e.g., "The ground truth was manually annotated by domain experts", "The ground truth was created using a semi-automated process and then verified by experts", etc.]
+**Languages:** (generated)
 
-### Ground Truth Format
-The ground truth is stored in [format, e.g., "JSON files", "CSV files", etc.] with the following structure:
+**Similar Benchmarks:** (generated)
 
-```json
-{
-  "field1": "ground truth value",
-  "field2": ["ground truth value 1", "ground truth value 2"],
-  "field3": {
-    "subfield1": "ground truth value",
-    "subfield2": "ground truth value"
-  }
-}
-```
-## Scoring
+**Resources:** (generated)
 
-### Evaluation Criteria
-The models are tasked with [clearly describe what the models are expected to do, e.g., "extracting named entities", "categorizing text segments", "transcribing handwritten text", etc.]. Models should output [describe the expected output format, e.g., "a JSON structure with the following fields...", "a list of extracted entities categorized by type", etc.].
+**Authors:** (generated)
 
-```json
-{
-  "field1": "value",
-  "field2": ["value1", "value2"],
-  "field3": {
-    "subfield1": "value",
-    "subfield2": "value"
-  }
-}
-```
+## Purpose and Intended Users
 
-### Scoring Methodology
-[Explain how the scoring is done, e.g., "The extracted data is compared to the ground truth using fuzzy string matching", "The model's output is evaluated based on precision, recall, and F1 score", etc.]
+**Goal:** Not specified
 
-### Example Scoring
-[Include an example scoring]
+**Audience:** Not specified
 
-## Observations
+**Tasks:** Not specified
 
-[Include any notable observations about model performance, patterns, or insights gained from the benchmark results]
+**Limitations:** Not specified
 
-## Limitations and Future Work
+**Out-of-Scope Uses:** Not specified
 
-- [Describe any limitations of the current benchmark]
-- [Suggest potential improvements or extensions for future versions]
-- [Mention any work in progress related to this benchmark]
+## Data
+
+**Source:** Not specified
+
+**Size:** (generated)
+
+**Format:** Not specified
+
+**Annotation:** Not specified
+
+**Size Breakdown:** (generated)
+
+**Collection Date:** Not specified
+
+**Contamination Controls:** Not specified
+
+## Methodology
+
+**Methods:** Not specified
+
+**Metrics:** Not specified
+
+**Calculation:** Not specified
+
+**Interpretation:** Not specified
+
+**Baseline Results:** Not specified
+
+**Validation:** Not specified
+
+**Human Baseline:** Not specified
+
+**Judge Uses LLM:** true
+
+**Judge Num:** Not specified
+
+**Judge Models:** Not specified
+
+**Judge Score Consolidation:** Not specified
+
+**Validity Justification:** Not specified
+
+## Ethical and Legal Considerations
+
+**Privacy and Anonymity:** Not specified
+
+**Data Licensing:** (generated)
+
+**Consent Procedures:** Not specified
+
+**Compliance with Regulations:** Not specified
+
+## Beyond the BenchmarkCard
+
+This section is not part of the BenchmarkCard schema and is not exported to `benchmark_card.json`.
+
+**Versions:**
+
+- 1 — initial version
+
+**Contributors by Role:** (generated)

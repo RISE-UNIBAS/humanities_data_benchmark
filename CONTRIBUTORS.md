@@ -139,7 +139,7 @@ Contributions are categorized by benchmark and type of contribution, and in alph
 | Domain expert | [Tabea Wullschleger]                   |
 | Data curator | [Tabea Wullschleger]                   |
 | Annotator | [Tabea Wullschleger]                   |
-| Analyst | [Maximilian Hindermann]                |
+| Analyst | [Maximilian Hindermann], [Tabea Wullschleger] |
 | Engineer | [Maximilian Hindermann], [Eric Decker] |
 
 

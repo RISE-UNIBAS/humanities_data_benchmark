@@ -597,6 +597,8 @@ def generate_meta_json(info: Dict) -> str:
         "description": info['description'],
         "tags": info['tags'],
         "contributors": info['contributors'],
+        "data_type": ", ".join(t for t, used in (("image", info['use_images']), ("text", info['use_texts'])) if used),
+        "license": "Not specified",
         "ranking": {
             "metric": info['ranking_metric'],
             "order": info['ranking_order']
@@ -754,80 +756,9 @@ class {class_name}(BaseModel):
 
 
 def generate_readme(info: Dict) -> str:
-    """Generate README.md content."""
-    template = f'''# {info['title']}
-
-## Overview
-
-{info['description']}
-
-## Benchmark Structure
-
-**Tags:** {', '.join(info['tags']) if info['tags'] else 'None'}
-
-**Scoring Metric:** {info['ranking_metric']} ({info['ranking_order']}ending)
-
-## Data
-
-'''
-
-    if info['use_images']:
-        template += "- **Images:** Store images in the `images/` directory\n"
-    if info['use_texts']:
-        template += "- **Texts:** Store text files in the `texts/` directory\n"
-    if info['use_shared_context']:
-        template += "- **Shared Context:** Store reference documents in the `context/` directory\n"
-        template += "  - These files are sent once at the beginning and cached\n"
-        template += "  - Useful for large reference documents that all test items reference\n"
-
-    template += "- **Ground Truths:** Store JSON ground truth files in `ground_truths/` directory\n"
-    template += "  - Each ground truth filename must match the corresponding image/text filename (minus extension)\n\n"
-
-    if info['use_shared_context']:
-        template += '''## Shared Context
-
-This benchmark uses shared context to send reference documents once before processing test items.
-
-**How it works:**
-1. Large reference documents are placed in `context/` directory
-2. The initial prompt (`context/shared_context_prompt.txt`) is sent with these files
-3. Individual test items can then reference this context without re-sending it
-4. This saves tokens and costs, especially with Anthropic's prompt caching
-
-**Configuration:**
-- Edit `get_shared_context_files()` in `benchmark.py` to specify which files to load
-- Edit `context/shared_context_prompt.txt` to customize the initial prompt
-
-'''
-
-    template += '''## Ground Truth Format
-
-```json
-{
-  "field1": "value1",
-  "field2": ["item1", "item2"]
-}
-```
-
-## Scoring
-
-TODO: Describe how scoring works for this benchmark.
-
-## Examples
-
-TODO: Add example inputs and expected outputs.
-
-## Contributors
-
-'''
-
-    if info['contributors']:
-        for contrib in info['contributors']:
-            template += f"- **{contrib['role']}:** {', '.join(contrib['contributors'])}\n"
-    else:
-        template += "TODO: Add contributors\n"
-
-    return template
+    """Generate README.md content: the BenchmarkCard template with the title filled in."""
+    template = (Path(__file__).parent.parent / "benchmarks" / "README_TEMPLATE.md").read_text(encoding='utf-8')
+    return template.replace("# [Benchmark Title]", f"# {info['title']}", 1)
 
 
 def generate_prompt_txt(info: Dict) -> str:
@@ -964,7 +895,8 @@ def print_next_steps(info: Dict):
     step_num += 1
 
     print(f"\n{Colors.BOLD}{step_num}. Review and refine:{Colors.END}")
-    print(f"   - Check README: benchmarks/{info['name']}/README.md")
+    print(f"   - Fill in the BenchmarkCard: benchmarks/{info['name']}/README.md")
+    print(f"   - Then run: python scripts/benchmark_cards.py {info['name']}")
     print(f"   - Adjust prompt: benchmarks/{info['name']}/prompts/prompt.txt")
 
     print(f"\n{Colors.GREEN}{Colors.BOLD}Benchmark '{info['name']}' is ready for development!{Colors.END}\n")

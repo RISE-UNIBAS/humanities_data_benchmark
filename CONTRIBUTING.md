@@ -94,14 +94,14 @@ pytest -m integrity         # data-integrity guards only
 There are two kinds of tests:
 
 - **Logic & scoring tests** exercise the scoring helpers and each benchmark's scoring logic offline — no API keys or network needed.
-- **Integrity guards** (the `integrity` marker) validate the repository's data so an incomplete model or benchmark addition fails fast: every non-legacy model in `benchmarks_tests.csv` has a `pricing.json` entry with an archived source URL, an entry in `update_pricing.py`, and a README listing; every test row's prompt file exists; and every benchmark object has a matching ground truth.
+- **Integrity guards** (the `integrity` marker) validate the repository's data so an incomplete model or benchmark addition fails fast: every non-legacy model in `benchmarks_tests.csv` has a `pricing.json` entry with an archived source URL, an entry in `update_pricing.py`, and a README listing; every test row's prompt file exists; every benchmark object has a matching ground truth; and every BenchmarkCard README is complete and in sync with `meta.json`.
 
 These run automatically on every push and pull request via GitHub Actions (`.github/workflows/tests.yml`), so a model or benchmark added without its pricing, prompt, or ground-truth pieces will fail CI.
 
 ### Benchmark Structure
 
 Each benchmark must include:
-- `README.md` - Description using our template
+- `README.md` - A BenchmarkCard, from our [template](benchmarks/README_TEMPLATE.md); run `python scripts/benchmark_cards.py <name>` to fill the generated fields and write `benchmark_card.json`
 - `images/` - Source images or documents
 - `prompts/` - Text prompts for the models
 - `ground_truths/` - Reference answers in JSON or text format

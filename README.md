@@ -482,7 +482,7 @@ The command creates the following benchmark structure:
 2. **Required Files:**
    - `benchmark.py` - Main benchmark class with scoring logic templates
    - `meta.json` - Benchmark metadata
-   - `README.md` - Documentation
+   - `README.md` - BenchmarkCard documentation, from `benchmarks/README_TEMPLATE.md`
    - `prompts/prompt.txt` - Default prompt
    - `dataclass.py` - Pydantic schema (optional)
 

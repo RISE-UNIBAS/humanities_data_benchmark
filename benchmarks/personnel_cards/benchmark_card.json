@@ -1,0 +1,92 @@
+{
+  "benchmark_card": {
+    "benchmark_details": {
+      "name": "Personnel Cards",
+      "overview": "Evaluates models' ability to transcribe and interpret personnel index cards of Swiss federal employees (1941–1961), containing typed and handwritten entries on job title, work location, pay grade, salary, and related notes in German and French.",
+      "data_type": "image",
+      "domains": [
+        "history",
+        "archival science",
+        "administrative records"
+      ],
+      "languages": [
+        "German",
+        "French"
+      ],
+      "similar_benchmarks": [
+        "Not specified"
+      ],
+      "resources": [
+        "https://rise-services.rise.unibas.ch/benchmarks/p/benchmarks/personnel_cards",
+        "https://github.com/RISE-UNIBAS/humanities_data_benchmark/tree/main/benchmarks/personnel_cards"
+      ],
+      "authors": [
+        "Tabea Wullschleger",
+        "Maximilian Hindermann",
+        "Eric Decker"
+      ]
+    },
+    "purpose_and_intended_users": {
+      "goal": "Measure how well vision-language models turn tabular personnel index cards into structured records, producing in one pass both a diplomatic transcript of each cell and a normalised interpretation (expanded abbreviations, ISO dates, numeric salaries), and recognising crossed-out entries. The results are meant to guide historians, archivists and digital humanities projects in choosing a model for digitising serial administrative records.",
+      "audience": [
+        "AI researchers",
+        "model developers",
+        "industry practitioners"
+      ],
+      "tasks": [
+        "table transcription from images",
+        "normalisation of abbreviations, dates and monetary values",
+        "detection of crossed-out entries"
+      ],
+      "limitations": "61 cards from a single series of one archive, written in German and French by a small number of clerks; results do not transfer automatically to other card layouts, hands or languages. The interpretation layer follows the conventions in the prompt (e.g. `YYYY-MM-DD` dates, amounts in CHF), so it measures agreement with those conventions rather than a neutral standard. A cell counts as matched only above a fuzzy similarity of 0.92, so near-misses in long cells score the same as wrong answers.",
+      "out_of_scope_uses": [
+        "drawing conclusions about the employees named on the cards",
+        "evaluating handwriting recognition on free-form documents",
+        "ranking models on languages other than German and French"
+      ]
+    },
+    "data": {
+      "source": "Personnel index cards of Swiss federal employees from the Swiss Federal Archives (Schweizerisches Bundesarchiv), series E4260D#05, \"Das Dienstverhältnis der Bundesbeamten: Personaldossiers (Serie)\": https://www.recherche.bar.admin.ch/recherche/#/de/archiv/einheit/3948547. Each card is a table with one row per change in employment, recording job title, work location, pay grade, salary, date of salary change, and notes on salary supplements.",
+      "size": "61 evaluated objects",
+      "format": "One JPG photograph per card, about 2500×1700 px and 2 MB each, with typed, handwritten and printed entries. The ground truth is one JSON file per card, following the `Table` dataclass in `dataclass.py`:\n\n```json\n{\n  \"rows\": [\n    {\n      \"row_number\": 1,\n      \"dienstliche_stellung\": {\n        \"diplomatic_transcript\": \"Assist.\",\n        \"interpretation\": \"Assistant\",\n        \"is_crossed_out\": false\n      },\n      \"dienstort\": {\n        \"diplomatic_transcript\": \"Basel\",\n        \"interpretation\": null,\n        \"is_crossed_out\": false\n      },\n      \"gehaltsklasse\": {\n        \"diplomatic_transcript\": \"III\",\n        \"interpretation\": \"3\",\n        \"is_crossed_out\": false\n      },\n      \"jahresgehalt_monatsgehalt_taglohn\": {\n        \"diplomatic_transcript\": \"Fr. 2400.-\",\n        \"interpretation\": \"2400 CHF\",\n        \"is_crossed_out\": false\n      },\n      \"datum_gehaltsänderung\": {\n        \"diplomatic_transcript\": \"1.4.1920\",\n        \"interpretation\": \"1920-04-01\",\n        \"is_crossed_out\": false\n      },\n      \"bemerkungen\": {\n        \"diplomatic_transcript\": \"\",\n        \"interpretation\": null,\n        \"is_crossed_out\": false\n      }\n    }\n  ]\n}\n```\n\nEach cell has three sub-fields:\n\n- `diplomatic_transcript`: the text exactly as written on the card, abbreviations included\n- `interpretation`: the expanded or standardised form, or `null`\n- `is_crossed_out`: whether the entry is struck through on the card",
+      "annotation": "Ground truths were transcribed and interpreted by the domain expert listed under Authors, following the extraction and interpretation rules in the [prompt file](prompts/prompt.txt).",
+      "size_breakdown": {
+        "images files": 61
+      },
+      "collection_date": "The cards date from 1941-1961.",
+      "contamination_controls": "None. Images and ground truths have been public in this GitHub repository since February 2026."
+    },
+    "methodology": {
+      "methods": [
+        "zero-shot structured extraction from a single image per request",
+        "JSON output constrained to the `Table` dataclass"
+      ],
+      "metrics": [
+        "F1 micro (`f1_micro`, used for ranking)",
+        "F1 macro (`f1_macro`)"
+      ],
+      "calculation": "Every terminal field of the JSON (for example `rows[0].dienstliche_stellung.diplomatic_transcript`) is compared between the response and the ground truth; empty strings count as missing. Field values are compared with a rapidfuzz similarity score, and a field is a match at a score of 0.92 or above.\n\n- TP: both have a value and the score is at least 0.92\n- FP and FN: both have a value but the score is below 0.92 (the field counts once as each)\n- FP: only the response has a value\n- FN: only the ground truth has a value\n\nF1 micro sums TP, FP and FN over all cards before computing F1. F1 macro averages the per-card F1, each rounded to two decimals.\n\nThe `rules` column of `benchmarks_tests.csv` selects which sub-fields are scored; an empty value scores all three:\n\n```json\n{\n  \"score_diplomatic_transcript\": true,\n  \"score_interpretation\": true,\n  \"score_is_crossed_out\": true\n}\n```\n\n`row_number` is never scored.",
+      "interpretation": "Scores range from 0 to 1; higher is better. F1 micro weights cards by their number of fields, so long cards count more; F1 macro weights every card equally.",
+      "baseline_results": "Current results for all tested models are on the [benchmark page](https://rise-services.rise.unibas.ch/benchmarks/p/benchmarks/personnel_cards) and in the published dataset of runs.\n\nObserved across models: the interpretation layer, which standardises abbreviations, dates and monetary values into machine-readable form, is particularly useful downstream. Models produce the diplomatic transcript and its interpreted form in a single pass, so no separate normalisation step is needed, which shortens the manual post-processing that turns raw archival data into structured records.",
+      "validation": "Ground truths were checked by the domain expert. Scoring is deterministic; the scorer is covered by the repository's test suite.",
+      "human_baseline": "Not specified",
+      "judge_uses_llm": false,
+      "judge_num": "Not specified",
+      "judge_models": [
+        "Not specified"
+      ],
+      "judge_score_consolidation": "Not specified",
+      "validity_justification": "Field-level F1 reflects the downstream use: each cell becomes a value in a database, so a cell is either usable or needs correction. Not specified beyond that."
+    },
+    "ethical_and_legal_considerations": {
+      "privacy_and_anonymity": "The cards record the employment history and salaries of named Swiss federal employees, 1941-1961. They are not anonymised. The people on the cards were born between 1871 and 1926, so all would be at least 100 years old in 2026. They are published as made available by the Swiss Federal Archives.",
+      "data_licensing": "Public Domain",
+      "consent_procedures": "Not specified",
+      "compliance_with_regulations": "The cards are federal archival records held by the Swiss Federal Archives and fall under the Federal Act on Archiving (BGA, SR 152.1). Records indexed by personal name that contain sensitive personal data have an extended protection period of 50 years (Art. 11 para. 1 BGA), which ends earlier, three years after the death of the person concerned (Art. 11 para. 2). The latest entry on any card is from 1961, so the 50-year period has expired for every card. No ethical review was carried out."
+    }
+  },
+  "card_info": {
+    "schema": "evaleval/auto-benchmarkcard@342c1ac7d278a93be75de713c151142b25f635d0",
+    "source": "README.md"
+  }
+}
