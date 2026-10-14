@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+- New model `gemini-4-argon` (GenAI), with 15 benchmark test configurations (T1885-T1899); `pricing.json` metadata bumped to version 1.56.
+- Results for 2026-10-14: T1885-T1899 (15 tests, 649 requests) for `gemini-4-argon`; `magazine_pages` on `prompt_explicit-json.txt`.
+
 ### Removed
 - `collected_results/compare_detail/` is no longer committed; the deploy regenerates it on the VM and copies it into the comparison widget's media directory, which now reads it from there instead of raw.githubusercontent. `export_dataset` still hashes it into `source_manifest.jsonl` as if committed (see `dev/COLLECTED_RESULTS_PLAN.md`).
 
