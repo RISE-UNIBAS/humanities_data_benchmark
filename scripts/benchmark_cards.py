@@ -297,12 +297,12 @@ def generated_values(name, meta, contributors=None):
 
     pattern = _basename_pattern(name, directory)
     breakdown = {}
-    for sub in ("images", "texts"):
+    for sub, label in (("images", "image files"), ("texts", "text files")):
         path = os.path.join(directory, sub)
         if os.path.isdir(path):
             count = sum(1 for f in os.listdir(path) if os.path.isfile(os.path.join(path, f)))
             if count:
-                breakdown[f"{sub} files"] = count
+                breakdown[label] = count
     objects = Benchmark.get_all_basenames(
         [os.path.join(directory, "images"), os.path.join(directory, "texts")],
         page_pattern=pattern,

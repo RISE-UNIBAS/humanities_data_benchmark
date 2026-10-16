@@ -1,0 +1,97 @@
+{
+  "benchmark_card": {
+    "benchmark_details": {
+      "name": "Business Letters",
+      "overview": "Tests models on extracting correspondence metadata (send date, sender and receiver persons) from 20th century Swiss business letters, resolving names to a reference list of persons.",
+      "data_type": "image",
+      "domains": [
+        "history",
+        "economic history",
+        "correspondence"
+      ],
+      "languages": [
+        "German"
+      ],
+      "similar_benchmarks": [
+        "Not specified"
+      ],
+      "resources": [
+        "https://rise-services.rise.unibas.ch/benchmarks/p/benchmarks/business_letters",
+        "https://github.com/RISE-UNIBAS/humanities_data_benchmark/tree/main/benchmarks/business_letters"
+      ],
+      "authors": [
+        "Eric Decker",
+        "Maximilian Hindermann",
+        "Lea Kasper",
+        "Anthea Alberto",
+        "Pema Frick",
+        "José Luis Losada Palenzuela",
+        "Sorin Marti",
+        "Elena Spadini"
+      ]
+    },
+    "purpose_and_intended_users": {
+      "goal": "Measure how well vision-language models extract correspondence metadata (send date, sender persons, receiver persons) from multi-page business letters, and resolve the names they find to the normalised persons of a reference list. The results are meant to guide historians, archivists and digital humanities projects in choosing a model for cataloguing letters and building correspondence networks from them.",
+      "audience": [
+        "AI researchers",
+        "model developers",
+        "industry practitioners"
+      ],
+      "tasks": [
+        "metadata extraction from multi-page letter images",
+        "date normalisation to ISO 8601",
+        "identification of sender and receiver persons",
+        "matching person names to a normalised name form"
+      ],
+      "limitations": "57 letters from a single collection of one company, written in German between 1926 and 1935 and mostly typewritten; results do not transfer automatically to other archives, hands or languages. Only exact matches count: a date scores only if it equals the ground truth string, and a name scores only if it equals the normalised form (`Surname, Given name`) or one of the variants recorded for that person in `ground_truths/persons.json`. The prompt does not ask for the normalised form, so a correct name spelled in a form nobody recorded counts as wrong. Persons the annotators inferred from function or correspondence history are left out of the ground truth, so a model that names them is penalised. The letter title is requested but not scored. The current prompt and schema do not request organisation fields.",
+      "out_of_scope_uses": [
+        "drawing conclusions about the persons and firms named in the letters",
+        "evaluating full-text transcription of letters",
+        "ranking models on languages other than German"
+      ]
+    },
+    "data": {
+      "source": "Letters from the collection \"Basler Rheinschifffahrt-Aktiengesellschaft, insbesondere über die Veräusserung des Dieselmotorbootes 'Rheinfelden' und die Gewährung eines Darlehens zur Finanzierung der Erstellung des Dieselmotorbootes 'Rhyblitz' an diese Firma\" of the Swiss Economic Archives (Schweizerisches Wirtschaftsarchiv), shelf mark CH SWA HS 191 V 10, digitised on e-manuscripta: http://dx.doi.org/10.7891/e-manuscripta-54917. The collection holds 68 letters, mostly of one to three pages, on business transactions, shipping and personnel matters; 57 of them have a ground truth.",
+      "size": "57 evaluated objects",
+      "format": "JPG scans of the letter pages, 2479×3508 px and about 500 KB each. A letter is one evaluated object; its pages are named `letter<NN>_p<N>.jpg` and sent together in one request. 33 letters have one page, 15 two, 4 three, 3 four, one five and one six. The ground truth is one JSON file per letter:\n\n```json\n{\n    \"letter_title\": [\"None\"],\n    \"send_date\": [\"1926-02-16\"],\n    \"sender_persons\": [\"Groschupf-Jaeger, Louis\", \"Ritter-Dreier, Fritz\"],\n    \"receiver_persons\": [\"Christ-Wackernagel, Paul\"],\n    \"has_signatures\": \"TRUE\"\n}\n```\n\n- `send_date`: the date in ISO 8601 form\n- `sender_persons`, `receiver_persons`: normalised names; `None` when the letter names nobody\n- `letter_title`: the title as written, or `None`; not scored\n- `has_signatures`: whether the letter is signed; used only to select letters for the test variants\n\n`<Name>` marks a person inferred from function and date, `<<Name>>` one inferred from the correspondence history. `ground_truths/persons.json` lists 24 persons with their normalised name and the variants found in the letters (`alternateName`), plus life dates, occupations and sources in Schema.org form.",
+      "annotation": "Annotators recorded the letters in a shared spreadsheet with a persons tab (normalised names, inscribed variants, identifiers such as GND) and a letters tab, following the conventions in [ground_truth_persons_organizations.md](ground_truth_persons_organizations.md). The persons reference list is used by the scorer; it is not supplied to the model as context. Both tabs are exported to `ground_truths/persons.csv` and `ground_truths/letters.csv`; every run regenerates the JSON files from these CSV files.",
+      "size_breakdown": {
+        "images files": 98
+      },
+      "collection_date": "Not specified for benchmark collection or digitisation. Source-document dates: The letters are dated 1926-02-16 to 1935-08-17.",
+      "contamination_controls": "No held-out private split, training-data audit or other contamination control is documented. Inputs, prompts and ground truths are distributed together in this public repository. Whether any evaluated model saw these materials during training is unknown."
+    },
+    "methodology": {
+      "methods": [
+        "zero-shot structured extraction from all pages of a letter in one request",
+        "structured JSON output requested using the `Document` dataclass (`metadata` with list-valued `send_date`, `letter_title`, `sender_persons`, `receiver_persons`)"
+      ],
+      "metrics": [
+        "F1 macro (`f1_macro`, used for ranking)",
+        "F1 micro (`f1_micro`)"
+      ],
+      "calculation": "Three categories are scored per letter: `send_date`, `sender_persons` and `receiver_persons`. Each side is turned into a set and compared exactly.\n\n- `send_date`: only the first date of each list is used. The response date is dropped if it is `null`.\n- persons: ground truth persons marked as inferred (`<…>`, `<<…>>`) and `None` are removed. A response name counts as the ground truth person's name if it equals it or appears in that person's `alternateName` list in `persons.json`. `null`, `None` and empty names are dropped.\n- TP: in both sets\n- FP: only in the response set\n- FN: only in the ground truth set\n\nA parsed response that reaches this scorer but cannot be converted into a letter scores no TP and every ground-truth item as FN. In a normal schema-configured run, an unparseable response (`answer.parsed is None`) is skipped by the shared runner before this scorer is called, and does not enter either F1 aggregate. TP, FP and FN are summed over all letters per category. F1 micro pools the three categories before computing F1; F1 macro averages the F1 of the three categories. Both are rounded to two decimals.\n\nThe `rules` column of `benchmarks_tests.csv` defines three test variants:\n\n- no rules: all 57 letters\n- `{\"skip_signatures\": true, \"skip_non_signatures\": false}`: only the 25 letters without signatures\n- `{\"skip_signatures\": false, \"skip_non_signatures\": true}`: only the 32 letters with signatures",
+      "interpretation": "Scores range from 0 to 1; higher is better. F1 macro, the ranking metric, gives the send date, which is a single item per letter, the same weight as the sender and receiver persons; F1 micro weights categories by their number of items, so persons dominate. Scores of the three variants are computed on different letters and are not directly comparable with each other.",
+      "baseline_results": "Model results are available on the [benchmark page](https://rise-services.rise.unibas.ch/benchmarks/p/benchmarks/business_letters) and in `results/<date>/<test_id>/` at the repository root. Compare runs with the same prompt, scoring rules and ground-truth revision, and report the number of successfully scored objects alongside the score. No fixed model baseline with a run ID and date is specified here.",
+      "validation": "Each letter's ground truth names the annotator responsible for it in the source spreadsheet; the current CSV-to-JSON exporter writes every row of `letters.csv` and does not itself filter a completion-status column. Scoring is deterministic; the scorer is covered by the repository's test suite.",
+      "human_baseline": "Not specified",
+      "judge_uses_llm": false,
+      "judge_num": "Not specified",
+      "judge_models": [
+        "Not specified"
+      ],
+      "judge_score_consolidation": "Not specified",
+      "validity_justification": "Set-based F1 on dates and normalised names reflects the downstream use: a catalogue record or network edge needs the correct date and the correct person, not a near spelling. Not specified beyond that."
+    },
+    "ethical_and_legal_considerations": {
+      "privacy_and_anonymity": "The letters name business people, mostly board members and officers of Basel shipping and trading firms, and `persons.json` adds their life dates, occupations and sources. Nothing is anonymised. Where known, the persons were born between 1857 and 1891, and the latest letter dates from 1935.",
+      "data_licensing": "Public Domain Mark 1.0",
+      "consent_procedures": "Not specified",
+      "compliance_with_regulations": "The letters are records of a private company held by the Swiss Economic Archives, which publishes the scans on e-manuscripta under the Public Domain Mark 1.0. No separate reuse terms are stated for the ground truths. No ethical review was carried out."
+    }
+  },
+  "card_info": {
+    "schema": "evaleval/auto-benchmarkcard@342c1ac7d278a93be75de713c151142b25f635d0",
+    "source": "README.md"
+  }
+}

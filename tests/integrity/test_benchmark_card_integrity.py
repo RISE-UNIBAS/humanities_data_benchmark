@@ -25,11 +25,7 @@ BENCHMARKS_DIR = benchmark_cards.BENCHMARKS_DIR
 # Example/smoke benchmarks used to exercise the harness, not real datasets.
 SCAFFOLD_BENCHMARKS = {"test_benchmark", "test_benchmark2"}
 
-UNMIGRATED = {
-    "bibliographic_data", "blacklist_cards", "book_advert_xml", "business_letters",
-    "company_lists", "duty_rosters", "fraktur_adverts", "general_meeting_minutes",
-    "library_cards", "magazine_pages", "medieval_manuscripts",
-}
+UNMIGRATED = set()
 
 
 def _benchmarks():

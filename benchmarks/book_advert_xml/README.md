@@ -1,9 +1,159 @@
-# book_advert_xml
+# Book Advert XML files (malformed) from Avisblatt
 
-## Overview
-This benchmark is in development.
+This README is a BenchmarkCard (Sokol et al., NeurIPS 2025, arXiv 2410.12974), schema as in evaleval/auto-benchmarkcard v0.2.0.
 
-## Description, Results, Leaderboard
-All results, details, and the leaderboard for this benchmark are available at:
-- **Benchmark detail**: https://rise-services.rise.unibas.ch/benchmarks/p/book_advert_xml
-- **Benchmark scores**: https://rise-services.rise.unibas.ch/benchmarks/p/benchmarks/?id=book_advert_xml
+<!-- Every field stays, in this order; write 'Not specified' when unknown. Fields marked
+     (generated) are filled from meta.json and the benchmark's files by
+     `python scripts/benchmark_cards.py <name>`; edit meta.json, not the README, to change them. -->
+
+The scoring implementation is in [benchmark.py](benchmark.py), the requested output schema in [dataclass.py](dataclass.py), and the instructions in [prompts/](prompts/).
+
+To run this benchmark, use `python scripts/run_single_test.py --adhoc` from the repository root and select `book_advert_xml`. Provider setup is described in the [root README](../../README.md#quick-start); configured prompts, models and scoring rules are recorded in [benchmarks_tests.csv](../benchmarks_tests.csv). Provider-backed runs incur API charges.
+
+## Benchmark Details
+
+**Name:** Book Advert XML files (malformed) from Avisblatt
+
+**Overview:** Evaluates models' ability to repair malformed XML markup in transcribed adverts from the Basel Avisblatt, an 18th-century advertising paper, mostly book sale listings tagged with elements for title, author, format and price.
+
+**Data Type:** text
+
+**Domains:**
+
+- book history
+- history of the press
+- text encoding
+
+**Languages:**
+
+- German
+
+**Similar Benchmarks:** Not specified
+
+**Resources:**
+
+- https://rise-services.rise.unibas.ch/benchmarks/p/benchmarks/book_advert_xml
+- https://github.com/RISE-UNIBAS/humanities_data_benchmark/tree/main/benchmarks/book_advert_xml
+
+**Authors:**
+
+- Ina Serif
+- Sorin Marti
+
+## Purpose and Intended Users
+
+**Goal:** Measure how well language models repair broken XML markup in historical text without altering the text: closing unclosed elements, correcting mismatched tag names and restoring malformed tags, as needed when cleaning the output of automatic tagging pipelines. The results are meant to guide digital humanities projects and editors who post-process semi-structured historical text in choosing a model for markup repair.
+
+**Audience:**
+
+- AI researchers
+- model developers
+- industry practitioners
+
+**Tasks:**
+
+- repair of malformed XML
+- preservation of the transcribed text while editing markup
+
+**Limitations:** 50 adverts from one newspaper and one tagging scheme. The ground truth makes few changes (none in 11 files, one in 30), so returning the input unchanged already scores about 99.0 of 100, and the range that separates models is narrow; models that repair more than the ground truth, or follow the prompt's invitation to add tags "where it makes sense", lose points. The scorer compares character strings, not XML structure, so it does not check that the output is well-formed; 6 ground truths contain mismatched or unclosed tags (three of them recorded as needing no fixes), and 12 contain unescaped `&`. Mismatched `PRIZE`/`PRICE` pairs are resolved to `PRIZE` in some ground truths and to `PRICE` in others, so the expected repair is not predictable from the input. 49 of 50 texts contain the same encoding damage (UTF-8 read as Mac Roman, e.g. `B√ºcher` for "Bücher"), kept in the ground truth, so a model that also fixes the encoding is penalised. At least one ground truth also corrects an OCR error in the text (`Parabieses` to `Paradieses`) that the prompt does not ask for. The prompt asks for a key `number_of_fixes`, the schema for `number_of_corrections`; neither is scored.
+
+**Out-of-Scope Uses:**
+
+- evaluating XML validation against a schema or DTD
+- evaluating OCR correction or encoding repair
+- evaluating tagging of untagged text from scratch
+
+## Data
+
+**Source:** Adverts from the Basel Avisblatt, the weekly advertising paper of Basel (1729–1844), digitised and processed by the SNSF project "Printed markets: information, data, and news in the Basel 'Avisblatt', 1729–1844" at the University of Basel: https://avisblatt.philhist.unibas.ch/. Most adverts announce books for sale or subscription by booksellers, printers and bookbinders; a few offer other goods. Each is tagged with elements for its bibliographic parts and made malformed.
+
+**Size:** 50 evaluated objects
+
+**Format:** One JSON file per advert under `texts/`, holding the malformed XML as a single string, 67–2,943 characters (median 1,146):
+
+```json
+{
+  "xml_string": "<ITEM>11. Bey Herrn Daniel Hag dem Buchbinder sind folgende B√ºcher ... <BIBL><AUTHOR>Ejusd.</AUTHOR> <TITLE>Politicorum Libri</TITLE>. <BIBL><TITLE>Monita</TITLE> ... </ITEM>"
+}
+```
+
+The ground truth is one JSON file per advert with the repaired string, the number of fixes and an explanation; only `fixed_xml` is scored:
+
+```json
+{
+  "fixed_xml": "<ITEM>11. Bey Herrn Daniel Hag dem Buchbinder sind folgende B√ºcher ... <BIBL><AUTHOR>Ejusd.</AUTHOR> <TITLE>Politicorum Libri</TITLE>.</BIBL><BIBL><TITLE>Monita</TITLE> ... </ITEM>",
+  "number_of_fixes": 3,
+  "explanation": "Three closing BIBL tags were missing after the TITLE tags ..."
+}
+```
+
+Elements used: `ITEM` (one per advert), `BIBL`, `TITLE`, `AUTHOR`, `FORMAT`, `VOLUME`, `YEAR`, `PLACE`, and `PRIZE` or `PRICE` for prices, with single uses of `DAY`, `DATE`, `DESCRIPTION` and `AVAILABILITY`. The ground truths record 0–7 fixes per advert, mostly unclosed `BIBL` or `TITLE` elements and `PRIZE`/`PRICE` tag mismatches.
+
+**Annotation:** The repaired ground truth was drafted by a language model and reviewed by the annotator, Sorin Marti, with Ina Serif as domain expert (see Contributors by Role). The source of the malformations (the project's tagging pipeline or deliberate corruption) is not documented. Defects that survived the review are listed under Limitations.
+
+**Size Breakdown:**
+
+- texts files: 50
+
+**Collection Date:** Not specified for benchmark collection or digitisation. Source-document dates: The Avisblatt appeared 1729–1844. The years named in the 50 adverts run up to 1748, which suggests the sample comes from the paper's first two decades.
+
+**Contamination Controls:** No held-out private split, training-data audit or other contamination control is documented. Inputs, prompts and ground truths are distributed together in this public repository. Whether any evaluated model saw these materials during training is unknown.
+
+## Methodology
+
+**Methods:**
+
+- zero-shot repair of one text per request, the text file attached to the prompt
+- structured JSON output requested using the `CorrectedAdvert` dataclass
+
+**Metrics:**
+
+- Fuzzy similarity (`fuzzy`, used for ranking)
+
+**Calculation:** From the response's `fixed_xml` and the ground truth's `fixed_xml`, all spaces, line breaks and carriage returns are removed. The advert score is the rapidfuzz `ratio` of the two strings, from 0 to 100. A response that parses but has no `fixed_xml` scores 0. The benchmark score is the mean of the advert scores. A response that cannot be parsed into the schema at all is not scored and does not enter the mean.
+
+**Interpretation:** Scores range from 0 to 100; higher is better. 100 means the strings match after removing ASCII spaces, line feeds and carriage returns. Tabs and other whitespace are not removed. A score of 100 does not establish XML well-formedness. Read scores against the no-edit reference of about 99.0: a score below it means the model's edits moved the text further from the ground truth than leaving it alone would have.
+
+**Baseline Results:** Model results are available on the [benchmark page](https://rise-services.rise.unibas.ch/benchmarks/p/benchmarks/book_advert_xml) and in `results/<date>/<test_id>/` at the repository root. Compare runs with the same prompt, scoring rules and ground-truth revision, and report the number of successfully scored objects alongside the score. No fixed model baseline with a run ID and date is specified here. Copying each input `xml_string` into `fixed_xml` without edits scores 99.001739/100 across all 50 adverts with the current scorer.
+
+Observed across models: the task combines syntactic repair, structural reconstruction (adding missing tags) and implicit interpretation (deciding what should be tagged), which blurs what a score measures; separate variants for repair only, repair with enrichment and interpretation-heavy work would allow more controlled comparisons. A single score per advert also hides which kinds of error a model makes; component-level measures such as tag accuracy and hierarchy correctness, and per-sample diagnostics, would make strengths and weaknesses visible.
+
+**Validation:** The model-drafted ground truths were reviewed by the annotator; no separate second check is recorded. Scoring is deterministic; the scorer is covered by the repository's test suite. A strict `xml.etree.ElementTree.fromstring` check of the current `fixed_xml` values rejects 16 of 50 references. This detects remaining markup or escaping defects; it does not change their string-similarity scores.
+
+**Human Baseline:** Not specified
+
+**Judge Uses LLM:** false
+
+**Judge Num:** Not specified
+
+**Judge Models:** Not specified
+
+**Judge Score Consolidation:** Not specified
+
+**Validity Justification:** Not specified
+
+## Ethical and Legal Considerations
+
+**Privacy and Anonymity:** The adverts name 18th-century booksellers, printers and authors; all are long dead. No living persons are concerned.
+
+**Data Licensing:** CC BY-NC-SA 4.0
+
+**Consent Procedures:** Not specified
+
+**Compliance with Regulations:** The advert texts come from the Avisblatt project's published data (Avisdata, https://doi.org/10.5281/zenodo.8278751), used under CC BY-NC-SA 4.0, the licence in that dataset's rights field (its notes say CC BY-SA 4.0). The adverts were printed in the 18th century and the persons named are long dead, so data protection law does not apply. No separate reuse terms are stated for the ground truths. No ethical review was carried out.
+
+## Beyond the BenchmarkCard
+
+This section is not part of the BenchmarkCard schema and is not exported to `benchmark_card.json`.
+
+**Versions:**
+
+- 1.0.0 — initial versioned state
+
+**Contributors by Role:**
+
+- Domain Expert: Ina Serif
+- Data Curator: Sorin Marti
+- Annotator: Sorin Marti
+- Analyst: Ina Serif, Sorin Marti
+- Engineer: Sorin Marti

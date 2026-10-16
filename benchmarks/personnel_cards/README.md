@@ -6,6 +6,10 @@ This README is a BenchmarkCard (Sokol et al., NeurIPS 2025, arXiv 2410.12974), s
      (generated) are filled from meta.json and the benchmark's files by
      `python scripts/benchmark_cards.py <name>`; edit meta.json, not the README, to change them. -->
 
+The scoring implementation is in [benchmark.py](benchmark.py), the requested output schema in [dataclass.py](dataclass.py), and the instructions in [prompts/](prompts/).
+
+To run this benchmark, use `python scripts/run_single_test.py --adhoc` from the repository root and select `personnel_cards`. Provider setup is described in the [root README](../../README.md#quick-start); configured prompts, models and scoring rules are recorded in [benchmarks_tests.csv](../benchmarks_tests.csv). Provider-backed runs incur API charges.
+
 ## Benchmark Details
 
 **Name:** Personnel Cards
@@ -40,7 +44,7 @@ This README is a BenchmarkCard (Sokol et al., NeurIPS 2025, arXiv 2410.12974), s
 
 ## Purpose and Intended Users
 
-**Goal:** Measure how well vision-language models turn tabular personnel index cards into structured records, producing in one pass both a diplomatic transcript of each cell and a normalised interpretation (expanded abbreviations, ISO dates, numeric salaries), and recognising crossed-out entries. The results are meant to guide historians, archivists and digital humanities projects in choosing a model for digitising serial administrative records.
+**Goal:** Measure how well vision-language models turn tabular personnel index cards into structured records, producing in one pass both a diplomatic transcript of each cell and a normalised interpretation (resolved ditto marks, ISO dates, numeric salaries), and recognising crossed-out entries. The results are meant to guide historians, archivists and digital humanities projects in choosing a model for digitising serial administrative records.
 
 **Audience:**
 
@@ -51,10 +55,10 @@ This README is a BenchmarkCard (Sokol et al., NeurIPS 2025, arXiv 2410.12974), s
 **Tasks:**
 
 - table transcription from images
-- normalisation of abbreviations, dates and monetary values
+- resolution of ditto marks and normalisation of dates, salary classes and monetary values
 - detection of crossed-out entries
 
-**Limitations:** 61 cards from a single series of one archive, written in German and French by a small number of clerks; results do not transfer automatically to other card layouts, hands or languages. The interpretation layer follows the conventions in the prompt (e.g. `YYYY-MM-DD` dates, amounts in CHF), so it measures agreement with those conventions rather than a neutral standard. A cell counts as matched only above a fuzzy similarity of 0.92, so near-misses in long cells score the same as wrong answers.
+**Limitations:** 61 cards from a single series of one archive, written in German and French by a small number of clerks; results do not transfer automatically to other card layouts, hands or languages. The interpretation layer follows the conventions in the prompt (e.g. `YYYY-MM-DD` dates and numeric salary strings without currency labels; abbreviations must not be expanded), so it measures agreement with those conventions rather than a neutral standard. Each selected sub-field counts as matched at a fuzzy similarity of 0.92 or above; a near-match below that threshold receives the same FP/FN penalty as a wholly wrong value.
 
 **Out-of-Scope Uses:**
 
@@ -77,7 +81,7 @@ This README is a BenchmarkCard (Sokol et al., NeurIPS 2025, arXiv 2410.12974), s
       "row_number": 1,
       "dienstliche_stellung": {
         "diplomatic_transcript": "Assist.",
-        "interpretation": "Assistant",
+        "interpretation": null,
         "is_crossed_out": false
       },
       "dienstort": {
@@ -92,7 +96,7 @@ This README is a BenchmarkCard (Sokol et al., NeurIPS 2025, arXiv 2410.12974), s
       },
       "jahresgehalt_monatsgehalt_taglohn": {
         "diplomatic_transcript": "Fr. 2400.-",
-        "interpretation": "2400 CHF",
+        "interpretation": "2400",
         "is_crossed_out": false
       },
       "datum_gehaltsänderung": {
@@ -113,7 +117,7 @@ This README is a BenchmarkCard (Sokol et al., NeurIPS 2025, arXiv 2410.12974), s
 Each cell has three sub-fields:
 
 - `diplomatic_transcript`: the text exactly as written on the card, abbreviations included
-- `interpretation`: the expanded or standardised form, or `null`
+- `interpretation`: a resolved ditto mark, normalised date, salary class or numeric amount, or `null`; the prompt explicitly says never to expand abbreviations
 - `is_crossed_out`: whether the entry is struck through on the card
 
 **Annotation:** Ground truths were transcribed and interpreted by the domain expert listed under Authors, following the extraction and interpretation rules in the [prompt file](prompts/prompt.txt).
@@ -122,16 +126,16 @@ Each cell has three sub-fields:
 
 - images files: 61
 
-**Collection Date:** The cards date from 1941-1961.
+**Collection Date:** Not specified for benchmark collection or digitisation. Source-document dates: The cards date from 1941-1961.
 
-**Contamination Controls:** None. Images and ground truths have been public in this GitHub repository since February 2026.
+**Contamination Controls:** No held-out private split, training-data audit or other contamination control is documented. Inputs, prompts and ground truths are distributed together in this public repository. Whether any evaluated model saw these materials during training is unknown.
 
 ## Methodology
 
 **Methods:**
 
 - zero-shot structured extraction from a single image per request
-- JSON output constrained to the `Table` dataclass
+- structured JSON output requested using the `Table` dataclass
 
 **Metrics:**
 
@@ -157,11 +161,11 @@ The `rules` column of `benchmarks_tests.csv` selects which sub-fields are scored
 }
 ```
 
-`row_number` is never scored.
+`row_number` is never scored and is not used for alignment: rows are compared by list position. Omitted or inserted rows shift later comparisons; extra scored fields can produce false positives. In schema-configured runs, the shared runner skips unparseable responses before aggregation.
 
-**Interpretation:** Scores range from 0 to 1; higher is better. F1 micro weights cards by their number of fields, so long cards count more; F1 macro weights every card equally.
+**Interpretation:** Scores range from 0 to 1; higher is better. F1 micro weights cards by their number of fields, so long cards count more; F1 macro weights every card equally. The 61 cards contain 209 rows and 1,254 crossed-out flags, of which 1,252 are false. Correct false flags earn true positives even for empty cells, so the default combined score can mask poor transcription. Report the selected field rules when comparing runs.
 
-**Baseline Results:** Current results for all tested models are on the [benchmark page](https://rise-services.rise.unibas.ch/benchmarks/p/benchmarks/personnel_cards) and in the published dataset of runs.
+**Baseline Results:** Model results are available on the [benchmark page](https://rise-services.rise.unibas.ch/benchmarks/p/benchmarks/personnel_cards) and in `results/<date>/<test_id>/` at the repository root. Compare runs with the same prompt, scoring rules and ground-truth revision, and report the number of successfully scored objects alongside the score. No fixed model baseline with a run ID and date is specified here. A diagnostic that preserves the ground-truth row structure, blanks every transcript and interpretation, and sets every crossed-out flag to false scores micro F1 0.663839 and macro F1 0.625082 under the default rules. It uses oracle row structure and is not an independent extraction baseline.
 
 Observed across models: the interpretation layer, which standardises abbreviations, dates and monetary values into machine-readable form, is particularly useful downstream. Models produce the diplomatic transcript and its interpreted form in a single pass, so no separate normalisation step is needed, which shortens the manual post-processing that turns raw archival data into structured records.
 
@@ -187,7 +191,7 @@ Observed across models: the interpretation layer, which standardises abbreviatio
 
 **Consent Procedures:** Not specified
 
-**Compliance with Regulations:** The cards are federal archival records held by the Swiss Federal Archives and fall under the Federal Act on Archiving (BGA, SR 152.1). Records indexed by personal name that contain sensitive personal data have an extended protection period of 50 years (Art. 11 para. 1 BGA), which ends earlier, three years after the death of the person concerned (Art. 11 para. 2). The latest entry on any card is from 1961, so the 50-year period has expired for every card. No ethical review was carried out.
+**Compliance with Regulations:** The cards are federal archival records held by the Swiss Federal Archives and fall under the Federal Act on Archiving (BGA, SR 152.1). Records indexed by personal name that contain sensitive personal data have an extended protection period of 50 years (Art. 11 para. 1 BGA), which ends earlier, three years after the death of the person concerned (Art. 11 para. 2). The latest entry on any card is from 1961, so the 50-year period has expired for every card. No separate reuse terms are stated for the ground truths. No ethical review was carried out.
 
 ## Beyond the BenchmarkCard
 
