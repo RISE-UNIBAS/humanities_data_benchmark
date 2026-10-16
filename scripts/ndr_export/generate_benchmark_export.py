@@ -143,12 +143,16 @@ def get_benchmark_test_runs(benchmark_name, all_tests):
             normalized_score = calculate_normalized_score(scoring_data, benchmark_name)
 
             # Build test run entry
+            cost_summary = (scoring_data or {}).get("cost_summary") or {}
             test_run = {
                 "test_id": test_id,
                 "date": date_str,
                 "provider": test_config.get("provider"),
                 "model": test_config.get("model"),
-                "normalized_score": normalized_score
+                "normalized_score": normalized_score,
+                "cost_usd": cost_summary.get("total_cost_usd"),
+                "prompt_file": test_config.get("prompt_file"),
+                "legacy": test_config.get("legacy_test") or False,
             }
 
             # Remove None values to keep it clean

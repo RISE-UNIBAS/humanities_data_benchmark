@@ -1,207 +1,150 @@
-"""Write the site's benchmark pages from the BenchmarkCard READMEs.
+"""Point the site's benchmark pages and result page at the HumBen widgets.
 
-The website (rise_benchmarks, NDR Core) keeps each benchmark page as HTML with NDR template tags
-in the `template_text` of an `ndr_core_ndrcorepage` row under the page `benchmarks`. For every
-benchmark whose README is a card, this script renders that text from the README, meta.json and
-benchmark_card.json and writes it into the site's SQLite database. Pages of benchmarks without a
-card are never touched. A page is written only when its whole conversion succeeds, each in its own
-transaction; a second run changes nothing.
+The website (rise_benchmarks, NDR Core) keeps its pages as rows of `ndr_core_ndrcorepage`. This
+script sets two kinds of page to a single NDR Core UI element, each a viz-modules widget:
 
-Page layout: an Overview block (description, buttons, table of contents), a Dataset block (fact
-table, tags, contributors and example image elements), then one block per `##` section of the
-README.
+- the page of every benchmark whose README is a BenchmarkCard (under the page `benchmarks`)
+  holds `benchmark_card` (humben-card), which reads the card from the repo and finds the
+  benchmark from the page URL. Pages of benchmarks without a card are never touched.
+- the result overview page `benchmark-results` becomes a template page holding
+  `benchmark_results` (humben-results), which reads benchmark_export.json and finds the
+  benchmark from `?id=`.
+- the `leaderboard` page holds only `dashboard` (humben), whose header carries the title and
+  introduction.
+- the test-run search page `testruns` becomes a template page holding `test_runs`
+  (humben-runs), followed by the site's compare widget (the JS module whose configuration
+  names the constructor HumbenCompare) so that it attaches to every run card.
+
+The widgets show their own title, so NDR's page title is switched off on these pages. A part
+whose UI element does not exist in the site is skipped, so nothing points at a missing
+element. Each page is written in its own transaction; a second run changes nothing.
 
 Run (the deploy does this after pulling, as the user that owns the database):
     python scripts/sync_benchmark_pages.py --db /srv/rise_benchmarks/db.sqlite3 [--only name ...] [--dry-run]
 """
 import argparse
 import difflib
-import html
-import json
 import os
-import re
 import sqlite3
 import sys
 from datetime import datetime, timezone
 
-import markdown
-
 SCRIPTS_DIR = os.path.dirname(os.path.abspath(__file__))
 sys.path[:0] = [SCRIPTS_DIR, os.path.dirname(SCRIPTS_DIR)]
 
-from benchmark_cards import BENCHMARKS_DIR, _split_sections, card_benchmarks, is_card  # noqa: E402
+from benchmark_cards import card_benchmarks  # noqa: E402
 
-REPO_BLOB = "https://github.com/RISE-UNIBAS/humanities_data_benchmark/blob/main/benchmarks/{name}/{path}"
-REPO_RAW = "https://raw.githubusercontent.com/RISE-UNIBAS/humanities_data_benchmark/main/benchmarks/{name}/{path}"
-# NDR Core refuses to render a page with more container tags than this.
-MAX_CONTAINER_TAGS = 50
-# ndr_core_ndrcoreresultfield ids that render a benchmark's tags, example image and contributors.
-ELEMENT_RESULT_FIELDS = {12: "tags", 5: "img", 14: "cont"}
-
-_FENCE = re.compile(r"^(```|~~~)([\w-]*)[^\n]*\n(.*?)^\1[ \t]*$", re.M | re.S)
-_BARE_URL = re.compile(r"(?<![<(\[\"'=`])(https?://[^\s<>()\]`]*[^\s<>()\]`.,;:])")
-
-
-class PageRenderError(ValueError):
-    pass
+# NDR Core UI elements (JavaScript modules) holding the humben-card and humben-results widgets.
+CARD_ELEMENT = "benchmark_card"
+RESULTS_ELEMENT = "benchmark_results"
+RESULTS_PAGE = "benchmark-results"
+DASHBOARD_ELEMENT = "dashboard"
+LEADERBOARD_PAGE = "leaderboard"
+RUNS_ELEMENT = "test_runs"
+RUNS_PAGE = "testruns"
+COMPARE_CONSTRUCTOR = "HumbenCompare"
+TEMPLATE_PAGE = 1  # NdrCorePage.PageType.TEMPLATE
 
 
-def _markdown_to_html(text, name):
-    codes = []
-
-    def stash(m):
-        codes.append((m.group(2) or "text", m.group(3).rstrip("\n")))
-        return f"\n\nNDRCODEBLOCK{len(codes) - 1}\n\n"
-
-    text = re.sub(r"<!--.*?-->", "", text, flags=re.S)
-    text = _FENCE.sub(stash, text)
-    text = _BARE_URL.sub(r"<\1>", text)
-    out = markdown.markdown(text, extensions=["tables", "sane_lists"])
-
-    def relink(m):
-        attr, url = m.group(1), m.group(2)
-        if re.match(r"^(?:[a-z][a-z0-9+.-]*:|#|/)", url, re.I):
-            return m.group(0)
-        template = REPO_RAW if attr == "src" else REPO_BLOB
-        return f'{attr}="{template.format(name=name, path=url)}"'
-
-    out = re.sub(r'(href|src)="([^"]*)"', relink, out)
-    if "[[" in out:
-        raise PageRenderError("README text contains '[[', which the site reads as a template tag")
-
-    def unstash(m):
-        language, code = codes[int(m.group(1))]
-        return f"[[start_code={language}]]{html.escape(code, quote=False)}[[end_code]]"
-
-    out = re.sub(r"<p>NDRCODEBLOCK(\d+)</p>", unstash, out)
-    if "NDRCODEBLOCK" in out:
-        raise PageRenderError("a code block could not be placed (fence inside a list or quote?)")
-    return out
+def render_page(element):
+    """template_text of a page that holds only `element`."""
+    return f"<p>[[element|{element}]]</p>"
 
 
-def _fact_table(meta, card, elements):
-    source = meta.get("source", {})
-    details = card.get("benchmark_details", {})
-    origin = html.escape(source.get("collection", ""), quote=False)
-    if source.get("url"):
-        url = html.escape(source["url"])
-        origin = f'{origin}, <a href="{url}">{url}</a>'
-    rows = [
-        ("Data Type", details.get("data_type", "")),
-        ("Amount", card.get("data", {}).get("size", "")),
-        ("Signature", source.get("signature", "")),
-        ("Language", ", ".join(details.get("languages", []))),
-        ("Time Period", source.get("period", "")),
-        ("License", meta.get("license", "")),
-    ]
-    rows = [(k, html.escape(v, quote=False)) for k, v in rows]
-    rows.insert(2, ("Origin", origin))
-    if elements.get("tags"):
-        rows.append(("Tags", f"[[element|{elements['tags']}]]"))
-    body = "".join(f"<tr><th>{k}</th><td>{v}</td></tr>" for k, v in rows if v)
-    return f'<figure class="table"><table><tbody>{body}</tbody></table></figure>'
+def _element_exists(db, element):
+    return db.execute("SELECT 1 FROM ndr_core_ndrcoreuielement WHERE name = ?", (element,)).fetchone() is not None
 
 
-def render_page(name, readme, meta, card, elements):
-    """template_text for benchmark `name`.
-
-    card: the "benchmark_card" object of benchmark_card.json.
-    elements: {"tags", "img", "cont"} -> NDR UI element name; missing keys are left out.
-    """
-    if not is_card(readme):
-        raise PageRenderError(f"{name}/README.md is not a BenchmarkCard")
-    description = html.escape(meta.get("description", ""), quote=False)
-    parts = [
-        "<p>[[start_block=Overview]]</p><p>[[start_cell]]</p>",
-        f"<p>{description}</p>",
-        "<p>"
-        f"[[page-btn-secondary-lg|benchmarks/{name}|Dataset Description]] "
-        f"[[page-btn-primary-lg|benchmark-results?id={name}|Result Overview]] "
-        f"[[page-btn-primary-lg|testruns?testruns_benchmark={name}__true&amp;search_button_testruns=Search|Test Runs]]"
-        "</p>",
-        "<p>[[end_cell]]</p><p>[[start_cell=40%]]</p><p>[[toc]]</p><p>[[end_cell]]</p><p>[[end_block]]</p>",
-        "<p>[[start_block=Dataset]]</p><p>[[start_cell]]</p>",
-        _fact_table(meta, card, elements),
-    ]
-    if elements.get("cont"):
-        parts.append(f"<p>[[element|{elements['cont']}]]</p>")
-    parts.append("<p>[[end_cell]]</p>")
-    if elements.get("img"):
-        parts.append(f"<p>[[start_cell=40%]]</p><p>[[element|{elements['img']}]]</p><p>[[end_cell]]</p>")
-    parts.append("<p>[[end_block]]</p>")
-
-    for heading, body_start, body_end in _split_sections(readme):
-        if "[" in heading or "]" in heading:
-            raise PageRenderError(f"section heading '{heading}' contains a bracket")
-        parts.append(f"<p>[[start_block={html.escape(heading, quote=False)}]]</p>")
-        parts.append(_markdown_to_html(readme[body_start:body_end].strip(), name))
-        parts.append("<p>[[end_block]]</p>")
-
-    text = "".join(parts)
-    containers = len(re.findall(r"\[\[(?:start|end)_(?:block|cell)", text))
-    if containers > MAX_CONTAINER_TAGS:
-        raise PageRenderError(f"{containers} container tags; the site renders at most {MAX_CONTAINER_TAGS}")
-    return text
-
-
-def _find_page(db, name):
-    return db.execute(
-        "SELECT p.id, p.template_text FROM ndr_core_ndrcorepage p "
-        "JOIN ndr_core_ndrcorepage parent ON p.parent_page_id = parent.id "
-        "WHERE p.view_name = ? AND parent.view_name = 'benchmarks'", (name,)).fetchone()
-
-
-def _elements(db, name):
-    marks = ",".join("?" * len(ELEMENT_RESULT_FIELDS))
-    rows = db.execute(
-        f"SELECT belongs_to_id, result_field_id FROM ndr_core_ndrcoreuielementitem "
-        f"WHERE object_id = ? AND result_field_id IN ({marks})", (name, *ELEMENT_RESULT_FIELDS))
-    return {ELEMENT_RESULT_FIELDS[field]: element for element, field in rows}
-
-
-def sync(db, name, dry_run=False, out=print):
-    """Render and write one benchmark's page. Returns 'written', 'unchanged', 'diff' or 'no page'."""
-    directory = os.path.join(BENCHMARKS_DIR, name)
-    page = _find_page(db, name)
-    if page is None:
-        out(f"{name}: no page under 'benchmarks'; skipped")
-        return "no page"
-    with open(os.path.join(directory, "README.md"), encoding="utf-8") as f:
-        readme = f.read()
-    with open(os.path.join(directory, "meta.json"), encoding="utf-8") as f:
-        meta = json.load(f)
-    card_path = os.path.join(directory, "benchmark_card.json")
-    if not os.path.isfile(card_path):
-        raise PageRenderError("benchmark_card.json missing; run scripts/benchmark_cards.py")
-    with open(card_path, encoding="utf-8") as f:
-        card = json.load(f)["benchmark_card"]
-
-    elements = _elements(db, name)
-    for key in sorted(set(ELEMENT_RESULT_FIELDS.values()) - set(elements)):
-        out(f"{name}: no '{key}' element; left out of the page")
-
-    page_id, current = page
-    new_text = render_page(name, readme, meta, card, elements)
-    if new_text == current:
-        out(f"{name}: unchanged")
+def _write(db, label, page, target, dry_run, out):
+    """Bring `page` (id, page_type, template_text, show_page_title) to `target`, a dict of columns."""
+    page_id, page_type, text, show_title = page
+    current = {"page_type": page_type, "template_text": text, "show_page_title": show_title}
+    if all(current[k] == v for k, v in target.items()):
+        out(f"{label}: unchanged")
         return "unchanged"
     if dry_run:
         split = lambda t: (t or "").replace("</p>", "</p>\n").splitlines()
-        out("\n".join(difflib.unified_diff(split(current), split(new_text), f"{name} (current)",
-                                           f"{name} (from README)", lineterm="")))
+        lines = [f"{k}: {current[k]!r} -> {v!r}" for k, v in target.items()
+                 if k != "template_text" and current[k] != v]
+        lines += difflib.unified_diff(split(text), split(target["template_text"]),
+                                      f"{label} (current)", f"{label} (widget)", lineterm="")
+        out("\n".join(lines))
         return "diff"
     now = datetime.now(timezone.utc).replace(tzinfo=None).isoformat(sep=" ")
+    columns = ", ".join(f"{k} = ?" for k in target)
     with db:
-        db.execute("UPDATE ndr_core_ndrcorepage SET template_text = ?, last_modified = ? WHERE id = ?",
-                   (new_text, now, page_id))
-    out(f"{name}: written")
+        db.execute(f"UPDATE ndr_core_ndrcorepage SET {columns}, last_modified = ? WHERE id = ?",
+                   (*target.values(), now, page_id))
+    out(f"{label}: written")
     return "written"
+
+
+def sync(db, name, dry_run=False, out=print):
+    """Point one benchmark's page at the card widget. Returns 'written', 'unchanged', 'diff' or 'no page'."""
+    page = db.execute(
+        "SELECT p.id, p.page_type, p.template_text, p.show_page_title FROM ndr_core_ndrcorepage p "
+        "JOIN ndr_core_ndrcorepage parent ON p.parent_page_id = parent.id "
+        "WHERE p.view_name = ? AND parent.view_name = 'benchmarks'", (name,)).fetchone()
+    if page is None:
+        out(f"{name}: no page under 'benchmarks'; skipped")
+        return "no page"
+    return _write(db, name, page, {"template_text": render_page(CARD_ELEMENT), "show_page_title": 0}, dry_run, out)
+
+
+def sync_results_page(db, dry_run=False, out=print):
+    """Turn the result overview page into a template page holding the results widget."""
+    page = db.execute(
+        "SELECT id, page_type, template_text, show_page_title FROM ndr_core_ndrcorepage WHERE view_name = ?",
+        (RESULTS_PAGE,)).fetchone()
+    if page is None:
+        out(f"{RESULTS_PAGE}: no such page; skipped")
+        return "no page"
+    target = {"page_type": TEMPLATE_PAGE, "template_text": render_page(RESULTS_ELEMENT), "show_page_title": 0}
+    return _write(db, RESULTS_PAGE, page, target, dry_run, out)
+
+
+def sync_simple_page(db, view_name, target, dry_run=False, out=print):
+    """Bring the top-level page `view_name` to `target`, a dict of columns."""
+    page = db.execute(
+        "SELECT id, page_type, template_text, show_page_title FROM ndr_core_ndrcorepage "
+        "WHERE view_name = ? AND parent_page_id IS NULL", (view_name,)).fetchone()
+    if page is None:
+        out(f"{view_name}: no such page; skipped")
+        return "no page"
+    return _write(db, view_name, page, target, dry_run, out)
+
+
+def _compare_element(db):
+    """Name of the UI element running the compare widget, or None. Matched on the constructor:
+    a hand-edited module config need not carry the package name."""
+    row = db.execute(
+        "SELECT belongs_to_id FROM ndr_core_ndrcoreuielementitem WHERE js_module_config LIKE ?",
+        (f'%"constructor": "{COMPARE_CONSTRUCTOR}"%',)).fetchone()
+    return row[0] if row else None
+
+
+def sync_runs_page(db, dry_run=False, out=print):
+    """Turn the test-run search page into a template page holding the runs widget."""
+    page = db.execute(
+        "SELECT id, page_type, template_text, show_page_title FROM ndr_core_ndrcorepage WHERE view_name = ?",
+        (RUNS_PAGE,)).fetchone()
+    if page is None:
+        out(f"{RUNS_PAGE}: no such page; skipped")
+        return "no page"
+    text = render_page(RUNS_ELEMENT)
+    compare = _compare_element(db)
+    if compare:
+        text += render_page(compare)
+    else:
+        out(f"{RUNS_PAGE}: no {COMPARE_CONSTRUCTOR} element; run cards will have no comparison view")
+    target = {"page_type": TEMPLATE_PAGE, "template_text": text, "show_page_title": 0}
+    return _write(db, RUNS_PAGE, page, target, dry_run, out)
 
 
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     parser.add_argument("--db", required=True, help="path to the site's db.sqlite3")
-    parser.add_argument("--only", nargs="*", help="limit to these benchmarks")
+    parser.add_argument("--only", nargs="*", help="limit the card pages to these benchmarks")
     parser.add_argument("--dry-run", action="store_true", help="print a diff per page, write nothing")
     args = parser.parse_args(argv)
     sys.stdout.reconfigure(errors="replace")
@@ -210,14 +153,40 @@ def main(argv=None):
     db = sqlite3.connect(args.db)
     failed = []
     try:
-        for name in card_benchmarks():
-            if args.only and name not in args.only:
-                continue
+        if _element_exists(db, CARD_ELEMENT):
+            for name in card_benchmarks():
+                if args.only and name not in args.only:
+                    continue
+                try:
+                    sync(db, name, args.dry_run)
+                except (OSError, sqlite3.Error) as e:
+                    failed.append(name)
+                    print(f"{name}: {e} (page left unchanged)", file=sys.stderr)
+        else:
+            print(f"UI element '{CARD_ELEMENT}' does not exist; benchmark pages left unchanged.")
+        if _element_exists(db, RESULTS_ELEMENT):
             try:
-                sync(db, name, args.dry_run)
-            except (PageRenderError, OSError, ValueError, sqlite3.Error) as e:
-                failed.append(name)
-                print(f"{name}: {e} (page left unchanged)", file=sys.stderr)
+                sync_results_page(db, args.dry_run)
+            except sqlite3.Error as e:
+                failed.append(RESULTS_PAGE)
+                print(f"{RESULTS_PAGE}: {e} (page left unchanged)", file=sys.stderr)
+        else:
+            print(f"UI element '{RESULTS_ELEMENT}' does not exist; {RESULTS_PAGE} left unchanged.")
+        if _element_exists(db, DASHBOARD_ELEMENT):
+            try:
+                sync_simple_page(db, LEADERBOARD_PAGE, {"template_text": render_page(DASHBOARD_ELEMENT),
+                                                        "show_page_title": 0}, args.dry_run)
+            except sqlite3.Error as e:
+                failed.append(LEADERBOARD_PAGE)
+                print(f"{LEADERBOARD_PAGE}: {e} (page left unchanged)", file=sys.stderr)
+        if _element_exists(db, RUNS_ELEMENT):
+            try:
+                sync_runs_page(db, args.dry_run)
+            except sqlite3.Error as e:
+                failed.append(RUNS_PAGE)
+                print(f"{RUNS_PAGE}: {e} (page left unchanged)", file=sys.stderr)
+        else:
+            print(f"UI element '{RUNS_ELEMENT}' does not exist; {RUNS_PAGE} left unchanged.")
     finally:
         db.close()
     if failed:
