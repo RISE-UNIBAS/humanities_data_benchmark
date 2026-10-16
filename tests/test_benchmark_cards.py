@@ -82,3 +82,23 @@ def test_audience_vocabulary_is_enforced():
     out = bc.render(text, parsed, values)
     with pytest.raises(bc.CardError, match="audience"):
         bc.to_card(bc.parse(out))
+
+
+@pytest.mark.parametrize("raw", [
+    "\n\n- 1.0.0 — initial version",
+    "\n\n- 1.1.0 — new prompt variant\n- 1.0.0 — initial version",
+])
+def test_semantic_versions_pass(raw):
+    bc.check_versions(raw)
+
+
+@pytest.mark.parametrize("raw,match", [
+    ("\n\n- 1 — initial version", "MAJOR.MINOR.PATCH"),
+    ("\n\n- v1.0 — initial version", "MAJOR.MINOR.PATCH"),
+    ("\n\n- 1.0.0", "MAJOR.MINOR.PATCH"),
+    ("\n\n- 1.0.0 — a\n- 1.0.0 — b", "listed twice"),
+    (" Not specified", "must list"),
+])
+def test_bad_versions_are_reported(raw, match):
+    with pytest.raises(bc.CardError, match=match):
+        bc.check_versions(raw)

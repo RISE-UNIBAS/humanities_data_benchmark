@@ -7,7 +7,8 @@ once its README is a card the strict xfail fails, and the name must be removed f
 Rules enforced here, for every card:
   1. The README parses: sections and fields present, in schema order.
   2. The card validates against the vendored schema, and data_type/audience use its vocabularies.
-  3. Methodology / Metrics names meta.json's ranking metric; Versions is filled in.
+  3. Methodology / Metrics names meta.json's ranking metric; Versions lists semantic versions
+     (`- MAJOR.MINOR.PATCH — what changed`).
   4. README generated fields and benchmark_card.json match what the script produces. Fix: run
      python scripts/benchmark_cards.py <name>.
 """

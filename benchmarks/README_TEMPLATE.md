@@ -92,8 +92,15 @@ This README is a BenchmarkCard (Sokol et al., NeurIPS 2025, arXiv 2410.12974), s
 
 This section is not part of the BenchmarkCard schema and is not exported to `benchmark_card.json`.
 
+<!-- Versions use semantic versioning, newest first, one line each: `- MAJOR.MINOR.PATCH — what
+     changed and why`.
+     MAJOR: scores before and after are not comparable (ground truths corrected, scoring or
+            ranking metric changed, objects added or removed).
+     MINOR: something added that leaves existing scores unchanged (e.g. a new prompt variant).
+     PATCH: a fix that changes no score (e.g. a better scan of the same image). -->
+
 **Versions:**
 
-- 1 — initial version
+- 1.0.0 — initial version
 
 **Contributors by Role:** (generated)

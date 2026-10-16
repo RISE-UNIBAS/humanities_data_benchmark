@@ -335,6 +335,25 @@ def render(text, parsed, values):
     return text
 
 
+VERSION_LINE = re.compile(r"-\s+(\d+)\.(\d+)\.(\d+)\s+—\s+\S")
+
+
+def check_versions(raw):
+    """Versions is a bullet list of `- MAJOR.MINOR.PATCH — what changed`, each version once."""
+    lines = [line.strip() for line in raw.strip().splitlines() if line.strip()]
+    if not lines or lines == [NOT_SPECIFIED]:
+        raise CardError("Beyond the BenchmarkCard / Versions must list the benchmark's versions")
+    seen = set()
+    for line in lines:
+        m = VERSION_LINE.match(line)
+        if not m:
+            raise CardError(f"Versions: '{line}' must read '- MAJOR.MINOR.PATCH — what changed'")
+        version = tuple(int(g) for g in m.groups())
+        if version in seen:
+            raise CardError(f"Versions: {'.'.join(m.groups())} is listed twice")
+        seen.add(version)
+
+
 def card_json(card):
     payload = {"benchmark_card": card, "card_info": {"schema": SCHEMA_ID, "source": "README.md"}}
     return json.dumps(payload, indent=2, ensure_ascii=False) + "\n"
@@ -353,8 +372,7 @@ def build(name, contributors=None):
     metric = meta.get("ranking", {}).get("metric")
     if metric and not any(metric in m for m in card["methodology"]["metrics"]):
         raise CardError(f"Methodology / Metrics must name the ranking metric '{metric}'")
-    if parsed["beyond"]["versions"].raw.strip() in ("", NOT_SPECIFIED):
-        raise CardError("Beyond the BenchmarkCard / Versions must list the benchmark's versions")
+    check_versions(parsed["beyond"]["versions"].raw)
     return readme, card_json(card)
 
 

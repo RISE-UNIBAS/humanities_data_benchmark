@@ -195,7 +195,7 @@ This section is not part of the BenchmarkCard schema and is not exported to `ben
 
 **Versions:**
 
-- 1 — initial versioned state
+- 1.0.0 — initial versioned state
 
 **Contributors by Role:**
 
