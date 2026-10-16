@@ -12,34 +12,39 @@ from scripts.ndr_export.generate_multi_select_data import generate_multi_select_
 from scripts.ndr_export.generate_visualizations import generate_visualizations
 from scripts.ndr_export.generate_vars import generate_vars
 from scripts.ndr_export.copy_static_data import copy_static_data
+from scripts.ndr_export.generate_site_data import generate_site_data
 
 
 def generate_all():
-    print("=== Step 1/8: Benchmark export ===")
+    print("=== Step 1/9: Benchmark export ===")
     generate_benchmark_export()
 
-    print("\n=== Step 2/8: Test runs export ===")
+    print("\n=== Step 2/9: Test runs export ===")
     generate_test_runs_export()
 
     # Detail before index: the index records which runs have re-scored field
     # detail, and learns that from the files this step writes.
-    print("\n=== Step 3/8: Compare detail (re-scores runs lacking field detail) ===")
+    print("\n=== Step 3/9: Compare detail (re-scores runs lacking field detail) ===")
     generate_compare_detail()
 
-    print("\n=== Step 4/8: Compare index ===")
+    print("\n=== Step 4/9: Compare index ===")
     generate_compare_index()
 
-    print("\n=== Step 5/8: Multi-select data ===")
+    print("\n=== Step 5/9: Multi-select data ===")
     generate_multi_select_data()
 
-    print("\n=== Step 6/8: Visualizations ===")
+    print("\n=== Step 6/9: Visualizations ===")
     generate_visualizations()
 
-    print("\n=== Step 7/8: Vars ===")
+    print("\n=== Step 7/9: Vars ===")
     generate_vars()
 
-    print("\n=== Step 8/8: Static data (pricing, model aliases) ===")
+    print("\n=== Step 8/9: Static data (pricing, model aliases) ===")
     copy_static_data()
+
+    # Last: it copies the benchmark export written in step 1.
+    print("\n=== Step 9/9: Site data (everything the website's widgets read) ===")
+    generate_site_data()
 
     print("\nAll exports complete.")
 

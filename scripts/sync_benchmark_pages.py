@@ -14,6 +14,9 @@ script sets two kinds of page to a single NDR Core UI element, each a viz-module
 - the test-run search page `testruns` becomes a template page holding `test_runs`
   (humben-runs), followed by the site's compare widget (the JS module whose configuration
   names the constructor HumbenCompare) so that it attaches to every run card.
+- the `news`, `contribute` and `about` pages hold `site_news`, `site_contribute` and
+  `site_about` (humben-site), which build them from the site data folder: news and about from
+  the benchmark-frontend repo, CHANGELOG.md, CONTRIBUTING.md, CITATION.cff, the contributor registry.
 
 The widgets show their own title, so NDR's page title is switched off on these pages. A part
 whose UI element does not exist in the site is skipped, so nothing points at a missing
@@ -42,6 +45,13 @@ DASHBOARD_ELEMENT = "dashboard"
 LEADERBOARD_PAGE = "leaderboard"
 RUNS_ELEMENT = "test_runs"
 RUNS_PAGE = "testruns"
+# Top-level pages that hold a single element: page view_name -> element name.
+SIMPLE_PAGES = {
+    LEADERBOARD_PAGE: DASHBOARD_ELEMENT,
+    "news": "site_news",
+    "contribute": "site_contribute",
+    "about": "site_about",
+}
 COMPARE_CONSTRUCTOR = "HumbenCompare"
 TEMPLATE_PAGE = 1  # NdrCorePage.PageType.TEMPLATE
 
@@ -172,13 +182,15 @@ def main(argv=None):
                 print(f"{RESULTS_PAGE}: {e} (page left unchanged)", file=sys.stderr)
         else:
             print(f"UI element '{RESULTS_ELEMENT}' does not exist; {RESULTS_PAGE} left unchanged.")
-        if _element_exists(db, DASHBOARD_ELEMENT):
+        for page, element in SIMPLE_PAGES.items():
+            if not _element_exists(db, element):
+                print(f"UI element '{element}' does not exist; {page} left unchanged.")
+                continue
             try:
-                sync_simple_page(db, LEADERBOARD_PAGE, {"template_text": render_page(DASHBOARD_ELEMENT),
-                                                        "show_page_title": 0}, args.dry_run)
+                sync_simple_page(db, page, {"template_text": render_page(element), "show_page_title": 0}, args.dry_run)
             except sqlite3.Error as e:
-                failed.append(LEADERBOARD_PAGE)
-                print(f"{LEADERBOARD_PAGE}: {e} (page left unchanged)", file=sys.stderr)
+                failed.append(page)
+                print(f"{page}: {e} (page left unchanged)", file=sys.stderr)
         if _element_exists(db, RUNS_ELEMENT):
             try:
                 sync_runs_page(db, args.dry_run)

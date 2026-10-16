@@ -15,6 +15,8 @@ SCHEMA = """
     INSERT INTO ndr_core_ndrcorepage VALUES (19, 'benchmark-results', NULL, 4, '', 1, '');
     INSERT INTO ndr_core_ndrcorepage VALUES (2, 'testruns', NULL, 3, '<p>intro</p>', 1, '');
     INSERT INTO ndr_core_ndrcorepage VALUES (4, 'leaderboard', NULL, 1, '<p>intro</p><p>[[element|dashboard]]</p>', 1, '');
+    INSERT INTO ndr_core_ndrcorepage VALUES (5, 'news', NULL, 1, '<p>old news</p>', 1, '');
+    INSERT INTO ndr_core_ndrcorepage VALUES (6, 'about', NULL, 1, '<p>old about</p>', 1, '');
 """
 
 
@@ -98,3 +100,13 @@ def test_leaderboard_page_holds_only_the_dashboard(db):
     target = {"template_text": sbp.render_page("dashboard"), "show_page_title": 0}
     assert sbp.sync_simple_page(db, "leaderboard", target, out=lambda m: None) == "written"
     assert _page(db, 4) == (1, "<p>[[element|dashboard]]</p>", 0)
+
+
+def test_site_pages_follow_their_elements(tmp_path):
+    path = tmp_path / "site.sqlite3"
+    _connect(str(path), ("site_news",)).close()
+    assert sbp.main(["--db", str(path)]) == 0
+    conn = sqlite3.connect(path)
+    assert _page(conn, 5) == (1, "<p>[[element|site_news]]</p>", 0)
+    assert _page(conn, 6) == (1, "<p>old about</p>", 1)   # site_about does not exist: untouched
+    conn.close()

@@ -1,6 +1,6 @@
 # Contributors
 
-This file acknowledges the contributions of individuals and institutions to the LLM Benchmark Suite for Humanities Image Data.
+This file acknowledges the contributions of individuals and institutions to the RISE Humanities Data Benchmark.
 
 ## Core Development Team
 

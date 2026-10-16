@@ -1,4 +1,4 @@
-# Contributing to the LLM Benchmark Suite for Humanities Image Data
+# Contributing to the RISE Humanities Data Benchmark
 
 We welcome contributions from the research community! This guide outlines how to participate in this project and contribute to the development of benchmarks for evaluating LLM performance on digital humanities tasks.
 
@@ -58,6 +58,115 @@ If you want to create a new benchmark:
 2. **Assemble a team** - Ideally include contributors covering multiple roles (domain expert, data curator, annotator, analyst, engineer)
 3. **Follow our structure** - Use our [benchmark template](benchmarks/README_TEMPLATE.md) and directory structure
 4. **Iterate and refine** - Work with the team to refine your benchmark based on feedback
+
+## Create and Submit a Benchmark
+
+This walkthrough takes a new benchmark from an empty fork to a pull request.
+
+### 1. Fork and clone
+
+Fork [RISE-UNIBAS/humanities_data_benchmark](https://github.com/RISE-UNIBAS/humanities_data_benchmark)
+on GitHub (top-right "Fork"), then clone your fork and set up the environment as described in
+[Setting Up Your Development Environment](#setting-up-your-development-environment):
+
+```bash
+git clone https://github.com/<your-username>/humanities_data_benchmark.git
+cd humanities_data_benchmark
+```
+
+### 2. Scaffold the benchmark
+
+The CLI helper creates the directory structure, `meta.json`, a scoring stub and the README
+(a BenchmarkCard template):
+
+```bash
+python scripts/create_benchmark.py
+```
+
+### 3. Add the inputs
+
+Inputs are what is sent to the model: text files (`.txt`, `.json`, …) in `texts/`, images
+(`.jpg`, `.png`, …) in `images/`. The filename without its extension names the object, and all
+files with the same basename are sent together in one request. Every object needs a ground
+truth:
+
+```
+benchmarks/<benchmark_name>/images/       page_1.jpg  page_2.jpg  page_3.jpg
+benchmarks/<benchmark_name>/texts/        page_1.txt              page_3.json
+benchmarks/<benchmark_name>/ground_truths/ page_1.json page_2.json page_3.json
+```
+
+This makes three requests: `page_1` sends an image and a text file, `page_2` only an image,
+`page_3` an image and a JSON file.
+
+### 4. Write the ground truths
+
+One file per object in `ground_truths/`, encoding the expected output exactly. A ground truth
+must be manually checked, unambiguous, as complete as possible, and consistent with your
+scoring logic. See also [Ground Truth Standards](#ground-truth-standards).
+
+### 5. Implement the scoring
+
+`benchmark.py` holds the benchmark class. Implement two methods: one scores a single
+request, the other aggregates a whole run. Return at least one metric; common ones are
+`fuzzy`, `f1_score` and `cer`.
+
+```python
+def score_request_answer(self, object_name, response, ground_truth):
+    # object_name: basename of the processed files
+    # response: the model's response; ground_truth: the matching ground truth
+    calculated_score = 0
+    # compare response and ground truth for this object
+    return {"fuzzy": calculated_score}
+
+def score_benchmark(self, all_scores):
+    return {"fuzzy": sum(s["fuzzy"] for s in all_scores) / len(all_scores)}
+```
+
+The existing benchmarks show many variants: field-level F1, fuzzy matching, character error
+rate, bounding-box overlap.
+
+### 6. Fill in the BenchmarkCard
+
+The benchmark's `README.md` is a [BenchmarkCard](benchmarks/README_TEMPLATE.md): every field
+stays, in order, with `Not specified` where unknown. Fields marked `(generated)` come from
+`meta.json` and the files. Fill in `meta.json` (including `data_type`, `license` and `source`),
+then run:
+
+```bash
+python scripts/benchmark_cards.py <benchmark_name>
+```
+
+It fills the generated fields, validates the card and writes `benchmark_card.json`.
+`benchmarks/personnel_cards/README.md` is a complete example.
+
+### 7. Test it
+
+Run the benchmark end to end against a model, then the test suite:
+
+```bash
+python scripts/run_single_test.py --adhoc   # prompt → responses → scoring → summary
+pytest
+```
+
+### 8. Check before submitting
+
+- **Data:** the dataset is small (recommended under 50 MB); ground truths are manually checked;
+  the data is legally usable (openly available, a clear licence, preferably open; no copyrighted
+  or sensitive data); every input has its ground truth.
+- **Technical:** the benchmark runs locally without errors; the metric is defined and documented
+  in the card; the directory structure follows the template; the BenchmarkCard is complete and
+  `python scripts/benchmark_cards.py --check` passes.
+- **Quality:** outputs are deterministic enough for a fair comparison; the benchmark fills a
+  clear gap (a new task, domain or corpus); the prompt does not steer the model toward the right
+  answers by over-specifying them.
+
+### 9. Open a pull request
+
+Push your branch to your fork and open a pull request against `RISE-UNIBAS/humanities_data_benchmark`,
+branch `main`. Describe what the benchmark tests, the ground-truth format, the scoring, how you
+validated the data, and any open questions. The maintainers run the benchmark, check the metric,
+confirm the licence and the structure, and may ask for changes before merging.
 
 ## Technical Requirements
 
