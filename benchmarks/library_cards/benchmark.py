@@ -64,7 +64,7 @@ class LibraryCards(Benchmark):
         """
 
         data = self.prepare_scoring_data(response)
-        ground_truth_data = ground_truth["response_text"]
+        ground_truth_data = ground_truth
 
         logging.info(image_name)
         logging.debug(f"response: {data}")

@@ -140,11 +140,11 @@ Observed across models: the task combines syntactic repair, structural reconstru
 
 **Privacy and Anonymity:** The adverts name 18th-century booksellers, printers and authors; all are long dead. No living persons are concerned.
 
-**Data Licensing:** CC BY-NC-SA 4.0
+**Data Licensing:** Source material: CC BY-NC-SA 4.0. Ground truth, prompts and other data created for this benchmark: CC BY 4.0.
 
 **Consent Procedures:** Not specified
 
-**Compliance with Regulations:** The advert texts come from the Avisblatt project's published data (Avisdata, https://doi.org/10.5281/zenodo.8278751), used under CC BY-NC-SA 4.0, the licence in that dataset's rights field (its notes say CC BY-SA 4.0). The adverts were printed in the 18th century and the persons named are long dead, so data protection law does not apply. No separate reuse terms are stated for the ground truth. No ethical review was carried out.
+**Compliance with Regulations:** The advert texts come from the Avisblatt project's published data (Avisdata, https://doi.org/10.5281/zenodo.8278751), used under CC BY-NC-SA 4.0, the licence in that dataset's rights field (its notes say CC BY-SA 4.0). The adverts were printed in the 18th century and the persons named are long dead, so data protection law does not apply. No ethical review was carried out.
 
 ## Beyond the BenchmarkCard
 
@@ -160,7 +160,7 @@ This section is not part of the BenchmarkCard schema and is not exported to `ben
 
 Source:
 
-> Basler Avisblatt, digitised by the SNSF project "Printed markets" (University of Basel), 1729–1844. Licence: CC BY-NC-SA 4.0. https://avisblatt.philhist.unibas.ch/
+> Basler Avisblatt, digitised by the SNSF project "Printed markets" (University of Basel), 1729–1844. Licence of the source material: CC BY-NC-SA 4.0. https://avisblatt.philhist.unibas.ch/
 
 The benchmark suite:
 

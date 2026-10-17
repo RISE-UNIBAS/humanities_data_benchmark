@@ -154,11 +154,11 @@ A response that parses but does not fit the letter structure scores no TP and co
 
 **Privacy and Anonymity:** The letters name business people, mostly board members and officers of Basel shipping and trading firms, and `persons.json` adds their life dates, occupations and sources. Nothing is anonymised. Where known, the persons were born between 1857 and 1891; the latest letter dates from 1935.
 
-**Data Licensing:** Public Domain Mark 1.0
+**Data Licensing:** Source material: Public Domain Mark 1.0. Ground truth, prompts and other data created for this benchmark: CC BY 4.0.
 
 **Consent Procedures:** Not specified
 
-**Compliance with Regulations:** The letters are records of a private company held by the Swiss Economic Archives, which publishes the scans on e-manuscripta under the Public Domain Mark 1.0. No separate reuse terms are stated for the ground truth. No ethical review was carried out.
+**Compliance with Regulations:** The letters are records of a private company held by the Swiss Economic Archives, which publishes the scans on e-manuscripta under the Public Domain Mark 1.0. No ethical review was carried out.
 
 ## Beyond the BenchmarkCard
 
@@ -182,7 +182,7 @@ This section is not part of the BenchmarkCard schema and is not exported to `ben
 
 Source:
 
-> Schweizerisches Wirtschaftsarchiv, CH SWA HS 191 V 10, 1926–1935. Licence: Public Domain Mark 1.0. http://dx.doi.org/10.7891/e-manuscripta-54917
+> Schweizerisches Wirtschaftsarchiv, CH SWA HS 191 V 10, 1926–1935. Licence of the source material: Public Domain Mark 1.0. http://dx.doi.org/10.7891/e-manuscripta-54917
 
 The benchmark suite:
 

@@ -135,7 +135,7 @@ def test_how_to_cite():
     text = bc.how_to_cite(meta, people, "1.1.0", CITATION)
     assert ("> Serif, I., & Losada, J. L. (2025). Fraktur Adverts (benchmark version 1.1.0). "
             "In *RISE Humanities Data Benchmark*. Zenodo. https://doi.org/10.5281/zenodo.1") in text
-    assert "> UB Basel, 1731–1762. Licence: CC BY 4.0. https://example.org" in text
+    assert "> UB Basel, 1731–1762. Licence of the source material: CC BY 4.0. https://example.org" in text
     assert "> Hindermann, M. (2026). A Paper. *J*, *12*(1), 24. https://doi.org/10.5334/x" in text
 
 

@@ -127,7 +127,7 @@ The benchmark scores are the unweighted means of the per-page values, rounded to
 
 Observed across models: the rule-based contour detector places its boxes very precisely, but its advantage partly reflects how the ground truth was made (see Limitations).
 
-**Validation:** The ground truth was checked by the annotators named under Annotation. Scoring is deterministic; the scorer has no dedicated unit tests.
+**Validation:** The ground truth was checked by the annotators named under Annotation. Scoring is deterministic; the scorer is covered by `tests/test_magazine_pages_scoring.py`.
 
 **Human Baseline:** Not specified
 
@@ -145,11 +145,11 @@ Observed across models: the rule-based contour detector places its boxes very pr
 
 **Privacy and Anonymity:** The pages are published trade journal pages, 1921–1950. They name companies, and some articles and advertisements name individuals, mostly business people acting in a public capacity. No private records are included and nothing is anonymised. Only advertisement positions are annotated; no personal data is extracted or scored.
 
-**Data Licensing:** CC BY 4.0
+**Data Licensing:** Source material: CC BY 4.0. Ground truth, prompts and other data created for this benchmark: CC BY 4.0.
 
 **Consent Procedures:** Not specified
 
-**Compliance with Regulations:** The page images are used under CC BY 4.0, the licence of the published advertisement corpus from the same journals. The pages are published material from 1921–1950; copyright in individual articles, illustrations and advertisement designs may outlast the publication if their authors are known (in Switzerland 70 years after the author's death, Art. 29 URG). No separate reuse terms are stated for the ground truth. No ethical review was carried out.
+**Compliance with Regulations:** The page images are used under CC BY 4.0, the licence of the published advertisement corpus from the same journals. The pages are published material from 1921–1950; copyright in individual articles, illustrations and advertisement designs may outlast the publication if their authors are known (in Switzerland 70 years after the author's death, Art. 29 URG). No ethical review was carried out.
 
 ## Beyond the BenchmarkCard
 
@@ -172,7 +172,7 @@ This section is not part of the BenchmarkCard schema and is not exported to `ben
 
 Source:
 
-> Journal of the British Chamber of Commerce for Switzerland, 1921–1950. Licence: CC BY 4.0. https://noise.europa.unibas.ch/p/sources/adverts/
+> Journal of the British Chamber of Commerce for Switzerland, 1921–1950. Licence of the source material: CC BY 4.0. https://noise.europa.unibas.ch/p/sources/adverts/
 
 The benchmark suite:
 

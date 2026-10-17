@@ -154,11 +154,11 @@ Observed across models: allowing for the identifier fields the model is not give
 
 **Privacy and Anonymity:** The pages list firms; some entries are sole proprietors named as persons (for example `Adolf Bürgin`). The entries give business names and locations only, from printed directories published 1921–1958. Nothing is anonymised.
 
-**Data Licensing:** Public Domain Mark 1.0
+**Data Licensing:** Source material: Public Domain Mark 1.0. Ground truth, prompts and other data created for this benchmark: CC BY 4.0.
 
 **Consent Procedures:** Not specified
 
-**Compliance with Regulations:** The indexes are printed publications held by the Swiss Economic Archives, which publishes the scans on e-manuscripta under the Public Domain Mark 1.0. No separate reuse terms are stated for the ground truth. No ethical review was carried out.
+**Compliance with Regulations:** The indexes are printed publications held by the Swiss Economic Archives, which publishes the scans on e-manuscripta under the Public Domain Mark 1.0. No ethical review was carried out.
 
 ## Beyond the BenchmarkCard
 
@@ -181,7 +181,7 @@ This section is not part of the BenchmarkCard schema and is not exported to `ben
 
 Source:
 
-> Schweizerisches Wirtschaftsarchiv, UBW Zo 1394, 1921–1958. Licence: Public Domain Mark 1.0. https://doi.org/10.7891/e-manuscripta-174832
+> Schweizerisches Wirtschaftsarchiv, UBW Zo 1394, 1921–1958. Licence of the source material: Public Domain Mark 1.0. https://doi.org/10.7891/e-manuscripta-174832
 
 The benchmark suite:
 

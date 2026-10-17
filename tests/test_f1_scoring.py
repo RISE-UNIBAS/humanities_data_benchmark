@@ -3,8 +3,7 @@
 company_lists, library_cards and personnel_cards share an identical
 score_benchmark (micro/macro aggregation) but differ in score_request_answer:
   - company_lists: wraps a bare-list response into {"entries": ...}; filters metadata.*
-  - library_cards: reads ground_truth["response_text"]; filters examination.* and a
-    couple of removed keys.
+  - library_cards: filters examination.* and a couple of removed keys.
   - personnel_cards: filters by self.rules and always skips row_number.
 """
 import importlib
@@ -89,7 +88,7 @@ class TestCompanyLists:
 
 
 # --------------------------------------------------------------------------- #
-# library_cards score_request_answer (ground truth nested under response_text)
+# library_cards score_request_answer
 # --------------------------------------------------------------------------- #
 class TestLibraryCards:
     @pytest.fixture
@@ -98,19 +97,19 @@ class TestLibraryCards:
 
     def test_perfect_match(self, scorer, response):
         fields = {"title": "Book", "author": "Smith"}
-        result = scorer.score_request_answer("img", response(parsed=fields), {"response_text": fields})
+        result = scorer.score_request_answer("img", response(parsed=fields), fields)
         assert (result["true_positives"], result["false_positives"], result["false_negatives"]) == (2, 0, 0)
         assert result["f1_score"] == 1.0
 
     def test_examination_fields_ignored(self, scorer, response):
-        gt = {"response_text": {"title": "Book", "examination": {"note": "x"}}}
+        gt = {"title": "Book", "examination": {"note": "x"}}
         pred = {"title": "Book", "examination": {"note": "WRONG"}}
         result = scorer.score_request_answer("img", response(parsed=pred), gt)
         # examination.* filtered out -> only title scored
         assert (result["true_positives"], result["false_positives"], result["false_negatives"]) == (1, 0, 0)
 
     def test_mismatch_is_fp_and_fn(self, scorer, response):
-        gt = {"response_text": {"title": "Original Title"}}
+        gt = {"title": "Original Title"}
         pred = {"title": "Nothing Alike Here"}
         result = scorer.score_request_answer("img", response(parsed=pred), gt)
         assert (result["true_positives"], result["false_positives"], result["false_negatives"]) == (0, 1, 1)

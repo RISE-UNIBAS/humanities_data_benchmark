@@ -155,11 +155,11 @@ Example: ground truth `Vnd ein pferit die mir vnd`, response `und ein pferit die
 
 **Privacy and Anonymity:** The manuscript dates from the mid-15th century. Its authors, Hans Rot and Peter Rot, died in 1452 and 1487, and every person it mentions died centuries ago. It contains no data about living persons.
 
-**Data Licensing:** Public Domain
+**Data Licensing:** Source material: Public Domain. Ground truth, prompts and other data created for this benchmark: CC BY 4.0.
 
 **Consent Procedures:** Not specified
 
-**Compliance with Regulations:** No data-protection rules apply to a 15th-century manuscript. e-codices marks the images of H V 15 as public domain, usable without restriction. No separate reuse terms are stated for the ground truth. No ethical review was carried out.
+**Compliance with Regulations:** No data-protection rules apply to a 15th-century manuscript. e-codices marks the images of H V 15 as public domain, usable without restriction. No ethical review was carried out.
 
 ## Beyond the BenchmarkCard
 
@@ -182,7 +182,7 @@ This section is not part of the BenchmarkCard schema and is not exported to `ben
 
 Source:
 
-> Universitätsbibliothek Basel, H V 15, mid-15th century. Licence: Public Domain. https://www.e-codices.unifr.ch/en/list/one/ubb/H-V-0015
+> Universitätsbibliothek Basel, H V 15, mid-15th century. Licence of the source material: Public Domain. https://www.e-codices.unifr.ch/en/list/one/ubb/H-V-0015
 
 The benchmark suite:
 

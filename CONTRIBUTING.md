@@ -130,7 +130,8 @@ rate, bounding-box overlap.
 
 The benchmark's `README.md` is a [BenchmarkCard](benchmarks/README_TEMPLATE.md): every field
 stays, in order, with `Not specified` where unknown. Fields marked `(generated)` come from
-`meta.json` and the files. Fill in `meta.json` (including `data_type`, `license` and `source`),
+`meta.json` and the files. Fill in `meta.json` (including `data_type`, `source` and `license`, the licence of the source
+material),
 then run:
 
 ```bash
@@ -152,8 +153,9 @@ pytest
 ### 8. Check before submitting
 
 - **Data:** the dataset is small (recommended under 50 MB); ground truths are manually checked;
-  the data is legally usable (openly available, a clear licence, preferably open; no copyrighted
-  or sensitive data); every input has its ground truth.
+  the source material is legally usable (openly available, a clear licence, preferably open; no
+  copyrighted or sensitive data); the ground truth you create is released under CC BY 4.0; every
+  input has its ground truth.
 - **Technical:** the benchmark runs locally without errors; the metric is defined and documented
   in the card; the directory structure follows the template; the BenchmarkCard is complete and
   `python scripts/benchmark_cards.py --check` passes.

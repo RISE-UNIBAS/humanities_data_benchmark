@@ -147,7 +147,7 @@ The page score is the unrounded mean over its fields; the benchmark score is the
 
 **Baseline Results:** Model results are available on the [benchmark page](https://rise-services.rise.unibas.ch/benchmarks/p/benchmarks/general_meeting_minutes) and in `results/<date>/<test_id>/` at the repository root. Compare runs with the same prompt, scoring rules and ground-truth revision, and report the number of successfully scored objects alongside the score. There is no fixed model baseline with a run ID and date.
 
-**Validation:** The ground truth was created by Sven Lienhard, annotator and domain expert; no second check is recorded. Scoring is deterministic; the scorer has no dedicated test.
+**Validation:** The ground truth was created by Sven Lienhard, annotator and domain expert; no second check is recorded. Scoring is deterministic; the scorer is covered by `tests/test_general_meeting_minutes_scoring.py`.
 
 **Human Baseline:** Not specified
 
@@ -165,11 +165,11 @@ The page score is the unrounded mean over its fields; the benchmark score is the
 
 **Privacy and Anonymity:** The registers name shareholders and their proxies, private persons and companies, with their home addresses, share holdings and signatures, 1951–1968. They are not anonymised. They are company records of shareholdings, and publishing them raises no personal-rights issue.
 
-**Data Licensing:** Free use
+**Data Licensing:** Source material: Free use. Ground truth, prompts and other data created for this benchmark: CC BY 4.0.
 
 **Consent Procedures:** Not specified
 
-**Compliance with Regulations:** The registers come from the company's private archive, so no public archival law sets a protection period for them; they are used under the archive's grant of free use. No separate reuse terms are stated for the ground truth. No ethical review was carried out.
+**Compliance with Regulations:** The registers come from the company's private archive, so no public archival law sets a protection period for them; they are used under the archive's grant of free use. No ethical review was carried out.
 
 ## Beyond the BenchmarkCard
 
@@ -192,7 +192,7 @@ This section is not part of the BenchmarkCard schema and is not exported to `ben
 
 Source:
 
-> Mines de Costano S.A., private archive, 1951–1968. Licence: Free use.
+> Mines de Costano S.A., private archive, 1951–1968. Licence of the source material: Free use.
 
 The benchmark suite:
 

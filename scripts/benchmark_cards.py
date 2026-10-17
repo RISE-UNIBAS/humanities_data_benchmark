@@ -9,6 +9,8 @@ Fields in GENERATED are derived from meta.json, the benchmark's files and CITATI
 rewritten by this script; edit meta.json, not the README, to change them. How to Cite cites the
 benchmark (its contributors, the year of meta.json `added`, the newest version, the suite's
 all-versions DOI), its source record (meta.json `source` and `license`) and the suite's papers.
+Data Licensing names two licences: meta.json `license` for the source material, and DATA_LICENSE
+for everything the benchmark itself creates (ground truth, prompts, annotations).
 The card is exported to benchmark_card.json beside the README and validated against
 scripts/benchmark_card_schema.py.
 
@@ -37,6 +39,7 @@ BENCHMARKS_DIR = os.path.join(REPO_ROOT, "benchmarks")
 CONTRIBUTORS_PATH = os.path.join(SCRIPTS_DIR, "data", "contributors.json")
 CITATION_PATH = os.path.join(REPO_ROOT, "CITATION.cff")
 SUITE_TITLE = "RISE Humanities Data Benchmark"
+DATA_LICENSE = "CC BY 4.0"
 SITE_URL = "https://rise-services.rise.unibas.ch/benchmarks/p/benchmarks/{name}"
 REPO_URL = "https://github.com/RISE-UNIBAS/humanities_data_benchmark/tree/main/benchmarks/{name}"
 
@@ -317,7 +320,7 @@ def how_to_cite(meta, people, version, citation):
              if source.get(k) and source.get(k) != NOT_SPECIFIED]
     parts = [re.sub(r"^(\d{4})-(\d{4})$", r"\1–\2", part) for part in parts]
     if parts:
-        line = f"{', '.join(parts)}. Licence: {meta['license']}."
+        line = f"{', '.join(parts)}. Licence of the source material: {meta['license']}."
         if source.get("url") and source["url"] != NOT_SPECIFIED:
             line += f" {source['url']}"
         blocks += ["Source:", f"> {line}"]
@@ -393,7 +396,9 @@ def generated_values(name, meta, contributors=None, version="1.0.0", citation=No
         ("benchmark_details", "authors"): authors or [NOT_SPECIFIED],
         ("data", "size"): f"{len(objects)} evaluated objects",
         ("data", "size_breakdown"): breakdown or NOT_SPECIFIED,
-        ("ethical_and_legal_considerations", "data_licensing"): meta["license"],
+        ("ethical_and_legal_considerations", "data_licensing"):
+            f"Source material: {meta['license']}. Ground truth, prompts and other data created for "
+            f"this benchmark: {DATA_LICENSE}.",
         ("beyond", "how_to_cite"): how_to_cite(meta, people, version, citation),
         ("beyond", "contributors_by_role"): by_role or [NOT_SPECIFIED],
     }

@@ -57,7 +57,7 @@ To run this benchmark, use `python scripts/run_single_test.py --adhoc` from the 
 - icon classification against a legend
 - date alignment of cells across separate images
 
-**Limitations:** 21 rows from one monthly roster of one ward in one facility; results do not transfer automatically to other roster software, layouts or icon sets. Days and shifts are compared by position, so a model that omits a day or splits a cell differently shifts every later field into a mismatch. All fields count equally, so each row's 30 dates and roughly 31 shifts of four fields each outweigh the four person fields and the year and month. The legend holds 33 icons, of which the ground truth uses 20; `Freier Tag` alone makes up a third of all shifts.
+**Limitations:** 21 rows from one monthly roster of one ward in one facility; results do not transfer automatically to other roster software, layouts or icon sets. Days and shifts are compared by position, so a model that omits a day or splits a cell differently shifts every later field into a mismatch. All fields count equally, so each row's 30 dates and roughly 31 shifts of four fields each outweigh the four person fields and the year and month. The legend holds 33 icons, of which the ground truth uses 21; `Freier Tag` alone makes up a third of all shifts.
 
 **Out-of-Scope Uses:**
 
@@ -126,7 +126,7 @@ To run this benchmark, use `python scripts/run_single_test.py --adhoc` from the 
 - `planned_on_current_unit`: `false` if the icon has red shading or a red border
 - `alternate_unit`: the unit abbreviation below the cell (e.g. `LE`, `TS`), several joined with a comma, or `null`
 
-Every row covers all 30 days of April; the 21 rows hold 655 shifts.
+Every row covers all 30 days of April; the 21 rows hold 656 shifts.
 
 **Annotation:** Maximilian Hindermann (annotator) created the ground truth by hand, with Ana-Maria Leonte and Franziska Zúñiga as domain experts, following the extraction rules in the [prompt file](prompts/prompt.txt).
 
@@ -166,7 +166,7 @@ A `null` icon or alternate unit on both sides counts as nothing. F1 micro sums T
 
 Observed across models: mapping cells to dates across the separate header image is the largest source of error. Models also confuse empty cells with `Freier Tag` or assign icons such as `HomeOffice` to them.
 
-**Validation:** The ground truth was created by a single annotator, Maximilian Hindermann; no second check is recorded. Scoring is deterministic; the scorer has no dedicated test.
+**Validation:** The ground truth was created by a single annotator, Maximilian Hindermann; no second check is recorded. Scoring is deterministic; the scorer is covered by `tests/test_duty_rosters_scoring.py`.
 
 **Human Baseline:** Not specified
 
@@ -184,11 +184,11 @@ Observed across models: mapping cells to dates across the separate header image 
 
 **Privacy and Anonymity:** The roster is from April 2025 and covers living people. It was anonymised by the facility before release: neither the images nor the ground truth contain names, staff are identified only by the IDs the INTERSCALE study assigned (the handwritten numbers in the margin), the facility is not named, and the ward label is cropped from the header image. Each row records a profession group, employment percentage and a month of shifts and absences, including sick days (two rows) and a month of maternity protection (one row).
 
-**Data Licensing:** CC BY 4.0
+**Data Licensing:** Source material: CC BY 4.0. Ground truth, prompts and other data created for this benchmark: CC BY 4.0.
 
 **Consent Procedures:** The facility released the anonymised roster for publication through the INTERSCALE study.
 
-**Compliance with Regulations:** As the roster is anonymised and carries only study IDs (see Privacy and Anonymity), it contains no personal data that identifies staff. The facility granted its use under CC BY 4.0 through the INTERSCALE study. No separate reuse terms are stated for the ground truth. No separate ethical review was carried out for the benchmark.
+**Compliance with Regulations:** As the roster is anonymised and carries only study IDs (see Privacy and Anonymity), it contains no personal data that identifies staff. The facility granted its use under CC BY 4.0 through the INTERSCALE study. No separate ethical review was carried out for the benchmark.
 
 ## Beyond the BenchmarkCard
 
@@ -203,15 +203,16 @@ This section is not part of the BenchmarkCard schema and is not exported to `ben
 
 **Versions:**
 
+- 2.0.0 — ground truth corrected: staff ids `SaA410` and `S402` as written in the margin (were `23` and `402`); row 109, 29 April: the right half of the split cell (Persönliche Absenz) added and the alternate unit removed
 - 1.0.0 — initial versioned state
 
 **How to Cite:** This benchmark:
 
-> Leonte, A.-M., Zúñiga, F., & Hindermann, M. (2026). Nursing Staff Duty Rosters (benchmark version 1.0.0). In *RISE Humanities Data Benchmark*. Zenodo. https://doi.org/10.5281/zenodo.16941752
+> Leonte, A.-M., Zúñiga, F., & Hindermann, M. (2026). Nursing Staff Duty Rosters (benchmark version 2.0.0). In *RISE Humanities Data Benchmark*. Zenodo. https://doi.org/10.5281/zenodo.16941752
 
 Source:
 
-> Swiss nursing care facility (not named), via the INTERSCALE study, 04-25_PEP_02-12-01, April 2025. Licence: CC BY 4.0. https://clinicaltrials.gov/study/NCT06473051
+> Swiss nursing care facility (not named), via the INTERSCALE study, 04-25_PEP_02-12-01, April 2025. Licence of the source material: CC BY 4.0. https://clinicaltrials.gov/study/NCT06473051
 
 The benchmark suite:
 

@@ -64,7 +64,7 @@ To run this benchmark, use `python scripts/run_single_test.py --adhoc` from the 
 
 **Limitations:** The 263 cards are a random sample from a single catalogue (see Source), not stratified by period, language or card condition. They mix typed, printed and handwritten entries, mostly in German. Only 10 are cross-references, so results on that class rest on very few cases.
 
-The ground truth was created by correcting GPT-4o output, so where the corrector accepted an ambiguous reading it may lean towards that model's choices. It follows the normalisation conventions described under Annotation, so it measures agreement with those conventions rather than with a neutral cataloguing standard. It contains at least one error: `00575005` has year `0`.
+The ground truth was created by correcting GPT-4o output, so where the corrector accepted an ambiguous reading it may lean towards that model's choices. It follows the normalisation conventions described under Annotation, so it measures agreement with those conventions rather than with a neutral cataloguing standard.
 
 All fields weigh equally, so a wrong shelfmark costs as much as a wrong author. The match threshold (see Calculation) is strict for short fields: `X, 184` against `X,184` or `Thieme Verlag` against `Thieme` scores as wrong. Fields empty on both sides are not counted, so a sparse card has a small denominator and a single error moves its F1 considerably.
 
@@ -76,11 +76,11 @@ All fields weigh equally, so a wrong shelfmark costs as much as a wrong author. 
 
 ## Data
 
-**Source:** Catalogue cards of the *Dissertationenkatalog bis 1980*, the dissertation catalogue of the University Library Basel (Universitätsbibliothek Basel), https://ub.unibas.ch/cmsdata/spezialkataloge/ipac/searchform.php?KatalogID=ak2. The benchmark uses a random sample of the cards for the roughly 700,000 dissertations the library collected before 1980. The dissertations come mainly from Switzerland and neighbouring countries. A card describes one dissertation, usually its author and the published version of record, sometimes also the defence or other published versions, without separating these explicitly. Some cards are cross-references: they name an author followed by `s.` (German *siehe*, "see") on a separate line and point to another card.
+**Source:** Catalogue cards of the *Dissertationenkatalog bis 1980*, the dissertation catalogue of the University Library Basel (Universitätsbibliothek Basel), https://ub.unibas.ch/cmsdata/spezialkataloge/ipac/searchform.php?KatalogID=ak2. The catalogue covers the roughly 700,000 dissertations the library collected before 1980; the benchmark's cards were drawn at random from its 680,671 scanned cards. The dissertations come mainly from Switzerland and neighbouring countries. A card describes one dissertation, usually its author and the published version of record, sometimes also the defence or other published versions, without separating these explicitly. Some cards are cross-references: they name an author followed by `s.` (German *siehe*, "see") on a separate line and point to another card.
 
 **Size:** 263 evaluated objects
 
-**Format:** One JPG per card, about 1000×600 px and 75 KB, typed, printed or handwritten. Each card has one ground-truth JSON file; two further files, `00604370.json` and `00604375.json`, have no image and are never scored. In a ground-truth file, `provider`, `model`, `test_time`, `execution_time` and `scores` record how the draft was produced; only `response_text` is scored. It follows the `Document` dataclass in `dataclass.py`:
+**Format:** One JPG per card, about 1000×600 px and 75 KB, typed, printed or handwritten. Each card has one ground-truth JSON file following the `Document` dataclass in `dataclass.py`:
 
 ```json
 {
@@ -88,7 +88,7 @@ All fields weigh equally, so a wrong shelfmark costs as much as a wrong author. 
   "author": {"last_name": "Müller", "first_name": "Maurice Edmond"},
   "publication": {
     "title": "Die hüftnahen Femurosteotomien unter Berücksichtigung der Form,Funktion und Beanspruchung des Hüftgelenkes",
-    "year": 1957,
+    "year": "1957",
     "place": "Stuttgart",
     "pages": "X,184",
     "publisher": "Thieme",
@@ -103,9 +103,9 @@ All fields weigh equally, so a wrong shelfmark costs as much as a wrong author. 
 - `publication`: `title`, `year`, `place`, `pages`, `publisher`, `format`; the dataclass also allows `editor`, which no ground-truth file fills
 - `library_reference`: `shelfmark` (often beginning `Diss.` or `AT`, or marked `Standort:`), `subjects`
 
-The ground truth stores `year` as an integer in 258 files and as a string in 5. The response schema allows a string or null, and the local Pydantic validator converts a numeric year to a string. The scorer compares both as strings, so `1957` and `"1957"` match.
+The ground truth stores `year` as a string, empty when the card gives none. The response schema allows a string or null, and the local Pydantic validator converts a numeric year to a string. The scorer compares both as strings, so `1957` and `"1957"` match.
 
-**Annotation:** GPT-4o drafted the ground truth; Gabriel Müller and Maximilian Hindermann corrected it by hand with the `ground_truther.py` tool. They followed the extraction rules of [prompt.txt](prompts/prompt.txt): a card with `s.` on its own line is a `Reference`, and pages are given without `S.`. In addition, pages keep unnumbered parts (`IV S. + 67-74 S.` becomes `IV 67-74`), and the octavo mark is kept exactly as on the card (`8°` or `8'`).
+**Annotation:** GPT-4o drafted the ground truth; Gabriel Müller and Maximilian Hindermann corrected it by hand, card by card, in a viewer showing the image beside the draft. They followed the extraction rules of [prompt.txt](prompts/prompt.txt): a card with `s.` on its own line is a `Reference`, and pages are given without `S.`. In addition, pages keep unnumbered parts (`IV S. + 67-74 S.` becomes `IV 67-74`), and the octavo mark is kept exactly as on the card (`8°` or `8'`).
 
 **Size Breakdown:**
 
@@ -165,11 +165,11 @@ Observed across models: models generally do well on clearly typed cards with sta
 
 **Privacy and Anonymity:** The cards name the authors of dissertations together with the title, place and year of the work; the same data is in the library's public catalogue. The cards are not anonymised: they hold metadata of published works and no personal data beyond the authorship the publications themselves state.
 
-**Data Licensing:** CC0
+**Data Licensing:** Source material: CC0. Ground truth, prompts and other data created for this benchmark: CC BY 4.0.
 
 **Consent Procedures:** Not specified
 
-**Compliance with Regulations:** The cards are bibliographic records of published works, so no personal-rights issue arises. The University Library Basel provided the card images and granted their use under CC0; no licence is published with the catalogue itself. No separate reuse terms are stated for the ground truth. No ethical review was carried out.
+**Compliance with Regulations:** The cards are bibliographic records of published works, so no personal-rights issue arises. The University Library Basel provided the card images and granted their use under CC0; no licence is published with the catalogue itself. No ethical review was carried out.
 
 ## Beyond the BenchmarkCard
 
@@ -184,15 +184,16 @@ This section is not part of the BenchmarkCard schema and is not exported to `ben
 
 **Versions:**
 
+- 2.0.0 — ground truth corrected: `00575005` (a cross-reference without a year) has an empty year instead of `0`; ground-truth files hold only the card record, years as strings; two files without an image removed
 - 1.0.0 — initial versioned state
 
 **How to Cite:** This benchmark:
 
-> Müller, G., & Hindermann, M. (2025). Library Cards (benchmark version 1.0.0). In *RISE Humanities Data Benchmark*. Zenodo. https://doi.org/10.5281/zenodo.16941752
+> Müller, G., & Hindermann, M. (2025). Library Cards (benchmark version 2.0.0). In *RISE Humanities Data Benchmark*. Zenodo. https://doi.org/10.5281/zenodo.16941752
 
 Source:
 
-> Universitätsbibliothek Basel, Dissertationenkatalog bis 1980, 1593–1979. Licence: CC0. https://ub.unibas.ch/cmsdata/spezialkataloge/ipac/searchform.php?KatalogID=ak2
+> Universitätsbibliothek Basel, Dissertationenkatalog bis 1980, 1593–1979. Licence of the source material: CC0. https://ub.unibas.ch/cmsdata/spezialkataloge/ipac/searchform.php?KatalogID=ak2
 
 The benchmark suite:
 

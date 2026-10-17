@@ -195,11 +195,11 @@ Observed across models: the interpretation layer, which turns ditto marks, dates
 
 **Privacy and Anonymity:** The backs of the cards record the employment history and salaries of Swiss federal employees, 1941–1961. They carry no name; the employee's name and personal data are on the front, which is not part of the benchmark. Nothing is anonymised. The people on the cards were born between 1871 and 1926, so all would be at least 100 years old in 2026. The cards are published as made available by the Swiss Federal Archives.
 
-**Data Licensing:** Public Domain
+**Data Licensing:** Source material: Public Domain. Ground truth, prompts and other data created for this benchmark: CC BY 4.0.
 
 **Consent Procedures:** Not specified
 
-**Compliance with Regulations:** The cards are federal archival records held by the Swiss Federal Archives and fall under the Federal Act on Archiving (BGA, SR 152.1). Records indexed by personal name that contain sensitive personal data have an extended protection period of 50 years (Art. 11 para. 1 BGA), which ends earlier, three years after the death of the person concerned (Art. 11 para. 2). The latest entry on any card is from 1961, so the 50-year period has expired for every card. No separate reuse terms are stated for the ground truth. No ethical review was carried out.
+**Compliance with Regulations:** The cards are federal archival records held by the Swiss Federal Archives and fall under the Federal Act on Archiving (BGA, SR 152.1). Records indexed by personal name that contain sensitive personal data have an extended protection period of 50 years (Art. 11 para. 1 BGA), which ends earlier, three years after the death of the person concerned (Art. 11 para. 2). The latest entry on any card is from 1961, so the 50-year period has expired for every card. No ethical review was carried out.
 
 ## Beyond the BenchmarkCard
 
@@ -215,7 +215,7 @@ This section is not part of the BenchmarkCard schema and is not exported to `ben
 
 Source:
 
-> Schweizerisches Bundesarchiv, E4260D#05, 1941–1961. Licence: Public Domain. https://www.recherche.bar.admin.ch/recherche/#/de/archiv/einheit/3948547
+> Schweizerisches Bundesarchiv, E4260D#05, 1941–1961. Licence of the source material: Public Domain. https://www.recherche.bar.admin.ch/recherche/#/de/archiv/einheit/3948547
 
 The benchmark suite:
 

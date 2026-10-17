@@ -148,11 +148,11 @@ A page's fuzzy score is the mean over its ground-truth adverts, rounded to two d
 
 **Privacy and Anonymity:** The adverts name private persons (sellers, buyers, servants seeking positions, the recently deceased) of Basel in 1731 and 1762. They are not anonymised. Everyone named has been dead for more than two centuries, so no living person is concerned.
 
-**Data Licensing:** CC BY 4.0
+**Data Licensing:** Source material: CC BY 4.0. Ground truth, prompts and other data created for this benchmark: CC BY 4.0.
 
 **Consent Procedures:** Not specified
 
-**Compliance with Regulations:** The pages are printed matter published in 1731 and 1762, long out of copyright; the persons named are long dead, so data protection law does not apply. The Avisblatt repository licenses the digitised issues under CC BY 4.0, so reuse requires attribution to the source records. No separate reuse terms are stated for the ground truth. No ethical review was carried out.
+**Compliance with Regulations:** The pages are printed matter published in 1731 and 1762, long out of copyright; the persons named are long dead, so data protection law does not apply. The Avisblatt repository licenses the digitised issues under CC BY 4.0, so reuse requires attribution to the source records. No ethical review was carried out.
 
 ## Beyond the BenchmarkCard
 
@@ -175,7 +175,7 @@ This section is not part of the BenchmarkCard schema and is not exported to `ben
 
 Source:
 
-> Universitätsbibliothek Basel, UBH Ztg 1, 1731–1762. Licence: CC BY 4.0. https://avisblatt.dg-basel.hasdai.org
+> Universitätsbibliothek Basel, UBH Ztg 1, 1731–1762. Licence of the source material: CC BY 4.0. https://avisblatt.dg-basel.hasdai.org
 
 The benchmark suite:
 

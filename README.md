@@ -735,9 +735,10 @@ Hindermann, M., & Marti, S. (2025, March 19). *RISE Crash Course: "AI Benchmarki
 
 ### Licensing
 
-The benchmark software is licensed under [GNU GPL version 3](LICENSE).
-For benchmark input materials and ground truths, consult the relevant benchmark's documentation
-and source attribution for applicable reuse terms.
+The benchmark software is licensed under [GNU GPL version 3](LICENSE). Everything the benchmarks
+create (ground truths, prompts, annotations) is licensed under
+[CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). The source material (images and texts)
+keeps its own licence, which each benchmark's README states under Data Licensing.
 
 ## Contributors
 

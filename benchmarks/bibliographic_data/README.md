@@ -174,11 +174,11 @@ Observed across models: common difficulties are entries with many authors, abbre
 
 **Privacy and Anonymity:** The pages name the authors, editors and reviewers of scholarly works published 1945–1957, as printed in a published bibliography. They contain no personal data beyond what is in the published record.
 
-**Data Licensing:** Not specified
+**Data Licensing:** Source material: Not specified. Ground truth, prompts and other data created for this benchmark: CC BY 4.0.
 
 **Consent Procedures:** Not specified
 
-**Compliance with Regulations:** The page images are JSTOR scans of a 1961 journal supplement that is still under copyright (the journal is now published by Wiley). No licence or permission to redistribute them is held; they are used for non-commercial academic research. No ethical review was carried out.
+**Compliance with Regulations:** The page images are JSTOR scans of a 1961 journal supplement that is still under copyright (the journal is now published by Wiley). No licence or permission to redistribute them is held; they are used for non-commercial academic research. The ground truth records the bibliographic data of the entries, which are facts rather than protected expression. No ethical review was carried out.
 
 ## Beyond the BenchmarkCard
 
@@ -194,7 +194,7 @@ This section is not part of the BenchmarkCard schema and is not exported to `ben
 
 Source:
 
-> History and Theory, Beiheft 1 (1961), via JSTOR, 1945–1957. Licence: Not specified. http://www.jstor.org/stable/2504495
+> History and Theory, Beiheft 1 (1961), via JSTOR, 1945–1957. Licence of the source material: Not specified. http://www.jstor.org/stable/2504495
 
 The benchmark suite:
 

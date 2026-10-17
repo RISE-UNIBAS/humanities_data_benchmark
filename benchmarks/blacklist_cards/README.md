@@ -146,11 +146,11 @@ Observed across models: models separate company name and location, extract the i
 
 **Privacy and Anonymity:** The cards name the firms and, on 13 of the 33 cards, individuals (some with business addresses) who were placed on the British blacklist in 1940–1946. They are not anonymised. Firms are not natural persons. The cards give no birth dates, but anyone economically active in 1940–1946 was very likely born before 1926 and would be at least 100 years old in 2026. The Swiss Federal Archives have made the record freely accessible since 1978.
 
-**Data Licensing:** Public Domain
+**Data Licensing:** Source material: Public Domain. Ground truth, prompts and other data created for this benchmark: CC BY 4.0.
 
 **Consent Procedures:** Not specified
 
-**Compliance with Regulations:** The cards are federal archival records held by the Swiss Federal Archives and fall under the Federal Act on Archiving (BGA, SR 152.1). The archive's record assigns them the ordinary protection period of 30 years (Art. 9 para. 1 BGA), which ended in 1978; no extended protection for personal data applies. As official records they carry no copyright and are used as public domain. No separate reuse terms are stated for the ground truth. No ethical review was carried out.
+**Compliance with Regulations:** The cards are federal archival records held by the Swiss Federal Archives and fall under the Federal Act on Archiving (BGA, SR 152.1). The archive's record assigns them the ordinary protection period of 30 years (Art. 9 para. 1 BGA), which ended in 1978; no extended protection for personal data applies. As official records they carry no copyright and are used as public domain. No ethical review was carried out.
 
 ## Beyond the BenchmarkCard
 
@@ -166,7 +166,7 @@ This section is not part of the BenchmarkCard schema and is not exported to `ben
 
 Source:
 
-> Schweizerisches Bundesarchiv, E2001E#1968/78#7508*, 1940–1946. Licence: Public Domain. https://www.recherche.bar.admin.ch/recherche/#/de/archiv/einheit/31240458
+> Schweizerisches Bundesarchiv, E2001E#1968/78#7508*, 1940–1946. Licence of the source material: Public Domain. https://www.recherche.bar.admin.ch/recherche/#/de/archiv/einheit/31240458
 
 The benchmark suite:
 
