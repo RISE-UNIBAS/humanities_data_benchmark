@@ -47,9 +47,9 @@ To run this benchmark, use `python scripts/run_single_test.py --adhoc` from the 
 
 **Audience:**
 
+- health services researchers
 - AI researchers
 - model developers
-- industry practitioners
 
 **Tasks:**
 
@@ -203,7 +203,7 @@ This section is not part of the BenchmarkCard schema and is not exported to `ben
 
 **Versions:**
 
-- 2.0.0 — ground truth corrected: staff ids `SaA410` and `S402` as written in the margin (were `23` and `402`); row 109, 29 April: the right half of the split cell (Persönliche Absenz) added and the alternate unit removed
+- 2.0.0 — ground truth corrected: staff ids `SaA410` and `S402` as written in the margin (were `23` and `402`); row 109, 29 April: the right half of the split cell (Persönliche Absenz) added and the alternate unit removed; all stored runs re-scored against the corrected ground truth
 - 1.0.0 — initial versioned state
 
 **How to Cite:** This benchmark:

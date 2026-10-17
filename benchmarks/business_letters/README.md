@@ -52,9 +52,10 @@ To run this benchmark, use `python scripts/run_single_test.py --adhoc` from the 
 
 **Audience:**
 
+- humanities researchers
+- archivists and librarians
 - AI researchers
 - model developers
-- industry practitioners
 
 **Tasks:**
 

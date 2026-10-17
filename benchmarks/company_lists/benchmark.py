@@ -87,10 +87,11 @@ class CompanyLists(Benchmark):
         # Get all unique keys from both datasets
         all_keys = set(response_keys + gt_keys)
 
-        # Filter out metadata fields
+        # Metadata and identifiers are not scored: page_id and entry_id are bookkeeping the
+        # model cannot read off the page.
         filtered_keys_temp = []
         for key in all_keys:
-            if key.startswith("metadata"):
+            if key.startswith("metadata") or key == "page_id" or key.endswith(".entry_id"):
                 continue
             filtered_keys_temp.append(key)
 

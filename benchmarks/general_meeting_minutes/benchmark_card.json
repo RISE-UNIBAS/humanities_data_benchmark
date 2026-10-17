@@ -30,9 +30,10 @@
     "purpose_and_intended_users": {
       "goal": "Measure how well vision-language models turn the attendance registers of a company's general meetings, printed forms filled in by typewriter and by hand, into structured records: one row per shareholder with name and address split apart, share counts by class, votes, and the presence and text of a signature, plus the carried-forward totals. The results are meant to guide historians, archivists and digital humanities projects in choosing a model for digitising tabular business records.",
       "audience": [
+        "humanities researchers",
+        "archivists and librarians",
         "AI researchers",
-        "model developers",
-        "industry practitioners"
+        "model developers"
       ],
       "tasks": [
         "table extraction from page images",
@@ -40,7 +41,7 @@
         "detection and transcription of handwritten signatures",
         "transcription of share counts and page totals"
       ],
-      "limitations": "Nine pages from the registers of a single company, 1951–1968, 85 rows in all; results do not transfer automatically to other forms, hands or record types. Several images are two-page spreads, so the number of rows per image varies from 6 to 20.\n\nThe scorer has several blind spots:\n\n- Rows are compared by position (`entries[0]` with `entries[0]`), not by row number or name. A model that skips or inserts one row is scored against the wrong ground-truth row for every row after it.\n- Only fields present in the ground truth are scored. Rows the model adds beyond the last ground-truth row cost nothing.\n- About a fifth of the scored fields are empty strings (empty share columns, missing totals, absent signatures); a model that returns `\"\"` there scores 1.0 for them.\n- `document` and `page_number` are given in the prompt, so they are close to free points.\n- A wrong `signature_present` value scores 0.22, not 0, because the booleans are compared as the strings `True` and `False`.\n- Scores are similarities, not matches: a field that is 80% similar contributes 0.8, so mean scores look higher than a thresholded F1 would.\n\nSome ground-truth files write the degree sign as the literal text `U+00B0` (15 times on four pages), so a model that writes `°` loses a little similarity in those addresses.",
+      "limitations": "Nine pages from the registers of a single company, 1951–1968, 85 rows in all; results do not transfer automatically to other forms, hands or record types. Several images are two-page spreads, so the number of rows per image varies from 6 to 20.\n\nThe scorer has several blind spots:\n\n- Rows are compared by position (`entries[0]` with `entries[0]`), not by row number or name. A model that skips or inserts one row is scored against the wrong ground-truth row for every row after it.\n- Only fields present in the ground truth are scored. Rows the model adds beyond the last ground-truth row cost nothing.\n- About a fifth of the scored fields are empty strings (empty share columns, missing totals, absent signatures); a model that returns `\"\"` there scores 1.0 for them.\n- `document` and `page_number` are given in the prompt, so they are close to free points.\n- A wrong `signature_present` value scores 0.22, not 0, because the booleans are compared as the strings `True` and `False`.\n- Scores are similarities, not matches: a field that is 80% similar contributes 0.8, so mean scores look higher than a thresholded F1 would.",
       "out_of_scope_uses": [
         "evaluating signature verification or writer identification",
         "evaluating arithmetic on the share columns (totals must be transcribed, not computed)",
@@ -63,8 +64,8 @@
         "zero-shot structured extraction from a single page image per request, with the file name and page number given in the prompt",
         "structured JSON output requested using the `MinutesPage` dataclass",
         "benchmark default output cap of 40,960 tokens; test rules can override it and model-specific ceilings can lower it",
-        "five prompt variants: `prompt.txt` (short instructions on splitting name and address) is the main cross-model variant; `extended_prompt.txt`, `prompt_first_reformulated.txt`, `updated_prompt.txt` and `updated_prompt_steps.txt` (longer rules on transcription fidelity, column order, totals and signatures) each have three configured tests. The variants have not been compared under controlled conditions, and scores are comparable across models only within one prompt",
-        "no shared context: nothing in `context/` is sent, and signatures are scored as ordinary fields"
+        "prompt `prompts/prompt.txt` (short instructions on splitting name and address). Four longer variants (`extended_prompt.txt`, `prompt_first_reformulated.txt`, `updated_prompt.txt`, `updated_prompt_steps.txt`) were tried on three OpenAI models and are retired as legacy tests; their scores are not comparable with `prompt.txt`",
+        "no shared context: each page is sent on its own, and signatures are scored as ordinary fields"
       ],
       "metrics": [
         "Fuzzy similarity (`fuzzy`, used for ranking)"
@@ -84,9 +85,9 @@
     },
     "ethical_and_legal_considerations": {
       "privacy_and_anonymity": "The registers name shareholders and their proxies, private persons and companies, with their home addresses, share holdings and signatures, 1951–1968. They are not anonymised. They are company records of shareholdings, and publishing them raises no personal-rights issue.",
-      "data_licensing": "Source material: Free use. Ground truth, prompts and other data created for this benchmark: CC BY 4.0.",
+      "data_licensing": "Source material: used with the permission of the owner of the Mines de Costano S.A. archive; no licence published. Ground truth, prompts and other data created for this benchmark: CC BY 4.0.",
       "consent_procedures": "Not specified",
-      "compliance_with_regulations": "The registers come from the company's private archive, so no public archival law sets a protection period for them; they are used under the archive's grant of free use. No ethical review was carried out."
+      "compliance_with_regulations": "The registers come from the company's private archive, so no public archival law sets a protection period for them; they are used with the permission of the archive's owner, who has published no licence for them. No ethical review was carried out."
     }
   },
   "card_info": {

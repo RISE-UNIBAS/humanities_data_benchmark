@@ -47,22 +47,22 @@ To run this benchmark, use `python scripts/run_single_test.py --adhoc` from the 
 
 **Audience:**
 
+- humanities researchers
+- archivists and librarians
 - AI researchers
 - model developers
-- industry practitioners
 
 **Tasks:**
 
 - entry segmentation on printed list pages
 - extraction of company names and locations
 
-**Limitations:** The 15 pages come from one publication series, mostly in English with German headings and company names in several languages; results do not transfer to other directories. Addresses, telephone numbers and product descriptions are not extracted, because not every entry has them. Entries are compared by position (see Calculation), so a skipped, merged or extra entry shifts every later entry and turns correct extractions into mismatches; reading a two-column page in a different order has the same effect. The ground truth also contains `page_id` and `entry_id`, whose expected values are the image basename and `<page_id>-<n>`. Both prompts contain a literal `{page_id}` placeholder that the benchmark does not fill (it implements no `get_prompt_kwargs`), so the model is never given these values. `prompt.txt` also shows malformed JSON and describes an array, while the schema requires a `ListPage` object. These inconsistencies penalise otherwise correct content extraction.
+**Limitations:** The 15 pages come from one publication series, mostly in English with German headings and company names in several languages; results do not transfer to other directories. Addresses, telephone numbers and product descriptions are not extracted, because not every entry has them. Entries are compared by position (see Calculation), so a skipped, merged or extra entry shifts every later entry and turns correct extractions into mismatches; reading a two-column page in a different order has the same effect. `prompt.txt` and `prompt_min.txt` contain a literal `{page_id}` placeholder that is never filled, and `prompt.txt` shows malformed JSON, describes an array where the schema requires a `ListPage` object, and dates the indexes 1925–1958; `prompt_v2.txt` corrects these.
 
 **Out-of-Scope Uses:**
 
 - drawing conclusions about the firms or persons listed
 - evaluating full-text OCR of directory pages
-- treating a score as company-name/location accuracy alone, because identifiers are also scored
 
 ## Data
 
@@ -90,8 +90,8 @@ To run this benchmark, use `python scripts/run_single_test.py --adhoc` from the 
 }
 ```
 
-- `page_id`: the image file name without extension
-- `entry_id`: `<page_id>-<n>`, numbered in reading order
+- `page_id`: the image file name without extension; not scored
+- `entry_id`: `<page_id>-<n>`, numbered in reading order; not scored
 - `company_name`: the name as printed, including persons listed as firms
 - `location`: the location as printed, or `"null"` when the entry has none
 
@@ -113,7 +113,7 @@ The 15 pages hold 353 entries; on three alphabetical pages most entries have no 
 
 - zero-shot structured extraction from a single image per request, temperature 0.5
 - structured JSON output requested using the `ListPage` dataclass
-- two prompt variants: [prompt.txt](prompts/prompt.txt) describes the source, the two list types and the output fields; [prompt_min.txt](prompts/prompt_min.txt) only asks for valid JSON and leaves the structure to the dataclass
+- prompt variants: [prompt.txt](prompts/prompt.txt) describes the source, the two list types and the output fields; [prompt_min.txt](prompts/prompt_min.txt) only asks for valid JSON and leaves the structure to the dataclass; [prompt_v2.txt](prompts/prompt_v2.txt), for new tests, is `prompt.txt` corrected (object output, valid example, 1921–1958, no placeholder)
 - output cap: the repository default of 16,384 tokens per request
 
 **Metrics:**
@@ -121,7 +121,7 @@ The 15 pages hold 353 entries; on three alphabetical pages most entries have no 
 - F1 macro (`f1_macro`, used for ranking)
 - F1 micro (`f1_micro`)
 
-**Calculation:** A response that is a bare list is wrapped as `entries`. Every terminal field of the JSON is then compared between response and ground truth by its path, for example `entries[3].company_name`; fields under `metadata` are ignored. `null`, `"null"` and missing values count as empty. Values are compared with the rapidfuzz `fuzz.ratio` similarity scaled to 0–1; a field is a match at 0.92 or above.
+**Calculation:** A response that is a bare list is wrapped as `entries`. Every terminal field of the JSON is then compared between response and ground truth by its path, for example `entries[3].company_name`; fields under `metadata` and the identifiers `page_id` and `entry_id` are ignored. `null`, `"null"` and missing values count as empty. Values are compared with the rapidfuzz `fuzz.ratio` similarity scaled to 0–1; a field is a match at 0.92 or above.
 
 - TP: both have a value and the score is at least 0.92
 - FP and FN: both have a value but the score is below 0.92 (the field counts once as each)
@@ -130,11 +130,11 @@ The 15 pages hold 353 entries; on three alphabetical pages most entries have no 
 
 F1 per page is rounded to two decimals. F1 macro averages the rounded per-page F1; F1 micro sums TP, FP and FN over all scored pages before computing F1 and is not rounded. A response that does not parse is not scored and enters neither aggregate.
 
-**Interpretation:** Scores range from 0 to 1; higher is better. The identifier fields are scored but their values are never given to the model, so perfect company names and locations with non-matching identifiers score about 0.63 (see Baseline Results); this is not a hard maximum, as a model that produces the expected identifiers scores higher. Compare the descriptive and minimal prompts separately, because they give different instructions.
+**Interpretation:** Scores range from 0 to 1; higher is better. A score measures company names and locations only. Compare the prompt variants separately, because they give different instructions.
 
-**Baseline Results:** Results are on the [benchmark page](https://rise-services.rise.unibas.ch/benchmarks/p/benchmarks/company_lists) and in `results/<date>/<test_id>/` at the repository root. No fixed baseline is recorded. Compare runs only with the same prompt, rules and ground-truth revision, and report the number of scored pages with the score. A diagnostic response that copies every company name and location in the correct order but sets all page and entry identifiers to `wrong` scores macro F1 0.628 and micro F1 0.629032 across the 15 pages.
+**Baseline Results:** Results are on the [benchmark page](https://rise-services.rise.unibas.ch/benchmarks/p/benchmarks/company_lists) and in `results/<date>/<test_id>/` at the repository root. No fixed baseline is recorded. Compare runs only with the same prompt, rules and ground-truth revision, and report the number of scored pages with the score.
 
-Observed across models: allowing for the identifier fields the model is not given (see Interpretation; the best stored score is 0.61), most models handle the English directory layouts well. Pages that break the entry order, notably two-column German thematic lists, score near zero for many models, because entries are compared by position.
+Observed across models: most models handle the English directory layouts well (the best scores are around 0.97). Pages that break the entry order score far lower: the two-column German subject index `156089_1321079_26` scores below 0.2 in almost half of all runs, because entries are compared by position.
 
 **Validation:** The ground truth was created by the annotators and the domain expert named under Annotation; no separate check is recorded. Scoring is deterministic; the scorer is covered by the repository's test suite.
 
@@ -173,11 +173,12 @@ This section is not part of the BenchmarkCard schema and is not exported to `ben
 
 **Versions:**
 
+- 2.0.0 — `page_id` and `entry_id` are no longer scored: the model is never given their expected values. All stored runs were re-scored with the new scorer, so they stay comparable; `prompt_v2.txt` added for new tests
 - 1.0.0 — initial versioned state
 
 **How to Cite:** This benchmark:
 
-> Kasper, L., & Marti, S. (2025). Company Lists (benchmark version 1.0.0). In *RISE Humanities Data Benchmark*. Zenodo. https://doi.org/10.5281/zenodo.16941752
+> Kasper, L., & Marti, S. (2025). Company Lists (benchmark version 2.0.0). In *RISE Humanities Data Benchmark*. Zenodo. https://doi.org/10.5281/zenodo.16941752
 
 Source:
 

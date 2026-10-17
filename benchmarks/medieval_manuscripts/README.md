@@ -46,9 +46,10 @@ To run it, call `python scripts/run_single_test.py --adhoc` from the repository 
 
 **Audience:**
 
+- humanities researchers
+- archivists and librarians
 - AI researchers
 - model developers
-- industry practitioners
 
 **Tasks:**
 

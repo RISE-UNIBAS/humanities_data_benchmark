@@ -46,9 +46,10 @@ To run it, call `python scripts/run_single_test.py --adhoc` from the repository 
 
 **Audience:**
 
+- humanities researchers
+- archivists and librarians
 - AI researchers
 - model developers
-- industry practitioners
 
 **Tasks:**
 
@@ -56,9 +57,9 @@ To run it, call `python scripts/run_single_test.py --adhoc` from the repository 
 - segmentation of a page into numbered advertisements
 - assignment of each advertisement to its section heading
 
-**Limitations:** Five pages from two issues of a single newspaper, the Basler Avisblatt (2 January 1731 and 11 February 1762), so scores rest on 91 scored adverts and do not transfer automatically to other papers, typefaces or periods. The two 1731 pages are high-resolution scans and the three 1762 pages much smaller (see Format), so the score mixes two image qualities. The transcription follows the conventions of `prompt_optimized.txt`: long s (ſ) as `s` and the virgule (`/`) as a comma, so a model that keeps ſ or `/` is penalised for following the original more closely.
+**Limitations:** Five pages from two issues of a single newspaper, the Basler Avisblatt (2 January 1731 and 11 February 1762), so scores rest on 93 scored adverts and do not transfer automatically to other papers, typefaces or periods. The two 1731 pages are high-resolution scans and the three 1762 pages much smaller (see Format), so the score mixes two image qualities. The transcription follows the conventions of `prompt_optimized.txt`: long s (ſ) as `s` and the virgule (`/`) as a comma, so a model that keeps ſ or `/` is penalised for following the original more closely.
 
-Several scoring properties bias results (see Calculation). An entry without a number prefix is never scored: nine of the twelve entries on `image_2` (news items and burial notices) and three entries on `image_5` drop out, so 91 of 103 ground-truth entries count. Adverts the model invents or splits off wrongly carry no penalty; only missing or mistranscribed adverts lower the score. If a model writes a section heading that falls below the 0.95 fuzzy threshold, every advert in that section counts as missing even if its text is perfect. The publication date the prompt asks for is not scored.
+Several scoring properties bias results (see Calculation). An entry without a number prefix is never scored: nine of the twelve entries on `image_2` (news items and burial notices) and the first entry on `image_5` (an advert continued from the previous page) drop out, so 93 of 103 ground-truth entries count. Adverts the model invents or splits off wrongly carry no penalty; only missing or mistranscribed adverts lower the score. If a model writes a section heading that falls below the 0.95 fuzzy threshold, every advert in that section counts as missing even if its text is perfect. The publication date the prompt asks for is not scored.
 
 **Out-of-Scope Uses:**
 
@@ -74,13 +75,13 @@ Several scoring properties bias results (see Calculation). An entry without a nu
 
 **Format:** One JPG per page, printed in two columns in Fraktur type. `image_1` and `image_2` (issue of 1731-01-02) are about 5000×8250 px and 11–13 MB; `image_3` to `image_5` (issue of 1762-02-11) are about 920×1160 px and 0.5 MB. `image_4` is a continuation page with no section heading on it.
 
-The ground truth is one JSON file per page: a list of adverts, or (for the 1731 pages) a dict whose keys are advert ids and whose values are one-element lists of adverts. Each advert follows the `Advertisement` dataclass in `dataclass.py`:
+The ground truth is one JSON file per page, a list of adverts in reading order. Each advert follows the `Advertisement` dataclass in `dataclass.py`:
 
 ```json
 {
-  "date": "1731-01-02",
   "tags_section": "Es werden zum Verkauff offerirt",
-  "text": "1. Ein Stücklein von in circa 20. Saum extra schön und guter rother Marggräffer-Wein von Anno 1728. in raisonnablem Preiß."
+  "text": "1. Ein Stücklein von in circa 20. Saum extra schön und guter rother Marggräffer-Wein von Anno 1728. in raisonnablem Preiß.",
+  "date": "1731-01-02"
 }
 ```
 
@@ -130,7 +131,7 @@ A page's fuzzy score is the mean over its ground-truth adverts, rounded to two d
 
 **Baseline Results:** Model results are on the [benchmark page](https://rise-services.rise.unibas.ch/benchmarks/p/benchmarks/fraktur_adverts) and in `results/<date>/<test_id>/` at the repository root. Compare runs with the same prompt, scoring rules and ground-truth revision. No fixed model baseline is defined.
 
-**Validation:** The ground truth was created by Ina Serif as domain expert and annotator; no second check by another person is recorded. Scoring is deterministic; the CER calculation, number-prefix extraction and advert matching are covered by `tests/test_fraktur_adverts_scoring.py`.
+**Validation:** The ground truth was created by Ina Serif as domain expert and annotator; no second check by another person is recorded. Scoring is deterministic; the scorer is covered by `tests/test_fraktur_adverts_scoring.py`.
 
 **Human Baseline:** Not specified
 
@@ -167,11 +168,12 @@ This section is not part of the BenchmarkCard schema and is not exported to `ben
 
 **Versions:**
 
+- 2.0.0 — ground truth corrected on `image_5`: advert 4 (stored in a raw database format and never scored) is a normal entry, and the advert numbered 3 twice is 5, as printed; all files share one format (a list of adverts, database fields removed); all stored runs re-scored against the corrected ground truth
 - 1.0.0 — initial versioned state
 
 **How to Cite:** This benchmark:
 
-> Serif, I., & Hindermann, M. (2025). Fraktur Adverts (benchmark version 1.0.0). In *RISE Humanities Data Benchmark*. Zenodo. https://doi.org/10.5281/zenodo.16941752
+> Serif, I., & Hindermann, M. (2025). Fraktur Adverts (benchmark version 2.0.0). In *RISE Humanities Data Benchmark*. Zenodo. https://doi.org/10.5281/zenodo.16941752
 
 Source:
 

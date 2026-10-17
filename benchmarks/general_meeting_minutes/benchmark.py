@@ -1,6 +1,6 @@
 """Benchmark implementation for General Meeting Minutes.
 
-Extract names, locations, signatures from table-like metting minutes of Mines de Costano S.A., 1930s - 1960s
+Extract names, locations, signatures from table-like meeting minutes of Mines de Costano S.A., 1951–1968
 """
 import logging
 from typing import Dict, List

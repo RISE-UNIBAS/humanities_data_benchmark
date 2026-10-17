@@ -7,12 +7,16 @@ score_benchmark (micro/macro aggregation) but differ in score_request_answer:
   - personnel_cards: filters by self.rules and always skips row_number.
 """
 import importlib
+import json
+import os
 
 import pytest
 
 CompanyLists = importlib.import_module("benchmarks.company_lists.benchmark").CompanyLists
 LibraryCards = importlib.import_module("benchmarks.library_cards.benchmark").LibraryCards
 PersonnelCards = importlib.import_module("benchmarks.personnel_cards.benchmark").PersonnelCards
+
+COMPANY_LISTS_GT = os.path.join(os.path.dirname(__file__), "..", "benchmarks", "company_lists", "ground_truths")
 
 
 # --------------------------------------------------------------------------- #
@@ -85,6 +89,24 @@ class TestCompanyLists:
         pred = {"metadata": {"source": "WRONG"}, "entries": [{"name": "Acme"}]}
         result = scorer.score_request_answer("img", response(parsed=pred), gt)
         assert (result["true_positives"], result["false_positives"], result["false_negatives"]) == (1, 0, 0)
+
+    def test_identifiers_ignored(self, scorer, response):
+        gt = {"page_id": "156089_1321081_14", "entries": [{"entry_id": "156089_1321081_14-1",
+                                                           "company_name": "Acme", "location": "Basel"}]}
+        pred = {"page_id": "page_24", "entries": [{"entry_id": "page_24-1",
+                                                   "company_name": "Acme", "location": "Basel"}]}
+        result = scorer.score_request_answer("img", response(parsed=pred), gt)
+        assert (result["true_positives"], result["false_positives"], result["false_negatives"]) == (2, 0, 0)
+        assert "page_id" not in result["field_scores"]
+
+    @pytest.mark.parametrize("name", sorted(
+        f[:-5] for f in os.listdir(COMPANY_LISTS_GT) if f.endswith(".json")))
+    def test_every_ground_truth_matches_itself(self, scorer, response, name):
+        with open(os.path.join(COMPANY_LISTS_GT, f"{name}.json"), encoding="utf-8") as f:
+            gt = json.load(f)
+        result = scorer.score_request_answer(name, response(parsed=gt), gt)
+        assert (result["false_positives"], result["false_negatives"]) == (0, 0)
+        assert result["f1_score"] == 1.0
 
 
 # --------------------------------------------------------------------------- #

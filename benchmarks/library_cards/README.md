@@ -53,9 +53,10 @@ To run this benchmark, use `python scripts/run_single_test.py --adhoc` from the 
 
 **Audience:**
 
+- humanities researchers
+- archivists and librarians
 - AI researchers
 - model developers
-- industry practitioners
 
 **Tasks:**
 
@@ -184,7 +185,7 @@ This section is not part of the BenchmarkCard schema and is not exported to `ben
 
 **Versions:**
 
-- 2.0.0 — ground truth corrected: `00575005` (a cross-reference without a year) has an empty year instead of `0`; ground-truth files hold only the card record, years as strings; two files without an image removed
+- 2.0.0 — ground truth corrected: `00575005` (a cross-reference without a year) has an empty year instead of `0`; ground-truth files hold only the card record, years as strings; two files without an image removed; all stored runs re-scored against the corrected ground truth
 - 1.0.0 — initial versioned state
 
 **How to Cite:** This benchmark:

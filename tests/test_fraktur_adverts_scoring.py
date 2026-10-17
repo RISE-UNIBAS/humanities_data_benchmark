@@ -1,11 +1,13 @@
 """Scoring tests for benchmarks/fraktur_adverts (CER + fuzzy).
 
-Covers the pure/aggregation logic: calculate_cer (note: unlike medieval_manuscripts,
-an empty reference is always max error), score_benchmark averaging, and the
-number-prefix parser. The section/number grouping in compare_ads is integration-heavy
-and intentionally not unit-tested here.
+Covers calculate_cer (note: unlike medieval_manuscripts, an empty reference is always max
+error), score_benchmark averaging, the number-prefix parser, the pairing of adverts by
+section and number in compare_ads, and every ground-truth file against itself.
 """
+import copy
 import importlib
+import json
+import os
 
 import pytest
 
@@ -82,3 +84,62 @@ class TestScoreRequestAnswerGolden:
         # response ad has no tags_section -> image_4 handling forces DEFAULT_SECTION, then matches
         parsed = {"advertisements": [{"text": "1. Foo"}]}
         assert metrics(scorer.score_request_answer("image_4", response(parsed=parsed), gt)) == {"fuzzy": 1.0, "cer": 0.0}
+
+GROUND_TRUTHS = os.path.join(os.path.dirname(__file__), "..", "benchmarks", "fraktur_adverts", "ground_truths")
+
+
+def ad(section, text):
+    return {"tags_section": section, "text": text, "date": "1762-02-11"}
+
+
+class TestCompareAds:
+    def test_pairs_by_section_and_number(self, scorer):
+        gt = [ad("Verkauf", "1. Ein Haus"), ad("Verkauf", "2. Ein Garten")]
+        response = {"advertisements": [ad("Verkauf", "2. Ein Garten"), ad("Verkauf", "1. Ein Haus")]}
+        results = scorer.compare_ads(response, gt, "image_1")
+        assert [(r["number"], r["match_found"], r["similarity"]) for r in results] == [(1, True, 1.0), (2, True, 1.0)]
+
+    def test_missing_advert_is_not_found(self, scorer):
+        results = scorer.compare_ads({"advertisements": []}, [ad("Verkauf", "1. Ein Haus")], "image_1")
+        assert results[0]["match_found"] is False and results[0]["similarity"] == 0.0
+
+    def test_section_name_matches_fuzzily(self, scorer):
+        gt = [ad("Es wird zum Verkauf angetragen", "1. Ein Haus")]
+        response = {"advertisements": [ad("Es wird zum Verkauff angetragen", "1. Ein Haus")]}
+        assert scorer.compare_ads(response, gt, "image_1")[0]["match_found"] is True
+
+    def test_unnumbered_entries_are_not_scored(self, scorer):
+        gt = [ad("Nachrichten", "Nachdeme die Stadt"), ad("Verkauf", "1. Ein Haus")]
+        assert [r["number"] for r in scorer.compare_ads({"advertisements": []}, gt, "image_1")] == [1]
+
+    def test_extra_response_adverts_cost_nothing(self, scorer):
+        gt = [ad("Verkauf", "1. Ein Haus")]
+        response = {"advertisements": [ad("Verkauf", "1. Ein Haus"), ad("Verkauf", "2. Erfunden")]}
+        assert len(scorer.compare_ads(response, gt, "image_1")) == 1
+
+    def test_image_4_defaults_missing_sections_and_finds_numbers_anywhere(self, scorer):
+        gt = [ad("", "1. Ein Haus"), ad(None, "2. Ein Garten")]
+        response = {"advertisements": [ad(None, "1. Ein Haus"), ad("Anderswo", "2. Ein Garten")]}
+        results = scorer.compare_ads(response, gt, "image_4")
+        assert all(r["section"] == DEFAULT_SECTION and r["match_found"] for r in results)
+
+    def test_unusable_response(self, scorer):
+        results = scorer.compare_ads(None, [ad("Verkauf", "1. Ein Haus")], "image_1")
+        assert results[0]["match_found"] is False
+
+
+class TestGroundTruth:
+    @pytest.mark.parametrize("name", sorted(f[:-5] for f in os.listdir(GROUND_TRUTHS) if f.endswith(".json")))
+    def test_every_ground_truth_matches_itself(self, scorer, response, name):
+        with open(os.path.join(GROUND_TRUTHS, f"{name}.json"), encoding="utf-8") as f:
+            gt = json.load(f)
+        result = scorer.score_request_answer(name, response(parsed={"advertisements": copy.deepcopy(gt)}), gt)
+        assert (result["fuzzy"], result["cer"]) == (1.0, 0.0)
+
+    @pytest.mark.parametrize("name", sorted(f[:-5] for f in os.listdir(GROUND_TRUTHS) if f.endswith(".json")))
+    def test_numbers_are_unique_within_a_section(self, name):
+        with open(os.path.join(GROUND_TRUTHS, f"{name}.json"), encoding="utf-8") as f:
+            entries = json.load(f)
+        seen = [(e["tags_section"], e["text"].split(".", 1)[0]) for e in entries
+                if (e["text"] or "")[:1].isdigit()]
+        assert len(seen) == len(set(seen)), "duplicate advert number in one section"

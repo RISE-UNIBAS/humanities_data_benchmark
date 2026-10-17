@@ -49,9 +49,10 @@ To run this benchmark, use `python scripts/run_single_test.py --adhoc` from the 
 
 **Audience:**
 
+- humanities researchers
+- archivists and librarians
 - AI researchers
 - model developers
-- industry practitioners
 
 **Tasks:**
 
@@ -70,8 +71,6 @@ The scorer has several blind spots:
 - `document` and `page_number` are given in the prompt, so they are close to free points.
 - A wrong `signature_present` value scores 0.22, not 0, because the booleans are compared as the strings `True` and `False`.
 - Scores are similarities, not matches: a field that is 80% similar contributes 0.8, so mean scores look higher than a thresholded F1 would.
-
-Some ground-truth files write the degree sign as the literal text `U+00B0` (15 times on four pages), so a model that writes `°` loses a little similarity in those addresses.
 
 **Out-of-Scope Uses:**
 
@@ -128,8 +127,8 @@ Some ground-truth files write the degree sign as the literal text `U+00B0` (15 t
 - zero-shot structured extraction from a single page image per request, with the file name and page number given in the prompt
 - structured JSON output requested using the `MinutesPage` dataclass
 - benchmark default output cap of 40,960 tokens; test rules can override it and model-specific ceilings can lower it
-- five prompt variants: `prompt.txt` (short instructions on splitting name and address) is the main cross-model variant; `extended_prompt.txt`, `prompt_first_reformulated.txt`, `updated_prompt.txt` and `updated_prompt_steps.txt` (longer rules on transcription fidelity, column order, totals and signatures) each have three configured tests. The variants have not been compared under controlled conditions, and scores are comparable across models only within one prompt
-- no shared context: nothing in `context/` is sent, and signatures are scored as ordinary fields
+- prompt `prompts/prompt.txt` (short instructions on splitting name and address). Four longer variants (`extended_prompt.txt`, `prompt_first_reformulated.txt`, `updated_prompt.txt`, `updated_prompt_steps.txt`) were tried on three OpenAI models and are retired as legacy tests; their scores are not comparable with `prompt.txt`
+- no shared context: each page is sent on its own, and signatures are scored as ordinary fields
 
 **Metrics:**
 
@@ -165,11 +164,11 @@ The page score is the unrounded mean over its fields; the benchmark score is the
 
 **Privacy and Anonymity:** The registers name shareholders and their proxies, private persons and companies, with their home addresses, share holdings and signatures, 1951–1968. They are not anonymised. They are company records of shareholdings, and publishing them raises no personal-rights issue.
 
-**Data Licensing:** Source material: Free use. Ground truth, prompts and other data created for this benchmark: CC BY 4.0.
+**Data Licensing:** Source material: used with the permission of the owner of the Mines de Costano S.A. archive; no licence published. Ground truth, prompts and other data created for this benchmark: CC BY 4.0.
 
 **Consent Procedures:** Not specified
 
-**Compliance with Regulations:** The registers come from the company's private archive, so no public archival law sets a protection period for them; they are used under the archive's grant of free use. No ethical review was carried out.
+**Compliance with Regulations:** The registers come from the company's private archive, so no public archival law sets a protection period for them; they are used with the permission of the archive's owner, who has published no licence for them. No ethical review was carried out.
 
 ## Beyond the BenchmarkCard
 
@@ -184,15 +183,16 @@ This section is not part of the BenchmarkCard schema and is not exported to `ben
 
 **Versions:**
 
+- 2.0.0 — ground truth corrected: the degree sign in Paris arrondissements, written as the literal text `U+00B0` 15 times on four pages, is now `°`; all stored runs re-scored against the corrected ground truth
 - 1.0.0 — initial versioned state
 
 **How to Cite:** This benchmark:
 
-> Binnenkade, A., Lienhard, S., & Marti, S. (2026). General Meeting Minutes (benchmark version 1.0.0). In *RISE Humanities Data Benchmark*. Zenodo. https://doi.org/10.5281/zenodo.16941752
+> Binnenkade, A., Lienhard, S., & Marti, S. (2026). General Meeting Minutes (benchmark version 2.0.0). In *RISE Humanities Data Benchmark*. Zenodo. https://doi.org/10.5281/zenodo.16941752
 
 Source:
 
-> Mines de Costano S.A., private archive, 1951–1968. Licence of the source material: Free use.
+> Mines de Costano S.A., private archive, 1951–1968. Licence of the source material: used with the permission of the owner of the Mines de Costano S.A. archive; no licence published.
 
 The benchmark suite:
 

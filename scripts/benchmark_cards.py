@@ -32,7 +32,7 @@ sys.path[:0] = [SCRIPTS_DIR, REPO_ROOT]
 
 from benchmark_base import Benchmark  # noqa: E402
 from benchmark_card_schema import (  # noqa: E402
-    AUDIENCE_VOCAB, DATA_TYPE_VOCAB, SCHEMA_ID, BenchmarkCard,
+    AUDIENCE_VOCAB, DATA_TYPE_VOCAB, HUMBEN_AUDIENCE_VOCAB, SCHEMA_ID, BenchmarkCard,
 )
 
 BENCHMARKS_DIR = os.path.join(REPO_ROOT, "benchmarks")
@@ -244,8 +244,9 @@ def to_card(parsed):
     data_types = [t.strip() for t in model.benchmark_details.data_type.split(",")]
     problems += [f"data_type '{t}' not in {sorted(DATA_TYPE_VOCAB)}"
                  for t in data_types if t not in DATA_TYPE_VOCAB]
-    problems += [f"audience '{a}' not in {sorted(AUDIENCE_VOCAB)}"
-                 for a in model.purpose_and_intended_users.audience if a not in AUDIENCE_VOCAB]
+    audiences = AUDIENCE_VOCAB | HUMBEN_AUDIENCE_VOCAB
+    problems += [f"audience '{a}' not in {sorted(audiences)}"
+                 for a in model.purpose_and_intended_users.audience if a not in audiences]
     if problems:
         raise CardError("; ".join(problems))
     return model.model_dump(exclude_none=True)

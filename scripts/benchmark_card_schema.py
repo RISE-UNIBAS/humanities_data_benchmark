@@ -39,6 +39,10 @@ AUDIENCE_VOCAB = {
     "AI researchers", "model developers", "safety evaluators",
     "industry practitioners", "policymakers", "educators",
 }
+# Not in EvalEval's vocabulary: the readers the humanities benchmarks are made for.
+HUMBEN_AUDIENCE_VOCAB = {
+    "humanities researchers", "archivists and librarians", "health services researchers",
+}
 
 
 class BenchmarkDetails(BaseModel):
