@@ -14,7 +14,7 @@ To run this benchmark, use `python scripts/run_single_test.py --adhoc` from the 
 
 **Name:** Nursing Staff Duty Rosters
 
-**Overview:** Evaluates models' ability to extract structured schedule data from visual nursing staff duty rosters, including shift types, half-day splits, alternate unit assignments, and staff metadata.
+**Overview:** Evaluates models' ability to extract structured schedule data from an icon-based nursing staff duty roster of a Swiss care facility, April 2025: shift types, half-day splits, alternate unit assignments and staff metadata.
 
 **Data Type:** image
 
@@ -57,7 +57,7 @@ To run this benchmark, use `python scripts/run_single_test.py --adhoc` from the 
 - icon classification against a legend
 - date alignment of cells across separate images
 
-**Limitations:** 21 rows from one monthly roster of one ward in one facility; results do not transfer automatically to other roster software, layouts or icon sets. Days and shifts are compared by position, so a model that omits a day or splits a cell differently shifts every later field into a mismatch. All fields count equally, so the roughly 30 day and 31 shift entries per row (four fields each) outweigh the four person fields and the year and month. The legend holds 33 icons, of which the ground truth uses 20; `Freier Tag` alone makes up a third of all shifts.
+**Limitations:** 21 rows from one monthly roster of one ward in one facility; results do not transfer automatically to other roster software, layouts or icon sets. Days and shifts are compared by position, so a model that omits a day or splits a cell differently shifts every later field into a mismatch. All fields count equally, so each row's 30 dates and roughly 31 shifts of four fields each outweigh the four person fields and the year and month. The legend holds 33 icons, of which the ground truth uses 20; `Freier Tag` alone makes up a third of all shifts.
 
 **Out-of-Scope Uses:**
 
@@ -67,11 +67,11 @@ To run this benchmark, use `python scripts/run_single_test.py --adhoc` from the 
 
 ## Data
 
-**Source:** One monthly staff planning sheet (PEP, file `04-25_PEP_02-12-01`) for April 2025 from one ward of a Swiss nursing care facility, provided through the INTERSCALE study of the Institute of Nursing Science, University of Basel (https://clinicaltrials.gov/study/NCT06473051), by the domain experts listed under Authors. The facility is not named. The sheet was segmented by hand into one image per staff member's row; the roster header (dates and weekdays) and the icon legend are separate images.
+**Source:** One monthly staff planning sheet (PEP, file `04-25_PEP_02-12-01`) for April 2025 from one ward of a Swiss nursing care facility, provided by Ana-Maria Leonte and Franziska Zúñiga through the INTERSCALE study of the Institute of Nursing Science, University of Basel (https://clinicaltrials.gov/study/NCT06473051). The facility is not named. The sheet was segmented by hand into one image per staff member's row; the roster header (dates and weekdays) and the icon legend are separate images.
 
 **Size:** 21 evaluated objects
 
-**Format:** One JPG per roster row, 2646 px wide, 96–141 px high and about 90 KB. Two context images go with every request: `context/roster_header.jpg` (2646×194 px) and `context/icons.jpg` (1279×912 px). The file `context/shared_context_prompt.txt` also lists icon names, but the current benchmark does not load or send it; the allowed names are supplied through `dataclass.py`. The ground truth is one JSON file per row, following the `Schedule` dataclass in `dataclass.py`:
+**Format:** One JPG per roster row, 2,646 px wide, 85–141 px high and 70–110 KB. Two context images go with every request: `context/roster_header.jpg` (2,646×194 px) and `context/icons.jpg` (1,279×912 px). The file `context/shared_context_prompt.txt` also lists icon names but is not sent; the allowed names reach the model through the `icon` enumeration in `dataclass.py`. The ground truth is one JSON file per row, following the `Schedule` dataclass in `dataclass.py`:
 
 ```json
 {
@@ -128,15 +128,15 @@ To run this benchmark, use `python scripts/run_single_test.py --adhoc` from the 
 
 Every row covers all 30 days of April; the 21 rows hold 655 shifts.
 
-**Annotation:** Ground truths were created by the annotator Maximilian Hindermann, with Ana Maria Leonte and Franziska Zúñiga as domain experts (see Contributors by Role), following the extraction rules in the [prompt file](prompts/prompt.txt).
+**Annotation:** Maximilian Hindermann (annotator) created the ground truth by hand, with Ana-Maria Leonte and Franziska Zúñiga as domain experts, following the extraction rules in the [prompt file](prompts/prompt.txt).
 
 **Size Breakdown:**
 
-- images files: 21
+- image files: 21
 
-**Collection Date:** Not specified for benchmark collection or digitisation. Source-document dates: The roster covers April 2025.
+**Collection Date:** Source documents: April 2025. Added to the benchmark: April 2026.
 
-**Contamination Controls:** No held-out private split, training-data audit or other contamination control is documented. Inputs, prompts and ground truths are distributed together in this public repository. Whether any evaluated model saw these materials during training is unknown.
+**Contamination Controls:** None. The images, prompt and ground truth have been public in this repository since April 2026.
 
 ## Methodology
 
@@ -151,22 +151,22 @@ Every row covers all 30 days of April; the 21 rows hold 655 shifts.
 - F1 micro (`f1_micro`, used for ranking)
 - F1 macro (`f1_macro`)
 
-**Calculation:** Every terminal field of the JSON (for example `persons[0].days[4].shifts[0].icon`) is compared between response and ground truth by its path; empty strings count as missing. Values are compared with a rapidfuzz similarity score on their string form, and a field is a match at a score of 0.92 or above.
+**Calculation:** Every terminal field present in the response or the ground truth (for example `persons[0].days[4].shifts[0].icon`) is compared at the same path; empty strings count as missing. Values are compared with a rapidfuzz similarity score on their string form, and a field is a match at a score of 0.92 or above.
 
 - TP: both have a value and the score is at least 0.92
 - FP and FN: both have a value but the score is below 0.92 (the field counts once as each)
 - FP: only the response has a value
 - FN: only the ground truth has a value
 
-A `null` icon or alternate unit on both sides counts as nothing. F1 per row is rounded to two decimals. F1 micro sums TP, FP and FN over all rows before computing F1; F1 macro averages the per-row F1. There are no configurable field-selection rules. In schema-configured runs, the shared runner skips unparseable responses, so both F1 aggregates cover only scored rows.
+A `null` icon or alternate unit on both sides counts as nothing. F1 micro sums TP, FP and FN over all rows before computing F1; F1 macro averages the per-row F1 values, each rounded to two decimals. There are no configurable field-selection rules. A response that does not parse as JSON is skipped rather than scored as zero, so both aggregates cover only scored rows.
 
 **Interpretation:** Scores range from 0 to 1; higher is better. Both metrics are dominated by shift-level fields; a low score can come from misaligned dates as much as from misread icons.
 
-**Baseline Results:** Model results are available on the [benchmark page](https://rise-services.rise.unibas.ch/benchmarks/p/benchmarks/duty_rosters) and in `results/<date>/<test_id>/` at the repository root. Compare runs with the same prompt, scoring rules and ground-truth revision, and report the number of successfully scored objects alongside the score. No fixed model baseline with a run ID and date is specified here.
+**Baseline Results:** Model results are available on the [benchmark page](https://rise-services.rise.unibas.ch/benchmarks/p/benchmarks/duty_rosters) and in `results/<date>/<test_id>/` at the repository root. Compare runs with the same prompt, scoring rules and ground-truth revision, and report the number of successfully scored objects alongside the score. There is no fixed model baseline with a run ID and date.
 
 Observed across models: mapping cells to dates across the separate header image is the largest source of error. Models also confuse empty cells with `Freier Tag` or assign icons such as `HomeOffice` to them.
 
-**Validation:** The ground truths were created by the annotator listed under Contributors by Role; no separate second check is recorded. Scoring is deterministic; this scorer has no dedicated test in the repository.
+**Validation:** The ground truth was created by a single annotator, Maximilian Hindermann; no second check is recorded. Scoring is deterministic; the scorer has no dedicated test.
 
 **Human Baseline:** Not specified
 
@@ -178,17 +178,17 @@ Observed across models: mapping cells to dates across the separate header image 
 
 **Judge Score Consolidation:** Not specified
 
-**Validity Justification:** Field-level F1 reflects the downstream use: each shift becomes a record in a staffing dataset, so a field is either usable or needs correction. Not specified beyond that.
+**Validity Justification:** Field-level F1 reflects the downstream use: each shift becomes a record in a staffing dataset, so a field is either usable or needs correction.
 
 ## Ethical and Legal Considerations
 
-**Privacy and Anonymity:** The roster is from April 2025 and covers living people. It was anonymised by the facility before release: neither the images nor the ground truths contain names, staff are identified only by the IDs the INTERSCALE study assigned (the handwritten numbers in the margin), the facility is not named, and the ward label is cropped from the current header image. Each row records a profession group, employment percentage and a month of shifts and absences, including sick days (two rows) and a month of maternity protection (one row).
+**Privacy and Anonymity:** The roster is from April 2025 and covers living people. It was anonymised by the facility before release: neither the images nor the ground truth contain names, staff are identified only by the IDs the INTERSCALE study assigned (the handwritten numbers in the margin), the facility is not named, and the ward label is cropped from the header image. Each row records a profession group, employment percentage and a month of shifts and absences, including sick days (two rows) and a month of maternity protection (one row).
 
 **Data Licensing:** CC BY 4.0
 
 **Consent Procedures:** The facility released the anonymised roster for publication through the INTERSCALE study.
 
-**Compliance with Regulations:** The roster was anonymised by the facility before release and carries only study IDs, so it contains no personal data that identifies staff. The facility granted its use under CC BY 4.0 through the INTERSCALE study. No separate reuse terms are stated for the ground truths. No separate ethical review for the benchmark was carried out.
+**Compliance with Regulations:** As the roster is anonymised and carries only study IDs (see Privacy and Anonymity), it contains no personal data that identifies staff. The facility granted its use under CC BY 4.0 through the INTERSCALE study. No separate reuse terms are stated for the ground truth. No separate ethical review was carried out for the benchmark.
 
 ## Beyond the BenchmarkCard
 
@@ -196,7 +196,7 @@ This section is not part of the BenchmarkCard schema and is not exported to `ben
 
 <!-- Versions use semantic versioning, newest first, one line each: `- MAJOR.MINOR.PATCH — what
      changed and why`.
-     MAJOR: scores before and after are not comparable (ground truths corrected, scoring or
+     MAJOR: scores before and after are not comparable (ground truth corrected, scoring or
             ranking metric changed, objects added or removed).
      MINOR: something added that leaves existing scores unchanged (e.g. a new prompt variant).
      PATCH: a fix that changes no score (e.g. a better scan of the same image). -->
@@ -204,6 +204,20 @@ This section is not part of the BenchmarkCard schema and is not exported to `ben
 **Versions:**
 
 - 1.0.0 — initial versioned state
+
+**How to Cite:** This benchmark:
+
+> Leonte, A.-M., Zúñiga, F., & Hindermann, M. (2026). Nursing Staff Duty Rosters (benchmark version 1.0.0). In *RISE Humanities Data Benchmark*. Zenodo. https://doi.org/10.5281/zenodo.16941752
+
+Source:
+
+> Swiss nursing care facility (not named), via the INTERSCALE study, 04-25_PEP_02-12-01, April 2025. Licence: CC BY 4.0. https://clinicaltrials.gov/study/NCT06473051
+
+The benchmark suite:
+
+> Hindermann, M., Marti, S., Kasper, L. K., & Bosse, A. (2026). The RISE Humanities Data Benchmark: A Framework for Evaluating Large Language Models for Humanities Tasks. *Journal of Open Humanities Data*, *12*(1), 24. https://doi.org/10.5334/johd.481
+>
+> Hindermann, M., Kasper, L. K., Marti, S., & Bosse, A. (2026). From Experiments to Epistemic Practice: The RISE Humanities Data Benchmark. *Journal of Open Humanities Data*, *12*(1), 38. https://doi.org/10.5334/johd.470
 
 **Contributors by Role:**
 

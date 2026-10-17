@@ -10,13 +10,11 @@ from dataclasses import dataclass
 class Category:
     """ A category to be scored.
 
-    :param used: whether the category is used, defaults to False
     :param tp: the number of true positives, defaults to 0
     :param fp: the number of false positives, defaults to 0
     :param fn: the number of false negatives, defaults to 0
     """
 
-    used: bool = False
     tp: int = 0
     fp: int = 0
     fn: int = 0

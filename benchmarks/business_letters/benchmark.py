@@ -3,8 +3,6 @@ from __future__ import annotations
 import re
 from re import Pattern
 
-import pandas as pd
-import csv
 import json
 import os
 import logging
@@ -24,9 +22,6 @@ class BusinessLetters(Benchmark):
     def get_basename_pattern(self) -> Optional[Pattern[str]]:
         return re.compile(r"_p\d+$")
 
-    def before_run(self) -> None:
-        self.update_ground_truth()
-
     def score_benchmark(self,
                         all_scores: list[dict]) -> dict:
         """ Score the benchmark.
@@ -34,9 +29,9 @@ class BusinessLetters(Benchmark):
         :param all_scores: a list of scores
         """
 
-        send_date = Category(used=True)
-        sender_persons = Category(used=True)
-        receiver_persons = Category(used=True)
+        send_date = Category()
+        sender_persons = Category()
+        receiver_persons = Category()
 
         for score in all_scores:
             if score is None:
@@ -74,11 +69,6 @@ class BusinessLetters(Benchmark):
         :param ground_truth: the ground truth
         """
 
-        # These variable have been moved from being method parameters to local variables with default values.
-        # TODO
-        inferred_from_function = False
-        inferred_from_correspondence = False
-
         data = self.prepare_scoring_data(response)
 
         ground_truth_letter = self._initialize_letter(raw_letter=ground_truth,
@@ -110,16 +100,12 @@ class BusinessLetters(Benchmark):
                                             ground_truth_letter=ground_truth_letter,
                                             predicted_letter=response_letter,
                                             persons=persons,
-                                            inferred_from_function=inferred_from_function,
-                                            inferred_from_correspondence=inferred_from_correspondence,
                                             detail=details["sender_persons"])
 
         score = score | self._score_persons(sender_or_receiver="receiver",
                                             ground_truth_letter=ground_truth_letter,
                                             predicted_letter=response_letter,
                                             persons=persons,
-                                            inferred_from_function=inferred_from_function,
-                                            inferred_from_correspondence=inferred_from_correspondence,
                                             detail=details["receiver_persons"])
 
         # This scorer states its verdict as true/false positives and negatives per
@@ -168,28 +154,6 @@ class BusinessLetters(Benchmark):
                 return False
             if ground_truth_letter.has_signatures is False:
                 return True
-
-    def update_ground_truth(self) -> None:
-        """ Update the ground truth. """
-
-        ground_truth_path = os.path.join(self.benchmark_dir, "ground_truths")
-        try:
-            self._update_persons(persons_csv=f"{ground_truth_path}/persons.csv",
-                                 persons_json=f"{ground_truth_path}/persons.json")
-        except FileNotFoundError:
-            logging.error(
-                f"Ground truth not found: {ground_truth_path}/persons.csv")
-        try:
-            self._update_letters(letters_csv=f"{ground_truth_path}/letters.csv",
-                                 letters_json_dir=ground_truth_path)
-        except FileNotFoundError:
-            logging.error(
-                f"Ground truth not found: {ground_truth_path}/letters.csv")
-
-    def update_required(self) -> bool:
-        """ If an update of the ground truth is required before running the benchmark. """
-
-        return True
 
     def _extract_response_letter(self,
                                  data,
@@ -268,25 +232,6 @@ class BusinessLetters(Benchmark):
             return None
 
     @staticmethod
-    def _make_render_person(persons: list[Person]) -> str | None:
-        """ Render a list of persons as a string.
-
-        :param persons: the list of persons
-        """
-
-        rendered_persons = []
-        try:
-            for person in persons:
-                if person.name == "None" or person.name == "null":
-                    return None
-                rendered_persons.append(person.name)
-            if len(rendered_persons) == 0:
-                return None
-            return "<br>".join(rendered_persons)
-        except TypeError:
-            return None
-
-    @staticmethod
     def _match_person(persons: dict,
                       ground_truth_person: Person,
                       predicted_person: str) -> str | None:
@@ -342,8 +287,6 @@ class BusinessLetters(Benchmark):
                        ground_truth_letter: Letter,
                        predicted_letter: Letter,
                        persons: dict,
-                       inferred_from_function: bool = False,
-                       inferred_from_correspondence: bool = False,
                        detail: Optional[dict] = None) -> dict[str, int]:
         """ Score 'sender_persons' or 'receiver_persons'.
 
@@ -351,17 +294,13 @@ class BusinessLetters(Benchmark):
         :param ground_truth_letter: the ground truth letter
         :param predicted_letter: the predicted letter
         :param persons: the persons ground_truth
-        :param inferred_from_function: whether sender person was inferred from function, defaults to False
-        :param inferred_from_correspondence: whether sender person was inferred from correspondence, defaults to False
         :param detail: if given, filled with the two normalized name sets the counts are
             taken from, for reporting what was compared
         """
 
         # select ground truth persons:
         ground_truth_persons = self._select_persons(sender_or_receiver=sender_or_receiver,
-                                                    ground_truth_letter=ground_truth_letter,
-                                                    inferred_from_function=inferred_from_function,
-                                                    inferred_from_correspondence=inferred_from_correspondence)
+                                                    ground_truth_letter=ground_truth_letter)
 
         # select predicted persons:
         predicted_persons = []
@@ -412,127 +351,16 @@ class BusinessLetters(Benchmark):
 
     @staticmethod
     def _select_persons(sender_or_receiver: Literal["sender", "receiver"],
-                        ground_truth_letter: Letter,
-                        inferred_from_function: bool = False,
-                        inferred_from_correspondence: bool = False
-                        ):
-        """ Select 'sender_persons' or 'receiver_persons' from the ground truth and filter by inference method.
+                        ground_truth_letter: Letter) -> list[Person]:
+        """ Select 'sender_persons' or 'receiver_persons' from the ground truth, without inferred persons.
+
+        A person inferred from function (`<Name>`) or from the correspondence history (`<<Name>>`)
+        can only be identified from the whole corpus, not from the one letter a request contains,
+        so naming one counts as a false positive.
 
         :param sender_or_receiver: whether to select sender or receiver persons
         :param ground_truth_letter: the ground truth letter
-        :param inferred_from_function: whether to filter by persons inferred from function, defaults to False
-        :param inferred_from_correspondence: whether to filter by persons inferred from correspondence, defaults to False
         """
 
-        ground_truth_persons = []
-        for person in ground_truth_letter.__getattribute__(f"{sender_or_receiver}_persons"):
-            if inferred_from_function is False and person.inferred_from_function is True:
-                continue
-            elif inferred_from_correspondence is False and person.inferred_from_correspondence is True:
-                continue
-            else:
-                ground_truth_persons.append(person)
-
-        return ground_truth_persons
-
-    @staticmethod
-    def _split_by_pipe(cell: str) -> list[str]:
-        """ Splits a CSV cell by the pipe '|' character and strips whitespace. """
-
-        return [s.strip() for s in cell.split('|') if s.strip()]
-
-    @staticmethod
-    def _update_persons(persons_csv: str,
-                        persons_json: str) -> None:
-        """ Convert persons ground truth from a GoogleSheets export CSV to JSON file.
-
-        :param persons_csv: file path of CSV file containing persons ground truth exported from Google Sheets
-        :param persons_json: file path of JSON file to save the converted ground truth to
-        """
-
-        persons_df = pd.read_csv(persons_csv)
-        grouped_persons = persons_df.groupby("identifier_value")
-        persons = []
-
-        for identifier, rows in grouped_persons:
-            first_row = rows.iloc[0]
-            logging.debug(f"Added person {first_row['identifier_value']}...")
-            person = {
-                "@context": "http://schema.org",
-                "@type": "Person",
-                "identifier": [
-                    {
-                        "@type": "PropertyValue",
-                        "propertyID": first_row["identifier_propertyID"],
-                        "value": str(first_row["identifier_value"]) if pd.notna(first_row["identifier_value"]) else None
-                    }
-                ],
-                "name": first_row["name"],
-                "alternateName": [name.strip() for name in first_row["alternateName"].split(",")] if pd.notna(
-                    first_row["alternateName"]) else [],
-                "birthDate": str(first_row["birthDate"]) if pd.notna(first_row["birthDate"]) else None,
-                "deathDate": str(first_row["deathDate"]) if pd.notna(first_row["deathDate"]) else None,
-                "description": first_row["description"] if pd.notna(first_row["description"]) else "",
-                "hasOccupation": [],
-                "citation": []
-            }
-
-            for _, row in rows.iterrows():
-                job = {
-                    "@type": "Occupation",
-                    "name": row["job_name"],
-                    "startDate": str(row["job_startDate"]) if pd.notna(row["job_startDate"]) else None,
-                    "endDate": str(row["job_endDate"]) if pd.notna(row["job_endDate"]) else None,
-                    "employer": {
-                        "@type": "Organization",
-                        "name": row["employer_name"],
-                        "identifier": [
-                            {
-                                "@type": "PropertyValue",
-                                "propertyID": row["employer_identifier_propertyID"],
-                                "value": str(row["employer_identifier_value"]) if pd.notna(
-                                    row["employer_identifier_value"]) else None  # int(row["employer_identifier_value"])
-                            }
-                        ]
-                    }
-                }
-                person["hasOccupation"].append(job)
-
-                citation = {
-                    "@type": "CreativeWork",
-                    "name": row["citation_name"],
-                    "url": row["citation_url"]
-                }
-                if citation not in person["citation"]:
-                    person["citation"].append(citation)
-
-            persons.append(person)
-
-        with open(persons_json, "w", encoding="utf-8") as jsonfile:
-            json.dump(persons, jsonfile, indent=4)
-
-    def _update_letters(self,
-                        letters_csv: str,
-                        letters_json_dir: str) -> None:
-        """ Convert letters ground truth from a CSV to JSON files.
-
-        :param letters_csv: file path of CSV file containing letters ground truth
-        :param letters_json_dir: directory to save the converted ground truth to
-        """
-
-        with open(letters_csv, newline="", encoding="utf-8") as csvfile:
-            reader = csv.DictReader(csvfile)
-            for row in reader:
-                data = {
-                    "letter_title": self._split_by_pipe(row["letter_title"]),
-                    "send_date": self._split_by_pipe(row["send_date"]),
-                    "sender_persons": self._split_by_pipe(row["sender_persons"]),
-                    "receiver_persons": self._split_by_pipe(row["receiver_persons"]),
-                    "has_signatures": row["has_signatures"],
-                }
-
-                doc_num = row["document_number"]
-                filename = os.path.join(letters_json_dir, f"letter{doc_num}.json")
-
-                with open(filename, "w", encoding="utf-8") as jsonfile:
-                    json.dump(data, jsonfile, indent=4)
+        return [person for person in ground_truth_letter.__getattribute__(f"{sender_or_receiver}_persons")
+                if not (person.inferred_from_function or person.inferred_from_correspondence)]

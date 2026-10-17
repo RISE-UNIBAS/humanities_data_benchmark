@@ -6,9 +6,9 @@ This README is a BenchmarkCard (Sokol et al., NeurIPS 2025, arXiv 2410.12974), s
      (generated) are filled from meta.json and the benchmark's files by
      `python scripts/benchmark_cards.py <name>`; edit meta.json, not the README, to change them. -->
 
-The scoring implementation is in [benchmark.py](benchmark.py), the requested output schema in [dataclass.py](dataclass.py), and the instructions in [prompts/](prompts/).
+The scorer is in [benchmark.py](benchmark.py), the output schema in [dataclass.py](dataclass.py) and the prompts in [prompts/](prompts/).
 
-To run this benchmark, use `python scripts/run_single_test.py --adhoc` from the repository root and select `fraktur_adverts`. Provider setup is described in the [root README](../../README.md#quick-start); configured prompts, models and scoring rules are recorded in [benchmarks_tests.csv](../benchmarks_tests.csv). Provider-backed runs incur API charges.
+To run it, call `python scripts/run_single_test.py --adhoc` from the repository root and select `fraktur_adverts`. Provider setup is described in the [root README](../../README.md#quick-start); the configured tests (model, prompt, rules) are in [benchmarks_tests.csv](../benchmarks_tests.csv). Runs against a provider incur API charges.
 
 ## Benchmark Details
 
@@ -42,7 +42,7 @@ To run this benchmark, use `python scripts/run_single_test.py --adhoc` from the 
 
 ## Purpose and Intended Users
 
-**Goal:** Measure how well vision-language models read 18th-century German Fraktur print and split a newspaper page of classified advertisements into its individual, numbered adverts, each assigned to its section heading and transcribed with its historical spelling intact. The results are meant to guide historians, newspaper researchers and digital humanities projects in choosing a model for transcribing early modern advertisement papers.
+**Goal:** Measure how well vision-language models read 18th-century German Fraktur print and split a newspaper page of classified advertisements into its individual, numbered adverts, each assigned to its section heading and transcribed with its historical spelling intact. The results are meant for AI researchers and model developers comparing models on early modern print, and for practitioners in historical and newspaper research and digital humanities choosing a model to transcribe advertisement papers.
 
 **Audience:**
 
@@ -56,11 +56,9 @@ To run this benchmark, use `python scripts/run_single_test.py --adhoc` from the 
 - segmentation of a page into numbered advertisements
 - assignment of each advertisement to its section heading
 
-**Limitations:** Five pages from two issues of a single newspaper, the Basler Avisblatt (2 January 1731 and 11 February 1762), so scores rest on about 90 adverts and do not transfer automatically to other papers, typefaces or periods. The two 1731 pages are high-resolution scans, the three 1762 pages are much smaller (about 920×1160 px), so the score mixes two image qualities.
+**Limitations:** Five pages from two issues of a single newspaper, the Basler Avisblatt (2 January 1731 and 11 February 1762), so scores rest on 91 scored adverts and do not transfer automatically to other papers, typefaces or periods. The two 1731 pages are high-resolution scans and the three 1762 pages much smaller (see Format), so the score mixes two image qualities. The transcription follows the conventions of `prompt_optimized.txt`: long s (ſ) as `s` and the virgule (`/`) as a comma, so a model that keeps ſ or `/` is penalised for following the original more closely.
 
-Adverts are matched only by section heading and leading number (`16.`). An advert without a number prefix is never scored: nine of the twelve entries on `image_2` (news items and burial notices) and three entries on `image_5` drop out, so 91 of 103 ground-truth entries count. Adverts the model invents or splits off wrongly carry no penalty; only missing or mistranscribed ones lower the score. If a model writes a section heading that differs from the ground truth by more than the 95% fuzzy threshold, every advert in that section counts as missing even if its text is perfect. The publication date the prompt asks for is not scored. Duplicate adverts with the same section and number overwrite earlier entries during grouping; invented adverts are therefore not measured as false positives.
-
-The transcription follows the conventions of `prompt_optimized.txt`: long s (ſ) as `s` and the virgule (`/`) as a comma. A model that keeps ſ or `/` is penalised for following the original more closely.
+Several scoring properties bias results (see Calculation). An entry without a number prefix is never scored: nine of the twelve entries on `image_2` (news items and burial notices) and three entries on `image_5` drop out, so 91 of 103 ground-truth entries count. Adverts the model invents or splits off wrongly carry no penalty; only missing or mistranscribed adverts lower the score. If a model writes a section heading that falls below the 0.95 fuzzy threshold, every advert in that section counts as missing even if its text is perfect. The publication date the prompt asks for is not scored.
 
 **Out-of-Scope Uses:**
 
@@ -92,30 +90,32 @@ The ground truth is one JSON file per page: a list of adverts, or (for the 1731 
 
 The model returns the same objects in a `Document` with a list `advertisements`.
 
-**Annotation:** Ground truths were transcribed by the domain expert listed under Authors and structured by section and advert number, keeping historical spelling, typographical errors and punctuation, and listing adverts column by column from left to right. Long s is written `s`. The ground truth originally also held an `ntokens` word count per advert; it was removed.
+**Annotation:** Transcribed by Ina Serif (domain expert) and structured by section and advert number, keeping historical spelling, typographical errors and punctuation, and listing adverts column by column from left to right. Long s is written `s`. The ground truth originally also held an `ntokens` word count per advert; it was removed.
 
 **Size Breakdown:**
 
-- images files: 5
+- image files: 5
 
-**Collection Date:** Not specified for benchmark collection or digitisation. Source-document dates: The pages date from 1731 (two pages of the issue of 2 January) and 1762 (three pages of the issue of 11 February).
+**Collection Date:** Source documents: 2 January 1731 (two pages) and 11 February 1762 (three pages). Added to the benchmark: March 2025 (the 1731 pages) and May 2025 (the 1762 pages).
 
-**Contamination Controls:** No held-out private split, training-data audit or other contamination control is documented. Inputs, prompts and ground truths are distributed together in this public repository. Whether any evaluated model saw these materials during training is unknown.
+**Contamination Controls:** None. The images, prompts and ground truth have been public in this repository since March 2025 (the 1731 pages) and May 2025 (the 1762 pages).
 
 ## Methodology
 
 **Methods:**
 
-- structured extraction from one page image per request, with illustrative JSON examples in the prompt and no labelled benchmark images supplied as demonstrations
-- structured JSON output requested using the `Document` dataclass
-- prompt `prompt_optimized.txt` for all current tests; the original `prompt.txt` (no transcription rules for ſ and `/`, asks for an unscored `ntokens` count) is used by one legacy test only
+- one page image per request; the prompts include illustrative output examples, and no benchmark page is supplied as a demonstration
+- [`prompt_optimized.txt`](prompts/prompt_optimized.txt) for all current tests; the original [`prompt.txt`](prompts/prompt.txt), which has no transcription rules for ſ and `/` and asks for an unscored `ntokens` count, is used by one legacy test only
+- all tests use temperature 0
+- structured JSON output requested with the `Document` dataclass
+- output capped at the repository default of 16,384 tokens per request, adjusted per model in `scripts/benchmark_base.py`
 
 **Metrics:**
 
 - Character error rate (`cer`, used for ranking; lower is better)
 - Fuzzy similarity (`fuzzy`; higher is better)
 
-**Calculation:** Adverts in the ground truth and in the response are grouped by `tags_section` and by the number at the start of `text` (`^\s*(\d+)\.`); entries with no section or no number prefix are left out. Each ground-truth section is looked up in the response by exact name, and failing that by the first response section with a fuzzy similarity of 0.95 or above. Within the section, the advert with the same number is the match. On `image_4`, which has no heading, adverts without a section are assigned the default section `Es wird zum Verkauf angetragen`, and a ground-truth advert may match a response advert with the same number in any section.
+**Calculation:** Adverts in the ground truth and in the response are grouped by `tags_section` and by the number at the start of `text` (`^\s*(\d+)\.`); entries with no section or no number prefix are left out, and of several entries with the same section and number only the last is kept. Each ground-truth section is looked up in the response by exact name, and failing that by the first response section with a fuzzy similarity of 0.95 or above. Within the section, the advert with the same number is the match. On `image_4`, which has no heading, adverts without a section are assigned the default section `Es wird zum Verkauf angetragen`, and a ground-truth advert may match a response advert with the same number in any section.
 
 For each ground-truth advert:
 
@@ -126,11 +126,11 @@ Adverts in the response that match no ground-truth advert are ignored.
 
 A page's fuzzy score is the mean over its ground-truth adverts, rounded to two decimals; its CER is the mean rounded to three decimals. The benchmark scores are the means of the page scores, rounded to three decimals, so each page weighs the same however many adverts it holds. A response that is not parseable JSON is left out of the means rather than scored as zero.
 
-**Interpretation:** CER runs from 0 (perfect after normalisation) to the cap of 1; an edit distance at least as large as the reference length reaches the cap even if some text is correct; fuzzy runs from 0 to 1, higher is better. Because CER ignores case and whitespace and fuzzy does not, a model can do noticeably better on CER than its fuzzy score suggests when it normalises capitalisation or line breaks. Both are page averages: `image_2`, with only three scored adverts, counts as much as `image_1` with 31.
+**Interpretation:** CER runs from 0 (identical after normalisation) to the cap of 1, lower is better; an edit distance at least as large as the ground-truth length reaches the cap even if some text is correct. Fuzzy runs from 0 to 1, higher is better. Because CER ignores case and whitespace and fuzzy does not, a model that normalises capitalisation or line breaks does noticeably better on CER than its fuzzy score suggests. Both are page averages: `image_2`, with only three scored adverts, counts as much as `image_1` with 31. A score covers only the pages with a parseable response; report the number of scored pages with it.
 
-**Baseline Results:** Model results are available on the [benchmark page](https://rise-services.rise.unibas.ch/benchmarks/p/benchmarks/fraktur_adverts) and in `results/<date>/<test_id>/` at the repository root. Compare runs with the same prompt, scoring rules and ground-truth revision, and report the number of successfully scored objects alongside the score. No fixed model baseline with a run ID and date is specified here.
+**Baseline Results:** Model results are on the [benchmark page](https://rise-services.rise.unibas.ch/benchmarks/p/benchmarks/fraktur_adverts) and in `results/<date>/<test_id>/` at the repository root. Compare runs with the same prompt, scoring rules and ground-truth revision. No fixed model baseline is defined.
 
-**Validation:** The ground truths were created by the domain expert and annotator listed under Contributors by Role; no separate second check is recorded. Scoring is deterministic; the CER calculation is covered by the repository's test suite.
+**Validation:** The ground truth was created by Ina Serif as domain expert and annotator; no second check by another person is recorded. Scoring is deterministic; the CER calculation, number-prefix extraction and advert matching are covered by `tests/test_fraktur_adverts_scoring.py`.
 
 **Human Baseline:** Not specified
 
@@ -142,7 +142,7 @@ A page's fuzzy score is the mean over its ground-truth adverts, rounded to two d
 
 **Judge Score Consolidation:** Not specified
 
-**Validity Justification:** Matching by section and advert number mirrors how adverts in the Avisblatt are cited and catalogued, and character-level error is the standard measure of transcription quality. Not specified beyond that.
+**Validity Justification:** Matching by section and advert number mirrors how adverts in the Avisblatt are cited and catalogued, and character-level error is the standard measure of transcription quality.
 
 ## Ethical and Legal Considerations
 
@@ -152,7 +152,7 @@ A page's fuzzy score is the mean over its ground-truth adverts, rounded to two d
 
 **Consent Procedures:** Not specified
 
-**Compliance with Regulations:** The pages are printed matter published in 1731 and 1762, long out of copyright; the persons named are long dead, so data protection law does not apply. The repository licenses the digitised issues under CC BY 4.0, so reuse requires attribution to the source records. No separate reuse terms are stated for the ground truths. No ethical review was carried out.
+**Compliance with Regulations:** The pages are printed matter published in 1731 and 1762, long out of copyright; the persons named are long dead, so data protection law does not apply. The Avisblatt repository licenses the digitised issues under CC BY 4.0, so reuse requires attribution to the source records. No separate reuse terms are stated for the ground truth. No ethical review was carried out.
 
 ## Beyond the BenchmarkCard
 
@@ -160,7 +160,7 @@ This section is not part of the BenchmarkCard schema and is not exported to `ben
 
 <!-- Versions use semantic versioning, newest first, one line each: `- MAJOR.MINOR.PATCH — what
      changed and why`.
-     MAJOR: scores before and after are not comparable (ground truths corrected, scoring or
+     MAJOR: scores before and after are not comparable (ground truth corrected, scoring or
             ranking metric changed, objects added or removed).
      MINOR: something added that leaves existing scores unchanged (e.g. a new prompt variant).
      PATCH: a fix that changes no score (e.g. a better scan of the same image). -->
@@ -168,6 +168,20 @@ This section is not part of the BenchmarkCard schema and is not exported to `ben
 **Versions:**
 
 - 1.0.0 — initial versioned state
+
+**How to Cite:** This benchmark:
+
+> Serif, I., & Hindermann, M. (2025). Fraktur Adverts (benchmark version 1.0.0). In *RISE Humanities Data Benchmark*. Zenodo. https://doi.org/10.5281/zenodo.16941752
+
+Source:
+
+> Universitätsbibliothek Basel, UBH Ztg 1, 1731–1762. Licence: CC BY 4.0. https://avisblatt.dg-basel.hasdai.org
+
+The benchmark suite:
+
+> Hindermann, M., Marti, S., Kasper, L. K., & Bosse, A. (2026). The RISE Humanities Data Benchmark: A Framework for Evaluating Large Language Models for Humanities Tasks. *Journal of Open Humanities Data*, *12*(1), 24. https://doi.org/10.5334/johd.481
+>
+> Hindermann, M., Kasper, L. K., Marti, S., & Bosse, A. (2026). From Experiments to Epistemic Practice: The RISE Humanities Data Benchmark. *Journal of Open Humanities Data*, *12*(1), 38. https://doi.org/10.5334/johd.470
 
 **Contributors by Role:**
 

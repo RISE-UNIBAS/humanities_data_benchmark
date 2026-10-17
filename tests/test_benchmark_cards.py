@@ -49,7 +49,7 @@ def test_bold_text_inside_a_field_stays_in_the_field():
 @pytest.mark.parametrize("kind,raw,expected", [
     ("list", "\n\n- a\n- b", ["a", "b"]),
     ("list", " Not specified", ["Not specified"]),
-    ("breakdown", "\n\n- images files: 3", {"images files": 3}),
+    ("breakdown", "\n\n- image files: 3", {"image files": 3}),
     ("breakdown", " Not specified", "Not specified"),
     ("bool", " false", False),
     ("int", " 2", 2),
@@ -102,3 +102,43 @@ def test_semantic_versions_pass(raw):
 def test_bad_versions_are_reported(raw, match):
     with pytest.raises(bc.CardError, match=match):
         bc.check_versions(raw)
+
+
+@pytest.mark.parametrize("names,expected", [
+    ([("Serif", "Ina")], "Serif, I."),
+    ([("Leonte", "Ana-Maria"), ("Kasper", "Lea Katharina")], "Leonte, A.-M., & Kasper, L. K."),
+    ([("A", "Bea"), ("C", "Dan"), ("E", "Fay")], "A, B., C, D., & E, F."),
+])
+def test_apa_names(names, expected):
+    assert bc._apa_names(names) == expected
+
+
+def test_newest_version_is_the_first_line():
+    assert bc.newest_version("\n\n- 2.0.0 — fix\n- 1.0.0 — initial version") == "2.0.0"
+
+
+CITATION = {
+    "authors": [{"family-names": "Serif", "given-names": "Ina", "orcid": "https://orcid.org/0000-0003-2419-4252"}],
+    "identifiers": [{"type": "doi", "value": "10.5281/zenodo.1", "description": "All versions"}],
+    "references": [{"type": "article", "authors": [{"family-names": "Hindermann", "given-names": "Maximilian"}],
+                    "title": "A Paper", "journal": "J", "year": 2026, "volume": 12, "issue": 1,
+                    "number": 24, "doi": "10.5334/x"}],
+}
+
+
+def test_how_to_cite():
+    meta = {"title": "Fraktur Adverts", "added": "2025-03", "license": "CC BY 4.0",
+            "source": {"collection": "UB Basel", "signature": "Not specified", "period": "1731-1762",
+                       "url": "https://example.org"}}
+    people = [("ina_serif", {"orcid": "0000-0003-2419-4252", "display_name": "Ina Serif"}),
+              ("x", {"display_name": "José Luis Losada"})]
+    text = bc.how_to_cite(meta, people, "1.1.0", CITATION)
+    assert ("> Serif, I., & Losada, J. L. (2025). Fraktur Adverts (benchmark version 1.1.0). "
+            "In *RISE Humanities Data Benchmark*. Zenodo. https://doi.org/10.5281/zenodo.1") in text
+    assert "> UB Basel, 1731–1762. Licence: CC BY 4.0. https://example.org" in text
+    assert "> Hindermann, M. (2026). A Paper. *J*, *12*(1), 24. https://doi.org/10.5334/x" in text
+
+
+def test_how_to_cite_needs_added():
+    with pytest.raises(bc.CardError, match="added"):
+        bc.how_to_cite({"title": "x", "license": "x"}, [], "1.0.0", CITATION)

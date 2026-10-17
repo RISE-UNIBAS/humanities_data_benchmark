@@ -94,7 +94,7 @@ This section is not part of the BenchmarkCard schema and is not exported to `ben
 
 <!-- Versions use semantic versioning, newest first, one line each: `- MAJOR.MINOR.PATCH — what
      changed and why`.
-     MAJOR: scores before and after are not comparable (ground truths corrected, scoring or
+     MAJOR: scores before and after are not comparable (ground truth corrected, scoring or
             ranking metric changed, objects added or removed).
      MINOR: something added that leaves existing scores unchanged (e.g. a new prompt variant).
      PATCH: a fix that changes no score (e.g. a better scan of the same image). -->
@@ -102,5 +102,7 @@ This section is not part of the BenchmarkCard schema and is not exported to `ben
 **Versions:**
 
 - 1.0.0 — initial version
+
+**How to Cite:** (generated)
 
 **Contributors by Role:** (generated)

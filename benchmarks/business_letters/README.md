@@ -6,7 +6,7 @@ This README is a BenchmarkCard (Sokol et al., NeurIPS 2025, arXiv 2410.12974), s
      (generated) are filled from meta.json and the benchmark's files by
      `python scripts/benchmark_cards.py <name>`; edit meta.json, not the README, to change them. -->
 
-The scoring implementation is in [benchmark.py](benchmark.py), the requested output schema in [dataclass.py](dataclass.py), and the instructions in [prompts/](prompts/).
+The scorer is in [benchmark.py](benchmark.py), the requested output schema in [dataclass.py](dataclass.py) and the prompt in [prompts/](prompts/).
 
 To run this benchmark, use `python scripts/run_single_test.py --adhoc` from the repository root and select `business_letters`. Provider setup is described in the [root README](../../README.md#quick-start); configured prompts, models and scoring rules are recorded in [benchmarks_tests.csv](../benchmarks_tests.csv). Provider-backed runs incur API charges.
 
@@ -14,7 +14,7 @@ To run this benchmark, use `python scripts/run_single_test.py --adhoc` from the 
 
 **Name:** Business Letters
 
-**Overview:** Tests models on extracting correspondence metadata (send date, sender and receiver persons) from 20th century Swiss business letters, resolving names to a reference list of persons.
+**Overview:** Models extract the send date and the sender and receiver persons from scanned German-language business letters of 1926–1935 held by the Swiss Economic Archives; a name counts when it matches a person's normalised form or one of the spellings recorded for that person.
 
 **Data Type:** image
 
@@ -48,7 +48,7 @@ To run this benchmark, use `python scripts/run_single_test.py --adhoc` from the 
 
 ## Purpose and Intended Users
 
-**Goal:** Measure how well vision-language models extract correspondence metadata (send date, sender persons, receiver persons) from multi-page business letters, and resolve the names they find to the normalised persons of a reference list. The results are meant to guide historians, archivists and digital humanities projects in choosing a model for cataloguing letters and building correspondence networks from them.
+**Goal:** Measure how well vision-language models extract correspondence metadata (send date, sender persons, receiver persons) from multi-page business letters, with each name read correctly enough to identify the person. The results are meant to guide historians, archivists and digital humanities projects in choosing a model for cataloguing letters and building correspondence networks from them.
 
 **Audience:**
 
@@ -63,7 +63,7 @@ To run this benchmark, use `python scripts/run_single_test.py --adhoc` from the 
 - identification of sender and receiver persons
 - matching person names to a normalised name form
 
-**Limitations:** 57 letters from a single collection of one company, written in German between 1926 and 1935 and mostly typewritten; results do not transfer automatically to other archives, hands or languages. Only exact matches count: a date scores only if it equals the ground truth string, and a name scores only if it equals the normalised form (`Surname, Given name`) or one of the variants recorded for that person in `ground_truths/persons.json`. The prompt does not ask for the normalised form, so a correct name spelled in a form nobody recorded counts as wrong. Persons the annotators inferred from function or correspondence history are left out of the ground truth, so a model that names them is penalised. The letter title is requested but not scored. The current prompt and schema do not request organisation fields.
+**Limitations:** The 57 letters come from a single collection on one company, are written in German between 1926 and 1935 and are mostly typewritten; results do not transfer to other archives, hands or languages. Only exact matches count (see Calculation), and the prompt does not ask for the normalised form, so a correct name spelled in a form not recorded in `ground_truths/persons.json` counts as wrong. Persons the annotators inferred from function or from the correspondence history can only be identified from the whole corpus, not from the single letter a request contains; they are excluded from the ground truth, so a model that names one is penalised. The letter title is requested but not scored; organisations and locations are not requested.
 
 **Out-of-Scope Uses:**
 
@@ -73,72 +73,70 @@ To run this benchmark, use `python scripts/run_single_test.py --adhoc` from the 
 
 ## Data
 
-**Source:** Letters from the collection "Basler Rheinschifffahrt-Aktiengesellschaft, insbesondere über die Veräusserung des Dieselmotorbootes 'Rheinfelden' und die Gewährung eines Darlehens zur Finanzierung der Erstellung des Dieselmotorbootes 'Rhyblitz' an diese Firma" of the Swiss Economic Archives (Schweizerisches Wirtschaftsarchiv), shelf mark CH SWA HS 191 V 10, digitised on e-manuscripta: http://dx.doi.org/10.7891/e-manuscripta-54917. The collection holds 68 letters, mostly of one to three pages, on business transactions, shipping and personnel matters; 57 of them have a ground truth.
+**Source:** Letters from the collection "Basler Rheinschifffahrt-Aktiengesellschaft, insbesondere über die Veräusserung des Dieselmotorbootes 'Rheinfelden' und die Gewährung eines Darlehens zur Finanzierung der Erstellung des Dieselmotorbootes 'Rhyblitz' an diese Firma" of the Swiss Economic Archives (Schweizerisches Wirtschaftsarchiv), shelf mark CH SWA HS 191 V 10, digitised on e-manuscripta: http://dx.doi.org/10.7891/e-manuscripta-54917. The collection holds 68 letters, mostly of one to three pages, on business transactions, shipping and personnel matters; 57 of them have a ground truth and form the benchmark.
 
 **Size:** 57 evaluated objects
 
-**Format:** JPG scans of the letter pages, 2479×3508 px and about 500 KB each. A letter is one evaluated object; its pages are named `letter<NN>_p<N>.jpg` and sent together in one request. 33 letters have one page, 15 two, 4 three, 3 four, one five and one six. The ground truth is one JSON file per letter:
+**Format:** 98 JPG scans of the letter pages, 2479×3508 px (3 pages in landscape orientation) and about 525 KB each. A letter is one evaluated object; its pages are named `letter<NN>_p<N>.jpg` and sent together in one request. 33 letters have one page, 15 have two, 4 three, 3 four, 1 five and 1 six. The ground truth is one JSON file per letter:
 
 ```json
 {
+    "transkribus_id": "1932319",
     "letter_title": ["None"],
     "send_date": ["1926-02-16"],
     "sender_persons": ["Groschupf-Jaeger, Louis", "Ritter-Dreier, Fritz"],
     "receiver_persons": ["Christ-Wackernagel, Paul"],
-    "has_signatures": "TRUE"
+    "has_signatures": true
 }
 ```
 
 - `send_date`: the date in ISO 8601 form
-- `sender_persons`, `receiver_persons`: normalised names; `None` when the letter names nobody
+- `sender_persons`, `receiver_persons`: normalised names (`Surname, Given name`); `None` when the letter names nobody
 - `letter_title`: the title as written, or `None`; not scored
-- `has_signatures`: whether the letter is signed; used only to select letters for the test variants
+- `transkribus_id`: the letter's document in Transkribus; not used in scoring
+- `has_signatures`: whether the letter carries handwritten signatures; used only to select letters for the test variants
 
-`<Name>` marks a person inferred from function and date, `<<Name>>` one inferred from the correspondence history. `ground_truths/persons.json` lists 24 persons with their normalised name and the variants found in the letters (`alternateName`), plus life dates, occupations and sources in Schema.org form.
+`<Name>` marks a person inferred from function and date, `<<Name>>` one inferred from the correspondence history. `ground_truths/persons.json` lists 24 persons with their normalised name and the variants found in the letters (`alternateName`), plus identifiers, life dates, occupations and sources, as [Schema.org Person](https://schema.org/Person) records.
 
-**Annotation:** Annotators recorded the letters in a shared spreadsheet with a persons tab (normalised names, inscribed variants, identifiers such as GND) and a letters tab, following the conventions in [ground_truth_persons_organizations.md](ground_truth_persons_organizations.md). The persons reference list is used by the scorer; it is not supplied to the model as context. Both tabs are exported to `ground_truths/persons.csv` and `ground_truths/letters.csv`; every run regenerates the JSON files from these CSV files.
+**Annotation:** Anthea Alberto, Eric Decker, Pema Frick, Maximilian Hindermann, Lea Kasper, José Luis Losada Palenzuela, Sorin Marti and Elena Spadini recorded the letters and persons in the [RSF Letters Ground Truth sheet](https://docs.google.com/spreadsheets/d/1qGMVvGZV7GpU11uy0grIffDbGS2rSOj85ziFWZGyuBI/edit?usp=sharing), exported once to the JSON files in `ground_truths/`. These files are now the ground truth and are edited directly: a letter names its persons by their `name` in `persons.json`, and every spelling of a person found in the letters belongs in that person's `alternateName`, since a response name is matched against both. The persons reference list is used by the scorer only; it is not supplied to the model.
 
 **Size Breakdown:**
 
-- images files: 98
+- image files: 98
 
-**Collection Date:** Not specified for benchmark collection or digitisation. Source-document dates: The letters are dated 1926-02-16 to 1935-08-17.
+**Collection Date:** Source documents: 1926–1935 (16 February 1926 to 17 August 1935). Added to the benchmark: February 2025.
 
-**Contamination Controls:** No held-out private split, training-data audit or other contamination control is documented. Inputs, prompts and ground truths are distributed together in this public repository. Whether any evaluated model saw these materials during training is unknown.
+**Contamination Controls:** None. The scans, prompt and ground truth have been public in this repository since February 2025.
 
 ## Methodology
 
 **Methods:**
 
-- zero-shot structured extraction from all pages of a letter in one request
+- zero-shot structured extraction from all pages of a letter in one request, prompt `prompts/prompt.txt`, temperature 0.0
 - structured JSON output requested using the `Document` dataclass (`metadata` with list-valued `send_date`, `letter_title`, `sender_persons`, `receiver_persons`)
+- output cap: the repository default of 16,384 tokens per request
+- three test variants, set in the `rules` column of `benchmarks_tests.csv`: no rules (all 57 letters); `{"skip_signatures": true, "skip_non_signatures": false}` (the 25 unsigned letters); `{"skip_signatures": false, "skip_non_signatures": true}` (the 32 signed letters)
 
 **Metrics:**
 
 - F1 macro (`f1_macro`, used for ranking)
 - F1 micro (`f1_micro`)
 
-**Calculation:** Three categories are scored per letter: `send_date`, `sender_persons` and `receiver_persons`. Each side is turned into a set and compared exactly.
+**Calculation:** Three categories are scored per letter: `send_date`, `sender_persons` and `receiver_persons`. Ground truth and response are each turned into a set and compared by exact string equality.
 
-- `send_date`: only the first date of each list is used. The response date is dropped if it is `null`.
-- persons: ground truth persons marked as inferred (`<…>`, `<<…>>`) and `None` are removed. A response name counts as the ground truth person's name if it equals it or appears in that person's `alternateName` list in `persons.json`. `null`, `None` and empty names are dropped.
+- `send_date`: only the first date of each list is used; a `null` response date is dropped.
+- persons: ground-truth persons marked as inferred (`<…>`, `<<…>>`) and `None` are removed. A response name counts as a ground-truth person if it equals the normalised name or appears in that person's `alternateName` list in `persons.json`. `null`, `None` and empty names are dropped.
 - TP: in both sets
 - FP: only in the response set
-- FN: only in the ground truth set
+- FN: only in the ground-truth set
 
-A parsed response that reaches this scorer but cannot be converted into a letter scores no TP and every ground-truth item as FN. In a normal schema-configured run, an unparseable response (`answer.parsed is None`) is skipped by the shared runner before this scorer is called, and does not enter either F1 aggregate. TP, FP and FN are summed over all letters per category. F1 micro pools the three categories before computing F1; F1 macro averages the F1 of the three categories. Both are rounded to two decimals.
+A response that parses but does not fit the letter structure scores no TP and counts every ground-truth item as FN. A response that does not parse (`answer.parsed is None`) is not scored and enters neither aggregate. TP, FP and FN are summed over all letters per category. F1 micro pools the three categories before computing F1; F1 macro averages the F1 of the three categories. Both are rounded to two decimals.
 
-The `rules` column of `benchmarks_tests.csv` defines three test variants:
+**Interpretation:** Scores range from 0 to 1; higher is better. F1 macro, the ranking metric, gives the send date, a single item per letter, the same weight as the sender and receiver persons; F1 micro weights categories by their number of items, so persons dominate. The three test variants are scored on different letters, and their scores are not comparable with each other. A low person score can reflect a spelling not recorded in `persons.json` rather than a wrong person (see Limitations).
 
-- no rules: all 57 letters
-- `{"skip_signatures": true, "skip_non_signatures": false}`: only the 25 letters without signatures
-- `{"skip_signatures": false, "skip_non_signatures": true}`: only the 32 letters with signatures
+**Baseline Results:** Results are on the [benchmark page](https://rise-services.rise.unibas.ch/benchmarks/p/benchmarks/business_letters) and in `results/<date>/<test_id>/` at the repository root. No fixed baseline is recorded. Compare runs only with the same prompt, rules and ground-truth revision, and report the number of scored letters with the score.
 
-**Interpretation:** Scores range from 0 to 1; higher is better. F1 macro, the ranking metric, gives the send date, which is a single item per letter, the same weight as the sender and receiver persons; F1 micro weights categories by their number of items, so persons dominate. Scores of the three variants are computed on different letters and are not directly comparable with each other.
-
-**Baseline Results:** Model results are available on the [benchmark page](https://rise-services.rise.unibas.ch/benchmarks/p/benchmarks/business_letters) and in `results/<date>/<test_id>/` at the repository root. Compare runs with the same prompt, scoring rules and ground-truth revision, and report the number of successfully scored objects alongside the score. No fixed model baseline with a run ID and date is specified here.
-
-**Validation:** Each letter's ground truth names the annotator responsible for it in the source spreadsheet; the current CSV-to-JSON exporter writes every row of `letters.csv` and does not itself filter a completion-status column. Scoring is deterministic; the scorer is covered by the repository's test suite.
+**Validation:** The source spreadsheet records for each letter who annotated it and who checked it. Scoring is deterministic; the scorer is covered by `tests/test_business_letters_scoring.py`.
 
 **Human Baseline:** Not specified
 
@@ -150,17 +148,17 @@ The `rules` column of `benchmarks_tests.csv` defines three test variants:
 
 **Judge Score Consolidation:** Not specified
 
-**Validity Justification:** Set-based F1 on dates and normalised names reflects the downstream use: a catalogue record or network edge needs the correct date and the correct person, not a near spelling. Not specified beyond that.
+**Validity Justification:** Set-based F1 on dates and normalised names reflects the downstream use: a catalogue record or network edge needs the correct date and the correct person, not a near spelling.
 
 ## Ethical and Legal Considerations
 
-**Privacy and Anonymity:** The letters name business people, mostly board members and officers of Basel shipping and trading firms, and `persons.json` adds their life dates, occupations and sources. Nothing is anonymised. Where known, the persons were born between 1857 and 1891, and the latest letter dates from 1935.
+**Privacy and Anonymity:** The letters name business people, mostly board members and officers of Basel shipping and trading firms, and `persons.json` adds their life dates, occupations and sources. Nothing is anonymised. Where known, the persons were born between 1857 and 1891; the latest letter dates from 1935.
 
 **Data Licensing:** Public Domain Mark 1.0
 
 **Consent Procedures:** Not specified
 
-**Compliance with Regulations:** The letters are records of a private company held by the Swiss Economic Archives, which publishes the scans on e-manuscripta under the Public Domain Mark 1.0. No separate reuse terms are stated for the ground truths. No ethical review was carried out.
+**Compliance with Regulations:** The letters are records of a private company held by the Swiss Economic Archives, which publishes the scans on e-manuscripta under the Public Domain Mark 1.0. No separate reuse terms are stated for the ground truth. No ethical review was carried out.
 
 ## Beyond the BenchmarkCard
 
@@ -168,14 +166,29 @@ This section is not part of the BenchmarkCard schema and is not exported to `ben
 
 <!-- Versions use semantic versioning, newest first, one line each: `- MAJOR.MINOR.PATCH — what
      changed and why`.
-     MAJOR: scores before and after are not comparable (ground truths corrected, scoring or
+     MAJOR: scores before and after are not comparable (ground truth corrected, scoring or
             ranking metric changed, objects added or removed).
      MINOR: something added that leaves existing scores unchanged (e.g. a new prompt variant).
      PATCH: a fix that changes no score (e.g. a better scan of the same image). -->
 
 **Versions:**
 
+- 1.0.1 — ground truth kept as JSON only (the CSV exports and their per-run conversion removed), `has_signatures` stored as a boolean, scorer code tidied; scores unchanged
 - 1.0.0 — initial versioned state
+
+**How to Cite:** This benchmark:
+
+> Decker, E., Hindermann, M., Kasper, L., Alberto, A., Frick, P., Losada Palenzuela, J. L., Marti, S., & Spadini, E. (2025). Business Letters (benchmark version 1.0.1). In *RISE Humanities Data Benchmark*. Zenodo. https://doi.org/10.5281/zenodo.16941752
+
+Source:
+
+> Schweizerisches Wirtschaftsarchiv, CH SWA HS 191 V 10, 1926–1935. Licence: Public Domain Mark 1.0. http://dx.doi.org/10.7891/e-manuscripta-54917
+
+The benchmark suite:
+
+> Hindermann, M., Marti, S., Kasper, L. K., & Bosse, A. (2026). The RISE Humanities Data Benchmark: A Framework for Evaluating Large Language Models for Humanities Tasks. *Journal of Open Humanities Data*, *12*(1), 24. https://doi.org/10.5334/johd.481
+>
+> Hindermann, M., Kasper, L. K., Marti, S., & Bosse, A. (2026). From Experiments to Epistemic Practice: The RISE Humanities Data Benchmark. *Journal of Open Humanities Data*, *12*(1), 38. https://doi.org/10.5334/johd.470
 
 **Contributors by Role:**
 

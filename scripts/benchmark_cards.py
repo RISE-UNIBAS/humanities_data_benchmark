@@ -5,9 +5,12 @@ in schema order, followed by `## Beyond the BenchmarkCard`; inside each, every f
 `**Label:**` line in schema order. List fields are bullet lists. Unknown values are
 `Not specified`, never omitted.
 
-Fields in GENERATED are derived from meta.json and the benchmark's files and rewritten by this
-script; edit meta.json, not the README, to change them. The card is exported to
-benchmark_card.json beside the README and validated against scripts/benchmark_card_schema.py.
+Fields in GENERATED are derived from meta.json, the benchmark's files and CITATION.cff and
+rewritten by this script; edit meta.json, not the README, to change them. How to Cite cites the
+benchmark (its contributors, the year of meta.json `added`, the newest version, the suite's
+all-versions DOI), its source record (meta.json `source` and `license`) and the suite's papers.
+The card is exported to benchmark_card.json beside the README and validated against
+scripts/benchmark_card_schema.py.
 
 Run:
     python scripts/benchmark_cards.py [name ...]          # regenerate (all cards if no name)
@@ -32,6 +35,8 @@ from benchmark_card_schema import (  # noqa: E402
 
 BENCHMARKS_DIR = os.path.join(REPO_ROOT, "benchmarks")
 CONTRIBUTORS_PATH = os.path.join(SCRIPTS_DIR, "data", "contributors.json")
+CITATION_PATH = os.path.join(REPO_ROOT, "CITATION.cff")
+SUITE_TITLE = "RISE Humanities Data Benchmark"
 SITE_URL = "https://rise-services.rise.unibas.ch/benchmarks/p/benchmarks/{name}"
 REPO_URL = "https://github.com/RISE-UNIBAS/humanities_data_benchmark/tree/main/benchmarks/{name}"
 
@@ -92,6 +97,7 @@ SECTIONS = [
 ]
 BEYOND = ("beyond", "Beyond the BenchmarkCard", [
     ("versions", "Versions", "text"),
+    ("how_to_cite", "How to Cite", "text"),
     ("contributors_by_role", "Contributors by Role", "list"),
 ])
 ALL_SECTIONS = SECTIONS + [BEYOND]
@@ -108,6 +114,7 @@ GENERATED = {
     ("data", "size"),
     ("data", "size_breakdown"),
     ("ethical_and_legal_considerations", "data_licensing"),
+    ("beyond", "how_to_cite"),
     ("beyond", "contributors_by_role"),
 }
 
@@ -261,6 +268,71 @@ def _load_contributors():
         return json.load(f)
 
 
+def _load_citation():
+    import yaml
+    with open(CITATION_PATH, encoding="utf-8") as f:
+        return yaml.safe_load(f)
+
+
+def _apa_names(names):
+    """'A, B., C, D., & E, F.' from (family, given) pairs."""
+    def one(family, given):
+        initials = " ".join("-".join(p[0] + "." for p in part.split("-")) for part in given.split())
+        return f"{family}, {initials}" if initials else family
+    parts = [one(f, g) for f, g in names]
+    if len(parts) == 1:
+        return parts[0]
+    return ", ".join(parts[:-1]) + ", & " + parts[-1]
+
+
+def _suite_doi(citation):
+    for ident in citation.get("identifiers", []):
+        if ident.get("type") == "doi" and ident.get("description") == "All versions":
+            return ident["value"]
+    raise CardError("CITATION.cff has no DOI described as 'All versions'")
+
+
+def how_to_cite(meta, people, version, citation):
+    """The How to Cite text: this benchmark, its source, the suite's papers.
+
+    `people` is [(person id, registry entry)] in author order; names come from the CITATION.cff
+    authors (matched by ORCID), else from the display name split at its last space."""
+    by_orcid = {a.get("orcid", "").rsplit("/", 1)[-1]: (a["family-names"], a["given-names"])
+                for a in citation.get("authors", []) if "family-names" in a}
+    names = []
+    for _, entry in people:
+        if entry.get("orcid") in by_orcid:
+            names.append(by_orcid[entry["orcid"]])
+        else:
+            given, _, family = entry["display_name"].rpartition(" ")
+            names.append((family, given))
+    if "added" not in meta:
+        raise CardError("meta.json lacks 'added' (YYYY-MM, when the benchmark's data was added)")
+    year = meta["added"][:4]
+    blocks = ["This benchmark:", f"> {_apa_names(names)} ({year}). {meta['title']} "
+              f"(benchmark version {version}). In *{SUITE_TITLE}*. Zenodo. "
+              f"https://doi.org/{_suite_doi(citation)}"]
+    source = meta.get("source", {})
+    parts = [source.get(k) for k in ("collection", "signature", "period")
+             if source.get(k) and source.get(k) != NOT_SPECIFIED]
+    parts = [re.sub(r"^(\d{4})-(\d{4})$", r"\1–\2", part) for part in parts]
+    if parts:
+        line = f"{', '.join(parts)}. Licence: {meta['license']}."
+        if source.get("url") and source["url"] != NOT_SPECIFIED:
+            line += f" {source['url']}"
+        blocks += ["Source:", f"> {line}"]
+    papers = [r for r in citation.get("references", []) if r.get("type") == "article"]
+    if papers:
+        quoted = []
+        for r in sorted(papers, key=lambda r: (r.get("year", 0), r.get("number", 0))):
+            authors = _apa_names([(a["family-names"], a["given-names"]) for a in r["authors"]])
+            title = " ".join(r["title"].split())
+            quoted.append(f"> {authors} ({r['year']}). {title}. *{r['journal']}*, *{r['volume']}*"
+                          f"({r['issue']}), {r['number']}. https://doi.org/{r['doi']}")
+        blocks += ["The benchmark suite:", "\n>\n".join(quoted)]
+    return "\n\n".join(blocks)
+
+
 def _basename_pattern(name, directory):
     import importlib.util
     benchmark_file = os.path.join(directory, "benchmark.py")
@@ -271,10 +343,11 @@ def _basename_pattern(name, directory):
     return cls.get_basename_pattern(cls.__new__(cls))
 
 
-def generated_values(name, meta, contributors=None):
-    """{(section, field): value} for every GENERATED field."""
+def generated_values(name, meta, contributors=None, version="1.0.0", citation=None):
+    """{(section, field): value} for every GENERATED field; `version` is the newest in Versions."""
     directory = os.path.join(BENCHMARKS_DIR, name)
     contributors = contributors if contributors is not None else _load_contributors()
+    citation = citation if citation is not None else _load_citation()
 
     missing = [k for k in ("data_type", "license") if k not in meta]
     if missing:
@@ -289,11 +362,12 @@ def generated_values(name, meta, contributors=None):
             raise CardError(f"contributor '{person}' not in scripts/data/contributors.json")
         return contributors[person]["display_name"]
 
-    authors, by_role = [], []
+    authors, by_role, people = [], [], []
     for entry in meta.get("contributors", []):
         names = [display(p) for p in entry["contributors"]]
         by_role.append(f"{entry['role']}: {', '.join(names)}")
         authors += [n for n in names if n not in authors]
+        people += [(p, contributors[p]) for p in entry["contributors"] if p not in dict(people)]
 
     pattern = _basename_pattern(name, directory)
     breakdown = {}
@@ -320,6 +394,7 @@ def generated_values(name, meta, contributors=None):
         ("data", "size"): f"{len(objects)} evaluated objects",
         ("data", "size_breakdown"): breakdown or NOT_SPECIFIED,
         ("ethical_and_legal_considerations", "data_licensing"): meta["license"],
+        ("beyond", "how_to_cite"): how_to_cite(meta, people, version, citation),
         ("beyond", "contributors_by_role"): by_role or [NOT_SPECIFIED],
     }
 
@@ -336,6 +411,11 @@ def render(text, parsed, values):
 
 
 VERSION_LINE = re.compile(r"-\s+(\d+)\.(\d+)\.(\d+)\s+—\s+\S")
+
+
+def newest_version(raw):
+    m = VERSION_LINE.match(raw.strip())
+    return ".".join(m.groups()) if m else "1.0.0"
 
 
 def check_versions(raw):
@@ -366,7 +446,9 @@ def build(name, contributors=None):
         readme = f.read()
     with open(os.path.join(directory, "meta.json"), encoding="utf-8") as f:
         meta = json.load(f)
-    readme = render(readme, parse(readme), generated_values(name, meta, contributors))
+    parsed = parse(readme)
+    version = newest_version(parsed["beyond"]["versions"].raw)
+    readme = render(readme, parsed, generated_values(name, meta, contributors, version))
     parsed = parse(readme)
     card = to_card(parsed)
     metric = meta.get("ranking", {}).get("metric")

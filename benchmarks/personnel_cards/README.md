@@ -14,7 +14,7 @@ To run this benchmark, use `python scripts/run_single_test.py --adhoc` from the 
 
 **Name:** Personnel Cards
 
-**Overview:** Evaluates models' ability to transcribe and interpret personnel index cards of Swiss federal employees (1941–1961), containing typed and handwritten entries on job title, work location, pay grade, salary, and related notes in German and French.
+**Overview:** Evaluates models' ability to transcribe and interpret personnel index cards of Swiss federal employees, 1941–1961, from the Swiss Federal Archives: typed and handwritten table entries in German and French on job title, place of service, salary class, salary and remarks.
 
 **Data Type:** image
 
@@ -58,54 +58,61 @@ To run this benchmark, use `python scripts/run_single_test.py --adhoc` from the 
 - resolution of ditto marks and normalisation of dates, salary classes and monetary values
 - detection of crossed-out entries
 
-**Limitations:** 61 cards from a single series of one archive, written in German and French by a small number of clerks; results do not transfer automatically to other card layouts, hands or languages. The interpretation layer follows the conventions in the prompt (e.g. `YYYY-MM-DD` dates and numeric salary strings without currency labels; abbreviations must not be expanded), so it measures agreement with those conventions rather than a neutral standard. Each selected sub-field counts as matched at a fuzzy similarity of 0.92 or above; a near-match below that threshold receives the same FP/FN penalty as a wholly wrong value.
+**Limitations:** The backs of 61 cards from a single series of one archive, in German and French; the number of clerks who wrote them is unknown and may approach one per card. Results do not transfer automatically to other card layouts, hands or languages. The interpretation layer follows the conventions in the prompt (`YYYY-MM-DD` dates, numeric salary strings without currency labels, abbreviations left unexpanded), so it measures agreement with those conventions rather than with a neutral standard.
+
+The scorer has properties that bias results (see Calculation):
+
+- A near-match below the 0.92 threshold is penalised as heavily as a wholly wrong value.
+- Rows are compared by list position, not by `row_number`; an omitted or inserted row shifts every later comparison.
+- Fields the response adds beyond the ground truth count as false positives.
 
 **Out-of-Scope Uses:**
 
-- drawing conclusions about the employees named on the cards
+- drawing conclusions about the employees the cards describe
+- extracting the personal data on the front of the cards (name, birth, family, education, aptitude), which is not part of the benchmark
 - evaluating handwriting recognition on free-form documents
 - ranking models on languages other than German and French
 
 ## Data
 
-**Source:** Personnel index cards of Swiss federal employees from the Swiss Federal Archives (Schweizerisches Bundesarchiv), series E4260D#05, "Das Dienstverhältnis der Bundesbeamten: Personaldossiers (Serie)": https://www.recherche.bar.admin.ch/recherche/#/de/archiv/einheit/3948547. Each card is a table with one row per change in employment, recording job title, work location, pay grade, salary, date of salary change, and notes on salary supplements.
+**Source:** Personnel index cards of Swiss federal employees from the Swiss Federal Archives (Schweizerisches Bundesarchiv), series E4260D#05, "Das Dienstverhältnis der Bundesbeamten: Personaldossiers (Serie)": https://www.recherche.bar.admin.ch/recherche/#/de/archiv/einheit/3948547. The benchmark uses the back of each card, a table with one row per change in employment, recording job title, work location, pay grade, salary, date of salary change, and notes on salary supplements.
 
 **Size:** 61 evaluated objects
 
-**Format:** One JPG photograph per card, about 2500×1700 px and 2 MB each, with typed, handwritten and printed entries. The ground truth is one JSON file per card, following the `Table` dataclass in `dataclass.py`:
+**Format:** One JPG photograph per card, mostly 2,100–2,600 px wide and 1,450–1,750 px high (one card is photographed upright), 0.3–3 MB, with printed, typed and handwritten entries. The ground truth is one JSON file per card, following the `Table` dataclass in `dataclass.py`. Row 2 of `0002_20230927_105304.json`, where a ditto mark repeats the job title of row 1:
 
 ```json
 {
   "rows": [
     {
-      "row_number": 1,
+      "row_number": 2,
       "dienstliche_stellung": {
-        "diplomatic_transcript": "Assist.",
-        "interpretation": null,
+        "diplomatic_transcript": "\"",
+        "interpretation": "Hilfsleiter",
         "is_crossed_out": false
       },
       "dienstort": {
-        "diplomatic_transcript": "Basel",
+        "diplomatic_transcript": "",
         "interpretation": null,
         "is_crossed_out": false
       },
       "gehaltsklasse": {
-        "diplomatic_transcript": "III",
-        "interpretation": "3",
+        "diplomatic_transcript": "",
+        "interpretation": null,
         "is_crossed_out": false
       },
       "jahresgehalt_monatsgehalt_taglohn": {
-        "diplomatic_transcript": "Fr. 2400.-",
-        "interpretation": "2400",
+        "diplomatic_transcript": "3'750.-",
+        "interpretation": "3750",
         "is_crossed_out": false
       },
       "datum_gehaltsänderung": {
-        "diplomatic_transcript": "1.4.1920",
-        "interpretation": "1920-04-01",
+        "diplomatic_transcript": "1. Jan. 1944",
+        "interpretation": "1944-01-01",
         "is_crossed_out": false
       },
       "bemerkungen": {
-        "diplomatic_transcript": "",
+        "diplomatic_transcript": "inkl. 600.-- techn. Z.",
         "interpretation": null,
         "is_crossed_out": false
       }
@@ -117,18 +124,18 @@ To run this benchmark, use `python scripts/run_single_test.py --adhoc` from the 
 Each cell has three sub-fields:
 
 - `diplomatic_transcript`: the text exactly as written on the card, abbreviations included
-- `interpretation`: a resolved ditto mark, normalised date, salary class or numeric amount, or `null`; the prompt explicitly says never to expand abbreviations
+- `interpretation`: the resolved ditto mark, normalised date, salary class or numeric amount, or `null`; abbreviations are never expanded
 - `is_crossed_out`: whether the entry is struck through on the card
 
-**Annotation:** Ground truths were transcribed and interpreted by the domain expert listed under Authors, following the extraction and interpretation rules in the [prompt file](prompts/prompt.txt).
+**Annotation:** Tabea Wullschleger, the domain expert, transcribed and interpreted the ground truth by hand, following the extraction and interpretation rules in the [prompt file](prompts/prompt.txt).
 
 **Size Breakdown:**
 
-- images files: 61
+- image files: 61
 
-**Collection Date:** Not specified for benchmark collection or digitisation. Source-document dates: The cards date from 1941-1961.
+**Collection Date:** Source documents: 1941–1961. Added to the benchmark: February 2026.
 
-**Contamination Controls:** No held-out private split, training-data audit or other contamination control is documented. Inputs, prompts and ground truths are distributed together in this public repository. Whether any evaluated model saw these materials during training is unknown.
+**Contamination Controls:** None. The images, prompt and ground truth have been public in this repository since February 2026.
 
 ## Methodology
 
@@ -136,20 +143,21 @@ Each cell has three sub-fields:
 
 - zero-shot structured extraction from a single image per request
 - structured JSON output requested using the `Table` dataclass
+- suite-wide default output cap of 16,384 tokens; a test rule can override it and model-specific settings can change it
 
 **Metrics:**
 
 - F1 micro (`f1_micro`, used for ranking)
 - F1 macro (`f1_macro`)
 
-**Calculation:** Every terminal field of the JSON (for example `rows[0].dienstliche_stellung.diplomatic_transcript`) is compared between the response and the ground truth; empty strings count as missing. Field values are compared with a rapidfuzz similarity score, and a field is a match at a score of 0.92 or above.
+**Calculation:** Every terminal field present in the response or the ground truth (for example `rows[0].dienstliche_stellung.diplomatic_transcript`) is compared at the same path; empty strings count as missing. Field values are compared with a rapidfuzz similarity score, and a field is a match at a score of 0.92 or above.
 
 - TP: both have a value and the score is at least 0.92
 - FP and FN: both have a value but the score is below 0.92 (the field counts once as each)
 - FP: only the response has a value
 - FN: only the ground truth has a value
 
-F1 micro sums TP, FP and FN over all cards before computing F1. F1 macro averages the per-card F1, each rounded to two decimals.
+F1 micro sums TP, FP and FN over all cards before computing F1. F1 macro averages the per-card F1 values, each rounded to two decimals.
 
 The `rules` column of `benchmarks_tests.csv` selects which sub-fields are scored; an empty value scores all three:
 
@@ -161,15 +169,15 @@ The `rules` column of `benchmarks_tests.csv` selects which sub-fields are scored
 }
 ```
 
-`row_number` is never scored and is not used for alignment: rows are compared by list position. Omitted or inserted rows shift later comparisons; extra scored fields can produce false positives. In schema-configured runs, the shared runner skips unparseable responses before aggregation.
+`row_number` is never scored and is not used for alignment: rows are compared by list position. A response that does not parse as JSON is skipped rather than scored as zero, so both aggregates cover only scored cards.
 
-**Interpretation:** Scores range from 0 to 1; higher is better. F1 micro weights cards by their number of fields, so long cards count more; F1 macro weights every card equally. The 61 cards contain 209 rows and 1,254 crossed-out flags, of which 1,252 are false. Correct false flags earn true positives even for empty cells, so the default combined score can mask poor transcription. Report the selected field rules when comparing runs.
+**Interpretation:** Scores range from 0 to 1; higher is better. F1 micro weights cards by their number of fields, so long cards count more; F1 macro weights every card equally. The 61 cards contain 209 rows and 1,254 crossed-out flags, of which 1,252 are false. Correct `false` flags earn true positives even for empty cells, so the default combined score can mask poor transcription. Compare runs only under the same field rules.
 
-**Baseline Results:** Model results are available on the [benchmark page](https://rise-services.rise.unibas.ch/benchmarks/p/benchmarks/personnel_cards) and in `results/<date>/<test_id>/` at the repository root. Compare runs with the same prompt, scoring rules and ground-truth revision, and report the number of successfully scored objects alongside the score. No fixed model baseline with a run ID and date is specified here. A diagnostic that preserves the ground-truth row structure, blanks every transcript and interpretation, and sets every crossed-out flag to false scores micro F1 0.663839 and macro F1 0.625082 under the default rules. It uses oracle row structure and is not an independent extraction baseline.
+**Baseline Results:** Model results are available on the [benchmark page](https://rise-services.rise.unibas.ch/benchmarks/p/benchmarks/personnel_cards) and in `results/<date>/<test_id>/` at the repository root. Compare runs with the same prompt, scoring rules and ground-truth revision, and report the number of successfully scored objects alongside the score. There is no fixed model baseline with a run ID and date. A diagnostic response that keeps the ground-truth row structure, blanks every transcript and interpretation, and sets every crossed-out flag to `false` scores F1 micro 0.663839 and F1 macro 0.625082 under the default rules. It borrows the row structure from the ground truth and is not an independent extraction baseline.
 
-Observed across models: the interpretation layer, which standardises abbreviations, dates and monetary values into machine-readable form, is particularly useful downstream. Models produce the diplomatic transcript and its interpreted form in a single pass, so no separate normalisation step is needed, which shortens the manual post-processing that turns raw archival data into structured records.
+Observed across models: the interpretation layer, which turns ditto marks, dates, salary classes and amounts into machine-readable values, is particularly useful downstream. Models produce the diplomatic transcript and its interpretation in a single pass, so no separate normalisation step is needed; this shortens the manual post-processing that turns archival data into structured records.
 
-**Validation:** Ground truths were checked by the domain expert. Scoring is deterministic; the scorer is covered by the repository's test suite.
+**Validation:** The ground truth was checked by the domain expert, Tabea Wullschleger. Scoring is deterministic; the scorer is covered by `tests/test_f1_scoring.py`.
 
 **Human Baseline:** Not specified
 
@@ -181,17 +189,17 @@ Observed across models: the interpretation layer, which standardises abbreviatio
 
 **Judge Score Consolidation:** Not specified
 
-**Validity Justification:** Field-level F1 reflects the downstream use: each cell becomes a value in a database, so a cell is either usable or needs correction. Not specified beyond that.
+**Validity Justification:** Field-level F1 reflects the downstream use: each cell becomes a value in a database, so a cell is either usable or needs correction.
 
 ## Ethical and Legal Considerations
 
-**Privacy and Anonymity:** The cards record the employment history and salaries of named Swiss federal employees, 1941-1961. They are not anonymised. The people on the cards were born between 1871 and 1926, so all would be at least 100 years old in 2026. They are published as made available by the Swiss Federal Archives.
+**Privacy and Anonymity:** The backs of the cards record the employment history and salaries of Swiss federal employees, 1941–1961. They carry no name; the employee's name and personal data are on the front, which is not part of the benchmark. Nothing is anonymised. The people on the cards were born between 1871 and 1926, so all would be at least 100 years old in 2026. The cards are published as made available by the Swiss Federal Archives.
 
 **Data Licensing:** Public Domain
 
 **Consent Procedures:** Not specified
 
-**Compliance with Regulations:** The cards are federal archival records held by the Swiss Federal Archives and fall under the Federal Act on Archiving (BGA, SR 152.1). Records indexed by personal name that contain sensitive personal data have an extended protection period of 50 years (Art. 11 para. 1 BGA), which ends earlier, three years after the death of the person concerned (Art. 11 para. 2). The latest entry on any card is from 1961, so the 50-year period has expired for every card. No separate reuse terms are stated for the ground truths. No ethical review was carried out.
+**Compliance with Regulations:** The cards are federal archival records held by the Swiss Federal Archives and fall under the Federal Act on Archiving (BGA, SR 152.1). Records indexed by personal name that contain sensitive personal data have an extended protection period of 50 years (Art. 11 para. 1 BGA), which ends earlier, three years after the death of the person concerned (Art. 11 para. 2). The latest entry on any card is from 1961, so the 50-year period has expired for every card. No separate reuse terms are stated for the ground truth. No ethical review was carried out.
 
 ## Beyond the BenchmarkCard
 
@@ -200,6 +208,20 @@ This section is not part of the BenchmarkCard schema and is not exported to `ben
 **Versions:**
 
 - 1.0.0 — initial versioned state
+
+**How to Cite:** This benchmark:
+
+> Wullschleger, T., Hindermann, M., & Decker, E. (2026). Personnel Cards (benchmark version 1.0.0). In *RISE Humanities Data Benchmark*. Zenodo. https://doi.org/10.5281/zenodo.16941752
+
+Source:
+
+> Schweizerisches Bundesarchiv, E4260D#05, 1941–1961. Licence: Public Domain. https://www.recherche.bar.admin.ch/recherche/#/de/archiv/einheit/3948547
+
+The benchmark suite:
+
+> Hindermann, M., Marti, S., Kasper, L. K., & Bosse, A. (2026). The RISE Humanities Data Benchmark: A Framework for Evaluating Large Language Models for Humanities Tasks. *Journal of Open Humanities Data*, *12*(1), 24. https://doi.org/10.5334/johd.481
+>
+> Hindermann, M., Kasper, L. K., Marti, S., & Bosse, A. (2026). From Experiments to Epistemic Practice: The RISE Humanities Data Benchmark. *Journal of Open Humanities Data*, *12*(1), 38. https://doi.org/10.5334/johd.470
 
 **Contributors by Role:**
 

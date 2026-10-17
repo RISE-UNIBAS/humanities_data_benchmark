@@ -18,6 +18,7 @@ class Letter:
     sender_persons: Optional[List[Person]] = field(default_factory=list)
     receiver_persons: Optional[List[Person]] = field(default_factory=list)
     has_signatures: Optional[bool] = None
+    transkribus_id: Optional[str] = None
 
     def __post_init__(self):
         # Normalize letter_title if it's a list:
@@ -36,11 +37,8 @@ class Letter:
         if isinstance(self.send_date, (list, dict, set)):
             raise TypeError(f"Unhashable send_date: {self.send_date!r}")
 
-        # Normalize has_signatures:
-        if self.has_signatures == "TRUE":
-            self.has_signatures = True
-        else:
-            self.has_signatures = False
+        # The ground truth stores a boolean; "TRUE" is the spreadsheet form it was exported from.
+        self.has_signatures = self.has_signatures is True or self.has_signatures == "TRUE"
 
     @staticmethod
     def _split_and_process(persons):

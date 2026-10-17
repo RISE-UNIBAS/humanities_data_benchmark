@@ -14,7 +14,7 @@ To run this benchmark, use `python scripts/run_single_test.py --adhoc` from the 
 
 **Name:** Blacklist Cards
 
-**Overview:** Index cards of companies on a British 'black list' in the 1940s. Assesses models' capability to recognize typed and handwritten information from index cards.
+**Overview:** Tests models on extracting company, location, identification number, stamped date and the blacklist entries from mostly typewritten index cards of the Swiss Federal Archives on Swiss firms and individuals put on the British trade blacklist in 1940–1946.
 
 **Data Type:** image
 
@@ -42,7 +42,7 @@ To run this benchmark, use `python scripts/run_single_test.py --adhoc` from the 
 
 ## Purpose and Intended Users
 
-**Goal:** Measure how well vision-language models extract the fields of a uniform, mostly typewritten index card into a structured record: separating company name from location, reading the identification number, normalising a stamped date, and transcribing the text blocks that record when a firm was put on and taken off the British blacklist. The results are meant to guide historians, archivists and digital humanities projects in choosing a model for digitising large series of uniform index cards.
+**Goal:** Measure how well vision-language models extract the fields of a uniform, mostly typewritten index card into a structured record: separating company name from location, reading the identification number, normalising a stamped date, and transcribing the text blocks that record when a firm was put on and taken off the British blacklist. The results serve researchers and developers comparing models on archival index cards, and practitioners in archives, historical research and digital humanities projects who choose a model for digitising large series of uniform cards.
 
 **Audience:**
 
@@ -56,7 +56,9 @@ To run this benchmark, use `python scripts/run_single_test.py --adhoc` from the 
 - transcription of typed and handwritten text blocks
 - date normalisation to `YYYY-MM-DD`
 
-**Limitations:** 33 cards from one record series of one archive, all following the same layout; results do not transfer automatically to other card types. The ground truth was drafted by a model and then corrected by hand, so it may lean towards that model's reading where the card is ambiguous. Blocks in `information` are compared by position, so a merged, split or reordered block lowers the score of every block after it; blocks beyond those in the ground truth cost nothing. Empty fields are scored too: 27 of 33 cards have no stamped date, and a response that also leaves `date` empty gets full marks for it, so an all-empty response already scores about 0.15. The split of company and location, and the omitted commas and periods, follow the annotators' conventions rather than a stated standard. The test CSV requests temperature 0.5, but the runner overrides or omits temperature for some models. Repeated-run uncertainty is not reported here.
+**Limitations:** The 33 cards come from one record series of one archive and all follow the same layout; results do not transfer to other card types. The ground truth was drafted by a model and corrected by hand (see Annotation), so where a card is ambiguous it may lean towards that model's reading. The split of company and location and the omitted commas and periods follow the annotators' conventions rather than a published standard.
+
+Blocks in `information` are compared by position (see Calculation), so a merged, split or reordered block lowers the score of every block after it, while blocks beyond those in the ground truth cost nothing. Empty fields are scored too: 27 of 33 cards have no stamped date, and a response that also leaves `date` empty gets full marks for it, so an all-empty response already scores about 0.15.
 
 **Out-of-Scope Uses:**
 
@@ -70,7 +72,7 @@ To run this benchmark, use `python scripts/run_single_test.py --adhoc` from the 
 
 **Size:** 33 evaluated objects
 
-**Format:** One JPG scan per card, about 1780–1860 × 1290–1320 px and 590 KB on average, mostly typewritten in German. Handwritten notes on the French blacklist ("fig. noch auf franz. Liste…") are transcribed, even where struck through; other handwritten annotations, mostly references to supplementary material, were left out. The ground truth is one JSON file per card, following the `Card` dataclass in `dataclass.py`:
+**Format:** One JPG scan per card, about 1,780–1,860 × 1,290–1,320 px and 590 KB on average, mostly typewritten in German. Handwritten notes on the French blacklist ("fig. noch auf franz. Liste…") are transcribed, even where struck through; other handwritten annotations, mostly references to supplementary material, were left out. The ground truth is one JSON file per card, following the `Card` dataclass in `dataclass.py`:
 
 ```json
 {
@@ -89,15 +91,15 @@ To run this benchmark, use `python scripts/run_single_test.py --adhoc` from the 
 - `date`: a stamped date in `YYYY-MM-DD`, or an empty string (27 of 33 cards)
 - `information`: the text blocks of the card body in reading order, line breaks kept as `\n`; 0–4 blocks per card
 
-**Annotation:** The ground truth was drafted by running the benchmark with the dataclass, most likely with one of the two models configured when the benchmark was added (Gemini 2.5 Flash preview or GPT-4.1; which one is not recorded), then reviewed and corrected item by item by the annotators listed under Contributors by Role. Commas after names and periods after locations were omitted. Dates in `information` are transcribed, not normalised.
+**Annotation:** A model drafted the ground truth by running the benchmark with the `Card` dataclass, most likely one of the two models configured when the benchmark was added, Gemini 2.5 Flash (preview) or GPT-4.1; which one is not recorded. Lea Kasper and Sorin Marti then reviewed and corrected every card by hand. Commas after names and periods after locations are omitted. Dates in `information` are transcribed, not normalised.
 
 **Size Breakdown:**
 
-- images files: 33
+- image files: 33
 
-**Collection Date:** Not specified for benchmark collection or digitisation. Source-document dates: The cards record blacklist amendments from 1940 to 1946.
+**Collection Date:** Source documents: blacklist amendments of 1940–1946, recorded in an index created 1946–1948. Added to the benchmark: October 2025.
 
-**Contamination Controls:** No held-out private split, training-data audit or other contamination control is documented. Inputs, prompts and ground truths are distributed together in this public repository. Whether any evaluated model saw these materials during training is unknown.
+**Contamination Controls:** None. The card images, prompt and ground truth have been public in this repository since October 2025.
 
 ## Methodology
 
@@ -105,7 +107,9 @@ To run this benchmark, use `python scripts/run_single_test.py --adhoc` from the 
 
 - zero-shot structured extraction from a single image per request
 - structured JSON output requested using the `Card` dataclass
-- configured temperature 0.5, subject to model-specific overrides in `scripts/benchmark_base.py`
+- one prompt, [prompt.txt](prompts/prompt.txt), used by all tests
+- temperature 0.5 in all tests, overridden or omitted for some models in `scripts/benchmark_base.py`
+- output cap: the repository default of 16,384 tokens per request, adjusted per model in `scripts/benchmark_base.py`
 
 **Metrics:**
 
@@ -118,13 +122,13 @@ To run this benchmark, use `python scripts/run_single_test.py --adhoc` from the 
 
 The card score is the mean over that card's fields. The benchmark score is the mean of the card scores. A response that cannot be parsed into the schema is not scored and does not enter the mean.
 
-**Interpretation:** Scores range from 0 to 1; higher is better. Partial string similarity earns partial credit, so small slips (a missing period in the identification number) cost little. A response with every field empty scores about 0.15.
+**Interpretation:** Scores range from 0 to 1; higher is better. Partial string similarity earns partial credit, so small slips (a missing period in the identification number) cost little. A score near 0.15 is no better than an empty response (see Baseline Results).
 
-**Baseline Results:** Model results are available on the [benchmark page](https://rise-services.rise.unibas.ch/benchmarks/p/benchmarks/blacklist_cards) and in `results/<date>/<test_id>/` at the repository root. Compare runs with the same prompt, scoring rules and ground-truth revision, and report the number of successfully scored objects alongside the score. No fixed model baseline with a run ID and date is specified here. An empty parsed object scores 0.153535 on the 33 current ground truths because missing values are normalised to empty strings; this is a scorer diagnostic, not a schema-valid model response.
+**Baseline Results:** Model results are available on the [benchmark page](https://rise-services.rise.unibas.ch/benchmarks/p/benchmarks/blacklist_cards) and in `results/<date>/<test_id>/` at the repository root. Compare runs with the same prompt, scoring rules and ground-truth revision, and report the number of successfully scored objects alongside the score. No fixed baseline run is designated. As a scorer diagnostic, an empty parsed object scores 0.153535 on the 33 ground-truth files, because missing values are normalised to empty strings; it is not a schema-valid model response.
 
-Observed across models: models separate company name and location, extract the identification number and transcribe the two dated lines reliably. The transcribed dates are not yet normalised, which can be done in a later processing step to turn them into structured dates for analysis.
+Observed across models: models separate company name and location, extract the identification number and transcribe the two dated lines reliably. Dates in the text blocks stay as written; turning them into structured dates for analysis is left to a later processing step.
 
-**Validation:** Every ground truth item was reviewed and corrected by hand after the model draft. Scoring is deterministic; the scorer is covered by the repository's test suite.
+**Validation:** The annotators reviewed and corrected every ground-truth file by hand after the model draft. Scoring is deterministic; the scorer is covered by the repository's test suite.
 
 **Human Baseline:** Not specified
 
@@ -136,17 +140,17 @@ Observed across models: models separate company name and location, extract the i
 
 **Judge Score Consolidation:** Not specified
 
-**Validity Justification:** Field-level similarity reflects the downstream use: each card becomes a database record, and near-misses need less correction than wrong values. Not specified beyond that.
+**Validity Justification:** Field-level similarity reflects the downstream use: each card becomes a database record, and near-misses need less correction than wrong values.
 
 ## Ethical and Legal Considerations
 
-**Privacy and Anonymity:** The cards name the firms and, on 13 of the 33 cards, individuals (some with business addresses) who were placed on the British blacklist in 1940–1946. They are not anonymised. Firms are not natural persons. Birth dates are not on the cards, but anyone economically active in 1940–1946 was very likely born before 1926 and would be at least 100 years old in 2026. The Swiss Federal Archives have made the record freely accessible since 1978.
+**Privacy and Anonymity:** The cards name the firms and, on 13 of the 33 cards, individuals (some with business addresses) who were placed on the British blacklist in 1940–1946. They are not anonymised. Firms are not natural persons. The cards give no birth dates, but anyone economically active in 1940–1946 was very likely born before 1926 and would be at least 100 years old in 2026. The Swiss Federal Archives have made the record freely accessible since 1978.
 
 **Data Licensing:** Public Domain
 
 **Consent Procedures:** Not specified
 
-**Compliance with Regulations:** The cards are federal archival records held by the Swiss Federal Archives and fall under the Federal Act on Archiving (BGA, SR 152.1). The archive's record assigns them the ordinary protection period of 30 years (Art. 9 para. 1 BGA), which ended in 1978; no extended protection for personal data applies. As official records they carry no copyright and are used as public domain. No separate reuse terms are stated for the ground truths. No ethical review was carried out.
+**Compliance with Regulations:** The cards are federal archival records held by the Swiss Federal Archives and fall under the Federal Act on Archiving (BGA, SR 152.1). The archive's record assigns them the ordinary protection period of 30 years (Art. 9 para. 1 BGA), which ended in 1978; no extended protection for personal data applies. As official records they carry no copyright and are used as public domain. No separate reuse terms are stated for the ground truth. No ethical review was carried out.
 
 ## Beyond the BenchmarkCard
 
@@ -155,6 +159,20 @@ This section is not part of the BenchmarkCard schema and is not exported to `ben
 **Versions:**
 
 - 1.0.0 — initial versioned state
+
+**How to Cite:** This benchmark:
+
+> Kasper, L., & Marti, S. (2025). Blacklist Cards (benchmark version 1.0.0). In *RISE Humanities Data Benchmark*. Zenodo. https://doi.org/10.5281/zenodo.16941752
+
+Source:
+
+> Schweizerisches Bundesarchiv, E2001E#1968/78#7508*, 1940–1946. Licence: Public Domain. https://www.recherche.bar.admin.ch/recherche/#/de/archiv/einheit/31240458
+
+The benchmark suite:
+
+> Hindermann, M., Marti, S., Kasper, L. K., & Bosse, A. (2026). The RISE Humanities Data Benchmark: A Framework for Evaluating Large Language Models for Humanities Tasks. *Journal of Open Humanities Data*, *12*(1), 24. https://doi.org/10.5334/johd.481
+>
+> Hindermann, M., Kasper, L. K., Marti, S., & Bosse, A. (2026). From Experiments to Epistemic Practice: The RISE Humanities Data Benchmark. *Journal of Open Humanities Data*, *12*(1), 38. https://doi.org/10.5334/johd.470
 
 **Contributors by Role:**
 

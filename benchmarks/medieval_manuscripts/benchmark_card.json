@@ -2,7 +2,7 @@
   "benchmark_card": {
     "benchmark_details": {
       "name": "Medieval Manuscripts",
-      "overview": "Evaluates models on handwritten text extraction from 15th century medieval manuscripts written in late medieval German. Tests the ability to transcribe historical handwriting, identify folio numbers, separate main text from marginal additions without being given their regions (an implicit segmentation), and maintain historical spelling and formatting. Performance is measured using fuzzy string matching and Character Error Rate (CER).",
+      "overview": "Evaluates models on the diplomatic transcription of pages from a mid-15th-century manuscript in late medieval German, the pilgrimage accounts of Hans and Peter Rot held by the Universitätsbibliothek Basel (H V 15). The model must keep historical spelling and abbreviations, identify the folio number, and separate main text from marginal additions without being given their regions (an implicit segmentation).",
       "data_type": "image",
       "domains": [
         "history",
@@ -25,7 +25,7 @@
       ]
     },
     "purpose_and_intended_users": {
-      "goal": "Measure how well vision-language models produce a diplomatic transcription of late medieval German handwriting: the main text block, the folio number and each marginal addition as separate fields, with historical spelling kept and abbreviations left unresolved. The results are meant to guide historians, palaeographers, archivists and digital humanities projects in choosing a model for transcribing medieval manuscripts.",
+      "goal": "Measure how well vision-language models produce a diplomatic transcription of late medieval German handwriting: the main text block, the folio number and each marginal addition as separate fields, with historical spelling kept and abbreviations left unresolved. The results are meant for AI researchers and model developers comparing models on historical handwriting, and for practitioners in historical research, archives and digital humanities choosing a model to transcribe medieval manuscripts.",
       "audience": [
         "AI researchers",
         "model developers",
@@ -35,7 +35,7 @@
         "diplomatic transcription of handwritten text from images",
         "separation of main text, folio number and marginal additions"
       ],
-      "limitations": "12 pages from a single manuscript, written by two scribes in one regional variety of German; results do not transfer automatically to other scripts, scribes, languages or layouts. Each page has one folio entry and the scorer reads only the first entry of the response, so a model that splits a page into several entries is scored on the first one alone. Additions are scored only up to the number of addition fields in the ground truth; extra marginal text in the response is not penalised. The page score averages fields without weighting by length, so the one- or two-character folio number counts as much as a main text of several hundred characters. A response that cannot be parsed as JSON is skipped rather than scored as a failure, so a model's average covers only the pages it answered in valid JSON. The transcription conventions (superscript letters written after the base letter, MUFI characters for abbreviations) are those of the prompt and the annotator; the score measures agreement with them.",
+      "limitations": "12 pages from a single manuscript, written by two scribes in one regional variety of German; results do not transfer automatically to other scripts, hands, languages or layouts. The transcription conventions (superscript letters written after the base letter, MUFI characters for abbreviation signs) are those of the prompt and the annotator, so the score measures agreement with them. Several scoring properties bias results (see Calculation): only the first entry of the response is scored, so a model that splits a page into several entries is scored on the first alone; marginal additions beyond those keyed in the ground truth are ignored; the page score weights the one- or two-character folio number as much as a main text of several hundred characters; and a response that cannot be parsed is left out of the average rather than scored as a failure, so a model's average covers only the pages it answered in valid JSON.",
       "out_of_scope_uses": [
         "evaluating expansion of abbreviations or normalisation to modern German",
         "evaluating text in other languages or scripts",
@@ -45,27 +45,29 @@
     "data": {
       "source": "Pages of Basel, Universitätsbibliothek, H V 15, \"Hans and Peter Roth, Pilgrimages to Jerusalem 1440 and 1453\", digitised by e-codices: https://www.e-codices.unifr.ch/en/list/one/ubb/H-V-0015. The small parchment manuscript (105 folios, 14 × 10.5 cm) contains the accounts of Hans Rot († 1452) and his son Peter Rot († 1487) of their pilgrimages to the Holy Land, possibly in their own hands. The 12 pages are folios 3r, 4v, 9v, 18r, 23v, 52v, 62v, 69r, 70v, 73r, 90r and 93r.",
       "size": "12 evaluated objects",
-      "format": "One JPG image per page, 1872×2808 px and about 1.0-1.2 MB each. The ground truth is one JSON file per page, keyed by the folio reference, with one entry holding the folio number as written on the page (empty if none is visible), the main text with line breaks as `\\n`, and one field per marginal addition. The response follows the `Document` dataclass in `dataclass.py`, a list `folios` of such entries.\n\n```json\n{\n  \"[9v]\": [\n    {\n      \"folio\": \"\",\n      \"text\": \"vnd die insel ist bi ccc mil\\n wit vnd ist der venediger\\n Itꝰ von kurfun vntz gon\\n ...\",\n      \"addition1\": \"Candia vff\\n Creta\",\n      \"addition2\": \"Virum\\n Malva\\n ricum\",\n      \"addition3\": \"Rhodꝰ.\"\n    }\n  ]\n}\n```\n\nMain texts are 274-710 characters long. Five pages carry a folio number; six have at least one marginal addition.",
-      "annotation": "Transcribed by the domain expert listed under Authors, following the transcription rules in the [prompt file](prompts/prompt.txt): historical spelling kept, abbreviations not resolved, superscript letters written after the base letter (e.g. `uo`), abbreviation signs as MUFI characters such as `ꝛ` and `ꝰ`.",
+      "format": "One JPG image per page, 1872×2808 px and 1.1–1.3 MB each. The ground truth is one JSON file per page, keyed by the folio reference, with one entry holding the folio number as written on the page (empty if none is visible), the main text with line breaks as `\n`, and one field per marginal addition. The response follows the `Document` dataclass in `dataclass.py`: a list `folios` of such entries, with fields `addition1` to `addition3`.\n\n```json\n{\n  \"[9v]\": [\n    {\n      \"folio\": \"\",\n      \"text\": \"vnd die insel ist bi ccc mil\n wit vnd ist der venediger\n Itꝰ von kurfun vntz gon\n ...\",\n      \"addition1\": \"Candia vff\n Creta\",\n      \"addition2\": \"Virum\n Malva\n ricum\",\n      \"addition3\": \"Rhodꝰ.\"\n    }\n  ]\n}\n```\n\nMain texts are 274–710 characters long. Five pages carry a folio number; six have at least one marginal addition. Every ground-truth file has an `addition1` field, empty where the page has no addition; only the page shown above has more than one.",
+      "annotation": "Transcribed by Ina Serif (domain expert) following the transcription rules in the [prompt file](prompts/prompt.txt): historical spelling kept, abbreviations not resolved, superscript letters written after the base letter (e.g. `uo`), abbreviation signs as MUFI characters such as `ꝛ` and `ꝰ`.",
       "size_breakdown": {
-        "images files": 12
+        "image files": 12
       },
-      "collection_date": "Not specified for benchmark collection or digitisation. Source-document dates: The manuscript dates from the middle of the 15th century; the pilgrimages it describes took place in 1440 and 1453.",
-      "contamination_controls": "No held-out private split, training-data audit or other contamination control is documented. Inputs, prompts and ground truths are distributed together in this public repository. Whether any evaluated model saw these materials during training is unknown."
+      "collection_date": "Source documents: mid-15th century; the pilgrimages described took place in 1440 and 1453. Added to the benchmark: October 2025.",
+      "contamination_controls": "None. The images, prompt and ground truth have been public in this repository since October 2025."
     },
     "methodology": {
       "methods": [
-        "transcription from one image per request, with an illustrative JSON output example and no labelled benchmark image supplied as a demonstration",
-        "structured JSON output requested using the `Document` dataclass"
+        "one page image per request with the prompt [`prompt.txt`](prompts/prompt.txt), the only variant; it includes an illustrative output example, and no benchmark page is supplied as a demonstration",
+        "all tests use temperature 0 and the same system role (a historian with expertise in medieval manuscripts and palaeography)",
+        "structured JSON output requested with the `Document` dataclass",
+        "output capped at the repository default of 16,384 tokens per request, adjusted per model in `scripts/benchmark_base.py`"
       ],
       "metrics": [
         "Character Error Rate (`cer`, used for ranking)",
         "fuzzy similarity (`fuzzy`)"
       ],
       "calculation": "Ground-truth entries are sorted by folio reference and matched by position to the entries of the response's `folios` list; every page has one entry, so it is matched to the first response entry. If the response has no entry, every compared field of the page gets fuzzy 0 and CER 1. Within the entry, these fields are compared:\n\n- `folio`, when the ground truth or the response has a value\n- `text`, always\n- consecutive `addition1` through at most `addition9`, stopping at the first missing or null ground-truth addition; a visited addition is scored when either side has a value\n\nNone, empty and whitespace-only values are treated as empty. For each compared field two values are computed, each rounded to three decimals:\n\n- fuzzy: the rapidfuzz ratio of the two strings divided by 100, case- and whitespace-sensitive; 1.0 for identical strings\n- CER: both strings are lowercased and runs of whitespace (including line breaks) collapsed to one space, then the Levenshtein distance is divided by the length of the normalised ground truth and capped at 1.0. Two empty strings give 0, one empty string gives 1.\n\nThe page fuzzy and CER are the unweighted means over the rounded field scores, then rounded to three decimals. The benchmark scores are the unweighted means over pages, rounded to three decimals; pages whose response could not be parsed are left out.\n\nExample: ground truth `Vnd ein pferit die mir vnd`, response `und ein pferit die mir vnd`: fuzzy 0.962, CER 1/26 = 0.038.",
-      "interpretation": "Both scores range from 0 to 1. Lower CER is better; higher fuzzy is better. CER ignores case and line-break layout, while fuzzy counts them, so a model that transcribes the letters correctly but merges lines or changes capitalisation loses fuzzy score but not CER. Because fields are averaged without weighting, a wrong or missing folio number moves the page score as much as the main text does.",
-      "baseline_results": "Model results are available on the [benchmark page](https://rise-services.rise.unibas.ch/benchmarks/p/benchmarks/medieval_manuscripts) and in `results/<date>/<test_id>/` at the repository root. Compare runs with the same prompt, scoring rules and ground-truth revision, and report the number of successfully scored objects alongside the score. No fixed model baseline with a run ID and date is specified here.",
-      "validation": "Ground truths were transcribed by the domain expert. Scoring is deterministic; the CER calculation and page averaging are covered by the repository's test suite.",
+      "interpretation": "Both scores range from 0 to 1; lower CER is better, higher fuzzy is better. CER ignores case and line breaks, while fuzzy counts them, so a model that reads the letters correctly but merges lines or changes capitalisation loses fuzzy score but not CER. CER is capped at 1 per field, so a field at 1 is not necessarily wrong in every character. A score covers only the pages with a parseable response (see Limitations); report the number of scored pages with it.",
+      "baseline_results": "Model results are on the [benchmark page](https://rise-services.rise.unibas.ch/benchmarks/p/benchmarks/medieval_manuscripts) and in `results/<date>/<test_id>/` at the repository root. Compare runs with the same prompt, scoring rules and ground-truth revision. No fixed model baseline is defined.",
+      "validation": "The ground truth was produced by the domain expert (see Annotation). Scoring is deterministic; the CER calculation and page averaging are covered by `tests/test_medieval_manuscripts_scoring.py`.",
       "human_baseline": "Not specified",
       "judge_uses_llm": false,
       "judge_num": "Not specified",
@@ -73,13 +75,13 @@
         "Not specified"
       ],
       "judge_score_consolidation": "Not specified",
-      "validity_justification": "CER is the standard measure for handwritten text recognition and reflects the correction effort needed to turn a model transcription into an edition-ready one. Not specified beyond that."
+      "validity_justification": "CER is the standard measure for handwritten text recognition and reflects the correction effort needed to turn a model transcription into an edition-ready one."
     },
     "ethical_and_legal_considerations": {
-      "privacy_and_anonymity": "The manuscript dates from the mid-15th century; its authors, Hans Rot and Peter Rot, died in 1452 and 1487, and every person it mentions died centuries ago. It contains no data about living persons.",
+      "privacy_and_anonymity": "The manuscript dates from the mid-15th century. Its authors, Hans Rot and Peter Rot, died in 1452 and 1487, and every person it mentions died centuries ago. It contains no data about living persons.",
       "data_licensing": "Public Domain",
       "consent_procedures": "Not specified",
-      "compliance_with_regulations": "No data-protection rules apply to a 15th-century manuscript. e-codices marks the images of H V 15 as public domain, usable without restriction. No separate reuse terms are stated for the ground truths. No ethical review was carried out."
+      "compliance_with_regulations": "No data-protection rules apply to a 15th-century manuscript. e-codices marks the images of H V 15 as public domain, usable without restriction. No separate reuse terms are stated for the ground truth. No ethical review was carried out."
     }
   },
   "card_info": {
