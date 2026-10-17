@@ -140,11 +140,13 @@ The scorer has several blind spots:
 - a value missing from the response (path absent or `null`) scores 0.0
 - otherwise the score is the rapidfuzz `ratio` of the two values as strings, divided by 100, case-sensitive and unnormalised
 
-The page score is the unrounded mean over its fields; the benchmark score is the mean of the page scores, so every page weighs the same whatever its number of rows. A response that is not parseable JSON is left out of the mean rather than scored as zero.
+The page score is the unrounded mean over its fields; the benchmark score is the mean of the page scores, so every page weighs the same whatever its number of rows. A response that cannot be parsed is scored as a miss: every ground-truth field scores 0.
 
-**Interpretation:** Scores range from 0 to 1; higher is better. Partial credit and free empty fields (see Limitations) make absolute scores run high, so compare models with each other rather than against a fixed bar. A low score on one page often means a skipped or inserted row rather than poor reading, because the rows after it are misaligned.
+**Interpretation:** Scores range from 0 to 1; higher is better. Partial credit and free empty fields (see Limitations) make absolute scores run high, so compare models with each other rather than against a fixed bar. A low score on one page often means a skipped or inserted row rather than poor reading, because the rows after it are misaligned. Across the 89 active test configurations, the score has a median of 0.83 and an interquartile range of 0.75–0.88; the best reach 0.96.
 
-**Baseline Results:** Model results are available on the [benchmark page](https://rise-services.rise.unibas.ch/benchmarks/p/benchmarks/general_meeting_minutes) and in `results/<date>/<test_id>/` at the repository root. Compare runs with the same prompt, scoring rules and ground-truth revision, and report the number of successfully scored objects alongside the score. There is no fixed model baseline with a run ID and date.
+**Baseline Results:** Model results are available on the [benchmark page](https://rise-services.rise.unibas.ch/benchmarks/p/benchmarks/general_meeting_minutes) and in `results/<date>/<test_id>/` at the repository root. Compare runs with the same prompt, scoring rules and ground-truth revision. There is no fixed model baseline with a run ID and date.
+
+Observed across models: share counts and signatures are read worst (mean field score about 0.5 for `actions_o`, `actions_p`, the page totals and `signature`), names, addresses and row numbers well (0.85–0.89), and the vote count best (0.93). Part of the share-count error is the column order, which varies between forms.
 
 **Validation:** The ground truth was created by Sven Lienhard, annotator and domain expert; no second check is recorded. Scoring is deterministic; the scorer is covered by `tests/test_general_meeting_minutes_scoring.py`.
 
@@ -183,12 +185,13 @@ This section is not part of the BenchmarkCard schema and is not exported to `ben
 
 **Versions:**
 
+- 3.0.0 — a response that cannot be parsed is scored as a miss instead of being left out; all stored runs re-scored
 - 2.0.0 — ground truth corrected: the degree sign in Paris arrondissements, written as the literal text `U+00B0` 15 times on four pages, is now `°`; all stored runs re-scored against the corrected ground truth
 - 1.0.0 — initial versioned state
 
 **How to Cite:** This benchmark:
 
-> Binnenkade, A., Lienhard, S., & Marti, S. (2026). General Meeting Minutes (benchmark version 2.0.0). In *RISE Humanities Data Benchmark*. Zenodo. https://doi.org/10.5281/zenodo.16941752
+> Binnenkade, A., Lienhard, S., & Marti, S. (2026). General Meeting Minutes (benchmark version 3.0.0). In *RISE Humanities Data Benchmark*. Zenodo. https://doi.org/10.5281/zenodo.16941752
 
 Source:
 

@@ -23,6 +23,8 @@ class PersonnelCards(Benchmark):
     - score_is_crossed_out: True
     """
 
+    score_unparseable_as_miss = True
+
     def score_benchmark(self, all_scores: list) -> dict:
         """Calculate macro and micro F1 scores across all test instances.
 

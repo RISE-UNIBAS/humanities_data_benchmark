@@ -119,7 +119,7 @@ To run this benchmark, use `python scripts/run_single_test.py --adhoc` from the 
 ```
 
 - `id`: the staff number written in the row's margin
-- `profession`: the section label printed above the row (e.g. `WBL`, `SRK`, `Tertiär`)
+- `profession`: the section label printed above the row (e.g. `WBL`, `SRK`, `Tertiär`); not scored, because the row images do not show it
 - `employment_percent`, `is_jumper`: the employment percentage and the `S` (jumper) column
 - `icon`: the legend name of the cell's icon, or `null` for an empty cell
 - `length`: `full`, `half_left` or `half_right`; a split cell gives two entries for the same date
@@ -158,13 +158,13 @@ Every row covers all 30 days of April; the 21 rows hold 656 shifts.
 - FP: only the response has a value
 - FN: only the ground truth has a value
 
-A `null` icon or alternate unit on both sides counts as nothing. F1 micro sums TP, FP and FN over all rows before computing F1; F1 macro averages the per-row F1 values, each rounded to two decimals. There are no configurable field-selection rules. A response that does not parse as JSON is skipped rather than scored as zero, so both aggregates cover only scored rows.
+`profession` is not scored. A `null` icon or alternate unit on both sides counts as nothing. F1 micro sums TP, FP and FN over all rows before computing F1; F1 macro averages the per-row F1 values, each rounded to two decimals. There are no configurable field-selection rules. A response that cannot be parsed is scored as a miss: every ground-truth field counts as a false negative.
 
-**Interpretation:** Scores range from 0 to 1; higher is better. Both metrics are dominated by shift-level fields; a low score can come from misaligned dates as much as from misread icons.
+**Interpretation:** Scores range from 0 to 1; higher is better. Both metrics are dominated by the shift fields, about 120 of the roughly 130 fields per row, so a score mainly reflects how well a model reads the shift icons, half-day splits, shading and alternate units. Across the 89 active test configurations, F1 micro has a median of 0.78 and an interquartile range of 0.71–0.86; the best reach 0.97.
 
 **Baseline Results:** Model results are available on the [benchmark page](https://rise-services.rise.unibas.ch/benchmarks/p/benchmarks/duty_rosters) and in `results/<date>/<test_id>/` at the repository root. Compare runs with the same prompt, scoring rules and ground-truth revision, and report the number of successfully scored objects alongside the score. There is no fixed model baseline with a run ID and date.
 
-Observed across models: mapping cells to dates across the separate header image is the largest source of error. Models also confuse empty cells with `Freier Tag` or assign icons such as `HomeOffice` to them.
+Observed across models: the shift icon is the field read worst (38% of icons correct across all stored runs), followed by the alternate unit (49%) and the shading flag `planned_on_current_unit` (73%). Mapping cells to their dates through the separate header works comparatively well (88%). Models also confuse empty cells with `Freier Tag` or assign icons such as `HomeOffice` to them.
 
 **Validation:** The ground truth was created by a single annotator, Maximilian Hindermann; no second check is recorded. Scoring is deterministic; the scorer is covered by `tests/test_duty_rosters_scoring.py`.
 
@@ -203,12 +203,13 @@ This section is not part of the BenchmarkCard schema and is not exported to `ben
 
 **Versions:**
 
+- 3.0.0 — `profession` is no longer scored (the section label is not in the row images); a response that cannot be parsed is scored as a miss; all stored runs re-scored
 - 2.0.0 — ground truth corrected: staff ids `SaA410` and `S402` as written in the margin (were `23` and `402`); row 109, 29 April: the right half of the split cell (Persönliche Absenz) added and the alternate unit removed; all stored runs re-scored against the corrected ground truth
 - 1.0.0 — initial versioned state
 
 **How to Cite:** This benchmark:
 
-> Leonte, A.-M., Zúñiga, F., & Hindermann, M. (2026). Nursing Staff Duty Rosters (benchmark version 2.0.0). In *RISE Humanities Data Benchmark*. Zenodo. https://doi.org/10.5281/zenodo.16941752
+> Leonte, A.-M., Zúñiga, F., & Hindermann, M. (2026). Nursing Staff Duty Rosters (benchmark version 3.0.0). In *RISE Humanities Data Benchmark*. Zenodo. https://doi.org/10.5281/zenodo.16941752
 
 Source:
 

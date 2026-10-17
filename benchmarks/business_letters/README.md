@@ -131,9 +131,9 @@ To run this benchmark, use `python scripts/run_single_test.py --adhoc` from the 
 - FP: only in the response set
 - FN: only in the ground-truth set
 
-A response that parses but does not fit the letter structure scores no TP and counts every ground-truth item as FN. A response that does not parse (`answer.parsed is None`) is not scored and enters neither aggregate. TP, FP and FN are summed over all letters per category. F1 micro pools the three categories before computing F1; F1 macro averages the F1 of the three categories. Both are rounded to two decimals.
+A response that parses but does not fit the letter structure scores no TP and counts every ground-truth item as FN. A response that cannot be parsed is scored as a miss, like a response that does not fit the letter structure: every ground-truth item counts as FN. TP, FP and FN are summed over all letters per category. F1 micro pools the three categories before computing F1; F1 macro averages the F1 of the three categories. Both are rounded to two decimals.
 
-**Interpretation:** Scores range from 0 to 1; higher is better. F1 macro, the ranking metric, gives the send date, a single item per letter, the same weight as the sender and receiver persons; F1 micro weights categories by their number of items, so persons dominate. The three test variants are scored on different letters, and their scores are not comparable with each other. A low person score can reflect a spelling not recorded in `persons.json` rather than a wrong person (see Limitations).
+**Interpretation:** Scores range from 0 to 1; higher is better. F1 macro, the ranking metric, gives the send date, a single item per letter, the same weight as the sender and receiver persons; F1 micro weights categories by their number of items, so persons dominate. The three test variants are scored on different letters, and their scores are not comparable with each other. A low person score can reflect a spelling not recorded in `persons.json` rather than a wrong person (see Limitations). Across the 96 active configurations of each variant, F1 macro has a median of 0.55 (interquartile range 0.51–0.59) on all letters, 0.53 (0.47–0.59) on the unsigned and 0.59 (0.54–0.63) on the signed letters.
 
 **Baseline Results:** Results are on the [benchmark page](https://rise-services.rise.unibas.ch/benchmarks/p/benchmarks/business_letters) and in `results/<date>/<test_id>/` at the repository root. No fixed baseline is recorded. Compare runs only with the same prompt, rules and ground-truth revision, and report the number of scored letters with the score.
 
@@ -174,12 +174,13 @@ This section is not part of the BenchmarkCard schema and is not exported to `ben
 
 **Versions:**
 
+- 2.0.0 — a response that cannot be parsed is scored as a miss instead of being left out; all stored runs re-scored
 - 1.0.1 — ground truth kept as JSON only (the CSV exports and their per-run conversion removed), `has_signatures` stored as a boolean, scorer code tidied; scores unchanged
 - 1.0.0 — initial versioned state
 
 **How to Cite:** This benchmark:
 
-> Decker, E., Hindermann, M., Kasper, L., Alberto, A., Frick, P., Losada Palenzuela, J. L., Marti, S., & Spadini, E. (2025). Business Letters (benchmark version 1.0.1). In *RISE Humanities Data Benchmark*. Zenodo. https://doi.org/10.5281/zenodo.16941752
+> Decker, E., Hindermann, M., Kasper, L., Alberto, A., Frick, P., Losada Palenzuela, J. L., Marti, S., & Spadini, E. (2025). Business Letters (benchmark version 2.0.0). In *RISE Humanities Data Benchmark*. Zenodo. https://doi.org/10.5281/zenodo.16941752
 
 Source:
 

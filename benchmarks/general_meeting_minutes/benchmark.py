@@ -13,6 +13,7 @@ class GeneralMeetingMinutes(Benchmark):
     """Benchmark for General Meeting Minutes."""
 
     max_output_tokens = 40960  # Minutes pages legitimately reach ~34k output tokens
+    score_unparseable_as_miss = True
 
     def get_prompt_kwargs(self, basename: str,
                           filenames: List[str]) -> Dict:
@@ -37,6 +38,8 @@ class GeneralMeetingMinutes(Benchmark):
         """
         logging.info("Scoring response for: %s", image_name)
         data = self.prepare_scoring_data(response)
+        if not isinstance(data, dict):
+            data = {}  # an unparseable response: every ground-truth field scores 0
 
         my_keys = get_all_keys(ground_truth)
 

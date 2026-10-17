@@ -81,6 +81,9 @@ class TestScoreRequestAnswer:
         result = scorer.score_request_answer("p", response(parsed=None, text="not json"), gt)
         assert result["fuzzy"] == 0.0
 
+    def test_unparseable_answers_are_scored(self):
+        assert GeneralMeetingMinutes.score_unparseable_as_miss is True
+
     @pytest.mark.parametrize("name", sorted(f[:-5] for f in os.listdir(GROUND_TRUTHS) if f.endswith(".json")))
     def test_every_ground_truth_matches_itself(self, scorer, response, name):
         with open(os.path.join(GROUND_TRUTHS, f"{name}.json"), encoding="utf-8") as f:

@@ -1,7 +1,8 @@
 """Scoring tests for duty_rosters.
 
 score_request_answer compares every terminal field of the Schedule JSON at the same path
-(persons[i].days[j].shifts[k].<field>), counting a match at fuzzy similarity >= 0.92.
+(persons[i].days[j].shifts[k].<field>), counting a match at fuzzy similarity >= 0.92;
+`profession` is not scored, and an unparseable response misses every field.
 Empty strings count as missing; a field missing on both sides counts as nothing.
 score_benchmark pools TP/FP/FN for f1_micro and averages the per-row f1_score for f1_macro.
 """
@@ -29,9 +30,10 @@ def schedule(days):
     }]}
 
 
-# Scored fields of schedule() with one full shift: year, month, 4 person fields, date,
-# and the shift's icon, length and planned_on_current_unit (alternate_unit is null).
-ONE_SHIFT_FIELDS = 10
+# Scored fields of schedule() with one full shift: year, month, id, employment_percent,
+# is_jumper, date, and the shift's icon, length and planned_on_current_unit (alternate_unit is
+# null; profession is not scored).
+ONE_SHIFT_FIELDS = 9
 
 
 def counts(result):
@@ -86,9 +88,21 @@ class TestScoreRequestAnswer:
         assert (fp, fn) == (2, 2 + 4)
         assert tp == ONE_SHIFT_FIELDS - 2
 
+    def test_profession_is_not_scored(self, scorer, response):
+        gt = schedule({"2025-04-01": [shift()]})
+        pred = copy.deepcopy(gt)
+        pred["persons"][0]["profession"] = "something else"
+        result = scorer.score_request_answer("row", response(parsed=pred), gt)
+        assert counts(result) == (ONE_SHIFT_FIELDS, 0, 0)
+        assert not any(k.endswith("profession") for k in result["field_scores"])
+
+    def test_unparseable_answers_are_scored(self):
+        assert DutyRosters.score_unparseable_as_miss is True
+
     def test_unparseable_response_scores_every_field_as_missing(self, scorer, response):
         gt = schedule({"2025-04-01": [shift()]})
         result = scorer.score_request_answer("row", response(parsed=None, text="not json"), gt)
+        assert result["false_positives"] == 0
         assert result["true_positives"] == 0
         assert result["false_negatives"] == ONE_SHIFT_FIELDS
         assert result["f1_score"] == 0.0

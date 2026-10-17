@@ -170,9 +170,9 @@ The `rules` column of `benchmarks_tests.csv` selects which sub-fields are scored
 }
 ```
 
-`row_number` is never scored and is not used for alignment: rows are compared by list position. A response that does not parse as JSON is skipped rather than scored as zero, so both aggregates cover only scored cards.
+`row_number` is never scored and is not used for alignment: rows are compared by list position. A response that cannot be parsed is scored as a miss: every ground-truth field counts as a false negative.
 
-**Interpretation:** Scores range from 0 to 1; higher is better. F1 micro weights cards by their number of fields, so long cards count more; F1 macro weights every card equally. The 61 cards contain 209 rows and 1,254 crossed-out flags, of which 1,252 are false. Correct `false` flags earn true positives even for empty cells, so the default combined score can mask poor transcription. Compare runs only under the same field rules.
+**Interpretation:** Scores range from 0 to 1; higher is better. F1 micro weights cards by their number of fields, so long cards count more; F1 macro weights every card equally. The 61 cards contain 209 rows and 1,254 crossed-out flags, of which 1,252 are false. Correct `false` flags earn true positives even for empty cells, so the default combined score can mask poor transcription. Compare runs only under the same field rules. Across the 95 active test configurations, F1 micro has a median of 0.95 (interquartile range 0.89–0.97); the best reach 0.98.
 
 **Baseline Results:** Model results are available on the [benchmark page](https://rise-services.rise.unibas.ch/benchmarks/p/benchmarks/personnel_cards) and in `results/<date>/<test_id>/` at the repository root. Compare runs with the same prompt, scoring rules and ground-truth revision, and report the number of successfully scored objects alongside the score. There is no fixed model baseline with a run ID and date. A diagnostic response that keeps the ground-truth row structure, blanks every transcript and interpretation, and sets every crossed-out flag to `false` scores F1 micro 0.663839 and F1 macro 0.625082 under the default rules. It borrows the row structure from the ground truth and is not an independent extraction baseline.
 
@@ -208,11 +208,12 @@ This section is not part of the BenchmarkCard schema and is not exported to `ben
 
 **Versions:**
 
+- 2.0.0 — a response that cannot be parsed is scored as a miss instead of being left out; all stored runs re-scored
 - 1.0.0 — initial versioned state
 
 **How to Cite:** This benchmark:
 
-> Wullschleger, T., Hindermann, M., & Decker, E. (2026). Personnel Cards (benchmark version 1.0.0). In *RISE Humanities Data Benchmark*. Zenodo. https://doi.org/10.5281/zenodo.16941752
+> Wullschleger, T., Hindermann, M., & Decker, E. (2026). Personnel Cards (benchmark version 2.0.0). In *RISE Humanities Data Benchmark*. Zenodo. https://doi.org/10.5281/zenodo.16941752
 
 Source:
 

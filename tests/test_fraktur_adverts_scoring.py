@@ -143,3 +143,11 @@ class TestGroundTruth:
         seen = [(e["tags_section"], e["text"].split(".", 1)[0]) for e in entries
                 if (e["text"] or "")[:1].isdigit()]
         assert len(seen) == len(set(seen)), "duplicate advert number in one section"
+
+
+class TestUnparseable:
+    def test_unparseable_answer_misses_every_advert(self, scorer, response):
+        assert FrakturAdverts.score_unparseable_as_miss is True
+        gt = [ad("Verkauf", "1. Ein Haus"), ad("Verkauf", "2. Ein Garten")]
+        result = scorer.score_request_answer("image_1", response(parsed=None, text="prose"), gt)
+        assert (result["fuzzy"], result["cer"]) == (0.0, 1.0)

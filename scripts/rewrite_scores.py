@@ -4,12 +4,14 @@ Used after a MAJOR version (a scorer change or a ground-truth correction) whose 
 apply to old responses too, so stored and new runs stay comparable. A run whose stored
 `scoring.json` lacks the metrics is left alone and reported.
 
-Per run, a request counts as scored if its file records a score. A file without a `score`
+Per run, a request counts as scored if its file records a score, or if it was skipped as
+unparseable and the benchmark now scores such answers as misses. A file without a `score`
 key comes from a run that predates per-request scores: that runner scored every request and
 read the answer from the response text (a ```json block or the whole text) when nothing was
 parsed, so all of them count and the text is parsed the same way. The rewritten
 `scoring.json` keeps `cost_summary` and every key the scorer does not produce, and records
-the rewrite in `rescored`.
+the rewrite in `rescored`. Only files whose numbers change are written; a stored score that
+lacks the field detail of today's scorer is not rewritten for that alone.
 
 `--verify` first: with an unchanged scorer it must reproduce the stored aggregates. Runs
 scored before a later scorer change cannot reproduce exactly; the report lists them.
@@ -29,8 +31,8 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent.parent.resolve()))
 
-from scripts.offline_scoring import (iter_run_inputs, iter_runs, load_scorer, read_tests,
-                                     rules_of_test)
+from scripts.offline_scoring import (iter_run_inputs, iter_runs, load_scorer, numeric_metrics,
+                                     read_tests, rules_of_test)
 
 
 def _legacy_parse(text):
@@ -48,7 +50,12 @@ def rescore_run(run_dir, test_id, scorer):
     """({request file: fresh score or None}, aggregate) for one run."""
     request_scores, counted = {}, []
     for object_id, record, answer, truth in iter_run_inputs(run_dir, test_id):
-        scored = record["score"] is not None if "score" in record else True
+        if "score" in record:
+            # A skipped unparseable answer counts once the benchmark scores it as a miss.
+            scored = record["score"] is not None or (
+                record.get("parsed") is None and getattr(scorer, "score_unparseable_as_miss", False))
+        else:
+            scored = True
         if "score" not in record and answer.parsed is None:
             answer.parsed = _legacy_parse(record.get("text"))
         fresh = scorer.score_request_answer(object_id, answer, truth) if scored else None
@@ -116,19 +123,23 @@ def main(argv=None):
             object_id = next((o for o in request_scores if path.stem.endswith("_" + o)), None)
             if object_id is None or "score" not in record:
                 continue
+            fresh = request_scores[object_id]
+            if (record["score"] is None) == (fresh is None) and (
+                    fresh is None or numeric_metrics(record["score"]) == numeric_metrics(fresh)):
+                continue
             record["score"] = request_scores[object_id]
             _write_json(path, record)
-        if finished:
+        if not finished:
+            unfinished += 1
+        elif any(not _same(stored.get(k), v) for k, v in aggregate.items()):
             _write_json(scoring_path, {**stored, **aggregate,
                                        "rescored": "%s on %s" % (args.label, date.today().isoformat())})
             written += 1
-        else:
-            unfinished += 1
 
     if args.verify:
         print("%d runs, %d aggregates differ" % (runs, mismatched))
         return 1 if mismatched else 0
-    print("%d runs rewritten, %d unfinished runs (no scoring.json) with request scores only" % (written, unfinished))
+    print("%d of %d runs with changed aggregates rewritten; %d unfinished runs (no scoring.json) got request scores only" % (written, runs, unfinished))
     if skipped:
         print("not rewritten, stored scoring.json has no metrics: %s" % ", ".join(skipped))
     return 0

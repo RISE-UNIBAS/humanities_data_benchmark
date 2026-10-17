@@ -227,3 +227,7 @@ class TestScoreRequestAnswerNonConforming:
         assert "document_number" not in parsed
         assert "document_number" not in parsed["metadata"]
         assert "document_number" not in ground_truth
+
+
+def test_unparseable_answers_are_scored_as_misses():
+    assert BusinessLetters.score_unparseable_as_miss is True

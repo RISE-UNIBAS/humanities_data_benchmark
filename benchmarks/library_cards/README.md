@@ -14,7 +14,7 @@ To run this benchmark, use `python scripts/run_single_test.py --adhoc` from the 
 
 **Name:** Library Cards
 
-**Overview:** Tests models on extracting bibliographic data (author, title, year, place and the card's type) from typed, printed and handwritten cards of the University Library Basel's dissertation catalogue (before 1980).
+**Overview:** Tests models on extracting bibliographic records (author, title, year, place, pages, publisher, format, shelfmark, subjects and the card's type) from typed, printed and handwritten cards of the University Library Basel's dissertation catalogue (before 1980).
 
 **Data Type:** image
 
@@ -65,7 +65,7 @@ To run this benchmark, use `python scripts/run_single_test.py --adhoc` from the 
 
 **Limitations:** The 263 cards are a random sample from a single catalogue (see Source), not stratified by period, language or card condition. They mix typed, printed and handwritten entries, mostly in German. Only 10 are cross-references, so results on that class rest on very few cases.
 
-The ground truth was created by correcting GPT-4o output, so where the corrector accepted an ambiguous reading it may lean towards that model's choices. It follows the normalisation conventions described under Annotation, so it measures agreement with those conventions rather than with a neutral cataloguing standard.
+The ground truth was created by correcting GPT-4o output, so where the corrector accepted an ambiguous reading it may lean towards that model's choices; the stored runs show no strong effect (GPT-4o scores F1 macro 0.85, rank 54 of 119 runs, against a median of 0.81 for models of its generation). It follows the normalisation conventions described under Annotation, so it measures agreement with those conventions rather than with a neutral cataloguing standard.
 
 All fields weigh equally, so a wrong shelfmark costs as much as a wrong author. The match threshold (see Calculation) is strict for short fields: `X, 184` against `X,184` or `Thieme Verlag` against `Thieme` scores as wrong. Fields empty on both sides are not counted, so a sparse card has a small denominator and a single error moves its F1 considerably.
 
@@ -138,15 +138,15 @@ The ground truth stores `year` as a string, empty when the card gives none. The 
 - FN: only the ground truth has a value
 - neither: both are empty
 
-F1 macro averages the per-card F1, each rounded to two decimals. F1 micro sums TP, FP and FN over all cards before computing F1. A response that is not parseable JSON is left out of both rather than scored as zero.
+F1 macro averages the per-card F1, each rounded to two decimals. F1 micro sums TP, FP and FN over all cards before computing F1. A response that cannot be parsed is scored as a miss: every ground-truth field counts as a false negative.
 
 For example, for the ground truth above and a response that differs only in `first_name` (`Maurice`), `pages` (`X, 184`) and `publisher` (`Thieme Verlag`), the card has 7 TP, 3 FP and 3 FN (`subjects` is empty in both and not counted), so precision, recall and F1 are 0.70.
 
-**Interpretation:** Scores range from 0 to 1; higher is better. F1 macro weights every card equally; F1 micro weights cards by their number of filled fields, so full descriptions count more than sparse cards and cross-references. A score does not separate misreadings from differences in normalisation (see Limitations).
+**Interpretation:** Scores range from 0 to 1; higher is better. F1 macro weights every card equally; F1 micro weights cards by their number of filled fields, so full descriptions count more than sparse cards and cross-references. A score does not separate misreadings from differences in normalisation (see Limitations). Across the 95 active test configurations, F1 macro has a median of 0.85 and an interquartile range of 0.79–0.88; the best reach 0.91.
 
 **Baseline Results:** Model results are available on the [benchmark page](https://rise-services.rise.unibas.ch/benchmarks/p/benchmarks/library_cards) and in `results/<date>/<test_id>/` at the repository root. Compare runs with the same prompt, scoring rules and ground-truth revision, and report the number of successfully scored objects alongside the score. No fixed baseline run is designated.
 
-Observed across models: models generally do well on clearly typed cards with standard layouts and worse on handwritten cards and those with non-standard layouts or abbreviations. Common errors are omitted or misparsed shelfmarks and subject classifications, small formatting differences in pages and publisher, publisher names with an added "Verlag", and variant notations of format and academic abbreviations.
+Observed across models: the card type (93% of fields correct across all stored runs), first names (88%) and places (87%) are read best; subjects (61%), shelfmarks (70%), formats (70%) and pages (77%) worst. Common errors are omitted or misparsed shelfmarks and subject classifications, small formatting differences in pages and publisher, publisher names with an added "Verlag", and variant notations of format and academic abbreviations.
 
 **Validation:** The annotators checked the ground truth by hand against the images. Scoring is deterministic; the scorer is covered by the repository's test suite. No inter-annotator agreement was measured.
 
@@ -185,12 +185,13 @@ This section is not part of the BenchmarkCard schema and is not exported to `ben
 
 **Versions:**
 
+- 3.0.0 — a response that cannot be parsed is scored as a miss instead of being left out; all stored runs re-scored
 - 2.0.0 — ground truth corrected: `00575005` (a cross-reference without a year) has an empty year instead of `0`; ground-truth files hold only the card record, years as strings; two files without an image removed; all stored runs re-scored against the corrected ground truth
 - 1.0.0 — initial versioned state
 
 **How to Cite:** This benchmark:
 
-> Müller, G., & Hindermann, M. (2025). Library Cards (benchmark version 2.0.0). In *RISE Humanities Data Benchmark*. Zenodo. https://doi.org/10.5281/zenodo.16941752
+> Müller, G., & Hindermann, M. (2025). Library Cards (benchmark version 3.0.0). In *RISE Humanities Data Benchmark*. Zenodo. https://doi.org/10.5281/zenodo.16941752
 
 Source:
 

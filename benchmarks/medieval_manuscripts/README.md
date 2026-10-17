@@ -56,7 +56,7 @@ To run it, call `python scripts/run_single_test.py --adhoc` from the repository 
 - diplomatic transcription of handwritten text from images
 - separation of main text, folio number and marginal additions
 
-**Limitations:** 12 pages from a single manuscript, written by two scribes in one regional variety of German; results do not transfer automatically to other scripts, hands, languages or layouts. The transcription conventions (superscript letters written after the base letter, MUFI characters for abbreviation signs) are those of the prompt and the annotator, so the score measures agreement with them. Several scoring properties bias results (see Calculation): only the first entry of the response is scored, so a model that splits a page into several entries is scored on the first alone; marginal additions beyond those keyed in the ground truth are ignored; the page score weights the one- or two-character folio number as much as a main text of several hundred characters; and a response that cannot be parsed is left out of the average rather than scored as a failure, so a model's average covers only the pages it answered in valid JSON.
+**Limitations:** 12 pages from a single manuscript, written by two scribes in one regional variety of German; results do not transfer automatically to other scripts, hands, languages or layouts. The transcription conventions (superscript letters written after the base letter, MUFI characters for abbreviation signs) are those of the prompt and the annotator, so the score measures agreement with them. Several scoring properties bias results (see Calculation): only the first entry of the response is scored, so a model that splits a page into several entries is scored on the first alone; marginal additions beyond those keyed in the ground truth are ignored; the page score weights the one- or two-character folio number as much as a main text of several hundred characters.
 
 **Out-of-Scope Uses:**
 
@@ -66,7 +66,7 @@ To run it, call `python scripts/run_single_test.py --adhoc` from the repository 
 
 ## Data
 
-**Source:** Pages of Basel, Universitätsbibliothek, H V 15, "Hans and Peter Roth, Pilgrimages to Jerusalem 1440 and 1453", digitised by e-codices: https://www.e-codices.unifr.ch/en/list/one/ubb/H-V-0015. The small parchment manuscript (105 folios, 14 × 10.5 cm) contains the accounts of Hans Rot († 1452) and his son Peter Rot († 1487) of their pilgrimages to the Holy Land, possibly in their own hands. The 12 pages are folios 3r, 4v, 9v, 18r, 23v, 52v, 62v, 69r, 70v, 73r, 90r and 93r.
+**Source:** Pages of Basel, Universitätsbibliothek, H V 15, "Hans and Peter Roth, Pilgrimages to Jerusalem 1440 and 1453" (the e-codices title; the authors are named Rot below), digitised by e-codices: https://www.e-codices.unifr.ch/en/list/one/ubb/H-V-0015. The small parchment manuscript (105 folios, 14 × 10.5 cm) contains the accounts of Hans Rot († 1452) and his son Peter Rot († 1487) of their pilgrimages to the Holy Land, possibly in their own hands. The 12 pages are folios 3r, 4v, 9v, 18r, 23v, 52v, 62v, 69r, 70v, 73r, 90r and 93r.
 
 **Size:** 12 evaluated objects
 
@@ -93,7 +93,7 @@ To run it, call `python scripts/run_single_test.py --adhoc` from the repository 
 }
 ```
 
-Main texts are 274–710 characters long. Five pages carry a folio number; six have at least one marginal addition. Every ground-truth file has an `addition1` field, empty where the page has no addition; only the page shown above has more than one.
+Main texts are 274–710 characters long. Six pages carry a folio number; six have at least one marginal addition. Every ground-truth file has an `addition1` field, empty where the page has no addition; only the page shown above has more than one.
 
 **Annotation:** Transcribed by Ina Serif (domain expert) following the transcription rules in the [prompt file](prompts/prompt.txt): historical spelling kept, abbreviations not resolved, superscript letters written after the base letter (e.g. `uo`), abbreviation signs as MUFI characters such as `ꝛ` and `ꝰ`.
 
@@ -119,24 +119,20 @@ Main texts are 274–710 characters long. Five pages carry a folio number; six h
 - Character Error Rate (`cer`, used for ranking)
 - fuzzy similarity (`fuzzy`)
 
-**Calculation:** Ground-truth entries are sorted by folio reference and matched by position to the entries of the response's `folios` list; every page has one entry, so it is matched to the first response entry. If the response has no entry, every compared field of the page gets fuzzy 0 and CER 1. Within the entry, these fields are compared:
+**Calculation:** The page's single ground-truth entry is compared with the first entry of the response's `folios`. The fields compared are `folio` (when either side has a value), `text` (always) and the marginal additions present in the ground truth (when either side has a value); empty, null and whitespace-only values count as empty. Each field gets two scores:
 
-- `folio`, when the ground truth or the response has a value
-- `text`, always
-- consecutive `addition1` through at most `addition9`, stopping at the first missing or null ground-truth addition; a visited addition is scored when either side has a value
+- fuzzy: the rapidfuzz ratio of the two strings, scaled to 0–1; case and line breaks count
+- CER: the Levenshtein distance divided by the length of the ground truth, after lowercasing and collapsing whitespace; capped at 1
 
-None, empty and whitespace-only values are treated as empty. For each compared field two values are computed, each rounded to three decimals:
-
-- fuzzy: the rapidfuzz ratio of the two strings divided by 100, case- and whitespace-sensitive; 1.0 for identical strings
-- CER: both strings are lowercased and runs of whitespace (including line breaks) collapsed to one space, then the Levenshtein distance is divided by the length of the normalised ground truth and capped at 1.0. Two empty strings give 0, one empty string gives 1.
-
-The page fuzzy and CER are the unweighted means over the rounded field scores, then rounded to three decimals. The benchmark scores are the unweighted means over pages, rounded to three decimals; pages whose response could not be parsed are left out.
+A page's fuzzy and CER are the unweighted means over its fields, and the benchmark scores the unweighted means over pages, all rounded to three decimals. A missing entry or a response that cannot be parsed scores fuzzy 0 and CER 1 on every field.
 
 Example: ground truth `Vnd ein pferit die mir vnd`, response `und ein pferit die mir vnd`: fuzzy 0.962, CER 1/26 = 0.038.
 
-**Interpretation:** Both scores range from 0 to 1; lower CER is better, higher fuzzy is better. CER ignores case and line breaks, while fuzzy counts them, so a model that reads the letters correctly but merges lines or changes capitalisation loses fuzzy score but not CER. CER is capped at 1 per field, so a field at 1 is not necessarily wrong in every character. A score covers only the pages with a parseable response (see Limitations); report the number of scored pages with it.
+**Interpretation:** Both scores range from 0 to 1; lower CER is better, higher fuzzy is better. CER ignores case and line breaks, while fuzzy counts them, so a model that reads the letters correctly but merges lines or changes capitalisation loses fuzzy score but not CER. CER is capped at 1 per field, so a field at 1 is not necessarily wrong in every character.
 
 **Baseline Results:** Model results are on the [benchmark page](https://rise-services.rise.unibas.ch/benchmarks/p/benchmarks/medieval_manuscripts) and in `results/<date>/<test_id>/` at the repository root. Compare runs with the same prompt, scoring rules and ground-truth revision. No fixed model baseline is defined.
+
+Observed across models: across the 95 active test configurations, CER ranges from about 0.09 for the best models to 1.0, with a median of 0.29. Main text is read considerably better (median CER 0.19 per page) than marginal additions (0.37 for the first, 0.88 and 1.0 for the second and third, which occur only on [9v]). The hardest pages are [9v], with three additions, and [70v], with a 279-character marginal note.
 
 **Validation:** The ground truth was produced by the domain expert (see Annotation). Scoring is deterministic; the CER calculation and page averaging are covered by `tests/test_medieval_manuscripts_scoring.py`.
 
@@ -175,11 +171,12 @@ This section is not part of the BenchmarkCard schema and is not exported to `ben
 
 **Versions:**
 
+- 2.0.0 — ground truth corrected: folio [69r] carries the number 69 (was empty); a response that cannot be parsed is scored as a miss instead of being left out; all stored runs re-scored
 - 1.0.0 — initial versioned state
 
 **How to Cite:** This benchmark:
 
-> Serif, I., & Hindermann, M. (2025). Medieval Manuscripts (benchmark version 1.0.0). In *RISE Humanities Data Benchmark*. Zenodo. https://doi.org/10.5281/zenodo.16941752
+> Serif, I., & Hindermann, M. (2025). Medieval Manuscripts (benchmark version 2.0.0). In *RISE Humanities Data Benchmark*. Zenodo. https://doi.org/10.5281/zenodo.16941752
 
 Source:
 

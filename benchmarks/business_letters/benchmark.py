@@ -18,6 +18,7 @@ from benchmarks.business_letters.person import Person
 
 class BusinessLetters(Benchmark):
     multi_image_support = True
+    score_unparseable_as_miss = True
 
     def get_basename_pattern(self) -> Optional[Pattern[str]]:
         return re.compile(r"_p\d+$")

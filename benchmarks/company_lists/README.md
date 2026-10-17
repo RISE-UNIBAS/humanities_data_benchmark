@@ -128,13 +128,13 @@ The 15 pages hold 353 entries; on three alphabetical pages most entries have no 
 - FP: only the response has a value
 - FN: only the ground truth has a value
 
-F1 per page is rounded to two decimals. F1 macro averages the rounded per-page F1; F1 micro sums TP, FP and FN over all scored pages before computing F1 and is not rounded. A response that does not parse is not scored and enters neither aggregate.
+F1 per page is rounded to two decimals. F1 macro averages the rounded per-page F1; F1 micro sums TP, FP and FN over all scored pages before computing F1 and is not rounded. A response that cannot be parsed is scored as a miss: every ground-truth field counts as a false negative.
 
-**Interpretation:** Scores range from 0 to 1; higher is better. A score measures company names and locations only. Compare the prompt variants separately, because they give different instructions.
+**Interpretation:** Scores range from 0 to 1; higher is better. A score measures company names and locations only. Compare the prompt variants separately, because they give different instructions: across the 95 active test configurations of each, F1 macro has a median of 0.81 (interquartile range 0.70–0.86) with `prompt.txt` and 0.67 (0.55–0.73) with `prompt_min.txt`.
 
 **Baseline Results:** Results are on the [benchmark page](https://rise-services.rise.unibas.ch/benchmarks/p/benchmarks/company_lists) and in `results/<date>/<test_id>/` at the repository root. No fixed baseline is recorded. Compare runs only with the same prompt, rules and ground-truth revision, and report the number of scored pages with the score.
 
-Observed across models: most models handle the English directory layouts well (the best scores are around 0.97). Pages that break the entry order score far lower: the two-column German subject index `156089_1321079_26` scores below 0.2 in almost half of all runs, because entries are compared by position.
+Observed across models: most models handle the English directory layouts well (the best scores are around 0.97). Company names are read far better than locations (79% against 57% of fields correct across all stored runs). Pages that break the entry order score far lower: the two-column German subject index `156089_1321079_26` scores below 0.2 in almost half of all runs, because entries are compared by position.
 
 **Validation:** The ground truth was created by the annotators and the domain expert named under Annotation; no separate check is recorded. Scoring is deterministic; the scorer is covered by the repository's test suite.
 
@@ -173,12 +173,13 @@ This section is not part of the BenchmarkCard schema and is not exported to `ben
 
 **Versions:**
 
+- 3.0.0 — a response that cannot be parsed is scored as a miss instead of being left out; all stored runs re-scored
 - 2.0.0 — `page_id` and `entry_id` are no longer scored: the model is never given their expected values. All stored runs were re-scored with the new scorer, so they stay comparable; `prompt_v2.txt` added for new tests
 - 1.0.0 — initial versioned state
 
 **How to Cite:** This benchmark:
 
-> Kasper, L., & Marti, S. (2025). Company Lists (benchmark version 2.0.0). In *RISE Humanities Data Benchmark*. Zenodo. https://doi.org/10.5281/zenodo.16941752
+> Kasper, L., & Marti, S. (2025). Company Lists (benchmark version 3.0.0). In *RISE Humanities Data Benchmark*. Zenodo. https://doi.org/10.5281/zenodo.16941752
 
 Source:
 

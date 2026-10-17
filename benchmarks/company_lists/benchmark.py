@@ -5,6 +5,8 @@ from scripts.scoring_helper import get_all_keys, get_nested_value, calculate_fuz
 
 class CompanyLists(Benchmark):
 
+    score_unparseable_as_miss = True
+
     def score_benchmark(self, all_scores):
         """
         Calculate macro and micro F1 scores across all test instances.
@@ -67,6 +69,8 @@ class CompanyLists(Benchmark):
         if isinstance(data, list) and "entries" in ground_truth:
             # Create entries wrapper to match ground truth structure
             data = {"entries": data}
+        if not isinstance(data, dict):
+            data = {}  # an unparseable response: every ground-truth field is missed
 
         logging.info(image_name)
         logging.debug(f"response: {data}")

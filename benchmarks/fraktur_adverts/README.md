@@ -125,11 +125,13 @@ For each ground-truth advert:
 
 Adverts in the response that match no ground-truth advert are ignored.
 
-A page's fuzzy score is the mean over its ground-truth adverts, rounded to two decimals; its CER is the mean rounded to three decimals. The benchmark scores are the means of the page scores, rounded to three decimals, so each page weighs the same however many adverts it holds. A response that is not parseable JSON is left out of the means rather than scored as zero.
+A page's fuzzy score is the mean over its ground-truth adverts, rounded to two decimals; its CER is the mean rounded to three decimals. The benchmark scores are the means of the page scores, rounded to three decimals, so each page weighs the same however many adverts it holds. A response that cannot be parsed is scored as a miss: every ground-truth advert gets similarity 0 and CER 1.
 
-**Interpretation:** CER runs from 0 (identical after normalisation) to the cap of 1, lower is better; an edit distance at least as large as the ground-truth length reaches the cap even if some text is correct. Fuzzy runs from 0 to 1, higher is better. Because CER ignores case and whitespace and fuzzy does not, a model that normalises capitalisation or line breaks does noticeably better on CER than its fuzzy score suggests. Both are page averages: `image_2`, with only three scored adverts, counts as much as `image_1` with 31. A score covers only the pages with a parseable response; report the number of scored pages with it.
+**Interpretation:** CER runs from 0 (identical after normalisation) to the cap of 1, lower is better; an edit distance at least as large as the ground-truth length reaches the cap even if some text is correct. Fuzzy runs from 0 to 1, higher is better. Because CER ignores case and whitespace and fuzzy does not, a model that normalises capitalisation or line breaks does noticeably better on CER than its fuzzy score suggests. Both are page averages: `image_2`, with only three scored adverts, counts as much as `image_1` with 31.
 
 **Baseline Results:** Model results are on the [benchmark page](https://rise-services.rise.unibas.ch/benchmarks/p/benchmarks/fraktur_adverts) and in `results/<date>/<test_id>/` at the repository root. Compare runs with the same prompt, scoring rules and ground-truth revision. No fixed model baseline is defined.
+
+Observed across models: results split sharply. Across the 95 active test configurations CER ranges from 0.005 to 1, with an interquartile range of 0.03–0.47 and a median of 0.19: some models read the Fraktur almost perfectly, others fail widely. Much of the error comes from pairing rather than reading: only 68–89% of a page's adverts are found by section and number on average, and a missed advert counts as CER 1 however well its text was read. `image_5` (median CER 0.23) and the two 1731 pages are the hardest.
 
 **Validation:** The ground truth was created by Ina Serif as domain expert and annotator; no second check by another person is recorded. Scoring is deterministic; the scorer is covered by `tests/test_fraktur_adverts_scoring.py`.
 
@@ -168,12 +170,13 @@ This section is not part of the BenchmarkCard schema and is not exported to `ben
 
 **Versions:**
 
+- 3.0.0 — a response that cannot be parsed is scored as a miss instead of being left out; all stored runs re-scored
 - 2.0.0 — ground truth corrected on `image_5`: advert 4 (stored in a raw database format and never scored) is a normal entry, and the advert numbered 3 twice is 5, as printed; all files share one format (a list of adverts, database fields removed); all stored runs re-scored against the corrected ground truth
 - 1.0.0 — initial versioned state
 
 **How to Cite:** This benchmark:
 
-> Serif, I., & Hindermann, M. (2025). Fraktur Adverts (benchmark version 2.0.0). In *RISE Humanities Data Benchmark*. Zenodo. https://doi.org/10.5281/zenodo.16941752
+> Serif, I., & Hindermann, M. (2025). Fraktur Adverts (benchmark version 3.0.0). In *RISE Humanities Data Benchmark*. Zenodo. https://doi.org/10.5281/zenodo.16941752
 
 Source:
 

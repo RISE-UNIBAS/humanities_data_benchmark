@@ -90,6 +90,12 @@ class TestCompanyLists:
         result = scorer.score_request_answer("img", response(parsed=pred), gt)
         assert (result["true_positives"], result["false_positives"], result["false_negatives"]) == (1, 0, 0)
 
+    def test_unparseable_response_is_a_miss(self, scorer, response):
+        assert CompanyLists.score_unparseable_as_miss is True
+        gt = {"page_id": "p", "entries": [{"entry_id": "p-1", "company_name": "Acme", "location": "Basel"}]}
+        result = scorer.score_request_answer("img", response(parsed=None, text="prose"), gt)
+        assert (result["true_positives"], result["false_positives"], result["false_negatives"]) == (0, 0, 2)
+
     def test_identifiers_ignored(self, scorer, response):
         gt = {"page_id": "156089_1321081_14", "entries": [{"entry_id": "156089_1321081_14-1",
                                                            "company_name": "Acme", "location": "Basel"}]}
@@ -122,6 +128,11 @@ class TestLibraryCards:
         result = scorer.score_request_answer("img", response(parsed=fields), fields)
         assert (result["true_positives"], result["false_positives"], result["false_negatives"]) == (2, 0, 0)
         assert result["f1_score"] == 1.0
+
+    def test_unparseable_response_is_a_miss(self, scorer, response):
+        assert LibraryCards.score_unparseable_as_miss is True
+        result = scorer.score_request_answer("img", response(parsed=None, text="prose"), {"title": "Book", "year": "1950"})
+        assert (result["true_positives"], result["false_positives"], result["false_negatives"]) == (0, 0, 2)
 
     def test_examination_fields_ignored(self, scorer, response):
         gt = {"title": "Book", "examination": {"note": "x"}}
@@ -175,3 +186,9 @@ class TestPersonnelCards:
         assert with_default["false_positives"] >= 1 and with_default["false_negatives"] >= 1
         assert (with_rule_off["false_positives"], with_rule_off["false_negatives"]) == (0, 0)
         assert with_rule_off["f1_score"] == 1.0
+
+def test_personnel_cards_scores_unparseable_answers_as_misses(make_scorer, response):
+    assert PersonnelCards.score_unparseable_as_miss is True
+    result = make_scorer(PersonnelCards).score_request_answer(
+        "img", response(parsed=None, text="prose"), {"rows": [{"row_number": 1, "dienstort": {"diplomatic_transcript": "Bern"}}]})
+    assert result["true_positives"] == 0 and result["false_negatives"] > 0

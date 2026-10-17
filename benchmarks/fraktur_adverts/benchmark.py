@@ -22,6 +22,8 @@ class FrakturAdverts(Benchmark):
     the model's predictions and ground truth data.
     """
 
+    score_unparseable_as_miss = True
+
     def calculate_cer(self, reference_text: str, hypothesis_text: str) -> float:
         """
         Calculate Character Error Rate (CER) between a reference text and a hypothesis text.
