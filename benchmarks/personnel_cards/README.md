@@ -158,6 +158,8 @@ Each cell has three sub-fields:
 - FP: only the response has a value
 - FN: only the ground truth has a value
 
+A card with no fields in either the response or the ground truth (four cards have no rows) scores F1 1.
+
 F1 micro sums TP, FP and FN over all cards before computing F1. F1 macro averages the per-card F1 values, each rounded to two decimals.
 
 The `rules` column of `benchmarks_tests.csv` selects which sub-fields are scored; an empty value scores all three:
@@ -208,12 +210,13 @@ This section is not part of the BenchmarkCard schema and is not exported to `ben
 
 **Versions:**
 
+- 3.0.0 — a card without rows answered without rows scores F1 1 instead of 0; all stored runs re-scored
 - 2.0.0 — a response that cannot be parsed is scored as a miss instead of being left out; all stored runs re-scored
 - 1.0.0 — initial versioned state
 
 **How to Cite:** This benchmark:
 
-> Wullschleger, T., Hindermann, M., & Decker, E. (2026). Personnel Cards (benchmark version 2.0.0). In *RISE Humanities Data Benchmark*. Zenodo. https://doi.org/10.5281/zenodo.16941752
+> Wullschleger, T., Hindermann, M., & Decker, E. (2026). Personnel Cards (benchmark version 3.0.0). In *RISE Humanities Data Benchmark*. Zenodo. https://doi.org/10.5281/zenodo.16941752
 
 Source:
 

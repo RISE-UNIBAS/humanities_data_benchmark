@@ -2,15 +2,15 @@
 
 Used after a MAJOR version (a scorer change or a ground-truth correction) whose new scores
 apply to old responses too, so stored and new runs stay comparable. A run whose stored
-`scoring.json` lacks the metrics is left alone and reported.
+`scoring.json` has no numeric metric is left alone and reported.
 
 Per run, a request counts as scored if its file records a score, or if it was skipped as
 unparseable and the benchmark now scores such answers as misses. A file without a `score`
 key comes from a run that predates per-request scores: that runner scored every request and
 read the answer from the response text (a ```json block or the whole text) when nothing was
 parsed, so all of them count and the text is parsed the same way. The rewritten
-`scoring.json` keeps `cost_summary` and every key the scorer does not produce, and records
-the rewrite in `rescored`. Only files whose numbers change are written; a stored score that
+`scoring.json` keeps `cost_summary` and every other non-numeric key, drops numeric metrics the
+scorer no longer reports, and records the rewrite in `rescored`. Only files whose numbers change are written; a stored score that
 lacks the field detail of today's scorer is not rewritten for that alone.
 
 `--verify` first: with an unchanged scorer it must reproduce the stored aggregates. Runs
@@ -114,7 +114,8 @@ def main(argv=None):
                     print("  %s/%s: %s" % (Path(run_dir).parent.name, test_id, diff))
             continue
 
-        if finished and any(stored.get(k) is None for k in aggregate):
+        stored_metrics = [k for k, v in stored.items() if isinstance(v, (int, float)) and not isinstance(v, bool)]
+        if finished and not stored_metrics:
             skipped.append("%s/%s" % (Path(run_dir).parent.name, test_id))
             continue
         for path in Path(run_dir).glob("request_*.json"):
@@ -131,8 +132,10 @@ def main(argv=None):
             _write_json(path, record)
         if not finished:
             unfinished += 1
-        elif any(not _same(stored.get(k), v) for k, v in aggregate.items()):
-            _write_json(scoring_path, {**stored, **aggregate,
+        elif any(not _same(stored.get(k), v) for k, v in aggregate.items()) or set(stored_metrics) - set(aggregate):
+            # Metrics the scorer no longer reports are dropped, not left stale.
+            kept = {k: v for k, v in stored.items() if k not in stored_metrics}
+            _write_json(scoring_path, {**kept, **aggregate,
                                        "rescored": "%s on %s" % (args.label, date.today().isoformat())})
             written += 1
 

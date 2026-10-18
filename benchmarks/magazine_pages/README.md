@@ -124,9 +124,9 @@ The benchmark scores are the unweighted means of the per-page values, rounded to
 
 **Interpretation:** Scores range from 0 to 1; higher is better. Because the benchmark F1 averages per-page F1, every page counts equally regardless of how many advertisements it holds. Precision and recall separate invented boxes from missed ones; mean IoU shows how tightly the matched boxes fit. Compare models only within one prompt variant: a model without a forced-tool path tends to answer `prompt.txt` in prose, which yields no boxes and scores zero, so a low score under `prompt.txt` can reflect the answer format rather than a failure to find the advertisements.
 
-**Baseline Results:** Results are on the [benchmark page](https://rise-services.rise.unibas.ch/benchmarks/p/benchmarks/magazine_pages) and in `results/<date>/<test_id>/` at the repository root. No fixed baseline is recorded beyond the contour detector (see Methods). Compare runs only with the same prompt, rules and ground-truth revision, and report the number of scored pages with the score.
+**Baseline Results:** Results are on the [benchmark page](https://rise-services.rise.unibas.ch/benchmarks/p/benchmarks/magazine_pages) and in `results/<date>/<test_id>/` at the repository root. No fixed baseline is recorded beyond the contour detector (see Methods). Compare runs only with the same prompt, rules and ground-truth revision.
 
-Observed across models: the rule-based contour detector places its boxes very precisely, but its advantage partly reflects how the ground truth was made (see Limitations).
+Observed across models: the prompt decides much of the result. Under `prompt.txt`, 23 of the 88 active test configurations score F1 0, because the model answers without boxes, and the median is 0.21; under `prompt_explicit-json.txt` none of the 7 scores 0 and the median is 0.86. The best models reach F1 0.97 under either prompt, with matched boxes fitting at a mean IoU of 0.90–0.97. The rule-based contour detector scores F1 0.80: its matched boxes fit closely (mean IoU 0.91), but it also frames bordered editorial content (precision 0.77). Its fit partly reflects how the ground truth was made (see Limitations).
 
 **Validation:** The ground truth was checked by the annotators named under Annotation. Scoring is deterministic; the scorer is covered by `tests/test_magazine_pages_scoring.py`.
 

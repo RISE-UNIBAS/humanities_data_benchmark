@@ -62,9 +62,9 @@ To run this benchmark, use `python scripts/run_single_test.py --adhoc` from the 
 
 **Limitations:** The benchmark covers five pages of a single printed bibliography (philosophy of history, works of 1945–1957), with an English-language apparatus and titles in several European languages. Results do not transfer to other citation styles, periods or layouts.
 
-Entries are compared by position (see Calculation), so a missed or split entry shifts every later entry and is penalised many times over. Only fields present in the ground truth are scored, so extra entries and extra fields in a response cost nothing.
+Entries are aligned in page order before scoring (see Calculation), so a missed or split entry costs only its own fields. Only fields present in the ground truth are scored, so extra entries and extra fields in a response cost nothing.
 
-Part of the ground truth cannot be reproduced by a response that follows the `Document` schema. 69 of the 729 scored fields use hyphenated keys (`container-title`, `publisher-place`, `event-date`) or nested objects (`relation`, `reprint`, `related`) where the schema has underscored keys or plain strings, and 13 entry types (`article-journal`, `chapter`, `review`) are not among the schema's values (`book`, `journal-article`, `other`). No schema-conformant response can match these fields exactly, so the attainable score is below 1.0.
+The ground truth records what each entry prints, and the schema leaves some conventions open that `prompt.txt` does not settle: the `id` is the printed running number (stated in `prompt_v2.txt`), a year is recorded only where the entry prints one, and a parenthetical or bracketed remark goes into `note` as printed. A model that numbers entries its own way loses every `id` and `relation`; a year inferred from the section heading where none is printed costs nothing. Top models score close to 1 (see Baseline Results), so the benchmark separates weaker models more than strong ones.
 
 **Out-of-Scope Uses:**
 
@@ -78,15 +78,11 @@ Part of the ground truth cannot be reproduced by a response that follows the `Do
 
 **Size:** 5 evaluated objects
 
-**Format:** One JPEG scan per page, about 1,750–1,910 × 2,880–2,950 px and 300–400 KB each. The ground truth is one JSON file per page; the excerpt below is from `page_2.json`. It is not a schema-valid response: `issued` is numeric and `relation` is an object, where the response schema expects strings:
+**Format:** One JPEG scan per page, about 1,750–1,910 × 2,880–2,950 px and 300–400 KB each. The ground truth is one JSON file per page in the shape of the response schema; the excerpt below is from `page_2.json`:
 
 ```json
 {
-  "metadata": {
-    "title": "Books",
-    "year": "1945",
-    "page_number": 1
-  },
+  "metadata": { "title": "Books", "year": "1945", "page_number": 1 },
   "entries": [
     {
       "id": "5",
@@ -99,28 +95,25 @@ Part of the ground truth cannot be reproduced by a response that follows the `Do
       ],
       "publisher": "Social Science Research Council",
       "publisher_place": "New York",
-      "note": "Published as Bulletin 53 by the SSRC",
-      "issued": 1945
+      "note": "Bulletin 53"
     },
     {
       "id": "6",
       "type": "journal-article",
-      "title": "Review of The Use of Personal Documents in History, Anthropology, and Sociology",
-      "author": [
-        { "family": "Lapiere", "given": "R. T." }
-      ],
+      "author": [ { "family": "Lapiere", "given": "R. T." } ],
       "container_title": "The American Journal of Sociology",
       "volume": "LII",
-      "issued": 1946,
-      "relation": { "reviewed": "5" }
+      "page": "156-157",
+      "issued": "1946",
+      "relation": "5"
     }
   ]
 }
 ```
 
-The five pages hold 82 entries (14–20 per page) and 729 scored fields. `id` is the running number printed in the bibliography. `issued` is an integer in the ground truth and a string in the schema; the scorer compares both as strings, so they match. Further deviations from the schema are listed under Limitations.
+The five pages hold 91 entries (14–21 per page) and 741 scored fields. `id` is the running number printed in the bibliography; `relation` holds the `id` of the reviewed entry; `related` lists the entries a volume contains. The first entry of `page_3` is the end of entry 14 from the previous page and has no `id`. Fields the page does not print are left out, even where the schema requires them (the `title` of eight untitled reviews, and the `title` and `id` of that continued entry); fields left out are not scored.
 
-**Annotation:** Sven Burkhardt and Pema Frick created the ground truth by hand, with Pema Frick as domain expert. They structured each entry in a CSL-like representation, including cross-references and entries that continue across pages.
+**Annotation:** Sven Burkhardt and Pema Frick created the ground truth by hand, with Pema Frick as domain expert. They structured each entry in a CSL-like representation, including cross-references and entries that continue across pages. For version 2.0.0 the ground truth was checked entry by entry against the scans and brought into the shape of the response schema: transcription errors corrected (names, titles, volumes, pages, years), six missing entries of `page_5` (64–69) added, entries 146–148 of `page_10` made entries of their own, untitled reviews left without a title, notes given as printed, years kept only where the entry prints one, and initials written with spaces as printed.
 
 **Size Breakdown:**
 
@@ -136,28 +129,28 @@ The five pages hold 82 entries (14–20 per page) and 729 scored fields. `id` is
 
 - zero-shot structured extraction from a single image per request
 - structured JSON output requested using the `Document` dataclass
-- one prompt, [prompt.txt](prompts/prompt.txt), used by all tests; it adds three instructions to the schema: the page number (taken from the file name), the `id` of the reviewed entry in `relation`, and `incomplete` for an entry that continues on the next page. All other conventions come from the schema alone
+- [prompt.txt](prompts/prompt.txt), used by all existing tests, adds three instructions to the schema: the page number (taken from the file name, so `page_2` is told it is page 2 though it is printed page 1), the `id` of the reviewed entry in `relation`, and `incomplete` for an entry that continues on the next page. New tests use [prompt_v2.txt](prompts/prompt_v2.txt), which gives the printed page number and says that `id` is the running number printed in front of an entry. All other conventions come from the schema alone
 - output cap: the repository default of 16,384 tokens per request, adjusted per model in `scripts/benchmark_base.py`
 
 **Metrics:**
 
 - Fuzzy similarity (`fuzzy`, used for ranking)
 
-**Calculation:** Every terminal field of the ground truth outside `metadata` (for example `entries[3].author[0].family`) is looked up at the same path in the response, so entries are matched by position. Fields only in the response are ignored.
+**Calculation:** Response entries are first aligned to ground-truth entries: an alignment that keeps both page orders and maximises the summed similarity of aligned entries, where the similarity of two entries is the mean field score below over the ground-truth entry's fields. Every terminal field of the ground truth outside `metadata` (for example `entries[3].author[0].family`) is then looked up at the same path in the aligned response entry. A ground-truth entry without a counterpart scores 0 in every field; response entries without a counterpart and fields only in the response are ignored.
 
 - identical values (after converting both to strings) score 1.0
 - a missing value in the response scores 0.0
 - otherwise the score is the rapidfuzz `ratio` divided by 100, between 0 and 1; there is no threshold
 
-The page score is the mean over that page's fields. The benchmark score is the mean of the page scores, so each page counts equally regardless of how many entries it holds. A response that cannot be parsed into the schema is not scored and does not enter the mean.
+The page score is the mean over that page's fields. The benchmark score is the mean of the page scores, so each page counts equally regardless of how many entries it holds. A response whose Document is nested under a single wrapper key (as some providers' tool calls return it) is unwrapped; a response that cannot be parsed scores 0.
 
-**Interpretation:** Scores range from 0 to 1; higher is better. Because partial string similarity earns partial credit, a wrong but similar value (for example `journal-article` for `article-journal`) still scores about 0.5. Part of the gap to 1.0 is not model error but the schema mismatch described under Limitations.
+**Interpretation:** Scores range from 0 to 1; higher is better. Because partial string similarity earns partial credit, a wrong but similar value (for example `Journal of Philosphy` for `Journal of Philosophy`, 0.98) still scores high; a score near 1 means near-exact records, not a share of correct entries.
 
-**Baseline Results:** Model results are available on the [benchmark page](https://rise-services.rise.unibas.ch/benchmarks/p/benchmarks/bibliographic_data) and in `results/<date>/<test_id>/` at the repository root. Compare runs with the same prompt, scoring rules and ground-truth revision, and report the number of successfully scored objects alongside the score. No fixed baseline run is designated.
+**Baseline Results:** Model results are available on the [benchmark page](https://rise-services.rise.unibas.ch/benchmarks/p/benchmarks/bibliographic_data) and in `results/<date>/<test_id>/` at the repository root. Compare runs with the same prompt, scoring rules and ground-truth revision. No fixed baseline run is designated. Across the latest run of each of the 95 non-legacy tests, `fuzzy` has a median of 0.95 and a best of 0.99 (gpt-6-astra).
 
-Observed across models: common difficulties are entries with many authors, abbreviated journal titles and volume notations, telling reviews apart from the works they review, and entries that run over the page break.
+Observed across models: averaged over all scored fields of those runs, `note` (0.55), `relation` (0.71) and `issued` (0.73) score lowest, since they depend on conventions the prompt leaves open; names, titles, publishers and pages score about 0.9.
 
-**Validation:** The annotators created the ground truth by hand. Scoring is deterministic; the scorer is covered by the repository's test suite. The ground truth does not consistently conform to the response schema (see Limitations).
+**Validation:** The annotators created the ground truth by hand; for version 2.0.0 every entry was checked against the scans, guided by the fields on which most of the ten best-scoring models agreed against the ground truth. Scoring is deterministic; the scorer is covered by `tests/test_bibliographic_data_scoring.py` and `tests/test_simple_averagers_scoring.py`, including a check that every ground-truth file scores 1 against itself.
 
 **Human Baseline:** Not specified
 
@@ -187,11 +180,12 @@ This section is not part of the BenchmarkCard schema and is not exported to `ben
 
 **Versions:**
 
+- 2.0.0 — ground truth checked against the scans and conformed to the response schema (transcription errors, six missing entries, entries 146–148 unnested, `relation` as the reviewed `id`, notes and years as printed); `prompt_v2.txt` for new tests; entries aligned in page order instead of by position; a response nested under a wrapper key is unwrapped; a response that cannot be parsed is scored as a miss; all stored runs re-scored
 - 1.0.0 — initial versioned state
 
 **How to Cite:** This benchmark:
 
-> Frick, P., Burkhardt, S., & Marti, S. (2025). Bibliographic Data (benchmark version 1.0.0). In *RISE Humanities Data Benchmark*. Zenodo. https://doi.org/10.5281/zenodo.16941752
+> Frick, P., Burkhardt, S., & Marti, S. (2025). Bibliographic Data (benchmark version 2.0.0). In *RISE Humanities Data Benchmark*. Zenodo. https://doi.org/10.5281/zenodo.16941752
 
 Source:
 

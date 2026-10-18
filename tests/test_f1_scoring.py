@@ -192,3 +192,21 @@ def test_personnel_cards_scores_unparseable_answers_as_misses(make_scorer, respo
     result = make_scorer(PersonnelCards).score_request_answer(
         "img", response(parsed=None, text="prose"), {"rows": [{"row_number": 1, "dienstort": {"diplomatic_transcript": "Bern"}}]})
     assert result["true_positives"] == 0 and result["false_negatives"] > 0
+
+
+PERSONNEL_CARDS_GT = os.path.join(os.path.dirname(__file__), "..", "benchmarks", "personnel_cards", "ground_truths")
+
+
+def test_personnel_cards_empty_card_answered_empty_scores_one(make_scorer, response):
+    scorer = make_scorer(PersonnelCards, rules=None)
+    assert scorer.score_request_answer("img", response(parsed={"rows": []}), {"rows": []})["f1_score"] == 1.0
+    assert scorer.score_request_answer("img", response(parsed=_row()), {"rows": []})["f1_score"] == 0.0
+
+
+@pytest.mark.parametrize("name", sorted(f[:-5] for f in os.listdir(PERSONNEL_CARDS_GT) if f.endswith(".json")))
+def test_personnel_cards_every_ground_truth_matches_itself(make_scorer, response, name):
+    with open(os.path.join(PERSONNEL_CARDS_GT, f"{name}.json"), encoding="utf-8") as f:
+        gt = json.load(f)
+    result = make_scorer(PersonnelCards, rules=None).score_request_answer(name, response(parsed=gt), gt)
+    assert (result["false_positives"], result["false_negatives"]) == (0, 0)
+    assert result["f1_score"] == 1.0

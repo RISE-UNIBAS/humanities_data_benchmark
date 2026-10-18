@@ -17,16 +17,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Scorer tests for `duty_rosters`, `general_meeting_minutes` and `magazine_pages`; an integrity test requires them for every benchmark.
 
 ### Removed
-- `business_letters` 2.0.0: unparseable responses scored as misses, stored runs re-scored; ground truth is JSON only; its CSV exports, per-run regeneration and dead scorer code removed, scores unchanged.
+- `business_letters` 2.0.0: unparseable responses scored as misses, stored runs re-scored; ground truth is JSON only; its CSV exports, per-run regeneration and dead scorer code removed, and `NaN` in `persons.json` replaced by `null`, scores unchanged.
 - `collected_results/compare_detail/` is no longer committed; the deploy regenerates it on the VM and copies it into the comparison widget's media directory, which now reads it from there instead of raw.githubusercontent. `export_dataset` still hashes it into `source_manifest.jsonl` as if committed (see `dev/COLLECTED_RESULTS_PLAN.md`).
 
 ### Fixed
 - `company_lists` 3.0.0: `page_id` and `entry_id` no longer scored; unparseable responses scored as misses; all stored runs re-scored with `scripts/rewrite_scores.py`; `prompt_v2.txt` for new tests.
 - `duty_rosters` 3.0.0: ground truth of rows SaA410, S402 (staff ids) and 109 (29 April) corrected; `profession` no longer scored (not in the row images); unparseable responses scored as misses; stored runs re-scored.
-- `personnel_cards` 2.0.0: unparseable responses scored as misses; stored runs re-scored.
+- `personnel_cards` 2.0.0: unparseable responses scored as misses; stored runs re-scored. 3.0.0: a card without rows answered without rows scores 1, not 0; stored runs re-scored.
+- `blacklist_cards` 2.0.0: Montaner card's date and address corrected; empty `information` is `null` in the ground truth and `[]` counts as empty; unparseable responses scored as misses; dead code removed; stored runs re-scored.
+- `magazine_pages`: five runs from before unparseable pages counted as misses re-scored under that rule.
 - `medieval_manuscripts` 2.0.0: folio [69r] numbered 69; unparseable responses scored as misses; stored runs re-scored.
 - `fraktur_adverts` 3.0.0: unparseable responses scored as misses; `image_5` adverts 4 (raw database format) and 5 (numbered 3) corrected; ground truth in one format; scorer simplified, behaviour unchanged; stored runs re-scored.
 - `general_meeting_minutes` 3.0.0: unparseable responses scored as misses; degree signs in the ground truth corrected (`U+00B0` → `°`); unused `context/` removed; the four prompt-variant tests retired as legacy; stored runs re-scored.
+- `bibliographic_data` 2.0.0: ground truth checked against the scans and conformed to the response schema (transcription errors, six missing entries, nested entries, `relation` as id); entries aligned in page order instead of by position; wrapped responses unwrapped; unparseable responses scored as misses; `prompt_v2.txt` for new tests (printed page number, `id` as the printed number); scorer tests; stored runs re-scored.
+- `book_advert_xml` 2.0.0: scored by edits (F1 of the model's edits against the reference's, `f1_macro`) instead of fuzzy similarity, which unchanged input won at 99; ground truth curated to input text plus tag repairs, all 50 well-formed, unscored keys dropped; unparseable responses scored as misses; `prompt_v2.txt` for new tests; stored runs re-scored.
 - `library_cards` 3.0.0: year of `00575005` corrected; unparseable responses scored as misses; ground-truth files hold only the card record; the two files without an image and the annotation tools removed; stored runs re-scored.
 
 ## [v0.6.1] - 2026-09-29

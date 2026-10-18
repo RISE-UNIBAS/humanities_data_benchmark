@@ -5,6 +5,8 @@ from scripts.scoring_helper import get_all_keys, get_nested_value, calculate_fuz
 
 class BlacklistCards(Benchmark):
 
+    score_unparseable_as_miss = True
+
     def score_benchmark(self, all_scores):
         if not all_scores:
             return {"fuzzy": 0.0}
@@ -18,11 +20,6 @@ class BlacklistCards(Benchmark):
     def score_request_answer(self, image_name, response, ground_truth):
         data = self.prepare_scoring_data(response)
 
-        # Check if data is a list (array) but ground_truth has entries
-        if isinstance(data, list) and "entries" in ground_truth:
-            # Create entries wrapper to match ground truth structure
-            data = {"entries": data}
-
         my_keys = get_all_keys(ground_truth)
 
         avg_score = 0
@@ -32,17 +29,14 @@ class BlacklistCards(Benchmark):
             test_value = get_nested_value(data, k)
             gold_value = get_nested_value(ground_truth, k)
 
-            # Skip metadata fields to focus on bibliographic entries
-            if k.startswith("metadata"):
-                continue
-
-            # Normalize None and "null" to empty string for consistent comparison
-            if test_value is None or test_value == "null":
+            # None, "null" and [] all mean empty
+            if test_value is None or test_value == "null" or test_value == []:
                 test_value = ""
-            if gold_value is None or gold_value == "null":
+            if gold_value is None or gold_value == "null" or gold_value == []:
                 gold_value = ""
 
-            score = calculate_fuzzy_score(test_value, gold_value)
+            # An unparseable response is a miss on every field, empty ones included.
+            score = calculate_fuzzy_score(test_value, gold_value) if isinstance(data, dict) else 0.0
             field_scores[k] = {
                 'response': test_value,
                 'ground_truth': gold_value,

@@ -59,7 +59,7 @@ To run this benchmark, use `python scripts/run_single_test.py --adhoc` from the 
 
 **Limitations:** The 33 cards come from one record series of one archive and all follow the same layout; results do not transfer to other card types. The ground truth was drafted by a model and corrected by hand (see Annotation), so where a card is ambiguous it may lean towards that model's reading. The split of company and location and the omitted commas and periods follow the annotators' conventions rather than a published standard.
 
-Blocks in `information` are compared by position (see Calculation), so a merged, split or reordered block lowers the score of every block after it, while blocks beyond those in the ground truth cost nothing. Empty fields are scored too: 27 of 33 cards have no stamped date, and a response that also leaves `date` empty gets full marks for it, so an all-empty response already scores about 0.15.
+Blocks in `information` are compared by position (see Calculation), so a merged, split or reordered block lowers the score of every block after it, while blocks beyond those in the ground truth cost nothing. Empty fields are scored too: 27 of 33 cards have no stamped date, and a response that also leaves `date` empty gets full marks for it, so an all-empty response already scores about 0.16.
 
 **Out-of-Scope Uses:**
 
@@ -116,18 +116,18 @@ Blocks in `information` are compared by position (see Calculation), so a merged,
 
 - Fuzzy similarity (`fuzzy`, used for ranking)
 
-**Calculation:** Every terminal field of the ground truth (for example `company.transcription` or `information[1].transcription`) is looked up at the same path in the response. Fields only in the response are ignored. `None` and the string `"null"` are treated as empty strings on both sides.
+**Calculation:** Every terminal field of the ground truth (for example `company.transcription` or `information[1].transcription`) is looked up at the same path in the response. Fields only in the response are ignored. `None`, the string `"null"` and an empty list are treated as empty strings on both sides.
 
 - identical values score 1.0, including two empty strings
 - otherwise the score is the rapidfuzz `ratio` divided by 100, between 0 and 1; there is no threshold, and an empty value against a non-empty one scores 0
 
-The card score is the mean over that card's fields. The benchmark score is the mean of the card scores. A response that cannot be parsed into the schema is not scored and does not enter the mean.
+The card score is the mean over that card's fields. The benchmark score is the mean of the card scores. A response that cannot be parsed is scored as a miss: every field scores 0, empty ones included.
 
-**Interpretation:** Scores range from 0 to 1; higher is better. Partial string similarity earns partial credit, so small slips (a missing period in the identification number) cost little. A score near 0.15 is no better than an empty response (see Baseline Results).
+**Interpretation:** Scores range from 0 to 1; higher is better. Partial string similarity earns partial credit, so small slips (a missing period in the identification number) cost little. A score near 0.16 is no better than an empty response (see Baseline Results).
 
-**Baseline Results:** Model results are available on the [benchmark page](https://rise-services.rise.unibas.ch/benchmarks/p/benchmarks/blacklist_cards) and in `results/<date>/<test_id>/` at the repository root. Compare runs with the same prompt, scoring rules and ground-truth revision, and report the number of successfully scored objects alongside the score. No fixed baseline run is designated. As a scorer diagnostic, an empty parsed object scores 0.153535 on the 33 ground-truth files, because missing values are normalised to empty strings; it is not a schema-valid model response.
+**Baseline Results:** Model results are available on the [benchmark page](https://rise-services.rise.unibas.ch/benchmarks/p/benchmarks/blacklist_cards) and in `results/<date>/<test_id>/` at the repository root. Compare runs with the same prompt, scoring rules and ground-truth revision, and report the number of successfully scored objects alongside the score. No fixed baseline run is designated. As a scorer diagnostic, an empty parsed object scores 0.158 on the 33 ground-truth files, because missing values are normalised to empty strings; it is not a schema-valid model response.
 
-Observed across models: models separate company name and location, extract the identification number and transcribe the two dated lines reliably. Dates in the text blocks stay as written; turning them into structured dates for analysis is left to a later processing step.
+Observed across models: across the 95 active test configurations the score has a median of 0.91 (interquartile range 0.85–0.94); the best reach 0.98. Models separate company name and location (mean field score 0.93 and 0.92), extract the identification number (0.95) and the stamped date (0.94) reliably; the text blocks of the body are the weakest part (0.84). Dates in the text blocks stay as written; turning them into structured dates for analysis is left to a later processing step.
 
 **Validation:** The annotators reviewed and corrected every ground-truth file by hand after the model draft. Scoring is deterministic; the scorer is covered by the repository's test suite.
 
@@ -159,11 +159,12 @@ This section is not part of the BenchmarkCard schema and is not exported to `ben
 
 **Versions:**
 
+- 2.0.0 — ground truth corrected: the Montaner card has no stamped date (was the typed removal date 1945-06-18) and its address is no longer a text block; two cards with no text blocks record `information` as `null` (was an empty string); an empty `information` list counts as empty; a response that cannot be parsed is scored as a miss; all stored runs re-scored
 - 1.0.0 — initial versioned state
 
 **How to Cite:** This benchmark:
 
-> Kasper, L., & Marti, S. (2025). Blacklist Cards (benchmark version 1.0.0). In *RISE Humanities Data Benchmark*. Zenodo. https://doi.org/10.5281/zenodo.16941752
+> Kasper, L., & Marti, S. (2025). Blacklist Cards (benchmark version 2.0.0). In *RISE Humanities Data Benchmark*. Zenodo. https://doi.org/10.5281/zenodo.16941752
 
 Source:
 
