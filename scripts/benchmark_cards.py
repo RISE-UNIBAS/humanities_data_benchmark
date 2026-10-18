@@ -246,7 +246,8 @@ def to_card(parsed):
                  for t in data_types if t not in DATA_TYPE_VOCAB]
     audiences = AUDIENCE_VOCAB | HUMBEN_AUDIENCE_VOCAB
     problems += [f"audience '{a}' not in {sorted(audiences)}"
-                 for a in model.purpose_and_intended_users.audience if a not in audiences]
+                 for a in model.purpose_and_intended_users.audience
+                 if a not in audiences and a != NOT_SPECIFIED]
     if problems:
         raise CardError("; ".join(problems))
     return model.model_dump(exclude_none=True)
