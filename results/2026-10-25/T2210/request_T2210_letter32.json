@@ -1,0 +1,94 @@
+{
+    "text": "{\"metadata\":{\"send_date\":[\"1928-05-03\"],\"letter_title\":[\"null\"],\"sender_persons\":[\"Ritter\",\"Groschupf\"],\"receiver_persons\":[\"W. Stauffacher\"]}}",
+    "model": "nex-agi/nex-n2.5-pro",
+    "provider": "openrouter",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 3222,
+        "output_tokens": 956,
+        "total_tokens": 4178,
+        "reasoning_tokens": 0,
+        "cached_tokens": 320,
+        "input_cost_usd": 0.00022245,
+        "output_cost_usd": 0.000239,
+        "estimated_cost_usd": 0.00046145
+    },
+    "duration": 28.854738235473633,
+    "timestamp": "2026-10-25T05:50:49.292773",
+    "parsed": {
+        "metadata": {
+            "send_date": [
+                "1928-05-03"
+            ],
+            "letter_title": [
+                "null"
+            ],
+            "sender_persons": [
+                "Ritter",
+                "Groschupf"
+            ],
+            "receiver_persons": [
+                "W. Stauffacher"
+            ]
+        }
+    },
+    "conversation_id": "ffc39c2f-7951-4499-913a-d4a2db972db6",
+    "score": {
+        "send_date_tp": 1,
+        "send_date_fp": 0,
+        "send_date_fn": 0,
+        "sender_persons_tp": 2,
+        "sender_persons_fp": 0,
+        "sender_persons_fn": 0,
+        "receiver_persons_tp": 1,
+        "receiver_persons_fp": 0,
+        "receiver_persons_fn": 0,
+        "field_scores": {
+            "send_date": {
+                "response": [
+                    "1928-05-03"
+                ],
+                "ground_truth": [
+                    "1928-05-03"
+                ],
+                "score": null,
+                "counts": {
+                    "send_date_tp": 1,
+                    "send_date_fp": 0,
+                    "send_date_fn": 0
+                }
+            },
+            "sender_persons": {
+                "response": [
+                    "Groschupf-Jaeger, Louis",
+                    "Ritter-Dreier, Fritz"
+                ],
+                "ground_truth": [
+                    "Groschupf-Jaeger, Louis",
+                    "Ritter-Dreier, Fritz"
+                ],
+                "score": null,
+                "counts": {
+                    "sender_persons_tp": 2,
+                    "sender_persons_fp": 0,
+                    "sender_persons_fn": 0
+                }
+            },
+            "receiver_persons": {
+                "response": [
+                    "Stauffacher, Werner"
+                ],
+                "ground_truth": [
+                    "Stauffacher, Werner"
+                ],
+                "score": null,
+                "counts": {
+                    "receiver_persons_tp": 1,
+                    "receiver_persons_fp": 0,
+                    "receiver_persons_fn": 0
+                }
+            }
+        }
+    },
+    "raw_response": "{\"id\":\"gen-1792903820-TDQpudG1JWlMO7FQlGKK\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\n  \\\"metadata\\\": {\\n    \\\"send_date\\\": [\\\"1928-05-03\\\"]\\n  , \\\"letter_title\\\": [\\\"null\\\"]\\n  , \\\"sender_persons\\\": [\\\"Ritter\\\", \\\"Groschupf\\\"]\\n  , \\\"receiver_persons\\\": [\\\"W. Stauffacher\\\"]\\n}\\n}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"metadata\":{\"send_date\":[\"1928-05-03\"],\"letter_title\":[\"null\"],\"sender_persons\":[\"Ritter\",\"Groschupf\"],\"receiver_persons\":[\"W. Stauffacher\"]}},\"reasoning\":\"\\nWe need answer only JSON. Need extract from image. Need inspect letter. We can use visual reading. Need identify title, sender persons, date, receiver persons.\\n\\nImage is a German typed letter. Top right \\\"Abschrift.\\\" maybe copy, not title? letter_title likely null unless \\\"Abschrift\\\" considered title? Need decide. Sender persons: at bottom after company name: \\\"sig. Ritter\\\" and \\\"sig. Groschupf\\\" (maybe Groschupf). Also company \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\" is sender organization, but key sender_persons asks person(s) who wrote. Use Ritter and Groschupf names. Do we include full? only sig. Ritter, sig. Groschupf. Receiver: \\\"Herrn W. Stauffacher, Pr\u00e4sident des Vereins f\u00fcr die Schiffahrt auf dem Oberrhein, Basel.\\\" So W. Stauffacher. Date: Basel, den 3. Mai 1928 => 1928-05-03. Letter title: no explicit title; \\\"Abschrift\\\" is copy annotation, not title. null.\\n\\nNeed JSON valid. Values as list even null? They said value for key to \\\"null\\\" maybe as string? Example values list. \\\"set the value for corresponding key to \\\"null\\\".\\\" Could mean string \\\"null\\\" or JSON null? They emphasize values corresponding to each key should be stored as a list, even if single. For missing, maybe [\\\"null\\\"]? Need interpret. They say \\\"set the value for the corresponding key to \\\"null\\\".\\\" In examples, arrays. They might expect \\\"null\\\" string? The quotes indicate string. But JSON file? Need decide. Usually output schema: \\\"letter_title\\\": [\\\"null\\\"]? But they said if not included set value for corresponding key to \\\"null\\\"; maybe include string \\\"null\\\". But \\\"Do not return anything except JSON file.\\\" We can output \\\"letter_title\\\": [\\\"null\\\"] to preserve list. Or \\\"letter_title\\\": [null] (JSON null). Which is more likely? The instruction says values should be stored as a list, even if single. So for missing, maybe list containing \\\"null\\\". But if \\\"null\\\" quoted in instruction, string. However JSON null is not string. Need choose.\\n\\nNeed maybe include letter_title [\\\"Abschrift\\\"]? Let's think. The top right \\\"Abschrift.\\\" typed. It may be a label indicating copy. The task title of letter. If no title, null. But \\\"Abschrift\\\" is a document descriptor, not title. They might expect \\\"Abschrift\\\" as letter_title because it's at top. But \\\"letter_title\\\" Title of letter. In a letter, no title. Should null.\\n\\nNeed maybe receiver persons include \\\"W. Stauffacher\\\" not \\\"Herrn W. Stauffacher\\\". Use name.\\n\\nNeed maybe sender_persons include \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\" as sender? Key persons, not organizations. But \\\"sender_persons\\\" names of persons who wrote the letter. Bottom signatures Ritter and Groschupf. We can include both. Maybe \\\"Ritter\\\" and \\\"Groschupf\\\" only. There is no first names. Use as seen.\\n\\nNeed maybe \\\"Groschupf\\\" could be \\\"Groschupf\\\" or \\\"Groschupf\\\"? Let's zoom mentally. At bottom: \\\"sig. Ritter\\\" \\\"sig. Groschupf\\\". Could be \\\"Groschupf\\\" (u after sch). Need maybe Swiss surname \\\"Groschupf\\\"? Let's inspect: \\\"Groschupf\\\" yes. Could be \\\"Groschupf\\\" with p f. There is \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\" (old spelling with ffahrt? Actually \\\"Rheinschiffahrt\\\" with ff). The company name at top \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\". Bottom \\\"BASLER RHEINSCHIFFAHRT-AKTIENGESELLSCHAFT\\\".\\n\\nNeed maybe date exact: 1928-05-03.\\n\\nNeed final only JSON. Ensure no trailing comma.\\n\",\"reasoning_details\":[{\"type\":\"reasoning.text\",\"text\":\"\\nWe need answer only JSON. Need extract from image. Need inspect letter. We can use visual reading. Need identify title, sender persons, date, receiver persons.\\n\\nImage is a German typed letter. Top right \\\"Abschrift.\\\" maybe copy, not title? letter_title likely null unless \\\"Abschrift\\\" considered title? Need decide. Sender persons: at bottom after company name: \\\"sig. Ritter\\\" and \\\"sig. Groschupf\\\" (maybe Groschupf). Also company \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\" is sender organization, but key sender_persons asks person(s) who wrote. Use Ritter and Groschupf names. Do we include full? only sig. Ritter, sig. Groschupf. Receiver: \\\"Herrn W. Stauffacher, Pr\u00e4sident des Vereins f\u00fcr die Schiffahrt auf dem Oberrhein, Basel.\\\" So W. Stauffacher. Date: Basel, den 3. Mai 1928 => 1928-05-03. Letter title: no explicit title; \\\"Abschrift\\\" is copy annotation, not title. null.\\n\\nNeed JSON valid. Values as list even null? They said value for key to \\\"null\\\" maybe as string? Example values list. \\\"set the value for corresponding key to \\\"null\\\".\\\" Could mean string \\\"null\\\" or JSON null? They emphasize values corresponding to each key should be stored as a list, even if single. For missing, maybe [\\\"null\\\"]? Need interpret. They say \\\"set the value for the corresponding key to \\\"null\\\".\\\" In examples, arrays. They might expect \\\"null\\\" string? The quotes indicate string. But JSON file? Need decide. Usually output schema: \\\"letter_title\\\": [\\\"null\\\"]? But they said if not included set value for corresponding key to \\\"null\\\"; maybe include string \\\"null\\\". But \\\"Do not return anything except JSON file.\\\" We can output \\\"letter_title\\\": [\\\"null\\\"] to preserve list. Or \\\"letter_title\\\": [null] (JSON null). Which is more likely? The instruction says values should be stored as a list, even if single. So for missing, maybe list containing \\\"null\\\". But if \\\"null\\\" quoted in instruction, string. However JSON null is not string. Need choose.\\n\\nNeed maybe include letter_title [\\\"Abschrift\\\"]? Let's think. The top right \\\"Abschrift.\\\" typed. It may be a label indicating copy. The task title of letter. If no title, null. But \\\"Abschrift\\\" is a document descriptor, not title. They might expect \\\"Abschrift\\\" as letter_title because it's at top. But \\\"letter_title\\\" Title of letter. In a letter, no title. Should null.\\n\\nNeed maybe receiver persons include \\\"W. Stauffacher\\\" not \\\"Herrn W. Stauffacher\\\". Use name.\\n\\nNeed maybe sender_persons include \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\" as sender? Key persons, not organizations. But \\\"sender_persons\\\" names of persons who wrote the letter. Bottom signatures Ritter and Groschupf. We can include both. Maybe \\\"Ritter\\\" and \\\"Groschupf\\\" only. There is no first names. Use as seen.\\n\\nNeed maybe \\\"Groschupf\\\" could be \\\"Groschupf\\\" or \\\"Groschupf\\\"? Let's zoom mentally. At bottom: \\\"sig. Ritter\\\" \\\"sig. Groschupf\\\". Could be \\\"Groschupf\\\" (u after sch). Need maybe Swiss surname \\\"Groschupf\\\"? Let's inspect: \\\"Groschupf\\\" yes. Could be \\\"Groschupf\\\" with p f. There is \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\" (old spelling with ffahrt? Actually \\\"Rheinschiffahrt\\\" with ff). The company name at top \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\". Bottom \\\"BASLER RHEINSCHIFFAHRT-AKTIENGESELLSCHAFT\\\".\\n\\nNeed maybe date exact: 1928-05-03.\\n\\nNeed final only JSON. Ensure no trailing comma.\\n\",\"format\":\"unknown\",\"index\":0}]},\"native_finish_reason\":\"stop\"}],\"created\":1792903820,\"model\":\"nex-agi/nex-n2.5-pro\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":null,\"usage\":{\"completion_tokens\":956,\"prompt_tokens\":3222,\"total_tokens\":4178,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":0,\"reasoning_tokens\":825,\"rejected_prediction_tokens\":null,\"image_tokens\":0},\"prompt_tokens_details\":{\"audio_tokens\":0,\"cached_tokens\":320,\"cache_write_tokens\":0,\"video_tokens\":0},\"cost\":0.00046145,\"is_byok\":false,\"cost_details\":{\"upstream_inference_cost\":0.00046145,\"upstream_inference_prompt_cost\":0.00022245,\"upstream_inference_completions_cost\":0.000239}},\"provider\":\"Nex AGI\"}"
+}

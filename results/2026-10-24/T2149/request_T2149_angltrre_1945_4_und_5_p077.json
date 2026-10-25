@@ -1,0 +1,104 @@
+{
+    "text": "{\"advertisements\":[{\"box\":[135.0,155.0,1215.0,1710.0]},{\"box\":[1255.0,240.0,2255.0,1700.0]},{\"box\":[150.0,1755.0,2230.0,3245.0]}]}",
+    "model": "elorian/glimpse",
+    "provider": "openrouter",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 3252,
+        "output_tokens": 1940,
+        "total_tokens": 5192,
+        "reasoning_tokens": 0,
+        "input_cost_usd": 0.0019512,
+        "output_cost_usd": 0.00582,
+        "estimated_cost_usd": 0.0077712
+    },
+    "duration": 14.004183292388916,
+    "timestamp": "2026-10-24T23:47:55.615397",
+    "parsed": {
+        "advertisements": [
+            {
+                "box": [
+                    135.0,
+                    155.0,
+                    1215.0,
+                    1710.0
+                ]
+            },
+            {
+                "box": [
+                    1255.0,
+                    240.0,
+                    2255.0,
+                    1700.0
+                ]
+            },
+            {
+                "box": [
+                    150.0,
+                    1755.0,
+                    2230.0,
+                    3245.0
+                ]
+            }
+        ]
+    },
+    "conversation_id": "35b65f20-d4d0-49d7-b167-254b2e2f702e",
+    "score": {
+        "field_scores": {
+            "box 0": {
+                "response": [
+                    150.0,
+                    1755.0,
+                    2230.0,
+                    3245.0
+                ],
+                "ground_truth": [
+                    146,
+                    1753,
+                    2240,
+                    3256
+                ],
+                "score": 0.985
+            },
+            "box 1": {
+                "response": [
+                    135.0,
+                    155.0,
+                    1215.0,
+                    1710.0
+                ],
+                "ground_truth": [
+                    126,
+                    144,
+                    1221,
+                    1719
+                ],
+                "score": 0.974
+            },
+            "box 2": {
+                "response": [
+                    1255.0,
+                    240.0,
+                    2255.0,
+                    1700.0
+                ],
+                "ground_truth": [
+                    1240,
+                    230,
+                    2261,
+                    1709
+                ],
+                "score": 0.967
+            }
+        },
+        "f1": 1.0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "mean_iou": 0.975,
+        "true_positives": 3,
+        "false_positives": 0,
+        "false_negatives": 0,
+        "iou_threshold": 0.5
+    },
+    "raw_response": "{\"id\":\"gen-1792878462-BHSWYLUZFXL4sJLncETv\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\n    \\\"advertisements\\\": [\\n        {\\\"box\\\": [135, 155, 1215, 1710]},\\n        {\\\"box\\\": [1255, 240, 2255, 1700]},\\n        {\\\"box\\\": [150, 1755, 2230, 3245]}\\n    ]\\n}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"advertisements\":[{\"box\":[135.0,155.0,1215.0,1710.0]},{\"box\":[1255.0,240.0,2255.0,1700.0]},{\"box\":[150.0,1755.0,2230.0,3245.0]}]},\"reasoning\":\"The user wants me to extract the bounding boxes of the advertisements on this magazine page.\\n\\nLooking at the page, I can identify three advertisements:\\n\\n1. Top left: \\\"NOUVEAUTES\\\" background with \\\"SILK MILLS formerly Naef Brothers LTD Zurich\\\" \u2014 this is an ad for Naef Brothers (silk mills). The box is roughly from (55, 45) to (490, 487).\\n\\n2. Top right: \\\"OMAG Swiss\\\" \u2014 photo accessories, microscopes, magnifying glasses, Optical and Mechanical Works Ltd., Neullschwil / Basel. The box is roughly from (505, 68) to (910, 485).\\n\\n3. Bottom: \\\"LES FILS DE PAUL JOBIN Montres Flora PORRENTRUY SUISSE ... MAISON FOND\u00c9E EN 1848\\\" \u2014 watch advertisement. The box is roughly from (60, 500) to (900, 925).\\n\\nLet me look at the image more carefully and estimate the coordinates more precisely.\\n\\nThe image is 2479 x 3508 pixels? Wait, the displayed image seems to be scaled. The original size is stated as 2479 x 3508. The displayed image might be around 1700 x 2400. I need to return coordinates in the original page pixels.\\n\\nLet me estimate based on the displayed image dimensions. The displayed image seems to be about 1707 wide? Actually, I should estimate ratios and scale to 2479 x 3508.\\n\\nLet me look at the layout in the displayed image (assuming width ~1707, height ~2400? Actually, the image given in the conversation is usually displayed at some size). I need to guess coordinates relative to the original 2479x3508.\\n\\nLet me estimate positions as ratios:\\n\\nAd 1 (Naef Brothers): The gray block starts at about x=55/1707 \u2248 0.032? Hmm, let me look at the image more carefully.\\n\\nActually, let me carefully estimate using the pixel coordinates of the displayed image. The displayed image seems to be 1707 wide? Not sure. Let me use ratios.\\n\\nTop-left ad: The gray rectangle with \\\"NOUVEAUTES\\\" text spans from about x=55 to x=490 in the displayed image of width ~1707? That seems too narrow. Let me think: the displayed image width is probably 1707. The left ad block occupies from about 5% to about 49% of the width. The right ad (OMAG) occupies from about 50.5% to about 91% of the width.\\n\\nVertically: the top ads occupy from about 4.5% to about 48.7% of the height. The bottom ad occupies from about 50% to about 92.5% of the height.\\n\\nLet me compute in original pixels (2479 x 3508):\\n\\nAd 1: x0 = 0.055*2479 \u2248 136? Hmm, need to be more careful.\\n\\nLet me try to measure using the coordinates of the displayed image as I perceive them. The image in the conversation: I can imagine it as width 1707, height 2400 (roughly 2479x3508 scaled by 0.688). Actually 2479*0.688 = 1705.5, 3508*0.688 = 2413.5. So the displayed image is probably around 1706 x 2414.\\n\\nFrom the visual: the left ad's gray block: left edge ~ x=55? That seems too small; the page margin is about 20-30 px. The gray block starts around x=55 and ends around x=490? Hmm, but the OMAG block starts around x=505 and ends around x=910. But the displayed width is 1706, so these numbers seem off by a factor of 2. Let me reconsider: the OMAG block's right edge is around x=910? The page width is 1706; the right margin is about 90. So the OMAG right edge should be around 1550.\\n\\nI think I was misreading. Let me carefully re-estimate using ratios of the width.\\n\\nLooking at the image: the left ad block occupies roughly from 5% to 49% of the width. The right ad block occupies roughly from 50.5% to 91% of the width.\\n\\nVertically: top ads from about 4.5% to about 48.7% of height. Bottom ad from about 50% to about 92.5% of height.\\n\\nCompute in original pixels (2479 x 3508):\\n\\nAd 1 (Naef): x0 = 0.055*2479 \u2248 136; x1 = 0.49*2479 \u2248 1215; y0 = 0.045*3508 \u2248 158; y1 = 0.487*3508 \u2248 1708.\\n\\nHmm, but let me double-check with typical values: the left block's left edge is around x=130-140 in original pixels. The top edge is around y=150-160.\\n\\nAd 2 (OMAG): x0 = 0.505*2479 \u2248 1252; x1 = 0.91*2479 \u2248 2256; y0 = 0.068*3508 \u2248 238; y1 = 0.485*3508 \u2248 1701.\\n\\nAd 3 (Paul Jobin): The outer border box: x0 = 0.06*2479 \u2248 149; x1 = 0.90*2479 \u2248 2231; y0 = 0.50*3508 \u2248 1754; y1 = 0.925*3508 \u2248 3245.\\n\\nThese are rough. The answer should be a JSON with three boxes.\\n\\nLet me try to be more precise by examining the image more carefully.\\n\\nThe displayed image (as I see it) has dimensions probably 1707x2400? The actual file might be 2479x3508. I'll just estimate directly in original coordinates.\\n\\nLooking at the page: the left ad's gray rectangle: top edge y \u2248 155, bottom edge y \u2248 1710, left x \u2248 135, right x \u2248 1215.\\n\\nOMAG ad: top y \u2248 240, bottom y \u2248 1700, left x \u2248 1255, right x \u2248 2255.\\n\\nBottom ad: outer black border: top y \u2248 1755, bottom y \u2248 3245, left x \u2248 150, right x \u2248 2230.\\n\\nI'll provide these.\\n\\nGiven the tolerance, the answer is:\\n\\n[135, 155, 1215, 1710], [1255, 240, 2255, 1700], [150, 1755, 2230, 3245]\\n\\nLet me double-check the bottom ad: the outer border rectangle starts just below the top ads, around y=1750 (50% of 3508 = 1754). The bottom border is around y=3245 (92.5%). The left border is around x=150 (6%). The right border is around x=2230 (90%).\\n\\nSeems reasonable.\\n\\nI'll return the JSON.\\n\",\"reasoning_details\":[{\"type\":\"reasoning.text\",\"text\":\"The user wants me to extract the bounding boxes of the advertisements on this magazine page.\\n\\nLooking at the page, I can identify three advertisements:\\n\\n1. Top left: \\\"NOUVEAUTES\\\" background with \\\"SILK MILLS formerly Naef Brothers LTD Zurich\\\" \u2014 this is an ad for Naef Brothers (silk mills). The box is roughly from (55, 45) to (490, 487).\\n\\n2. Top right: \\\"OMAG Swiss\\\" \u2014 photo accessories, microscopes, magnifying glasses, Optical and Mechanical Works Ltd., Neullschwil / Basel. The box is roughly from (505, 68) to (910, 485).\\n\\n3. Bottom: \\\"LES FILS DE PAUL JOBIN Montres Flora PORRENTRUY SUISSE ... MAISON FOND\u00c9E EN 1848\\\" \u2014 watch advertisement. The box is roughly from (60, 500) to (900, 925).\\n\\nLet me look at the image more carefully and estimate the coordinates more precisely.\\n\\nThe image is 2479 x 3508 pixels? Wait, the displayed image seems to be scaled. The original size is stated as 2479 x 3508. The displayed image might be around 1700 x 2400. I need to return coordinates in the original page pixels.\\n\\nLet me estimate based on the displayed image dimensions. The displayed image seems to be about 1707 wide? Actually, I should estimate ratios and scale to 2479 x 3508.\\n\\nLet me look at the layout in the displayed image (assuming width ~1707, height ~2400? Actually, the image given in the conversation is usually displayed at some size). I need to guess coordinates relative to the original 2479x3508.\\n\\nLet me estimate positions as ratios:\\n\\nAd 1 (Naef Brothers): The gray block starts at about x=55/1707 \u2248 0.032? Hmm, let me look at the image more carefully.\\n\\nActually, let me carefully estimate using the pixel coordinates of the displayed image. The displayed image seems to be 1707 wide? Not sure. Let me use ratios.\\n\\nTop-left ad: The gray rectangle with \\\"NOUVEAUTES\\\" text spans from about x=55 to x=490 in the displayed image of width ~1707? That seems too narrow. Let me think: the displayed image width is probably 1707. The left ad block occupies from about 5% to about 49% of the width. The right ad (OMAG) occupies from about 50.5% to about 91% of the width.\\n\\nVertically: the top ads occupy from about 4.5% to about 48.7% of the height. The bottom ad occupies from about 50% to about 92.5% of the height.\\n\\nLet me compute in original pixels (2479 x 3508):\\n\\nAd 1: x0 = 0.055*2479 \u2248 136? Hmm, need to be more careful.\\n\\nLet me try to measure using the coordinates of the displayed image as I perceive them. The image in the conversation: I can imagine it as width 1707, height 2400 (roughly 2479x3508 scaled by 0.688). Actually 2479*0.688 = 1705.5, 3508*0.688 = 2413.5. So the displayed image is probably around 1706 x 2414.\\n\\nFrom the visual: the left ad's gray block: left edge ~ x=55? That seems too small; the page margin is about 20-30 px. The gray block starts around x=55 and ends around x=490? Hmm, but the OMAG block starts around x=505 and ends around x=910. But the displayed width is 1706, so these numbers seem off by a factor of 2. Let me reconsider: the OMAG block's right edge is around x=910? The page width is 1706; the right margin is about 90. So the OMAG right edge should be around 1550.\\n\\nI think I was misreading. Let me carefully re-estimate using ratios of the width.\\n\\nLooking at the image: the left ad block occupies roughly from 5% to 49% of the width. The right ad block occupies roughly from 50.5% to 91% of the width.\\n\\nVertically: top ads from about 4.5% to about 48.7% of height. Bottom ad from about 50% to about 92.5% of height.\\n\\nCompute in original pixels (2479 x 3508):\\n\\nAd 1 (Naef): x0 = 0.055*2479 \u2248 136; x1 = 0.49*2479 \u2248 1215; y0 = 0.045*3508 \u2248 158; y1 = 0.487*3508 \u2248 1708.\\n\\nHmm, but let me double-check with typical values: the left block's left edge is around x=130-140 in original pixels. The top edge is around y=150-160.\\n\\nAd 2 (OMAG): x0 = 0.505*2479 \u2248 1252; x1 = 0.91*2479 \u2248 2256; y0 = 0.068*3508 \u2248 238; y1 = 0.485*3508 \u2248 1701.\\n\\nAd 3 (Paul Jobin): The outer border box: x0 = 0.06*2479 \u2248 149; x1 = 0.90*2479 \u2248 2231; y0 = 0.50*3508 \u2248 1754; y1 = 0.925*3508 \u2248 3245.\\n\\nThese are rough. The answer should be a JSON with three boxes.\\n\\nLet me try to be more precise by examining the image more carefully.\\n\\nThe displayed image (as I see it) has dimensions probably 1707x2400? The actual file might be 2479x3508. I'll just estimate directly in original coordinates.\\n\\nLooking at the page: the left ad's gray rectangle: top edge y \u2248 155, bottom edge y \u2248 1710, left x \u2248 135, right x \u2248 1215.\\n\\nOMAG ad: top y \u2248 240, bottom y \u2248 1700, left x \u2248 1255, right x \u2248 2255.\\n\\nBottom ad: outer black border: top y \u2248 1755, bottom y \u2248 3245, left x \u2248 150, right x \u2248 2230.\\n\\nI'll provide these.\\n\\nGiven the tolerance, the answer is:\\n\\n[135, 155, 1215, 1710], [1255, 240, 2255, 1700], [150, 1755, 2230, 3245]\\n\\nLet me double-check the bottom ad: the outer border rectangle starts just below the top ads, around y=1750 (50% of 3508 = 1754). The bottom border is around y=3245 (92.5%). The left border is around x=150 (6%). The right border is around x=2230 (90%).\\n\\nSeems reasonable.\\n\\nI'll return the JSON.\\n\",\"format\":\"unknown\",\"index\":0}]},\"native_finish_reason\":\"stop\"}],\"created\":1792878462,\"model\":\"elorian/glimpse\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":\"default\",\"usage\":{\"completion_tokens\":1940,\"prompt_tokens\":3252,\"total_tokens\":5192,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":0,\"reasoning_tokens\":1841,\"rejected_prediction_tokens\":null,\"image_tokens\":0},\"prompt_tokens_details\":{\"audio_tokens\":0,\"cached_tokens\":0,\"cache_write_tokens\":0,\"video_tokens\":0},\"cost\":0.0077712,\"is_byok\":false,\"cost_details\":{\"upstream_inference_cost\":0.0077712,\"upstream_inference_prompt_cost\":0.0019512,\"upstream_inference_completions_cost\":0.00582}},\"provider\":\"Together\"}"
+}

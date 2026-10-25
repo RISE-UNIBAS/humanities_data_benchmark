@@ -1,0 +1,90 @@
+{
+    "text": "{\"metadata\":{\"send_date\":[\"1926-06-22\"],\"letter_title\":null,\"sender_persons\":[\"Hiller\"],\"receiver_persons\":[\"P. Christ - Wackernagel\"]}}",
+    "model": "command-a-plus-05-2026",
+    "provider": "cohere",
+    "finish_reason": "complete",
+    "usage": {
+        "input_tokens": 628,
+        "output_tokens": 994,
+        "total_tokens": 1622,
+        "reasoning_tokens": 0,
+        "input_cost_usd": 0.0,
+        "output_cost_usd": 0.0,
+        "reasoning_cost_usd": 0.0,
+        "estimated_cost_usd": 0.0
+    },
+    "duration": 13.14650011062622,
+    "timestamp": "2026-10-24T20:26:06.867392",
+    "parsed": {
+        "metadata": {
+            "letter_title": null,
+            "send_date": [
+                "1926-06-22"
+            ],
+            "sender_persons": [
+                "Hiller"
+            ],
+            "receiver_persons": [
+                "P. Christ - Wackernagel"
+            ]
+        }
+    },
+    "conversation_id": "d333028e-3803-4045-bb64-a25aeb3d279d",
+    "score": {
+        "send_date_tp": 1,
+        "send_date_fp": 0,
+        "send_date_fn": 0,
+        "sender_persons_tp": 0,
+        "sender_persons_fp": 1,
+        "sender_persons_fn": 2,
+        "receiver_persons_tp": 1,
+        "receiver_persons_fp": 0,
+        "receiver_persons_fn": 0,
+        "field_scores": {
+            "send_date": {
+                "response": [
+                    "1926-06-22"
+                ],
+                "ground_truth": [
+                    "1926-06-22"
+                ],
+                "score": null,
+                "counts": {
+                    "send_date_tp": 1,
+                    "send_date_fp": 0,
+                    "send_date_fn": 0
+                }
+            },
+            "sender_persons": {
+                "response": [
+                    "Hiller"
+                ],
+                "ground_truth": [
+                    "Groschupf-Jaeger, Louis",
+                    "Ritter-Dreier, Fritz"
+                ],
+                "score": null,
+                "counts": {
+                    "sender_persons_tp": 0,
+                    "sender_persons_fp": 1,
+                    "sender_persons_fn": 2
+                }
+            },
+            "receiver_persons": {
+                "response": [
+                    "Christ-Wackernagel, Paul"
+                ],
+                "ground_truth": [
+                    "Christ-Wackernagel, Paul"
+                ],
+                "score": null,
+                "counts": {
+                    "receiver_persons_tp": 1,
+                    "receiver_persons_fp": 0,
+                    "receiver_persons_fn": 0
+                }
+            }
+        }
+    },
+    "raw_response": "{\"id\":\"e439bfe9-02b1-4ca5-a035-518b3e0e7981\",\"finish_reason\":\"COMPLETE\",\"message\":{\"role\":\"assistant\",\"content\":[{\"type\":\"thinking\",\"thinking\":\"We need to extract letter_title, sender_persons, send_date, receiver_persons.\\n\\nWe have a letter from the Basler Schiffahrt-Aktiengesellschaft (Basel Shipping Company). The letter is dated Basel, den 22. Juni 1926. The letter is addressed to Herrn P. Christ - Wackernagel. The content: \\\"Sehr geehrter Herr Christ, Wir erlauben uns, Ihnen in der Beilage Abschrift unseres gestrigen Schreibens an Herrn Dr. Max Vischer, Pr\u00e4sident der Basler Personenschiffahrt-Gesellschaft, zur gefl. Kenntnismahme zu \u00fcbergeben.\\\" So they are sending a copy of yesterday's letter to Dr. Max Vischer. The letter is from the Basler Schiffahrt-Aktiengesellschaft, presumably signed by someone (signature appears to be \\\"Hiller\\\"?). The letter title? Not explicitly given. Possibly the letter is a cover letter for the copy. Could be \\\"Cover letter for copy of yesterday's letter to Dr. Max Vischer\\\". But we need to infer. The letter may not have a formal title; we could set letter_title to null if not present. However, the instructions: \\\"Title of the letter.\\\" If not present, set to null. The letter appears to be a business letter; there is no explicit title. So we set letter_title: null.\\n\\nSender persons: The letter is from Basler Schiffahrt-Aktiengesellschaft, but who signed? The signature appears to be \\\"Hiller\\\". The letter is typed on behalf of the company. The sender could be the company, or the signatory. Usually the sender is the company. But we can include the signatory as a person. The instructions: \\\"Name(s) of the person(s) who wrote the letter.\\\" That would be the signatory. The signature is \\\"Hiller\\\". Possibly the full name is \\\"Dr. Hiller\\\"? The signature is not fully legible. It appears to be \\\"Hiller\\\". Could be \\\"A. Hiller\\\"? The signature is \\\"Hiller\\\". There's also a stamp \\\"BASLER SCHIFFFAHRT-AKTIENGESELLSCHAFT\\\". The letter is typed, but the signature is handwritten. So the sender person is \\\"Hiller\\\". Could also include the company name, but they ask for person(s). So we list \\\"Hiller\\\". If uncertain, we could list \\\"Hiller\\\" as the sender.\\n\\nReceiver persons: The letter is addressed to \\\"Herrn P. Christ - Wackernagel\\\". So the receiver is \\\"P. Christ - Wackernagel\\\". Possibly full name \\\"P. Christ-Wackernagel\\\". We'll list that.\\n\\nSend date: \\\"Basel, den 22. Juni 1926.\\\" So date is 22 June 1926. In ISO format: 1926-06-22.\\n\\nThus we produce JSON:\\n\\n{\\n  \\\"letter_title\\\": null,\\n  \\\"sender_persons\\\": [\\\"Hiller\\\"],\\n  \\\"send_date\\\": [\\\"1926-06-22\\\"],\\n  \\\"receiver_persons\\\": [\\\"P. Christ - Wackernagel\\\"]\\n}\\n\\nBut we need to wrap in the required schema: top-level object with key \\\"metadata\\\" mapping to an object containing the four fields.\\n\\nThus:\\n\\n{\\n  \\\"metadata\\\": {\\n    \\\"letter_title\\\": [\\\"...\\\"]? Actually if null, we set to null (not array). The schema allows anyOf: array or null. So we can set null directly, not array. The example shows array with one string. But if null, we set null. So:\\n\\n\\\"letter_title\\\": null,\\n\\\"send_date\\\": [\\\"1926-06-22\\\"],\\n\\\"sender_persons\\\": [\\\"Hiller\\\"],\\n\\\"receiver_persons\\\": [\\\"P. Christ - Wackernagel\\\"]\\n\\nMake sure to follow JSON formatting.\\n\\nThus final JSON:\\n\\n{\\n  \\\"metadata\\\": {\\n    \\\"letter_title\\\": null,\\n    \\\"send_date\\\": [\\\"1926-06-22\\\"],\\n    \\\"sender_persons\\\": [\\\"Hiller\\\"],\\n    \\\"receiver_persons\\\": [\\\"P. Christ - Wackernagel\\\"]\\n  }\\n}\\n\\nCheck if any other details: The letter includes \\\"1 Beilage.\\\" but not needed.\\n\\nPotential nuance: The letter is from \\\"Basler Schiffahrt-Aktiengesellschaft\\\". The signatory may be a director. The signature appears to be \\\"Hiller\\\". Could be \\\"Dr. Hiller\\\"? The signature is \\\"Hiller\\\". We'll use \\\"Hiller\\\". If uncertain, we could also include the company as a sender person? But they ask for person(s). So we list the signatory.\\n\\nThus answer.\"},{\"type\":\"text\",\"text\":\"{\\n  \\\"metadata\\\": {\\n    \\\"letter_title\\\": null,\\n    \\\"send_date\\\": [\\\"1926-06-22\\\"],\\n    \\\"sender_persons\\\": [\\\"Hiller\\\"],\\n    \\\"receiver_persons\\\": [\\\"P. Christ - Wackernagel\\\"]\\n  }\\n}\"}]},\"usage\":{\"billed_units\":{\"input_tokens\":3910.0,\"output_tokens\":989.0},\"tokens\":{\"input_tokens\":628.0,\"output_tokens\":994.0,\"reasoning_tokens\":934,\"image_tokens\":3343},\"cached_tokens\":576.0}}"
+}

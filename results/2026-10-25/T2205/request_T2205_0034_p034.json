@@ -1,0 +1,59 @@
+{
+    "text": "{\"advertisements\":[{\"box\":[1424.0,2583.0,2384.0,3307.0]}]}",
+    "model": "nex-agi/nex-n2.5-mini",
+    "provider": "openrouter",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 3060,
+        "output_tokens": 1352,
+        "total_tokens": 4412,
+        "reasoning_tokens": 0,
+        "cached_tokens": 128,
+        "input_cost_usd": 7.362e-05,
+        "output_cost_usd": 0.0001352,
+        "estimated_cost_usd": 0.00020882
+    },
+    "duration": 21.256450176239014,
+    "timestamp": "2026-10-25T04:30:43.235163",
+    "parsed": {
+        "advertisements": [
+            {
+                "box": [
+                    1424.0,
+                    2583.0,
+                    2384.0,
+                    3307.0
+                ]
+            }
+        ]
+    },
+    "conversation_id": "4be94a93-335d-4daa-bf2a-1a8617410591",
+    "score": {
+        "field_scores": {
+            "box 0": {
+                "response": [
+                    1424.0,
+                    2583.0,
+                    2384.0,
+                    3307.0
+                ],
+                "ground_truth": [
+                    1414,
+                    2523,
+                    2372,
+                    3244
+                ],
+                "score": 0.825
+            }
+        },
+        "f1": 1.0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "mean_iou": 0.825,
+        "true_positives": 1,
+        "false_positives": 0,
+        "false_negatives": 0,
+        "iou_threshold": 0.5
+    },
+    "raw_response": "{\"id\":\"gen-1792899022-iUqzEluzG7WtXyTlsug4\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\n  \\\"advertisements\\\": [\\n    {\\n      \\\"box\\\": [1424, 2583, 2384, 3307]\\n    }\\n  ]\\n}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"advertisements\":[{\"box\":[1424.0,2583.0,2384.0,3307.0]}]},\"reasoning\":\"\\nWe need answer only JSON object with advertisements bounding boxes. Need inspect image page 2479x3508. Need extract all advertisements. Page has one obvious ad at bottom right: \\\"GLAUS, LEUZINGER & Co. S. A. AARAU - SWITZERLAND...\\\" Need determine bounding box in original coordinates. Need return all advertisements; maybe only ad. Need compute coordinates. Need use image dimensions. Need identify page content coordinates. Need bounding box maybe outer rectangle of ad. Need infer from image.\\n\\nWe have image resolution 2479x3508. Need coordinates in original page. Need locate ad rectangle. Need estimate x0,y0,x1,y1. Need be accurate enough. Let's analyze image.\\n\\nWe need maybe ad includes border rectangle from x around 1425 to 2385, y around 2578 to 3308? Let's inspect.\\n\\nPage: book spread. Left page starts x around 80? right page x around 1388? Ad in right page bottom. Border rectangle. Need coordinates.\\n\\nLet's use visual coordinate estimation. The image width 2479, height 3508. Page right edge at x about 2390? bottom at y 3318? The ad rectangle near bottom right: left border vertical at x ~1425? right border at x ~2385? top border at y ~2575? bottom border at y ~3305? Need more precise.\\n\\nLet's reason from image. The page content right column: article spans x ~1427 to 2375, y 370 to 2500. Horizontal separator line at y ~2508. Then paragraph about Lloyd's Bank from y 2540 to 2575. Then ad top border at y maybe 2594? Actually image: ad top border is below bank paragraph, around y 2584? Need coordinate.\\n\\nLet's use relative pixel positions. The top of page header at y ~256? Page bottom ~3313. Ad top border appears at y ~2580. Ad bottom border at y ~3305. Left border x ~1423. Right border x ~2385. Need output [x0,y0,x1,y1].\\n\\nNeed maybe include advertisement as whole rectangle, not text/image? Usually bounding box should enclose ad. Use outer border rectangle. Need maybe if ad extends to lower right, include bottom text \\\"Ask for Catalogues\\\" within border.\\n\\nLet's inspect with image coordinates mentally. Could derive from known page layout. Let's identify major landmarks:\\n- top header \\\"THE ANGLO-SWISS REVIEW\\\" y around 263, x 1075-1405.\\n- vertical divider line at x ~1388 from y 302 to 3244.\\n- right article text columns from x 1428 to 2375.\\n- ad rectangle border:\\n  - left vertical line from y ~2584 to 3307 at x ~1424.\\n  - right vertical line from y ~2584 to 3307 at x ~2384.\\n  - top horizontal line at y ~2584 from x 1424 to 2384.\\n  - bottom horizontal line at y ~3307 from x 1424 to 2384.\\nMaybe border thickness 3-4 px. Bounding box could be [1424,2582,2385,3307]. Need maybe top y 2581, bottom 3307.\\n\\nLet's not overfit. Need maybe if ad has inner border? It is a bordered ad with outer border. Need include only one ad.\\n\\nLet's examine the image. The ad is at bottom right of right page. It has a rectangular border. Top border line at just below the \\\"throughout the world.\\\" paragraph. There is a horizontal line at y about 2505? Then paragraph below. Ad top border maybe y=2584. The border is black. The right edge of border at x=2383, left edge at x=1423. The bottom edge at y=3307. The page bottom visible at y=3320. The ad bottom border is 15 px above page bottom. Yes.\\n\\nLet's consider if there are any other advertisements: The page has \\\"Stainless Iron\\\" article, not ad. The bank paragraph is not ad. The \\\"SMILES\\\" column is not ad. The top header not ad. So one.\\n\\nNeed output JSON exactly. Coordinates integers. Need no extra.\\n\\nLet's ensure bounding box maybe [1424, 2584, 2385, 3307]. If x1 should be inclusive? Usually bounding box [x0,y0,x1,y1] with x1,y1 bottom-right. Use outer border coordinates.\\n\\nLet's maybe use [1423, 2582, 2385, 3307]. Need choose.\\n\\nLet's see if page width 2479. The ad right border maybe at x 2385. The page right margin maybe x 2394. The ad right border is 10 px from page edge. If page right edge x 2397, ad right x 2385. Good.\\n\\nLet's maybe include [1425, 2583, 2384, 3307]. The difference small.\\n\\nNeed maybe if bounding box includes ad text but not border? The instruction \\\"bounding boxes\\\" for advertisements usually include full ad including border. Use outer border.\\n\\nLet's craft JSON.\",\"reasoning_details\":[{\"type\":\"reasoning.text\",\"text\":\"\\nWe need answer only JSON object with advertisements bounding boxes. Need inspect image page 2479x3508. Need extract all advertisements. Page has one obvious ad at bottom right: \\\"GLAUS, LEUZINGER & Co. S. A. AARAU - SWITZERLAND...\\\" Need determine bounding box in original coordinates. Need return all advertisements; maybe only ad. Need compute coordinates. Need use image dimensions. Need identify page content coordinates. Need bounding box maybe outer rectangle of ad. Need infer from image.\\n\\nWe have image resolution 2479x3508. Need coordinates in original page. Need locate ad rectangle. Need estimate x0,y0,x1,y1. Need be accurate enough. Let's analyze image.\\n\\nWe need maybe ad includes border rectangle from x around 1425 to 2385, y around 2578 to 3308? Let's inspect.\\n\\nPage: book spread. Left page starts x around 80? right page x around 1388? Ad in right page bottom. Border rectangle. Need coordinates.\\n\\nLet's use visual coordinate estimation. The image width 2479, height 3508. Page right edge at x about 2390? bottom at y 3318? The ad rectangle near bottom right: left border vertical at x ~1425? right border at x ~2385? top border at y ~2575? bottom border at y ~3305? Need more precise.\\n\\nLet's reason from image. The page content right column: article spans x ~1427 to 2375, y 370 to 2500. Horizontal separator line at y ~2508. Then paragraph about Lloyd's Bank from y 2540 to 2575. Then ad top border at y maybe 2594? Actually image: ad top border is below bank paragraph, around y 2584? Need coordinate.\\n\\nLet's use relative pixel positions. The top of page header at y ~256? Page bottom ~3313. Ad top border appears at y ~2580. Ad bottom border at y ~3305. Left border x ~1423. Right border x ~2385. Need output [x0,y0,x1,y1].\\n\\nNeed maybe include advertisement as whole rectangle, not text/image? Usually bounding box should enclose ad. Use outer border rectangle. Need maybe if ad extends to lower right, include bottom text \\\"Ask for Catalogues\\\" within border.\\n\\nLet's inspect with image coordinates mentally. Could derive from known page layout. Let's identify major landmarks:\\n- top header \\\"THE ANGLO-SWISS REVIEW\\\" y around 263, x 1075-1405.\\n- vertical divider line at x ~1388 from y 302 to 3244.\\n- right article text columns from x 1428 to 2375.\\n- ad rectangle border:\\n  - left vertical line from y ~2584 to 3307 at x ~1424.\\n  - right vertical line from y ~2584 to 3307 at x ~2384.\\n  - top horizontal line at y ~2584 from x 1424 to 2384.\\n  - bottom horizontal line at y ~3307 from x 1424 to 2384.\\nMaybe border thickness 3-4 px. Bounding box could be [1424,2582,2385,3307]. Need maybe top y 2581, bottom 3307.\\n\\nLet's not overfit. Need maybe if ad has inner border? It is a bordered ad with outer border. Need include only one ad.\\n\\nLet's examine the image. The ad is at bottom right of right page. It has a rectangular border. Top border line at just below the \\\"throughout the world.\\\" paragraph. There is a horizontal line at y about 2505? Then paragraph below. Ad top border maybe y=2584. The border is black. The right edge of border at x=2383, left edge at x=1423. The bottom edge at y=3307. The page bottom visible at y=3320. The ad bottom border is 15 px above page bottom. Yes.\\n\\nLet's consider if there are any other advertisements: The page has \\\"Stainless Iron\\\" article, not ad. The bank paragraph is not ad. The \\\"SMILES\\\" column is not ad. The top header not ad. So one.\\n\\nNeed output JSON exactly. Coordinates integers. Need no extra.\\n\\nLet's ensure bounding box maybe [1424, 2584, 2385, 3307]. If x1 should be inclusive? Usually bounding box [x0,y0,x1,y1] with x1,y1 bottom-right. Use outer border coordinates.\\n\\nLet's maybe use [1423, 2582, 2385, 3307]. Need choose.\\n\\nLet's see if page width 2479. The ad right border maybe at x 2385. The page right margin maybe x 2394. The ad right border is 10 px from page edge. If page right edge x 2397, ad right x 2385. Good.\\n\\nLet's maybe include [1425, 2583, 2384, 3307]. The difference small.\\n\\nNeed maybe if bounding box includes ad text but not border? The instruction \\\"bounding boxes\\\" for advertisements usually include full ad including border. Use outer border.\\n\\nLet's craft JSON.\",\"format\":\"unknown\",\"index\":0}]},\"native_finish_reason\":\"stop\"}],\"created\":1792899022,\"model\":\"nex-agi/nex-n2.5-mini\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":null,\"usage\":{\"completion_tokens\":1352,\"prompt_tokens\":3060,\"total_tokens\":4412,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":0,\"reasoning_tokens\":1050,\"rejected_prediction_tokens\":null,\"image_tokens\":0},\"prompt_tokens_details\":{\"audio_tokens\":0,\"cached_tokens\":128,\"cache_write_tokens\":0,\"video_tokens\":0},\"cost\":0.00020882,\"is_byok\":false,\"cost_details\":{\"upstream_inference_cost\":0.00020882,\"upstream_inference_prompt_cost\":0.00007362,\"upstream_inference_completions_cost\":0.0001352}},\"provider\":\"Nex AGI\"}"
+}

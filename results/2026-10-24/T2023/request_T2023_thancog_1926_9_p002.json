@@ -1,0 +1,91 @@
+{
+    "text": "{\"advertisements\":[{\"box\":[160.0,100.0,930.0,490.0]},{\"box\":[160.0,500.0,930.0,910.0]}]}",
+    "model": "nvidia/nemotron-3.5-super-vl",
+    "provider": "openrouter",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 3118,
+        "output_tokens": 1030,
+        "total_tokens": 4148,
+        "reasoning_tokens": 0,
+        "input_cost_usd": 0.0003118,
+        "output_cost_usd": 0.000412,
+        "estimated_cost_usd": 0.0007238
+    },
+    "duration": 5.452295303344727,
+    "timestamp": "2026-10-24T21:12:34.442026",
+    "parsed": {
+        "advertisements": [
+            {
+                "box": [
+                    160.0,
+                    100.0,
+                    930.0,
+                    490.0
+                ]
+            },
+            {
+                "box": [
+                    160.0,
+                    500.0,
+                    930.0,
+                    910.0
+                ]
+            }
+        ]
+    },
+    "conversation_id": "0ad346f1-9dd5-45ef-8b70-98ea7aa0a490",
+    "score": {
+        "field_scores": {
+            "box 0": {
+                "response": null,
+                "ground_truth": [
+                    342,
+                    1781,
+                    2323,
+                    3198
+                ],
+                "score": 0.0
+            },
+            "box 1": {
+                "response": null,
+                "ground_truth": [
+                    346,
+                    339,
+                    2323,
+                    1751
+                ],
+                "score": 0.0
+            },
+            "unmatched prediction 0": {
+                "response": [
+                    160.0,
+                    100.0,
+                    930.0,
+                    490.0
+                ],
+                "ground_truth": null,
+                "score": 0.0
+            },
+            "unmatched prediction 1": {
+                "response": [
+                    160.0,
+                    500.0,
+                    930.0,
+                    910.0
+                ],
+                "ground_truth": null,
+                "score": 0.0
+            }
+        },
+        "f1": 0.0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "mean_iou": 0.0,
+        "true_positives": 0,
+        "false_positives": 2,
+        "false_negatives": 2,
+        "iou_threshold": 0.5
+    },
+    "raw_response": "{\"id\":\"gen-1792869149-5zJlV9c0jdrFbyvzAY4K\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\n    \\\"advertisements\\\": [\\n        {\\\"box\\\": [160, 100, 930, 490]},\\n        {\\\"box\\\": [160, 500, 930, 910]}\\n    ]\\n}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"advertisements\":[{\"box\":[160.0,100.0,930.0,490.0]},{\"box\":[160.0,500.0,930.0,910.0]}]},\"reasoning\":\"The user wants me to identify and extract bounding boxes for all advertisements on the provided page.\\n\\n1.  **Analyze the image:**\\n    *   The image shows a page from \\\"THE ANGLO-SWISS COMMERCIAL GAZETTE\\\", September 1926.\\n    *   There are two distinct, large blocks of text that look like advertisements.\\n    *   **Advertisement 1:** Top block. It's for \\\"CUNARD LINE\\\". It lists ships like Mauretania, Aquitania, Berengaria. It has a border around it.\\n    *   **Advertisement 2:** Bottom block. It's for \\\"IMPERIAL AIRWAYS LTD\\\". It mentions \\\"THERE IS ONLY ONE BRITISH AIR LINE BETWEEN ENGLAND AND THE CONTINENT\\\". It also has a border around it.\\n\\n2.  **Determine coordinates:**\\n    *   The image dimensions are given as 2479 x 3508 pixels.\\n    *   I need to estimate the bounding boxes [x0, y0, x1, y1] for each ad.\\n\\n    *   **Ad 1 (Cunard Line):**\\n        *   Top edge: Just below the header \\\"THE ANGLO-SWISS COMMERCIAL GAZETTE\\\". Around y=100.\\n        *   Left edge: Starts near the left margin of the content area. Around x=160.\\n        *   Bottom edge: Ends before the second ad starts. Around y=490.\\n        *   Right edge: Ends near the right margin. Around x=930.\\n        *   Let's refine. The box seems to encompass the entire bordered section.\\n        *   y0: ~100\\n        *   x0: ~160\\n        *   y1: ~490\\n        *   x1: ~930\\n\\n    *   **Ad 2 (Imperial Airways):**\\n        *   Top edge: Just below the first ad. Around y=500.\\n        *   Left edge: Similar to the first ad. Around x=160.\\n        *   Bottom edge: Near the bottom of the page content. Around y=910.\\n        *   Right edge: Similar to the first ad. Around x=930.\\n\\n3.  **Refine coordinates based on visual inspection:**\\n    *   Looking at the full image, the page is rotated slightly or just scanned. Wait, the image provided is actually a crop or a specific view. Let's look at the pixel values relative to the provided image size.\\n    *   The image provided is 2479 wide x 3508 high.\\n    *   **Ad 1 (Cunard):**\\n        *   Top border line: y ~ 105.\\n        *   Left border line: x ~ 165.\\n        *   Bottom border line: y ~ 495.\\n        *   Right border line: x ~ 925.\\n    *   **Ad 2 (Imperial Airways):**\\n        *   Top border line: y ~ 505.\\n        *   Left border line: x ~ 165.\\n        *   Bottom border line: y ~ 915.\\n        *   Right border line: x ~ 925.\\n\\n    Let's check the coordinates more carefully.\\n    The image shows the left page of a spread.\\n    Ad 1: \\\"CUNARD LINE\\\".\\n    Box: [165, 105, 925, 495] roughly.\\n    Ad 2: \\\"IMPERIAL AIRWAYS LTD\\\".\\n    Box: [165, 505, 925, 915] roughly.\\n\\n    Let's try to be precise.\\n    Ad 1 Top: The line under the header. y=100 seems reasonable.\\n    Ad 1 Left: The vertical line. x=160.\\n    Ad 1 Bottom: The horizontal line separating the two ads. y=490.\\n    Ad 1 Right: The vertical line on the right. x=930.\\n\\n    Ad 2 Top: The horizontal line below the first ad. y=500.\\n    Ad 2 Left: x=160.\\n    Ad 2 Bottom: The bottom border line. y=910.\\n    Ad 2 Right: x=930.\\n\\n    Let's format the JSON.\",\"reasoning_details\":[{\"type\":\"reasoning.text\",\"text\":\"The user wants me to identify and extract bounding boxes for all advertisements on the provided page.\\n\\n1.  **Analyze the image:**\\n    *   The image shows a page from \\\"THE ANGLO-SWISS COMMERCIAL GAZETTE\\\", September 1926.\\n    *   There are two distinct, large blocks of text that look like advertisements.\\n    *   **Advertisement 1:** Top block. It's for \\\"CUNARD LINE\\\". It lists ships like Mauretania, Aquitania, Berengaria. It has a border around it.\\n    *   **Advertisement 2:** Bottom block. It's for \\\"IMPERIAL AIRWAYS LTD\\\". It mentions \\\"THERE IS ONLY ONE BRITISH AIR LINE BETWEEN ENGLAND AND THE CONTINENT\\\". It also has a border around it.\\n\\n2.  **Determine coordinates:**\\n    *   The image dimensions are given as 2479 x 3508 pixels.\\n    *   I need to estimate the bounding boxes [x0, y0, x1, y1] for each ad.\\n\\n    *   **Ad 1 (Cunard Line):**\\n        *   Top edge: Just below the header \\\"THE ANGLO-SWISS COMMERCIAL GAZETTE\\\". Around y=100.\\n        *   Left edge: Starts near the left margin of the content area. Around x=160.\\n        *   Bottom edge: Ends before the second ad starts. Around y=490.\\n        *   Right edge: Ends near the right margin. Around x=930.\\n        *   Let's refine. The box seems to encompass the entire bordered section.\\n        *   y0: ~100\\n        *   x0: ~160\\n        *   y1: ~490\\n        *   x1: ~930\\n\\n    *   **Ad 2 (Imperial Airways):**\\n        *   Top edge: Just below the first ad. Around y=500.\\n        *   Left edge: Similar to the first ad. Around x=160.\\n        *   Bottom edge: Near the bottom of the page content. Around y=910.\\n        *   Right edge: Similar to the first ad. Around x=930.\\n\\n3.  **Refine coordinates based on visual inspection:**\\n    *   Looking at the full image, the page is rotated slightly or just scanned. Wait, the image provided is actually a crop or a specific view. Let's look at the pixel values relative to the provided image size.\\n    *   The image provided is 2479 wide x 3508 high.\\n    *   **Ad 1 (Cunard):**\\n        *   Top border line: y ~ 105.\\n        *   Left border line: x ~ 165.\\n        *   Bottom border line: y ~ 495.\\n        *   Right border line: x ~ 925.\\n    *   **Ad 2 (Imperial Airways):**\\n        *   Top border line: y ~ 505.\\n        *   Left border line: x ~ 165.\\n        *   Bottom border line: y ~ 915.\\n        *   Right border line: x ~ 925.\\n\\n    Let's check the coordinates more carefully.\\n    The image shows the left page of a spread.\\n    Ad 1: \\\"CUNARD LINE\\\".\\n    Box: [165, 105, 925, 495] roughly.\\n    Ad 2: \\\"IMPERIAL AIRWAYS LTD\\\".\\n    Box: [165, 505, 925, 915] roughly.\\n\\n    Let's try to be precise.\\n    Ad 1 Top: The line under the header. y=100 seems reasonable.\\n    Ad 1 Left: The vertical line. x=160.\\n    Ad 1 Bottom: The horizontal line separating the two ads. y=490.\\n    Ad 1 Right: The vertical line on the right. x=930.\\n\\n    Ad 2 Top: The horizontal line below the first ad. y=500.\\n    Ad 2 Left: x=160.\\n    Ad 2 Bottom: The bottom border line. y=910.\\n    Ad 2 Right: x=930.\\n\\n    Let's format the JSON.\",\"format\":\"unknown\",\"index\":0}]},\"native_finish_reason\":\"stop\"}],\"created\":1792869149,\"model\":\"nvidia/nemotron-3.5-super-vl\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":null,\"usage\":{\"completion_tokens\":1030,\"prompt_tokens\":3118,\"total_tokens\":4148,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":0,\"reasoning_tokens\":967,\"rejected_prediction_tokens\":null,\"image_tokens\":0},\"prompt_tokens_details\":{\"audio_tokens\":0,\"cached_tokens\":0,\"cache_write_tokens\":0,\"video_tokens\":0},\"cost\":0.0007238,\"is_byok\":false,\"cost_details\":{\"upstream_inference_cost\":0.0007238,\"upstream_inference_prompt_cost\":0.0003118,\"upstream_inference_completions_cost\":0.000412}},\"provider\":\"Crusoe\"}"
+}

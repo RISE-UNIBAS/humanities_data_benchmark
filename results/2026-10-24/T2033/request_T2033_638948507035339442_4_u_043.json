@@ -1,0 +1,74 @@
+{
+    "text": "{\"company\":{\"transcription\":\"Beatus A.G.\"},\"location\":{\"transcription\":\"Basel.\"},\"b_id\":{\"transcription\":\"B.51.322.GB.608\"},\"date\":\"\",\"information\":[{\"transcription\":\"Britische schwarze Liste\\n10. Amendment vom Juli 1942.\"},{\"transcription\":\"gestrichen:\\nAmendment 13, 23. November 1945.\"}]}",
+    "model": "meta/muse-spark-open",
+    "provider": "openrouter",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 3445,
+        "output_tokens": 825,
+        "total_tokens": 4270,
+        "reasoning_tokens": 0,
+        "input_cost_usd": 0.00430625,
+        "output_cost_usd": 0.00350625,
+        "estimated_cost_usd": 0.0078125
+    },
+    "duration": 11.545340299606323,
+    "timestamp": "2026-10-24T21:38:34.811446",
+    "parsed": {
+        "company": {
+            "transcription": "Beatus A.G."
+        },
+        "location": {
+            "transcription": "Basel."
+        },
+        "b_id": {
+            "transcription": "B.51.322.GB.608"
+        },
+        "date": "",
+        "information": [
+            {
+                "transcription": "Britische schwarze Liste\n10. Amendment vom Juli 1942."
+            },
+            {
+                "transcription": "gestrichen:\nAmendment 13, 23. November 1945."
+            }
+        ]
+    },
+    "conversation_id": "0087f1d5-9a3a-48ac-bfd6-ce20b8dd3953",
+    "score": {
+        "fuzzy": 0.9848484848484849,
+        "field_scores": {
+            "b_id.transcription": {
+                "response": "B.51.322.GB.608",
+                "ground_truth": "B.51.322.GB.608",
+                "score": 1.0
+            },
+            "company.transcription": {
+                "response": "Beatus A.G.",
+                "ground_truth": "Beatus A.G.",
+                "score": 1.0
+            },
+            "date": {
+                "response": "",
+                "ground_truth": "",
+                "score": 1.0
+            },
+            "information[0].transcription": {
+                "response": "Britische schwarze Liste\n10. Amendment vom Juli 1942.",
+                "ground_truth": "Britische schwarze Liste\n10. Amendment vom Juli 1942.",
+                "score": 1.0
+            },
+            "information[1].transcription": {
+                "response": "gestrichen:\nAmendment 13, 23. November 1945.",
+                "ground_truth": "gestrichen:\nAmendment 13, 23. November 1945.",
+                "score": 1.0
+            },
+            "location.transcription": {
+                "response": "Basel.",
+                "ground_truth": "Basel",
+                "score": 0.9090909090909091
+            }
+        }
+    },
+    "raw_response": "{\"id\":\"gen-1792870703-PYCuLLbQTN9mxfEp2eZ5\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\n\\\"company\\\": {\\n\\\"transcription\\\": \\\"Beatus A.G.\\\"\\n},\\n\\\"location\\\": {\\n\\\"transcription\\\": \\\"Basel.\\\"\\n},\\n\\\"b_id\\\": {\\n\\\"transcription\\\": \\\"B.51.322.GB.608\\\"\\n},\\n\\\"date\\\": \\\"\\\",\\n\\\"information\\\": [\\n{\\n\\\"transcription\\\": \\\"Britische schwarze Liste\\\\n10. Amendment vom Juli 1942.\\\"\\n},\\n{\\n\\\"transcription\\\": \\\"gestrichen:\\\\nAmendment 13, 23. November 1945.\\\"\\n}\\n]\\n}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"company\":{\"transcription\":\"Beatus A.G.\"},\"location\":{\"transcription\":\"Basel.\"},\"b_id\":{\"transcription\":\"B.51.322.GB.608\"},\"date\":\"\",\"information\":[{\"transcription\":\"Britische schwarze Liste\\n10. Amendment vom Juli 1942.\"},{\"transcription\":\"gestrichen:\\nAmendment 13, 23. November 1945.\"}]},\"reasoning\":\"We need to extract:\\n\\ncompany: Beatus A.G.\\nlocation: Basel.\\nb_id: B.51.322.GB.608\\ndate: Any stamped dates on the card in YYYY-MM-DD format. If no date present, empty string. There is no stamped date? The card has typed dates: 10. Amendment vom Juli 1942 and Amendment 13, 23. November 1945. But those are not stamped dates? The instruction says \\\"Any stamped dates on the card\\\". Probably means stamp ink. This card has no stamp. So empty string.\\n\\ninformation: list of text blocks from main body. Each block should be separate string in list. Maintain line breaks with \\\\n.\\n\\nWe have main body:\\nBritische schwarze Liste\\n10. Amendment vom Juli 1942.\\n\\nand\\n\\ngestrichen:\\nAmendment 13, 23. November 1945.\\n\\nAre those two blocks? Probably two entries. Let's see format: information is list of text blocks. Each block should be separate string. So first block: \\\"Britische schwarze Liste\\\\n10. Amendment vom Juli 1942.\\\"\\n\\nSecond block: \\\"gestrichen:\\\\nAmendment 13, 23. November 1945.\\\"\\n\\nCheck JSON format required:\\n\\n{\\n  \\\"company\\\": {\\\"transcription\\\": \\\"\\\"},\\n  \\\"location\\\": {\\\"transcription\\\": \\\"\\\"},\\n  \\\"b_id\\\": {\\\"transcription\\\": \\\"\\\"},\\n  \\\"date\\\": \\\"\\\",\\n  \\\"information\\\": [\\n    {\\\"transcription\\\": \\\"\\\"}\\n  ]\\n}\\n\\nSo need to output exactly that.\\n\\nCompany transcription: \\\"Beatus A.G.\\\"\\nLocation transcription: \\\"Basel.\\\" or \\\"Basel\\\"? The card shows \\\"B a s e l .\\\" with spaces. But transcription should be \\\"Basel.\\\" Probably include period. The example says exclude location from company, location is city. Should we include period? The card has \\\"Basel.\\\" with period. Keep as \\\"Basel.\\\" Might be \\\"Basel\\\" without period? Let's keep \\\"Basel.\\\" as seen. Could also be \\\"Basel\\\". Safer to include period as typed? The instruction: The city or town, often following company name. So transcription should be what is written. It is \\\"Basel.\\\" Let's output \\\"Basel.\\\"\\n\\nCheck other similar tasks: Usually they include period. We'll output \\\"Basel.\\\"\\n\\nb_id: \\\"B.51.322.GB.608\\\"\\n\\ndate: \\\"\\\" (empty string)\\n\\ninformation: two entries.\\n\\nNeed to ensure JSON valid.\\n\\nReturn data ONLY as valid JSON object.\\n\\nMake sure to escape \\\\n properly.\\n\\nSo:\\n\\n{\\n  \\\"company\\\": {\\\"transcription\\\": \\\"Beatus A.G.\\\"},\\n  \\\"location\\\": {\\\"transcription\\\": \\\"Basel.\\\"},\\n  \\\"b_id\\\": {\\\"transcription\\\": \\\"B.51.322.GB.608\\\"},\\n  \\\"date\\\": \\\"\\\",\\n  \\\"information\\\": [\\n    {\\\"transcription\\\": \\\"Britische schwarze Liste\\\\n10. Amendment vom Juli 1942.\\\"},\\n    {\\\"transcription\\\": \\\"gestrichen:\\\\nAmendment 13, 23. November 1945.\\\"}\\n  ]\\n}\\n\\nCheck if location should be without period: Might be expected \\\"Basel\\\". Both could be accepted but we need choose one. The image shows \\\"B a s e l .\\\" with spaced letters and a period. The transcription likely \\\"Basel.\\\" I'll include period.\\n\\nAlso company: \\\"Beatus A.G.\\\" includes period.\\n\\nMake sure JSON correct.\\n\\nNo explanatory text.\\n\\n\",\"reasoning_details\":[{\"type\":\"reasoning.text\",\"text\":\"We need to extract:\\n\\ncompany: Beatus A.G.\\nlocation: Basel.\\nb_id: B.51.322.GB.608\\ndate: Any stamped dates on the card in YYYY-MM-DD format. If no date present, empty string. There is no stamped date? The card has typed dates: 10. Amendment vom Juli 1942 and Amendment 13, 23. November 1945. But those are not stamped dates? The instruction says \\\"Any stamped dates on the card\\\". Probably means stamp ink. This card has no stamp. So empty string.\\n\\ninformation: list of text blocks from main body. Each block should be separate string in list. Maintain line breaks with \\\\n.\\n\\nWe have main body:\\nBritische schwarze Liste\\n10. Amendment vom Juli 1942.\\n\\nand\\n\\ngestrichen:\\nAmendment 13, 23. November 1945.\\n\\nAre those two blocks? Probably two entries. Let's see format: information is list of text blocks. Each block should be separate string. So first block: \\\"Britische schwarze Liste\\\\n10. Amendment vom Juli 1942.\\\"\\n\\nSecond block: \\\"gestrichen:\\\\nAmendment 13, 23. November 1945.\\\"\\n\\nCheck JSON format required:\\n\\n{\\n  \\\"company\\\": {\\\"transcription\\\": \\\"\\\"},\\n  \\\"location\\\": {\\\"transcription\\\": \\\"\\\"},\\n  \\\"b_id\\\": {\\\"transcription\\\": \\\"\\\"},\\n  \\\"date\\\": \\\"\\\",\\n  \\\"information\\\": [\\n    {\\\"transcription\\\": \\\"\\\"}\\n  ]\\n}\\n\\nSo need to output exactly that.\\n\\nCompany transcription: \\\"Beatus A.G.\\\"\\nLocation transcription: \\\"Basel.\\\" or \\\"Basel\\\"? The card shows \\\"B a s e l .\\\" with spaces. But transcription should be \\\"Basel.\\\" Probably include period. The example says exclude location from company, location is city. Should we include period? The card has \\\"Basel.\\\" with period. Keep as \\\"Basel.\\\" Might be \\\"Basel\\\" without period? Let's keep \\\"Basel.\\\" as seen. Could also be \\\"Basel\\\". Safer to include period as typed? The instruction: The city or town, often following company name. So transcription should be what is written. It is \\\"Basel.\\\" Let's output \\\"Basel.\\\"\\n\\nCheck other similar tasks: Usually they include period. We'll output \\\"Basel.\\\"\\n\\nb_id: \\\"B.51.322.GB.608\\\"\\n\\ndate: \\\"\\\" (empty string)\\n\\ninformation: two entries.\\n\\nNeed to ensure JSON valid.\\n\\nReturn data ONLY as valid JSON object.\\n\\nMake sure to escape \\\\n properly.\\n\\nSo:\\n\\n{\\n  \\\"company\\\": {\\\"transcription\\\": \\\"Beatus A.G.\\\"},\\n  \\\"location\\\": {\\\"transcription\\\": \\\"Basel.\\\"},\\n  \\\"b_id\\\": {\\\"transcription\\\": \\\"B.51.322.GB.608\\\"},\\n  \\\"date\\\": \\\"\\\",\\n  \\\"information\\\": [\\n    {\\\"transcription\\\": \\\"Britische schwarze Liste\\\\n10. Amendment vom Juli 1942.\\\"},\\n    {\\\"transcription\\\": \\\"gestrichen:\\\\nAmendment 13, 23. November 1945.\\\"}\\n  ]\\n}\\n\\nCheck if location should be without period: Might be expected \\\"Basel\\\". Both could be accepted but we need choose one. The image shows \\\"B a s e l .\\\" with spaced letters and a period. The transcription likely \\\"Basel.\\\" I'll include period.\\n\\nAlso company: \\\"Beatus A.G.\\\" includes period.\\n\\nMake sure JSON correct.\\n\\nNo explanatory text.\\n\\n\",\"format\":\"unknown\",\"index\":0}]},\"native_finish_reason\":\"stop\"}],\"created\":1792870703,\"model\":\"meta/muse-spark-open\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":null,\"usage\":{\"completion_tokens\":825,\"prompt_tokens\":3445,\"total_tokens\":4270,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":0,\"reasoning_tokens\":709,\"rejected_prediction_tokens\":null,\"image_tokens\":0},\"prompt_tokens_details\":{\"audio_tokens\":0,\"cached_tokens\":0,\"cache_write_tokens\":0,\"video_tokens\":0},\"cost\":0.0078125,\"is_byok\":false,\"cost_details\":{\"upstream_inference_cost\":0.0078125,\"upstream_inference_prompt_cost\":0.00430625,\"upstream_inference_completions_cost\":0.00350625}},\"provider\":\"Fireworks\"}"
+}

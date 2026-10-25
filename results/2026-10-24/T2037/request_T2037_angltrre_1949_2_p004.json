@@ -1,0 +1,82 @@
+{
+    "text": "{\"advertisements\":[{\"box\":[322.0,132.0,2365.0,1685.0]},{\"box\":[322.0,1725.0,2365.0,3285.0]}]}",
+    "model": "meta/muse-spark-open",
+    "provider": "openrouter",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 4142,
+        "output_tokens": 808,
+        "total_tokens": 4950,
+        "reasoning_tokens": 0,
+        "cached_tokens": 256,
+        "input_cost_usd": 0.0048959,
+        "output_cost_usd": 0.003434,
+        "estimated_cost_usd": 0.0083299
+    },
+    "duration": 12.987205505371094,
+    "timestamp": "2026-10-24T21:43:45.431433",
+    "parsed": {
+        "advertisements": [
+            {
+                "box": [
+                    322.0,
+                    132.0,
+                    2365.0,
+                    1685.0
+                ]
+            },
+            {
+                "box": [
+                    322.0,
+                    1725.0,
+                    2365.0,
+                    3285.0
+                ]
+            }
+        ]
+    },
+    "conversation_id": "852484df-ae76-4d9d-8c61-97686af980b1",
+    "score": {
+        "field_scores": {
+            "box 0": {
+                "response": [
+                    322.0,
+                    1725.0,
+                    2365.0,
+                    3285.0
+                ],
+                "ground_truth": [
+                    332,
+                    1772,
+                    2361,
+                    3263
+                ],
+                "score": 0.949
+            },
+            "box 1": {
+                "response": [
+                    322.0,
+                    132.0,
+                    2365.0,
+                    1685.0
+                ],
+                "ground_truth": [
+                    342,
+                    223,
+                    2368,
+                    1705
+                ],
+                "score": 0.919
+            }
+        },
+        "f1": 1.0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "mean_iou": 0.934,
+        "true_positives": 2,
+        "false_positives": 0,
+        "false_negatives": 0,
+        "iou_threshold": 0.5
+    },
+    "raw_response": "{\"id\":\"gen-1792871012-P8uHoeh29UnXt80w55wB\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\n\\\"advertisements\\\": [\\n{\\\"box\\\": [322, 132, 2365, 1685]},\\n{\\\"box\\\": [322, 1725, 2365, 3285]}\\n]\\n}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"advertisements\":[{\"box\":[322.0,132.0,2365.0,1685.0]},{\"box\":[322.0,1725.0,2365.0,3285.0]}]},\"reasoning\":\"We need to extract advertisements and return bounding boxes. Page size 2479x3508. There are two advertisements on page.\\n\\nTop ad: Crowe & Co. Ltd. - The Reliable Forwarding Agent. Bottom ad: Nivada Grenchen Suisse - Elegance watches.\\n\\nWe need bounding boxes in pixels.\\n\\nWe need to estimate coordinates.\\n\\nOriginal size 2479 x 3508.\\n\\nWe have image with borders. Let's approximate.\\n\\nTop advertisement box: The border is visible. Let's estimate.\\n\\nWe need to give [x0,y0,x1,y1] top-left and bottom-right.\\n\\nWe need to look at image dimensions. The page is vertical. The top ad occupies upper half.\\n\\nWe can estimate relative coordinates then convert to pixels.\\n\\nLet's assume page image has margins. But coordinates are in original page pixels (2479x3508). So we need to map.\\n\\nWe can approximate:\\n\\nTop ad: x0 ~ 320, y0 ~ 130, x1 ~ 2370, y1 ~ 1680? Need more precise.\\n\\nBottom ad: x0 ~ 320, y0 ~ 1720, x1 ~ 2370, y1 ~ 3280?\\n\\nWe need to be more accurate. Let's try to estimate percentages.\\n\\nLooking at image: The page has a black border outside? The actual page is beige. The border of ad is inset.\\n\\nLeft margin: maybe ~5% from left edge. Right margin similar. Top margin maybe ~3-4%.\\n\\nLet's do detailed estimation:\\n\\nAssume image width 2479. Left edge of ad border: maybe at x= 320? Let's calculate: 320/2479 \u2248 12.9%. That seems plausible given left margin looks about 1/8 width.\\n\\nRight edge: maybe at x= 2370? 2370/2479 \u2248 95.6%. Left maybe 130? Let's check.\\n\\nBetter to use normalized 0-1000 then scale.\\n\\nWe can attempt to provide boxes:\\n\\nTop ad: [x0=320, y0=130, x1=2370, y1=1680] ?\\n\\nBottom ad: [x0=320, y0=1720, x1=2370, y1=3280] ?\\n\\nWe need to ensure y coordinates correct. Page height 3508. Top ad top y maybe 130 (3.7% down). Bottom ad bottom y maybe 3280 (93.5%). Middle gap between ads: maybe y=1680 to 1720.\\n\\nLet's refine: Top ad bottom edge is just above middle line. At about 48% height. 0.48*3508=1684. So y1 ~1680 good.\\n\\nBottom ad top edge maybe 49% => 1720. Bottom edge maybe 94% => 3300.\\n\\nWe should provide integer boxes.\\n\\nWe need to return JSON with advertisements list.\\n\\nWe should provide two boxes.\\n\\nMake sure format exactly: {\\\"advertisements\\\": [{\\\"box\\\": [x0,y0,x1,y1]}, ...]}\\n\\nWe need to ensure coordinates are pixels.\\n\\nWe could provide more precise estimates: Let's look at image again: The top ad's border is slightly inset from page edge. Left border maybe at ~13% width. Let's estimate x0= 330, x1= 2360.\\n\\nWe can give:\\n\\nTop: [322, 132, 2365, 1685]\\nBottom: [322, 1725, 2365, 3285]\\n\\nThat seems reasonable.\\n\\nWe should ensure we cover full ad including border.\\n\\nProvide final answer.\\n\\nWe must not add commentary.\\n\\nReturn only JSON object.\\n\\n\",\"reasoning_details\":[{\"type\":\"reasoning.text\",\"text\":\"We need to extract advertisements and return bounding boxes. Page size 2479x3508. There are two advertisements on page.\\n\\nTop ad: Crowe & Co. Ltd. - The Reliable Forwarding Agent. Bottom ad: Nivada Grenchen Suisse - Elegance watches.\\n\\nWe need bounding boxes in pixels.\\n\\nWe need to estimate coordinates.\\n\\nOriginal size 2479 x 3508.\\n\\nWe have image with borders. Let's approximate.\\n\\nTop advertisement box: The border is visible. Let's estimate.\\n\\nWe need to give [x0,y0,x1,y1] top-left and bottom-right.\\n\\nWe need to look at image dimensions. The page is vertical. The top ad occupies upper half.\\n\\nWe can estimate relative coordinates then convert to pixels.\\n\\nLet's assume page image has margins. But coordinates are in original page pixels (2479x3508). So we need to map.\\n\\nWe can approximate:\\n\\nTop ad: x0 ~ 320, y0 ~ 130, x1 ~ 2370, y1 ~ 1680? Need more precise.\\n\\nBottom ad: x0 ~ 320, y0 ~ 1720, x1 ~ 2370, y1 ~ 3280?\\n\\nWe need to be more accurate. Let's try to estimate percentages.\\n\\nLooking at image: The page has a black border outside? The actual page is beige. The border of ad is inset.\\n\\nLeft margin: maybe ~5% from left edge. Right margin similar. Top margin maybe ~3-4%.\\n\\nLet's do detailed estimation:\\n\\nAssume image width 2479. Left edge of ad border: maybe at x= 320? Let's calculate: 320/2479 \u2248 12.9%. That seems plausible given left margin looks about 1/8 width.\\n\\nRight edge: maybe at x= 2370? 2370/2479 \u2248 95.6%. Left maybe 130? Let's check.\\n\\nBetter to use normalized 0-1000 then scale.\\n\\nWe can attempt to provide boxes:\\n\\nTop ad: [x0=320, y0=130, x1=2370, y1=1680] ?\\n\\nBottom ad: [x0=320, y0=1720, x1=2370, y1=3280] ?\\n\\nWe need to ensure y coordinates correct. Page height 3508. Top ad top y maybe 130 (3.7% down). Bottom ad bottom y maybe 3280 (93.5%). Middle gap between ads: maybe y=1680 to 1720.\\n\\nLet's refine: Top ad bottom edge is just above middle line. At about 48% height. 0.48*3508=1684. So y1 ~1680 good.\\n\\nBottom ad top edge maybe 49% => 1720. Bottom edge maybe 94% => 3300.\\n\\nWe should provide integer boxes.\\n\\nWe need to return JSON with advertisements list.\\n\\nWe should provide two boxes.\\n\\nMake sure format exactly: {\\\"advertisements\\\": [{\\\"box\\\": [x0,y0,x1,y1]}, ...]}\\n\\nWe need to ensure coordinates are pixels.\\n\\nWe could provide more precise estimates: Let's look at image again: The top ad's border is slightly inset from page edge. Left border maybe at ~13% width. Let's estimate x0= 330, x1= 2360.\\n\\nWe can give:\\n\\nTop: [322, 132, 2365, 1685]\\nBottom: [322, 1725, 2365, 3285]\\n\\nThat seems reasonable.\\n\\nWe should ensure we cover full ad including border.\\n\\nProvide final answer.\\n\\nWe must not add commentary.\\n\\nReturn only JSON object.\\n\\n\",\"format\":\"unknown\",\"index\":0}]},\"native_finish_reason\":\"stop\"}],\"created\":1792871012,\"model\":\"meta/muse-spark-open\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":null,\"usage\":{\"completion_tokens\":808,\"prompt_tokens\":4142,\"total_tokens\":4950,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":0,\"reasoning_tokens\":709,\"rejected_prediction_tokens\":null,\"image_tokens\":0},\"prompt_tokens_details\":{\"audio_tokens\":0,\"cached_tokens\":256,\"cache_write_tokens\":0,\"video_tokens\":0},\"cost\":0.0083299,\"is_byok\":false,\"cost_details\":{\"upstream_inference_cost\":0.0083299,\"upstream_inference_prompt_cost\":0.0048959,\"upstream_inference_completions_cost\":0.003434}},\"provider\":\"Fireworks\"}"
+}

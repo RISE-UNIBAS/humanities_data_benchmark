@@ -1,0 +1,92 @@
+{
+    "text": "{\"metadata\":{\"send_date\":[\"1926-08-13\"],\"letter_title\":null,\"sender_persons\":[\"Groschopf\",\"J.A. Ritter\"],\"receiver_persons\":[\"Dr. Max Vischer\"]}}",
+    "model": "meta/muse-spark-open",
+    "provider": "openrouter",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 11997,
+        "output_tokens": 1038,
+        "total_tokens": 13035,
+        "reasoning_tokens": 0,
+        "cached_tokens": 448,
+        "input_cost_usd": 0.01450345,
+        "output_cost_usd": 0.0044115,
+        "estimated_cost_usd": 0.01891495
+    },
+    "duration": 18.619492769241333,
+    "timestamp": "2026-10-24T21:24:35.108032",
+    "parsed": {
+        "metadata": {
+            "send_date": [
+                "1926-08-13"
+            ],
+            "letter_title": null,
+            "sender_persons": [
+                "Groschopf",
+                "J.A. Ritter"
+            ],
+            "receiver_persons": [
+                "Dr. Max Vischer"
+            ]
+        }
+    },
+    "conversation_id": "5fe9fcbd-b9c0-4334-be03-61674998547f",
+    "score": {
+        "send_date_tp": 1,
+        "send_date_fp": 0,
+        "send_date_fn": 0,
+        "sender_persons_tp": 2,
+        "sender_persons_fp": 0,
+        "sender_persons_fn": 0,
+        "receiver_persons_tp": 1,
+        "receiver_persons_fp": 0,
+        "receiver_persons_fn": 0,
+        "field_scores": {
+            "send_date": {
+                "response": [
+                    "1926-08-13"
+                ],
+                "ground_truth": [
+                    "1926-08-13"
+                ],
+                "score": null,
+                "counts": {
+                    "send_date_tp": 1,
+                    "send_date_fp": 0,
+                    "send_date_fn": 0
+                }
+            },
+            "sender_persons": {
+                "response": [
+                    "Groschupf-Jaeger, Louis",
+                    "Ritter-Dreier, Fritz"
+                ],
+                "ground_truth": [
+                    "Groschupf-Jaeger, Louis",
+                    "Ritter-Dreier, Fritz"
+                ],
+                "score": null,
+                "counts": {
+                    "sender_persons_tp": 2,
+                    "sender_persons_fp": 0,
+                    "sender_persons_fn": 0
+                }
+            },
+            "receiver_persons": {
+                "response": [
+                    "Vischer-von Planta, Max"
+                ],
+                "ground_truth": [
+                    "Vischer-von Planta, Max"
+                ],
+                "score": null,
+                "counts": {
+                    "receiver_persons_tp": 1,
+                    "receiver_persons_fp": 0,
+                    "receiver_persons_fn": 0
+                }
+            }
+        }
+    },
+    "raw_response": "{\"id\":\"gen-1792869857-h71KyIO0vHD9q7KkJ5a7\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\n\\\"metadata\\\": {\\n\\\"letter_title\\\": null,\\n\\\"send_date\\\": [\\n\\\"1926-08-13\\\"\\n],\\n\\\"sender_persons\\\": [\\n\\\"Groschopf\\\",\\n\\\"J.A. Ritter\\\"\\n],\\n\\\"receiver_persons\\\": [\\n\\\"Dr. Max Vischer\\\"\\n]\\n}\\n}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"metadata\":{\"send_date\":[\"1926-08-13\"],\"letter_title\":null,\"sender_persons\":[\"Groschopf\",\"J.A. Ritter\"],\"receiver_persons\":[\"Dr. Max Vischer\"]}},\"reasoning\":\"We need to extract letter_title, sender_persons, send_date, receiver_persons.\\n\\nWe have images. Letter is from Basler Rheinschiffahrt-Aktiengesellschaft, Marktstrasse 5, Basel, den 13. August 1926. To Herrn Dr. Max Vischer, Pr\u00e4sident der Basler Personenschiffahrtsgesellschaft, Basel.\\n\\nContent about Ben\u00fctzung der Landungsstege.\\n\\nLetter title? Not explicitly given. Maybe no title. So null? Or maybe subject is \\\"betreffend Ben\u00fctzung der Landungsstege\\\"? But letter_title key: Title of the letter. In this letter, there is no explicit title. So null.\\n\\nSender persons: sig. Groschopf, J.A. Ritter. Also Basler Rheinschiffahrt-Aktiengesellschaft as organization, but sender_persons expects names. So Groschopf and J.A. Ritter. Possibly also? The letterhead says Basler Rheinschiffahrt-Aktiengesellschaft. But sender_persons are the signatories: Groschopf and J.A. Ritter.\\n\\nReceiver persons: Herrn Dr. Max Vischer.\\n\\nSend date: Basel, den 13. August 1926 => 1926-08-13.\\n\\nNeed to return JSON with lists.\\n\\nCheck format: values as list, even if single. If not included, set value to \\\"null\\\" (string? Example shows list with strings. But instruction says set value to \\\"null\\\". Probably string \\\"null\\\" or JSON null? Example says set to \\\"null\\\". Might mean string \\\"null\\\". But better to use null? Instruction: set the value for the corresponding key to \\\"null\\\". Could be string. We'll follow: if missing, value is \\\"null\\\" string? But spec says JSON file where values corresponding to each key should be stored as a list, even if single. So if null, maybe [\\\"null\\\"]? Or \\\"null\\\"? Example says set value to \\\"null\\\". Ambiguous. Probably they want null (JSON null) or \\\"null\\\". We'll use null? Let's see typical tasks: they want \\\"null\\\" string inside list? Might be [\\\"null\\\"]? But instruction says set value to \\\"null\\\" not [\\\"null\\\"]. Could be they want null literal. We'll provide null as JSON null? But they said list even if single. So maybe they want [\\\"null\\\"]? Let's interpret as null literal, not list. However instruction says values should be stored as a list, even if single. So if missing, maybe they still want null not list? We'll follow instruction literally: if not included, set value to \\\"null\\\" (string). Could be they want \\\"null\\\" string, not list. We'll provide null? Let's check example: they have all values as lists. So for missing, maybe they want null (not list). We'll provide null.\\n\\nBetter to provide letter_title as null because no title.\\n\\nSender persons: [\\\"Groschopf\\\", \\\"J.A. Ritter\\\"] or [\\\"Groschopf\\\", \\\"J.A. Ritter\\\"]? The signature says sig. Groschopf J.A. Ritter. So full names: Groschopf and J.A. Ritter. Could also include first name unknown. So just Groschopf.\\n\\nReceiver: [\\\"Dr. Max Vischer\\\"] or [\\\"Max Vischer\\\"]? The address says Herrn Dr. Max Vischer. So include Dr. Max Vischer.\\n\\nSend date: [\\\"1926-08-13\\\"]\\n\\nWe must not return anything except JSON.\\n\\nWe need to ensure ISO format YYYY-MM-DD.\\n\\nProvide JSON:\\n\\n{\\n  \\\"letter_title\\\": null,\\n  \\\"send_date\\\": [\\\"1926-08-13\\\"],\\n  \\\"sender_persons\\\": [\\\"Groschopf\\\", \\\"J.A. Ritter\\\"],\\n  \\\"receiver_persons\\\": [\\\"Dr. Max Vischer\\\"]\\n}\\n\\nBut maybe sender_persons should include full? Could be [\\\"Groschopf\\\", \\\"J.A. Ritter\\\"] correct.\\n\\nAlternatively sender could be Basler Rheinschiffahrt-Aktiengesellschaft as organization not person, so ignore.\\n\\nIf they want letter_title null as string \\\"null\\\" inside list? Let's provide null.\\n\\nWe should also consider letter_title might be \\\"Betreffend Ben\u00fctzung der Landungsstege\\\" - but that's subject line. However instruction says title of letter. Could be that subject is considered title. But typical letter_title extraction might be that phrase. However the letter doesn't have a title header. So null is safer.\\n\\nCheck other possibility: letter_title could be \\\"ABSCHRIFT\\\" - but that's copy mark, not title.\\n\\nSo null.\\n\\nWe must output JSON file.\\n\\nEnsure correct keys order? Not important.\\n\\nReturn JSON.\\n\\nWe must not use OCR, but we did mental.\\n\\nProvide final answer.\",\"reasoning_details\":[{\"type\":\"reasoning.text\",\"text\":\"We need to extract letter_title, sender_persons, send_date, receiver_persons.\\n\\nWe have images. Letter is from Basler Rheinschiffahrt-Aktiengesellschaft, Marktstrasse 5, Basel, den 13. August 1926. To Herrn Dr. Max Vischer, Pr\u00e4sident der Basler Personenschiffahrtsgesellschaft, Basel.\\n\\nContent about Ben\u00fctzung der Landungsstege.\\n\\nLetter title? Not explicitly given. Maybe no title. So null? Or maybe subject is \\\"betreffend Ben\u00fctzung der Landungsstege\\\"? But letter_title key: Title of the letter. In this letter, there is no explicit title. So null.\\n\\nSender persons: sig. Groschopf, J.A. Ritter. Also Basler Rheinschiffahrt-Aktiengesellschaft as organization, but sender_persons expects names. So Groschopf and J.A. Ritter. Possibly also? The letterhead says Basler Rheinschiffahrt-Aktiengesellschaft. But sender_persons are the signatories: Groschopf and J.A. Ritter.\\n\\nReceiver persons: Herrn Dr. Max Vischer.\\n\\nSend date: Basel, den 13. August 1926 => 1926-08-13.\\n\\nNeed to return JSON with lists.\\n\\nCheck format: values as list, even if single. If not included, set value to \\\"null\\\" (string? Example shows list with strings. But instruction says set value to \\\"null\\\". Probably string \\\"null\\\" or JSON null? Example says set to \\\"null\\\". Might mean string \\\"null\\\". But better to use null? Instruction: set the value for the corresponding key to \\\"null\\\". Could be string. We'll follow: if missing, value is \\\"null\\\" string? But spec says JSON file where values corresponding to each key should be stored as a list, even if single. So if null, maybe [\\\"null\\\"]? Or \\\"null\\\"? Example says set value to \\\"null\\\". Ambiguous. Probably they want null (JSON null) or \\\"null\\\". We'll use null? Let's see typical tasks: they want \\\"null\\\" string inside list? Might be [\\\"null\\\"]? But instruction says set value to \\\"null\\\" not [\\\"null\\\"]. Could be they want null literal. We'll provide null as JSON null? But they said list even if single. So maybe they want [\\\"null\\\"]? Let's interpret as null literal, not list. However instruction says values should be stored as a list, even if single. So if missing, maybe they still want null not list? We'll follow instruction literally: if not included, set value to \\\"null\\\" (string). Could be they want \\\"null\\\" string, not list. We'll provide null? Let's check example: they have all values as lists. So for missing, maybe they want null (not list). We'll provide null.\\n\\nBetter to provide letter_title as null because no title.\\n\\nSender persons: [\\\"Groschopf\\\", \\\"J.A. Ritter\\\"] or [\\\"Groschopf\\\", \\\"J.A. Ritter\\\"]? The signature says sig. Groschopf J.A. Ritter. So full names: Groschopf and J.A. Ritter. Could also include first name unknown. So just Groschopf.\\n\\nReceiver: [\\\"Dr. Max Vischer\\\"] or [\\\"Max Vischer\\\"]? The address says Herrn Dr. Max Vischer. So include Dr. Max Vischer.\\n\\nSend date: [\\\"1926-08-13\\\"]\\n\\nWe must not return anything except JSON.\\n\\nWe need to ensure ISO format YYYY-MM-DD.\\n\\nProvide JSON:\\n\\n{\\n  \\\"letter_title\\\": null,\\n  \\\"send_date\\\": [\\\"1926-08-13\\\"],\\n  \\\"sender_persons\\\": [\\\"Groschopf\\\", \\\"J.A. Ritter\\\"],\\n  \\\"receiver_persons\\\": [\\\"Dr. Max Vischer\\\"]\\n}\\n\\nBut maybe sender_persons should include full? Could be [\\\"Groschopf\\\", \\\"J.A. Ritter\\\"] correct.\\n\\nAlternatively sender could be Basler Rheinschiffahrt-Aktiengesellschaft as organization not person, so ignore.\\n\\nIf they want letter_title null as string \\\"null\\\" inside list? Let's provide null.\\n\\nWe should also consider letter_title might be \\\"Betreffend Ben\u00fctzung der Landungsstege\\\" - but that's subject line. However instruction says title of letter. Could be that subject is considered title. But typical letter_title extraction might be that phrase. However the letter doesn't have a title header. So null is safer.\\n\\nCheck other possibility: letter_title could be \\\"ABSCHRIFT\\\" - but that's copy mark, not title.\\n\\nSo null.\\n\\nWe must output JSON file.\\n\\nEnsure correct keys order? Not important.\\n\\nReturn JSON.\\n\\nWe must not use OCR, but we did mental.\\n\\nProvide final answer.\",\"format\":\"unknown\",\"index\":0}]},\"native_finish_reason\":\"stop\"}],\"created\":1792869857,\"model\":\"meta/muse-spark-open\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":null,\"usage\":{\"completion_tokens\":1038,\"prompt_tokens\":11997,\"total_tokens\":13035,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":0,\"reasoning_tokens\":965,\"rejected_prediction_tokens\":null,\"image_tokens\":0},\"prompt_tokens_details\":{\"audio_tokens\":0,\"cached_tokens\":448,\"cache_write_tokens\":0,\"video_tokens\":0},\"cost\":0.01891495,\"is_byok\":false,\"cost_details\":{\"upstream_inference_cost\":0.01891495,\"upstream_inference_prompt_cost\":0.01450345,\"upstream_inference_completions_cost\":0.0044115}},\"provider\":\"Fireworks\"}"
+}

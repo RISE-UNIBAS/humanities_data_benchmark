@@ -1,0 +1,87 @@
+{
+    "text": "{\"metadata\":{\"send_date\":[\"1936-07-14\"],\"letter_title\":[\"null\"],\"sender_persons\":[\"Basler Personenschiffahrtsgesellschaft\"],\"receiver_persons\":[\"Redaktion der Basler Nachrichten\"]}}",
+    "model": "nex-agi/nex-n2.5-pro",
+    "provider": "openrouter",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 3222,
+        "output_tokens": 1415,
+        "total_tokens": 4637,
+        "reasoning_tokens": 0,
+        "cached_tokens": 320,
+        "input_cost_usd": 0.00022245,
+        "output_cost_usd": 0.00035375,
+        "estimated_cost_usd": 0.0005762
+    },
+    "duration": 91.2854540348053,
+    "timestamp": "2026-10-25T05:35:53.882179",
+    "parsed": {
+        "metadata": {
+            "send_date": [
+                "1936-07-14"
+            ],
+            "letter_title": [
+                "null"
+            ],
+            "sender_persons": [
+                "Basler Personenschiffahrtsgesellschaft"
+            ],
+            "receiver_persons": [
+                "Redaktion der Basler Nachrichten"
+            ]
+        }
+    },
+    "conversation_id": "39957916-5e07-47f2-8411-7e167aa76522",
+    "score": {
+        "send_date_tp": 0,
+        "send_date_fp": 1,
+        "send_date_fn": 1,
+        "sender_persons_tp": 0,
+        "sender_persons_fp": 1,
+        "sender_persons_fn": 0,
+        "receiver_persons_tp": 0,
+        "receiver_persons_fp": 1,
+        "receiver_persons_fn": 0,
+        "field_scores": {
+            "send_date": {
+                "response": [
+                    "1936-07-14"
+                ],
+                "ground_truth": [
+                    "1926-07-14"
+                ],
+                "score": null,
+                "counts": {
+                    "send_date_tp": 0,
+                    "send_date_fp": 1,
+                    "send_date_fn": 1
+                }
+            },
+            "sender_persons": {
+                "response": [
+                    "Basler Personenschiffahrtsgesellschaft"
+                ],
+                "ground_truth": [],
+                "score": null,
+                "counts": {
+                    "sender_persons_tp": 0,
+                    "sender_persons_fp": 1,
+                    "sender_persons_fn": 0
+                }
+            },
+            "receiver_persons": {
+                "response": [
+                    "Redaktion der Basler Nachrichten"
+                ],
+                "ground_truth": [],
+                "score": null,
+                "counts": {
+                    "receiver_persons_tp": 0,
+                    "receiver_persons_fp": 1,
+                    "receiver_persons_fn": 0
+                }
+            }
+        }
+    },
+    "raw_response": "{\"id\":\"gen-1792902862-pF5mk6fNv8aKUEgBH2bl\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\n  \\\"metadata\\\": {\\n    \\\"send_date\\\": [\\\"1936-07-14\\\"],\\n    \\\"letter_title\\\": [\\\"null\\\"],\\n    \\\"sender_persons\\\": [\\\"Basler Personenschiffahrtsgesellschaft\\\"],\\n    \\\"receiver_persons\\\": [\\\"Redaktion der Basler Nachrichten\\\"]\\n  }\\n}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"metadata\":{\"send_date\":[\"1936-07-14\"],\"letter_title\":[\"null\"],\"sender_persons\":[\"Basler Personenschiffahrtsgesellschaft\"],\"receiver_persons\":[\"Redaktion der Basler Nachrichten\"]}},\"reasoning\":\"\\nWe need answer only JSON. Need parse image. Need follow user says don't use OCR? They mean not mention? We can inspect image manually. Need extract keys values list. Need identify letter title? Probably no explicit title. Sender: Basler Personenschiffahrtsgesellschaft? The closing says \\\"Basler Personenschiffahrtsgesellschaft Der Gesch\u00e4ftsf\u00fchrer\\\". Receiver: An die Redaktion der \\\"Basler Nachrichten\\\", Basel. Date: 14. Juli 1936 at top. Need ISO 1936-07-14.\\n\\nNeed consider sender_persons should names of persons who wrote letter. Since organization not person? The key says person(s), but if sender is company? We can include organization? Letter from Basler Personenschiffahrtsgesellschaft, Der Gesch\u00e4ftsf\u00fchrer. There is no individual name. Should sender_persons list maybe [\\\"Basler Personenschiffahrtsgesellschaft\\\"] or [\\\"Der Gesch\u00e4ftsf\u00fchrer der Basler Personenschiffahrtsgesellschaft\\\"]? User asks name(s) of person(s) who wrote the letter. If not included, set null. But letter is signed by organization/position, not person. Historical document extraction may accept org as sender. Need decide.\\n\\nReceiver persons: \\\"An die Redaktion der 'Basler Nachrichten'\\\". That's not person, but recipient. The key says receiver_persons names. Could include organization \\\"Redaktion der Basler Nachrichten\\\". If no person, maybe null? The instructions expect extracted values; examples person. But letters often addressed to institutions. Need not set null if organization included? They ask \\\"person(s)\\\" but keys are receiver_persons. Hmm.\\n\\nNeed return JSON only. Need maybe letter_title null.\\n\\nLet's inspect image more carefully. Top date: \\\"14. Juli 1936\\\" yes. Address: \\\"An die Redaktion der / 'Basler Nachrichten' / Basel\\\" (maybe Basel). Body: about letterbox. Closing: \\\"Hochachtungsvoll: Basler Personenschiffahrtsgesellschaft Der Gesch\u00e4ftsf\u00fchrer\\\" The \\\"Basler Personenschiffahrtsgesellschaft\\\" maybe with old spelling \\\"Personenschiffahrtsgesellschaft\\\" (Schiffahrt). Need preserve.\\n\\nPotential issue title: no title. set [\\\"null\\\"]? User says set value for key to \\\"null\\\" (JSON null or string?). They say values corresponding to each key should be stored as a list; if info not included set value to \\\"null\\\". Example uses list strings. In JSON, \\\"null\\\" could mean string or null? They put quotes in instruction but example no null. Need produce list with null? \\\"set the value ... to \\\"null\\\"\\\" maybe string. But JSON file; if key value list, maybe [\\\"null\\\"]? In these tasks, they often expect null string inside list? They explicitly \\\"values ... should be stored as a list\\\" and \\\"set the value for corresponding key to \\\"null\\\".\\\" Could be [\\\"null\\\"] to satisfy list. But JSON null cannot be list. They said values should be list even if single. So for missing use [\\\"null\\\"] likely. Need decide.\\n\\nNeed no markdown. JSON valid.\\n\\nNeed maybe sender_persons [\\\"Basler Personenschiffahrtsgesellschaft\\\"] receiver [\\\"Redaktion der Basler Nachrichten\\\"].\\n\\nCould letter_title be \\\"An die Redaktion der 'Basler Nachrichten'\\\"? No that's recipient address, not title. No title. letter_title [\\\"null\\\"].\\n\\nLet's think if date exact or approximate; top date exact 14 July 1936. Good.\\n\\nNeed maybe \\\"Basler Personenschiffahrts-Gesellschaft\\\"? In image closing: \\\"Basler Personenschiffahrtsgesellschaft\\\" no hyphen. It may be \\\"Basler Personenschiffahrts-Gesellschaft\\\"? The typed signature line: \\\"Basler Personenschiffahrtsgesellschaft\\\" (maybe \\\"Basler Personenschiffahrts-Gesellschaft\\\" with no visible hyphen). Need maybe old spelling \\\"Basler Personenschiffahrtsgesellschaft\\\".\\n\\nNeed maybe \\\"Redaktion der Basler Nachrichten\\\" as receiver. The receiver line: \\\"An die Redaktion der / \\\"Basler Nachrichten\\\",\\\". Include Basel? Recipient name not location. \\\"Redaktion der Basler Nachrichten\\\" enough.\\n\\nNeed maybe sender: \\\"Basler Personenschiffahrtsgesellschaft, Der Gesch\u00e4ftsf\u00fchrer\\\" as written. But sender_persons: \\\"Basler Personenschiffahrtsgesellschaft\\\" maybe organization. If key persons, maybe \\\"Der Gesch\u00e4ftsf\u00fchrer der Basler Personenschiffahrtsgesellschaft\\\" not a name. But it's the only sender. If no name, should null. But document has sender org. The task says sender_persons: Name(s) of person(s) who wrote the letter. Could the organization's managing director wrote; no name. We might output null. But many extraction tasks want \\\"sender_persons\\\" including organizations? Hmm.\\n\\nLet's examine wording: \\\"Name(s) of the person(s) who wrote the letter.\\\" If letter signed by \\\"Basler Personenschiffahrtsgesellschaft Der Gesch\u00e4ftsf\u00fchrer\\\", no person name. But \\\"Basler Personenschiffahrtsgesellschaft\\\" is not person, but in historical letters, organization can be sender. They might not penalize? The user wants values from letter. If set sender_persons null, we lose important sender. But key name says persons; however \\\"receiver_persons\\\" also includes \\\"Redaktion der Basler Nachrichten\\\" not person. The example includes persons, but not exclusive. I think include named entities even if organizations; otherwise many letters to editors would have null receiver. The task likely from archival letters: sender_persons/receiver_persons can include institutions. Use exact names.\\n\\nNeed maybe \\\"letter_title\\\": [\\\"\\\"]? No, \\\"null\\\".\\n\\nNeed JSON with double quotes, no trailing comma.\\n\\nLet's craft:\\n{\\n\\\"letter_title\\\": [\\\"null\\\"],\\n\\\"send_date\\\": [\\\"1936-07-14\\\"],\\n\\\"sender_persons\\\": [\\\"Basler Personenschiffahrtsgesellschaft\\\"],\\n\\\"receiver_persons\\\": [\\\"Redaktion der Basler Nachrichten\\\"]\\n}\\nNeed maybe include \\\"Basel\\\" in receiver? \\\"An die Redaktion der 'Basler Nachrichten', Basel\\\". The receiver_persons key wants names, not place. So no.\\n\\nNeed final only JSON.\\n\",\"reasoning_details\":[{\"type\":\"reasoning.text\",\"text\":\"\\nWe need answer only JSON. Need parse image. Need follow user says don't use OCR? They mean not mention? We can inspect image manually. Need extract keys values list. Need identify letter title? Probably no explicit title. Sender: Basler Personenschiffahrtsgesellschaft? The closing says \\\"Basler Personenschiffahrtsgesellschaft Der Gesch\u00e4ftsf\u00fchrer\\\". Receiver: An die Redaktion der \\\"Basler Nachrichten\\\", Basel. Date: 14. Juli 1936 at top. Need ISO 1936-07-14.\\n\\nNeed consider sender_persons should names of persons who wrote letter. Since organization not person? The key says person(s), but if sender is company? We can include organization? Letter from Basler Personenschiffahrtsgesellschaft, Der Gesch\u00e4ftsf\u00fchrer. There is no individual name. Should sender_persons list maybe [\\\"Basler Personenschiffahrtsgesellschaft\\\"] or [\\\"Der Gesch\u00e4ftsf\u00fchrer der Basler Personenschiffahrtsgesellschaft\\\"]? User asks name(s) of person(s) who wrote the letter. If not included, set null. But letter is signed by organization/position, not person. Historical document extraction may accept org as sender. Need decide.\\n\\nReceiver persons: \\\"An die Redaktion der 'Basler Nachrichten'\\\". That's not person, but recipient. The key says receiver_persons names. Could include organization \\\"Redaktion der Basler Nachrichten\\\". If no person, maybe null? The instructions expect extracted values; examples person. But letters often addressed to institutions. Need not set null if organization included? They ask \\\"person(s)\\\" but keys are receiver_persons. Hmm.\\n\\nNeed return JSON only. Need maybe letter_title null.\\n\\nLet's inspect image more carefully. Top date: \\\"14. Juli 1936\\\" yes. Address: \\\"An die Redaktion der / 'Basler Nachrichten' / Basel\\\" (maybe Basel). Body: about letterbox. Closing: \\\"Hochachtungsvoll: Basler Personenschiffahrtsgesellschaft Der Gesch\u00e4ftsf\u00fchrer\\\" The \\\"Basler Personenschiffahrtsgesellschaft\\\" maybe with old spelling \\\"Personenschiffahrtsgesellschaft\\\" (Schiffahrt). Need preserve.\\n\\nPotential issue title: no title. set [\\\"null\\\"]? User says set value for key to \\\"null\\\" (JSON null or string?). They say values corresponding to each key should be stored as a list; if info not included set value to \\\"null\\\". Example uses list strings. In JSON, \\\"null\\\" could mean string or null? They put quotes in instruction but example no null. Need produce list with null? \\\"set the value ... to \\\"null\\\"\\\" maybe string. But JSON file; if key value list, maybe [\\\"null\\\"]? In these tasks, they often expect null string inside list? They explicitly \\\"values ... should be stored as a list\\\" and \\\"set the value for corresponding key to \\\"null\\\".\\\" Could be [\\\"null\\\"] to satisfy list. But JSON null cannot be list. They said values should be list even if single. So for missing use [\\\"null\\\"] likely. Need decide.\\n\\nNeed no markdown. JSON valid.\\n\\nNeed maybe sender_persons [\\\"Basler Personenschiffahrtsgesellschaft\\\"] receiver [\\\"Redaktion der Basler Nachrichten\\\"].\\n\\nCould letter_title be \\\"An die Redaktion der 'Basler Nachrichten'\\\"? No that's recipient address, not title. No title. letter_title [\\\"null\\\"].\\n\\nLet's think if date exact or approximate; top date exact 14 July 1936. Good.\\n\\nNeed maybe \\\"Basler Personenschiffahrts-Gesellschaft\\\"? In image closing: \\\"Basler Personenschiffahrtsgesellschaft\\\" no hyphen. It may be \\\"Basler Personenschiffahrts-Gesellschaft\\\"? The typed signature line: \\\"Basler Personenschiffahrtsgesellschaft\\\" (maybe \\\"Basler Personenschiffahrts-Gesellschaft\\\" with no visible hyphen). Need maybe old spelling \\\"Basler Personenschiffahrtsgesellschaft\\\".\\n\\nNeed maybe \\\"Redaktion der Basler Nachrichten\\\" as receiver. The receiver line: \\\"An die Redaktion der / \\\"Basler Nachrichten\\\",\\\". Include Basel? Recipient name not location. \\\"Redaktion der Basler Nachrichten\\\" enough.\\n\\nNeed maybe sender: \\\"Basler Personenschiffahrtsgesellschaft, Der Gesch\u00e4ftsf\u00fchrer\\\" as written. But sender_persons: \\\"Basler Personenschiffahrtsgesellschaft\\\" maybe organization. If key persons, maybe \\\"Der Gesch\u00e4ftsf\u00fchrer der Basler Personenschiffahrtsgesellschaft\\\" not a name. But it's the only sender. If no name, should null. But document has sender org. The task says sender_persons: Name(s) of person(s) who wrote the letter. Could the organization's managing director wrote; no name. We might output null. But many extraction tasks want \\\"sender_persons\\\" including organizations? Hmm.\\n\\nLet's examine wording: \\\"Name(s) of the person(s) who wrote the letter.\\\" If letter signed by \\\"Basler Personenschiffahrtsgesellschaft Der Gesch\u00e4ftsf\u00fchrer\\\", no person name. But \\\"Basler Personenschiffahrtsgesellschaft\\\" is not person, but in historical letters, organization can be sender. They might not penalize? The user wants values from letter. If set sender_persons null, we lose important sender. But key name says persons; however \\\"receiver_persons\\\" also includes \\\"Redaktion der Basler Nachrichten\\\" not person. The example includes persons, but not exclusive. I think include named entities even if organizations; otherwise many letters to editors would have null receiver. The task likely from archival letters: sender_persons/receiver_persons can include institutions. Use exact names.\\n\\nNeed maybe \\\"letter_title\\\": [\\\"\\\"]? No, \\\"null\\\".\\n\\nNeed JSON with double quotes, no trailing comma.\\n\\nLet's craft:\\n{\\n\\\"letter_title\\\": [\\\"null\\\"],\\n\\\"send_date\\\": [\\\"1936-07-14\\\"],\\n\\\"sender_persons\\\": [\\\"Basler Personenschiffahrtsgesellschaft\\\"],\\n\\\"receiver_persons\\\": [\\\"Redaktion der Basler Nachrichten\\\"]\\n}\\nNeed maybe include \\\"Basel\\\" in receiver? \\\"An die Redaktion der 'Basler Nachrichten', Basel\\\". The receiver_persons key wants names, not place. So no.\\n\\nNeed final only JSON.\\n\",\"format\":\"unknown\",\"index\":0}]},\"native_finish_reason\":\"stop\"}],\"created\":1792902862,\"model\":\"nex-agi/nex-n2.5-pro\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":null,\"usage\":{\"completion_tokens\":1415,\"prompt_tokens\":3222,\"total_tokens\":4637,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":0,\"reasoning_tokens\":1408,\"rejected_prediction_tokens\":null,\"image_tokens\":0},\"prompt_tokens_details\":{\"audio_tokens\":0,\"cached_tokens\":320,\"cache_write_tokens\":0,\"video_tokens\":0},\"cost\":0.0005762,\"is_byok\":false,\"cost_details\":{\"upstream_inference_cost\":0.0005762,\"upstream_inference_prompt_cost\":0.00022245,\"upstream_inference_completions_cost\":0.00035375}},\"provider\":\"Nex AGI\"}"
+}

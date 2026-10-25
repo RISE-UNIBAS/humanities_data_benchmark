@@ -1,0 +1,90 @@
+{
+    "text": "{\"metadata\":{\"send_date\":[\"1928-04-03\"],\"letter_title\":[\"Betrifft Kauf \\\"Rheinfelden\\\" Ihr Schreiben vom 24. M\u00e4rz\"],\"sender_persons\":[\"Basler Rheinschiffahrt-Aktiengesellschaft\"],\"receiver_persons\":[\"Basler Personenschiffahrtsgesellschaft\"]}}",
+    "model": "nex-agi/nex-n2.5-pro",
+    "provider": "openrouter",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 4372,
+        "output_tokens": 684,
+        "total_tokens": 5056,
+        "reasoning_tokens": 0,
+        "cached_tokens": 320,
+        "input_cost_usd": 0.0003087,
+        "output_cost_usd": 0.000171,
+        "estimated_cost_usd": 0.0004797
+    },
+    "duration": 21.784104824066162,
+    "timestamp": "2026-10-25T06:00:18.459812",
+    "parsed": {
+        "metadata": {
+            "send_date": [
+                "1928-04-03"
+            ],
+            "letter_title": [
+                "Betrifft Kauf \"Rheinfelden\" Ihr Schreiben vom 24. M\u00e4rz"
+            ],
+            "sender_persons": [
+                "Basler Rheinschiffahrt-Aktiengesellschaft"
+            ],
+            "receiver_persons": [
+                "Basler Personenschiffahrtsgesellschaft"
+            ]
+        }
+    },
+    "conversation_id": "8d820db5-df62-4e6d-a240-27316cf79a81",
+    "score": {
+        "send_date_tp": 1,
+        "send_date_fp": 0,
+        "send_date_fn": 0,
+        "sender_persons_tp": 0,
+        "sender_persons_fp": 1,
+        "sender_persons_fn": 2,
+        "receiver_persons_tp": 0,
+        "receiver_persons_fp": 1,
+        "receiver_persons_fn": 0,
+        "field_scores": {
+            "send_date": {
+                "response": [
+                    "1928-04-03"
+                ],
+                "ground_truth": [
+                    "1928-04-03"
+                ],
+                "score": null,
+                "counts": {
+                    "send_date_tp": 1,
+                    "send_date_fp": 0,
+                    "send_date_fn": 0
+                }
+            },
+            "sender_persons": {
+                "response": [
+                    "Basler Rheinschiffahrt-Aktiengesellschaft"
+                ],
+                "ground_truth": [
+                    "Groschupf-Jaeger, Louis",
+                    "Ritter-Dreier, Fritz"
+                ],
+                "score": null,
+                "counts": {
+                    "sender_persons_tp": 0,
+                    "sender_persons_fp": 1,
+                    "sender_persons_fn": 2
+                }
+            },
+            "receiver_persons": {
+                "response": [
+                    "Basler Personenschiffahrtsgesellschaft"
+                ],
+                "ground_truth": [],
+                "score": null,
+                "counts": {
+                    "receiver_persons_tp": 0,
+                    "receiver_persons_fp": 1,
+                    "receiver_persons_fn": 0
+                }
+            }
+        }
+    },
+    "raw_response": "{\"id\":\"gen-1792904397-NHNssZk9m4F3nL2w8Jyw\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\n  \\\"metadata\\\": {\\n    \\\"send_date\\\": [\\\"1928-04-03\\\"],\\n    \\\"letter_title\\\": [\\\"Betrifft Kauf \\\\\\\"Rheinfelden\\\\\\\" Ihr Schreiben vom 24. M\u00e4rz\\\"],\\n    \\\"sender_persons\\\": [\\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"],\\n    \\\"receiver_persons\\\": [\\\"Basler Personenschiffahrtsgesellschaft\\\"]\\n  }\\n}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"metadata\":{\"send_date\":[\"1928-04-03\"],\"letter_title\":[\"Betrifft Kauf \\\"Rheinfelden\\\" Ihr Schreiben vom 24. M\u00e4rz\"],\"sender_persons\":[\"Basler Rheinschiffahrt-Aktiengesellschaft\"],\"receiver_persons\":[\"Basler Personenschiffahrtsgesellschaft\"]}},\"reasoning\":\"\\nWe need answer JSON only. Need inspect letter. Need extract title, sender persons, send date, receiver persons. Need not use OCR? We can read image. We need identify from letter. It is German business letter.\\n\\nLet's examine image. First page letterhead \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\" Marktgasse 5, Basel. Date \\\"Basel, den 3. April 1928.\\\" Address: \\\"Basler Personenschiffahrtsgesellschaft, Basel.\\\" Subject \\\"Betrifft Kauf \\\"Rheinfelden\\\" Ihr Schreiben vom 24. M\u00e4rz.\\\" Body. Closing: \\\"Hochachtend BASLER RHEINSCHIFFAHRT-AKTIENGESELLSCHAFT\\\" with signatures unreadable. So sender is company, not person? Key says sender_persons: Name(s) of person(s) who wrote letter. If sender is organization, include? They ask persons, but letter is from company. Need maybe \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\". receiver \\\"Basler Personenschiffahrtsgesellschaft\\\". letter_title maybe subject line: \\\"Kauf \\\\\\\"Rheinfelden\\\\\\\" Ihr Schreiben vom 24. M\u00e4rz\\\" or \\\"Betrifft Kauf \\\\\\\"Rheinfelden\\\\\\\" Ihr Schreiben vom 24. M\u00e4rz\\\". send_date exact 1928-04-03.\\n\\nNeed consider if \\\"sender_persons\\\" should include signatories? There are two signatures but no printed names, illegible. We might not include because not named. The closing is company. The task \\\"sender_persons: Name(s) of the person(s) who wrote the letter.\\\" Since no person names, but sender organization. Should we set null? In historical letters, sender can be organization if letterhead. They expect value of sender_persons maybe \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\". The key says persons but examples include people. But if no person names, maybe \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\" is a corporate sender. Need decide.\\n\\nNeed output JSON file with lists. No comments. \\\"letter_title\\\": [\\\"Betrifft Kauf \\\\\\\"Rheinfelden\\\\\\\" Ihr Schreiben vom 24. M\u00e4rz\\\"] maybe.\\n\\nLet's ensure date. First page top: Basel, den 3. April 1928. Second page header says \\\"Basler Personenschiffahrtsgesellschaft, Basel. 3.4.28.\\\" So exact date 1928-04-03.\\n\\nReceiver: \\\"Basler Personenschiffahrtsgesellschaft, Basel.\\\" So list with company. Maybe \\\"Basler Personenschiffahrtsgesellschaft\\\" only. Could include Basel? Key persons name(s), not location.\\n\",\"reasoning_details\":[{\"type\":\"reasoning.text\",\"text\":\"\\nWe need answer JSON only. Need inspect letter. Need extract title, sender persons, send date, receiver persons. Need not use OCR? We can read image. We need identify from letter. It is German business letter.\\n\\nLet's examine image. First page letterhead \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\" Marktgasse 5, Basel. Date \\\"Basel, den 3. April 1928.\\\" Address: \\\"Basler Personenschiffahrtsgesellschaft, Basel.\\\" Subject \\\"Betrifft Kauf \\\"Rheinfelden\\\" Ihr Schreiben vom 24. M\u00e4rz.\\\" Body. Closing: \\\"Hochachtend BASLER RHEINSCHIFFAHRT-AKTIENGESELLSCHAFT\\\" with signatures unreadable. So sender is company, not person? Key says sender_persons: Name(s) of person(s) who wrote letter. If sender is organization, include? They ask persons, but letter is from company. Need maybe \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\". receiver \\\"Basler Personenschiffahrtsgesellschaft\\\". letter_title maybe subject line: \\\"Kauf \\\\\\\"Rheinfelden\\\\\\\" Ihr Schreiben vom 24. M\u00e4rz\\\" or \\\"Betrifft Kauf \\\\\\\"Rheinfelden\\\\\\\" Ihr Schreiben vom 24. M\u00e4rz\\\". send_date exact 1928-04-03.\\n\\nNeed consider if \\\"sender_persons\\\" should include signatories? There are two signatures but no printed names, illegible. We might not include because not named. The closing is company. The task \\\"sender_persons: Name(s) of the person(s) who wrote the letter.\\\" Since no person names, but sender organization. Should we set null? In historical letters, sender can be organization if letterhead. They expect value of sender_persons maybe \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\". The key says persons but examples include people. But if no person names, maybe \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\" is a corporate sender. Need decide.\\n\\nNeed output JSON file with lists. No comments. \\\"letter_title\\\": [\\\"Betrifft Kauf \\\\\\\"Rheinfelden\\\\\\\" Ihr Schreiben vom 24. M\u00e4rz\\\"] maybe.\\n\\nLet's ensure date. First page top: Basel, den 3. April 1928. Second page header says \\\"Basler Personenschiffahrtsgesellschaft, Basel. 3.4.28.\\\" So exact date 1928-04-03.\\n\\nReceiver: \\\"Basler Personenschiffahrtsgesellschaft, Basel.\\\" So list with company. Maybe \\\"Basler Personenschiffahrtsgesellschaft\\\" only. Could include Basel? Key persons name(s), not location.\\n\",\"format\":\"unknown\",\"index\":0}]},\"native_finish_reason\":\"stop\"}],\"created\":1792904397,\"model\":\"nex-agi/nex-n2.5-pro\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":null,\"usage\":{\"completion_tokens\":684,\"prompt_tokens\":4372,\"total_tokens\":5056,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":0,\"reasoning_tokens\":546,\"rejected_prediction_tokens\":null,\"image_tokens\":0},\"prompt_tokens_details\":{\"audio_tokens\":0,\"cached_tokens\":320,\"cache_write_tokens\":0,\"video_tokens\":0},\"cost\":0.0004797,\"is_byok\":false,\"cost_details\":{\"upstream_inference_cost\":0.0004797,\"upstream_inference_prompt_cost\":0.0003087,\"upstream_inference_completions_cost\":0.000171}},\"provider\":\"Nex AGI\"}"
+}

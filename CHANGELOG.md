@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+### Added
+- 21 new models with 14 benchmark test configurations each (T1900-T2221), `company_lists` on `prompt_v2.txt` only: `claude-haiku-5-5` (Anthropic), `gpt-6.1-sol` (OpenAI), `mistral-large-4`, `mistral-small-2603`, `ministral-3b-2512` (Mistral), `command-a-plus-05-2026` (Cohere), and via OpenRouter `minimax/minimax-m3.1-flash`, `nvidia/nemotron-3.5-super-vl`, `meta/muse-spark-open`, `meta/muse-wonder`, `stepfun/step-5-preview`, `qwen/qwen3.8-max-prime`, `xiaomi/mimo-v2.6-pro`, `xiaomi/mimo-v2.6-flash`, `inclusionai/ling-3.0-flash-vl`, `perceptron/perceptron-mk1.5`, `elorian/glimpse`, `fireworks/ember-1`, `bytedance-seed/seed-2-1-turbo`, `nex-agi/nex-n2.5-mini`, `nex-agi/nex-n2.5-pro`; `pricing.json` metadata bumped to version 1.58.
+- Results for 2026-10-24: 175 tests in T1900-T2185 (7,972 requests) for 15 of the new models, `mistral-large-4` with one; `inclusionai/ling-3.0-flash-vl` not run.
+- Results for 2026-10-25: 85 tests in T2068-T2215 (3,830 requests) for `qwen/qwen3.8-max-prime`, `xiaomi/mimo-v2.6-pro`, `xiaomi/mimo-v2.6-flash`, `fireworks/ember-1`, `bytedance-seed/seed-2-1-turbo`, `nex-agi/nex-n2.5-mini`, `nex-agi/nex-n2.5-pro`.
+
+### Fixed
+- Mistral requests at temperature 0 send `top_p=1`, which `mistral-large-4` requires; its chunked thinking/text answers are parsed from the text chunks. `command-a-plus-05-2026` output cap clamped to its 64,000 ceiling.
+
 ## [v0.7.0] - 2026-10-19
 
 ### Added

@@ -1,0 +1,105 @@
+{
+    "text": "{\"advertisements\":[{\"box\":[55.0,85.0,1205.0,1625.0]},{\"box\":[1245.0,85.0,2275.0,1625.0]},{\"box\":[150.0,1685.0,2245.0,3145.0]}]}",
+    "model": "meta/muse-spark-open",
+    "provider": "openrouter",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 4142,
+        "output_tokens": 589,
+        "total_tokens": 4731,
+        "reasoning_tokens": 0,
+        "cached_tokens": 256,
+        "input_cost_usd": 0.0048959,
+        "output_cost_usd": 0.00250325,
+        "estimated_cost_usd": 0.00739915
+    },
+    "duration": 11.77551794052124,
+    "timestamp": "2026-10-24T21:43:34.700458",
+    "parsed": {
+        "advertisements": [
+            {
+                "box": [
+                    55.0,
+                    85.0,
+                    1205.0,
+                    1625.0
+                ]
+            },
+            {
+                "box": [
+                    1245.0,
+                    85.0,
+                    2275.0,
+                    1625.0
+                ]
+            },
+            {
+                "box": [
+                    150.0,
+                    1685.0,
+                    2245.0,
+                    3145.0
+                ]
+            }
+        ]
+    },
+    "conversation_id": "04accf45-69b0-40b5-8df4-5aa1f0dfce0c",
+    "score": {
+        "field_scores": {
+            "box 0": {
+                "response": [
+                    150.0,
+                    1685.0,
+                    2245.0,
+                    3145.0
+                ],
+                "ground_truth": [
+                    146,
+                    1753,
+                    2240,
+                    3256
+                ],
+                "score": 0.882
+            },
+            "box 2": {
+                "response": [
+                    1245.0,
+                    85.0,
+                    2275.0,
+                    1625.0
+                ],
+                "ground_truth": [
+                    1240,
+                    230,
+                    2261,
+                    1709
+                ],
+                "score": 0.844
+            },
+            "box 1": {
+                "response": [
+                    55.0,
+                    85.0,
+                    1205.0,
+                    1625.0
+                ],
+                "ground_truth": [
+                    126,
+                    144,
+                    1221,
+                    1719
+                ],
+                "score": 0.842
+            }
+        },
+        "f1": 1.0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "mean_iou": 0.856,
+        "true_positives": 3,
+        "false_positives": 0,
+        "false_negatives": 0,
+        "iou_threshold": 0.5
+    },
+    "raw_response": "{\"id\":\"gen-1792871003-4iwsxB4BWaX3donQqtUh\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\n\\\"advertisements\\\": [\\n{\\\"box\\\": [55, 85, 1205, 1625]},\\n{\\\"box\\\": [1245, 85, 2275, 1625]},\\n{\\\"box\\\": [150, 1685, 2245, 3145]}\\n]\\n}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"advertisements\":[{\"box\":[55.0,85.0,1205.0,1625.0]},{\"box\":[1245.0,85.0,2275.0,1625.0]},{\"box\":[150.0,1685.0,2245.0,3145.0]}]},\"reasoning\":\"We need to extract all advertisements and return bounding boxes. Page size 2479x3508.\\n\\nWe have three ads visible:\\n\\nTop left: SILK MILLS formerly Naef Brothers LTD Zurich - with NOUVEAUTES background. Box approx [~50, ~30, ~490, ~490] in relative? Need pixel coordinates.\\n\\nTop right: OMAG Swiss Photo accessories etc. Box [~505, ~50, ~910, ~490]\\n\\nBottom: LES FILS DE PAUL JOBIN Montres Flora - watch ad. Box [~60, ~500, ~900, ~930] roughly.\\n\\nWe need to provide pixel coordinates in original page 2479x3508.\\n\\nWe need estimate bounding boxes.\\n\\nWe should give approximate boxes.\\n\\nLet's estimate:\\n\\nTop left ad: x0 ~ 50? Actually page has margin. Let's look: image shows page with border. The content area starts maybe at x ~ 50? Let's approximate.\\n\\nWe need to give boxes in pixels.\\n\\nWe can estimate:\\n\\n- Top-left advertisement (Naef Brothers): x0=55, y0=70, x1=1200, y1=1620? Wait need to scale to 2479x3508.\\n\\nBetter to use normalized then multiply.\\n\\nLet's assume page width 2479, height 3508.\\n\\nTop left ad occupies left half, top quarter.\\n\\nCoordinates: x0 ~ 130, y0 ~ 90, x1 ~ 1200, y1 ~ 1620\\n\\nTop right ad: x0 ~ 1250, y0 ~ 90, x1 ~ 2270, y1 ~ 1620\\n\\nBottom ad: x0 ~ 150, y0 ~ 1680, x1 ~ 2250, y1 ~ 3150\\n\\nWe need to provide JSON.\\n\\nWe should ensure boxes cover advertisements.\\n\\nProvide three entries.\\n\\nReturn only JSON object.\\n\\nMake sure format: {\\\"advertisements\\\": [{\\\"box\\\": [x0,y0,x1,y1]}, ...]}\\n\\nProvide integer pixel values.\\n\\nLet's craft final answer with estimated boxes:\\n\\n- Naef Brothers: [55, 85, 1205, 1625]\\n- OMAG: [1245, 85, 2275, 1625]\\n- Les Fils de Paul Jobin: [150, 1685, 2245, 3145]\\n\\nCheck proportions: y for bottom ad should be lower.\\n\\nWe need to ensure within 2479x3508.\\n\\nProvide those.\\n\\n\",\"reasoning_details\":[{\"type\":\"reasoning.text\",\"text\":\"We need to extract all advertisements and return bounding boxes. Page size 2479x3508.\\n\\nWe have three ads visible:\\n\\nTop left: SILK MILLS formerly Naef Brothers LTD Zurich - with NOUVEAUTES background. Box approx [~50, ~30, ~490, ~490] in relative? Need pixel coordinates.\\n\\nTop right: OMAG Swiss Photo accessories etc. Box [~505, ~50, ~910, ~490]\\n\\nBottom: LES FILS DE PAUL JOBIN Montres Flora - watch ad. Box [~60, ~500, ~900, ~930] roughly.\\n\\nWe need to provide pixel coordinates in original page 2479x3508.\\n\\nWe need estimate bounding boxes.\\n\\nWe should give approximate boxes.\\n\\nLet's estimate:\\n\\nTop left ad: x0 ~ 50? Actually page has margin. Let's look: image shows page with border. The content area starts maybe at x ~ 50? Let's approximate.\\n\\nWe need to give boxes in pixels.\\n\\nWe can estimate:\\n\\n- Top-left advertisement (Naef Brothers): x0=55, y0=70, x1=1200, y1=1620? Wait need to scale to 2479x3508.\\n\\nBetter to use normalized then multiply.\\n\\nLet's assume page width 2479, height 3508.\\n\\nTop left ad occupies left half, top quarter.\\n\\nCoordinates: x0 ~ 130, y0 ~ 90, x1 ~ 1200, y1 ~ 1620\\n\\nTop right ad: x0 ~ 1250, y0 ~ 90, x1 ~ 2270, y1 ~ 1620\\n\\nBottom ad: x0 ~ 150, y0 ~ 1680, x1 ~ 2250, y1 ~ 3150\\n\\nWe need to provide JSON.\\n\\nWe should ensure boxes cover advertisements.\\n\\nProvide three entries.\\n\\nReturn only JSON object.\\n\\nMake sure format: {\\\"advertisements\\\": [{\\\"box\\\": [x0,y0,x1,y1]}, ...]}\\n\\nProvide integer pixel values.\\n\\nLet's craft final answer with estimated boxes:\\n\\n- Naef Brothers: [55, 85, 1205, 1625]\\n- OMAG: [1245, 85, 2275, 1625]\\n- Les Fils de Paul Jobin: [150, 1685, 2245, 3145]\\n\\nCheck proportions: y for bottom ad should be lower.\\n\\nWe need to ensure within 2479x3508.\\n\\nProvide those.\\n\\n\",\"format\":\"unknown\",\"index\":0}]},\"native_finish_reason\":\"stop\"}],\"created\":1792871003,\"model\":\"meta/muse-spark-open\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":null,\"usage\":{\"completion_tokens\":589,\"prompt_tokens\":4142,\"total_tokens\":4731,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":0,\"reasoning_tokens\":472,\"rejected_prediction_tokens\":null,\"image_tokens\":0},\"prompt_tokens_details\":{\"audio_tokens\":0,\"cached_tokens\":256,\"cache_write_tokens\":0,\"video_tokens\":0},\"cost\":0.00739915,\"is_byok\":false,\"cost_details\":{\"upstream_inference_cost\":0.00739915,\"upstream_inference_prompt_cost\":0.0048959,\"upstream_inference_completions_cost\":0.00250325}},\"provider\":\"Fireworks\"}"
+}

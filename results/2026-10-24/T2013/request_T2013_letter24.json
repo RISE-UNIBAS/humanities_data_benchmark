@@ -1,0 +1,86 @@
+{
+    "text": "{\"metadata\":{\"send_date\":[\"1928-04-04\"],\"letter_title\":[\"EINSCHREIBEN\"],\"sender_persons\":[\"BASLER PERSONENSCHIFFFAHTSGESELLSCHAFT\"],\"receiver_persons\":[\"Basler Rheinschiffahrt-Aktiengesellschaft\"]}}",
+    "model": "nvidia/nemotron-3.5-super-vl",
+    "provider": "openrouter",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 6238,
+        "output_tokens": 1266,
+        "total_tokens": 7504,
+        "reasoning_tokens": 0,
+        "input_cost_usd": 0.0009357,
+        "output_cost_usd": 0.000633,
+        "estimated_cost_usd": 0.0015687
+    },
+    "duration": 8.69770884513855,
+    "timestamp": "2026-10-24T20:38:09.061473",
+    "parsed": {
+        "metadata": {
+            "send_date": [
+                "1928-04-04"
+            ],
+            "letter_title": [
+                "EINSCHREIBEN"
+            ],
+            "sender_persons": [
+                "BASLER PERSONENSCHIFFFAHTSGESELLSCHAFT"
+            ],
+            "receiver_persons": [
+                "Basler Rheinschiffahrt-Aktiengesellschaft"
+            ]
+        }
+    },
+    "conversation_id": "df9de1d6-e030-40c2-a2dc-758e543abae3",
+    "score": {
+        "send_date_tp": 1,
+        "send_date_fp": 0,
+        "send_date_fn": 0,
+        "sender_persons_tp": 0,
+        "sender_persons_fp": 1,
+        "sender_persons_fn": 0,
+        "receiver_persons_tp": 0,
+        "receiver_persons_fp": 1,
+        "receiver_persons_fn": 0,
+        "field_scores": {
+            "send_date": {
+                "response": [
+                    "1928-04-04"
+                ],
+                "ground_truth": [
+                    "1928-04-04"
+                ],
+                "score": null,
+                "counts": {
+                    "send_date_tp": 1,
+                    "send_date_fp": 0,
+                    "send_date_fn": 0
+                }
+            },
+            "sender_persons": {
+                "response": [
+                    "BASLER PERSONENSCHIFFFAHTSGESELLSCHAFT"
+                ],
+                "ground_truth": [],
+                "score": null,
+                "counts": {
+                    "sender_persons_tp": 0,
+                    "sender_persons_fp": 1,
+                    "sender_persons_fn": 0
+                }
+            },
+            "receiver_persons": {
+                "response": [
+                    "Basler Rheinschiffahrt-Aktiengesellschaft"
+                ],
+                "ground_truth": [],
+                "score": null,
+                "counts": {
+                    "receiver_persons_tp": 0,
+                    "receiver_persons_fp": 1,
+                    "receiver_persons_fn": 0
+                }
+            }
+        }
+    },
+    "raw_response": "{\"id\":\"gen-1792867080-Ay81T7QRiu6UhPJhAlrn\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\n  \\\"metadata\\\": {\\n    \\\"send_date\\\": [\\n      \\\"1928-04-04\\\"\\n    ],\\n    \\\"letter_title\\\": [\\n      \\\"EINSCHREIBEN\\\"\\n    ],\\n    \\\"sender_persons\\\": [\\n      \\\"BASLER PERSONENSCHIFFFAHTSGESELLSCHAFT\\\"\\n    ],\\n    \\\"receiver_persons\\\": [\\n      \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"\\n    ]\\n  }\\n}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"metadata\":{\"send_date\":[\"1928-04-04\"],\"letter_title\":[\"EINSCHREIBEN\"],\"sender_persons\":[\"BASLER PERSONENSCHIFFFAHTSGESELLSCHAFT\"],\"receiver_persons\":[\"Basler Rheinschiffahrt-Aktiengesellschaft\"]}},\"reasoning\":\"The user wants me to extract specific metadata from a historical letter presented in two images.\\nI need to act as a historian expert in 20th-century Swiss history.\\nThe output must be a JSON file with specific keys: `letter_title`, `sender_persons`, `send_date`, `receiver_persons`.\\nValues must be lists, even for single items.\\nDates must be in ISO format YYYY-MM-DD.\\nIf info is missing, use \\\"null\\\".\\nDo not return anything except the JSON.\\n\\n**Image Analysis:**\\n\\n*   **Image 1:**\\n    *   Top right: \\\"24\\\" (handwritten).\\n    *   Top right text: \\\"Basel, den 4. April 1928.\\\" -> Date: 1928-04-04.\\n    *   Header: \\\"EINSCHREIBEN\\\" (Registered mail). This looks like a document type or title, but usually, the \\\"letter_title\\\" refers to the subject or the document type if no specific title exists. Let's look closer. \\\"EINSCHREIBEN\\\" is underlined. It might be the title of the document type.\\n    *   Recipient Address block:\\n        *   \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"\\n        *   \\\"BASEL\\\"\\n        *   \\\"Marktgasse 5\\\"\\n    *   Body text starts: \\\"Wir sind im Besitze Ihres Gechtren vom 3. ds. und haben davon Kenntnis genommen...\\\" (We are in possession of your letter from the 3rd of this month...). This confirms it's a reply.\\n    *   The letter is addressed *to* the \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\". So the receiver is that company.\\n    *   Who is the sender? The signature block is on the next page.\\n\\n*   **Image 2:**\\n    *   Continuation of the text.\\n    *   Closing: \\\"In Hochachtung\\\" (With high esteem/respect).\\n    *   Sender Name: \\\"BASLER PERSONENSCHIFFFAHTSGESELLSCHAFT\\\".\\n\\n**Synthesizing the Data:**\\n\\n*   **letter_title:** The document has \\\"EINSCHREIBEN\\\" underlined at the top. This acts as the title/heading of the document type. Alternatively, there isn't a specific subject line like \\\"Re: Ticket prices\\\". \\\"EINSCHREIBEN\\\" is the most prominent title-like element. Let's use that. Or perhaps the prompt implies a title of the letter itself. Often in these tasks, if there's no explicit \\\"Subject: ...\\\", the header text like \\\"EINSCHREIBEN\\\" is used. Let's look at the example. The example had \\\"Petition for Environmental Protection\\\". Here, \\\"EINSCHREIBEN\\\" is the only candidate for a title.\\n*   **sender_persons:** The signature at the end of Image 2 is \\\"BASLER PERSONENSCHIFFFAHTSGESELLSCHAFT\\\". This is an organization, but the key asks for \\\"persons\\\". However, in archival contexts, organizations are often treated as the sender entity. I will list the organization name.\\n*   **send_date:** \\\"Basel, den 4. April 1928.\\\" -> 1928-04-04.\\n*   **receiver_persons:** The address block in Image 1 lists \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\".\\n\\n**Refining the values:**\\n\\n*   `letter_title`: [\\\"EINSCHREIBEN\\\"]\\n*   `sender_persons`: [\\\"BASLER PERSONENSCHIFFFAHTSGESELLSCHAFT\\\"]\\n*   `send_date`: [\\\"1928-04-04\\\"]\\n*   `receiver_persons`: [\\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"]\\n\\nLet's double check the date format. \\\"4. April 1928\\\" -> 1928-04-04.\\nLet's double check the sender. Image 2 ends with \\\"BASLER PERSONENSCHIFFFAHTSGESELLSCHAFT\\\".\\nLet's double check the receiver. Image 1 header: \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\".\\n\\nWait, looking at Image 1 again.\\nThe text \\\"Basel, den 4. April 1928.\\\" is aligned right.\\nBelow that is \\\"EINSCHREIBEN\\\".\\nBelow that is the recipient address: \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\".\\nSo the letter is *from* someone *to* Basler Rheinschiffahrt-Aktiengesellschaft.\\nThe signature on Image 2 is \\\"BASLER PERSONENSCHIFFFAHTSGESELLSCHAFT\\\".\\n\\nSo:\\nSender: Basler Personenschifffahrtsgesellschaft\\nReceiver: Basler Rheinschiffahrt-Aktiengesellschaft\\nDate: 1928-04-04\\nTitle: EINSCHREIBEN\\n\\nOne detail: \\\"sender_persons\\\" and \\\"receiver_persons\\\". The values are organizations. I will treat them as the entities requested.\\n\\nFinal check on JSON structure.\\nKeys: letter_title, sender_persons, send_date, receiver_persons.\\nValues: Lists of strings.\\n\\nConstructing JSON.\",\"reasoning_details\":[{\"type\":\"reasoning.text\",\"text\":\"The user wants me to extract specific metadata from a historical letter presented in two images.\\nI need to act as a historian expert in 20th-century Swiss history.\\nThe output must be a JSON file with specific keys: `letter_title`, `sender_persons`, `send_date`, `receiver_persons`.\\nValues must be lists, even for single items.\\nDates must be in ISO format YYYY-MM-DD.\\nIf info is missing, use \\\"null\\\".\\nDo not return anything except the JSON.\\n\\n**Image Analysis:**\\n\\n*   **Image 1:**\\n    *   Top right: \\\"24\\\" (handwritten).\\n    *   Top right text: \\\"Basel, den 4. April 1928.\\\" -> Date: 1928-04-04.\\n    *   Header: \\\"EINSCHREIBEN\\\" (Registered mail). This looks like a document type or title, but usually, the \\\"letter_title\\\" refers to the subject or the document type if no specific title exists. Let's look closer. \\\"EINSCHREIBEN\\\" is underlined. It might be the title of the document type.\\n    *   Recipient Address block:\\n        *   \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"\\n        *   \\\"BASEL\\\"\\n        *   \\\"Marktgasse 5\\\"\\n    *   Body text starts: \\\"Wir sind im Besitze Ihres Gechtren vom 3. ds. und haben davon Kenntnis genommen...\\\" (We are in possession of your letter from the 3rd of this month...). This confirms it's a reply.\\n    *   The letter is addressed *to* the \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\". So the receiver is that company.\\n    *   Who is the sender? The signature block is on the next page.\\n\\n*   **Image 2:**\\n    *   Continuation of the text.\\n    *   Closing: \\\"In Hochachtung\\\" (With high esteem/respect).\\n    *   Sender Name: \\\"BASLER PERSONENSCHIFFFAHTSGESELLSCHAFT\\\".\\n\\n**Synthesizing the Data:**\\n\\n*   **letter_title:** The document has \\\"EINSCHREIBEN\\\" underlined at the top. This acts as the title/heading of the document type. Alternatively, there isn't a specific subject line like \\\"Re: Ticket prices\\\". \\\"EINSCHREIBEN\\\" is the most prominent title-like element. Let's use that. Or perhaps the prompt implies a title of the letter itself. Often in these tasks, if there's no explicit \\\"Subject: ...\\\", the header text like \\\"EINSCHREIBEN\\\" is used. Let's look at the example. The example had \\\"Petition for Environmental Protection\\\". Here, \\\"EINSCHREIBEN\\\" is the only candidate for a title.\\n*   **sender_persons:** The signature at the end of Image 2 is \\\"BASLER PERSONENSCHIFFFAHTSGESELLSCHAFT\\\". This is an organization, but the key asks for \\\"persons\\\". However, in archival contexts, organizations are often treated as the sender entity. I will list the organization name.\\n*   **send_date:** \\\"Basel, den 4. April 1928.\\\" -> 1928-04-04.\\n*   **receiver_persons:** The address block in Image 1 lists \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\".\\n\\n**Refining the values:**\\n\\n*   `letter_title`: [\\\"EINSCHREIBEN\\\"]\\n*   `sender_persons`: [\\\"BASLER PERSONENSCHIFFFAHTSGESELLSCHAFT\\\"]\\n*   `send_date`: [\\\"1928-04-04\\\"]\\n*   `receiver_persons`: [\\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"]\\n\\nLet's double check the date format. \\\"4. April 1928\\\" -> 1928-04-04.\\nLet's double check the sender. Image 2 ends with \\\"BASLER PERSONENSCHIFFFAHTSGESELLSCHAFT\\\".\\nLet's double check the receiver. Image 1 header: \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\".\\n\\nWait, looking at Image 1 again.\\nThe text \\\"Basel, den 4. April 1928.\\\" is aligned right.\\nBelow that is \\\"EINSCHREIBEN\\\".\\nBelow that is the recipient address: \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\".\\nSo the letter is *from* someone *to* Basler Rheinschiffahrt-Aktiengesellschaft.\\nThe signature on Image 2 is \\\"BASLER PERSONENSCHIFFFAHTSGESELLSCHAFT\\\".\\n\\nSo:\\nSender: Basler Personenschifffahrtsgesellschaft\\nReceiver: Basler Rheinschiffahrt-Aktiengesellschaft\\nDate: 1928-04-04\\nTitle: EINSCHREIBEN\\n\\nOne detail: \\\"sender_persons\\\" and \\\"receiver_persons\\\". The values are organizations. I will treat them as the entities requested.\\n\\nFinal check on JSON structure.\\nKeys: letter_title, sender_persons, send_date, receiver_persons.\\nValues: Lists of strings.\\n\\nConstructing JSON.\",\"format\":\"unknown\",\"index\":0}]},\"native_finish_reason\":\"stop\"}],\"created\":1792867080,\"model\":\"nvidia/nemotron-3.5-super-vl\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":\"default\",\"usage\":{\"completion_tokens\":1266,\"prompt_tokens\":6238,\"total_tokens\":7504,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":0,\"reasoning_tokens\":1159,\"rejected_prediction_tokens\":null,\"image_tokens\":0},\"prompt_tokens_details\":{\"audio_tokens\":0,\"cached_tokens\":0,\"cache_write_tokens\":0,\"video_tokens\":0},\"cost\":0.0015687,\"is_byok\":false,\"cost_details\":{\"upstream_inference_cost\":0.0015687,\"upstream_inference_prompt_cost\":0.0009357,\"upstream_inference_completions_cost\":0.000633}},\"provider\":\"Together\"}"
+}

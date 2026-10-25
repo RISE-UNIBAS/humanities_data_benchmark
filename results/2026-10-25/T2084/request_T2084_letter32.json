@@ -1,0 +1,92 @@
+{
+    "text": "{\"metadata\":{\"send_date\":[\"1928-05-03\"],\"letter_title\":null,\"sender_persons\":[\"Ritter\",\"Groschupf\"],\"receiver_persons\":[\"W. Stauffacher\"]}}",
+    "model": "xiaomi/mimo-v2.6-pro",
+    "provider": "openrouter",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 3206,
+        "output_tokens": 773,
+        "total_tokens": 3979,
+        "reasoning_tokens": 0,
+        "cached_tokens": 3200,
+        "input_cost_usd": 1.413e-05,
+        "output_cost_usd": 0.00067251,
+        "estimated_cost_usd": 0.00068664
+    },
+    "duration": 13.447821140289307,
+    "timestamp": "2026-10-25T01:10:59.620099",
+    "parsed": {
+        "metadata": {
+            "send_date": [
+                "1928-05-03"
+            ],
+            "letter_title": null,
+            "sender_persons": [
+                "Ritter",
+                "Groschupf"
+            ],
+            "receiver_persons": [
+                "W. Stauffacher"
+            ]
+        }
+    },
+    "conversation_id": "9b415363-2e4a-41c7-b0c2-af2fdb74d611",
+    "score": {
+        "send_date_tp": 1,
+        "send_date_fp": 0,
+        "send_date_fn": 0,
+        "sender_persons_tp": 2,
+        "sender_persons_fp": 0,
+        "sender_persons_fn": 0,
+        "receiver_persons_tp": 1,
+        "receiver_persons_fp": 0,
+        "receiver_persons_fn": 0,
+        "field_scores": {
+            "send_date": {
+                "response": [
+                    "1928-05-03"
+                ],
+                "ground_truth": [
+                    "1928-05-03"
+                ],
+                "score": null,
+                "counts": {
+                    "send_date_tp": 1,
+                    "send_date_fp": 0,
+                    "send_date_fn": 0
+                }
+            },
+            "sender_persons": {
+                "response": [
+                    "Groschupf-Jaeger, Louis",
+                    "Ritter-Dreier, Fritz"
+                ],
+                "ground_truth": [
+                    "Groschupf-Jaeger, Louis",
+                    "Ritter-Dreier, Fritz"
+                ],
+                "score": null,
+                "counts": {
+                    "sender_persons_tp": 2,
+                    "sender_persons_fp": 0,
+                    "sender_persons_fn": 0
+                }
+            },
+            "receiver_persons": {
+                "response": [
+                    "Stauffacher, Werner"
+                ],
+                "ground_truth": [
+                    "Stauffacher, Werner"
+                ],
+                "score": null,
+                "counts": {
+                    "receiver_persons_tp": 1,
+                    "receiver_persons_fp": 0,
+                    "receiver_persons_fn": 0
+                }
+            }
+        }
+    },
+    "raw_response": "{\"id\":\"gen-1792883446-tjsSnN05jJ03Ob0Gn8z4\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\n    \\\"metadata\\\": {\\n        \\\"send_date\\\": [\\\"1928-05-03\\\"],\\n        \\\"letter_title\\\": null,\\n        \\\"sender_persons\\\": [\\\"Ritter\\\", \\\"Groschupf\\\"],\\n        \\\"receiver_persons\\\": [\\\"W. Stauffacher\\\"]\\n    }\\n}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"metadata\":{\"send_date\":[\"1928-05-03\"],\"letter_title\":null,\"sender_persons\":[\"Ritter\",\"Groschupf\"],\"receiver_persons\":[\"W. Stauffacher\"]}},\"reasoning\":\"The user wants me to extract specific information from a historical letter image and output it as JSON.\\nThe keys are: `letter_title`, `sender_persons`, `send_date`, `receiver_persons`.\\nThe output format must be JSON with lists for values.\\nI need to use the ISO date format.\\n\\n**Image Analysis:**\\n\\n1.  **Header/Title:**\\n* Top right says \\\"Abschrift\\\" (Copy/Transcript).\\n*   There is a red number \\\"32\\\".\\n*   The letterhead text is \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\". This looks like the sender's organization.\\n*   There is no specific \\\"Subject:\\\" or \\\"Title:\\\" line in the body. Usually, for formal letters like this without a specific subject line, the letter title might be null, or one might infer it from the content. However, looking at the extraction request, \\\"letter_title\\\" usually implies a subject line. Let's look closer. The text body starts \\\"In No. 4 der Rheinquellen ist ein Artikel...\\\" (In No. 4 of Rheinquellen there is an article...). There is no explicit title.\\n*   Wait, sometimes the name of the letterhead is considered the title or the sender. Let's assume `letter_title` refers to a specific subject line. If none exists, it should be \\\"null\\\".\\n*   Alternatively, is the document title \\\"Abschrift\\\"? No, that's the document type.\\n*   Let's check if \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\" is the title. That's clearly the organization. Usually, title extraction looks for \\\"Betreff:\\\" or a bold heading. There isn't one. So, `letter_title` is likely \\\"null\\\".\\n\\n2.  **Sender Persons:**\\n*   The letter is from \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\".\\n*   At the bottom, it says \\\"Hochachtend BASLER RHEINSCHIFFAHRT-AKTIENGESELLSCHAFT\\\".\\n*   Below that are signatures: \\\"sig. Ritter\\\" and \\\"sig. Groschupf\\\".\\n*   These names represent the individuals sending it. The instruction asks for \\\"Name(s) of the person(s)\\\". The organization is not a person.\\n*   So, the senders are \\\"Ritter\\\" and \\\"Groschupf\\\". I should check if full names are available. Just \\\"sig. Ritter\\\" and \\\"sig. Groschupf\\\". I will use these names.\\n\\n3.  **Send Date:**\\n*   Upper right area: \\\"Basel, den 3. Mai 1928.\\\"\\n*   This is the date the letter was written/sent.\\n*   Format: YYYY-MM-DD.\\n*   Year: 1928.\\n*   Month: Mai (May) -> 05.\\n*   Day: 3.\\n*   Result: \\\"1928-05-03\\\".\\n\\n4.  **Receiver Persons:**\\n*   The addressee block is:\\n\\\"Herrn W. Stauffacher,\\nPr\u00e4sident des Vereins f\u00fcr die Schiffahrt auf dem Oberrhein,\\nBasel.\\\"\\n*   The specific person is \\\"W. Stauffacher\\\".\\n*   So, `receiver_persons` should contain \\\"W. Stauffacher\\\".\",\"reasoning_details\":[{\"type\":\"reasoning.text\",\"text\":\"The user wants me to extract specific information from a historical letter image and output it as JSON.\\nThe keys are: `letter_title`, `sender_persons`, `send_date`, `receiver_persons`.\\nThe output format must be JSON with lists for values.\\nI need to use the ISO date format.\\n\\n**Image Analysis:**\\n\\n1.  **Header/Title:**\\n* Top right says \\\"Abschrift\\\" (Copy/Transcript).\\n*   There is a red number \\\"32\\\".\\n*   The letterhead text is \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\". This looks like the sender's organization.\\n*   There is no specific \\\"Subject:\\\" or \\\"Title:\\\" line in the body. Usually, for formal letters like this without a specific subject line, the letter title might be null, or one might infer it from the content. However, looking at the extraction request, \\\"letter_title\\\" usually implies a subject line. Let's look closer. The text body starts \\\"In No. 4 der Rheinquellen ist ein Artikel...\\\" (In No. 4 of Rheinquellen there is an article...). There is no explicit title.\\n*   Wait, sometimes the name of the letterhead is considered the title or the sender. Let's assume `letter_title` refers to a specific subject line. If none exists, it should be \\\"null\\\".\\n*   Alternatively, is the document title \\\"Abschrift\\\"? No, that's the document type.\\n*   Let's check if \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\" is the title. That's clearly the organization. Usually, title extraction looks for \\\"Betreff:\\\" or a bold heading. There isn't one. So, `letter_title` is likely \\\"null\\\".\\n\\n2.  **Sender Persons:**\\n*   The letter is from \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\".\\n*   At the bottom, it says \\\"Hochachtend BASLER RHEINSCHIFFAHRT-AKTIENGESELLSCHAFT\\\".\\n*   Below that are signatures: \\\"sig. Ritter\\\" and \\\"sig. Groschupf\\\".\\n*   These names represent the individuals sending it. The instruction asks for \\\"Name(s) of the person(s)\\\". The organization is not a person.\\n*   So, the senders are \\\"Ritter\\\" and \\\"Groschupf\\\". I should check if full names are available. Just \\\"sig. Ritter\\\" and \\\"sig. Groschupf\\\". I will use these names.\\n\\n3.  **Send Date:**\\n*   Upper right area: \\\"Basel, den 3. Mai 1928.\\\"\\n*   This is the date the letter was written/sent.\\n*   Format: YYYY-MM-DD.\\n*   Year: 1928.\\n*   Month: Mai (May) -> 05.\\n*   Day: 3.\\n*   Result: \\\"1928-05-03\\\".\\n\\n4.  **Receiver Persons:**\\n*   The addressee block is:\\n\\\"Herrn W. Stauffacher,\\nPr\u00e4sident des Vereins f\u00fcr die Schiffahrt auf dem Oberrhein,\\nBasel.\\\"\\n*   The specific person is \\\"W. Stauffacher\\\".\\n*   So, `receiver_persons` should contain \\\"W. Stauffacher\\\".\",\"format\":\"unknown\",\"index\":0}]},\"native_finish_reason\":\"stop\"}],\"created\":1792883446,\"model\":\"xiaomi/mimo-v2.6-pro\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":null,\"usage\":{\"completion_tokens\":773,\"prompt_tokens\":3206,\"total_tokens\":3979,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":0,\"reasoning_tokens\":707,\"rejected_prediction_tokens\":null,\"image_tokens\":0},\"prompt_tokens_details\":{\"audio_tokens\":0,\"cached_tokens\":3200,\"cache_write_tokens\":0,\"video_tokens\":0},\"cost\":0.00068664,\"is_byok\":false,\"cost_details\":{\"upstream_inference_cost\":0.00068664,\"upstream_inference_prompt_cost\":0.00001413,\"upstream_inference_completions_cost\":0.00067251}},\"provider\":\"Xiaomi\"}"
+}

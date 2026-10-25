@@ -1,0 +1,91 @@
+{
+    "text": "{\"metadata\":{\"send_date\":[\"1926-03-04\"],\"letter_title\":[\"null\"],\"sender_persons\":[\"C. Ritter\"],\"receiver_persons\":[\"P. Christ-Wackernagel\"]}}",
+    "model": "nex-agi/nex-n2.5-mini",
+    "provider": "openrouter",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 4430,
+        "output_tokens": 1642,
+        "total_tokens": 6072,
+        "reasoning_tokens": 0,
+        "cached_tokens": 320,
+        "input_cost_usd": 0.00010355,
+        "output_cost_usd": 0.0001642,
+        "estimated_cost_usd": 0.00026775
+    },
+    "duration": 29.521230697631836,
+    "timestamp": "2026-10-25T02:29:58.899957",
+    "parsed": {
+        "metadata": {
+            "send_date": [
+                "1926-03-04"
+            ],
+            "letter_title": [
+                "null"
+            ],
+            "sender_persons": [
+                "C. Ritter"
+            ],
+            "receiver_persons": [
+                "P. Christ-Wackernagel"
+            ]
+        }
+    },
+    "conversation_id": "0655a145-0555-4c2c-b36f-28f28988cc1f",
+    "score": {
+        "send_date_tp": 1,
+        "send_date_fp": 0,
+        "send_date_fn": 0,
+        "sender_persons_tp": 0,
+        "sender_persons_fp": 1,
+        "sender_persons_fn": 1,
+        "receiver_persons_tp": 1,
+        "receiver_persons_fp": 0,
+        "receiver_persons_fn": 0,
+        "field_scores": {
+            "send_date": {
+                "response": [
+                    "1926-03-04"
+                ],
+                "ground_truth": [
+                    "1926-03-04"
+                ],
+                "score": null,
+                "counts": {
+                    "send_date_tp": 1,
+                    "send_date_fp": 0,
+                    "send_date_fn": 0
+                }
+            },
+            "sender_persons": {
+                "response": [
+                    "C. Ritter"
+                ],
+                "ground_truth": [
+                    "Ritter-Wehrle, Oskar"
+                ],
+                "score": null,
+                "counts": {
+                    "sender_persons_tp": 0,
+                    "sender_persons_fp": 1,
+                    "sender_persons_fn": 1
+                }
+            },
+            "receiver_persons": {
+                "response": [
+                    "Christ-Wackernagel, Paul"
+                ],
+                "ground_truth": [
+                    "Christ-Wackernagel, Paul"
+                ],
+                "score": null,
+                "counts": {
+                    "receiver_persons_tp": 1,
+                    "receiver_persons_fp": 0,
+                    "receiver_persons_fn": 0
+                }
+            }
+        }
+    },
+    "raw_response": "{\"id\":\"gen-1792891770-5jpc5EkPvfC8fvFDKMjz\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\n  \\\"metadata\\\": {\\n    \\\"send_date\\\": [\\\"1926-03-04\\\"],\\n    \\\"letter_title\\\": [\\\"null\\\"],\\n    \\\"sender_persons\\\": [\\\"C. Ritter\\\"],\\n    \\\"receiver_persons\\\": [\\\"P. Christ-Wackernagel\\\"]\\n  }\\n}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"metadata\":{\"send_date\":[\"1926-03-04\"],\"letter_title\":[\"null\"],\"sender_persons\":[\"C. Ritter\"],\"receiver_persons\":[\"P. Christ-Wackernagel\"]}},\"reasoning\":\"\\nWe need answer only JSON. Need extract title, sender persons, date, receiver persons from images. Need think. We must not OCR? User says do not use OCR but images visible to model. We can read. Need produce JSON keys lists. Need identify title of letter maybe no explicit title? It's a letter from Basler Rheinschifffahrt-Aktiengesellschaft to Herrn P. Christ-Wackernagel, c/o Paravicini, Christ & Co., Basel, Kaufhausgasse 7. Date Basel, den 4. M\u00e4rz 1926. Sender persons: likely \\\"Basler Rheinschifffahrt-Aktiengesellschaft\\\" as institution, maybe \\\"C. Ritter\\\" (signature? \\\"Der Pr\u00e4sident C. Ritter\\\"). But key says persons who wrote letter. Need names of persons. The letterhead is company; signature \\\"C. Ritter\\\" maybe president. The text says \\\"wir\\\" from company. Sender_persons should include names of persons who wrote, maybe \\\"C. Ritter\\\" (President of Basler Rheinschifffahrt-Aktiengesellschaft). But \\\"Basler Rheinschifffahrt-Aktiengesellschaft\\\" not person. User specifically sender_persons. Could include company? Hmm.\\n\\nNeed parse first page letterhead: \\\"Basler Rheinschifffahrt-Aktiengesellschaft, Marktgasse 5III\\\" and date \\\"Basel, den 4. M\u00e4rz 1926.\\\" Recipient \\\"Herrn P. Christ - Wackernagel, c/o Paravicini, Christ & Co., Basel, Kaufhausgasse 7.\\\" The salutation \\\"Sehr geehrter Herr Christ\\\" indicates receiver is Herr Christ (P. Christ-Wackernagel). Sender signature at end: \\\"Der Pr\u00e4sident C. Ritter\\\" maybe with signature. Need exact.\\n\\nLetter_title: Could be \\\"Betriebsgemeinschaftsvertrag\\\" or \\\"Vorschlag zur Betriebsgemeinschaft der Schiffe 'Vogel-Gryf' und 'Rheinfelden'\\\"? There is no title at top, but content is a letter proposing joint operation. The key asks title of letter. If not included, set null. The letter itself has no explicit title. But maybe we can infer title from content? User says extract values from letter. If not included set null. There is no title, so letter_title maybe [\\\"null\\\"]? Actually \\\"set the value ... to \\\"null\\\" (string) for corresponding key. In example arrays. So if missing, value should be [\\\"null\\\"]? They said values should be stored as a list, even single value. If piece info not included, set value for corresponding key to \\\"null\\\". In JSON, for list, value corresponding key should be list. So likely [\\\"null\\\"]. But maybe title inferred from company? Need decide.\\n\\nNeed return valid JSON. No extra.\\n\\nNeed be precise with date ISO: 1926-03-04. Page headers repeat 4.3.26. Exact.\\n\\nReceiver persons: \\\"P. Christ-Wackernagel\\\" maybe \\\"P. Christ\\\" in salutation. Should include \\\"P. Christ-Wackernagel\\\" as recipient. Also maybe \\\"Paravicini, Christ & Co.\\\" company. But receiver_persons only persons. \\\"Herrn P. Christ - Wackernagel\\\" (typewriter with spaces around dash). Could be \\\"P. Christ-Wackernagel\\\". Need maybe \\\"Herrn P. Christ-Wackernagel\\\". Include only person name. Could include \\\"Herr Christ\\\" but no first name. The addressee line says \\\"Herrn P. Christ - Wackernagel, c/o Paravicini, Christ & Co.\\\" So use \\\"P. Christ-Wackernagel\\\". If they want names persons, maybe \\\"Herr Christ\\\" or \\\"P. Christ-Wackernagel\\\". Use full.\\n\\nSender_persons: \\\"C. Ritter\\\" (signature). Maybe also \\\"Basler Rheinschifffahrt-Aktiengesellschaft\\\" not person. The letterhead is sender organization. But key says persons. If only person visible, \\\"C. Ritter\\\". The letter says \\\"Der Pr\u00e4sident C. Ritter\\\" at bottom. Maybe the signature is \\\"C. Ritter\\\". Include \\\"C. Ritter\\\". Should we include company? Since sender_persons asks persons, no. But if no named individual? There is named president. Good.\\n\\nLetter_title: There is no title. But maybe \\\"Betriebsgemeinschaftsvertrag\\\" appears in closing: \\\"Betriebgemeinschaftsvertrages\\\" and \\\"Vorschlag ... einer Betriebsgemeinschaft\\\". Could title be \\\"Vorschlag einer Betriebsgemeinschaft zwischen Basler Rheinschifffahrt-Aktiengesellschaft und der Personenschiffahrtsgesellschaft\\\"? The letter is a proposal to form an operating community with Personenschiffahrtsgesellschaft for vessels \\\"Vogel-Gryf\\\" and \\\"Rheinfelden\\\". But not an explicit title. User asked title of letter. If not included set null. However, in document extraction tasks, \\\"letter_title\\\" may be inferred from content if no formal title. But instruction: \\\"If a piece of information is not included in the letter, set ... null.\\\" Title not included. But maybe letterhead \\\"Basler Rheinschifffahrt-Aktiengesellschaft\\\" is not title. Could use \\\"Vorschlag zur Betriebsgemeinschaft der Schiffe \u201eVogel-Gryf\u201c und \u201eRheinfelden\u201c\\\" as descriptive title? Need decide.\\n\\nLet's examine images. Page 1 no heading besides letterhead. It begins with recipient and salutation. No subject line. Page 5 closing \\\"Wir hoffen, dass unsere Vorschl\u00e4ge als eine annehmbare Diskussionsbasis f\u00fcr die Ausarbeitung eines Betriebsgemeinschaftsvertrages dienen werden.\\\" No title. So literal extraction: letter_title: [\\\"null\\\"]. But maybe they expect a title based on letter content. Hmm.\\n\\nLet's consider \\\"historical letter\\\" with images. They want extract values of keys. For letter_title, if no title, maybe \\\"null\\\" string. But if no title, maybe use \\\"Letter from Basler Rheinschifffahrt-Aktiengesellschaft to P. Christ-Wackernagel\\\" as title? They said title of the letter, not subject. In absence, null.\\n\\nNeed final only JSON. Use double quotes. Arrays.\\n\\nPotential issue: \\\"send_date\\\" exact or approximate. Use [\\\"1926-03-04\\\"]. Good.\\n\\nNeed maybe sender_persons as [\\\"Basler Rheinschifffahrt-Aktiengesellschaft\\\", \\\"C. Ritter\\\"]? But key says persons, but maybe they want names of persons who wrote. The letter is written by company, signed by president. If include company in sender_persons, violates persons. But extraction tasks often include organizations under sender_persons if no individuals. Hmm. They specifically key \\\"sender_persons\\\" not \\\"sender\\\". Could include both organization and person? Let's parse wording: \\\"- sender_persons: Name(s) of the person(s) who wrote the letter.\\\" So not organization. But in letter, \\\"Basler Rheinschifffahrt-Aktiengesellschaft\\\" is letterhead, not person. The person who wrote/signed is C. Ritter. Use that.\\n\\nNeed maybe receiver_persons include \\\"P. Christ-Wackernagel\\\" only, not c/o firm. Good.\\n\\nNeed final no markdown.\",\"reasoning_details\":[{\"type\":\"reasoning.text\",\"text\":\"\\nWe need answer only JSON. Need extract title, sender persons, date, receiver persons from images. Need think. We must not OCR? User says do not use OCR but images visible to model. We can read. Need produce JSON keys lists. Need identify title of letter maybe no explicit title? It's a letter from Basler Rheinschifffahrt-Aktiengesellschaft to Herrn P. Christ-Wackernagel, c/o Paravicini, Christ & Co., Basel, Kaufhausgasse 7. Date Basel, den 4. M\u00e4rz 1926. Sender persons: likely \\\"Basler Rheinschifffahrt-Aktiengesellschaft\\\" as institution, maybe \\\"C. Ritter\\\" (signature? \\\"Der Pr\u00e4sident C. Ritter\\\"). But key says persons who wrote letter. Need names of persons. The letterhead is company; signature \\\"C. Ritter\\\" maybe president. The text says \\\"wir\\\" from company. Sender_persons should include names of persons who wrote, maybe \\\"C. Ritter\\\" (President of Basler Rheinschifffahrt-Aktiengesellschaft). But \\\"Basler Rheinschifffahrt-Aktiengesellschaft\\\" not person. User specifically sender_persons. Could include company? Hmm.\\n\\nNeed parse first page letterhead: \\\"Basler Rheinschifffahrt-Aktiengesellschaft, Marktgasse 5III\\\" and date \\\"Basel, den 4. M\u00e4rz 1926.\\\" Recipient \\\"Herrn P. Christ - Wackernagel, c/o Paravicini, Christ & Co., Basel, Kaufhausgasse 7.\\\" The salutation \\\"Sehr geehrter Herr Christ\\\" indicates receiver is Herr Christ (P. Christ-Wackernagel). Sender signature at end: \\\"Der Pr\u00e4sident C. Ritter\\\" maybe with signature. Need exact.\\n\\nLetter_title: Could be \\\"Betriebsgemeinschaftsvertrag\\\" or \\\"Vorschlag zur Betriebsgemeinschaft der Schiffe 'Vogel-Gryf' und 'Rheinfelden'\\\"? There is no title at top, but content is a letter proposing joint operation. The key asks title of letter. If not included, set null. The letter itself has no explicit title. But maybe we can infer title from content? User says extract values from letter. If not included set null. There is no title, so letter_title maybe [\\\"null\\\"]? Actually \\\"set the value ... to \\\"null\\\" (string) for corresponding key. In example arrays. So if missing, value should be [\\\"null\\\"]? They said values should be stored as a list, even single value. If piece info not included, set value for corresponding key to \\\"null\\\". In JSON, for list, value corresponding key should be list. So likely [\\\"null\\\"]. But maybe title inferred from company? Need decide.\\n\\nNeed return valid JSON. No extra.\\n\\nNeed be precise with date ISO: 1926-03-04. Page headers repeat 4.3.26. Exact.\\n\\nReceiver persons: \\\"P. Christ-Wackernagel\\\" maybe \\\"P. Christ\\\" in salutation. Should include \\\"P. Christ-Wackernagel\\\" as recipient. Also maybe \\\"Paravicini, Christ & Co.\\\" company. But receiver_persons only persons. \\\"Herrn P. Christ - Wackernagel\\\" (typewriter with spaces around dash). Could be \\\"P. Christ-Wackernagel\\\". Need maybe \\\"Herrn P. Christ-Wackernagel\\\". Include only person name. Could include \\\"Herr Christ\\\" but no first name. The addressee line says \\\"Herrn P. Christ - Wackernagel, c/o Paravicini, Christ & Co.\\\" So use \\\"P. Christ-Wackernagel\\\". If they want names persons, maybe \\\"Herr Christ\\\" or \\\"P. Christ-Wackernagel\\\". Use full.\\n\\nSender_persons: \\\"C. Ritter\\\" (signature). Maybe also \\\"Basler Rheinschifffahrt-Aktiengesellschaft\\\" not person. The letterhead is sender organization. But key says persons. If only person visible, \\\"C. Ritter\\\". The letter says \\\"Der Pr\u00e4sident C. Ritter\\\" at bottom. Maybe the signature is \\\"C. Ritter\\\". Include \\\"C. Ritter\\\". Should we include company? Since sender_persons asks persons, no. But if no named individual? There is named president. Good.\\n\\nLetter_title: There is no title. But maybe \\\"Betriebsgemeinschaftsvertrag\\\" appears in closing: \\\"Betriebgemeinschaftsvertrages\\\" and \\\"Vorschlag ... einer Betriebsgemeinschaft\\\". Could title be \\\"Vorschlag einer Betriebsgemeinschaft zwischen Basler Rheinschifffahrt-Aktiengesellschaft und der Personenschiffahrtsgesellschaft\\\"? The letter is a proposal to form an operating community with Personenschiffahrtsgesellschaft for vessels \\\"Vogel-Gryf\\\" and \\\"Rheinfelden\\\". But not an explicit title. User asked title of letter. If not included set null. However, in document extraction tasks, \\\"letter_title\\\" may be inferred from content if no formal title. But instruction: \\\"If a piece of information is not included in the letter, set ... null.\\\" Title not included. But maybe letterhead \\\"Basler Rheinschifffahrt-Aktiengesellschaft\\\" is not title. Could use \\\"Vorschlag zur Betriebsgemeinschaft der Schiffe \u201eVogel-Gryf\u201c und \u201eRheinfelden\u201c\\\" as descriptive title? Need decide.\\n\\nLet's examine images. Page 1 no heading besides letterhead. It begins with recipient and salutation. No subject line. Page 5 closing \\\"Wir hoffen, dass unsere Vorschl\u00e4ge als eine annehmbare Diskussionsbasis f\u00fcr die Ausarbeitung eines Betriebsgemeinschaftsvertrages dienen werden.\\\" No title. So literal extraction: letter_title: [\\\"null\\\"]. But maybe they expect a title based on letter content. Hmm.\\n\\nLet's consider \\\"historical letter\\\" with images. They want extract values of keys. For letter_title, if no title, maybe \\\"null\\\" string. But if no title, maybe use \\\"Letter from Basler Rheinschifffahrt-Aktiengesellschaft to P. Christ-Wackernagel\\\" as title? They said title of the letter, not subject. In absence, null.\\n\\nNeed final only JSON. Use double quotes. Arrays.\\n\\nPotential issue: \\\"send_date\\\" exact or approximate. Use [\\\"1926-03-04\\\"]. Good.\\n\\nNeed maybe sender_persons as [\\\"Basler Rheinschifffahrt-Aktiengesellschaft\\\", \\\"C. Ritter\\\"]? But key says persons, but maybe they want names of persons who wrote. The letter is written by company, signed by president. If include company in sender_persons, violates persons. But extraction tasks often include organizations under sender_persons if no individuals. Hmm. They specifically key \\\"sender_persons\\\" not \\\"sender\\\". Could include both organization and person? Let's parse wording: \\\"- sender_persons: Name(s) of the person(s) who wrote the letter.\\\" So not organization. But in letter, \\\"Basler Rheinschifffahrt-Aktiengesellschaft\\\" is letterhead, not person. The person who wrote/signed is C. Ritter. Use that.\\n\\nNeed maybe receiver_persons include \\\"P. Christ-Wackernagel\\\" only, not c/o firm. Good.\\n\\nNeed final no markdown.\",\"format\":\"unknown\",\"index\":0}]},\"native_finish_reason\":\"stop\"}],\"created\":1792891770,\"model\":\"nex-agi/nex-n2.5-mini\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":null,\"usage\":{\"completion_tokens\":1642,\"prompt_tokens\":4430,\"total_tokens\":6072,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":0,\"reasoning_tokens\":1542,\"rejected_prediction_tokens\":null,\"image_tokens\":0},\"prompt_tokens_details\":{\"audio_tokens\":0,\"cached_tokens\":320,\"cache_write_tokens\":0,\"video_tokens\":0},\"cost\":0.00026775,\"is_byok\":false,\"cost_details\":{\"upstream_inference_cost\":0.00026775,\"upstream_inference_prompt_cost\":0.00010355,\"upstream_inference_completions_cost\":0.0001642}},\"provider\":\"Nex AGI\"}"
+}

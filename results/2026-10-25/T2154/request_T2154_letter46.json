@@ -1,0 +1,85 @@
+{
+    "text": "{\"metadata\":{\"send_date\":[\"1929-05-27\"],\"letter_title\":null,\"sender_persons\":null,\"receiver_persons\":[\"F. L\u00fctzelschwab\"]}}",
+    "model": "fireworks/ember-1",
+    "provider": "openrouter",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 8363,
+        "output_tokens": 1033,
+        "total_tokens": 9396,
+        "reasoning_tokens": 0,
+        "cached_tokens": 8362,
+        "input_cost_usd": 0.0025116,
+        "output_cost_usd": 0.015495,
+        "estimated_cost_usd": 0.0180066
+    },
+    "duration": 13.608702898025513,
+    "timestamp": "2026-10-25T00:06:12.515923",
+    "parsed": {
+        "metadata": {
+            "send_date": [
+                "1929-05-27"
+            ],
+            "letter_title": null,
+            "sender_persons": null,
+            "receiver_persons": [
+                "F. L\u00fctzelschwab"
+            ]
+        }
+    },
+    "conversation_id": "6620595c-9516-4366-88c2-cba45f32fdde",
+    "score": {
+        "send_date_tp": 1,
+        "send_date_fp": 0,
+        "send_date_fn": 0,
+        "sender_persons_tp": 0,
+        "sender_persons_fp": 0,
+        "sender_persons_fn": 1,
+        "receiver_persons_tp": 0,
+        "receiver_persons_fp": 1,
+        "receiver_persons_fn": 1,
+        "field_scores": {
+            "send_date": {
+                "response": [
+                    "1929-05-27"
+                ],
+                "ground_truth": [
+                    "1929-05-27"
+                ],
+                "score": null,
+                "counts": {
+                    "send_date_tp": 1,
+                    "send_date_fp": 0,
+                    "send_date_fn": 0
+                }
+            },
+            "sender_persons": {
+                "response": [],
+                "ground_truth": [
+                    "Oettinger-Meili, Artur"
+                ],
+                "score": null,
+                "counts": {
+                    "sender_persons_tp": 0,
+                    "sender_persons_fp": 0,
+                    "sender_persons_fn": 1
+                }
+            },
+            "receiver_persons": {
+                "response": [
+                    "F. L\u00fctzelschwab"
+                ],
+                "ground_truth": [
+                    "L\u00fctzelschwab, F."
+                ],
+                "score": null,
+                "counts": {
+                    "receiver_persons_tp": 0,
+                    "receiver_persons_fp": 1,
+                    "receiver_persons_fn": 1
+                }
+            }
+        }
+    },
+    "raw_response": "{\"id\":\"gen-1792879559-JlRlugjwaHF10KxV6ddI\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\\"metadata\\\":{\\\"letter_title\\\":null,\\\"receiver_persons\\\":[\\\"F. L\u00fctzelschwab\\\"],\\\"send_date\\\":[\\\"1929-05-27\\\"],\\\"sender_persons\\\":null}}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"metadata\":{\"send_date\":[\"1929-05-27\"],\"letter_title\":null,\"sender_persons\":null,\"receiver_persons\":[\"F. L\u00fctzelschwab\"]}},\"reasoning\":\"The user wants me to extract metadata from a historical letter. Let me analyze the images.\\n\\nPage 1:\\n- Date: \\\"Basel, den 27. Mai 1929.\\\" \u2192 1929-05-27\\n- Addressed to: \\\"Herrn F. L\u00fctzelschwab, z. Adler, Kaiseraugst.\\\" \u2192 receiver is F. L\u00fctzelschwab\\n- Salutation: \\\"Sehr geehrter Herr!\\\"\\n- References a letter from 22. Mai 1929\\n- Mentions \\\"Kaufofferte der Basler Rheinschiffahrt A.-G.\\\" as a quoted passage title\\n- Mentions \\\"Herrn Rupprecht\\\"\\n- The letter is from Basler Personenschiffahrtsgesellschaft (page 2 signature)\\n\\nPage 2:\\n- \\\"- 2 -\\\"\\n- \\\"Ich empfehle Ihnen, sich sofort mit dem Kur- & Verkehrsverein Rheinfelden in Verbindung zu setzen...\\\"\\n- \\\"Hochachtungsvoll:\\\"\\n- Signature (faded): \\\"Basler Personenschiffahrtsgesellschaft\\\" / \\\"Der Gesch\u00e4ftsf\u00fchrer\\\" (or similar)\\n\\nSo:\\n- letter_title: There's no explicit title. The letter doesn't have a title. Set to null. Actually, the underlined \\\"Kaufofferte der Basler Rheinschiffahrt A.-G.\\\" is a quoted passage from a protocol, not the letter title. So letter_title should be null.\\n- sender_persons: The letter is signed by \\\"Basler Personenschiffahrtsgesellschaft\\\" / \\\"Der Gesch\u00e4ftsf\u00fchrer\\\". No individual person name is given for the sender. The sender is an organization, not a person. The key asks for sender_persons (names of persons who wrote the letter). Since no person is named (only \\\"Der Gesch\u00e4ftsf\u00fchrer\\\" of the company), we could set to null. But the signature says \\\"Basler Personenschiffahrtsgesellschaft / Der Gesch\u00e4ftsf\u00fchrer\\\". There's no personal name. So sender_persons = null. However, one might argue the sender is the company. But the key specifically says \\\"person(s)\\\". Since no person name is given, null is appropriate.\\n\\nWait, let me reconsider. The signature block reads \\\"Basler Personenschiffahrtsgesellschaft\\\" and below \\\"Der Gesch\u00e4ftsf\u00fchrer\\\" (faded). No name. So sender_persons = null.\\n\\n- send_date: 1929-05-27\\n- receiver_persons: \\\"F. L\u00fctzelschwab\\\" (Herrn F. L\u00fctzelschwab). The address is \\\"z. Adler, Kaiseraugst\\\" (at the Adler inn/hotel in Kaiseraugst). So receiver person is F. L\u00fctzelschwab.\\n\\nletter_title: null (no title on the letter).\\n\\nLet me format the JSON according to the schema. The schema requires the top-level object to have \\\"metadata\\\" key containing the Metadata object.\\n\\nThe example in the prompt shows a flat structure, but the response_format schema requires {\\\"metadata\\\": {...}}. I must follow the schema.\\n\\nSo output:\\n{\\n  \\\"metadata\\\": {\\n    \\\"letter_title\\\": null,\\n    \\\"send_date\\\": [\\\"1929-05-27\\\"],\\n    \\\"sender_persons\\\": null,\\n    \\\"receiver_persons\\\": [\\\"F. L\u00fctzelschwab\\\"]\\n  }\\n}\\n\\nWait, the schema says each field can be array of strings or null. The instruction says \\\"If a piece of information is not included in the letter, set the value for the corresponding key to 'null'.\\\" And \\\"the values corresponding to each key should be stored as a list, even if there is only a single value\\\". So for present info, use list; for absent, use null.\\n\\nFor sender_persons: The letter is from the Basler Personenschiffahrtsgesellschaft, signed by \\\"Der Gesch\u00e4ftsf\u00fchrer\\\" without a name. Since the key is sender_persons (persons), and no person is named, I'll set to null. But one could include the company. The instruction specifically says \\\"Name(s) of the person(s) who wrote the letter.\\\" The Gesch\u00e4ftsf\u00fchrer is not named. So null.\\n\\nActually, let me reconsider whether to include \\\"Basler Personenschiffahrtsgesellschaft\\\" as sender. The key is sender_persons, and the company is not a person. The signature is the company + \\\"Der Gesch\u00e4ftsf\u00fchrer\\\" (the managing director), no name. So no person name is available. null is correct.\\n\\nFinal JSON.\",\"reasoning_details\":[{\"type\":\"reasoning.text\",\"text\":\"The user wants me to extract metadata from a historical letter. Let me analyze the images.\\n\\nPage 1:\\n- Date: \\\"Basel, den 27. Mai 1929.\\\" \u2192 1929-05-27\\n- Addressed to: \\\"Herrn F. L\u00fctzelschwab, z. Adler, Kaiseraugst.\\\" \u2192 receiver is F. L\u00fctzelschwab\\n- Salutation: \\\"Sehr geehrter Herr!\\\"\\n- References a letter from 22. Mai 1929\\n- Mentions \\\"Kaufofferte der Basler Rheinschiffahrt A.-G.\\\" as a quoted passage title\\n- Mentions \\\"Herrn Rupprecht\\\"\\n- The letter is from Basler Personenschiffahrtsgesellschaft (page 2 signature)\\n\\nPage 2:\\n- \\\"- 2 -\\\"\\n- \\\"Ich empfehle Ihnen, sich sofort mit dem Kur- & Verkehrsverein Rheinfelden in Verbindung zu setzen...\\\"\\n- \\\"Hochachtungsvoll:\\\"\\n- Signature (faded): \\\"Basler Personenschiffahrtsgesellschaft\\\" / \\\"Der Gesch\u00e4ftsf\u00fchrer\\\" (or similar)\\n\\nSo:\\n- letter_title: There's no explicit title. The letter doesn't have a title. Set to null. Actually, the underlined \\\"Kaufofferte der Basler Rheinschiffahrt A.-G.\\\" is a quoted passage from a protocol, not the letter title. So letter_title should be null.\\n- sender_persons: The letter is signed by \\\"Basler Personenschiffahrtsgesellschaft\\\" / \\\"Der Gesch\u00e4ftsf\u00fchrer\\\". No individual person name is given for the sender. The sender is an organization, not a person. The key asks for sender_persons (names of persons who wrote the letter). Since no person is named (only \\\"Der Gesch\u00e4ftsf\u00fchrer\\\" of the company), we could set to null. But the signature says \\\"Basler Personenschiffahrtsgesellschaft / Der Gesch\u00e4ftsf\u00fchrer\\\". There's no personal name. So sender_persons = null. However, one might argue the sender is the company. But the key specifically says \\\"person(s)\\\". Since no person name is given, null is appropriate.\\n\\nWait, let me reconsider. The signature block reads \\\"Basler Personenschiffahrtsgesellschaft\\\" and below \\\"Der Gesch\u00e4ftsf\u00fchrer\\\" (faded). No name. So sender_persons = null.\\n\\n- send_date: 1929-05-27\\n- receiver_persons: \\\"F. L\u00fctzelschwab\\\" (Herrn F. L\u00fctzelschwab). The address is \\\"z. Adler, Kaiseraugst\\\" (at the Adler inn/hotel in Kaiseraugst). So receiver person is F. L\u00fctzelschwab.\\n\\nletter_title: null (no title on the letter).\\n\\nLet me format the JSON according to the schema. The schema requires the top-level object to have \\\"metadata\\\" key containing the Metadata object.\\n\\nThe example in the prompt shows a flat structure, but the response_format schema requires {\\\"metadata\\\": {...}}. I must follow the schema.\\n\\nSo output:\\n{\\n  \\\"metadata\\\": {\\n    \\\"letter_title\\\": null,\\n    \\\"send_date\\\": [\\\"1929-05-27\\\"],\\n    \\\"sender_persons\\\": null,\\n    \\\"receiver_persons\\\": [\\\"F. L\u00fctzelschwab\\\"]\\n  }\\n}\\n\\nWait, the schema says each field can be array of strings or null. The instruction says \\\"If a piece of information is not included in the letter, set the value for the corresponding key to 'null'.\\\" And \\\"the values corresponding to each key should be stored as a list, even if there is only a single value\\\". So for present info, use list; for absent, use null.\\n\\nFor sender_persons: The letter is from the Basler Personenschiffahrtsgesellschaft, signed by \\\"Der Gesch\u00e4ftsf\u00fchrer\\\" without a name. Since the key is sender_persons (persons), and no person is named, I'll set to null. But one could include the company. The instruction specifically says \\\"Name(s) of the person(s) who wrote the letter.\\\" The Gesch\u00e4ftsf\u00fchrer is not named. So null.\\n\\nActually, let me reconsider whether to include \\\"Basler Personenschiffahrtsgesellschaft\\\" as sender. The key is sender_persons, and the company is not a person. The signature is the company + \\\"Der Gesch\u00e4ftsf\u00fchrer\\\" (the managing director), no name. So no person name is available. null is correct.\\n\\nFinal JSON.\",\"format\":\"unknown\",\"index\":0}]},\"native_finish_reason\":\"stop\"}],\"created\":1792879559,\"model\":\"fireworks/ember-1\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":null,\"usage\":{\"completion_tokens\":1033,\"prompt_tokens\":8363,\"total_tokens\":9396,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":0,\"reasoning_tokens\":948,\"rejected_prediction_tokens\":null,\"image_tokens\":0},\"prompt_tokens_details\":{\"audio_tokens\":0,\"cached_tokens\":8362,\"cache_write_tokens\":0,\"video_tokens\":0},\"cost\":0.0180066,\"is_byok\":false,\"cost_details\":{\"upstream_inference_cost\":0.0180066,\"upstream_inference_prompt_cost\":0.0025116,\"upstream_inference_completions_cost\":0.015495}},\"provider\":\"Fireworks\"}"
+}

@@ -1,0 +1,81 @@
+{
+    "text": "{\"advertisements\":[{\"box\":[300.0,189.0,2311.0,1713.0]},{\"box\":[268.0,1740.0,2336.0,3228.0]}]}",
+    "model": "fireworks/ember-1",
+    "provider": "openrouter",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 4331,
+        "output_tokens": 1200,
+        "total_tokens": 5531,
+        "reasoning_tokens": 0,
+        "input_cost_usd": 0.012993,
+        "output_cost_usd": 0.018,
+        "estimated_cost_usd": 0.030993
+    },
+    "duration": 17.253082275390625,
+    "timestamp": "2026-10-25T00:53:00.870616",
+    "parsed": {
+        "advertisements": [
+            {
+                "box": [
+                    300.0,
+                    189.0,
+                    2311.0,
+                    1713.0
+                ]
+            },
+            {
+                "box": [
+                    268.0,
+                    1740.0,
+                    2336.0,
+                    3228.0
+                ]
+            }
+        ]
+    },
+    "conversation_id": "5fddae91-97e4-4f36-bc0d-d2869729cebc",
+    "score": {
+        "field_scores": {
+            "box 0": {
+                "response": [
+                    268.0,
+                    1740.0,
+                    2336.0,
+                    3228.0
+                ],
+                "ground_truth": [
+                    265,
+                    1730,
+                    2344,
+                    3235
+                ],
+                "score": 0.983
+            },
+            "box 1": {
+                "response": [
+                    300.0,
+                    189.0,
+                    2311.0,
+                    1713.0
+                ],
+                "ground_truth": [
+                    300,
+                    187,
+                    2331,
+                    1703
+                ],
+                "score": 0.982
+            }
+        },
+        "f1": 1.0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "mean_iou": 0.983,
+        "true_positives": 2,
+        "false_positives": 0,
+        "false_negatives": 0,
+        "iou_threshold": 0.5
+    },
+    "raw_response": "{\"id\":\"gen-1792882364-kjizIntX9gGGWYXinCAF\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\n\\\"advertisements\\\": [\\n{\\\"box\\\": [300, 189, 2311, 1713]},\\n{\\\"box\\\": [268, 1740, 2336, 3228]}\\n]\\n}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"advertisements\":[{\"box\":[300.0,189.0,2311.0,1713.0]},{\"box\":[268.0,1740.0,2336.0,3228.0]}]},\"reasoning\":\"The user wants me to extract all advertisements from the page and return their bounding boxes.\\n\\nLooking at the image, I can see two distinct advertisements:\\n1. Top advertisement: Stoffel & Co - \\\"8 factories are working for you\\\" - this spans roughly from x=175 to x=1348, y=110 to y=1000\\n2. Bottom advertisement: Georges Meyer & Co. Ltd. - with the building/gate illustration - this spans roughly from x=160 to x=1360, y=1020 to y=1880\\n\\nLet me estimate more precisely based on the original page size of 2479 x 3508 pixels.\\n\\nThe image displayed is 1447 x 2048 (approximately). I need to scale to 2479 x 3508.\\n\\nScale factor: 2479/1447 \u2248 1.713, 3508/2048 \u2248 1.713\\n\\nTop ad (Stoffel & Co):\\n- Left edge: ~175/1447 * 2479 \u2248 300\\n- Right edge: ~1348/1447 * 2479 \u2248 2310\\n- Top edge: ~110/2048 * 3508 \u2248 188\\n- Bottom edge: ~1000/2048 * 3508 \u2248 1713\\n\\nWait, let me look more carefully. The displayed image dimensions - let me use the proportions directly.\\n\\nLooking at the image:\\n- The top advertisement (Stoffel) has a dark background. It starts at about x=0.121 of width and ends at about x=0.932 of width. Vertically from about y=0.054 to y=0.488.\\n\\nIn original pixels:\\n- x0 = 0.121 * 2479 \u2248 300\\n- x1 = 0.932 * 2479 \u2248 2311\\n- y0 = 0.054 * 3508 \u2248 189\\n- y1 = 0.488 * 3508 \u2248 1712\\n\\nThe bottom advertisement (Georges Meyer):\\n- It has a thin border. Starts at about x=0.108 of width, ends at about x=0.942 of width. Vertically from about y=0.496 to y=0.920.\\n\\nIn original pixels:\\n- x0 = 0.108 * 2479 \u2248 268\\n- x1 = 0.942 * 2479 \u2248 2335\\n- y0 = 0.496 * 3508 \u2248 1740\\n- y1 = 0.920 * 3508 \u2248 3227\\n\\nLet me refine by looking at the image more carefully.\\n\\nThe page content area: The image shows a magazine page. The actual page (cream colored) goes from about x=45 to x=1415 in the displayed image (1447 wide). \\n\\nTop ad: The dark rectangle starts at around x=175 and the inner cream panel with \\\"8 factories\\\" is at x=335-540. The whole ad including dark background goes from x\u2248175 to x\u22481348, y\u2248112 to y\u2248998.\\n\\nActually, looking again, the top advertisement's bounding box: left edge of dark area is at ~175, right edge at ~1348, top at ~112, bottom at ~998. But there's also the cream vertical strip with text that's part of the ad. The whole thing appears to be one advertisement unit.\\n\\nLet me convert using ratio. Displayed image is 1447\u00d72048. Original is 2479\u00d73508. Ratio = 2479/1447 = 1.7132; 3508/2048 = 1.7129. Consistent ~1.713.\\n\\nTop ad:\\n- x0: 175 \u00d7 1.713 = 300\\n- y0: 112 \u00d7 1.713 = 192\\n- x1: 1348 \u00d7 1.713 = 2309\\n- y1: 998 \u00d7 1.713 = 1710\\n\\nBottom ad (bordered):\\n- x0: 160 \u00d7 1.713 = 274\\n- y0: 1018 \u00d7 1.713 = 1744\\n- x1: 1360 \u00d7 1.713 = 2330\\n- y1: 1882 \u00d7 1.713 = 3225\\n\\nThese look reasonable. Let me finalize.\\n\\nActually, looking at the image dimensions given in the prompt: the image shown has width 1447 and height 2048 based on the markdown. But the original is 2479\u00d73508. The ratio is consistent.\\n\\nLet me provide the bounding boxes.\\n\\nFor the top Stoffel ad, the bounding box should enclose the entire advertisement. Looking carefully:\\n- Left: the dark panel starts around 12% from left = 298\\n- Top: around 5.4% from top = 189\\n- Right: around 93.2% = 2310\\n- Bottom: around 48.8% = 1712\\n\\nFor the bottom Georges Meyer ad:\\n- Left border: around 10.8% = 268\\n- Top border: around 49.6% = 1740\\n- Right border: around 94.2% = 2335\\n- Bottom border: around 92.0% = 3227\\n\\nI'll go with these estimates.\",\"reasoning_details\":[{\"type\":\"reasoning.text\",\"text\":\"The user wants me to extract all advertisements from the page and return their bounding boxes.\\n\\nLooking at the image, I can see two distinct advertisements:\\n1. Top advertisement: Stoffel & Co - \\\"8 factories are working for you\\\" - this spans roughly from x=175 to x=1348, y=110 to y=1000\\n2. Bottom advertisement: Georges Meyer & Co. Ltd. - with the building/gate illustration - this spans roughly from x=160 to x=1360, y=1020 to y=1880\\n\\nLet me estimate more precisely based on the original page size of 2479 x 3508 pixels.\\n\\nThe image displayed is 1447 x 2048 (approximately). I need to scale to 2479 x 3508.\\n\\nScale factor: 2479/1447 \u2248 1.713, 3508/2048 \u2248 1.713\\n\\nTop ad (Stoffel & Co):\\n- Left edge: ~175/1447 * 2479 \u2248 300\\n- Right edge: ~1348/1447 * 2479 \u2248 2310\\n- Top edge: ~110/2048 * 3508 \u2248 188\\n- Bottom edge: ~1000/2048 * 3508 \u2248 1713\\n\\nWait, let me look more carefully. The displayed image dimensions - let me use the proportions directly.\\n\\nLooking at the image:\\n- The top advertisement (Stoffel) has a dark background. It starts at about x=0.121 of width and ends at about x=0.932 of width. Vertically from about y=0.054 to y=0.488.\\n\\nIn original pixels:\\n- x0 = 0.121 * 2479 \u2248 300\\n- x1 = 0.932 * 2479 \u2248 2311\\n- y0 = 0.054 * 3508 \u2248 189\\n- y1 = 0.488 * 3508 \u2248 1712\\n\\nThe bottom advertisement (Georges Meyer):\\n- It has a thin border. Starts at about x=0.108 of width, ends at about x=0.942 of width. Vertically from about y=0.496 to y=0.920.\\n\\nIn original pixels:\\n- x0 = 0.108 * 2479 \u2248 268\\n- x1 = 0.942 * 2479 \u2248 2335\\n- y0 = 0.496 * 3508 \u2248 1740\\n- y1 = 0.920 * 3508 \u2248 3227\\n\\nLet me refine by looking at the image more carefully.\\n\\nThe page content area: The image shows a magazine page. The actual page (cream colored) goes from about x=45 to x=1415 in the displayed image (1447 wide). \\n\\nTop ad: The dark rectangle starts at around x=175 and the inner cream panel with \\\"8 factories\\\" is at x=335-540. The whole ad including dark background goes from x\u2248175 to x\u22481348, y\u2248112 to y\u2248998.\\n\\nActually, looking again, the top advertisement's bounding box: left edge of dark area is at ~175, right edge at ~1348, top at ~112, bottom at ~998. But there's also the cream vertical strip with text that's part of the ad. The whole thing appears to be one advertisement unit.\\n\\nLet me convert using ratio. Displayed image is 1447\u00d72048. Original is 2479\u00d73508. Ratio = 2479/1447 = 1.7132; 3508/2048 = 1.7129. Consistent ~1.713.\\n\\nTop ad:\\n- x0: 175 \u00d7 1.713 = 300\\n- y0: 112 \u00d7 1.713 = 192\\n- x1: 1348 \u00d7 1.713 = 2309\\n- y1: 998 \u00d7 1.713 = 1710\\n\\nBottom ad (bordered):\\n- x0: 160 \u00d7 1.713 = 274\\n- y0: 1018 \u00d7 1.713 = 1744\\n- x1: 1360 \u00d7 1.713 = 2330\\n- y1: 1882 \u00d7 1.713 = 3225\\n\\nThese look reasonable. Let me finalize.\\n\\nActually, looking at the image dimensions given in the prompt: the image shown has width 1447 and height 2048 based on the markdown. But the original is 2479\u00d73508. The ratio is consistent.\\n\\nLet me provide the bounding boxes.\\n\\nFor the top Stoffel ad, the bounding box should enclose the entire advertisement. Looking carefully:\\n- Left: the dark panel starts around 12% from left = 298\\n- Top: around 5.4% from top = 189\\n- Right: around 93.2% = 2310\\n- Bottom: around 48.8% = 1712\\n\\nFor the bottom Georges Meyer ad:\\n- Left border: around 10.8% = 268\\n- Top border: around 49.6% = 1740\\n- Right border: around 94.2% = 2335\\n- Bottom border: around 92.0% = 3227\\n\\nI'll go with these estimates.\",\"format\":\"unknown\",\"index\":0}]},\"native_finish_reason\":\"stop\"}],\"created\":1792882364,\"model\":\"fireworks/ember-1\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":null,\"usage\":{\"completion_tokens\":1200,\"prompt_tokens\":4331,\"total_tokens\":5531,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":0,\"reasoning_tokens\":900,\"rejected_prediction_tokens\":null,\"image_tokens\":0},\"prompt_tokens_details\":{\"audio_tokens\":0,\"cached_tokens\":0,\"cache_write_tokens\":0,\"video_tokens\":0},\"cost\":0.030993,\"is_byok\":false,\"cost_details\":{\"upstream_inference_cost\":0.030993,\"upstream_inference_prompt_cost\":0.012993,\"upstream_inference_completions_cost\":0.018}},\"provider\":\"Fireworks\"}"
+}

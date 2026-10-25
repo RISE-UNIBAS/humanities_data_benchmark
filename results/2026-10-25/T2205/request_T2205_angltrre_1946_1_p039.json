@@ -1,0 +1,105 @@
+{
+    "text": "{\"advertisements\":[{\"box\":[181.0,218.0,2196.0,1701.0]},{\"box\":[181.0,1758.0,1178.0,3242.0]},{\"box\":[1232.0,1758.0,2212.0,3242.0]}]}",
+    "model": "nex-agi/nex-n2.5-mini",
+    "provider": "openrouter",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 3060,
+        "output_tokens": 1918,
+        "total_tokens": 4978,
+        "reasoning_tokens": 0,
+        "cached_tokens": 128,
+        "input_cost_usd": 7.362e-05,
+        "output_cost_usd": 0.0001918,
+        "estimated_cost_usd": 0.00026542
+    },
+    "duration": 21.862754821777344,
+    "timestamp": "2026-10-25T04:30:50.598745",
+    "parsed": {
+        "advertisements": [
+            {
+                "box": [
+                    181.0,
+                    218.0,
+                    2196.0,
+                    1701.0
+                ]
+            },
+            {
+                "box": [
+                    181.0,
+                    1758.0,
+                    1178.0,
+                    3242.0
+                ]
+            },
+            {
+                "box": [
+                    1232.0,
+                    1758.0,
+                    2212.0,
+                    3242.0
+                ]
+            }
+        ]
+    },
+    "conversation_id": "3c0c5a4b-c87f-49e6-a02c-b60bf09839a8",
+    "score": {
+        "field_scores": {
+            "box 0": {
+                "response": [
+                    181.0,
+                    218.0,
+                    2196.0,
+                    1701.0
+                ],
+                "ground_truth": [
+                    182,
+                    204,
+                    2244,
+                    1697
+                ],
+                "score": 0.965
+            },
+            "box 1": {
+                "response": [
+                    181.0,
+                    1758.0,
+                    1178.0,
+                    3242.0
+                ],
+                "ground_truth": [
+                    179,
+                    1739,
+                    1195,
+                    3226
+                ],
+                "score": 0.959
+            },
+            "box 2": {
+                "response": [
+                    1232.0,
+                    1758.0,
+                    2212.0,
+                    3242.0
+                ],
+                "ground_truth": [
+                    1237,
+                    1739,
+                    2246,
+                    3225
+                ],
+                "score": 0.939
+            }
+        },
+        "f1": 1.0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "mean_iou": 0.954,
+        "true_positives": 3,
+        "false_positives": 0,
+        "false_negatives": 0,
+        "iou_threshold": 0.5
+    },
+    "raw_response": "{\"id\":\"gen-1792899029-limvl2Ct9DM3uaSZdcMH\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\n  \\\"advertisements\\\": [\\n    {\\\"box\\\": [181, 218, 2196, 1701]},\\n    {\\\"box\\\": [181, 1758, 1178, 3242]},\\n    {\\\"box\\\": [1232, 1758, 2212, 3242]}\\n  ]\\n}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"advertisements\":[{\"box\":[181.0,218.0,2196.0,1701.0]},{\"box\":[181.0,1758.0,1178.0,3242.0]},{\"box\":[1232.0,1758.0,2212.0,3242.0]}]},\"reasoning\":\"\\nWe need answer JSON only with bounding boxes for all advertisements. Need infer coords on original page 2479x3508. Need identify ad rectangles. Image shows three ads: top large ad spanning x ~183 to 2197? y ~218 to 1701? bottom left x ~181 to 1179 y ~1758 to 3242? bottom right x ~1233 to 2212 y ~1757 to 3242? Need precise enough. Need return boxes. Let's analyze image.\\n\\nWe have page image likely 2479 x 3508. Need bounding boxes. Need extract all advertisements. There are 3 ad blocks. Coordinates in original pixels. Need maybe include only ad area, not page margins. Need estimate from visible image. We can use pixel mapping. The provided image displayed in prompt has dimensions maybe 2479 x 3508? It says original size. The visible image in chat maybe same dimensions. Need determine coordinates.\\n\\nLet's inspect image manually. Page has black border? Page outer? We need boxes.\\n\\nImage coordinate origin top-left. We can estimate from image. Let's use visual landmarks. The top ad is rectangle bordered by black line. Its outer border coordinates:\\n- left border x around 182? (visible vertical black line)\\n- right border x around 2196?\\n- top border y around 218?\\n- bottom border y around 1701? (or 1700)\\nActually page top margin black at y=0? Image has black top strip 0-28? Page starts y~28? The top ad border at y=218? Need.\\n\\nBottom left ad:\\n- left border x around 182\\n- right border x around 1178\\n- top border y around 1758\\n- bottom border y around 3242\\nBottom right:\\n- left border x around 1232\\n- right border x around 2212\\n- top border y around 1758\\n- bottom border y around 3242\\n\\nNeed maybe page cropped with black margins, page edges. Let's parse coordinates more systematically.\\n\\nThe image displayed is 2479x3508. The page content:\\n- black outer background top and bottom, page cream. Page left margin x around 22? Page right margin x around 2458? Maybe.\\n\\nAd top:\\n- left vertical border is at x ~182, top horizontal at y~218, right at x~2196, bottom at y~1701. It has black border thickness ~4.\\n\\nBottom left:\\n- left vertical at x~181, top horizontal at y~1758, right at x~1178, bottom at y~3242.\\nBottom right:\\n- left vertical at x~1233, top at y~1758, right at x~2212, bottom at y~3242.\\n\\nNeed maybe include border? Bounding boxes often include full ad including border. Use outer border coordinates. Need maybe top ad x0=181, y0=218, x1=2197, y1=1701.\\n\\nLet's consider if there are any other advertisements? The page has three panels: top ad, lower left machine, lower right watch. No page number. Return only JSON.\\n\\nNeed ensure \\\"box\\\": [x0, y0, x1, y1]. Could include all. Need no additional.\\n\\nLet's perhaps derive more precise using image proportions. Let's estimate from visible: The top ad's outer rectangle: top border y=218? bottom y=1701. Left x=182. Right x=2196. It is a single ad. Lower left rectangle: x=181, y=1758, x1=1178, y1=3242. Lower right x=1232, y=1758, x1=2212, y1=3242.\\n\\nNeed maybe if top ad extends to x=2197? The right border maybe x=2196. The page's bottom right ad right border at x=2212. The page right margin 2458, so right border 2212. Top ad right border maybe x=2196 because top ad slightly narrower than lower right. Let's inspect: Top ad right border seems at 2196? It is inset 20 px from lower right ad right border. The top ad left border aligns with bottom left left border at 181. The top ad right border aligns with lower right? Wait top ad right border maybe 2196, lower right right border 2212. In image, top ad right border is at x=2195, lower right at x=2212. The top ad is centered? Top ad left at 182, right at 2196 (width 2014). Lower right width 980. Lower left width 997. Gap 54. Top ad width 2014. Page width 2479. Margins: left 182, right 283. Not centered. Maybe top ad right border at 2197. Let's see top ad right border vertical line appears at x=2196? The bottom right ad right border at x=2211. Difference 15. Top ad left at 182. Width 2014. If page width 2479, right margin 283. Top ad left margin 182. It is not centered due to page? Maybe page has uneven margins due to scan.\\n\\nCould use OCR? no.\\n\\nNeed maybe include top ad's inner content? The ad is entire bordered rectangle. Lower left ad entire bordered rectangle. Lower right ad entire bordered rectangle.\\n\\nLet's think if \\\"advertisements\\\" should include only ad content not border? Usually bounding boxes include rectangle. We can include border.\\n\\nNeed maybe not include page number. No.\\n\\nLet's craft JSON. But before final, let's consider if there is a top ad plus two bottom ads, or maybe the entire page is an advertisement? The top ad and bottom ads are separate. The bottom left and bottom right are separate advertisements. The top ad has \\\"GOTH & CO. LTD., BASLE\\\" and is an ad. The bottom left \\\"Ls. Vial & Cie., Machine-Tools, Geneva\\\" ad. Bottom right \\\"E. Borel, Co Neuchatel\\\" ad. So 3.\\n\\nPotential issue: The top ad has large blank area; bounding box includes whole ad. Good.\\n\\nNeed maybe coordinates x1/y1 should be inclusive? Usually [x0,y0,x1,y1] bounding box. We can use outer border coordinates. If exact unknown, acceptable.\\n\\nLet's maybe choose:\\nTop: [181, 218, 2196, 1701]\\nBottom left: [181, 1758, 1178, 3242]\\nBottom right: [1232, 1758, 2212, 3242]\\n\\nNeed maybe bottom left x1=1178 or 1179? The right border of bottom left is at x=1178. Bottom right left at x=1232. Gap 54. If x1=1178, next x0=1232. Good.\\n\\nLet's ensure y bottom: bottom border at y=3242. Page bottom number at y=3270. The bottom border line at y=3242. Top of bottom ads at y=1758. Gap between top and bottom ads: top bottom y=1701, bottom top y=1758, gap 57. Good.\\n\\nLet's final JSON only.\",\"reasoning_details\":[{\"type\":\"reasoning.text\",\"text\":\"\\nWe need answer JSON only with bounding boxes for all advertisements. Need infer coords on original page 2479x3508. Need identify ad rectangles. Image shows three ads: top large ad spanning x ~183 to 2197? y ~218 to 1701? bottom left x ~181 to 1179 y ~1758 to 3242? bottom right x ~1233 to 2212 y ~1757 to 3242? Need precise enough. Need return boxes. Let's analyze image.\\n\\nWe have page image likely 2479 x 3508. Need bounding boxes. Need extract all advertisements. There are 3 ad blocks. Coordinates in original pixels. Need maybe include only ad area, not page margins. Need estimate from visible image. We can use pixel mapping. The provided image displayed in prompt has dimensions maybe 2479 x 3508? It says original size. The visible image in chat maybe same dimensions. Need determine coordinates.\\n\\nLet's inspect image manually. Page has black border? Page outer? We need boxes.\\n\\nImage coordinate origin top-left. We can estimate from image. Let's use visual landmarks. The top ad is rectangle bordered by black line. Its outer border coordinates:\\n- left border x around 182? (visible vertical black line)\\n- right border x around 2196?\\n- top border y around 218?\\n- bottom border y around 1701? (or 1700)\\nActually page top margin black at y=0? Image has black top strip 0-28? Page starts y~28? The top ad border at y=218? Need.\\n\\nBottom left ad:\\n- left border x around 182\\n- right border x around 1178\\n- top border y around 1758\\n- bottom border y around 3242\\nBottom right:\\n- left border x around 1232\\n- right border x around 2212\\n- top border y around 1758\\n- bottom border y around 3242\\n\\nNeed maybe page cropped with black margins, page edges. Let's parse coordinates more systematically.\\n\\nThe image displayed is 2479x3508. The page content:\\n- black outer background top and bottom, page cream. Page left margin x around 22? Page right margin x around 2458? Maybe.\\n\\nAd top:\\n- left vertical border is at x ~182, top horizontal at y~218, right at x~2196, bottom at y~1701. It has black border thickness ~4.\\n\\nBottom left:\\n- left vertical at x~181, top horizontal at y~1758, right at x~1178, bottom at y~3242.\\nBottom right:\\n- left vertical at x~1233, top at y~1758, right at x~2212, bottom at y~3242.\\n\\nNeed maybe include border? Bounding boxes often include full ad including border. Use outer border coordinates. Need maybe top ad x0=181, y0=218, x1=2197, y1=1701.\\n\\nLet's consider if there are any other advertisements? The page has three panels: top ad, lower left machine, lower right watch. No page number. Return only JSON.\\n\\nNeed ensure \\\"box\\\": [x0, y0, x1, y1]. Could include all. Need no additional.\\n\\nLet's perhaps derive more precise using image proportions. Let's estimate from visible: The top ad's outer rectangle: top border y=218? bottom y=1701. Left x=182. Right x=2196. It is a single ad. Lower left rectangle: x=181, y=1758, x1=1178, y1=3242. Lower right x=1232, y=1758, x1=2212, y1=3242.\\n\\nNeed maybe if top ad extends to x=2197? The right border maybe x=2196. The page's bottom right ad right border at x=2212. The page right margin 2458, so right border 2212. Top ad right border maybe x=2196 because top ad slightly narrower than lower right. Let's inspect: Top ad right border seems at 2196? It is inset 20 px from lower right ad right border. The top ad left border aligns with bottom left left border at 181. The top ad right border aligns with lower right? Wait top ad right border maybe 2196, lower right right border 2212. In image, top ad right border is at x=2195, lower right at x=2212. The top ad is centered? Top ad left at 182, right at 2196 (width 2014). Lower right width 980. Lower left width 997. Gap 54. Top ad width 2014. Page width 2479. Margins: left 182, right 283. Not centered. Maybe top ad right border at 2197. Let's see top ad right border vertical line appears at x=2196? The bottom right ad right border at x=2211. Difference 15. Top ad left at 182. Width 2014. If page width 2479, right margin 283. Top ad left margin 182. It is not centered due to page? Maybe page has uneven margins due to scan.\\n\\nCould use OCR? no.\\n\\nNeed maybe include top ad's inner content? The ad is entire bordered rectangle. Lower left ad entire bordered rectangle. Lower right ad entire bordered rectangle.\\n\\nLet's think if \\\"advertisements\\\" should include only ad content not border? Usually bounding boxes include rectangle. We can include border.\\n\\nNeed maybe not include page number. No.\\n\\nLet's craft JSON. But before final, let's consider if there is a top ad plus two bottom ads, or maybe the entire page is an advertisement? The top ad and bottom ads are separate. The bottom left and bottom right are separate advertisements. The top ad has \\\"GOTH & CO. LTD., BASLE\\\" and is an ad. The bottom left \\\"Ls. Vial & Cie., Machine-Tools, Geneva\\\" ad. Bottom right \\\"E. Borel, Co Neuchatel\\\" ad. So 3.\\n\\nPotential issue: The top ad has large blank area; bounding box includes whole ad. Good.\\n\\nNeed maybe coordinates x1/y1 should be inclusive? Usually [x0,y0,x1,y1] bounding box. We can use outer border coordinates. If exact unknown, acceptable.\\n\\nLet's maybe choose:\\nTop: [181, 218, 2196, 1701]\\nBottom left: [181, 1758, 1178, 3242]\\nBottom right: [1232, 1758, 2212, 3242]\\n\\nNeed maybe bottom left x1=1178 or 1179? The right border of bottom left is at x=1178. Bottom right left at x=1232. Gap 54. If x1=1178, next x0=1232. Good.\\n\\nLet's ensure y bottom: bottom border at y=3242. Page bottom number at y=3270. The bottom border line at y=3242. Top of bottom ads at y=1758. Gap between top and bottom ads: top bottom y=1701, bottom top y=1758, gap 57. Good.\\n\\nLet's final JSON only.\",\"format\":\"unknown\",\"index\":0}]},\"native_finish_reason\":\"stop\"}],\"created\":1792899029,\"model\":\"nex-agi/nex-n2.5-mini\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":null,\"usage\":{\"completion_tokens\":1918,\"prompt_tokens\":3060,\"total_tokens\":4978,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":0,\"reasoning_tokens\":1416,\"rejected_prediction_tokens\":null,\"image_tokens\":0},\"prompt_tokens_details\":{\"audio_tokens\":0,\"cached_tokens\":128,\"cache_write_tokens\":0,\"video_tokens\":0},\"cost\":0.00026542,\"is_byok\":false,\"cost_details\":{\"upstream_inference_cost\":0.00026542,\"upstream_inference_prompt_cost\":0.00007362,\"upstream_inference_completions_cost\":0.0001918}},\"provider\":\"Nex AGI\"}"
+}

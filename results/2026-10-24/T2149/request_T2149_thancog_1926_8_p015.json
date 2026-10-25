@@ -1,0 +1,81 @@
+{
+    "text": "{\"advertisements\":[{\"box\":[180.0,300.0,2155.0,1680.0]},{\"box\":[180.0,1735.0,2155.0,3085.0]}]}",
+    "model": "elorian/glimpse",
+    "provider": "openrouter",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 3252,
+        "output_tokens": 1595,
+        "total_tokens": 4847,
+        "reasoning_tokens": 0,
+        "input_cost_usd": 0.0019512,
+        "output_cost_usd": 0.004785,
+        "estimated_cost_usd": 0.0067362
+    },
+    "duration": 13.016568422317505,
+    "timestamp": "2026-10-24T23:48:54.279211",
+    "parsed": {
+        "advertisements": [
+            {
+                "box": [
+                    180.0,
+                    300.0,
+                    2155.0,
+                    1680.0
+                ]
+            },
+            {
+                "box": [
+                    180.0,
+                    1735.0,
+                    2155.0,
+                    3085.0
+                ]
+            }
+        ]
+    },
+    "conversation_id": "30ead8ad-0cdc-480c-a68c-6f0207a56b29",
+    "score": {
+        "field_scores": {
+            "box 0": {
+                "response": [
+                    180.0,
+                    300.0,
+                    2155.0,
+                    1680.0
+                ],
+                "ground_truth": [
+                    170,
+                    289,
+                    2165,
+                    1695
+                ],
+                "score": 0.972
+            },
+            "box 1": {
+                "response": [
+                    180.0,
+                    1735.0,
+                    2155.0,
+                    3085.0
+                ],
+                "ground_truth": [
+                    181,
+                    1719,
+                    2177,
+                    3111
+                ],
+                "score": 0.959
+            }
+        },
+        "f1": 1.0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "mean_iou": 0.965,
+        "true_positives": 2,
+        "false_positives": 0,
+        "false_negatives": 0,
+        "iou_threshold": 0.5
+    },
+    "raw_response": "{\"id\":\"gen-1792878521-5WbWWEhMev06H2spOVpE\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\\"advertisements\\\": [{\\\"box\\\": [180, 300, 2155, 1680]}, {\\\"box\\\": [180, 1735, 2155, 3085]}]}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"advertisements\":[{\"box\":[180.0,300.0,2155.0,1680.0]},{\"box\":[180.0,1735.0,2155.0,3085.0]}]},\"reasoning\":\"The user wants me to extract the advertisements from this magazine page and return their bounding boxes.\\n\\nLooking at the page, it's from \\\"The Anglo-Swiss Commercial Gazette,\\\" August 1926, page 15.\\n\\nThere are two clear advertisements enclosed in borders:\\n\\n1. CUNARD LINE advertisement - top of the page. The border box starts around y=85 and ends around y=480. Let me look at the coordinates more carefully.\\n\\nThe page is 2479 x 3508 pixels. The image displayed in the conversation is probably scaled, but I need to estimate coordinates in the original pixel space.\\n\\nLet me estimate based on the image. The image shown is probably around 1700 wide? Actually, the original size is 2479 x 3508. I need to estimate bounding boxes in the original pixel coordinates.\\n\\nLet me look at the layout: the page has a header at the top (August, 1926. THE ANGLO-SWISS COMMERCIAL GAZETTE 15). Then the first ad: CUNARD LINE, enclosed in a rectangular border. The border seems to start around x=70 (left edge) and extend to x=870 (right edge) in the displayed image coordinates... but I need the original coordinates.\\n\\nLet me think about the displayed image dimensions. The image in the conversation is probably rendered at some size, but I should estimate proportionally.\\n\\nLooking at the image: the page occupies most of the frame. The left edge of the page is around x=20 (in display), the right edge around x=960. The top edge of the page is around y=50, the bottom edge around y=950.\\n\\nActually, let me carefully estimate using ratios relative to the original 2479 x 3508.\\n\\nFirst ad (CUNARD LINE): the border rectangle. In the displayed image (assuming width ~1700?), hmm, I don't know the display size. Let me just estimate proportionally.\\n\\nThe page width is 2479. The ad border's left edge is about 7% of the width? Let me see: the page's left edge is at about x=20/1000 of the image width? Hmm.\\n\\nLet me set up ratios based on a typical rendering: the image appears to be about 1700 px wide? Not sure. Better to estimate using relative positions.\\n\\nFrom the image: the page (paper) spans horizontally from about 2% to about 96% of the image width. The ad border's left edge is at about 7.5% of the image width, right edge at about 87%.\\n\\nVertically: the top border of the first ad is at about 8.5% of the image height, bottom border at about 48%.\\n\\nThe second ad (J.R. GEIGY): top border at about 49.5%, bottom border at about 88%.\\n\\nNow converting to original pixels: width 2479, height 3508.\\n\\nFirst ad: x0 = 0.075*2479 \u2248 186; x1 = 0.87*2479 \u2248 2157; y0 = 0.085*3508 \u2248 298; y1 = 0.48*3508 \u2248 1684.\\n\\nSecond ad: x0 same \u2248 186; x1 \u2248 2157; y0 = 0.495*3508 \u2248 1736; y1 = 0.88*3508 \u2248 3087.\\n\\nLet me refine by looking at the image more carefully. The image given in the conversation: I can imagine coordinates. Let me try to measure using known features: the header text \\\"August, 1926.\\\" is at top left around y=65 (in display). The top border of the first ad is just below that, around y=85-90 in display (if display height is ~1000?). Hmm, the display image height might be around 2300? Not sure.\\n\\nLet me just use ratios carefully.\\n\\nLooking at the image: total height includes black bars at top and bottom. The page paper starts at about y=50/1000? Actually, the top black bar is about 0-5% of height. The page top edge is around 5%. The header line is around 6%. The top border of the first ad is around 8.5-9%.\\n\\nThe bottom border of the first ad is around 47.5-48%.\\n\\nThe top border of the second ad is around 49.5%.\\n\\nThe bottom border of the second ad is around 87.5-88%.\\n\\nThe page bottom edge is around 94%.\\n\\nHorizontally: the left edge of the page is around 2%, the right edge around 96%. The left border of the ad is around 7.3%, the right border around 86.8%.\\n\\nSo in original pixels:\\n\\nx0 = 0.073*2479 \u2248 181\\nx1 = 0.868*2479 \u2248 2152\\ny0 (ad1) = 0.087*3508 \u2248 305\\ny1 (ad1) = 0.478*3508 \u2248 1677\\ny0 (ad2) = 0.495*3508 \u2248 1736\\ny1 (ad2) = 0.878*3508 \u2248 3080\\n\\nThese are reasonable.\\n\\nGiven the tolerance for such tasks, approximate boxes are fine.\\n\\nLet me double-check the vertical positions using text landmarks: the \\\"CUNARD LINE\\\" title is at about 12% of height. The bottom line of the first ad \\\"Freight Agents: CROWE & Co...\\\" is at about 46%. The bottom border is at about 47.5%.\\n\\nThe \\\"J.R. GEIGY\\\" title is at about 54%. The bottom line \\\"3, Lloyds Avenue, London, E.C.3.\\\" is at about 86%. The bottom border is at about 87.5%.\\n\\nSo final answer:\\n\\n[181, 305, 2152, 1677] and [181, 1736, 2152, 3080].\\n\\nRounding: maybe [180, 300, 2155, 1680] and [180, 1735, 2155, 3085].\\n\\nI'll provide these.\\n\\nThe output should be only the list of boxes.\\n\",\"reasoning_details\":[{\"type\":\"reasoning.text\",\"text\":\"The user wants me to extract the advertisements from this magazine page and return their bounding boxes.\\n\\nLooking at the page, it's from \\\"The Anglo-Swiss Commercial Gazette,\\\" August 1926, page 15.\\n\\nThere are two clear advertisements enclosed in borders:\\n\\n1. CUNARD LINE advertisement - top of the page. The border box starts around y=85 and ends around y=480. Let me look at the coordinates more carefully.\\n\\nThe page is 2479 x 3508 pixels. The image displayed in the conversation is probably scaled, but I need to estimate coordinates in the original pixel space.\\n\\nLet me estimate based on the image. The image shown is probably around 1700 wide? Actually, the original size is 2479 x 3508. I need to estimate bounding boxes in the original pixel coordinates.\\n\\nLet me look at the layout: the page has a header at the top (August, 1926. THE ANGLO-SWISS COMMERCIAL GAZETTE 15). Then the first ad: CUNARD LINE, enclosed in a rectangular border. The border seems to start around x=70 (left edge) and extend to x=870 (right edge) in the displayed image coordinates... but I need the original coordinates.\\n\\nLet me think about the displayed image dimensions. The image in the conversation is probably rendered at some size, but I should estimate proportionally.\\n\\nLooking at the image: the page occupies most of the frame. The left edge of the page is around x=20 (in display), the right edge around x=960. The top edge of the page is around y=50, the bottom edge around y=950.\\n\\nActually, let me carefully estimate using ratios relative to the original 2479 x 3508.\\n\\nFirst ad (CUNARD LINE): the border rectangle. In the displayed image (assuming width ~1700?), hmm, I don't know the display size. Let me just estimate proportionally.\\n\\nThe page width is 2479. The ad border's left edge is about 7% of the width? Let me see: the page's left edge is at about x=20/1000 of the image width? Hmm.\\n\\nLet me set up ratios based on a typical rendering: the image appears to be about 1700 px wide? Not sure. Better to estimate using relative positions.\\n\\nFrom the image: the page (paper) spans horizontally from about 2% to about 96% of the image width. The ad border's left edge is at about 7.5% of the image width, right edge at about 87%.\\n\\nVertically: the top border of the first ad is at about 8.5% of the image height, bottom border at about 48%.\\n\\nThe second ad (J.R. GEIGY): top border at about 49.5%, bottom border at about 88%.\\n\\nNow converting to original pixels: width 2479, height 3508.\\n\\nFirst ad: x0 = 0.075*2479 \u2248 186; x1 = 0.87*2479 \u2248 2157; y0 = 0.085*3508 \u2248 298; y1 = 0.48*3508 \u2248 1684.\\n\\nSecond ad: x0 same \u2248 186; x1 \u2248 2157; y0 = 0.495*3508 \u2248 1736; y1 = 0.88*3508 \u2248 3087.\\n\\nLet me refine by looking at the image more carefully. The image given in the conversation: I can imagine coordinates. Let me try to measure using known features: the header text \\\"August, 1926.\\\" is at top left around y=65 (in display). The top border of the first ad is just below that, around y=85-90 in display (if display height is ~1000?). Hmm, the display image height might be around 2300? Not sure.\\n\\nLet me just use ratios carefully.\\n\\nLooking at the image: total height includes black bars at top and bottom. The page paper starts at about y=50/1000? Actually, the top black bar is about 0-5% of height. The page top edge is around 5%. The header line is around 6%. The top border of the first ad is around 8.5-9%.\\n\\nThe bottom border of the first ad is around 47.5-48%.\\n\\nThe top border of the second ad is around 49.5%.\\n\\nThe bottom border of the second ad is around 87.5-88%.\\n\\nThe page bottom edge is around 94%.\\n\\nHorizontally: the left edge of the page is around 2%, the right edge around 96%. The left border of the ad is around 7.3%, the right border around 86.8%.\\n\\nSo in original pixels:\\n\\nx0 = 0.073*2479 \u2248 181\\nx1 = 0.868*2479 \u2248 2152\\ny0 (ad1) = 0.087*3508 \u2248 305\\ny1 (ad1) = 0.478*3508 \u2248 1677\\ny0 (ad2) = 0.495*3508 \u2248 1736\\ny1 (ad2) = 0.878*3508 \u2248 3080\\n\\nThese are reasonable.\\n\\nGiven the tolerance for such tasks, approximate boxes are fine.\\n\\nLet me double-check the vertical positions using text landmarks: the \\\"CUNARD LINE\\\" title is at about 12% of height. The bottom line of the first ad \\\"Freight Agents: CROWE & Co...\\\" is at about 46%. The bottom border is at about 47.5%.\\n\\nThe \\\"J.R. GEIGY\\\" title is at about 54%. The bottom line \\\"3, Lloyds Avenue, London, E.C.3.\\\" is at about 86%. The bottom border is at about 87.5%.\\n\\nSo final answer:\\n\\n[181, 305, 2152, 1677] and [181, 1736, 2152, 3080].\\n\\nRounding: maybe [180, 300, 2155, 1680] and [180, 1735, 2155, 3085].\\n\\nI'll provide these.\\n\\nThe output should be only the list of boxes.\\n\",\"format\":\"unknown\",\"index\":0}]},\"native_finish_reason\":\"stop\"}],\"created\":1792878521,\"model\":\"elorian/glimpse\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":\"default\",\"usage\":{\"completion_tokens\":1595,\"prompt_tokens\":3252,\"total_tokens\":4847,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":0,\"reasoning_tokens\":1536,\"rejected_prediction_tokens\":null,\"image_tokens\":0},\"prompt_tokens_details\":{\"audio_tokens\":0,\"cached_tokens\":0,\"cache_write_tokens\":0,\"video_tokens\":0},\"cost\":0.0067362,\"is_byok\":false,\"cost_details\":{\"upstream_inference_cost\":0.0067362,\"upstream_inference_prompt_cost\":0.0019512,\"upstream_inference_completions_cost\":0.004785}},\"provider\":\"Together\"}"
+}

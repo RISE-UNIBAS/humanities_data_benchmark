@@ -1,0 +1,113 @@
+{
+    "text": "{\"type\":{\"type\":\"Reference\"},\"author\":{\"last_name\":\"Montaghemi\",\"first_name\":\"Nourhomadeh\"},\"publication\":{\"title\":\"\",\"year\":\"\",\"place\":\"\",\"pages\":\"\",\"publisher\":\"\",\"format\":\"\",\"editor\":\"\"},\"library_reference\":{\"shelfmark\":\"\",\"subjects\":\"\"}}",
+    "model": "meta/muse-spark-open",
+    "provider": "openrouter",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 1296,
+        "output_tokens": 682,
+        "total_tokens": 1978,
+        "reasoning_tokens": 0,
+        "cached_tokens": 128,
+        "input_cost_usd": 0.0014792,
+        "output_cost_usd": 0.0028985,
+        "estimated_cost_usd": 0.0043777
+    },
+    "duration": 10.136668920516968,
+    "timestamp": "2026-10-24T21:27:07.071786",
+    "parsed": {
+        "type": {
+            "type": "Reference"
+        },
+        "author": {
+            "last_name": "Montaghemi",
+            "first_name": "Nourhomadeh"
+        },
+        "publication": {
+            "title": "",
+            "year": "",
+            "place": "",
+            "pages": "",
+            "publisher": "",
+            "format": "",
+            "editor": ""
+        },
+        "library_reference": {
+            "shelfmark": "",
+            "subjects": ""
+        }
+    },
+    "conversation_id": "4fe0fcdc-a204-4655-a30e-f91a578f6274",
+    "score": {
+        "f1_score": 0.33,
+        "precision": 0.3333333333333333,
+        "recall": 0.3333333333333333,
+        "true_positives": 1,
+        "false_positives": 2,
+        "false_negatives": 2,
+        "field_scores": {
+            "author.last_name": {
+                "response": "Montaghemi",
+                "ground_truth": "Sonnenbichler",
+                "score": 0.34782608695652173
+            },
+            "publication.publisher": {
+                "response": null,
+                "ground_truth": null,
+                "score": 1.0
+            },
+            "author.first_name": {
+                "response": "Nourhomadeh",
+                "ground_truth": null,
+                "score": 0.0
+            },
+            "publication.year": {
+                "response": null,
+                "ground_truth": null,
+                "score": 1.0
+            },
+            "publication.format": {
+                "response": null,
+                "ground_truth": null,
+                "score": 1.0
+            },
+            "library_reference.shelfmark": {
+                "response": null,
+                "ground_truth": null,
+                "score": 1.0
+            },
+            "type.type": {
+                "response": "Reference",
+                "ground_truth": "Reference",
+                "score": 1.0
+            },
+            "library_reference.subjects": {
+                "response": null,
+                "ground_truth": null,
+                "score": 1.0
+            },
+            "publication.place": {
+                "response": null,
+                "ground_truth": null,
+                "score": 1.0
+            },
+            "publication.title": {
+                "response": null,
+                "ground_truth": "Montaghemi, Nourhomadeh",
+                "score": 0.0
+            },
+            "publication.pages": {
+                "response": null,
+                "ground_truth": null,
+                "score": 1.0
+            },
+            "publication.editor": {
+                "response": null,
+                "ground_truth": null,
+                "score": 1.0
+            }
+        },
+        "total_fields": 12
+    },
+    "raw_response": "{\"id\":\"gen-1792870017-cwiOKhEyu69WJGME6bC8\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\\"type\\\":{\\\"type\\\":\\\"Reference\\\"},\\\"author\\\":{\\\"last_name\\\":\\\"Montaghemi\\\",\\\"first_name\\\":\\\"Nourhomadeh\\\"},\\\"publication\\\":{\\\"title\\\":\\\"\\\",\\\"place\\\":\\\"\\\",\\\"pages\\\":\\\"\\\",\\\"publisher\\\":\\\"\\\",\\\"format\\\":\\\"\\\" ,\\\"year\\\":\\\"\\\" ,\\\"editor\\\":\\\"\\\"},\\\"library_reference\\\":{\\\"shelfmark\\\":\\\"\\\",\\\"subjects\\\":\\\"\\\"}}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"type\":{\"type\":\"Reference\"},\"author\":{\"last_name\":\"Montaghemi\",\"first_name\":\"Nourhomadeh\"},\"publication\":{\"title\":\"\",\"year\":\"\",\"place\":\"\",\"pages\":\"\",\"publisher\":\"\",\"format\":\"\",\"editor\":\"\"},\"library_reference\":{\"shelfmark\":\"\",\"subjects\":\"\"}},\"reasoning\":\"We need to extract bibliographic info. Card shows:\\n\\nMontaghemi, Nourhomadeh\\ns.\\nSonnenbichler - Montaghemi, Nourhomadeh\\n\\nSo type is Reference because contains \\\"s.\\\" on separate line.\\n\\nAuthor: last_name Montaghemi, first_name Nourhomadeh\\n\\nPublication: title? What is title? The card is reference card pointing to Sonnenbichler - Montaghemi, Nourhomadeh. But we need to fill publication fields. Probably title empty? Or maybe title is Sonnenbichler - Montaghemi? But rules: title is main title of work. For reference cards, maybe no publication info. So we should leave empty strings.\\n\\nBut need to follow exact format. The JSON requires type.type, author, publication, library_reference.\\n\\nWe must return ONLY JSON.\\n\\nWe need to decide values:\\n\\ntype: \\\"Reference\\\"\\n\\nauthor last_name: \\\"Montaghemi\\\" first_name: \\\"Nourhomadeh\\\"\\n\\npublication: title \\\"\\\", year? Omit if not present? Rule 5 says omit year fields entirely if not present. But format shows year as string. Should we omit year key? Probably omit. But to be safe, maybe include empty? Instruction says omit year fields entirely if not present. So we should not include \\\"year\\\" key.\\n\\nBut example format includes year. However rule 5 says omit year fields entirely if not present. So we should omit.\\n\\nSimilarly place, pages, publisher, format empty strings.\\n\\nlibrary_reference shelfmark \\\"\\\", subjects \\\"\\\"\\n\\nWe must ensure JSON valid.\\n\\nPotential nuance: The card type Reference means we ignore? But still need to output author as Montaghemi.\\n\\nCheck extraction rules: Ignore any information that doesn't fit.\\n\\nSo output:\\n\\n{\\n  \\\"type\\\": {\\\"type\\\": \\\"Reference\\\"},\\n  \\\"author\\\": {\\\"last_name\\\": \\\"Montaghemi\\\", \\\"first_name\\\": \\\"Nourhomadeh\\\"},\\n  \\\"publication\\\": {\\\"title\\\": \\\"\\\", \\\"place\\\": \\\"\\\", \\\"pages\\\": \\\"\\\", \\\"publisher\\\": \\\"\\\", \\\"format\\\": \\\"\\\"},\\n  \\\"library_reference\\\": {\\\"shelfmark\\\": \\\"\\\", \\\"subjects\\\": \\\"\\\"}\\n}\\n\\nBut should we include year omitted? Yes.\\n\\nAlternatively some implementations include year as empty string. But rule says omit year fields entirely if not present. So we omit.\\n\\nWe must ensure exact format keys.\\n\\nReturn ONLY JSON.\\n\\nWe should not add extra text.\\n\\nWe need to consider that title might be \\\"Sonnenbichler - Montaghemi, Nourhomadeh\\\" ? But that is reference target, not title. However some might interpret title as that. But publication title should be empty because it's a reference card, not a dissertation.\\n\\nThe instruction: Card Type: If a card contains the note \\\"s.\\\" on a separate line, it is a \\\"Reference\\\". Otherwise, it is a \\\"Dissertation or thesis\\\".\\n\\nSo for Reference, publication info likely empty.\\n\\nThus final JSON as above.\\n\\nWe must ensure proper escaping.\\n\\nWe should output with correct JSON.\\n\\nPotential requirement: publication.year omitted, so no year key.\\n\\nLet's produce final answer.\",\"reasoning_details\":[{\"type\":\"reasoning.text\",\"text\":\"We need to extract bibliographic info. Card shows:\\n\\nMontaghemi, Nourhomadeh\\ns.\\nSonnenbichler - Montaghemi, Nourhomadeh\\n\\nSo type is Reference because contains \\\"s.\\\" on separate line.\\n\\nAuthor: last_name Montaghemi, first_name Nourhomadeh\\n\\nPublication: title? What is title? The card is reference card pointing to Sonnenbichler - Montaghemi, Nourhomadeh. But we need to fill publication fields. Probably title empty? Or maybe title is Sonnenbichler - Montaghemi? But rules: title is main title of work. For reference cards, maybe no publication info. So we should leave empty strings.\\n\\nBut need to follow exact format. The JSON requires type.type, author, publication, library_reference.\\n\\nWe must return ONLY JSON.\\n\\nWe need to decide values:\\n\\ntype: \\\"Reference\\\"\\n\\nauthor last_name: \\\"Montaghemi\\\" first_name: \\\"Nourhomadeh\\\"\\n\\npublication: title \\\"\\\", year? Omit if not present? Rule 5 says omit year fields entirely if not present. But format shows year as string. Should we omit year key? Probably omit. But to be safe, maybe include empty? Instruction says omit year fields entirely if not present. So we should not include \\\"year\\\" key.\\n\\nBut example format includes year. However rule 5 says omit year fields entirely if not present. So we should omit.\\n\\nSimilarly place, pages, publisher, format empty strings.\\n\\nlibrary_reference shelfmark \\\"\\\", subjects \\\"\\\"\\n\\nWe must ensure JSON valid.\\n\\nPotential nuance: The card type Reference means we ignore? But still need to output author as Montaghemi.\\n\\nCheck extraction rules: Ignore any information that doesn't fit.\\n\\nSo output:\\n\\n{\\n  \\\"type\\\": {\\\"type\\\": \\\"Reference\\\"},\\n  \\\"author\\\": {\\\"last_name\\\": \\\"Montaghemi\\\", \\\"first_name\\\": \\\"Nourhomadeh\\\"},\\n  \\\"publication\\\": {\\\"title\\\": \\\"\\\", \\\"place\\\": \\\"\\\", \\\"pages\\\": \\\"\\\", \\\"publisher\\\": \\\"\\\", \\\"format\\\": \\\"\\\"},\\n  \\\"library_reference\\\": {\\\"shelfmark\\\": \\\"\\\", \\\"subjects\\\": \\\"\\\"}\\n}\\n\\nBut should we include year omitted? Yes.\\n\\nAlternatively some implementations include year as empty string. But rule says omit year fields entirely if not present. So we omit.\\n\\nWe must ensure exact format keys.\\n\\nReturn ONLY JSON.\\n\\nWe should not add extra text.\\n\\nWe need to consider that title might be \\\"Sonnenbichler - Montaghemi, Nourhomadeh\\\" ? But that is reference target, not title. However some might interpret title as that. But publication title should be empty because it's a reference card, not a dissertation.\\n\\nThe instruction: Card Type: If a card contains the note \\\"s.\\\" on a separate line, it is a \\\"Reference\\\". Otherwise, it is a \\\"Dissertation or thesis\\\".\\n\\nSo for Reference, publication info likely empty.\\n\\nThus final JSON as above.\\n\\nWe must ensure proper escaping.\\n\\nWe should output with correct JSON.\\n\\nPotential requirement: publication.year omitted, so no year key.\\n\\nLet's produce final answer.\",\"format\":\"unknown\",\"index\":0}]},\"native_finish_reason\":\"stop\"}],\"created\":1792870017,\"model\":\"meta/muse-spark-open\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":null,\"usage\":{\"completion_tokens\":682,\"prompt_tokens\":1296,\"total_tokens\":1978,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":0,\"reasoning_tokens\":613,\"rejected_prediction_tokens\":null,\"image_tokens\":0},\"prompt_tokens_details\":{\"audio_tokens\":0,\"cached_tokens\":128,\"cache_write_tokens\":0,\"video_tokens\":0},\"cost\":0.0043777,\"is_byok\":false,\"cost_details\":{\"upstream_inference_cost\":0.0043777,\"upstream_inference_prompt_cost\":0.0014792,\"upstream_inference_completions_cost\":0.0028985}},\"provider\":\"Fireworks\"}"
+}

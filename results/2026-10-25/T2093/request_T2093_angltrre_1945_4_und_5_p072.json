@@ -1,0 +1,91 @@
+{
+    "text": "{\"advertisements\":[{\"box\":[202.0,88.0,1575.0,835.0]},{\"box\":[178.0,852.0,1596.0,3313.0]}]}",
+    "model": "xiaomi/mimo-v2.6-pro",
+    "provider": "openrouter",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 3047,
+        "output_tokens": 971,
+        "total_tokens": 4018,
+        "reasoning_tokens": 0,
+        "input_cost_usd": 0.001325445,
+        "output_cost_usd": 0.00084477,
+        "estimated_cost_usd": 0.002170215
+    },
+    "duration": 14.914870738983154,
+    "timestamp": "2026-10-25T02:14:51.704946",
+    "parsed": {
+        "advertisements": [
+            {
+                "box": [
+                    202.0,
+                    88.0,
+                    1575.0,
+                    835.0
+                ]
+            },
+            {
+                "box": [
+                    178.0,
+                    852.0,
+                    1596.0,
+                    3313.0
+                ]
+            }
+        ]
+    },
+    "conversation_id": "8d7b9c63-468c-4dee-8f55-9eb3de95a20a",
+    "score": {
+        "field_scores": {
+            "box 0": {
+                "response": null,
+                "ground_truth": [
+                    265,
+                    1730,
+                    2344,
+                    3235
+                ],
+                "score": 0.0
+            },
+            "box 1": {
+                "response": null,
+                "ground_truth": [
+                    300,
+                    187,
+                    2331,
+                    1703
+                ],
+                "score": 0.0
+            },
+            "unmatched prediction 0": {
+                "response": [
+                    202.0,
+                    88.0,
+                    1575.0,
+                    835.0
+                ],
+                "ground_truth": null,
+                "score": 0.0
+            },
+            "unmatched prediction 1": {
+                "response": [
+                    178.0,
+                    852.0,
+                    1596.0,
+                    3313.0
+                ],
+                "ground_truth": null,
+                "score": 0.0
+            }
+        },
+        "f1": 0.0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "mean_iou": 0.0,
+        "true_positives": 0,
+        "false_positives": 2,
+        "false_negatives": 2,
+        "iou_threshold": 0.5
+    },
+    "raw_response": "{\"id\":\"gen-1792887277-cKtbnfqE1KUoC9Ceahqa\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\n    \\\"advertisements\\\": [\\n        {\\\"box\\\": [202, 88, 1575, 835]},\\n        {\\\"box\\\": [178, 852, 1596, 3313]}\\n    ]\\n}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"advertisements\":[{\"box\":[202.0,88.0,1575.0,835.0]},{\"box\":[178.0,852.0,1596.0,3313.0]}]},\"reasoning\":\"Got it, let's look at the page. There are two ads: first one at the top, then the bottom one. Let's get their coordinates.\\n\\nFirst ad (Stoffel & Co): top left is around [125, 54], bottom right [931, 488]. Wait, the page is 2479x3508, so scale up? Wait no, the image shown is a scaled version, so we need to map to original size. Wait, the original page is 2479x3508, the image here is 1473x2048 (approx, looking at the dimensions). So scale factor is 2479/1473 \u2248 1.683, 3508/2048 \u22481.713.\\n\\nWait no, actually, let's get the boxes in original pixels. Let's see:\\n\\nFirst ad (top): x0 is ~125*1.683 \u2248 210, y0 ~54*1.713\u224892, x1 ~931*1.683\u22481567, y1 ~488*1.713\u2248836.\\n\\nWait no, looking at the image: the first ad starts at x ~122 (in the provided image, which is 1473 px wide, original 2479, so 2479/1473 \u2248 1.683). So x0: 122 * (2479/1473) \u2248 205, y0: 52*(3508/2048)\u224889, x1: 934*(2479/1473)\u22481573, y1: 486*(3508/2048)\u2248832.\\n\\nSecond ad (bottom): x0 ~108*(2479/1473)\u2248182, y0 ~500*(3508/2048)\u2248857, x1 ~946*(2479/1473)\u22481594, y1 ~1932*(3508/2048)\u22483315.\\n\\nWait no, let's check the image again. The top ad is from [121, 53] to [933, 487] in the displayed image. The displayed image's width is 1473, original is 2479, so scale x: 2479/1473 \u2248 1.683. Y scale: 3508 / 2048 \u2248 1.713.\\n\\nSo first box:\\nx0: 121 * 1.683 \u2248 204\\ny0: 53 * 1.713 \u2248 91\\nx1: 933 * 1.683 \u2248 1570\\ny1: 487 * 1.713 \u2248 834\\n\\nSecond box:\\nx0: 107 * 1.683 \u2248 180\\ny0: 499 * 1.713 \u2248 855\\nx1: 947 * 1.683 \u2248 1594\\ny1: 1931 * 1.713 \u2248 3308\\n\\nWait but let's make it accurate. Alternatively, the original page's top ad is in the upper half, so box [205, 90, 1572, 833], and the lower ad is [181, 854, 1593, 3310]. Let's confirm. Yep, those are the two ads. So the JSON would have those two boxes.\",\"reasoning_details\":[{\"type\":\"reasoning.text\",\"text\":\"Got it, let's look at the page. There are two ads: first one at the top, then the bottom one. Let's get their coordinates.\\n\\nFirst ad (Stoffel & Co): top left is around [125, 54], bottom right [931, 488]. Wait, the page is 2479x3508, so scale up? Wait no, the image shown is a scaled version, so we need to map to original size. Wait, the original page is 2479x3508, the image here is 1473x2048 (approx, looking at the dimensions). So scale factor is 2479/1473 \u2248 1.683, 3508/2048 \u22481.713.\\n\\nWait no, actually, let's get the boxes in original pixels. Let's see:\\n\\nFirst ad (top): x0 is ~125*1.683 \u2248 210, y0 ~54*1.713\u224892, x1 ~931*1.683\u22481567, y1 ~488*1.713\u2248836.\\n\\nWait no, looking at the image: the first ad starts at x ~122 (in the provided image, which is 1473 px wide, original 2479, so 2479/1473 \u2248 1.683). So x0: 122 * (2479/1473) \u2248 205, y0: 52*(3508/2048)\u224889, x1: 934*(2479/1473)\u22481573, y1: 486*(3508/2048)\u2248832.\\n\\nSecond ad (bottom): x0 ~108*(2479/1473)\u2248182, y0 ~500*(3508/2048)\u2248857, x1 ~946*(2479/1473)\u22481594, y1 ~1932*(3508/2048)\u22483315.\\n\\nWait no, let's check the image again. The top ad is from [121, 53] to [933, 487] in the displayed image. The displayed image's width is 1473, original is 2479, so scale x: 2479/1473 \u2248 1.683. Y scale: 3508 / 2048 \u2248 1.713.\\n\\nSo first box:\\nx0: 121 * 1.683 \u2248 204\\ny0: 53 * 1.713 \u2248 91\\nx1: 933 * 1.683 \u2248 1570\\ny1: 487 * 1.713 \u2248 834\\n\\nSecond box:\\nx0: 107 * 1.683 \u2248 180\\ny0: 499 * 1.713 \u2248 855\\nx1: 947 * 1.683 \u2248 1594\\ny1: 1931 * 1.713 \u2248 3308\\n\\nWait but let's make it accurate. Alternatively, the original page's top ad is in the upper half, so box [205, 90, 1572, 833], and the lower ad is [181, 854, 1593, 3310]. Let's confirm. Yep, those are the two ads. So the JSON would have those two boxes.\",\"format\":\"unknown\",\"index\":0}]},\"native_finish_reason\":\"stop\"}],\"created\":1792887277,\"model\":\"xiaomi/mimo-v2.6-pro\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":null,\"usage\":{\"completion_tokens\":971,\"prompt_tokens\":3047,\"total_tokens\":4018,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":0,\"reasoning_tokens\":907,\"rejected_prediction_tokens\":null,\"image_tokens\":0},\"prompt_tokens_details\":{\"audio_tokens\":0,\"cached_tokens\":0,\"cache_write_tokens\":0,\"video_tokens\":0},\"cost\":0.002170215,\"is_byok\":false,\"cost_details\":{\"upstream_inference_cost\":0.002170215,\"upstream_inference_prompt_cost\":0.001325445,\"upstream_inference_completions_cost\":0.00084477}},\"provider\":\"Xiaomi\"}"
+}

@@ -1,0 +1,77 @@
+{
+    "text": "{\"metadata\":{\"send_date\":[\"1932-12-21\"],\"letter_title\":null,\"sender_persons\":null,\"receiver_persons\":null}}",
+    "model": "xiaomi/mimo-v2.6-pro",
+    "provider": "openrouter",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 3206,
+        "output_tokens": 765,
+        "total_tokens": 3971,
+        "reasoning_tokens": 0,
+        "cached_tokens": 3200,
+        "input_cost_usd": 1.413e-05,
+        "output_cost_usd": 0.00066555,
+        "estimated_cost_usd": 0.00067968
+    },
+    "duration": 14.378760814666748,
+    "timestamp": "2026-10-25T01:11:27.245171",
+    "parsed": {
+        "metadata": {
+            "send_date": [
+                "1932-12-21"
+            ],
+            "letter_title": null,
+            "sender_persons": null,
+            "receiver_persons": null
+        }
+    },
+    "conversation_id": "26384191-7fad-46b9-b54e-e56948e26fbd",
+    "score": {
+        "send_date_tp": 1,
+        "send_date_fp": 0,
+        "send_date_fn": 0,
+        "sender_persons_tp": 0,
+        "sender_persons_fp": 0,
+        "sender_persons_fn": 0,
+        "receiver_persons_tp": 0,
+        "receiver_persons_fp": 0,
+        "receiver_persons_fn": 0,
+        "field_scores": {
+            "send_date": {
+                "response": [
+                    "1932-12-21"
+                ],
+                "ground_truth": [
+                    "1932-12-21"
+                ],
+                "score": null,
+                "counts": {
+                    "send_date_tp": 1,
+                    "send_date_fp": 0,
+                    "send_date_fn": 0
+                }
+            },
+            "sender_persons": {
+                "response": [],
+                "ground_truth": [],
+                "score": null,
+                "counts": {
+                    "sender_persons_tp": 0,
+                    "sender_persons_fp": 0,
+                    "sender_persons_fn": 0
+                }
+            },
+            "receiver_persons": {
+                "response": [],
+                "ground_truth": [],
+                "score": null,
+                "counts": {
+                    "receiver_persons_tp": 0,
+                    "receiver_persons_fp": 0,
+                    "receiver_persons_fn": 0
+                }
+            }
+        }
+    },
+    "raw_response": "{\"id\":\"gen-1792883473-gRZZ2Pi9YOgFrXiF87qd\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\n    \\\"metadata\\\": {\\n        \\\"send_date\\\": [\\\"1932-12-21\\\"],\\n        \\\"letter_title\\\": null,\\n        \\\"sender_persons\\\": null,\\n        \\\"receiver_persons\\\": null\\n    }\\n}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"metadata\":{\"send_date\":[\"1932-12-21\"],\"letter_title\":null,\"sender_persons\":null,\"receiver_persons\":null}},\"reasoning\":\"The user wants me to extract specific fields from a letter shown in an image.\\n\\n**Fields to extract:**\\n1.  `letter_title`: Title of the letter.\\n2.  `sender_persons`: Name(s) of the person(s) who wrote the letter.\\n3.  `send_date`: Exact or approximate date (YYYY-MM-DD).\\n4.  `receiver_persons`: Name(s) of the person(s) who received the letter.\\n\\n**Image Analysis:**\\n- **Header:** \\\"Basel, den 21.Dezember 1932.\\\" -> Location: Basel, Date: 21 December 1932.\\n- **Left side initials:** \\\"ER.\\\"\\n- **Addressee / Organization mentioned:** \\\"Basler Rheinschiffahrt-Aktiengesellschaft BASEL Marktgsse 5.\\\" This is the letterhead or the entity sending it. Actually, looking at the layout:\\n- \\\"Basel, den 21.Dezember 1932.\\\" is the dateline.\\n- The text below \\\"Basler Rheinschiffahrt-Aktiengesellschaft BASEL Marktgasse 5\\\" is centered. This looks like the letterhead.\\n- The text starts: \\\"Namens der Basler Personenschiffahrtsgesellschaft best\u00e4tige ich Ihnen den Empfang Ihres Geehrten vom 19.ds. Ich habe dieses Schreiben an den Verein f\u00fcr die Schifffahrt auf dem Oberrhein weitergeleitet und nehme an, dass sich dieser mit Ihnen direkt in Verbindung setzen werde.\\\"\\n- **Closing:** \\\"In Hochachtung\\\"\\n- **Signature:** The image is cut off at the bottom. There is no visible signature or typed name at the bottom.\\n\\n**Mapping fields:**\\n\\n1.  **letter_title**: There is no explicit title like \\\"Letter to X\\\" or \\\"Subject: Y\\\". The content is a confirmation of receipt of a letter dated 19th of the current month and forwarding it. Usually, if no title is present, it should be null. However, sometimes the subject line acts as a title. Here, there is no subject line. The text is body text. So `letter_title` is likely `null`.\\n\\n2.  **sender_persons**: The letter is on the letterhead of \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\". The text says \\\"Namens der Basler Personenschiffahrtsgesellschaft best\u00e4tige ich Ihnen...\\\" (On behalf of the Basel Passenger Shipping Company, I confirm to you...).\\n- The letter is written by an unnamed individual representing the company.\\n- There is no specific person named as the author (no signature block visible).\\n- The prompt asks for \\\"Name(s) of the person(s)\\\". If a person isn't named, should I put the organization? The key is `sender_persons`. If no person is named, the value is likely `null`.\\n- Wait, let me look closer at the top left. \\\"ER.\\\" Those might be reference initials or the writer's initials. But that's not a full name.\\n- The text refers to \\\"Basler Personenschiffahrtsgesellschaft\\\". This is an organization.\\n- Is there a person implied? \\\"best\u00e4tige ich Ihnen\\\" (I confirm to you). The \\\"I\\\" is anonymous.\\n- Therefore, `sender_persons` is `null`.\",\"reasoning_details\":[{\"type\":\"reasoning.text\",\"text\":\"The user wants me to extract specific fields from a letter shown in an image.\\n\\n**Fields to extract:**\\n1.  `letter_title`: Title of the letter.\\n2.  `sender_persons`: Name(s) of the person(s) who wrote the letter.\\n3.  `send_date`: Exact or approximate date (YYYY-MM-DD).\\n4.  `receiver_persons`: Name(s) of the person(s) who received the letter.\\n\\n**Image Analysis:**\\n- **Header:** \\\"Basel, den 21.Dezember 1932.\\\" -> Location: Basel, Date: 21 December 1932.\\n- **Left side initials:** \\\"ER.\\\"\\n- **Addressee / Organization mentioned:** \\\"Basler Rheinschiffahrt-Aktiengesellschaft BASEL Marktgsse 5.\\\" This is the letterhead or the entity sending it. Actually, looking at the layout:\\n- \\\"Basel, den 21.Dezember 1932.\\\" is the dateline.\\n- The text below \\\"Basler Rheinschiffahrt-Aktiengesellschaft BASEL Marktgasse 5\\\" is centered. This looks like the letterhead.\\n- The text starts: \\\"Namens der Basler Personenschiffahrtsgesellschaft best\u00e4tige ich Ihnen den Empfang Ihres Geehrten vom 19.ds. Ich habe dieses Schreiben an den Verein f\u00fcr die Schifffahrt auf dem Oberrhein weitergeleitet und nehme an, dass sich dieser mit Ihnen direkt in Verbindung setzen werde.\\\"\\n- **Closing:** \\\"In Hochachtung\\\"\\n- **Signature:** The image is cut off at the bottom. There is no visible signature or typed name at the bottom.\\n\\n**Mapping fields:**\\n\\n1.  **letter_title**: There is no explicit title like \\\"Letter to X\\\" or \\\"Subject: Y\\\". The content is a confirmation of receipt of a letter dated 19th of the current month and forwarding it. Usually, if no title is present, it should be null. However, sometimes the subject line acts as a title. Here, there is no subject line. The text is body text. So `letter_title` is likely `null`.\\n\\n2.  **sender_persons**: The letter is on the letterhead of \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\". The text says \\\"Namens der Basler Personenschiffahrtsgesellschaft best\u00e4tige ich Ihnen...\\\" (On behalf of the Basel Passenger Shipping Company, I confirm to you...).\\n- The letter is written by an unnamed individual representing the company.\\n- There is no specific person named as the author (no signature block visible).\\n- The prompt asks for \\\"Name(s) of the person(s)\\\". If a person isn't named, should I put the organization? The key is `sender_persons`. If no person is named, the value is likely `null`.\\n- Wait, let me look closer at the top left. \\\"ER.\\\" Those might be reference initials or the writer's initials. But that's not a full name.\\n- The text refers to \\\"Basler Personenschiffahrtsgesellschaft\\\". This is an organization.\\n- Is there a person implied? \\\"best\u00e4tige ich Ihnen\\\" (I confirm to you). The \\\"I\\\" is anonymous.\\n- Therefore, `sender_persons` is `null`.\",\"format\":\"unknown\",\"index\":0}]},\"native_finish_reason\":\"stop\"}],\"created\":1792883473,\"model\":\"xiaomi/mimo-v2.6-pro\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":null,\"usage\":{\"completion_tokens\":765,\"prompt_tokens\":3206,\"total_tokens\":3971,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":0,\"reasoning_tokens\":714,\"rejected_prediction_tokens\":null,\"image_tokens\":0},\"prompt_tokens_details\":{\"audio_tokens\":0,\"cached_tokens\":3200,\"cache_write_tokens\":0,\"video_tokens\":0},\"cost\":0.00067968,\"is_byok\":false,\"cost_details\":{\"upstream_inference_cost\":0.00067968,\"upstream_inference_prompt_cost\":0.00001413,\"upstream_inference_completions_cost\":0.00066555}},\"provider\":\"Xiaomi\"}"
+}

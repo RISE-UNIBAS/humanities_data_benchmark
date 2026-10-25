@@ -1,0 +1,82 @@
+{
+    "text": "{\"metadata\":{\"send_date\":[\"1928-05-24\"],\"letter_title\":null,\"sender_persons\":null,\"receiver_persons\":[\"Werner Stauffacher\"]}}",
+    "model": "fireworks/ember-1",
+    "provider": "openrouter",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 8363,
+        "output_tokens": 693,
+        "total_tokens": 9056,
+        "reasoning_tokens": 0,
+        "input_cost_usd": 0.025089,
+        "output_cost_usd": 0.010395,
+        "estimated_cost_usd": 0.035484
+    },
+    "duration": 10.451358556747437,
+    "timestamp": "2026-10-25T00:01:34.149162",
+    "parsed": {
+        "metadata": {
+            "send_date": [
+                "1928-05-24"
+            ],
+            "letter_title": null,
+            "sender_persons": null,
+            "receiver_persons": [
+                "Werner Stauffacher"
+            ]
+        }
+    },
+    "conversation_id": "a916747a-221c-4756-99c5-c25879e2d284",
+    "score": {
+        "send_date_tp": 1,
+        "send_date_fp": 0,
+        "send_date_fn": 0,
+        "sender_persons_tp": 0,
+        "sender_persons_fp": 0,
+        "sender_persons_fn": 0,
+        "receiver_persons_tp": 1,
+        "receiver_persons_fp": 0,
+        "receiver_persons_fn": 0,
+        "field_scores": {
+            "send_date": {
+                "response": [
+                    "1928-05-24"
+                ],
+                "ground_truth": [
+                    "1928-05-24"
+                ],
+                "score": null,
+                "counts": {
+                    "send_date_tp": 1,
+                    "send_date_fp": 0,
+                    "send_date_fn": 0
+                }
+            },
+            "sender_persons": {
+                "response": [],
+                "ground_truth": [],
+                "score": null,
+                "counts": {
+                    "sender_persons_tp": 0,
+                    "sender_persons_fp": 0,
+                    "sender_persons_fn": 0
+                }
+            },
+            "receiver_persons": {
+                "response": [
+                    "Stauffacher, Werner"
+                ],
+                "ground_truth": [
+                    "Stauffacher, Werner"
+                ],
+                "score": null,
+                "counts": {
+                    "receiver_persons_tp": 1,
+                    "receiver_persons_fp": 0,
+                    "receiver_persons_fn": 0
+                }
+            }
+        }
+    },
+    "raw_response": "{\"id\":\"gen-1792879284-8ZD55q2Ml1r3zmE2C4ek\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\\"metadata\\\":{\\\"letter_title\\\":null,\\\"send_date\\\":[\\\"1928-05-24\\\"],\\\"sender_persons\\\":null,\\\"receiver_persons\\\":[\\\"Werner Stauffacher\\\"]}}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"metadata\":{\"send_date\":[\"1928-05-24\"],\"letter_title\":null,\"sender_persons\":null,\"receiver_persons\":[\"Werner Stauffacher\"]}},\"reasoning\":\"The user wants me to extract metadata from a historical letter. Let me analyze the images.\\n\\nThe letter is dated \\\"Basel, den 24. Mai 1928\\\" - so send_date is 1928-05-24.\\n\\nThe receiver is:\\n\\\"Herrn Direktor Werner Stauffacher, Pr\u00e4sident des Vereins f\u00fcr die Schiffahrt auf dem Oberrhein, Basel\\\"\\n\\nSo receiver_persons: [\\\"Werner Stauffacher\\\"]\\n\\nThe sender: The letter ends with \\\"Mit dem Ausdruck vorz\u00fcglicher Hochachtung Ihr ergebener\\\" but there's no signature visible. The letter mentions \\\"Herrn Groschupf\\\" multiple times as someone the sender is complaining about. The sender says \\\"Ich sehe mich veranlasst...\\\" but doesn't sign their name visibly. \\n\\nWait, let me re-read. The sender is writing to Werner Stauffacher. The sender mentions Herr Dr. Speich (president of Basler Rheinschiffahrt A.-G.) and Herr Groschupf. The sender complains about Groschupf. But the actual sender's name is not visible in the letter - there's no signature. The letter just says \\\"Ihr ergebener\\\" with no name.\\n\\nSo sender_persons should be null since the sender's name is not included.\\n\\nletter_title: There's no explicit title. The red \\\"38\\\" is just a page/archive number. So letter_title should be null.\\n\\nsend_date: 1928-05-24\\n\\nreceiver_persons: Werner Stauffacher\\n\\nLet me format the JSON according to the schema. The schema requires a \\\"metadata\\\" object containing the four keys.\\n\\nThe instructions say \\\"Do not return anything except the JSON file.\\\" and the response format requires raw JSON matching the schema with \\\"metadata\\\" wrapper.\\n\\nLet me construct:\\n{\\n  \\\"metadata\\\": {\\n    \\\"letter_title\\\": null,\\n    \\\"send_date\\\": [\\\"1928-05-24\\\"],\\n    \\\"sender_persons\\\": null,\\n    \\\"receiver_persons\\\": [\\\"Werner Stauffacher\\\"]\\n  }\\n}\\n\\nWait, the schema says each field can be array or null. The instructions say values should be stored as a list even if single value, and if not included set to \\\"null\\\". So for missing info, use null (not [\\\"null\\\"]). The example uses lists. For null, the schema allows null.\\n\\nActually the instruction says: 'If a piece of information is not included in the letter, set the value for the corresponding key to \\\"null\\\".' This could mean the string \\\"null\\\" or JSON null. The schema allows null. I'll use JSON null for missing values.\\n\\nFor sender, the name is not given (no signature). So sender_persons: null.\\n\\nActually, let me reconsider. Is there any indication of the sender? The letter is unsigned (just \\\"Ihr ergebener\\\"). The sender references \\\"meiner Antwort\\\" and \\\"meines heutigen Schreibens an Herrn Dr. Speich\\\". No name. So sender is null.\\n\\nFinal JSON.\",\"reasoning_details\":[{\"type\":\"reasoning.text\",\"text\":\"The user wants me to extract metadata from a historical letter. Let me analyze the images.\\n\\nThe letter is dated \\\"Basel, den 24. Mai 1928\\\" - so send_date is 1928-05-24.\\n\\nThe receiver is:\\n\\\"Herrn Direktor Werner Stauffacher, Pr\u00e4sident des Vereins f\u00fcr die Schiffahrt auf dem Oberrhein, Basel\\\"\\n\\nSo receiver_persons: [\\\"Werner Stauffacher\\\"]\\n\\nThe sender: The letter ends with \\\"Mit dem Ausdruck vorz\u00fcglicher Hochachtung Ihr ergebener\\\" but there's no signature visible. The letter mentions \\\"Herrn Groschupf\\\" multiple times as someone the sender is complaining about. The sender says \\\"Ich sehe mich veranlasst...\\\" but doesn't sign their name visibly. \\n\\nWait, let me re-read. The sender is writing to Werner Stauffacher. The sender mentions Herr Dr. Speich (president of Basler Rheinschiffahrt A.-G.) and Herr Groschupf. The sender complains about Groschupf. But the actual sender's name is not visible in the letter - there's no signature. The letter just says \\\"Ihr ergebener\\\" with no name.\\n\\nSo sender_persons should be null since the sender's name is not included.\\n\\nletter_title: There's no explicit title. The red \\\"38\\\" is just a page/archive number. So letter_title should be null.\\n\\nsend_date: 1928-05-24\\n\\nreceiver_persons: Werner Stauffacher\\n\\nLet me format the JSON according to the schema. The schema requires a \\\"metadata\\\" object containing the four keys.\\n\\nThe instructions say \\\"Do not return anything except the JSON file.\\\" and the response format requires raw JSON matching the schema with \\\"metadata\\\" wrapper.\\n\\nLet me construct:\\n{\\n  \\\"metadata\\\": {\\n    \\\"letter_title\\\": null,\\n    \\\"send_date\\\": [\\\"1928-05-24\\\"],\\n    \\\"sender_persons\\\": null,\\n    \\\"receiver_persons\\\": [\\\"Werner Stauffacher\\\"]\\n  }\\n}\\n\\nWait, the schema says each field can be array or null. The instructions say values should be stored as a list even if single value, and if not included set to \\\"null\\\". So for missing info, use null (not [\\\"null\\\"]). The example uses lists. For null, the schema allows null.\\n\\nActually the instruction says: 'If a piece of information is not included in the letter, set the value for the corresponding key to \\\"null\\\".' This could mean the string \\\"null\\\" or JSON null. The schema allows null. I'll use JSON null for missing values.\\n\\nFor sender, the name is not given (no signature). So sender_persons: null.\\n\\nActually, let me reconsider. Is there any indication of the sender? The letter is unsigned (just \\\"Ihr ergebener\\\"). The sender references \\\"meiner Antwort\\\" and \\\"meines heutigen Schreibens an Herrn Dr. Speich\\\". No name. So sender is null.\\n\\nFinal JSON.\",\"format\":\"unknown\",\"index\":0}]},\"native_finish_reason\":\"stop\"}],\"created\":1792879284,\"model\":\"fireworks/ember-1\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":null,\"usage\":{\"completion_tokens\":693,\"prompt_tokens\":8363,\"total_tokens\":9056,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":0,\"reasoning_tokens\":643,\"rejected_prediction_tokens\":null,\"image_tokens\":0},\"prompt_tokens_details\":{\"audio_tokens\":0,\"cached_tokens\":0,\"cache_write_tokens\":0,\"video_tokens\":0},\"cost\":0.035484,\"is_byok\":false,\"cost_details\":{\"upstream_inference_cost\":0.035484,\"upstream_inference_prompt_cost\":0.025089,\"upstream_inference_completions_cost\":0.010395}},\"provider\":\"Fireworks\"}"
+}

@@ -1,0 +1,92 @@
+{
+    "text": "{\"metadata\":{\"send_date\":[\"1928-06-19\"],\"letter_title\":[\"null\"],\"sender_persons\":[\"Dr. Adolf Bieder\",\"Dr. Hans Burckhardt\",\"Dr. Rudolf Leupold\"],\"receiver_persons\":[\"Basler Personenschifffahrtsgesellschaft\"]}}",
+    "model": "nvidia/nemotron-3.5-super-vl",
+    "provider": "openrouter",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 3282,
+        "output_tokens": 1250,
+        "total_tokens": 4532,
+        "reasoning_tokens": 0,
+        "input_cost_usd": 0.0004923,
+        "output_cost_usd": 0.000625,
+        "estimated_cost_usd": 0.0011173
+    },
+    "duration": 3.6198782920837402,
+    "timestamp": "2026-10-24T20:38:31.215485",
+    "parsed": {
+        "metadata": {
+            "send_date": [
+                "1928-06-19"
+            ],
+            "letter_title": [
+                "null"
+            ],
+            "sender_persons": [
+                "Dr. Adolf Bieder",
+                "Dr. Hans Burckhardt",
+                "Dr. Rudolf Leupold"
+            ],
+            "receiver_persons": [
+                "Basler Personenschifffahrtsgesellschaft"
+            ]
+        }
+    },
+    "conversation_id": "668a40e0-200b-41a8-90f5-85c0d18f5779",
+    "score": {
+        "send_date_tp": 1,
+        "send_date_fp": 0,
+        "send_date_fn": 0,
+        "sender_persons_tp": 1,
+        "sender_persons_fp": 2,
+        "sender_persons_fn": 0,
+        "receiver_persons_tp": 0,
+        "receiver_persons_fp": 1,
+        "receiver_persons_fn": 0,
+        "field_scores": {
+            "send_date": {
+                "response": [
+                    "1928-06-19"
+                ],
+                "ground_truth": [
+                    "1928-06-19"
+                ],
+                "score": null,
+                "counts": {
+                    "send_date_tp": 1,
+                    "send_date_fp": 0,
+                    "send_date_fn": 0
+                }
+            },
+            "sender_persons": {
+                "response": [
+                    "Dr. Adolf Bieder",
+                    "Dr. Hans Burckhardt",
+                    "Leupold, Rudolf"
+                ],
+                "ground_truth": [
+                    "Leupold, Rudolf"
+                ],
+                "score": null,
+                "counts": {
+                    "sender_persons_tp": 1,
+                    "sender_persons_fp": 2,
+                    "sender_persons_fn": 0
+                }
+            },
+            "receiver_persons": {
+                "response": [
+                    "Basler Personenschifffahrtsgesellschaft"
+                ],
+                "ground_truth": [],
+                "score": null,
+                "counts": {
+                    "receiver_persons_tp": 0,
+                    "receiver_persons_fp": 1,
+                    "receiver_persons_fn": 0
+                }
+            }
+        }
+    },
+    "raw_response": "{\"id\":\"gen-1792867107-087uAGS4PVhkMgr629jn\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\n    \\\"metadata\\\": {\\n        \\\"send_date\\\": [\\n            \\\"1928-06-19\\\"\\n        ],\\n        \\\"letter_title\\\": [\\n            \\\"null\\\"\\n        ],\\n        \\\"sender_persons\\\": [\\n            \\\"Dr. Adolf Bieder\\\",\\n            \\\"Dr. Hans Burckhardt\\\",\\n            \\\"Dr. Rudolf Leupold\\\"\\n        ],\\n        \\\"receiver_persons\\\": [\\n            \\\"Basler Personenschifffahrtsgesellschaft\\\"\\n        ]\\n    }\\n}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"metadata\":{\"send_date\":[\"1928-06-19\"],\"letter_title\":[\"null\"],\"sender_persons\":[\"Dr. Adolf Bieder\",\"Dr. Hans Burckhardt\",\"Dr. Rudolf Leupold\"],\"receiver_persons\":[\"Basler Personenschifffahrtsgesellschaft\"]}},\"reasoning\":\"The user wants me to extract specific information from the provided image of a historical letter and output it as a JSON file.\\n\\n**1. Analyze the Image:**\\n*   **Header/Letterhead:**\\n    *   Dr. ADOLF BIEDER\\n    *   Dr. HANS BURCKHARDT\\n    *   Dr. RUDOLF LEUPOLD\\n    *   Advokatur & Notariat\\n    *   BASEL\\n    *   6 Barf\u00fcssergasse 6\\n    *   TELEPHON: SAFRAN 39.62\\n    *   POSTSCHECKKONTO V 168\\n*   **Date:** \\\"Basel, den 19.Juni 1928\\\" (Top right)\\n*   **Recipient:** \\\"An die Basler Personenschifffahrtsgesellschaft\\\" (Addressed to the Basel Passenger Shipping Company)\\n    *   Address: Albangraben 8, BASEL\\n*   **Body Text:** Discusses returning a ship's letter for \\\"Albatros\\\" and deregistering it from the ship register. Mentions an invoice.\\n*   **Signature:** \\\"Hochachtungsvoll\\\" followed by a signature that looks like \\\"R. Leupold\\\". This matches the letterhead name Dr. Rudolf Leupold.\\n*   **Footer:** \\\"Beilagen erw.\\\" (Enclosures mentioned).\\n\\n**2. Map to Keys:**\\n*   **letter_title:** The letter doesn't have a specific \\\"Title\\\" like a subject line in bold. However, usually, if there's no explicit title, I might look for the main subject or leave it null. Wait, looking at the prompt example, it expects a title. In formal letters like this, sometimes the first line or the subject is the title. Here, there is no explicit \\\"Subject: ...\\\" line. The text starts with \\\"In der Beilage gebe ich Ihnen den Schiffsbrief...\\\". There is no distinct title. I will set this to null or perhaps infer it from the content if necessary, but the instructions say \\\"If a piece of information is not included in the letter, set the value for the corresponding key to 'null'\\\". So, `letter_title` -> `null`.\\n*   **sender_persons:** The letterhead lists three names: Dr. Adolf Bieder, Dr. Hans Burckhardt, Dr. Rudolf Leupold. The signature is clearly \\\"R. Leupold\\\" (Rudolf Leupold). However, the letterhead represents the firm. Usually, all names on the letterhead are considered the senders of the entity, or just the signer. The prompt asks for \\\"Name(s) of the person(s) who wrote the letter\\\". The letterhead lists the firm partners. The signature is Rudolf Leupold. I should probably list the names in the letterhead as they represent the sending office, or just the signer. Let's look at the letterhead block. It lists three doctors. I will list all three found in the header as they are the senders of the firm's correspondence. Actually, looking closely, the signature is just one person. But the letterhead implies the firm. Let's list the names visible in the header block as they are the identified senders of the stationery.\\n    *   Names: Dr. Adolf Bieder, Dr. Hans Burckhardt, Dr. Rudolf Leupold.\\n*   **send_date:** \\\"19.Juni 1928\\\". ISO format: 1928-06-19.\\n*   **receiver_persons:** The recipient is an organization: \\\"Basler Personenschifffahrtsgesellschaft\\\". The prompt asks for \\\"person(s)\\\". Often organizations are treated as receivers. I will list the organization name.\\n\\n**3. Refine Values:**\\n*   **letter_title:** Not present. -> `null`.\\n*   **sender_persons:** The header lists: Dr. Adolf Bieder, Dr. Hans Burckhardt, Dr. Rudolf Leupold.\\n*   **send_date:** 1928-06-19.\\n*   **receiver_persons:** Basler Personenschifffahrtsgesellschaft.\\n\\n**4. Formatting:**\\n*   JSON format.\\n*   Values as lists.\\n*   ISO date format.\\n\\n**Drafting JSON:**\\n```json\\n{\\n    \\\"letter_title\\\": [null],\\n    \\\"sender_persons\\\": [\\\"Dr. Adolf Bieder\\\", \\\"Dr. Hans Burckhardt\\\", \\\"Dr. Rudolf Leupold\\\"],\\n    \\\"send_date\\\": [\\\"1928-06-19\\\"],\\n    \\\"receiver_persons\\\": [\\\"Basler Personenschifffahrtsgesellschaft\\\"]\\n}\\n```\\nWait, let's double check the \\\"letter_title\\\". Is there a subject? No.\\nLet's double check the sender. The signature is clearly Rudolf Leupold. The letterhead lists three names. Usually, in these extraction tasks, if the letterhead has multiple names, they are all considered the senders of the entity.\\nLet's double check the receiver. \\\"An die Basler Personenschifffahrtsgesellschaft\\\". That is the receiver.\\n\\nFinal check on date: \\\"19.Juni 1928\\\" -> 1928-06-19.\\n\\nOne detail: \\\"letter_title\\\". If I look at the text, there is no title. I will use null.\\n\\nLet's construct the final output.\",\"reasoning_details\":[{\"type\":\"reasoning.text\",\"text\":\"The user wants me to extract specific information from the provided image of a historical letter and output it as a JSON file.\\n\\n**1. Analyze the Image:**\\n*   **Header/Letterhead:**\\n    *   Dr. ADOLF BIEDER\\n    *   Dr. HANS BURCKHARDT\\n    *   Dr. RUDOLF LEUPOLD\\n    *   Advokatur & Notariat\\n    *   BASEL\\n    *   6 Barf\u00fcssergasse 6\\n    *   TELEPHON: SAFRAN 39.62\\n    *   POSTSCHECKKONTO V 168\\n*   **Date:** \\\"Basel, den 19.Juni 1928\\\" (Top right)\\n*   **Recipient:** \\\"An die Basler Personenschifffahrtsgesellschaft\\\" (Addressed to the Basel Passenger Shipping Company)\\n    *   Address: Albangraben 8, BASEL\\n*   **Body Text:** Discusses returning a ship's letter for \\\"Albatros\\\" and deregistering it from the ship register. Mentions an invoice.\\n*   **Signature:** \\\"Hochachtungsvoll\\\" followed by a signature that looks like \\\"R. Leupold\\\". This matches the letterhead name Dr. Rudolf Leupold.\\n*   **Footer:** \\\"Beilagen erw.\\\" (Enclosures mentioned).\\n\\n**2. Map to Keys:**\\n*   **letter_title:** The letter doesn't have a specific \\\"Title\\\" like a subject line in bold. However, usually, if there's no explicit title, I might look for the main subject or leave it null. Wait, looking at the prompt example, it expects a title. In formal letters like this, sometimes the first line or the subject is the title. Here, there is no explicit \\\"Subject: ...\\\" line. The text starts with \\\"In der Beilage gebe ich Ihnen den Schiffsbrief...\\\". There is no distinct title. I will set this to null or perhaps infer it from the content if necessary, but the instructions say \\\"If a piece of information is not included in the letter, set the value for the corresponding key to 'null'\\\". So, `letter_title` -> `null`.\\n*   **sender_persons:** The letterhead lists three names: Dr. Adolf Bieder, Dr. Hans Burckhardt, Dr. Rudolf Leupold. The signature is clearly \\\"R. Leupold\\\" (Rudolf Leupold). However, the letterhead represents the firm. Usually, all names on the letterhead are considered the senders of the entity, or just the signer. The prompt asks for \\\"Name(s) of the person(s) who wrote the letter\\\". The letterhead lists the firm partners. The signature is Rudolf Leupold. I should probably list the names in the letterhead as they represent the sending office, or just the signer. Let's look at the letterhead block. It lists three doctors. I will list all three found in the header as they are the senders of the firm's correspondence. Actually, looking closely, the signature is just one person. But the letterhead implies the firm. Let's list the names visible in the header block as they are the identified senders of the stationery.\\n    *   Names: Dr. Adolf Bieder, Dr. Hans Burckhardt, Dr. Rudolf Leupold.\\n*   **send_date:** \\\"19.Juni 1928\\\". ISO format: 1928-06-19.\\n*   **receiver_persons:** The recipient is an organization: \\\"Basler Personenschifffahrtsgesellschaft\\\". The prompt asks for \\\"person(s)\\\". Often organizations are treated as receivers. I will list the organization name.\\n\\n**3. Refine Values:**\\n*   **letter_title:** Not present. -> `null`.\\n*   **sender_persons:** The header lists: Dr. Adolf Bieder, Dr. Hans Burckhardt, Dr. Rudolf Leupold.\\n*   **send_date:** 1928-06-19.\\n*   **receiver_persons:** Basler Personenschifffahrtsgesellschaft.\\n\\n**4. Formatting:**\\n*   JSON format.\\n*   Values as lists.\\n*   ISO date format.\\n\\n**Drafting JSON:**\\n```json\\n{\\n    \\\"letter_title\\\": [null],\\n    \\\"sender_persons\\\": [\\\"Dr. Adolf Bieder\\\", \\\"Dr. Hans Burckhardt\\\", \\\"Dr. Rudolf Leupold\\\"],\\n    \\\"send_date\\\": [\\\"1928-06-19\\\"],\\n    \\\"receiver_persons\\\": [\\\"Basler Personenschifffahrtsgesellschaft\\\"]\\n}\\n```\\nWait, let's double check the \\\"letter_title\\\". Is there a subject? No.\\nLet's double check the sender. The signature is clearly Rudolf Leupold. The letterhead lists three names. Usually, in these extraction tasks, if the letterhead has multiple names, they are all considered the senders of the entity.\\nLet's double check the receiver. \\\"An die Basler Personenschifffahrtsgesellschaft\\\". That is the receiver.\\n\\nFinal check on date: \\\"19.Juni 1928\\\" -> 1928-06-19.\\n\\nOne detail: \\\"letter_title\\\". If I look at the text, there is no title. I will use null.\\n\\nLet's construct the final output.\",\"format\":\"unknown\",\"index\":0}]},\"native_finish_reason\":\"stop\"}],\"created\":1792867107,\"model\":\"nvidia/nemotron-3.5-super-vl\",\"object\":\"chat.completion\",\"service_tier\":\"default\",\"system_fingerprint\":null,\"usage\":{\"completion_tokens\":1250,\"prompt_tokens\":3282,\"total_tokens\":4532,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":0,\"reasoning_tokens\":1147,\"rejected_prediction_tokens\":null,\"image_tokens\":0},\"prompt_tokens_details\":{\"audio_tokens\":0,\"cached_tokens\":0,\"cache_write_tokens\":0,\"video_tokens\":0},\"cost\":0.0011173,\"is_byok\":false,\"cost_details\":{\"upstream_inference_cost\":0.0011173,\"upstream_inference_prompt_cost\":0.0004923,\"upstream_inference_completions_cost\":0.000625}},\"provider\":\"DeepInfra\"}"
+}

@@ -255,8 +255,10 @@ This benchmark suite currently tests models from the following providers:
 | | claude-opus-5                             | Claude Opus 5                                              |
 | | claude-opus-5-5                           | Claude Opus 5.5                                            |
 | | claude-sonnet-5-5                         | Claude Sonnet 5.5                                          |
+| | claude-haiku-5-5                          | Claude Haiku 5.5                                           |
 | **Cohere** | command-a-03-2025                         | Command A (Mar 2025)                                       |
 | | command-a-vision-07-2025                  | Command A Vision (Jul 2025); multimodal                    |
+| | command-a-plus-05-2026                    | Command A+ (May 2026); multimodal, reasoning               |
 | | command-r-08-2024                         | Command R (Aug 2024)                                       |
 | | command-r-plus-08-2024                    | Command R+ (Aug 2024)                                      |
 | | command-r7b-12-2024                       | Command R 7B (Dec 2024)                                    |
@@ -301,13 +303,16 @@ This benchmark suite currently tests models from the following providers:
 | **Mistral AI** | ~~magistral-medium-2509~~                 | ~~Magistral Medium (Sep 2025); reasoning~~ (legacy)        |
 | | ~~magistral-small-2509~~                  | ~~Magistral Small (Sep 2025); reasoning~~ (legacy)         |
 | | ministral-14b-2512                        | Ministral 3 14B (Dec 2025)                                 |
+| | ministral-3b-2512                         | Ministral 3 3B (Dec 2025)                                  |
 | | ministral-8b-2512                         | Ministral 3 8B (Dec 2025)                                  |
 | | ~~mistral-large-2411~~                    | ~~Mistral Large (Nov 2024)~~ (legacy)                      |
 | | mistral-large-2512                        | Mistral Large (Dec 2025)                                   |
+| | mistral-large-4                           | Mistral Large 4                                            |
 | | ~~mistral-medium-2505~~                   | ~~Mistral Medium (May 2025)~~ (legacy)                     |
 | | ~~mistral-medium-2508~~                   | ~~Mistral Medium (Aug 2025)~~ (legacy)                     |
 | | mistral-medium-3.5                        | Mistral Medium 3.5 (Apr 2026)                              |
 | | ~~mistral-small-2506~~                    | ~~Mistral Small (Jun 2025)~~ (legacy)                      |
+| | mistral-small-2603                        | Mistral Small 4 (Mar 2026); multimodal                     |
 | | ~~pixtral-12b~~                           | ~~Pixtral 12B; multimodal~~ (legacy)                       |
 | | ~~pixtral-large-2411~~                    | ~~Pixtral Large (Nov 2024); multimodal~~ (legacy)          |
 | **OpenAI** | gpt-4.1                                   | GPT-4.1                                                    |
@@ -328,6 +333,7 @@ This benchmark suite currently tests models from the following providers:
 | | gpt-6-astra                               | GPT-6 Astra                                                |
 | | gpt-6-sol                                 | GPT-6 Sol                                                  |
 | | gpt-6-luna                                | GPT-6 Luna                                                 |
+| | gpt-6.1-sol                               | GPT-6.1 Sol                                                |
 | | gpt-5-mini                                | GPT-5 Mini                                                 |
 | | gpt-5-nano                                | GPT-5 Nano                                                 |
 | | o3                                        | OpenAI o3; reasoning                                       |
@@ -358,6 +364,21 @@ This benchmark suite currently tests models from the following providers:
 | | z-ai/glm-5v-turbo                         | GLM-5V Turbo (Z.ai); multimodal                            |
 | | meta/muse-spark-1.3                       | Muse Spark 1.3 (Meta); multimodal                          |
 | | z-ai/glm-5.3-flash                        | GLM-5.3 Flash (Z.ai); multimodal                           |
+| | minimax/minimax-m3.1-flash                | MiniMax M3.1 Flash; multimodal                             |
+| | nvidia/nemotron-3.5-super-vl              | Nemotron 3.5 Super VL (NVIDIA); multimodal                 |
+| | meta/muse-spark-open                      | Muse Spark Open (Meta), open weights; multimodal           |
+| | meta/muse-wonder                          | Muse Wonder (Meta); multimodal                             |
+| | stepfun/step-5-preview                    | StepFun Step 5 (preview); multimodal                       |
+| | qwen/qwen3.8-max-prime                    | Qwen 3.8 Max Prime; multimodal                             |
+| | xiaomi/mimo-v2.6-pro                      | MiMo V2.6 Pro (Xiaomi); multimodal                         |
+| | xiaomi/mimo-v2.6-flash                    | MiMo V2.6 Flash (Xiaomi); multimodal                       |
+| | inclusionai/ling-3.0-flash-vl             | Ling 3.0 Flash VL (inclusionAI); multimodal                |
+| | perceptron/perceptron-mk1.5               | Perceptron Mk1.5; multimodal                               |
+| | elorian/glimpse                           | Glimpse (Elorian); multimodal                              |
+| | fireworks/ember-1                         | Ember 1 (Fireworks); multimodal                            |
+| | bytedance-seed/seed-2-1-turbo             | Seed 2.1 Turbo (ByteDance); multimodal                     |
+| | nex-agi/nex-n2.5-mini                     | Nex N2.5 Mini (Nex AGI); multimodal                        |
+| | nex-agi/nex-n2.5-pro                      | Nex N2.5 Pro (Nex AGI); multimodal                         |
 | **sciCORE** | ~~GLM-4.5V-FP8~~                              | ~~GLM-4.5V, FP8 quantization; multimodal (Univ. of Basel HPC)~~ (legacy) |
 | | ~~qwen3-235b-fp8~~                            | ~~Qwen3 235B, FP8 quantization (Univ. of Basel HPC)~~ (legacy)          |
 | | ~~qwen35-397b-a17b-fp8~~                  | ~~Qwen3.5 397B-A17B, FP8 quantization (Univ. of Basel HPC)~~ (legacy) |

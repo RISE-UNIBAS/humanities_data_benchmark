@@ -1,0 +1,81 @@
+{
+    "text": "{\"company\":{\"transcription\":\"\\\"ITALELVETICA\\\" S.A. di partecipazione finanziaria ed industriali\"},\"location\":{\"transcription\":\"Chur\"},\"b_id\":{\"transcription\":\"B.51.322.GB.87.\"},\"date\":\"\",\"information\":[{\"transcription\":\"Britische schwarze Liste\"},{\"transcription\":\"13. Amendment vom 16.12.1940\"},{\"transcription\":\"gestrichen:\"},{\"transcription\":\"Amendment II, 30.10.45.\"}]}",
+    "model": "command-a-plus-05-2026",
+    "provider": "cohere",
+    "finish_reason": "complete",
+    "usage": {
+        "input_tokens": 650,
+        "output_tokens": 1281,
+        "total_tokens": 1931,
+        "reasoning_tokens": 0,
+        "input_cost_usd": 0.0,
+        "output_cost_usd": 0.0,
+        "reasoning_cost_usd": 0.0,
+        "estimated_cost_usd": 0.0
+    },
+    "duration": 6.946691036224365,
+    "timestamp": "2026-10-24T21:30:04.095051",
+    "parsed": {
+        "company": {
+            "transcription": "\"ITALELVETICA\" S.A. di partecipazione finanziaria ed industriali"
+        },
+        "location": {
+            "transcription": "Chur"
+        },
+        "b_id": {
+            "transcription": "B.51.322.GB.87."
+        },
+        "date": "",
+        "information": [
+            {
+                "transcription": "Britische schwarze Liste"
+            },
+            {
+                "transcription": "13. Amendment vom 16.12.1940"
+            },
+            {
+                "transcription": "gestrichen:"
+            },
+            {
+                "transcription": "Amendment II, 30.10.45."
+            }
+        ]
+    },
+    "conversation_id": "bd304540-9822-48e3-b056-1cabd2506eee",
+    "score": {
+        "fuzzy": 0.8473236832611833,
+        "field_scores": {
+            "b_id.transcription": {
+                "response": "B.51.322.GB.87.",
+                "ground_truth": "B.51.322.GB.87.",
+                "score": 1.0
+            },
+            "company.transcription": {
+                "response": "\"ITALELVETICA\" S.A. di partecipazione finanziaria ed industriali",
+                "ground_truth": "\"ITALELVETICA\" S.A. di partecipazione finanziarie ed industriali",
+                "score": 0.984375
+            },
+            "date": {
+                "response": "",
+                "ground_truth": "",
+                "score": 1.0
+            },
+            "information[0].transcription": {
+                "response": "Britische schwarze Liste",
+                "ground_truth": "Britische schwarze Liste\n13. Amendment vom 16.12.1940",
+                "score": 0.6233766233766234
+            },
+            "information[1].transcription": {
+                "response": "13. Amendment vom 16.12.1940",
+                "ground_truth": "gestrichen:\nAmendment 11, 30.10.45.",
+                "score": 0.4761904761904761
+            },
+            "location.transcription": {
+                "response": "Chur",
+                "ground_truth": "Chur",
+                "score": 1.0
+            }
+        }
+    },
+    "raw_response": "{\"id\":\"c10c21ed-3bf5-454c-9937-28e4536f5d74\",\"finish_reason\":\"COMPLETE\",\"message\":{\"role\":\"assistant\",\"content\":[{\"type\":\"thinking\",\"thinking\":\"The user wants me to extract data from an index card image and return a JSON object with specific fields. Let me analyze the image:\\n\\n1. **Company**: The primary company name, usually in the top-left. Exclude the location.\\n   - In the top-left, I see: `\\\"ITALELVETICA\\\" S.A. di partecipazione finanziaria ed industriali`\\n   - The location \\\"Chur\\\" appears to the right of this, so I should exclude it from the company name.\\n   - Company name: `\\\"ITALELVETICA\\\" S.A. di partecipazione finanziaria ed industriali`\\n\\n2. **Location**: The city or town, often following the company name.\\n   - I see \\\"Chur\\\" to the right of the company name, which is a city in Switzerland.\\n   - Location: \\\"Chur\\\"\\n\\n3. **b_id**: The identifier code, usually in the top-right, starting with \\\"B.\\\".\\n   - In the top-right, I see: `B.51.322.GB.87.`\\n   - b_id: \\\"B.51.322.GB.87.\\\"\\n\\n4. **date**: Any stamped dates on the card in YYYY-MM-DD format.\\n   - I see \\\"16.12.1940\\\" in the text \\\"13. Amendment vom 16.12.1940\\\"\\n   - I also see \\\"30.10.45\\\" in \\\"Amendment II, 30.10.45.\\\"\\n   - These appear to be dates mentioned in the text, not necessarily stamped dates. The user asked for \\\"stamped dates\\\" but these seem to be part of the content. However, to be safe, I should include dates that are clearly visible and in a date format.\\n   - The format in the text uses dots (16.12.1940) which would be YYYY-MM-DD as 1940-12-16\\n   - The second date is 30.10.45 which would be 1945-10-30 (assuming 45 means 1945)\\n   - However, the user specifically asked for \\\"stamped dates\\\". Looking more carefully, I don't see any obvious stamp marks with dates. The dates are part of the printed text. I should probably leave the date field empty since there are no clearly stamped dates visible.\\n   - Actually, let me reconsider. The user said \\\"Any stamped dates on the card\\\" - these dates are printed as part of the text, not stamped. I'll leave the date field empty.\\n\\n5. **information**: A list of text blocks from the main body of the card. Each block should be a separate string. Maintain line breaks with \\\\n.\\n   - I need to extract the main body text blocks, excluding the company/location/b_id header information.\\n   - The main body appears to start after the horizontal line and includes:\\n     - \\\"Britische schwarze Liste\\\"\\n     - \\\"13. Amendment vom 16.12.1940\\\"\\n     - \\\"gestrichen:\\\"\\n     - \\\"Amendment II, 30.10.45.\\\"\\n   \\n   - I should capture these as separate blocks with line breaks preserved.\\n\\nLet me structure the JSON:\\n\\n```json\\n{\\n  \\\"company\\\": {\\\"transcription\\\": \\\"\\\\\\\"ITALELVETICA\\\\\\\" S.A. di partecipazione finanziaria ed industriali\\\"},\\n  \\\"location\\\": {\\\"transcription\\\": \\\"Chur\\\"},\\n  \\\"b_id\\\": {\\\"transcription\\\": \\\"B.51.322.GB.87.\\\"},\\n  \\\"date\\\": \\\"\\\",\\n  \\\"information\\\": [\\n    {\\\"transcription\\\": \\\"Britische schwarze Liste\\\"},\\n    {\\\"transcription\\\": \\\"13. Amendment vom 16.12.1940\\\"},\\n    {\\\"transcription\\\": \\\"gestrichen:\\\"},\\n    {\\\"transcription\\\": \\\"Amendment II, 30.10.45.\\\"}\\n  ]\\n}\\n```\\n\\nWait, let me reconsider the date field. The user asked for \\\"Any stamped dates on the card in YYYY-MM-DD format\\\". Looking at the image again, I don't see any obvious stamped dates (like a rubber stamp with a date). The dates I see are part of the printed text. However, the text does contain dates in a format that could be converted (16.12.1940 and 30.10.45). \\n\\nActually, let me be more careful about what constitutes a \\\"stamped date\\\". In archival contexts, a \\\"stamped date\\\" typically refers to an official stamp or marking applied to a document, often by an authority or office. The dates in this document appear to be part of the printed content, not stamps. So I should leave the date field empty as per the instructions.\\n\\nLet me also double-check the information blocks. The main body of the card after the header section contains:\\n- \\\"Britische schwarze Liste\\\"\\n- \\\"13. Amendment vom 16.12.1940\\\"\\n- \\\"gestrichen:\\\"\\n- \\\"Amendment II, 30.10.45.\\\"\\n\\nThese should be captured as separate information blocks.\\n\\nFinal JSON structure:\\n\\n```json\\n{\\n  \\\"company\\\": {\\\"transcription\\\": \\\"\\\\\\\"ITALELVETICA\\\\\\\" S.A. di partecipazione finanziaria ed industriali\\\"},\\n  \\\"location\\\": {\\\"transcription\\\": \\\"Chur\\\"},\\n  \\\"b_id\\\": {\\\"transcription\\\": \\\"B.51.322.GB.87.\\\"},\\n  \\\"date\\\": \\\"\\\",\\n  \\\"information\\\": [\\n    {\\\"transcription\\\": \\\"Britische schwarze Liste\\\"},\\n    {\\\"transcription\\\": \\\"13. Amendment vom 16.12.1940\\\"},\\n    {\\\"transcription\\\": \\\"gestrichen:\\\"},\\n    {\\\"transcription\\\": \\\"Amendment II, 30.10.45.\\\"}\\n  ]\\n}\\n```\\n\\nThis looks correct based on my analysis of the image.\"},{\"type\":\"text\",\"text\":\"{\\n  \\\"company\\\": {\\\"transcription\\\": \\\"\\\\\\\"ITALELVETICA\\\\\\\" S.A. di partecipazione finanziaria ed industriali\\\"},\\n  \\\"location\\\": {\\\"transcription\\\": \\\"Chur\\\"},\\n  \\\"b_id\\\": {\\\"transcription\\\": \\\"B.51.322.GB.87.\\\"},\\n  \\\"date\\\": \\\"\\\",\\n  \\\"information\\\": [\\n    {\\\"transcription\\\": \\\"Britische schwarze Liste\\\"},\\n    {\\\"transcription\\\": \\\"13. Amendment vom 16.12.1940\\\"},\\n    {\\\"transcription\\\": \\\"gestrichen:\\\"},\\n    {\\\"transcription\\\": \\\"Amendment II, 30.10.45.\\\"}\\n  ]\\n}\"}]},\"usage\":{\"billed_units\":{\"input_tokens\":3932.0,\"output_tokens\":1277.0},\"tokens\":{\"input_tokens\":650.0,\"output_tokens\":1281.0,\"reasoning_tokens\":1150,\"image_tokens\":3343},\"cached_tokens\":608.0}}"
+}

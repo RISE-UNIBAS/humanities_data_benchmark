@@ -1,0 +1,78 @@
+{
+    "text": "{\"company\":{\"transcription\":\"ARIA, Automobil-Reifen-Import A.G.\"},\"location\":{\"transcription\":\"Z\u00fcrich\"},\"b_id\":{\"transcription\":\"B.51.322.GB.638\"},\"date\":\"1942-08-06\",\"information\":[{\"transcription\":\"Britische schwarze Liste\\nAmendment 12, Juli 1942.\"},{\"transcription\":\"gestrichen:\"},{\"transcription\":\"Amendment 13, 23. November 1945.\"}]}",
+    "model": "command-a-plus-05-2026",
+    "provider": "cohere",
+    "finish_reason": "complete",
+    "usage": {
+        "input_tokens": 650,
+        "output_tokens": 1183,
+        "total_tokens": 1833,
+        "reasoning_tokens": 0,
+        "input_cost_usd": 0.0,
+        "output_cost_usd": 0.0,
+        "reasoning_cost_usd": 0.0,
+        "estimated_cost_usd": 0.0
+    },
+    "duration": 6.920047998428345,
+    "timestamp": "2026-10-24T21:27:39.011121",
+    "parsed": {
+        "company": {
+            "transcription": "ARIA, Automobil-Reifen-Import A.G."
+        },
+        "location": {
+            "transcription": "Z\u00fcrich"
+        },
+        "b_id": {
+            "transcription": "B.51.322.GB.638"
+        },
+        "date": "1942-08-06",
+        "information": [
+            {
+                "transcription": "Britische schwarze Liste\nAmendment 12, Juli 1942."
+            },
+            {
+                "transcription": "gestrichen:"
+            },
+            {
+                "transcription": "Amendment 13, 23. November 1945."
+            }
+        ]
+    },
+    "conversation_id": "f454eb93-3e3e-4844-98b3-a6dfb3d9e354",
+    "score": {
+        "fuzzy": 0.9,
+        "field_scores": {
+            "b_id.transcription": {
+                "response": "B.51.322.GB.638",
+                "ground_truth": "B.51.322.GB.638",
+                "score": 1.0
+            },
+            "company.transcription": {
+                "response": "ARIA, Automobil-Reifen-Import A.G.",
+                "ground_truth": "ARIA, Automobil-Reifen-Import A.G.",
+                "score": 1.0
+            },
+            "date": {
+                "response": "1942-08-06",
+                "ground_truth": "1942-08-06",
+                "score": 1.0
+            },
+            "information[0].transcription": {
+                "response": "Britische schwarze Liste\nAmendment 12, Juli 1942.",
+                "ground_truth": "Britische schwarze Liste\nAmendment 12, Juli 1942.",
+                "score": 1.0
+            },
+            "information[1].transcription": {
+                "response": "gestrichen:",
+                "ground_truth": "gestrichen:\nAmendment 13, 23. November 1945.",
+                "score": 0.4
+            },
+            "location.transcription": {
+                "response": "Z\u00fcrich",
+                "ground_truth": "Z\u00fcrich",
+                "score": 1.0
+            }
+        }
+    },
+    "raw_response": "{\"id\":\"41f1e877-a0a1-482e-a577-a40edff11ed4\",\"finish_reason\":\"COMPLETE\",\"message\":{\"role\":\"assistant\",\"content\":[{\"type\":\"thinking\",\"thinking\":\"Let\u2019s parse the image.\\n\\nThe card has:\\n\\nTop-left: \u201cARIA, Automobil-Reifen-Import A.G.\u201d \u2013 that is the company name. Then location \u201cZ\u00fcrich.\u201d (city). So company = \\\"ARIA, Automobil-Reifen-Import A.G.\\\" (exclude location). Location = \\\"Z\u00fcrich\\\".\\n\\nTop-right: B.51.322.GB.638 \u2013 that is b_id. Should be \\\"B.51.322.GB.638\\\". The format says b_id: identifier code, usually in top-right, starting with \\\"B.\\\" So we include the whole code.\\n\\nDate: There is a stamped date \\\"6. Aug. 1942\\\" in the top-right column. Also there are other dates in the body: \\\"12. Juli 1942\\\" and \\\"23. November 1945\\\". The instruction: \\\"date: Any stamped dates on the card in YYYY-MM-DD format. If no date is present, use an empty string.\\\" Stamped dates are likely the typed/handwritten stamp. The top-right has \\\"6. Aug. 1942\\\" which is a date stamp. So we should extract that as date: \\\"1942-08-06\\\". The other dates are part of the information text, not stamped.\\n\\nThus date = \\\"1942-08-06\\\". If multiple stamped dates? There's only one.\\n\\nInformation: list of text blocks from the main body of the card. Each block should be a separate string. Maintain line breaks with \\\\n.\\n\\nWe need to capture each distinct block of text. The main body includes:\\n\\n- \\\"Britische schwarze Liste\\\"\\n- \\\"Amendment 12, Juli 1942.\\\"\\n- blank line? Actually there is a line break after that? The image shows:\\n\\n\\\"Britische schwarze Liste\\nAmendment 12, Juli 1942.\\\"\\n\\nProbably these are two lines, but we can treat them as separate blocks? The instruction: \\\"list of text blocks from the main body of the card. Each block should be a separate string in the list. Maintain line breaks with \\\\n.\\\" So we need to capture each distinct textual segment, preserving line breaks within each block using \\\\n. So we can combine lines that belong together as one block. For example, the first two lines could be combined as one block with a newline: \\\"Britische schwarze Liste\\\\nAmendment 12, Juli 1942.\\\" Then next block: \\\"gestrichen:\\\" (maybe separate). Then next block: \\\"Amendment 13, 23. November 1945.\\\" Possibly these are separate blocks.\\n\\nBut we need to decide how to split. Usually each separate logical sentence or heading is a block. The card has:\\n\\n- blank line? Actually after the top header and a horizontal line, there is a space then the text:\\n\\n\\\"Britische schwarze Liste\\nAmendment 12, Juli 1942.\\\"\\n\\nThen a blank line? Then \\\"gestrichen:\\\" on its own line. Then \\\"Amendment 13, 23. November 1945.\\\"\\n\\nThus we can have three blocks:\\n\\nBlock 1: \\\"Britische schwarze Liste\\\\nAmendment 12, Juli 1942.\\\"\\nBlock 2: \\\"gestrichen:\\\"\\nBlock 3: \\\"Amendment 13, 23. November 1945.\\\"\\n\\nAlternatively, we could separate each line as its own block, but the instruction says each block should be a separate string; maintain line breaks with \\\\n. So we can combine lines that are physically separate lines but belong together.\\n\\nThus information list: [block1, block2, block3].\\n\\nCheck for any other text: There's also the top header lines, but those are not part of the main body? The main body is likely after the horizontal line. The top header includes company and location and b_id and date. Those are captured separately. So we should not include them in information.\\n\\nThus final JSON:\\n\\n{\\n  \\\"company\\\": {\\\"transcription\\\": \\\"ARIA, Automobil-Reifen-Import A.G.\\\"},\\n  \\\"location\\\": {\\\"transcription\\\": \\\"Z\u00fcrich\\\"},\\n  \\\"b_id\\\": {\\\"transcription\\\": \\\"B.51.322.GB.638\\\"},\\n  \\\"date\\\": \\\"1942-08-06\\\",\\n  \\\"information\\\": [\\n    {\\\"transcription\\\": \\\"Britische schwarze Liste\\\\nAmendment 12, Juli 1942.\\\"},\\n    {\\\"transcription\\\": \\\"gestrichen:\\\"},\\n    {\\\"transcription\\\": \\\"Amendment 13, 23. November 1945.\\\"}\\n  ]\\n}\\n\\nCheck for any other text like \\\"6. Aug. 1942\\\" appears in top-right column but it's a stamped date, not part of information. So we ignore.\\n\\nCheck for any other text like \\\"47019\\\" at bottom left; that is likely a reference number, not part of information. Should we include? The instruction: \\\"list of text blocks from the main body of the card.\\\" The bottom number is not part of main body; it's probably a file number. So we exclude.\\n\\nThus final JSON as above.\\n\\nMake sure to output only JSON object, no extra text.\\n\\nLet's produce that.\"},{\"type\":\"text\",\"text\":\"{\\n  \\\"company\\\": {\\n    \\\"transcription\\\": \\\"ARIA, Automobil-Reifen-Import A.G.\\\"\\n  },\\n  \\\"location\\\": {\\n    \\\"transcription\\\": \\\"Z\u00fcrich\\\"\\n  },\\n  \\\"b_id\\\": {\\n    \\\"transcription\\\": \\\"B.51.322.GB.638\\\"\\n  },\\n  \\\"date\\\": \\\"1942-08-06\\\",\\n  \\\"information\\\": [\\n    {\\n      \\\"transcription\\\": \\\"Britische schwarze Liste\\\\nAmendment 12, Juli 1942.\\\"\\n    },\\n    {\\n      \\\"transcription\\\": \\\"gestrichen:\\\"\\n    },\\n    {\\n      \\\"transcription\\\": \\\"Amendment 13, 23. November 1945.\\\"\\n    }\\n  ]\\n}\"}]},\"usage\":{\"billed_units\":{\"input_tokens\":3932.0,\"output_tokens\":1179.0},\"tokens\":{\"input_tokens\":650.0,\"output_tokens\":1183.0,\"reasoning_tokens\":1034,\"image_tokens\":3343},\"cached_tokens\":16.0}}"
+}

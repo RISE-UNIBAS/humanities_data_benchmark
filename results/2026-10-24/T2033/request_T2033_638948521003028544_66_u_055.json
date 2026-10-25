@@ -1,0 +1,75 @@
+{
+    "text": "{\"company\":{\"transcription\":\"Winterstein & Co., Ernst\"},\"location\":{\"transcription\":\"ZUERICH\"},\"b_id\":{\"transcription\":\"B.51.322.GB.452.\"},\"date\":\"\",\"information\":[{\"transcription\":\"Britische schwarze Liste\\nAmendment 21, Dezember 1941.\"},{\"transcription\":\"gestrichen:\\nAmendment 13, 23.11.1945.\"}]}",
+    "model": "meta/muse-spark-open",
+    "provider": "openrouter",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 3492,
+        "output_tokens": 568,
+        "total_tokens": 4060,
+        "reasoning_tokens": 0,
+        "cached_tokens": 384,
+        "input_cost_usd": 0.0039426,
+        "output_cost_usd": 0.002414,
+        "estimated_cost_usd": 0.0063566
+    },
+    "duration": 11.117785930633545,
+    "timestamp": "2026-10-24T21:38:46.373789",
+    "parsed": {
+        "company": {
+            "transcription": "Winterstein & Co., Ernst"
+        },
+        "location": {
+            "transcription": "ZUERICH"
+        },
+        "b_id": {
+            "transcription": "B.51.322.GB.452."
+        },
+        "date": "",
+        "information": [
+            {
+                "transcription": "Britische schwarze Liste\nAmendment 21, Dezember 1941."
+            },
+            {
+                "transcription": "gestrichen:\nAmendment 13, 23.11.1945."
+            }
+        ]
+    },
+    "conversation_id": "4fa96396-e044-46fd-ba18-002380dfa4d4",
+    "score": {
+        "fuzzy": 1.0,
+        "field_scores": {
+            "b_id.transcription": {
+                "response": "B.51.322.GB.452.",
+                "ground_truth": "B.51.322.GB.452.",
+                "score": 1.0
+            },
+            "company.transcription": {
+                "response": "Winterstein & Co., Ernst",
+                "ground_truth": "Winterstein & Co., Ernst",
+                "score": 1.0
+            },
+            "date": {
+                "response": "",
+                "ground_truth": "",
+                "score": 1.0
+            },
+            "information[0].transcription": {
+                "response": "Britische schwarze Liste\nAmendment 21, Dezember 1941.",
+                "ground_truth": "Britische schwarze Liste\nAmendment 21, Dezember 1941.",
+                "score": 1.0
+            },
+            "information[1].transcription": {
+                "response": "gestrichen:\nAmendment 13, 23.11.1945.",
+                "ground_truth": "gestrichen:\nAmendment 13, 23.11.1945.",
+                "score": 1.0
+            },
+            "location.transcription": {
+                "response": "ZUERICH",
+                "ground_truth": "ZUERICH",
+                "score": 1.0
+            }
+        }
+    },
+    "raw_response": "{\"id\":\"gen-1792870715-grjQX2OR1UurDanB41YM\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\n\\\"company\\\": {\\n\\\"transcription\\\": \\\"Winterstein & Co., Ernst\\\"\\n},\\n\\\"location\\\": {\\n\\\"transcription\\\": \\\"ZUERICH\\\"\\n},\\n\\\"b_id\\\": {\\n\\\"transcription\\\": \\\"B.51.322.GB.452.\\\"\\n},\\n\\\"date\\\": \\\"\\\",\\n\\\"information\\\": [\\n{\\n\\\"transcription\\\": \\\"Britische schwarze Liste\\\\nAmendment 21, Dezember 1941.\\\"\\n},\\n{\\n\\\"transcription\\\": \\\"gestrichen:\\\\nAmendment 13, 23.11.1945.\\\"\\n}\\n]\\n}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"company\":{\"transcription\":\"Winterstein & Co., Ernst\"},\"location\":{\"transcription\":\"ZUERICH\"},\"b_id\":{\"transcription\":\"B.51.322.GB.452.\"},\"date\":\"\",\"information\":[{\"transcription\":\"Britische schwarze Liste\\nAmendment 21, Dezember 1941.\"},{\"transcription\":\"gestrichen:\\nAmendment 13, 23.11.1945.\"}]},\"reasoning\":\"We need to extract data. Company: \\\"Winterstein & Co., Ernst,\\\" location ZUERICH. So company transcription should be \\\"Winterstein & Co., Ernst\\\" ? Exclude location. The format says company: primary company name, usually top-left. Exclude location. So company is Winterstein & Co., Ernst\\n\\nLocation: ZUERICH\\n\\nb_id: B.51.322.GB.452.\\n\\ndate: Any stamped dates on card in YYYY-MM-DD format. There is no stamped date? The card has printed dates but not stamped. So empty string.\\n\\ninformation: list of text blocks from main body. Each block should be separate string. Maintain line breaks with \\\\n.\\n\\nWe have two blocks? Let's see: \\\"Britische schwarze Liste\\\\nAmendment 21, Dezember 1941.\\\" and \\\"gestrichen:\\\\nAmendment 13, 23.11.1945.\\\"\\n\\nProbably two entries.\\n\\nCheck image: Top-left line is company/location, not information. Main body has two blocks separated by blank line.\\n\\nSo information = [\\n {\\\"transcription\\\": \\\"Britische schwarze Liste\\\\nAmendment 21, Dezember 1941.\\\"},\\n {\\\"transcription\\\": \\\"gestrichen:\\\\nAmendment 13, 23.11.1945.\\\"}\\n]\\n\\nNeed to ensure exact transcription. Note capitalization: \\\"Britische schwarze Liste\\\" etc. Also \\\"gestrichen:\\\" underlined.\\n\\nWe must return JSON object exactly as format.\\n\\nRequired JSON format:\\n{\\n  \\\"company\\\": {\\\"transcription\\\": \\\"\\\"},\\n  \\\"location\\\": {\\\"transcription\\\": \\\"\\\"},\\n  \\\"b_id\\\": {\\\"transcription\\\": \\\"\\\"},\\n  \\\"date\\\": \\\"\\\",\\n  \\\"information\\\": [\\n    {\\\"transcription\\\": \\\"\\\"}\\n  ]\\n}\\n\\nSo date is string, not object.\\n\\nProvide.\\n\\nCheck b_id: \\\"B.51.322.GB.452.\\\" includes trailing dot. Should include as seen.\\n\\nCompany transcription: \\\"Winterstein & Co., Ernst\\\" - include comma? Original: \\\"Winterstein & Co., Ernst, ZUERICH\\\" So company part is \\\"Winterstein & Co., Ernst\\\"\\n\\nLocation: \\\"ZUERICH\\\"\\n\\nMake sure JSON valid.\\n\\nReturn ONLY JSON object.\\n\\nNo explanatory text.\\n\\n\",\"reasoning_details\":[{\"type\":\"reasoning.text\",\"text\":\"We need to extract data. Company: \\\"Winterstein & Co., Ernst,\\\" location ZUERICH. So company transcription should be \\\"Winterstein & Co., Ernst\\\" ? Exclude location. The format says company: primary company name, usually top-left. Exclude location. So company is Winterstein & Co., Ernst\\n\\nLocation: ZUERICH\\n\\nb_id: B.51.322.GB.452.\\n\\ndate: Any stamped dates on card in YYYY-MM-DD format. There is no stamped date? The card has printed dates but not stamped. So empty string.\\n\\ninformation: list of text blocks from main body. Each block should be separate string. Maintain line breaks with \\\\n.\\n\\nWe have two blocks? Let's see: \\\"Britische schwarze Liste\\\\nAmendment 21, Dezember 1941.\\\" and \\\"gestrichen:\\\\nAmendment 13, 23.11.1945.\\\"\\n\\nProbably two entries.\\n\\nCheck image: Top-left line is company/location, not information. Main body has two blocks separated by blank line.\\n\\nSo information = [\\n {\\\"transcription\\\": \\\"Britische schwarze Liste\\\\nAmendment 21, Dezember 1941.\\\"},\\n {\\\"transcription\\\": \\\"gestrichen:\\\\nAmendment 13, 23.11.1945.\\\"}\\n]\\n\\nNeed to ensure exact transcription. Note capitalization: \\\"Britische schwarze Liste\\\" etc. Also \\\"gestrichen:\\\" underlined.\\n\\nWe must return JSON object exactly as format.\\n\\nRequired JSON format:\\n{\\n  \\\"company\\\": {\\\"transcription\\\": \\\"\\\"},\\n  \\\"location\\\": {\\\"transcription\\\": \\\"\\\"},\\n  \\\"b_id\\\": {\\\"transcription\\\": \\\"\\\"},\\n  \\\"date\\\": \\\"\\\",\\n  \\\"information\\\": [\\n    {\\\"transcription\\\": \\\"\\\"}\\n  ]\\n}\\n\\nSo date is string, not object.\\n\\nProvide.\\n\\nCheck b_id: \\\"B.51.322.GB.452.\\\" includes trailing dot. Should include as seen.\\n\\nCompany transcription: \\\"Winterstein & Co., Ernst\\\" - include comma? Original: \\\"Winterstein & Co., Ernst, ZUERICH\\\" So company part is \\\"Winterstein & Co., Ernst\\\"\\n\\nLocation: \\\"ZUERICH\\\"\\n\\nMake sure JSON valid.\\n\\nReturn ONLY JSON object.\\n\\nNo explanatory text.\\n\\n\",\"format\":\"unknown\",\"index\":0}]},\"native_finish_reason\":\"stop\"}],\"created\":1792870715,\"model\":\"meta/muse-spark-open\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":null,\"usage\":{\"completion_tokens\":568,\"prompt_tokens\":3492,\"total_tokens\":4060,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":0,\"reasoning_tokens\":448,\"rejected_prediction_tokens\":null,\"image_tokens\":0},\"prompt_tokens_details\":{\"audio_tokens\":0,\"cached_tokens\":384,\"cache_write_tokens\":0,\"video_tokens\":0},\"cost\":0.0063566,\"is_byok\":false,\"cost_details\":{\"upstream_inference_cost\":0.0063566,\"upstream_inference_prompt_cost\":0.0039426,\"upstream_inference_completions_cost\":0.002414}},\"provider\":\"Fireworks\"}"
+}

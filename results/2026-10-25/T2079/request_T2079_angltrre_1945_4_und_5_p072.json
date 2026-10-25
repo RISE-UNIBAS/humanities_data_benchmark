@@ -1,0 +1,91 @@
+{
+    "text": "{\"advertisements\":[{\"box\":[122.0,55.0,933.0,487.0]},{\"box\":[111.0,494.0,942.0,919.0]}]}",
+    "model": "qwen/qwen3.8-max-prime",
+    "provider": "openrouter",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 2915,
+        "output_tokens": 2153,
+        "total_tokens": 5068,
+        "reasoning_tokens": 0,
+        "input_cost_usd": 0.01166,
+        "output_cost_usd": 0.025836,
+        "estimated_cost_usd": 0.037496
+    },
+    "duration": 27.468429803848267,
+    "timestamp": "2026-10-25T06:16:57.919529",
+    "parsed": {
+        "advertisements": [
+            {
+                "box": [
+                    122.0,
+                    55.0,
+                    933.0,
+                    487.0
+                ]
+            },
+            {
+                "box": [
+                    111.0,
+                    494.0,
+                    942.0,
+                    919.0
+                ]
+            }
+        ]
+    },
+    "conversation_id": "03c72f87-5ac2-4273-bdfc-43e8a49d9013",
+    "score": {
+        "field_scores": {
+            "box 0": {
+                "response": null,
+                "ground_truth": [
+                    265,
+                    1730,
+                    2344,
+                    3235
+                ],
+                "score": 0.0
+            },
+            "box 1": {
+                "response": null,
+                "ground_truth": [
+                    300,
+                    187,
+                    2331,
+                    1703
+                ],
+                "score": 0.0
+            },
+            "unmatched prediction 0": {
+                "response": [
+                    122.0,
+                    55.0,
+                    933.0,
+                    487.0
+                ],
+                "ground_truth": null,
+                "score": 0.0
+            },
+            "unmatched prediction 1": {
+                "response": [
+                    111.0,
+                    494.0,
+                    942.0,
+                    919.0
+                ],
+                "ground_truth": null,
+                "score": 0.0
+            }
+        },
+        "f1": 0.0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "mean_iou": 0.0,
+        "true_positives": 0,
+        "false_positives": 2,
+        "false_negatives": 2,
+        "iou_threshold": 0.5
+    },
+    "raw_response": "{\"id\":\"gen-1792905390-5Cl8Vh9woESpsjIhhLnI\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\\"advertisements\\\": [{\\\"box\\\": [122, 55, 933, 487]}, {\\\"box\\\": [111, 494, 942, 919]}] }\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"advertisements\":[{\"box\":[122.0,55.0,933.0,487.0]},{\"box\":[111.0,494.0,942.0,919.0]}]},\"reasoning\":\"The page contains two advertisements:\\n\\n1. Top advertisement: \\\"Stoffels\\\" / Stoffel & Co, St. Gall \u2014 an advertisement for a woven fabric manufacturer. Bounding box roughly from (122, 55) to (932, 487).\\n\\n2. Bottom advertisement: \\\"Georges Meyer & Co. Ltd.\\\" Wohlen & Sarnen, Switzerland \u2014 manufacturer of braids for hats. Bounding box roughly from (111, 495) to (942, 918).\\n\\nLet me estimate the coordinates in the original pixel space (2479 x 3508). The displayed image seems to be scaled. Wait, the coordinates given in the image: the image width is probably around 1600? Actually, the original size is 2479 x 3508. The image shown in the conversation is probably at some scale. I need to estimate the boxes in the original pixels.\\n\\nLooking at the layout: the top ad block occupies roughly from y=55 to y=487 in the displayed image height of about 2300? Hmm, the displayed image dimensions are unknown. Let me guess: the image is probably rendered at width 1600? Actually, typical scan dimensions: 2479x3508. The displayed image in the prompt is probably the same ratio.\\n\\nLet me estimate relative positions: the top ad (dark block) extends from about x=122/1600? Hmm.\\n\\nBetter approach: use relative fractions. The top ad occupies from about 7% of the width to about 93% of the width? Let me look: the dark rectangle starts at x \u2248 122 (in an image of width ~1600?) and ends at x \u2248 932. If the image width is 1600, the fractions are: 0.076 to 0.58? No, 932/1600 = 0.58, but the dark block extends to about 93% of the width? Actually, the dark block ends around x=932 in an image of width ~1600? The image shown: the width appears to be about 1600 pixels? The dark block extends from x\u2248122 to x\u2248932? Hmm, but the right edge of the dark block appears near the right margin of the page, around x=932 in an image of width 1000? Let me think: the image in the prompt is probably scaled to width 1600? Not sure.\\n\\nLet me look at the image again: the page occupies most of the frame. The top dark ad block extends from left ~12% to right ~93% of the page width. The bottom ad frame extends from ~11% to ~94%.\\n\\nAssuming original width 2479: 12% = ~297, 93% = ~2305. Height: original 3508. Top ad from y ~5.5% to ~48.7%? The top ad block starts at y\u224855 in an image of height ~2300? Hmm.\\n\\nLet me set up: the displayed image height is probably 2300? Actually, the image in the prompt: dimensions unknown but ratio 2479:3508 \u2248 0.7067. If width is 1600 then height is 2264.\\n\\nEstimating in fractions:\\n\\nTop ad: x from 122/1600=0.076 to 932/1600=0.5825? That can't be right because the dark block clearly extends past the center to near the right edge. Hmm, but the coordinates I recalled (122, 55) to (932, 487) might be from a width-1000 scale? If width is 1000 then height is 1417. Then 932/1000 = 0.932 which matches the right edge. And 122/1000=0.122 matches the left edge. y: 55/1417=0.039 to 487/1417=0.344. Hmm, but the top ad ends at about 48.7% of the height? The top ad block ends around y=487 in an image of height 1000? Ugh.\\n\\nLet me look at the image visually and estimate directly in fractions:\\n\\n- Top ad (dark block): top edge y \u2248 55/1000? The image height in the prompt appears to be about 2300 pixels? I can't measure directly.\\n\\nSimpler: use fractions from visual inspection:\\n\\nTop ad block: starts at about 5.5% from the top? Actually, the page top margin: the dark block starts a bit below the top edge, around y=0.055 of the height? The image shows the dark block starting at about y=55 in a height of ~1000? Hmm, the whole image height in the prompt is probably 2300? The dark block occupies from about 5% to about 48% of the height? Looking: the dark block's top edge is near the top (about 5% down), bottom edge at about 48.5% down (just before the bottom ad frame starts at ~49.5%). Yes, the bottom ad frame starts at about half the page height.\\n\\nThus top ad: y0 \u2248 0.055*3508 \u2248 193, y1 \u2248 0.487*3508 \u2248 1708. x0 \u2248 0.122*2479 \u2248 302, x1 \u2248 0.932*2479 \u2248 2310.\\n\\nBottom ad: frame from y \u2248 0.495*3508 \u2248 1736 to y \u2248 0.918*3508 \u2248 3220. x from 0.111*2479 \u2248 275 to 0.942*2479 \u2248 2335.\\n\\nCross-checking with typical layout: page number \\\"142\\\" at bottom left ~ y=0.935.\\n\\nThus final:\\n\\nAd 1: [302, 193, 2310, 1708]\\nAd 2: [275, 1736, 2335, 3220]\\n\\nRounding: no problem.\\n\\nLet me double-check the top ad's left edge: the dark block's left edge is at about x=122 in a width of 1000 => 0.122. Yes.\\n\\nBottom ad frame left edge ~ x=111/1000 = 0.111; right edge ~ 942/1000 = 0.942. Top edge ~ 495/1000? Wait, if height is 1417 for width 1000, then the bottom frame top edge at y\u2248495 in height 1417? Hmm, earlier I used height 1000 for y fractions. Let me redo: if the image is width 1000 then height = 1417. The top ad block: top edge y \u2248 78? Hmm.\\n\\nLet me look at the image and estimate visually in fractions of height: the top dark block occupies from about 5.5% to about 48.7% of the height? The whole image height includes the page and margins. The dark block's top edge appears at about 5.5% of the height. The bottom ad frame's top edge at about 49.5%, bottom edge at about 91.8%. Page number at about 93.5%. Bottom of page at about 98%.\\n\\nThese fractions seem reasonable.\\n\\nThus final JSON:\\n\\n{\\n  \\\"advertisements\\\": [\\n    {\\\"box\\\": [302, 193, 2310, 1708]},\\n    {\\\"box\\\": [275, 1736, 2335, 3220]}\\n  ]\\n}\\n\\nSlight adjustments: top ad x0: 0.122*2479 = 302.4; x1: 0.932*2479 = 2310.4; y0: 0.055*3508 = 192.9; y1: 0.487*3508 = 1708.4.\\n\\nBottom ad: x0: 0.111*2479 = 275.2; x1: 0.942*2479 = 2335.2; y0: 0.495*3508 = 1736.5; y1: 0.918*3508 = 3220.3.\\n\\nGood.\\n\",\"reasoning_details\":[{\"type\":\"reasoning.text\",\"text\":\"The page contains two advertisements:\\n\\n1. Top advertisement: \\\"Stoffels\\\" / Stoffel & Co, St. Gall \u2014 an advertisement for a woven fabric manufacturer. Bounding box roughly from (122, 55) to (932, 487).\\n\\n2. Bottom advertisement: \\\"Georges Meyer & Co. Ltd.\\\" Wohlen & Sarnen, Switzerland \u2014 manufacturer of braids for hats. Bounding box roughly from (111, 495) to (942, 918).\\n\\nLet me estimate the coordinates in the original pixel space (2479 x 3508). The displayed image seems to be scaled. Wait, the coordinates given in the image: the image width is probably around 1600? Actually, the original size is 2479 x 3508. The image shown in the conversation is probably at some scale. I need to estimate the boxes in the original pixels.\\n\\nLooking at the layout: the top ad block occupies roughly from y=55 to y=487 in the displayed image height of about 2300? Hmm, the displayed image dimensions are unknown. Let me guess: the image is probably rendered at width 1600? Actually, typical scan dimensions: 2479x3508. The displayed image in the prompt is probably the same ratio.\\n\\nLet me estimate relative positions: the top ad (dark block) extends from about x=122/1600? Hmm.\\n\\nBetter approach: use relative fractions. The top ad occupies from about 7% of the width to about 93% of the width? Let me look: the dark rectangle starts at x \u2248 122 (in an image of width ~1600?) and ends at x \u2248 932. If the image width is 1600, the fractions are: 0.076 to 0.58? No, 932/1600 = 0.58, but the dark block extends to about 93% of the width? Actually, the dark block ends around x=932 in an image of width ~1600? The image shown: the width appears to be about 1600 pixels? The dark block extends from x\u2248122 to x\u2248932? Hmm, but the right edge of the dark block appears near the right margin of the page, around x=932 in an image of width 1000? Let me think: the image in the prompt is probably scaled to width 1600? Not sure.\\n\\nLet me look at the image again: the page occupies most of the frame. The top dark ad block extends from left ~12% to right ~93% of the page width. The bottom ad frame extends from ~11% to ~94%.\\n\\nAssuming original width 2479: 12% = ~297, 93% = ~2305. Height: original 3508. Top ad from y ~5.5% to ~48.7%? The top ad block starts at y\u224855 in an image of height ~2300? Hmm.\\n\\nLet me set up: the displayed image height is probably 2300? Actually, the image in the prompt: dimensions unknown but ratio 2479:3508 \u2248 0.7067. If width is 1600 then height is 2264.\\n\\nEstimating in fractions:\\n\\nTop ad: x from 122/1600=0.076 to 932/1600=0.5825? That can't be right because the dark block clearly extends past the center to near the right edge. Hmm, but the coordinates I recalled (122, 55) to (932, 487) might be from a width-1000 scale? If width is 1000 then height is 1417. Then 932/1000 = 0.932 which matches the right edge. And 122/1000=0.122 matches the left edge. y: 55/1417=0.039 to 487/1417=0.344. Hmm, but the top ad ends at about 48.7% of the height? The top ad block ends around y=487 in an image of height 1000? Ugh.\\n\\nLet me look at the image visually and estimate directly in fractions:\\n\\n- Top ad (dark block): top edge y \u2248 55/1000? The image height in the prompt appears to be about 2300 pixels? I can't measure directly.\\n\\nSimpler: use fractions from visual inspection:\\n\\nTop ad block: starts at about 5.5% from the top? Actually, the page top margin: the dark block starts a bit below the top edge, around y=0.055 of the height? The image shows the dark block starting at about y=55 in a height of ~1000? Hmm, the whole image height in the prompt is probably 2300? The dark block occupies from about 5% to about 48% of the height? Looking: the dark block's top edge is near the top (about 5% down), bottom edge at about 48.5% down (just before the bottom ad frame starts at ~49.5%). Yes, the bottom ad frame starts at about half the page height.\\n\\nThus top ad: y0 \u2248 0.055*3508 \u2248 193, y1 \u2248 0.487*3508 \u2248 1708. x0 \u2248 0.122*2479 \u2248 302, x1 \u2248 0.932*2479 \u2248 2310.\\n\\nBottom ad: frame from y \u2248 0.495*3508 \u2248 1736 to y \u2248 0.918*3508 \u2248 3220. x from 0.111*2479 \u2248 275 to 0.942*2479 \u2248 2335.\\n\\nCross-checking with typical layout: page number \\\"142\\\" at bottom left ~ y=0.935.\\n\\nThus final:\\n\\nAd 1: [302, 193, 2310, 1708]\\nAd 2: [275, 1736, 2335, 3220]\\n\\nRounding: no problem.\\n\\nLet me double-check the top ad's left edge: the dark block's left edge is at about x=122 in a width of 1000 => 0.122. Yes.\\n\\nBottom ad frame left edge ~ x=111/1000 = 0.111; right edge ~ 942/1000 = 0.942. Top edge ~ 495/1000? Wait, if height is 1417 for width 1000, then the bottom frame top edge at y\u2248495 in height 1417? Hmm, earlier I used height 1000 for y fractions. Let me redo: if the image is width 1000 then height = 1417. The top ad block: top edge y \u2248 78? Hmm.\\n\\nLet me look at the image and estimate visually in fractions of height: the top dark block occupies from about 5.5% to about 48.7% of the height? The whole image height includes the page and margins. The dark block's top edge appears at about 5.5% of the height. The bottom ad frame's top edge at about 49.5%, bottom edge at about 91.8%. Page number at about 93.5%. Bottom of page at about 98%.\\n\\nThese fractions seem reasonable.\\n\\nThus final JSON:\\n\\n{\\n  \\\"advertisements\\\": [\\n    {\\\"box\\\": [302, 193, 2310, 1708]},\\n    {\\\"box\\\": [275, 1736, 2335, 3220]}\\n  ]\\n}\\n\\nSlight adjustments: top ad x0: 0.122*2479 = 302.4; x1: 0.932*2479 = 2310.4; y0: 0.055*3508 = 192.9; y1: 0.487*3508 = 1708.4.\\n\\nBottom ad: x0: 0.111*2479 = 275.2; x1: 0.942*2479 = 2335.2; y0: 0.495*3508 = 1736.5; y1: 0.918*3508 = 3220.3.\\n\\nGood.\\n\",\"format\":\"unknown\",\"index\":0}]},\"native_finish_reason\":\"stop\"}],\"created\":1792905390,\"model\":\"qwen/qwen3.8-max-prime\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":null,\"usage\":{\"completion_tokens\":2153,\"prompt_tokens\":2915,\"total_tokens\":5068,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":0,\"reasoning_tokens\":2098,\"rejected_prediction_tokens\":null,\"image_tokens\":0},\"prompt_tokens_details\":{\"audio_tokens\":0,\"cached_tokens\":0,\"cache_write_tokens\":0,\"video_tokens\":0},\"cost\":0.037496,\"is_byok\":false,\"cost_details\":{\"upstream_inference_cost\":0.037496,\"upstream_inference_prompt_cost\":0.01166,\"upstream_inference_completions_cost\":0.025836}},\"provider\":\"Alibaba\"}"
+}

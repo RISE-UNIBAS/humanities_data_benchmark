@@ -1,0 +1,86 @@
+{
+    "text": "{\"advertisements\":[{\"box\":[322.0,219.0,2356.0,1694.0]},{\"box\":[317.0,1764.0,2357.0,3258.0]}]}",
+    "model": "nex-agi/nex-n2.5-mini",
+    "provider": "openrouter",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 3282,
+        "output_tokens": 1787,
+        "total_tokens": 5069,
+        "reasoning_tokens": 0,
+        "cached_tokens": 128,
+        "input_cost_usd": 7.917e-05,
+        "output_cost_usd": 0.0001787,
+        "estimated_cost_usd": 0.00025787,
+        "attempts": 2,
+        "discarded_input_tokens": 3060,
+        "discarded_output_tokens": 16384,
+        "discarded_cost_usd": 0.00171202
+    },
+    "duration": 182.15947580337524,
+    "timestamp": "2026-10-25T04:36:34.530006",
+    "parsed": {
+        "advertisements": [
+            {
+                "box": [
+                    322,
+                    219,
+                    2356,
+                    1694
+                ]
+            },
+            {
+                "box": [
+                    317,
+                    1764,
+                    2357,
+                    3258
+                ]
+            }
+        ]
+    },
+    "conversation_id": "ad3b3f92-c24b-4c50-8894-af5e1dfbb50a",
+    "score": {
+        "field_scores": {
+            "box 0": {
+                "response": [
+                    317,
+                    1764,
+                    2357,
+                    3258
+                ],
+                "ground_truth": [
+                    332,
+                    1772,
+                    2361,
+                    3263
+                ],
+                "score": 0.982
+            },
+            "box 1": {
+                "response": [
+                    322,
+                    219,
+                    2356,
+                    1694
+                ],
+                "ground_truth": [
+                    342,
+                    223,
+                    2368,
+                    1705
+                ],
+                "score": 0.975
+            }
+        },
+        "f1": 1.0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "mean_iou": 0.978,
+        "true_positives": 2,
+        "false_positives": 0,
+        "false_negatives": 0,
+        "iou_threshold": 0.5
+    },
+    "raw_response": "{\"id\":\"gen-1792899370-cIOh09UgdOu7CYyn3oZQ\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\n  \\\"advertisements\\\": [\\n    {\\n      \\\"box\\\": [322, 219, 2356, 1694]\\n    },\\n    {\\n      \\\"box\\\": [317, 1764, 2357, 3258]\\n    }\\n  ]\\n}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"reasoning\":\"\\nWe need answer only JSON object. Need extract all ads bounding boxes from image. Need infer coordinates original page 2479x3508. We have image displayed scaled? Need map coordinates. Need identify ads: top advertisement for Crowe & Co Ltd within border from roughly x=324 to 2355? y=219 to 1694? bottom ad for Nivada from x=317 to 2357? y=1764 to 3259? Need accurate.\\n\\nWe need produce boxes in original pixels. Need analyze image dimensions. The page shown is 2479x3508. Image itself likely same dimensions. Need estimate bounding boxes. Let's inspect visually. There are two advertisement panels separated by horizontal line. Top ad border: left vertical line at x maybe 322? top y 219? right x 2356? bottom y 1694? Need more precise.\\n\\nNeed maybe use image pixel coordinates. Since provided image displayed at maybe 768x1087? We can map by pixel ratios. Need identify actual pixel coordinates. We can estimate from visible image. Let's use coordinate mapping from displayed image dimensions? The image in prompt has resolution 2479x3508 maybe. We can manually map. Need output bounding boxes. Need all advertisements. There are two.\\n\\nNeed be careful: Are there other ads? Page contains only two ads. Need boxes around ad panels (including borders). Top: rectangular ad with border. Bottom: rectangular ad with border.\\n\\nNeed determine coordinates accurately. Let's parse image.\\n\\nOriginal page dimensions: 2479 x 3508. In displayed image, left edge of page maybe x=95? Actually image includes black margins around page. Page left around 95? Wait original image is 2479 wide, includes page and black edge? Let's infer. The page content area starts x ~95? No, image itself includes black borders at sides, page edges at x=95 and x=2380? Let's estimate from image displayed. The page is a scanned book page, with black background around it. Page is not full width. The original page dimensions are 2479x3508, but image includes page within. Need coordinates in original page image, not physical page? User says original size of page 2479x3508 pixels. So bounding boxes in image coordinates. The page image includes margins around page? The page itself maybe starts x=95 and ends x=2380, but original image includes black outside. Need coordinates of ad boxes in image.\\n\\nLet's map from displayed image: The page left edge at x~95, right edge at x~2381. Top page edge y~28, bottom page edge y~3474. But original image dimensions 2479x3508, so page occupies x 95-2380, y 28-3474. The ad border left x maybe 322, right 2357, top y 219, bottom 1694. Bottom ad border x 317, right 2357, top 1764, bottom 3258.\\n\\nNeed maybe include only ad content not page border? \\\"bounding boxes of advertisements\\\" usually includes entire ad area, including border. Need output boxes.\\n\\nLet's derive more precise using proportional scaling from displayed image. The image in prompt maybe rendered at 768x1087? We can use visual coordinates? But as ChatGPT no actual image processing. Need estimate.\\n\\nLet's use image dimensions and visible positions.\\n\\nTop ad:\\n- Left vertical border line: It is at x maybe 322. In image, page left margin around 95. The ad border left is about 227 px from page left. Since page width 2285, fraction 0.0995. x=95+227=322.\\n- Right vertical border line: x maybe 2355. Page right edge 2380, margin 25. x=2355.\\n- Top horizontal border line: y maybe 219. Page top edge 28, margin 191. y=219.\\n- Bottom horizontal border line: y maybe 1694. y=1694.\\n\\nBottom ad:\\n- Left vertical border x maybe 317.\\n- Right vertical border x maybe 2357.\\n- Top horizontal border y maybe 1764.\\n- Bottom horizontal border y maybe 3258.\\n\\nNeed maybe top ad x0=323, y0=219, x1=2356, y1=1694. Bottom x0=317, y0=1764, x1=2357, y1=3258.\\n\\nLet's see if top ad border line at x=322? The top ad left border and bottom ad left border are slightly different: top left border x=323, bottom left border x=317. Top right border x=2356, bottom right x=2357. Top bottom line y=1694, bottom top line y=1764.\\n\\nNeed maybe include top ad text \\\"Freight Agents to\\\" etc. The ad extends from border.\\n\\nLet's consider if there is a small ad at page bottom? Page number 26 not ad. No.\\n\\nNeed output JSON only.\\n\\nBut let's ensure no extra commentary. Use integers.\\n\\nPotential issue: \\\"all advertisements\\\" could mean each ad panel, not each individual ad. Top has one ad, bottom one ad. Good.\\n\\nNeed maybe not include page border as ad? The ad boxes are within border. Bounding boxes of advertisements could be content bounds not border. But typical extraction includes ad area. Let's maybe include border rectangles.\\n\\nLet's refine coordinates.\\n\\nCould use image coordinate mapping from visible:\\n- Top ad border: The horizontal line at top is around y=219. The bottom line at y=1694. The left line at x=322. The right line at x=2356.\\n- Bottom ad border: top line y=1764, bottom y=3258, left x=317, right x=2357.\\n\\nLet's maybe output [322, 219, 2356, 1694] and [317, 1764, 2357, 3258].\\n\\nNeed maybe include top ad x0=323? Let's choose.\\n\\nLet's think if original page coordinate includes black border. The image shown has page left edge at x=95, right edge at x=2380. The top ad border left x=322, right x=2356. The bottom ad border left x=317, right x=2357.\\n\\nCould there be a second advertisement within top ad? \\\"Freight Agents to\\\" and \\\"Allied Firms\\\" are part of same ad. \\\"Crowe & Co. Ltd.\\\" is the same. No.\\n\\nLet's maybe include only content not border: top ad x=439 y=286 to 1870 y=1607? But \\\"bounding boxes of advertisements\\\" usually includes border. The ad is the whole panel.\\n\\nNeed final JSON.\\n\\nDouble-check if page number \\\"26\\\" at bottom left is not ad. No.\\n\\nLet's output.\",\"reasoning_details\":[{\"type\":\"reasoning.text\",\"text\":\"\\nWe need answer only JSON object. Need extract all ads bounding boxes from image. Need infer coordinates original page 2479x3508. We have image displayed scaled? Need map coordinates. Need identify ads: top advertisement for Crowe & Co Ltd within border from roughly x=324 to 2355? y=219 to 1694? bottom ad for Nivada from x=317 to 2357? y=1764 to 3259? Need accurate.\\n\\nWe need produce boxes in original pixels. Need analyze image dimensions. The page shown is 2479x3508. Image itself likely same dimensions. Need estimate bounding boxes. Let's inspect visually. There are two advertisement panels separated by horizontal line. Top ad border: left vertical line at x maybe 322? top y 219? right x 2356? bottom y 1694? Need more precise.\\n\\nNeed maybe use image pixel coordinates. Since provided image displayed at maybe 768x1087? We can map by pixel ratios. Need identify actual pixel coordinates. We can estimate from visible image. Let's use coordinate mapping from displayed image dimensions? The image in prompt has resolution 2479x3508 maybe. We can manually map. Need output bounding boxes. Need all advertisements. There are two.\\n\\nNeed be careful: Are there other ads? Page contains only two ads. Need boxes around ad panels (including borders). Top: rectangular ad with border. Bottom: rectangular ad with border.\\n\\nNeed determine coordinates accurately. Let's parse image.\\n\\nOriginal page dimensions: 2479 x 3508. In displayed image, left edge of page maybe x=95? Actually image includes black margins around page. Page left around 95? Wait original image is 2479 wide, includes page and black edge? Let's infer. The page content area starts x ~95? No, image itself includes black borders at sides, page edges at x=95 and x=2380? Let's estimate from image displayed. The page is a scanned book page, with black background around it. Page is not full width. The original page dimensions are 2479x3508, but image includes page within. Need coordinates in original page image, not physical page? User says original size of page 2479x3508 pixels. So bounding boxes in image coordinates. The page image includes margins around page? The page itself maybe starts x=95 and ends x=2380, but original image includes black outside. Need coordinates of ad boxes in image.\\n\\nLet's map from displayed image: The page left edge at x~95, right edge at x~2381. Top page edge y~28, bottom page edge y~3474. But original image dimensions 2479x3508, so page occupies x 95-2380, y 28-3474. The ad border left x maybe 322, right 2357, top y 219, bottom 1694. Bottom ad border x 317, right 2357, top 1764, bottom 3258.\\n\\nNeed maybe include only ad content not page border? \\\"bounding boxes of advertisements\\\" usually includes entire ad area, including border. Need output boxes.\\n\\nLet's derive more precise using proportional scaling from displayed image. The image in prompt maybe rendered at 768x1087? We can use visual coordinates? But as ChatGPT no actual image processing. Need estimate.\\n\\nLet's use image dimensions and visible positions.\\n\\nTop ad:\\n- Left vertical border line: It is at x maybe 322. In image, page left margin around 95. The ad border left is about 227 px from page left. Since page width 2285, fraction 0.0995. x=95+227=322.\\n- Right vertical border line: x maybe 2355. Page right edge 2380, margin 25. x=2355.\\n- Top horizontal border line: y maybe 219. Page top edge 28, margin 191. y=219.\\n- Bottom horizontal border line: y maybe 1694. y=1694.\\n\\nBottom ad:\\n- Left vertical border x maybe 317.\\n- Right vertical border x maybe 2357.\\n- Top horizontal border y maybe 1764.\\n- Bottom horizontal border y maybe 3258.\\n\\nNeed maybe top ad x0=323, y0=219, x1=2356, y1=1694. Bottom x0=317, y0=1764, x1=2357, y1=3258.\\n\\nLet's see if top ad border line at x=322? The top ad left border and bottom ad left border are slightly different: top left border x=323, bottom left border x=317. Top right border x=2356, bottom right x=2357. Top bottom line y=1694, bottom top line y=1764.\\n\\nNeed maybe include top ad text \\\"Freight Agents to\\\" etc. The ad extends from border.\\n\\nLet's consider if there is a small ad at page bottom? Page number 26 not ad. No.\\n\\nNeed output JSON only.\\n\\nBut let's ensure no extra commentary. Use integers.\\n\\nPotential issue: \\\"all advertisements\\\" could mean each ad panel, not each individual ad. Top has one ad, bottom one ad. Good.\\n\\nNeed maybe not include page border as ad? The ad boxes are within border. Bounding boxes of advertisements could be content bounds not border. But typical extraction includes ad area. Let's maybe include border rectangles.\\n\\nLet's refine coordinates.\\n\\nCould use image coordinate mapping from visible:\\n- Top ad border: The horizontal line at top is around y=219. The bottom line at y=1694. The left line at x=322. The right line at x=2356.\\n- Bottom ad border: top line y=1764, bottom y=3258, left x=317, right x=2357.\\n\\nLet's maybe output [322, 219, 2356, 1694] and [317, 1764, 2357, 3258].\\n\\nNeed maybe include top ad x0=323? Let's choose.\\n\\nLet's think if original page coordinate includes black border. The image shown has page left edge at x=95, right edge at x=2380. The top ad border left x=322, right x=2356. The bottom ad border left x=317, right x=2357.\\n\\nCould there be a second advertisement within top ad? \\\"Freight Agents to\\\" and \\\"Allied Firms\\\" are part of same ad. \\\"Crowe & Co. Ltd.\\\" is the same. No.\\n\\nLet's maybe include only content not border: top ad x=439 y=286 to 1870 y=1607? But \\\"bounding boxes of advertisements\\\" usually includes border. The ad is the whole panel.\\n\\nNeed final JSON.\\n\\nDouble-check if page number \\\"26\\\" at bottom left is not ad. No.\\n\\nLet's output.\",\"format\":\"unknown\",\"index\":0}]},\"native_finish_reason\":\"stop\"}],\"created\":1792899370,\"model\":\"nex-agi/nex-n2.5-mini\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":null,\"usage\":{\"completion_tokens\":1787,\"prompt_tokens\":3282,\"total_tokens\":5069,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":0,\"reasoning_tokens\":1421,\"rejected_prediction_tokens\":null,\"image_tokens\":0},\"prompt_tokens_details\":{\"audio_tokens\":0,\"cached_tokens\":128,\"cache_write_tokens\":0,\"video_tokens\":0},\"cost\":0.00025787,\"is_byok\":false,\"cost_details\":{\"upstream_inference_cost\":0.00025787,\"upstream_inference_prompt_cost\":0.00007917,\"upstream_inference_completions_cost\":0.0001787}},\"provider\":\"Nex AGI\"}"
+}

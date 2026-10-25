@@ -1,0 +1,90 @@
+{
+    "text": "{\"metadata\":{\"send_date\":[\"1926-06-28\"],\"letter_title\":[\"null\"],\"sender_persons\":[\"Max Vischer\"],\"receiver_persons\":[\"P. Christ-Wackernagel\"]}}",
+    "model": "meta/muse-spark-open",
+    "provider": "openrouter",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 8153,
+        "output_tokens": 994,
+        "total_tokens": 9147,
+        "reasoning_tokens": 0,
+        "input_cost_usd": 0.01019125,
+        "output_cost_usd": 0.0042245,
+        "estimated_cost_usd": 0.01441575
+    },
+    "duration": 3.827000617980957,
+    "timestamp": "2026-10-24T21:23:44.264228",
+    "parsed": {
+        "metadata": {
+            "send_date": [
+                "1926-06-28"
+            ],
+            "letter_title": [
+                "null"
+            ],
+            "sender_persons": [
+                "Max Vischer"
+            ],
+            "receiver_persons": [
+                "P. Christ-Wackernagel"
+            ]
+        }
+    },
+    "conversation_id": "a3878ca7-b908-43a4-9947-e77568d0b706",
+    "score": {
+        "send_date_tp": 1,
+        "send_date_fp": 0,
+        "send_date_fn": 0,
+        "sender_persons_tp": 1,
+        "sender_persons_fp": 0,
+        "sender_persons_fn": 0,
+        "receiver_persons_tp": 1,
+        "receiver_persons_fp": 0,
+        "receiver_persons_fn": 0,
+        "field_scores": {
+            "send_date": {
+                "response": [
+                    "1926-06-28"
+                ],
+                "ground_truth": [
+                    "1926-06-28"
+                ],
+                "score": null,
+                "counts": {
+                    "send_date_tp": 1,
+                    "send_date_fp": 0,
+                    "send_date_fn": 0
+                }
+            },
+            "sender_persons": {
+                "response": [
+                    "Vischer-von Planta, Max"
+                ],
+                "ground_truth": [
+                    "Vischer-von Planta, Max"
+                ],
+                "score": null,
+                "counts": {
+                    "sender_persons_tp": 1,
+                    "sender_persons_fp": 0,
+                    "sender_persons_fn": 0
+                }
+            },
+            "receiver_persons": {
+                "response": [
+                    "Christ-Wackernagel, Paul"
+                ],
+                "ground_truth": [
+                    "Christ-Wackernagel, Paul"
+                ],
+                "score": null,
+                "counts": {
+                    "receiver_persons_tp": 1,
+                    "receiver_persons_fp": 0,
+                    "receiver_persons_fn": 0
+                }
+            }
+        }
+    },
+    "raw_response": "{\"id\":\"gen-1792869820-1hz4n1C5TIYhSdF1V5o0\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\n  \\\"metadata\\\": {\\n    \\\"letter_title\\\": [\\\"null\\\"],\\n    \\\"receiver_persons\\\": [\\\"P. Christ-Wackernagel\\\"],\\n    \\\"send_date\\\": [\\\"1926-06-28\\\"],\\n    \\\"sender_persons\\\": [\\\"Max Vischer\\\"]\\n  }\\n}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"metadata\":{\"send_date\":[\"1926-06-28\"],\"letter_title\":[\"null\"],\"sender_persons\":[\"Max Vischer\"],\"receiver_persons\":[\"P. Christ-Wackernagel\"]}},\"reasoning\":\"We need to extract letter_title, sender_persons, send_date, receiver_persons.\\n\\nWe have images of letter. First page header: Dr Fritz Steiger Dr Max Vischer Advokaten und Notare Basel ... Basel, den 28. Juni 1926. Addressed to Herrn P. Christ-Wackernagel, vom Hause Paravicini, Christ & Co., Basel Kaufhausgasse. Second page signature: Max Vischer (handwritten). So sender is Max Vischer? Or Dr Max Vischer. The letterhead shows two names but sender is Max Vischer who signed. Need to decide sender_persons: [\\\"Max Vischer\\\"] or [\\\"Dr Max Vischer\\\"]? Probably \\\"Max Vischer\\\". Could also include Dr Fritz Steiger? But letter is signed by Max Vischer, so sender is Max Vischer. The letterhead is firm but sender is Max Vischer.\\n\\nReceiver: P. Christ-Wackernagel. Also \\\"Herrn P. Christ-Wackernagel\\\" . Might be \\\"P. Christ-Wackernagel\\\". Could also be \\\"P. Christ-Wackernagel\\\" full. Might need to include as is.\\n\\nSend_date: Basel, den 28. Juni 1926. => 1926-06-28\\n\\nLetter_title: Title of the letter. Is there a title? The letter doesn't have explicit title. So null. Could be no title. So letter_title: [\\\"null\\\"]? But instruction says if not included set value to \\\"null\\\". And values should be stored as list even if single. So [\\\"null\\\"]? Or maybe null string. Example shows list with strings. So we should return [\\\"null\\\"]? Or maybe \\\"null\\\" as string inside list. The instruction: set the value for the corresponding key to \\\"null\\\". But also says values corresponding to each key should be stored as a list. So ambiguous. Probably they want [\\\"null\\\"] or [null]? Example shows strings. Safer to return [\\\"null\\\"]? Or maybe they want null not in list? But spec says even if single value for a key, store as list. So if missing, set value to \\\"null\\\" - maybe they mean the list contains \\\"null\\\" string. Could also mean the key's value is the string \\\"null\\\" not list. But spec says return them in JSON file where values corresponding to each key should be stored as a list. So we must follow that: letter_title: [\\\"null\\\"].\\n\\nAlternatively some tasks expect letter_title to be null (JSON null). But instruction says set to \\\"null\\\" string.\\n\\nWe need to output JSON only.\\n\\nWe must consider letter_title maybe is not present, so null.\\n\\nSender_persons: [\\\"Max Vischer\\\"] or [\\\"Dr Max Vischer\\\"]? Let's check signature: \\\"Max Vischer\\\" handwritten. So use that.\\n\\nReceiver_persons: [\\\"P. Christ-Wackernagel\\\"] . Could also be [\\\"P. Christ-Wackernagel\\\", \\\"Paravicini, Christ & Co.\\\"]? But receiver is Herrn P. Christ-Wackernagel. So list with one.\\n\\nWe should provide ISO date.\\n\\nReturn JSON with keys: letter_title, send_date, sender_persons, receiver_persons. Order as in example? Example order: letter_title, send_date, sender_persons, receiver_persons. We'll follow that.\\n\\nMake sure JSON valid.\\n\\nPotential nuance: sender_persons might be [\\\"Dr Fritz Steiger\\\", \\\"Dr Max Vischer\\\"]? But letter is from the firm, but signed by Max Vischer. The instruction: Name(s) of the person(s) who wrote the letter. That is Max Vischer. So single.\\n\\nWe should output:\\n\\n{\\n  \\\"letter_title\\\": [\\\"null\\\"],\\n  \\\"send_date\\\": [\\\"1926-06-28\\\"],\\n  \\\"sender_persons\\\": [\\\"Max Vischer\\\"],\\n  \\\"receiver_persons\\\": [\\\"P. Christ-Wackernagel\\\"]\\n}\\n\\nIf they expect Dr Max Vischer, we could include Dr. But we can add both? Better to include exactly as appears: \\\"Max Vischer\\\". Could also be \\\"Dr Max Vischer\\\". Might be considered correct if either.\\n\\nWe could provide sender as \\\"Max Vischer\\\" and also note Dr. To be safe, we could provide [\\\"Max Vischer\\\"].\\n\\nReceiver: maybe \\\"P. Christ-Wackernagel\\\" is correct.\\n\\nCheck if letter_title could be something like \\\"Betreff: ...\\\" No title.\\n\\nThus final answer JSON.\\n\\nWe must not return anything except JSON.\\n\\n\",\"reasoning_details\":[{\"type\":\"reasoning.text\",\"text\":\"We need to extract letter_title, sender_persons, send_date, receiver_persons.\\n\\nWe have images of letter. First page header: Dr Fritz Steiger Dr Max Vischer Advokaten und Notare Basel ... Basel, den 28. Juni 1926. Addressed to Herrn P. Christ-Wackernagel, vom Hause Paravicini, Christ & Co., Basel Kaufhausgasse. Second page signature: Max Vischer (handwritten). So sender is Max Vischer? Or Dr Max Vischer. The letterhead shows two names but sender is Max Vischer who signed. Need to decide sender_persons: [\\\"Max Vischer\\\"] or [\\\"Dr Max Vischer\\\"]? Probably \\\"Max Vischer\\\". Could also include Dr Fritz Steiger? But letter is signed by Max Vischer, so sender is Max Vischer. The letterhead is firm but sender is Max Vischer.\\n\\nReceiver: P. Christ-Wackernagel. Also \\\"Herrn P. Christ-Wackernagel\\\" . Might be \\\"P. Christ-Wackernagel\\\". Could also be \\\"P. Christ-Wackernagel\\\" full. Might need to include as is.\\n\\nSend_date: Basel, den 28. Juni 1926. => 1926-06-28\\n\\nLetter_title: Title of the letter. Is there a title? The letter doesn't have explicit title. So null. Could be no title. So letter_title: [\\\"null\\\"]? But instruction says if not included set value to \\\"null\\\". And values should be stored as list even if single. So [\\\"null\\\"]? Or maybe null string. Example shows list with strings. So we should return [\\\"null\\\"]? Or maybe \\\"null\\\" as string inside list. The instruction: set the value for the corresponding key to \\\"null\\\". But also says values corresponding to each key should be stored as a list. So ambiguous. Probably they want [\\\"null\\\"] or [null]? Example shows strings. Safer to return [\\\"null\\\"]? Or maybe they want null not in list? But spec says even if single value for a key, store as list. So if missing, set value to \\\"null\\\" - maybe they mean the list contains \\\"null\\\" string. Could also mean the key's value is the string \\\"null\\\" not list. But spec says return them in JSON file where values corresponding to each key should be stored as a list. So we must follow that: letter_title: [\\\"null\\\"].\\n\\nAlternatively some tasks expect letter_title to be null (JSON null). But instruction says set to \\\"null\\\" string.\\n\\nWe need to output JSON only.\\n\\nWe must consider letter_title maybe is not present, so null.\\n\\nSender_persons: [\\\"Max Vischer\\\"] or [\\\"Dr Max Vischer\\\"]? Let's check signature: \\\"Max Vischer\\\" handwritten. So use that.\\n\\nReceiver_persons: [\\\"P. Christ-Wackernagel\\\"] . Could also be [\\\"P. Christ-Wackernagel\\\", \\\"Paravicini, Christ & Co.\\\"]? But receiver is Herrn P. Christ-Wackernagel. So list with one.\\n\\nWe should provide ISO date.\\n\\nReturn JSON with keys: letter_title, send_date, sender_persons, receiver_persons. Order as in example? Example order: letter_title, send_date, sender_persons, receiver_persons. We'll follow that.\\n\\nMake sure JSON valid.\\n\\nPotential nuance: sender_persons might be [\\\"Dr Fritz Steiger\\\", \\\"Dr Max Vischer\\\"]? But letter is from the firm, but signed by Max Vischer. The instruction: Name(s) of the person(s) who wrote the letter. That is Max Vischer. So single.\\n\\nWe should output:\\n\\n{\\n  \\\"letter_title\\\": [\\\"null\\\"],\\n  \\\"send_date\\\": [\\\"1926-06-28\\\"],\\n  \\\"sender_persons\\\": [\\\"Max Vischer\\\"],\\n  \\\"receiver_persons\\\": [\\\"P. Christ-Wackernagel\\\"]\\n}\\n\\nIf they expect Dr Max Vischer, we could include Dr. But we can add both? Better to include exactly as appears: \\\"Max Vischer\\\". Could also be \\\"Dr Max Vischer\\\". Might be considered correct if either.\\n\\nWe could provide sender as \\\"Max Vischer\\\" and also note Dr. To be safe, we could provide [\\\"Max Vischer\\\"].\\n\\nReceiver: maybe \\\"P. Christ-Wackernagel\\\" is correct.\\n\\nCheck if letter_title could be something like \\\"Betreff: ...\\\" No title.\\n\\nThus final answer JSON.\\n\\nWe must not return anything except JSON.\\n\\n\",\"format\":\"unknown\",\"index\":0}]},\"native_finish_reason\":\"stop\"}],\"created\":1792869820,\"model\":\"meta/muse-spark-open\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":null,\"usage\":{\"completion_tokens\":994,\"prompt_tokens\":8153,\"total_tokens\":9147,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":0,\"reasoning_tokens\":924,\"rejected_prediction_tokens\":null,\"image_tokens\":0},\"prompt_tokens_details\":{\"audio_tokens\":0,\"cached_tokens\":0,\"cache_write_tokens\":0,\"video_tokens\":0},\"cost\":0.01441575,\"is_byok\":false,\"cost_details\":{\"upstream_inference_cost\":0.01441575,\"upstream_inference_prompt_cost\":0.01019125,\"upstream_inference_completions_cost\":0.0042245}},\"provider\":\"Modal\"}"
+}
