@@ -1,0 +1,92 @@
+{
+    "text": "{\"advertisements\":[{\"box\":[169.0,207.0,1209.0,1700.0]},{\"box\":[163.0,1761.0,1195.0,3255.0]}]}",
+    "model": "nex-agi/nex-n2.5-pro",
+    "provider": "openrouter",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 3060,
+        "output_tokens": 1137,
+        "total_tokens": 4197,
+        "reasoning_tokens": 0,
+        "cached_tokens": 128,
+        "input_cost_usd": 0.00022182,
+        "output_cost_usd": 0.00028425,
+        "estimated_cost_usd": 0.00050607
+    },
+    "duration": 29.210506677627563,
+    "timestamp": "2026-10-26T09:01:19.868038",
+    "parsed": {
+        "advertisements": [
+            {
+                "box": [
+                    169.0,
+                    207.0,
+                    1209.0,
+                    1700.0
+                ]
+            },
+            {
+                "box": [
+                    163.0,
+                    1761.0,
+                    1195.0,
+                    3255.0
+                ]
+            }
+        ]
+    },
+    "conversation_id": "ed049d1a-7d2a-4c37-9bf2-18d616c308b4",
+    "score": {
+        "field_scores": {
+            "box 0": {
+                "response": null,
+                "ground_truth": [
+                    332,
+                    1772,
+                    2361,
+                    3263
+                ],
+                "score": 0.0
+            },
+            "box 1": {
+                "response": null,
+                "ground_truth": [
+                    342,
+                    223,
+                    2368,
+                    1705
+                ],
+                "score": 0.0
+            },
+            "unmatched prediction 0": {
+                "response": [
+                    169.0,
+                    207.0,
+                    1209.0,
+                    1700.0
+                ],
+                "ground_truth": null,
+                "score": 0.0
+            },
+            "unmatched prediction 1": {
+                "response": [
+                    163.0,
+                    1761.0,
+                    1195.0,
+                    3255.0
+                ],
+                "ground_truth": null,
+                "score": 0.0
+            }
+        },
+        "f1": 0.0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "mean_iou": 0.0,
+        "true_positives": 0,
+        "false_positives": 2,
+        "false_negatives": 2,
+        "iou_threshold": 0.5
+    },
+    "raw_response": "{\"id\":\"gen-1793001651-Hj3QGSdvSCnvS02pr62T\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\n  \\\"advertisements\\\": [\\n    {\\n      \\\"box\\\": [169, 207, 1209, 1700]\\n    },\\n    {\\n      \\\"box\\\": [163, 1761, 1195, 3255]\\n    }\\n  ]\\n}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"advertisements\":[{\"box\":[169.0,207.0,1209.0,1700.0]},{\"box\":[163.0,1761.0,1195.0,3255.0]}]},\"reasoning\":\"\\nWe need answer only JSON object. Need extract all advertisements bounding boxes from image. We need identify ads on page. Page has two clear full-page half ads: top Crowe & Co. forwarding agent inside border from x maybe 170 to 1210? Actually image dimensions 2479x3508. Need estimate coordinates.\\n\\nNeed provide boxes for advertisements. Need include both advertisements. Need bounding boxes perhaps around ad content/border. Need coordinate in original page. We need be accurate.\\n\\nLet's analyze image. Page is a scan of a magazine page, with two ads occupying upper and lower halves. The page has margins and borders. Top ad is rectangular with border starting around x=169 y=206 to x=1208 y=1701? Wait full page width 2479, content occupies left page only? The image shows left page, with right edge at x~1220, page center? Actually original page width 2479, but the scan includes a full open page? Looking at image: left page from x=57 to x=1220? Then black gutter/right side? Wait the right side beyond x=1220 is dark/black or blank? The image is 2479 width, but the visible page is about 1170 px wide on left, and the right half is black/gutter? Let's inspect: There is a beige page with right edge near x=1220, then black background from x=1220 to 2479? But maybe the right side is dark shadow of open magazine? The page itself is left half only. The user says original page size 2479x3508, likely image includes one page plus black margins. The content is on left page, so coordinates are within image. Need boxes in image coordinates.\\n\\nTop ad border:\\n- Top line at y=207? x=170 to 1208.\\n- Left border x=169, y=207 to 1699.\\n- Right border x=1208, y=207 to 1699.\\n- Bottom border y=1699, x=170 to 1208.\\nMaybe include border. Top ad has inner margin? Actually ad box is the entire rectangle with border. Coordinates [169,207,1209,1699].\\n\\nBottom ad border:\\n- Top line y=1761? x=163? to 1194? Wait bottom ad has outer border at x=163 y=1762, x=1195 y=3254. It includes inner black image. There is a rectangular border around ad. Top border at y=1761, left x=163, right x=1195, bottom y=3254. Need maybe include page number outside? No.\\n\\nNeed maybe include top and bottom ads only. There may be no other ads. Need output JSON.\\n\\nBut let's be precise. Need coordinate x0,y0,x1,y1. Let's estimate from image.\\n\\nLet's derive based on pixel dimensions. The visible page left edge at x=57. The ad top border left x=169, right x=1208. Top y=207. Bottom y=1699. Bottom ad top border y=1762, left x=163, right x=1194, bottom y=3255. There is page number at y=3297 x=183; not ad. Need not include.\\n\\nLet's inspect image mentally. Top ad: border top line begins at x=168 y=207, ends x=1208 y=207. Left border x=169 from y=207 to y=1699. Right border x=1208 from y=207 to y=1699. Bottom border y=1699. So box [169,207,1209,1700] maybe.\\n\\nBottom ad: border top line y=1761, x=163 to 1195. Left border x=163 y=1761 to 3254. Right border x=1195. Bottom border y=3254. So [163,1761,1195,3255].\\n\\nNeed decide if include inner black content only? User asks extract all advertisements and bounding boxes. Usually bounding boxes around ad regions, including border. So yes.\\n\\nNeed ensure JSON valid.\\n\",\"reasoning_details\":[{\"type\":\"reasoning.text\",\"text\":\"\\nWe need answer only JSON object. Need extract all advertisements bounding boxes from image. We need identify ads on page. Page has two clear full-page half ads: top Crowe & Co. forwarding agent inside border from x maybe 170 to 1210? Actually image dimensions 2479x3508. Need estimate coordinates.\\n\\nNeed provide boxes for advertisements. Need include both advertisements. Need bounding boxes perhaps around ad content/border. Need coordinate in original page. We need be accurate.\\n\\nLet's analyze image. Page is a scan of a magazine page, with two ads occupying upper and lower halves. The page has margins and borders. Top ad is rectangular with border starting around x=169 y=206 to x=1208 y=1701? Wait full page width 2479, content occupies left page only? The image shows left page, with right edge at x~1220, page center? Actually original page width 2479, but the scan includes a full open page? Looking at image: left page from x=57 to x=1220? Then black gutter/right side? Wait the right side beyond x=1220 is dark/black or blank? The image is 2479 width, but the visible page is about 1170 px wide on left, and the right half is black/gutter? Let's inspect: There is a beige page with right edge near x=1220, then black background from x=1220 to 2479? But maybe the right side is dark shadow of open magazine? The page itself is left half only. The user says original page size 2479x3508, likely image includes one page plus black margins. The content is on left page, so coordinates are within image. Need boxes in image coordinates.\\n\\nTop ad border:\\n- Top line at y=207? x=170 to 1208.\\n- Left border x=169, y=207 to 1699.\\n- Right border x=1208, y=207 to 1699.\\n- Bottom border y=1699, x=170 to 1208.\\nMaybe include border. Top ad has inner margin? Actually ad box is the entire rectangle with border. Coordinates [169,207,1209,1699].\\n\\nBottom ad border:\\n- Top line y=1761? x=163? to 1194? Wait bottom ad has outer border at x=163 y=1762, x=1195 y=3254. It includes inner black image. There is a rectangular border around ad. Top border at y=1761, left x=163, right x=1195, bottom y=3254. Need maybe include page number outside? No.\\n\\nNeed maybe include top and bottom ads only. There may be no other ads. Need output JSON.\\n\\nBut let's be precise. Need coordinate x0,y0,x1,y1. Let's estimate from image.\\n\\nLet's derive based on pixel dimensions. The visible page left edge at x=57. The ad top border left x=169, right x=1208. Top y=207. Bottom y=1699. Bottom ad top border y=1762, left x=163, right x=1194, bottom y=3255. There is page number at y=3297 x=183; not ad. Need not include.\\n\\nLet's inspect image mentally. Top ad: border top line begins at x=168 y=207, ends x=1208 y=207. Left border x=169 from y=207 to y=1699. Right border x=1208 from y=207 to y=1699. Bottom border y=1699. So box [169,207,1209,1700] maybe.\\n\\nBottom ad: border top line y=1761, x=163 to 1195. Left border x=163 y=1761 to 3254. Right border x=1195. Bottom border y=3254. So [163,1761,1195,3255].\\n\\nNeed decide if include inner black content only? User asks extract all advertisements and bounding boxes. Usually bounding boxes around ad regions, including border. So yes.\\n\\nNeed ensure JSON valid.\\n\",\"format\":\"unknown\",\"index\":0}]},\"native_finish_reason\":\"stop\"}],\"created\":1793001651,\"model\":\"nex-agi/nex-n2.5-pro\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":null,\"usage\":{\"completion_tokens\":1137,\"prompt_tokens\":3060,\"total_tokens\":4197,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":0,\"reasoning_tokens\":802,\"rejected_prediction_tokens\":null,\"image_tokens\":0},\"prompt_tokens_details\":{\"audio_tokens\":0,\"cached_tokens\":128,\"cache_write_tokens\":0,\"video_tokens\":0},\"cost\":0.00050607,\"is_byok\":false,\"cost_details\":{\"upstream_inference_cost\":0.00050607,\"upstream_inference_prompt_cost\":0.00022182,\"upstream_inference_completions_cost\":0.00028425}},\"provider\":\"Nex AGI\"}"
+}
