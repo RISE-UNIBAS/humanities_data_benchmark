@@ -204,7 +204,7 @@ This section is not part of the BenchmarkCard schema and is not exported to `ben
 **Versions:**
 
 - 2.0.0 — ground truth corrected: staff ids `SaA410` and `S402` as written in the margin (were `23` and `402`); row 109, 29 April: the right half of the split cell (Persönliche Absenz) added and the alternate unit removed; `profession` is no longer scored (the section label is not in the row images); a response that cannot be parsed is scored as a miss instead of being left out; all stored runs re-scored
-- 1.0.0 — initial versioned state, when the card was introduced; same content as 0.2.1
+- 1.0.0 — initial versioned state, when the card was introduced; same content as 0.3.0
 
 **How to Cite:** This benchmark:
 

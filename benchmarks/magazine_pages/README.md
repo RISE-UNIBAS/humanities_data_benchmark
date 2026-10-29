@@ -165,7 +165,7 @@ This section is not part of the BenchmarkCard schema and is not exported to `ben
 
 **Versions:**
 
-- 1.0.0 — initial versioned state, when the card was introduced; same content as 0.3.0
+- 1.0.0 — initial versioned state, when the card was introduced; same content as 0.4.0
 
 **How to Cite:** This benchmark:
 

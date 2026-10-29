@@ -172,7 +172,7 @@ This section is not part of the BenchmarkCard schema and is not exported to `ben
 **Versions:**
 
 - 2.0.0 — ground truth corrected: folio [69r] carries the number 69 (was empty); a response that cannot be parsed is scored as a miss instead of being left out; all stored runs re-scored
-- 1.0.0 — initial versioned state, when the card was introduced; same content as 0.2.3
+- 1.0.0 — initial versioned state, when the card was introduced; same content as 0.4.1
 
 **How to Cite:** This benchmark:
 

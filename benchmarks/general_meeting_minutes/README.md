@@ -186,7 +186,7 @@ This section is not part of the BenchmarkCard schema and is not exported to `ben
 **Versions:**
 
 - 2.0.0 — ground truth corrected: the degree sign in Paris arrondissements, written as the literal text `U+00B0` 15 times on four pages, is now `°`; a response that cannot be parsed is scored as a miss instead of being left out; all stored runs re-scored
-- 1.0.0 — initial versioned state, when the card was introduced; same content as 0.3.3
+- 1.0.0 — initial versioned state, when the card was introduced; same content as 0.5.1
 
 **How to Cite:** This benchmark:
 
