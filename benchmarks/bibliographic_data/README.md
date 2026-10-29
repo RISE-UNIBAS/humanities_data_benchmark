@@ -181,7 +181,8 @@ This section is not part of the BenchmarkCard schema and is not exported to `ben
 **Versions:**
 
 - 2.0.0 (2026-10-18) — ground truth checked against the scans and conformed to the response schema (transcription errors, six missing entries, entries 146–148 unnested, `relation` as the reviewed `id`, notes and years as printed); `prompt_v2.txt` for new tests; entries aligned in page order instead of by position; a response nested under a wrapper key is unwrapped; a response that cannot be parsed is scored as a miss; all stored runs re-scored
-- 1.0.0 (2026-10-16) — initial versioned state, when the card was introduced; same content as 0.10.1
+- 1.0.0 (2026-10-16) — initial versioned state, when the card was introduced; same content as 0.11.0
+- 0.11.0 (2026-09-18) — answers capped at 16,384 output tokens instead of 32,768
 - 0.10.1 (2026-09-11) — per-field comparison recorded with each answer; scores unchanged
 - 0.10.0 (2026-09-09) — answers capped at 32,768 output tokens
 - 0.9.0 (2026-08-16) — an answer that cannot be parsed is left out of the average instead of scored as a miss

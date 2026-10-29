@@ -32,9 +32,10 @@ RUNS = {
                                "recorded it, with the benchmark's files as committed. "
                                "`inferred`: from the run's time and when each version was "
                                "committed. `ambiguous`: recorded while the benchmark's files had "
-                               "uncommitted changes, or inferred for a run made earlier on the "
-                               "day a version took effect (or that day at an unknown time); "
-                               "either way the next version is also possible.",
+                               "uncommitted changes, a run resumed from answers made with another "
+                               "benchmark state, or inferred for a run made earlier on the day a "
+                               "version took effect (or that day at an unknown time); the next "
+                               "version is also possible.",
     "source_path": "Path of the run directory in the source archive, for tracing a row "
                    "back to the bytes it came from.",
     "config_status": "`matched` when the test id resolves in the configuration file, "

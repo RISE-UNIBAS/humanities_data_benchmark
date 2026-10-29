@@ -342,8 +342,9 @@ or after the run's day (a re-scoring checks every stored run and records itself 
 they were made with (`benchmark_version_basis = recorded`). For the others a version is
 assigned from the run's first request time, read as Europe/Zurich, against the time its
 change was committed (`inferred`). `ambiguous` marks runs made earlier on the day a version
-took effect, and runs recorded while the benchmark's files had uncommitted changes; for both
-the next version is also possible. The versions themselves, with dates, commits
+took effect, runs recorded while the benchmark's files had uncommitted changes, and runs
+resumed from answers made with another benchmark state; for these the next version is also
+possible. The versions themselves, with dates, commits
 and summaries, are listed in each benchmark's `meta.json` in the source repository.
 
 Derived costs use dated pricing entries, as described above, whereas scores retain their

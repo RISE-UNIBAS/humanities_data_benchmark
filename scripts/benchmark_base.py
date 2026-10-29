@@ -33,6 +33,11 @@ _REPO_ROOT = Path(__file__).resolve().parent.parent
 _SHARED_SCORING_CODE = ("scripts/benchmark_base.py", "scripts/scoring_helper.py")
 
 
+def _state_paths(folder):
+    """The paths whose content makes up a benchmark's state, relative to the repository."""
+    return [Path(folder).resolve().relative_to(_REPO_ROOT).as_posix(), *_SHARED_SCORING_CODE]
+
+
 def recorded_version(benchmark_dir):
     """What a run starts with, for scoring.json `benchmark_version`: the newest version in the
     benchmark's meta.json, the commit checked out, and the benchmark's files and shared scoring code
@@ -49,12 +54,39 @@ def recorded_version(benchmark_dir):
             return subprocess.run(["git", *args], cwd=_REPO_ROOT, capture_output=True, text=True,
                                   encoding="utf-8", check=True, timeout=30).stdout
         stamp["commit"] = git("rev-parse", "HEAD").strip()
-        paths = [folder.relative_to(_REPO_ROOT).as_posix(), *_SHARED_SCORING_CODE]
-        stamp["uncommitted"] = sorted(line[3:].strip('"') for line in git("status", "--porcelain", "--", *paths).splitlines()
+        stamp["uncommitted"] = sorted(line[3:].strip('"') for line in git("status", "--porcelain", "--", *_state_paths(folder)).splitlines()
                                       if line.strip())
     except (OSError, ValueError, subprocess.SubprocessError):
         pass
     return stamp
+
+
+def same_benchmark_state(a, b, benchmark_dir):
+    """Whether two recorded versions describe the same benchmark: same version and uncommitted
+    files, and commits that do not differ in the benchmark's files or shared scoring code."""
+    if a == b:
+        return True
+    if not a or not b or a.get("version") != b.get("version") or a.get("uncommitted") != b.get("uncommitted")             or not a.get("commit") or not b.get("commit"):
+        return False
+    try:
+        return subprocess.run(["git", "diff", "--quiet", a["commit"], b["commit"], "--", *_state_paths(benchmark_dir)],
+                              cwd=_REPO_ROOT, capture_output=True, timeout=30).returncode == 0
+    except (OSError, ValueError, subprocess.SubprocessError):
+        return False
+
+
+def resumed_version(saved, benchmark_dir):
+    """scoring.json `benchmark_version` of a run from the versions recorded with its saved answers,
+    [(timestamp, recorded version or None)]: the earliest answer's, with `mixed` when the answers
+    were made with different benchmark states, or some before answers recorded one (None). None
+    when no answer recorded one."""
+    stamps = [stamp for _, stamp in sorted(saved, key=lambda pair: pair[0] or "")]
+    if not any(stamps):
+        return None
+    first = stamps[0] or {"version": None, "commit": None, "uncommitted": None}
+    if all(same_benchmark_state(stamps[0], stamp, benchmark_dir) for stamp in stamps):
+        return first
+    return {**first, "mixed": True}
 
 
 # gpt-6 accepts only its default temperature; unlisted, every request is refused once before the
@@ -548,6 +580,8 @@ class Benchmark(ABC):
                                  f"{self.get_request_name(object_basename)}.json")
         answer_json = answer.to_dict()
         answer_json['score'] = score
+        if getattr(self, 'version', None):
+            answer_json['benchmark_version'] = self.version
         try:
             raw_answer = answer.raw_response.json()
             answer_json['raw_response'] = raw_answer
@@ -556,6 +590,22 @@ class Benchmark(ABC):
 
         write_file(file_name, answer_json)
         logging.info(f"Saved answer to {file_name}")
+
+    def saved_versions(self, object_basenames):
+        """(timestamp, recorded version or None) of every saved answer of the run, this process's
+        and those an earlier one saved and this one reused."""
+        saved = []
+        for object_basename in object_basenames:
+            file_name = self.get_request_answer_file_name(object_basename)
+            if not os.path.exists(file_name):
+                continue
+            try:
+                data = json.loads(read_file(file_name))
+            except (OSError, ValueError, TypeError):
+                continue
+            if isinstance(data, dict):
+                saved.append((data.get('timestamp'), data.get('benchmark_version')))
+        return saved
 
     def save_benchmark_score(self,
                              score: dict) -> None:
@@ -756,7 +806,7 @@ class Benchmark(ABC):
             logging.warning("workers > 1 is not supported with use_shared_context=True; falling back to 1 worker.")
             workers = 1
 
-        version = recorded_version(self.benchmark_dir)
+        self.version = recorded_version(self.benchmark_dir)
         self.before_run()
 
         # Establish shared context if enabled
@@ -791,7 +841,9 @@ class Benchmark(ABC):
         cost_summary = self.calculate_cost(all_answers)
         benchmark_score['cost_summary'] = cost_summary
         logging.info(f"Cost summary: {cost_summary}")
-        benchmark_score['benchmark_version'] = version
+        version = resumed_version(self.saved_versions(object_basenames), self.benchmark_dir)
+        if version:
+            benchmark_score['benchmark_version'] = version
 
         self.save_benchmark_score(benchmark_score)
 

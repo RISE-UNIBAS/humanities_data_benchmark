@@ -248,3 +248,58 @@ class TestRecordedVersion:
         monkeypatch.setattr(benchmark_base, "_REPO_ROOT", tmp_path)
         monkeypatch.setattr(benchmark_base.subprocess, "run", lambda *a, **k: (_ for _ in ()).throw(OSError()))
         assert benchmark_base.recorded_version(folder) == {"version": "1.0.0", "commit": None, "uncommitted": None}
+
+    @staticmethod
+    def _commit(root, message):
+        import subprocess
+        for args in (["add", "."], ["-c", "user.name=t", "-c", "user.email=t@t", "commit", "-q", "-m", message]):
+            subprocess.run(["git", *args], cwd=root, check=True)
+
+    def test_a_run_from_one_benchmark_state_keeps_its_earliest_version(self, repo):
+        from benchmark_base import recorded_version, resumed_version
+        first = recorded_version(repo)
+        (repo.parent.parent / "other.txt").write_text("changed", encoding="utf-8")
+        self._commit(repo.parent.parent, "outside the benchmark")
+        later = recorded_version(repo)
+        assert later["commit"] != first["commit"]
+        assert resumed_version([("2026-01-02T10:00:00", later), ("2026-01-01T09:00:00", first)], repo) == first
+
+    def test_a_resume_after_a_benchmark_change_keeps_the_original_version_and_is_mixed(self, repo):
+        from benchmark_base import recorded_version, resumed_version
+        first = recorded_version(repo)
+        (repo / "meta.json").write_text('{"versions": [{"version": "3.0.0"}]}', encoding="utf-8")
+        self._commit(repo.parent.parent, "3.0.0")
+        later = recorded_version(repo)
+        assert resumed_version([("2026-01-02T10:00:00", later), ("2026-01-01T09:00:00", first)], repo) == \
+            {**first, "mixed": True}
+
+    def test_answers_saved_before_versions_were_recorded_make_a_run_mixed(self, repo):
+        from benchmark_base import recorded_version, resumed_version
+        now = recorded_version(repo)
+        assert resumed_version([("2026-01-01T09:00:00", None), ("2026-01-02T10:00:00", now)], repo) == \
+            {"version": None, "commit": None, "uncommitted": None, "mixed": True}
+        assert resumed_version([("2026-01-01T09:00:00", None)], repo) is None
+        assert resumed_version([], repo) is None
+
+    def test_a_resumed_run_records_the_version_its_reused_answers_were_made_with(self, repo, tmp_path, monkeypatch):
+        """Answers saved under 2.0.0, the run resumed after 3.0.0: the run keeps 2.0.0, marked mixed."""
+        from benchmark_base import recorded_version, resumed_version
+        benchmark = _Stored.__new__(_Stored)
+        run_dir = tmp_path / "results" / "T0001"
+        monkeypatch.setattr(benchmark, "get_request_answer_path", lambda: str(run_dir))
+        monkeypatch.setattr(benchmark, "get_request_name", lambda name: "request_T0001_" + name)
+
+        def save(name, when):
+            answer = LLMResponse(text="{}", model="m", provider="openai", finish_reason="stop",
+                                 usage=Usage(input_tokens=1, output_tokens=1, total_tokens=2), raw_response={})
+            answer.timestamp = when
+            benchmark.save_request_answer(name, answer, {})
+
+        benchmark.version = recorded_version(repo)
+        save("a", __import__("datetime").datetime(2026, 1, 1, 9))
+        (repo / "meta.json").write_text('{"versions": [{"version": "3.0.0"}]}', encoding="utf-8")
+        self._commit(repo.parent.parent, "3.0.0")
+        benchmark.version = recorded_version(repo)
+        save("b", __import__("datetime").datetime(2026, 1, 2, 9))
+        stamp = resumed_version(benchmark.saved_versions(["a", "b", "never-saved"]), repo)
+        assert stamp["version"] == "2.0.0" and stamp["mixed"] is True

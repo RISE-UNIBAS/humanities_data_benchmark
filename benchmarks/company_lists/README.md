@@ -175,7 +175,7 @@ This section is not part of the BenchmarkCard schema and is not exported to `ben
 
 - 2.0.0 (2026-10-17) — `page_id` and `entry_id` are no longer scored: the model is never given their expected values; `prompt_v2.txt` added for new tests; a response that cannot be parsed is scored as a miss instead of being left out; all stored runs re-scored
 - 1.0.0 (2026-10-16) — initial versioned state, when the card was introduced; same content as 0.6.0
-- 0.6.0 (2026-09-18) — schema: `location` may be null
+- 0.6.0 (2026-09-18) — schema: `location` may be null; answers capped at 16,384 output tokens instead of 32,768
 - 0.5.0 (2026-09-09) — answers capped at 32,768 output tokens
 - 0.4.0 (2026-08-16) — an answer that cannot be parsed is left out of the average instead of scored as a miss
 - 0.3.1 (2026-03-10) — a failed object is left out of the average instead of stopping the run

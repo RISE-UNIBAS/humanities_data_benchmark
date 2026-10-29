@@ -55,3 +55,14 @@ def test_a_rescoring_covers_every_run_stored_by_its_day(make_corpus):
     assert [runs[k]["scored"] for k in ("2026-01-02/T0001", "2026-01-02/T0002", "2026-02-03/T0002")] == \
         ["1.0.0", "1.0.0", "1.0.0"]
     assert runs["2026-01-02/T0002"]["made"] == "0.1.0"
+
+
+def test_a_resume_over_another_benchmark_state_is_ambiguous(make_corpus):
+    stamp = {"version": "0.1.0", "commit": "c", "uncommitted": [], "mixed": True}
+    _, runs = _versions(make_corpus, {"2026-01-06": {
+        "T0001": {"requests": {"a": {"timestamp": "2026-01-06T09:00:00"}}, "scoring": {"benchmark_version": stamp}},
+        "T0002": {"requests": {"a": {"timestamp": "2026-01-06T09:00:00"}},
+                  "scoring": {"benchmark_version": {**stamp, "version": None, "commit": None, "uncommitted": None}}},
+    }})
+    assert (runs["2026-01-06/T0001"]["made"], runs["2026-01-06/T0001"]["basis"]) == ("0.1.0", "ambiguous")
+    assert (runs["2026-01-06/T0002"]["made"], runs["2026-01-06/T0002"]["basis"]) == ("0.2.0", "ambiguous")

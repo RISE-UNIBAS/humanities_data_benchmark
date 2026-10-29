@@ -176,7 +176,7 @@ This section is not part of the BenchmarkCard schema and is not exported to `ben
 
 - 2.0.0 (2026-10-17) — ground truth kept as JSON only (the CSV exports and their per-run conversion removed), `has_signatures` stored as a boolean; a response that cannot be parsed is scored as a miss instead of being left out; all stored runs re-scored
 - 1.0.0 (2026-10-16) — initial versioned state, when the card was introduced; same content as 0.12.0
-- 0.12.0 (2026-09-18) — null entries in name lists are dropped, so answers such as `[null]` are scored instead of left out
+- 0.12.0 (2026-09-18) — null entries in name lists are dropped, so answers such as `[null]` are scored instead of left out; answers capped at 16,384 output tokens instead of 32,768
 - 0.11.1 (2026-09-11) — per-field comparison recorded with each answer; scores unchanged
 - 0.11.0 (2026-09-09) — answers capped at 32,768 output tokens; an answer that cannot be read as a letter is scored as a miss
 - 0.10.3 (2026-04-21) — configurations with empty rules no longer fail

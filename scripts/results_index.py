@@ -298,15 +298,18 @@ def run_version(history, first, recorded=None):
 
     The version the runner recorded in scoring.json `benchmark_version` wins when the history
     knows it: basis `recorded`, or `ambiguous` when the benchmark's files differed from the commit
-    (or that is unknown), since the next version may be what they held. Otherwise the version in
-    force at `first`, the run's first request in local time: `inferred`, or `ambiguous` as
-    version_at says."""
+    (or that is unknown), since the next version may be what they held, or when the run resumed
+    answers made with another benchmark state (`mixed`). Otherwise the version in force at
+    `first`, the run's first request in local time: `inferred`, or `ambiguous` as version_at says
+    or for a mixed run."""
     if not history:
         return None, None
+    mixed = isinstance(recorded, dict) and bool(recorded.get("mixed"))
     if isinstance(recorded, dict) and any(v.version == recorded.get("version") for v in history):
-        return recorded["version"], "recorded" if recorded.get("uncommitted") == [] else "ambiguous"
+        clean = recorded.get("uncommitted") == [] and not mixed
+        return recorded["version"], "recorded" if clean else "ambiguous"
     version, ambiguous = version_at(history, first)
-    return version, "ambiguous" if ambiguous else "inferred"
+    return version, "ambiguous" if ambiguous or mixed else "inferred"
 
 
 def rescoring(history, label, day):

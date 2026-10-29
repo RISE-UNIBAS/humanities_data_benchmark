@@ -145,6 +145,30 @@ class Extractor:
                     else iter_run_dirs()):
             self._one_run(run)
         self._finish_scored_versions()
+        return self._check_metrics()
+
+    def run_selected(self, runs):
+        """Extract only `runs`, for a partial build. Their scored versions still count the
+        re-scoring labels of every stored run, as in a full build."""
+        for run in runs:
+            self._one_run(run)
+        self.note_rescorings(iter_run_dirs(self.results_path) if self.results_path else iter_run_dirs())
+        self._finish_scored_versions()
+        return self
+
+    def note_rescorings(self, runs):
+        """Note the re-scorings named by the `rescored` labels of `runs`, exported or not: a
+        re-scoring covers every run stored by its day but labels only those it changed."""
+        for run in runs:
+            benchmark = self.catalog.benchmark_of(run.test_id)
+            history = self._history(benchmark)
+            scoring = read_scoring(run)
+            label = scoring.value.get("rescored") if scoring.status == "ok" and isinstance(scoring.value, dict) else None
+            named = rescoring(history, label, run.date) if label and history else None
+            if named:
+                self._rescorings.setdefault(benchmark, set()).add(named)
+
+    def _check_metrics(self):
         if self._unknown_metrics:
             seen = sorted(set(self._unknown_metrics))
             raise ValueError(
@@ -434,9 +458,7 @@ class Extractor:
 
         Made with: the version the runner recorded, else the version in force at the run's first
         request, or at the start of its date folder when no request records a time."""
-        if benchmark not in self._versions:
-            self._versions[benchmark] = version_history(benchmark) if benchmark else ()
-        history = self._versions[benchmark]
+        history = self._history(benchmark)
         if not history:
             return None, None, None
         times = [t for t in (local_time(r["timestamp_raw"]) for r in request_rows if r["timestamp_raw"]) if t]
@@ -452,6 +474,11 @@ class Extractor:
             else:
                 self._rescorings.setdefault(benchmark, set()).add(named)
         return made, basis, first[:10]
+
+    def _history(self, benchmark):
+        if benchmark not in self._versions:
+            self._versions[benchmark] = version_history(benchmark) if benchmark else ()
+        return self._versions[benchmark]
 
     def _finish_scored_versions(self):
         """Set benchmark_version_scored (results_index.scored_version)."""

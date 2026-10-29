@@ -24,7 +24,7 @@ from scripts.export_dataset import metrics as M
 from scripts.export_dataset import writers
 from scripts.export_dataset.extract import Extractor, parse_timestamp
 from scripts.export_dataset.schema import REQUESTS, RUNS, SCORES_LONG, SORT_KEYS, UNIQUE_KEYS
-from scripts.results_index import TestCatalog
+from scripts.results_index import TestCatalog, iter_run_dirs
 
 
 @pytest.fixture
@@ -821,6 +821,19 @@ def test_the_scored_version_follows_a_rescored_label_through_published_numbers(e
                                           "scoring": {"f1_micro": 0.5, "rescored": "company_lists 3.0.0 on 2026-10-17"}}}},
                 metas=metas)
     assert (e.runs[0]["benchmark_version"], e.runs[0]["benchmark_version_scored"]) == ("0.1.0", "2.0.0")
+
+
+def test_a_partial_build_gets_the_scored_version_of_a_full_one(extract):
+    """A re-scoring labelled only on a run the partial build leaves out still covers its runs."""
+    metas = {"company_lists": _versions(("1.0.0", "2026-10-16", {}), ("0.1.0", "2026-01-01", {}))}
+    spec = {"2026-03-01": {"T0001": {"requests": {"a": {}},
+                                     "scoring": {"f1_micro": 0.5, "rescored": "company_lists 1.0.0 on 2026-10-16"}}},
+            "2026-03-02": {"T0001": {"requests": {"a": {}}, "scoring": {"f1_micro": 0.5}}}}
+    full = {r["date"]: r["benchmark_version_scored"] for r in extract(spec, metas=metas).runs}
+    partial = extract(spec, metas=metas, run=False)
+    partial.run_selected([r for r in iter_run_dirs(partial.results_path) if r.date == "2026-03-02"])
+    assert [(r["date"], r["benchmark_version_scored"]) for r in partial.runs] == [("2026-03-02", full["2026-03-02"])]
+    assert full["2026-03-02"] == "1.0.0"
 
 
 def test_an_unknown_rescored_version_is_ignored_with_a_diagnostic(extract):

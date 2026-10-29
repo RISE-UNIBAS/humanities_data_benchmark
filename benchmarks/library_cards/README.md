@@ -188,7 +188,7 @@ This section is not part of the BenchmarkCard schema and is not exported to `ben
 - 2.0.0 (2026-10-17) — ground truth corrected: `00575005` (a cross-reference without a year) has an empty year instead of `0`; ground-truth files hold only the card record, years as strings; two files without an image removed; a response that cannot be parsed is scored as a miss instead of being left out; all stored runs re-scored
 - 1.0.0 (2026-10-16) — initial versioned state, when the card was introduced; same content as 0.13.1
 - 0.13.1 (2026-09-27) — prompt variant asking for `year` as a string
-- 0.13.0 (2026-09-18) — schema: `year` may be null and a numeric year is read as text
+- 0.13.0 (2026-09-18) — schema: `year` may be null and a numeric year is read as text; answers capped at 16,384 output tokens instead of 32,768
 - 0.12.0 (2026-09-09) — answers capped at 32,768 output tokens
 - 0.11.0 (2026-08-16) — an answer that cannot be parsed is left out of the average instead of scored as a miss
 - 0.10.2 (2026-03-10) — a failed object is left out of the average instead of stopping the run

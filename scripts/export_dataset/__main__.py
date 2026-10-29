@@ -108,8 +108,7 @@ def build(source=RESULTS_PATH, out=DATASET_PATH, date=None, benchmark=None, limi
     if partial:
         selected = _selected_runs(source, date, benchmark, limit, catalog)
         print("  partial build: %d run directories selected" % len(selected))
-        for run in selected:
-            extractor._one_run(run)
+        extractor.run_selected(selected)
         if extractor._unknown_metrics:
             raise ValueError("undefined metrics: %s"
                              % sorted(set(extractor._unknown_metrics)))
