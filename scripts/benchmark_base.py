@@ -4,6 +4,7 @@ import json
 import logging
 import os
 import re
+import subprocess
 import threading
 from abc import ABC, abstractmethod
 from concurrent.futures import ThreadPoolExecutor, as_completed
@@ -26,6 +27,35 @@ if _PRICING_FILE.exists():
 else:
     logger.warning("Pricing table not found at %s; falling back to the ai_client bundled "
                    "table, which may not price newer models at all.", _PRICING_FILE)
+
+_REPO_ROOT = Path(__file__).resolve().parent.parent
+# Code outside the benchmark's folder that changes its scores (as in the card integrity test).
+_SHARED_SCORING_CODE = ("scripts/benchmark_base.py", "scripts/scoring_helper.py")
+
+
+def recorded_version(benchmark_dir):
+    """What a run starts with, for scoring.json `benchmark_version`: the newest version in the
+    benchmark's meta.json, the commit checked out, and the benchmark's files and shared scoring code
+    that differ from it (`uncommitted`, untracked files included), which that version may not cover.
+    `commit` and `uncommitted` are None without git."""
+    folder = Path(benchmark_dir).resolve()
+    try:
+        versions = json.loads((folder / "meta.json").read_text(encoding="utf-8")).get("versions") or []
+    except (OSError, ValueError, AttributeError):
+        versions = []
+    stamp = {"version": versions[0].get("version") if versions else None, "commit": None, "uncommitted": None}
+    try:
+        def git(*args):
+            return subprocess.run(["git", *args], cwd=_REPO_ROOT, capture_output=True, text=True,
+                                  encoding="utf-8", check=True, timeout=30).stdout
+        stamp["commit"] = git("rev-parse", "HEAD").strip()
+        paths = [folder.relative_to(_REPO_ROOT).as_posix(), *_SHARED_SCORING_CODE]
+        stamp["uncommitted"] = sorted(line[3:].strip('"') for line in git("status", "--porcelain", "--", *paths).splitlines()
+                                      if line.strip())
+    except (OSError, ValueError, subprocess.SubprocessError):
+        pass
+    return stamp
+
 
 # gpt-6 accepts only its default temperature; unlisted, every request is refused once before the
 # client retries without it. Drop once generic-llm-api-client lists the family itself.
@@ -726,6 +756,7 @@ class Benchmark(ABC):
             logging.warning("workers > 1 is not supported with use_shared_context=True; falling back to 1 worker.")
             workers = 1
 
+        version = recorded_version(self.benchmark_dir)
         self.before_run()
 
         # Establish shared context if enabled
@@ -760,6 +791,7 @@ class Benchmark(ABC):
         cost_summary = self.calculate_cost(all_answers)
         benchmark_score['cost_summary'] = cost_summary
         logging.info(f"Cost summary: {cost_summary}")
+        benchmark_score['benchmark_version'] = version
 
         self.save_benchmark_score(benchmark_score)
 

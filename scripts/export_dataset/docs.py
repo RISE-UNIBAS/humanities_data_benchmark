@@ -338,10 +338,12 @@ over the archive's history, and each benchmark records that history as versions:
 whose scorer and ground truth its stored scores stand under: the latest re-scoring made on
 or after the run's day (a re-scoring checks every stored run and records itself in
 `scoring.json` only where a score changed). Scores share a basis when the major number of
-`benchmark_version_scored` is the same, or 0.y before 1.0.0. A version is assigned from the
-run's first request time, read as Europe/Zurich, against the time its change was
-committed; `benchmark_version_basis = ambiguous` marks runs made earlier on the day a version
-took effect, where that later version is also possible. The versions themselves, with dates, commits
+`benchmark_version_scored` is the same, or 0.y before 1.0.0. Newer runs record the version
+they were made with (`benchmark_version_basis = recorded`). For the others a version is
+assigned from the run's first request time, read as Europe/Zurich, against the time its
+change was committed (`inferred`). `ambiguous` marks runs made earlier on the day a version
+took effect, and runs recorded while the benchmark's files had uncommitted changes; for both
+the next version is also possible. The versions themselves, with dates, commits
 and summaries, are listed in each benchmark's `meta.json` in the source repository.
 
 Derived costs use dated pricing entries, as described above, whereas scores retain their

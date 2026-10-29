@@ -289,6 +289,42 @@ def version_of_label(history, number):
     return None
 
 
+RESCORED_LABEL = re.compile(r"^\S+ (\d+\.\d+\.\d+)(?:.* on (\d{4}-\d{2}-\d{2}))?")
+"""scoring.json `rescored`, as rewrite_scores writes it: "<label naming X.Y.Z> on YYYY-MM-DD"."""
+
+
+def run_version(history, first, recorded=None):
+    """(version, basis) a run was made with; (None, None) without a history.
+
+    The version the runner recorded in scoring.json `benchmark_version` wins when the history
+    knows it: basis `recorded`, or `ambiguous` when the benchmark's files differed from the commit
+    (or that is unknown), since the next version may be what they held. Otherwise the version in
+    force at `first`, the run's first request in local time: `inferred`, or `ambiguous` as
+    version_at says."""
+    if not history:
+        return None, None
+    if isinstance(recorded, dict) and any(v.version == recorded.get("version") for v in history):
+        return recorded["version"], "recorded" if recorded.get("uncommitted") == [] else "ambiguous"
+    version, ambiguous = version_at(history, first)
+    return version, "ambiguous" if ambiguous else "inferred"
+
+
+def rescoring(history, label, day):
+    """(version, day) that a `rescored` label names, the day defaulting to `day`; None when the
+    label names no recorded version."""
+    m = RESCORED_LABEL.match(str(label))
+    named = version_of_label(history, m.group(1)) if m else None
+    return (named, m.group(2) or day) if named else None
+
+
+def scored_version(history, made, day, rescorings):
+    """The version a run's stored scores stand under: the latest of `made` and the benchmark's
+    re-scorings, (version, day) pairs, made on or after `day`, the run's first day. A re-scoring
+    checks every stored run but labels only those whose scores changed, so it covers the others."""
+    order = [v.version for v in history]
+    return max([made] + [v for v, on in rescorings if on >= day], key=order.index)
+
+
 class RunDir(NamedTuple):
     """One stored run directory, `<root>/<date>/<test_id>/`."""
 

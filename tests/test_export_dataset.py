@@ -801,6 +801,19 @@ def test_a_run_on_the_day_a_version_took_effect_is_ambiguous(extract):
     assert (e.runs[0]["benchmark_version"], e.runs[0]["benchmark_version_basis"]) == ("0.2.0", "ambiguous")
 
 
+def test_a_version_the_runner_recorded_wins_over_the_run_time(extract):
+    metas = {"company_lists": _versions(("0.2.0", "2026-01-05", {}), ("0.1.0", "2026-01-01", {}))}
+    clean = {"version": "0.2.0", "commit": "c" * 40, "uncommitted": []}
+    e = extract({"2026-01-05": {"T0001": {"requests": {"a": {"timestamp": "2026-01-05T09:00:00"}},
+                                          "scoring": {"f1_micro": 0.5, "benchmark_version": clean}}},
+                 "2026-01-06": {"T0001": {"requests": {"a": {"timestamp": "2026-01-06T09:00:00"}},
+                                          "scoring": {"f1_micro": 0.5, "benchmark_version":
+                                                      {**clean, "version": "0.1.0", "uncommitted": ["x"]}}}}},
+                metas=metas)
+    rows = {r["date"]: (r["benchmark_version"], r["benchmark_version_basis"]) for r in e.runs}
+    assert rows == {"2026-01-05": ("0.2.0", "recorded"), "2026-01-06": ("0.1.0", "ambiguous")}
+
+
 def test_the_scored_version_follows_a_rescored_label_through_published_numbers(extract):
     metas = {"company_lists": _versions(("2.0.0", "2026-10-17", {"published_as": ["2.0.0", "3.0.0"]}),
                                         ("1.0.0", "2026-10-16", {}), ("0.1.0", "2026-01-01", {}))}

@@ -28,11 +28,13 @@ RUNS = {
                                 "checks every stored run and labels only those whose scores "
                                 "changed, so unlabelled runs count too. Scores share a basis "
                                 "when the major number is the same; before 1.0.0, when 0.y is.",
-    "benchmark_version_basis": "How `benchmark_version` was found. `inferred`: from the run's "
-                               "time and when each version was committed. `ambiguous`: a "
-                               "version took effect later on the run's day, or that day at an "
-                               "unknown time; runs are often made before a change is committed, "
-                               "so the later version is also possible.",
+    "benchmark_version_basis": "How `benchmark_version` was found. `recorded`: the runner "
+                               "recorded it, with the benchmark's files as committed. "
+                               "`inferred`: from the run's time and when each version was "
+                               "committed. `ambiguous`: recorded while the benchmark's files had "
+                               "uncommitted changes, or inferred for a run made earlier on the "
+                               "day a version took effect (or that day at an unknown time); "
+                               "either way the next version is also possible.",
     "source_path": "Path of the run directory in the source archive, for tracing a row "
                    "back to the bytes it came from.",
     "config_status": "`matched` when the test id resolves in the configuration file, "

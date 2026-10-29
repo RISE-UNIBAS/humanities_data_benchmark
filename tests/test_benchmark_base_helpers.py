@@ -206,3 +206,45 @@ class TestLoadSavedAnswer:
         usage = stored(Usage(input_tokens=1000, output_tokens=1000, total_tokens=2000))
         assert usage.reasoning_tokens is None
         assert usage.estimated_cost_usd == pytest.approx(0.003)
+
+
+class TestRecordedVersion:
+    """What a run records in scoring.json `benchmark_version`."""
+
+    @pytest.fixture
+    def repo(self, tmp_path, monkeypatch):
+        import subprocess
+        import benchmark_base
+        folder = tmp_path / "benchmarks" / "letters"
+        folder.mkdir(parents=True)
+        (folder / "meta.json").write_text('{"versions": [{"version": "2.0.0"}, {"version": "1.0.0"}]}',
+                                          encoding="utf-8")
+        (tmp_path / "other.txt").write_text("x", encoding="utf-8")
+        for args in (["init", "-q"], ["add", "."],
+                     ["-c", "user.name=t", "-c", "user.email=t@t", "commit", "-q", "-m", "c"]):
+            subprocess.run(["git", *args], cwd=tmp_path, check=True)
+        monkeypatch.setattr(benchmark_base, "_REPO_ROOT", tmp_path)
+        return folder
+
+    def test_a_clean_benchmark_records_its_newest_version_and_commit(self, repo):
+        from benchmark_base import recorded_version
+        (repo.parent.parent / "other.txt").write_text("changed", encoding="utf-8")  # outside the benchmark
+        stamp = recorded_version(repo)
+        assert stamp["version"] == "2.0.0" and len(stamp["commit"]) == 40 and stamp["uncommitted"] == []
+
+    def test_changed_and_new_files_of_the_benchmark_are_listed(self, repo):
+        from benchmark_base import recorded_version
+        (repo / "meta.json").write_text('{"versions": [{"version": "3.0.0"}]}', encoding="utf-8")
+        (repo / "prompt_new.txt").write_text("p", encoding="utf-8")
+        stamp = recorded_version(repo)
+        assert stamp["version"] == "3.0.0"
+        assert stamp["uncommitted"] == ["benchmarks/letters/meta.json", "benchmarks/letters/prompt_new.txt"]
+
+    def test_without_git_only_the_version_is_known(self, tmp_path, monkeypatch):
+        import benchmark_base
+        folder = tmp_path / "letters"
+        folder.mkdir()
+        (folder / "meta.json").write_text('{"versions": [{"version": "1.0.0"}]}', encoding="utf-8")
+        monkeypatch.setattr(benchmark_base, "_REPO_ROOT", tmp_path)
+        monkeypatch.setattr(benchmark_base.subprocess, "run", lambda *a, **k: (_ for _ in ()).throw(OSError()))
+        assert benchmark_base.recorded_version(folder) == {"version": "1.0.0", "commit": None, "uncommitted": None}
