@@ -159,8 +159,17 @@ This section is not part of the BenchmarkCard schema and is not exported to `ben
 
 **Versions:**
 
-- 2.0.0 — ground truth corrected: the Montaner card has no stamped date (was the typed removal date 1945-06-18) and its address is no longer a text block; two cards with no text blocks record `information` as `null` (was an empty string); an empty `information` list counts as empty; a response that cannot be parsed is scored as a miss; all stored runs re-scored
-- 1.0.0 — initial versioned state, when the card was introduced; same content as 0.6.1
+- 2.0.0 (2026-10-18) — ground truth corrected: the Montaner card has no stamped date (was the typed removal date 1945-06-18) and its address is no longer a text block; two cards with no text blocks record `information` as `null` (was an empty string); an empty `information` list counts as empty; a response that cannot be parsed is scored as a miss; all stored runs re-scored
+- 1.0.0 (2026-10-16) — initial versioned state, when the card was introduced; same content as 0.6.1
+- 0.6.1 (2026-09-11) — per-field comparison recorded with each answer; scores unchanged
+- 0.6.0 (2026-09-09) — answers capped at 32,768 output tokens
+- 0.5.0 (2026-08-16) — an answer that cannot be parsed is left out of the average instead of scored as a miss
+- 0.4.2 (2026-06-30) — a run with no scored object scores 0 instead of failing
+- 0.4.1 (2026-04-22) — a failed object is left out of the average instead of stopping the run
+- 0.4.0 (2025-11-24) — answers are parsed by the API client instead of the benchmark; failed requests stop the run again
+- 0.3.0 (2025-11-23) — renamed blacklist_cards; ranked by fuzzy instead of f1_macro, which the scorer never produced
+- 0.2.0 (2025-10-29) — a null answer matches an empty ground-truth field
+- 0.1.0 (2025-10-24) — first state, as blacklist
 
 **How to Cite:** This benchmark:
 

@@ -180,8 +180,21 @@ This section is not part of the BenchmarkCard schema and is not exported to `ben
 
 **Versions:**
 
-- 2.0.0 — ground truth checked against the scans and conformed to the response schema (transcription errors, six missing entries, entries 146–148 unnested, `relation` as the reviewed `id`, notes and years as printed); `prompt_v2.txt` for new tests; entries aligned in page order instead of by position; a response nested under a wrapper key is unwrapped; a response that cannot be parsed is scored as a miss; all stored runs re-scored
-- 1.0.0 — initial versioned state, when the card was introduced; same content as 0.10.1
+- 2.0.0 (2026-10-18) — ground truth checked against the scans and conformed to the response schema (transcription errors, six missing entries, entries 146–148 unnested, `relation` as the reviewed `id`, notes and years as printed); `prompt_v2.txt` for new tests; entries aligned in page order instead of by position; a response nested under a wrapper key is unwrapped; a response that cannot be parsed is scored as a miss; all stored runs re-scored
+- 1.0.0 (2026-10-16) — initial versioned state, when the card was introduced; same content as 0.10.1
+- 0.10.1 (2026-09-11) — per-field comparison recorded with each answer; scores unchanged
+- 0.10.0 (2026-09-09) — answers capped at 32,768 output tokens
+- 0.9.0 (2026-08-16) — an answer that cannot be parsed is left out of the average instead of scored as a miss
+- 0.8.2 (2026-06-30) — a run with no scored object scores 0 instead of failing
+- 0.8.1 (2026-04-22) — a failed object is left out of the average instead of stopping the run
+- 0.8.0 (2025-11-24) — answers are parsed by the API client instead of the benchmark; failed requests stop the run again
+- 0.7.0 (2025-10-20) — numbers and strings compared as text, so a number matches the same digits given as a string
+- 0.6.0 (2025-10-17) — requests that fail are saved as empty answers and scored as misses
+- 0.5.0 (2025-10-16) — the prompt states the page number instead of a literal `{page_number}`
+- 0.4.0 (2025-09-24) — schema rebuilt with pydantic: `relation` and `reprint` become strings, empty defaults become null
+- 0.3.0 (2025-04-08) — `metadata` fields no longer scored; answers given as a list are accepted; two ground-truth files made valid JSON
+- 0.2.0 (2025-04-03) — three pages added (page_3 to page_5); `issued` asked for as a string
+- 0.1.0 (2025-03-01) — first state
 
 **How to Cite:** This benchmark:
 

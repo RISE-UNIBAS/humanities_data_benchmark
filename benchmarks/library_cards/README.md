@@ -176,8 +176,8 @@ Observed across models: the card type (93% of fields correct across all stored r
 
 This section is not part of the BenchmarkCard schema and is not exported to `benchmark_card.json`.
 
-<!-- Versions use semantic versioning, newest first, one line each: `- MAJOR.MINOR.PATCH — what
-     changed and why`.
+<!-- Versions use semantic versioning, newest first, one line each:
+     `- MAJOR.MINOR.PATCH (YYYY-MM-DD) — what changed and why`.
      MAJOR: scores before and after are not comparable (ground truth corrected, scoring or
             ranking metric changed, objects added or removed).
      MINOR: something added that leaves existing scores unchanged (e.g. a new prompt variant).
@@ -185,8 +185,24 @@ This section is not part of the BenchmarkCard schema and is not exported to `ben
 
 **Versions:**
 
-- 2.0.0 — ground truth corrected: `00575005` (a cross-reference without a year) has an empty year instead of `0`; ground-truth files hold only the card record, years as strings; two files without an image removed; a response that cannot be parsed is scored as a miss instead of being left out; all stored runs re-scored
-- 1.0.0 — initial versioned state, when the card was introduced; same content as 0.13.1
+- 2.0.0 (2026-10-17) — ground truth corrected: `00575005` (a cross-reference without a year) has an empty year instead of `0`; ground-truth files hold only the card record, years as strings; two files without an image removed; a response that cannot be parsed is scored as a miss instead of being left out; all stored runs re-scored
+- 1.0.0 (2026-10-16) — initial versioned state, when the card was introduced; same content as 0.13.1
+- 0.13.1 (2026-09-27) — prompt variant asking for `year` as a string
+- 0.13.0 (2026-09-18) — schema: `year` may be null and a numeric year is read as text
+- 0.12.0 (2026-09-09) — answers capped at 32,768 output tokens
+- 0.11.0 (2026-08-16) — an answer that cannot be parsed is left out of the average instead of scored as a miss
+- 0.10.2 (2026-03-10) — a failed object is left out of the average instead of stopping the run
+- 0.10.1 (2026-01-24) — images stored as real JPEG files; same images
+- 0.10.0 (2025-11-24) — renamed library_cards; answers are parsed by the API client instead of the benchmark; failed requests stop the run again
+- 0.9.0 (2025-10-20) — numbers and strings compared as text, so a number matches the same digits given as a string
+- 0.8.0 (2025-10-17) — requests that fail are saved as empty answers and scored as misses
+- 0.7.0 (2025-09-24) — schema rebuilt with pydantic; `year` is a string
+- 0.6.0 (2025-09-09) — fuzzy match threshold lowered from 0.95 to 0.92; ground truth revised
+- 0.5.0 (2025-09-08) — `reprint_note` and `publication_number` removed from schema, prompt and ground truth
+- 0.4.0 (2025-09-07) — examination fields left out of schema, prompt and ground truth
+- 0.3.0 (2025-09-05) — a field is no longer counted twice under its parent; ground truth revised
+- 0.2.0 (2025-09-03) — first scorer (field-level F1); two ground-truth files added; prompt revised
+- 0.1.0 (2025-09-02) — first state, as zettelkatalog; the scorer recorded no score
 
 **How to Cite:** This benchmark:
 

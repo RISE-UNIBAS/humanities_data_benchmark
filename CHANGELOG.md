@@ -17,7 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `scripts/export_dataset/crosscheck.py`: reconciles the dataset with the website's run export from benchmark-frontend before packaging.
 - `scripts/results_index.py`: one shared reader for `results/` and `benchmarks_tests.csv`, also used by `scripts/compare/`.
 - README: slides from DaSCHCon 2026 and the SGG workshop under Publications; the Results section describes the new website.
-- Version history of every benchmark in `meta.json` `versions` (version, date, commit, kind of change, summary), reconstructed from the git history, with 0.y.z before the cards; the cards' Versions list is generated from it, and an integrity test checks the history.
+- Version history of every benchmark in `meta.json` `versions` (version, date, commit, kind of change, summary), reconstructed from the git history, with 0.y.z before the cards; the cards' Versions list is generated from it, every version dated, and an integrity test checks the history.
 
 ### Changed
 - `magazine_pages` example image: a page with seven advertisements.

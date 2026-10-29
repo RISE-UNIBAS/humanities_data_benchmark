@@ -85,18 +85,19 @@ def test_audience_vocabulary_is_enforced():
 
 
 @pytest.mark.parametrize("raw", [
-    "\n\n- 1.0.0 — initial version",
-    "\n\n- 1.1.0 — new prompt variant\n- 1.0.0 — initial version",
+    "\n\n- 1.0.0 (2026-10-16) — initial version",
+    "\n\n- 1.1.0 (2026-10-20) — new prompt variant\n- 1.0.0 (2026-10-16) — initial version\n- 0.1.0 (2025-03-01) — first state",
 ])
 def test_semantic_versions_pass(raw):
     bc.check_versions(raw)
 
 
 @pytest.mark.parametrize("raw,match", [
-    ("\n\n- 1 — initial version", "MAJOR.MINOR.PATCH"),
-    ("\n\n- v1.0 — initial version", "MAJOR.MINOR.PATCH"),
-    ("\n\n- 1.0.0", "MAJOR.MINOR.PATCH"),
-    ("\n\n- 1.0.0 — a\n- 1.0.0 — b", "listed twice"),
+    ("\n\n- 1 (2026-10-16) — initial version", "MAJOR.MINOR.PATCH"),
+    ("\n\n- v1.0 (2026-10-16) — initial version", "MAJOR.MINOR.PATCH"),
+    ("\n\n- 1.0.0 — initial version", "YYYY-MM-DD"),
+    ("\n\n- 1.0.0 (2026-10-16)", "MAJOR.MINOR.PATCH"),
+    ("\n\n- 1.0.0 (2026-10-16) — a\n- 1.0.0 (2026-10-17) — b", "listed twice"),
     (" Not specified", "must list"),
 ])
 def test_bad_versions_are_reported(raw, match):
@@ -148,7 +149,7 @@ def test_apa_names(names, expected):
 
 
 def test_newest_version_is_the_first_line():
-    assert bc.newest_version("\n\n- 2.0.0 — fix\n- 1.0.0 — initial version") == "2.0.0"
+    assert bc.newest_version("\n\n- 2.0.0 (2026-10-17) — fix\n- 1.0.0 (2026-10-16) — initial version") == "2.0.0"
 
 
 CITATION = {

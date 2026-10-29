@@ -93,7 +93,7 @@ This README is a BenchmarkCard (Sokol et al., NeurIPS 2025, arXiv 2410.12974), s
 This section is not part of the BenchmarkCard schema and is not exported to `benchmark_card.json`.
 
 <!-- Versions are generated from meta.json `versions`, which holds the whole history, newest
-     first: `{"version", "date", "commit", "change", "summary"}`, with 0.y.z before the card
+     first, one line each as `- X.Y.Z (date) — summary`: `{"version", "date", "commit", "change", "summary"}`, with 0.y.z before the card
      (y: incompatible changes, z: compatible ones). Add an entry there for each change, dated and
      with the commit that made it.
      MAJOR: scores before and after are not comparable (ground truth corrected, scoring or

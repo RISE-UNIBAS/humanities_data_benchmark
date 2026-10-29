@@ -162,8 +162,8 @@ Observed across models: across the 95 active test configurations, CER ranges fro
 
 This section is not part of the BenchmarkCard schema and is not exported to `benchmark_card.json`.
 
-<!-- Versions use semantic versioning, newest first, one line each: `- MAJOR.MINOR.PATCH — what
-     changed and why`.
+<!-- Versions use semantic versioning, newest first, one line each:
+     `- MAJOR.MINOR.PATCH (YYYY-MM-DD) — what changed and why`.
      MAJOR: scores before and after are not comparable (ground truth corrected, scoring or
             ranking metric changed, objects added or removed).
      MINOR: something added that leaves existing scores unchanged (e.g. a new prompt variant).
@@ -171,8 +171,15 @@ This section is not part of the BenchmarkCard schema and is not exported to `ben
 
 **Versions:**
 
-- 2.0.0 — ground truth corrected: folio [69r] carries the number 69 (was empty); a response that cannot be parsed is scored as a miss instead of being left out; all stored runs re-scored
-- 1.0.0 — initial versioned state, when the card was introduced; same content as 0.4.1
+- 2.0.0 (2026-10-17) — ground truth corrected: folio [69r] carries the number 69 (was empty); a response that cannot be parsed is scored as a miss instead of being left out; all stored runs re-scored
+- 1.0.0 (2026-10-16) — initial versioned state, when the card was introduced; same content as 0.4.1
+- 0.4.1 (2026-09-11) — per-field comparison recorded with each answer; scores unchanged
+- 0.4.0 (2026-09-09) — answers capped at 32,768 output tokens
+- 0.3.2 (2026-03-31) — an unscored object is skipped instead of failing the run
+- 0.3.1 (2026-03-10) — a failed object is left out of the average instead of stopping the run
+- 0.3.0 (2025-11-24) — answers are parsed by the API client instead of the benchmark; failed requests stop the run again
+- 0.2.0 (2025-10-24) — typos corrected in two ground-truth files
+- 0.1.0 (2025-10-22) — first state
 
 **How to Cite:** This benchmark:
 
