@@ -11,8 +11,15 @@ Rules enforced here, for every card:
      (`- MAJOR.MINOR.PATCH — what changed`).
   4. README generated fields and benchmark_card.json match what the script produces. Fix: run
      python scripts/benchmark_cards.py <name>.
+  5. meta.json `versions` holds the benchmark's history and follows the rules in
+     benchmark_cards.check_meta_versions.
+  6. Each recorded commit exists and changes a benchmark folder or the shared scoring code
+     (scripts/benchmark_base.py, scripts/scoring_helper.py). Needs the full git history; skipped
+     on a shallow clone.
 """
+import json
 import os
+import subprocess
 
 import pytest
 
@@ -53,6 +60,36 @@ def _check(name):
 ])
 def test_readme_is_a_valid_current_card(name):
     _check(name)
+
+
+def _versions(name):
+    with open(os.path.join(BENCHMARKS_DIR, name, "meta.json"), encoding="utf-8") as f:
+        return json.load(f).get("versions")
+
+
+@pytest.mark.parametrize("name", _benchmarks())
+def test_meta_json_records_the_version_history(name):
+    versions = _versions(name)
+    assert versions, f"{name}/meta.json has no `versions`"
+    benchmark_cards.check_meta_versions(versions)
+
+
+def _git(*args):
+    return subprocess.run(["git", *args], cwd=os.path.dirname(BENCHMARKS_DIR), capture_output=True, text=True)
+
+
+@pytest.mark.parametrize("name", _benchmarks())
+def test_version_commits_exist_and_change_the_benchmark(name):
+    if _git("rev-parse", "--is-shallow-repository").stdout.strip() != "false":
+        pytest.skip("needs the full git history")
+    for v in _versions(name) or []:
+        if "commit" not in v:
+            continue
+        changed = _git("show", "--name-only", "--format=", v["commit"])
+        assert changed.returncode == 0, f"{name} {v['version']}: commit {v['commit']} not found"
+        paths = changed.stdout.split()
+        assert any(p.startswith("benchmarks/") or p in ("scripts/benchmark_base.py", "scripts/scoring_helper.py")
+                   for p in paths), f"{name} {v['version']}: commit {v['commit'][:10]} changes no benchmark or scoring code"
 
 
 def test_unmigrated_set_names_real_benchmarks():

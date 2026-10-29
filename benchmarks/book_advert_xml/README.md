@@ -153,7 +153,7 @@ This section is not part of the BenchmarkCard schema and is not exported to `ben
 **Versions:**
 
 - 2.0.0 — scored by edits (F1 of the response's edits against the reference's, `f1_macro`) instead of fuzzy similarity, which an unchanged input won at 99; ground truth curated to the input text plus markup repairs and made well-formed; a response that cannot be parsed is scored as a miss; `prompt_v2.txt` for new tests; all stored runs re-scored
-- 1.0.0 — initial versioned state
+- 1.0.0 — initial versioned state, when the card was introduced; same content as 0.2.1
 
 **How to Cite:** This benchmark:
 

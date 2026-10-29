@@ -104,6 +104,40 @@ def test_bad_versions_are_reported(raw, match):
         bc.check_versions(raw)
 
 
+def _v(version, date, change, **extra):
+    return {"version": version, "date": date, "change": change, "summary": "s", **extra}
+
+
+def test_a_history_before_and_after_the_card_passes():
+    bc.check_meta_versions([
+        _v("2.0.0", "2026-10-17", "major", published_as=["2.0.0", "3.0.0"]),
+        _v("1.0.0", "2026-10-16", "initial"),
+        _v("0.2.1", "2026-09-27", "minor"),
+        _v("0.2.0", "2026-09-18", "major", commit="a" * 40),
+        _v("0.1.0", "2025-09-02", "initial"),
+    ])
+
+
+def test_a_new_benchmark_starts_at_one():
+    bc.check_meta_versions([_v("1.0.0", "2026-10-29", "initial")])
+
+
+@pytest.mark.parametrize("entries,match", [
+    ([_v("0.3.0", "2026-01-02", "major"), _v("0.1.0", "2026-01-01", "initial")], "does not follow"),
+    ([_v("0.1.1", "2026-01-02", "major"), _v("0.1.0", "2026-01-01", "initial")], "does not follow"),
+    ([_v("1.1.0", "2026-01-02", "patch"), _v("1.0.0", "2026-01-01", "initial")], "does not follow"),
+    ([_v("0.2.0", "2026-01-01", "major"), _v("0.1.0", "2026-01-02", "initial")], "dated before"),
+    ([_v("0.2.0", "2026-01-01", "initial")], "oldest entry"),
+    ([_v("0.1.0", "2026-01-01", "initial", published_as=["1.0.0"])], "never published"),
+    ([_v("0.1.0", "2026-01-01", "initial", commit="abc")], "full hash"),
+    ([_v("0.1.0", "2026-01-01", "rewrite")], "change must be"),
+    ([], "non-empty"),
+])
+def test_bad_histories_are_reported(entries, match):
+    with pytest.raises(bc.CardError, match=match):
+        bc.check_meta_versions(entries)
+
+
 @pytest.mark.parametrize("names,expected", [
     ([("Serif", "Ina")], "Serif, I."),
     ([("Leonte", "Ana-Maria"), ("Kasper", "Lea Katharina")], "Leonte, A.-M., & Kasper, L. K."),
