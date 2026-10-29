@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+- README: slides from DaSCHCon 2026 and the SGG workshop under Publications.
+
 ### Changed
 - `magazine_pages` example image: a page with seven advertisements.
 - Website code moved to the benchmark-frontend repository; `scripts/ndr_export/` is now `scripts/compare/`, which builds only the comparison data, and `pricing_resolver.py` moved to `scripts/`.
