@@ -285,3 +285,20 @@ def test_payload_is_returned_unchanged(make_corpus):
     _file, read = first_request(next(iter_run_dirs(root)))
     assert read.value == record
     assert json.dumps(read.value, sort_keys=True) == json.dumps(record, sort_keys=True)
+
+
+def test_local_time_converts_offsets_and_keeps_naive_times():
+    from scripts.results_index import local_time
+    assert local_time("2026-10-17T19:56:29+00:00") == "2026-10-17T21:56:29"
+    assert local_time("2026-10-17T21:56:29.123456") == "2026-10-17T21:56:29"
+    assert local_time("not a time") is None
+
+
+def test_a_published_number_wins_over_a_version_that_now_carries_it():
+    from scripts.results_index import Version, version_of_label
+    history = (Version("1.0.0", "2026-10-16T00:00:00", ()),
+               Version("2.0.0", "2026-10-17T00:00:00", ("1.0.1",)),
+               Version("3.0.0", "2026-10-18T00:00:00", ("2.0.0",)))
+    assert version_of_label(history, "2.0.0") == "3.0.0"
+    assert version_of_label(history, "1.0.1") == "2.0.0"
+    assert version_of_label(history, "4.0.0") is None

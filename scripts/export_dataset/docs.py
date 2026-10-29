@@ -333,14 +333,21 @@ is used for grouping and comparison.
 
 Configuration and benchmark metadata describe the **export snapshot**, which may differ
 from the configuration at execution time. Prompts, ground truths, and scoring code changed
-over the archive's history. Stored scores are preserved as recorded; the export does not
-reconstruct the historical versions of those evaluation components.
+over the archive's history, and each benchmark records that history as versions:
+`benchmark_version` is the version a run was made with, `benchmark_version_scored` the one
+whose scorer and ground truth its stored scores stand under: the latest re-scoring made on
+or after the run's day (a re-scoring checks every stored run and records itself in
+`scoring.json` only where a score changed). Scores share a basis when the major number of
+`benchmark_version_scored` is the same, or 0.y before 1.0.0. A version is assigned from the
+run's first request time, read as Europe/Zurich, against the time its change was
+committed; `benchmark_version_basis = ambiguous` marks runs made earlier on the day a version
+took effect, where that later version is also possible. The versions themselves, with dates, commits
+and summaries, are listed in each benchmark's `meta.json` in the source repository.
 
 Derived costs use dated pricing entries, as described above, whereas scores retain their
 original evaluation context. Historical cost reconstruction does not resolve changes in
-models, prompts, or source documents. Comparisons of scores across dates additionally
-require attention to changes in ground truths and scoring methods that are not versioned
-in the exported records.
+models, prompts, or source documents. Comparisons of scores across dates should
+group by `benchmark_version_scored`.
 
 ## Loading CSV files
 

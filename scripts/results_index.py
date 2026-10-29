@@ -41,8 +41,11 @@ not caused here, and the pricing table it loads is not used by anything in this 
 import csv
 import json
 import re
+import subprocess
+from datetime import datetime
 from pathlib import Path
 from typing import NamedTuple
+from zoneinfo import ZoneInfo
 
 PROJECT_ROOT = Path(__file__).parent.parent.resolve()
 RESULTS_PATH = PROJECT_ROOT / "results"
@@ -212,6 +215,78 @@ def benchmark_names():
 def benchmark_meta(name):
     """A benchmark's meta.json as a `JsonRead`, so absent and unparseable stay distinct."""
     return read_json(BENCHMARKS_PATH / name / "meta.json")
+
+
+RESULTS_TIMEZONE = "Europe/Zurich"
+"""The zone the runner's request timestamps were written in; they carry no offset."""
+
+
+class Version(NamedTuple):
+    version: str
+    effective: str        # local time it took effect, "YYYY-MM-DDTHH:MM:SS"
+    published_as: tuple   # numbers it was once published under
+    exact: bool = True    # False when only the date is known
+
+
+def local_time(raw):
+    """A timestamp as naive local time "YYYY-MM-DDTHH:MM:SS", or None. Offsets are converted to
+    RESULTS_TIMEZONE; naive values are taken as already local."""
+    try:
+        moment = datetime.fromisoformat(str(raw))
+    except (TypeError, ValueError):
+        return None
+    if moment.tzinfo is not None:
+        moment = moment.astimezone(ZoneInfo(RESULTS_TIMEZONE)).replace(tzinfo=None)
+    return moment.isoformat(timespec="seconds")
+
+
+def version_history(name):
+    """A benchmark's meta.json `versions`, oldest first, each with the local time it took effect:
+    its commit's time, or its date at midnight without a commit or git. Empty when the benchmark
+    records no versions."""
+    read = benchmark_meta(name)
+    entries = read.value.get("versions") if isinstance(read.value, dict) else None
+    if not entries:
+        return ()
+    shas = [e["commit"] for e in entries if e.get("commit")]
+    times = {}
+    if shas:
+        try:
+            out = subprocess.run(["git", "show", "-s", "--format=%H %cI", *shas], cwd=PROJECT_ROOT,
+                                 capture_output=True, text=True, check=True).stdout
+            times = dict((sha, local_time(iso)) for sha, iso in
+                         (line.split() for line in out.splitlines() if line.strip()))
+        except (OSError, subprocess.CalledProcessError):
+            times = {}
+    return tuple(Version(e["version"], times.get(e.get("commit")) or e["date"] + "T00:00:00",
+                         tuple(e.get("published_as") or ()), bool(times.get(e.get("commit"))))
+                 for e in reversed(entries))
+
+
+def version_at(history, when):
+    """(version, ambiguous) in force at local time `when`: the last version that took effect at
+    or before it, else the first. Ambiguous when a version took effect later the same day, or that
+    day at an unknown time: runs are often made from changes that are committed later."""
+    if not history or not when:
+        return None, None
+    current = history[0]
+    for v in history:
+        if v.effective <= when:
+            current = v
+    return current.version, any(v.effective[:10] == when[:10] and (when < v.effective or not v.exact)
+                                for v in history)
+
+
+def version_of_label(history, number):
+    """The version that a published number (e.g. from a `rescored` label) now goes by, or None.
+    A number a version was published under wins over a version that now carries it."""
+    for v in history:
+        if number in v.published_as:
+            return v.version
+    for v in history:
+        if number == v.version:
+            return v.version
+    return None
 
 
 class RunDir(NamedTuple):

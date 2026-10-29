@@ -772,3 +772,66 @@ def test_an_unknown_test_id_survives_a_build_with_rescored_detail(build_with_det
                          root="mixed")
     requests, _rescored_ids, _payload_ids, _orphans = build_with_detail(source=source)
     assert ("T9999@2026-01-02", "c") in requests
+
+
+# --------------------------------------------------------------------------------
+# Benchmark versions
+# --------------------------------------------------------------------------------
+
+def _versions(*entries):
+    return {"versions": [{"version": v, "date": d, "change": "major", "summary": "s", **extra}
+                         for v, d, extra in entries]}
+
+
+def test_a_run_gets_the_version_in_force_at_its_first_request(extract):
+    metas = {"company_lists": _versions(("0.2.0", "2026-01-05", {}), ("0.1.0", "2026-01-01", {}))}
+    e = extract({"2026-01-03": {"T0001": {"requests": {"a": {"timestamp": "2026-01-03T10:00:00"},
+                                                       "b": {"timestamp": "2026-01-03T09:00:00"}}}},
+                 "2026-01-06": {"T0001": {"requests": {"a": {"timestamp": "2026-01-06T08:00:00"}}}}},
+                metas=metas)
+    rows = {r["date"]: r for r in e.runs}
+    assert (rows["2026-01-03"]["benchmark_version"], rows["2026-01-03"]["benchmark_version_basis"]) == ("0.1.0", "inferred")
+    assert rows["2026-01-06"]["benchmark_version"] == "0.2.0"
+    assert rows["2026-01-06"]["benchmark_version_scored"] == "0.2.0"
+
+
+def test_a_run_on_the_day_a_version_took_effect_is_ambiguous(extract):
+    metas = {"company_lists": _versions(("0.2.0", "2026-01-05", {}), ("0.1.0", "2026-01-01", {}))}
+    e = extract({"2026-01-05": {"T0001": {"requests": {"a": {"timestamp": "2026-01-05T09:00:00"}}}}}, metas=metas)
+    assert (e.runs[0]["benchmark_version"], e.runs[0]["benchmark_version_basis"]) == ("0.2.0", "ambiguous")
+
+
+def test_the_scored_version_follows_a_rescored_label_through_published_numbers(extract):
+    metas = {"company_lists": _versions(("2.0.0", "2026-10-17", {"published_as": ["2.0.0", "3.0.0"]}),
+                                        ("1.0.0", "2026-10-16", {}), ("0.1.0", "2026-01-01", {}))}
+    e = extract({"2026-03-01": {"T0001": {"requests": {"a": {"timestamp": "2026-03-01T09:00:00"}},
+                                          "scoring": {"f1_micro": 0.5, "rescored": "company_lists 3.0.0 on 2026-10-17"}}}},
+                metas=metas)
+    assert (e.runs[0]["benchmark_version"], e.runs[0]["benchmark_version_scored"]) == ("0.1.0", "2.0.0")
+
+
+def test_an_unknown_rescored_version_is_ignored_with_a_diagnostic(extract):
+    metas = {"company_lists": _versions(("0.1.0", "2026-01-01", {}))}
+    e = extract({"2026-03-01": {"T0001": {"requests": {"a": {}},
+                                          "scoring": {"f1_micro": 0.5, "rescored": "company_lists 9.0.0 on 2026-10-17"}}}},
+                metas=metas)
+    assert e.runs[0]["benchmark_version"] == e.runs[0]["benchmark_version_scored"] == "0.1.0"
+    assert any(d["issue"] == "rescored_version_unknown" for d in e.diagnostics)
+
+
+def test_a_rescoring_covers_unlabelled_runs_stored_by_its_day(extract):
+    """rewrite_scores labels only the runs whose aggregate changed; it re-scored all of them."""
+    metas = {"company_lists": _versions(("1.0.0", "2026-10-16", {}), ("0.1.0", "2026-01-01", {}))}
+    e = extract({"2026-03-01": {"T0001": {"requests": {"a": {}},
+                                          "scoring": {"f1_micro": 0.5, "rescored": "company_lists 1.0.0 on 2026-10-16"}}},
+                 "2026-03-02": {"T0001": {"requests": {"a": {}}, "scoring": {"f1_micro": 0.5}}},
+                 "2026-10-20": {"T0001": {"requests": {"a": {}}, "scoring": {"f1_micro": 0.5}}}},
+                metas=metas)
+    scored = {r["date"]: (r["benchmark_version"], r["benchmark_version_scored"]) for r in e.runs}
+    assert scored == {"2026-03-01": ("0.1.0", "1.0.0"), "2026-03-02": ("0.1.0", "1.0.0"),
+                      "2026-10-20": ("1.0.0", "1.0.0")}
+
+
+def test_a_benchmark_without_versions_leaves_the_columns_null(extract):
+    e = extract({"2026-03-01": {"T0001": {"requests": {"a": {}}}}})
+    assert [e.runs[0][k] for k in ("benchmark_version", "benchmark_version_scored", "benchmark_version_basis")] == [None] * 3

@@ -18,6 +18,21 @@ RUNS = {
             "is the directory name, and the runner writes to it for the duration of a run.",
     "benchmark": "Which benchmark this run belongs to, from the test configuration. Null "
                  "when the test id could not be resolved.",
+    "benchmark_version": "The benchmark version the run was made with: the version in force "
+                         "at its first request (inputs, prompts, schema and scorer as they "
+                         "then were), from the benchmark's version history. Null for a "
+                         "benchmark without one.",
+    "benchmark_version_scored": "The version whose scorer and ground truth the stored scores "
+                                "stand under: the latest re-scoring of the benchmark made on or "
+                                "after the run's day, else `benchmark_version`. A re-scoring "
+                                "checks every stored run and labels only those whose scores "
+                                "changed, so unlabelled runs count too. Scores share a basis "
+                                "when the major number is the same; before 1.0.0, when 0.y is.",
+    "benchmark_version_basis": "How `benchmark_version` was found. `inferred`: from the run's "
+                               "time and when each version was committed. `ambiguous`: a "
+                               "version took effect later on the run's day, or that day at an "
+                               "unknown time; runs are often made before a change is committed, "
+                               "so the later version is also possible.",
     "source_path": "Path of the run directory in the source archive, for tracing a row "
                    "back to the bytes it came from.",
     "config_status": "`matched` when the test id resolves in the configuration file, "

@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - `scripts/export_dataset/`: builds `dataset/`, with `runs`, `requests`, `scores_long` and `rescored_fields` tables in Parquet and CSV, a metric dictionary, payload sidecars, coverage, diagnostics and a source manifest of hashed inputs.
+- Each run carries the benchmark version it was made and scored with (`benchmark_version`, `benchmark_version_scored`, `benchmark_version_basis`); dataset schema 1.3.0.
 - Per-request cost from recorded tokens at the price in force on the run's date, reasoning included, beside the stored cost; `reasoning_tokens` and reasoning cost columns on `requests` and `runs`.
 - `dataset/` documentation: `datapackage.json`, README, changelog and `CITATION.cff`; data licensed CC BY 4.0.
 - `dataset/examples/business_letters_cost.py`: cost per correct extraction by provider and date.

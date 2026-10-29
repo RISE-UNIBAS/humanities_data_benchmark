@@ -57,6 +57,9 @@ RUNS = pa.schema([
     ("test_id", pa.string()),
     ("date", pa.string()),
     ("benchmark", pa.string()),
+    ("benchmark_version", pa.string()),
+    ("benchmark_version_scored", pa.string()),
+    ("benchmark_version_basis", pa.string()),
     ("source_path", pa.string()),
 
     ("config_status", pa.string()),
