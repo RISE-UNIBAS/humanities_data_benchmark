@@ -174,7 +174,7 @@ This section is not part of the BenchmarkCard schema and is not exported to `ben
 **Versions:**
 
 - 2.0.0 — `page_id` and `entry_id` are no longer scored: the model is never given their expected values; `prompt_v2.txt` added for new tests; a response that cannot be parsed is scored as a miss instead of being left out; all stored runs re-scored
-- 1.0.0 — initial versioned state, when the card was introduced; same content as 0.4.0
+- 1.0.0 — initial versioned state, when the card was introduced; same content as 0.6.0
 
 **How to Cite:** This benchmark:
 

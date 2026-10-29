@@ -160,7 +160,7 @@ This section is not part of the BenchmarkCard schema and is not exported to `ben
 **Versions:**
 
 - 2.0.0 — ground truth corrected: the Montaner card has no stamped date (was the typed removal date 1945-06-18) and its address is no longer a text block; two cards with no text blocks record `information` as `null` (was an empty string); an empty `information` list counts as empty; a response that cannot be parsed is scored as a miss; all stored runs re-scored
-- 1.0.0 — initial versioned state, when the card was introduced; same content as 0.3.1
+- 1.0.0 — initial versioned state, when the card was introduced; same content as 0.6.1
 
 **How to Cite:** This benchmark:
 

@@ -212,7 +212,7 @@ This section is not part of the BenchmarkCard schema and is not exported to `ben
 
 - 3.0.0 — a card without rows answered without rows scores F1 1 instead of 0; all stored runs re-scored
 - 2.0.0 — a response that cannot be parsed is scored as a miss instead of being left out; all stored runs re-scored
-- 1.0.0 — initial versioned state, when the card was introduced; same content as 0.4.0
+- 1.0.0 — initial versioned state, when the card was introduced; same content as 0.5.0
 
 **How to Cite:** This benchmark:
 
