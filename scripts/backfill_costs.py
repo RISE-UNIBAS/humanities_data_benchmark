@@ -44,7 +44,7 @@ PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 if PROJECT_ROOT not in sys.path:
     sys.path.insert(0, PROJECT_ROOT)
 
-from scripts.ndr_export.pricing_resolver import resolve_pricing  # noqa: E402
+from scripts.pricing_resolver import resolve_pricing  # noqa: E402
 from scripts.reasoning_tokens import (  # noqa: E402
     gap_of,
     reported_reasoning,
@@ -54,7 +54,7 @@ from scripts.reasoning_tokens import (  # noqa: E402
 DEFAULT_MAX_AGE_DAYS = 30
 """The window `update_pricing.py` maintains."""
 
-logging.getLogger("scripts.ndr_export.pricing_resolver").setLevel(logging.ERROR)
+logging.getLogger("scripts.pricing_resolver").setLevel(logging.ERROR)
 
 TOKENS_KEY = "reasoning_tokens"
 COST_KEY = "reasoning_cost_usd"

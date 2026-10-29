@@ -1,22 +1,17 @@
-"""Site data integrity guards.
+"""Integrity guards for the files the website reads from this repository.
 
-The website's widgets read only the folder that scripts/ndr_export/generate_site_data.py builds
-(collected_results/site/). Parts of it come from this repository; a release or guide that does not
-match the format the widgets parse is silently left off the page, so these guards fail instead.
-news.md and about.md live in the benchmark-frontend repository; the generator checks news.md at
-deploy, and its check is tested here.
+The website (benchmark-frontend) builds its release notes from CHANGELOG.md and its Contribute
+page from CONTRIBUTING.md; a release or guide that does not match the format it parses is
+silently left off the page, so these guards fail instead.
 
 Rules enforced here:
   1. Every versioned `## ` heading in CHANGELOG.md reads `[vX.Y.Z] - YYYY-MM-DD`, newest first.
   2. CONTRIBUTING.md starts with a `# ` title.
-  3. The news check accepts `## YYYY-MM-DD — Title`, newest first, and reports anything else.
 """
 import os
 import re
 
 import pytest
-
-from scripts.ndr_export.generate_site_data import check_news
 
 pytestmark = pytest.mark.integrity
 
@@ -57,17 +52,3 @@ def test_changelog_releases_are_dated_and_ordered():
 def test_contributing_has_a_title():
     assert _read("CONTRIBUTING.md").startswith("# "), "CONTRIBUTING.md must start with a '# ' title"
 
-
-def test_news_check_accepts_the_format():
-    news = "# News\n\n## 2026-10-16 — Second\n\nText.\n\n## 2026-09-11 — First\n\n```\n## not a post\n```\n"
-    assert check_news(news) == []
-
-
-@pytest.mark.parametrize("news,problem", [
-    ("## 2026-10-16 - Hyphen instead of em dash\n", "must read"),
-    ("## 16.10.2026 — Swiss date\n", "must read"),
-    ("## 2026-13-01 — No such month\n", "invalid date"),
-    ("## 2026-09-11 — Old\n\n## 2026-10-16 — New\n", "newest first"),
-])
-def test_news_check_reports_problems(news, problem):
-    assert any(problem in p for p in check_news(news))

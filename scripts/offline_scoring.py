@@ -5,7 +5,7 @@ again. Three callers need that and were growing their own copies of the setup:
 
   * `scripts/rescore.py` -- proving a change to a scorer leaves its numbers untouched
   * `tests/integrity/test_field_scores_integrity.py` -- the `field_scores` contract
-  * `scripts/ndr_export/generate_compare_detail.py` -- comparison detail for runs whose
+  * `scripts/compare/generate_compare_detail.py` -- comparison detail for runs whose
     scorer did not record any at the time
 
 Benchmarks are instantiated with `__new__`, skipping `__init__`: `__init__` builds an API

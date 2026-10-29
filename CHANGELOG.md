@@ -5,6 +5,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+### Changed
+- `magazine_pages` example image: a page with seven advertisements.
+- Website code moved to the benchmark-frontend repository; `scripts/ndr_export/` is now `scripts/compare/`, which builds only the comparison data, and `pricing_resolver.py` moved to `scripts/`.
+
+### Removed
+- NDR Core exports (multi-select data, visualizations, vars), `scripts/sync_benchmark_pages.py`, the site fields of `contributors.json` (`photo`, `website`, `core`) and the unused `mkdocs.yml`.
+
 ## [v0.7.1] - 2026-10-26
 
 ### Added
