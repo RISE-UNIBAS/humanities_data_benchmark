@@ -604,7 +604,10 @@ def generate_meta_json(info: Dict) -> str:
         "ranking": {
             "metric": info['ranking_metric'],
             "order": info['ranking_order']
-        }
+        },
+        # Add the commit's full hash once the benchmark is committed.
+        "versions": [{"version": "1.0.0", "date": date.today().isoformat(), "change": "initial",
+                      "summary": "initial version"}]
     }
 
     return json.dumps(meta, indent=2, ensure_ascii=False)

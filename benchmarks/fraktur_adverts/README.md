@@ -170,13 +170,12 @@ This section is not part of the BenchmarkCard schema and is not exported to `ben
 
 **Versions:**
 
-- 3.0.0 — a response that cannot be parsed is scored as a miss instead of being left out; all stored runs re-scored
-- 2.0.0 — ground truth corrected on `image_5`: advert 4 (stored in a raw database format and never scored) is a normal entry, and the advert numbered 3 twice is 5, as printed; all files share one format (a list of adverts, database fields removed); all stored runs re-scored against the corrected ground truth
-- 1.0.0 — initial versioned state
+- 2.0.0 — ground truth corrected on `image_5`: advert 4 (stored in a raw database format and never scored) is a normal entry, and the advert numbered 3 twice is 5, as printed; all files share one format (a list of adverts, database fields removed); a response that cannot be parsed is scored as a miss instead of being left out; all stored runs re-scored
+- 1.0.0 — initial versioned state, when the card was introduced; same content as 0.7.1
 
 **How to Cite:** This benchmark:
 
-> Serif, I., & Hindermann, M. (2025). Fraktur Adverts (benchmark version 3.0.0). In *RISE Humanities Data Benchmark*. Zenodo. https://doi.org/10.5281/zenodo.16941752
+> Serif, I., & Hindermann, M. (2025). Fraktur Adverts (benchmark version 2.0.0). In *RISE Humanities Data Benchmark*. Zenodo. https://doi.org/10.5281/zenodo.16941752
 
 Source:
 

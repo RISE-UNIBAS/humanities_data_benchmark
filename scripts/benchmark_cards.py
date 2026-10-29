@@ -9,6 +9,10 @@ Fields in GENERATED are derived from meta.json, the benchmark's files and CITATI
 rewritten by this script; edit meta.json, not the README, to change them. How to Cite cites the
 benchmark (its contributors, the year of meta.json `added`, the newest version, the suite's
 all-versions DOI), its source record (meta.json `source` and `license`) and the suite's papers.
+Versions lists meta.json `versions` from 1.0.0 on; that list, newest first, holds the whole history
+(0.y.z before the card: y counts incompatible changes, z compatible ones), each entry with its
+date, the commit that made it, the kind of change and a summary. check_meta_versions states the
+rules it must follow.
 Data Licensing names two licences: meta.json `license` for the source material, and DATA_LICENSE
 for everything the benchmark itself creates (ground truth, prompts, annotations).
 The card is exported to benchmark_card.json beside the README and validated against
@@ -99,7 +103,7 @@ SECTIONS = [
     ]),
 ]
 BEYOND = ("beyond", "Beyond the BenchmarkCard", [
-    ("versions", "Versions", "text"),
+    ("versions", "Versions", "list"),
     ("how_to_cite", "How to Cite", "text"),
     ("contributors_by_role", "Contributors by Role", "list"),
 ])
@@ -117,6 +121,7 @@ GENERATED = {
     ("data", "size"),
     ("data", "size_breakdown"),
     ("ethical_and_legal_considerations", "data_licensing"),
+    ("beyond", "versions"),
     ("beyond", "how_to_cite"),
     ("beyond", "contributors_by_role"),
 }
@@ -387,7 +392,7 @@ def generated_values(name, meta, contributors=None, version="1.0.0", citation=No
         page_pattern=pattern,
     )
 
-    return {
+    values = {
         ("benchmark_details", "name"): meta["title"],
         ("benchmark_details", "overview"): meta["description"],
         ("benchmark_details", "data_type"): meta["data_type"],
@@ -404,6 +409,10 @@ def generated_values(name, meta, contributors=None, version="1.0.0", citation=No
         ("beyond", "how_to_cite"): how_to_cite(meta, people, version, citation),
         ("beyond", "contributors_by_role"): by_role or [NOT_SPECIFIED],
     }
+    if meta.get("versions"):
+        values[("beyond", "versions")] = ["%s — %s" % (v["version"], v["summary"]) for v in meta["versions"]
+                                          if not v["version"].startswith("0.")]
+    return values
 
 
 def render(text, parsed, values):
@@ -441,6 +450,53 @@ def check_versions(raw):
         seen.add(version)
 
 
+CHANGES = ("initial", "major", "minor", "patch")
+
+
+def _bumped(older, newer, change):
+    """Whether `newer` follows `older` by `change`. Before 1.0.0 the minor place counts incompatible
+    changes and the patch place compatible ones; 1.0.0 starts the card's numbering."""
+    if change == "initial":
+        return newer == (1, 0, 0) and older[0] == 0
+    if older[0] == 0:
+        if change == "major":
+            return newer == (0, older[1] + 1, 0)
+        return newer == (0, older[1], older[2] + 1)
+    return newer == {"major": (older[0] + 1, 0, 0), "minor": (older[0], older[1] + 1, 0),
+                     "patch": (older[0], older[1], older[2] + 1)}[change]
+
+
+def check_meta_versions(entries):
+    """meta.json `versions`: newest first; each entry has version, date, change and summary, and the
+    commit that made it once committed (a full hash); the oldest is the initial 0.1.0, or 1.0.0 for
+    a benchmark created with its card, and each later one follows by its change; dates do not go
+    back; `published_as` (numbers once published for it) only from 1.0.0 on."""
+    if not isinstance(entries, list) or not entries:
+        raise CardError("meta.json versions must be a non-empty list")
+    parsed = []
+    for e in entries:
+        missing = [k for k in ("version", "date", "change", "summary") if not e.get(k)]
+        if missing:
+            raise CardError(f"meta.json versions: {e.get('version')} lacks {missing}")
+        if not re.fullmatch(r"\d+\.\d+\.\d+", e["version"]) or not re.fullmatch(r"\d{4}-\d{2}-\d{2}", e["date"]):
+            raise CardError(f"meta.json versions: {e['version']} has a malformed version or date")
+        if "commit" in e and not re.fullmatch(r"[0-9a-f]{40}", e["commit"]):
+            raise CardError(f"meta.json versions: {e['version']} commit must be a full hash")
+        if e["change"] not in CHANGES:
+            raise CardError(f"meta.json versions: {e['version']} change must be one of {CHANGES}")
+        if e.get("published_as") and e["version"].startswith("0."):
+            raise CardError(f"meta.json versions: {e['version']} was never published")
+        parsed.append((tuple(int(g) for g in e["version"].split(".")), e))
+    parsed.reverse()
+    if parsed[0][0] not in ((0, 1, 0), (1, 0, 0)) or parsed[0][1]["change"] != "initial":
+        raise CardError("meta.json versions: the oldest entry must be the initial 0.1.0 or 1.0.0")
+    for (old, a), (new, b) in zip(parsed, parsed[1:]):
+        if not _bumped(old, new, b["change"]):
+            raise CardError(f"meta.json versions: {b['version']} does not follow {a['version']} by a {b['change']} change")
+        if b["date"] < a["date"]:
+            raise CardError(f"meta.json versions: {b['version']} is dated before {a['version']}")
+
+
 def card_json(card):
     payload = {"benchmark_card": card, "card_info": {"schema": SCHEMA_ID, "source": "README.md"}}
     return json.dumps(payload, indent=2, ensure_ascii=False) + "\n"
@@ -454,7 +510,11 @@ def build(name, contributors=None):
     with open(os.path.join(directory, "meta.json"), encoding="utf-8") as f:
         meta = json.load(f)
     parsed = parse(readme)
-    version = newest_version(parsed["beyond"]["versions"].raw)
+    if meta.get("versions"):
+        check_meta_versions(meta["versions"])
+        version = meta["versions"][0]["version"]
+    else:
+        version = newest_version(parsed["beyond"]["versions"].raw)
     readme = render(readme, parsed, generated_values(name, meta, contributors, version))
     parsed = parse(readme)
     card = to_card(parsed)

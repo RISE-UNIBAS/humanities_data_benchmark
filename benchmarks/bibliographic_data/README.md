@@ -181,7 +181,7 @@ This section is not part of the BenchmarkCard schema and is not exported to `ben
 **Versions:**
 
 - 2.0.0 — ground truth checked against the scans and conformed to the response schema (transcription errors, six missing entries, entries 146–148 unnested, `relation` as the reviewed `id`, notes and years as printed); `prompt_v2.txt` for new tests; entries aligned in page order instead of by position; a response nested under a wrapper key is unwrapped; a response that cannot be parsed is scored as a miss; all stored runs re-scored
-- 1.0.0 — initial versioned state
+- 1.0.0 — initial versioned state, when the card was introduced; same content as 0.6.1
 
 **How to Cite:** This benchmark:
 

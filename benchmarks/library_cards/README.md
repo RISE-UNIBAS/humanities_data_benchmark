@@ -185,13 +185,12 @@ This section is not part of the BenchmarkCard schema and is not exported to `ben
 
 **Versions:**
 
-- 3.0.0 — a response that cannot be parsed is scored as a miss instead of being left out; all stored runs re-scored
-- 2.0.0 — ground truth corrected: `00575005` (a cross-reference without a year) has an empty year instead of `0`; ground-truth files hold only the card record, years as strings; two files without an image removed; all stored runs re-scored against the corrected ground truth
-- 1.0.0 — initial versioned state
+- 2.0.0 — ground truth corrected: `00575005` (a cross-reference without a year) has an empty year instead of `0`; ground-truth files hold only the card record, years as strings; two files without an image removed; a response that cannot be parsed is scored as a miss instead of being left out; all stored runs re-scored
+- 1.0.0 — initial versioned state, when the card was introduced; same content as 0.6.1
 
 **How to Cite:** This benchmark:
 
-> Müller, G., & Hindermann, M. (2025). Library Cards (benchmark version 3.0.0). In *RISE Humanities Data Benchmark*. Zenodo. https://doi.org/10.5281/zenodo.16941752
+> Müller, G., & Hindermann, M. (2025). Library Cards (benchmark version 2.0.0). In *RISE Humanities Data Benchmark*. Zenodo. https://doi.org/10.5281/zenodo.16941752
 
 Source:
 

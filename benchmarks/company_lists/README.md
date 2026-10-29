@@ -173,13 +173,12 @@ This section is not part of the BenchmarkCard schema and is not exported to `ben
 
 **Versions:**
 
-- 3.0.0 — a response that cannot be parsed is scored as a miss instead of being left out; all stored runs re-scored
-- 2.0.0 — `page_id` and `entry_id` are no longer scored: the model is never given their expected values. All stored runs were re-scored with the new scorer, so they stay comparable; `prompt_v2.txt` added for new tests
-- 1.0.0 — initial versioned state
+- 2.0.0 — `page_id` and `entry_id` are no longer scored: the model is never given their expected values; `prompt_v2.txt` added for new tests; a response that cannot be parsed is scored as a miss instead of being left out; all stored runs re-scored
+- 1.0.0 — initial versioned state, when the card was introduced; same content as 0.4.0
 
 **How to Cite:** This benchmark:
 
-> Kasper, L., & Marti, S. (2025). Company Lists (benchmark version 3.0.0). In *RISE Humanities Data Benchmark*. Zenodo. https://doi.org/10.5281/zenodo.16941752
+> Kasper, L., & Marti, S. (2025). Company Lists (benchmark version 2.0.0). In *RISE Humanities Data Benchmark*. Zenodo. https://doi.org/10.5281/zenodo.16941752
 
 Source:
 
