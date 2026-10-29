@@ -30,6 +30,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - NDR Core exports (multi-select data, visualizations, vars), `scripts/sync_benchmark_pages.py`, the site fields of `contributors.json` (`photo`, `website`, `core`) and the unused `mkdocs.yml`.
 
 ### Fixed
+- An answer billed with `finish_reason` "error" (OpenRouter, Mistral) is saved and scored as a miss instead of dropped by the fatal-error check.
 - `generate_compare_detail.py`: removes a detail file once its run no longer needs one.
 
 ## [v0.7.1] - 2026-10-26

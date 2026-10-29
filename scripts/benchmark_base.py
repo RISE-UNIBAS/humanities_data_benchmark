@@ -66,7 +66,9 @@ def same_benchmark_state(a, b, benchmark_dir):
     files, and commits that do not differ in the benchmark's files or shared scoring code."""
     if a == b:
         return True
-    if not a or not b or a.get("version") != b.get("version") or a.get("uncommitted") != b.get("uncommitted")             or not a.get("commit") or not b.get("commit"):
+    if not a or not b or a.get("version") != b.get("version") or a.get("uncommitted") != b.get("uncommitted"):
+        return False
+    if not a.get("commit") or not b.get("commit"):
         return False
     try:
         return subprocess.run(["git", "diff", "--quiet", a["commit"], b["commit"], "--", *_state_paths(benchmark_dir)],
@@ -746,7 +748,10 @@ class Benchmark(ABC):
         """ Check whether a failed answer carries a provider error that retrying cannot fix. """
         if answer is None or answer.finish_reason != "error":
             return False
-        message = str((answer.raw_response or {}).get("error", ""))
+        # Only the client's own error responses are dicts; Mistral also returns finish_reason
+        # "error" in a billed response, which keeps the SDK object and is saved as an answer.
+        raw = answer.raw_response
+        message = str(raw.get("error", "")) if isinstance(raw, dict) else ""
         return any(marker in message for marker in FATAL_ERROR_MARKERS)
 
     def _process_object(self, object_basename: str, regenerate_existing_results: bool):

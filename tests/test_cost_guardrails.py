@@ -101,6 +101,15 @@ class TestFatalProviderErrorDetection:
     def test_missing_answer_is_not_fatal(self):
         assert bb.Benchmark._is_fatal_provider_error(None) is False
 
+    def test_a_billed_error_answer_with_the_sdk_response_is_not_fatal(self):
+        """Mistral returns finish_reason "error" in a 200 response; the client keeps the SDK object."""
+        class ChatCompletionResponse:
+            pass
+        answer = LLMResponse(text='{"advertisements": [', model="m", provider="mistral",
+                             finish_reason="error", usage=Usage(output_tokens=535),
+                             raw_response=ChatCompletionResponse(), duration=1.0)
+        assert bb.Benchmark._is_fatal_provider_error(answer) is False
+
 
 class TestRunAbortsOnFatalError:
     def _run_with_fatal_error(self, workers):
