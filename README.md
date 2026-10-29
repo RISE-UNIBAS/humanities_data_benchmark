@@ -10,7 +10,7 @@ LLMs perform on digital humanities (DH) tasks involving visual and text-like mat
 Tasks covered include transcription, structured information extraction, and document layout analysis, each scored
 against ground truths and recorded together with its cost and runtime.
 
-**[Explore the results dashboard](https://rise-services.rise.unibas.ch/benchmarks/)**
+**[Explore the results on the website](https://rise-services.rise.unibas.ch/benchmarks/)**
 
 [Why benchmark?](#why-benchmark) · [Results](#results) ·
 [Available benchmarks](#available-benchmarks) · [Quick start](#quick-start) ·
@@ -32,18 +32,22 @@ helping researchers make informed choices about which AI systems best suit their
 ## Results
 
 All scored runs are published on the
-**[results dashboard](https://rise-services.rise.unibas.ch/benchmarks/)**, which is the primary way
-to read this benchmark:
+**[website](https://rise-services.rise.unibas.ch/benchmarks/)**, which is the primary way to read
+this benchmark:
 
-- **[Leaderboard](https://rise-services.rise.unibas.ch/benchmarks/p/leaderboard/)** — aggregated
-  results showing which providers and models perform best on which kinds of data.
-- **[Datasets](https://rise-services.rise.unibas.ch/benchmarks/p/benchmarks/)** — browse the
-  benchmarks and the results recorded for each of them.
+- **[Leaderboard](https://rise-services.rise.unibas.ch/benchmarks/p/leaderboard/)** — every model's
+  best run on every benchmark, with its 95% sampling margin and cost per 1,000 documents; also
+  *Which model for me?*, the run list, cost and speed, and a side-by-side comparison of up to
+  four models, input by input.
+- **[Benchmarks](https://rise-services.rise.unibas.ch/benchmarks/p/benchmarks/)** — each
+  benchmark's card, an example input, its results and newest runs.
+- **Model pages** — one per model tested, legacy models included, linked from the leaderboard.
 - **[Test runs](https://rise-services.rise.unibas.ch/benchmarks/p/testruns/)** — search individual
   test runs and compare model output with the ground truths.
 
 Every score shown there traces back to a stored response in this repository, under
-`results/<date>/<test_id>/`, alongside the aggregated `scoring.json` for the run.
+`results/<date>/<test_id>/`, alongside the aggregated `scoring.json` for the run. The website is
+rebuilt from this repository every night that it changes.
 
 ## Available benchmarks
 
@@ -75,7 +79,7 @@ stored runs are re-scored under it, so scores of one benchmark are always compar
 
 ## Quick start
 
-To inspect existing comparisons, open the [results dashboard](https://rise-services.rise.unibas.ch/benchmarks/).
+To inspect existing comparisons, open the [website](https://rise-services.rise.unibas.ch/benchmarks/).
 To run a new evaluation, follow the steps below. Python 3.12 or newer is recommended.
 
 ### Install

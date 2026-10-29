@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Unreleased
 
 ### Added
-- README: slides from DaSCHCon 2026 and the SGG workshop under Publications.
+- README: slides from DaSCHCon 2026 and the SGG workshop under Publications; the Results section describes the new website.
 
 ### Changed
 - `magazine_pages` example image: a page with seven advertisements.
