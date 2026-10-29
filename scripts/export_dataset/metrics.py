@@ -4,8 +4,8 @@ Each metric definition specifies its role, unit, direction, range, and aggregati
 rule. Identifiers use ``<benchmark>.<level>.<source_metric>`` so similarly named
 metrics remain distinguishable across tasks and evaluation levels.
 
-For example, book_advert_xml reports fuzzy similarity on a 0-100 scale, while
-other registered fuzzy metrics use 0-1. Definitions are based on stored scoring
+For example, `f1_macro` averages three extraction categories in business_letters but
+the per-advert F1 over edits in book_advert_xml. Definitions are based on stored scoring
 records and benchmark scorers. Extraction rejects unregistered numeric metrics.
 """
 import math
@@ -56,18 +56,6 @@ def _build():
                        "Fuzzy string similarity from scoring_helper.calculate_fuzzy_score. "
                        "The run value is the scorer's own mean, not a re-aggregation."))
 
-    for level in ("run", "request"):
-        add(_entry("book_advert_xml", level, "fuzzy", "performance", "ratio_0_100",
-                   "higher_better", 0.0, 100.0, "mean_over_requests",
-                   "rapidfuzz.fuzz.ratio, on 0-100. Not comparable with the 0-1 `fuzzy` "
-                   "every other benchmark records without rescaling."))
-
-    add(_entry("book_advert_xml", "request", "score", "performance", "ratio_0_100",
-               "higher_better", 0.0, 100.0, "mean_over_requests",
-               "Emitted as 0.0 on the failure path, alongside a `message`, where the "
-               "success path emits `fuzzy`. A real observation of a failed request, and "
-               "not to be confused with the run-level string \"niy\"."))
-
     # --- character error rate -------------------------------------------------
     for b in CER_BENCHMARKS:
         for level in ("run", "request"):
@@ -117,10 +105,10 @@ def _build():
                    "path is preserved literally, including the empty-string key that "
                    "6,080 stored records use."))
 
-    add(_entry("book_advert_xml", "field", "score", "performance", "ratio_0_100",
-               "higher_better", 0.0, 100.0, "not_summable",
-               "rapidfuzz.fuzz.ratio of the whole normalised XML, keyed `fixed_xml`; "
-               "0-100 like the request-level `fuzzy`."))
+    add(_entry("book_advert_xml", "field", "score", "performance", "ratio_0_1",
+               "higher_better", 0.0, 1.0, "not_summable",
+               "The advert's F1 over edits, keyed `fixed_xml`; the same value as the "
+               "request-level `f1_score`."))
     add(_entry("magazine_pages", "field", "score", "performance", "iou",
                "higher_better", 0.0, 1.0, "not_summable",
                "IoU of the prediction matched to one ground-truth box, keyed `box <n>`; "
@@ -165,8 +153,35 @@ def _build():
                "The overlap a box had to reach to count as matched. Configuration, not a "
                "result: averaging it with mean_iou is meaningless."))
 
-    add(_entry("book_advert_xml", "run", "n", "count", "items", "not_applicable",
-               0.0, None, "sum", "Items the scorer averaged over, where it records one."))
+    # --- XML repair: F1 over edits ----------------------------------------------
+    # An edit is a deleted, inserted or substituted token (whole tag, character reference
+    # or single character) against the advert's input; the reference's edits are the ones
+    # wanted. An unparseable answer makes no edits.
+    for metric, desc in (
+        ("f1_macro", "Mean of the adverts' F1 over edits. The ranking metric."),
+        ("f1_micro", "F1 over the run's pooled edit counts; dominated by the few answers "
+                     "that rewrite or drop whole adverts."),
+        ("micro_precision", "Edits shared with the reference over all edits made, pooled."),
+        ("micro_recall", "Edits shared with the reference over all edits wanted, pooled."),
+    ):
+        add(_entry("book_advert_xml", "run", metric, "performance", "ratio_0_1",
+                   "higher_better", 0.0, 1.0, "not_summable", desc))
+    add(_entry("book_advert_xml", "run", "total_instances", "count", "adverts",
+               "not_applicable", 0.0, None, "sum", "Adverts the scorer scored in this run."))
+    for metric, name in (("total_tp", "Edits made that the reference also makes"),
+                         ("total_fp", "Edits made that the reference does not make"),
+                         ("total_fn", "Edits the reference makes that were not made")):
+        add(_entry("book_advert_xml", "run", metric, "count", "edits", "not_applicable",
+                   0.0, None, "sum", "%s, over the whole run. A sufficient statistic for "
+                   "the pooled precision, recall and F1." % name))
+    add(_entry("book_advert_xml", "request", "f1_score", "performance", "ratio_0_1",
+               "higher_better", 0.0, 1.0, "not_summable",
+               "F1 over edits for this advert; 1 when neither side makes an edit."))
+    for metric, name in (("true_positives", "Edits made that the reference also makes"),
+                         ("false_positives", "Edits made that the reference does not make"),
+                         ("false_negatives", "Edits the reference makes that were not made")):
+        add(_entry("book_advert_xml", "request", metric, "count", "edits", "not_applicable",
+                   0.0, None, "sum", "%s, for this advert. Summable across requests." % name))
 
     # --- scaffolds ------------------------------------------------------------
     add(_entry("test_benchmark2", "request", "score", "parameter", "none",

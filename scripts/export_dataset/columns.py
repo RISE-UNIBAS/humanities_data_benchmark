@@ -243,7 +243,7 @@ METRICS = {
     "source_metric": "The key as the scorer writes it.",
     "metric_role": "`performance` for a measurement, `count` for a tally, `parameter` for "
                    "a setting the scorer was given. Averaging across roles is meaningless.",
-    "unit": "`ratio_0_1`, `ratio_0_100`, `error_rate`, `iou`, or a count noun.",
+    "unit": "`ratio_0_1`, `error_rate`, `iou`, or a count noun.",
     "direction": "`higher_better`, `lower_better`, or `not_applicable` for counts and "
                  "parameters.",
     "min_value": "Lower bound where the metric has one.",

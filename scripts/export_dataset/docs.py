@@ -259,8 +259,9 @@ rule. Consult these definitions before comparing or combining values.
   Character error rate (`cer`) is lower-is-better; it should not be pooled directly with
   higher-is-better similarity scores.
 - Metric ids are **scoped by benchmark** because the same name means different things.
-  `book_advert_xml` records `fuzzy` on a 0–100 scale; other benchmarks that report `fuzzy`
-  use 0–1. Rescaling alone does not establish comparability across different tasks.
+  `f1_macro` averages three extraction categories in `business_letters` but each advert's
+  F1 over edits in `book_advert_xml`, and their counts are of different things (extractions,
+  edits). A shared name or scale does not establish comparability across tasks.
 
 F1 scores measure performance rather than the number of correct extractions. Analyses
 requiring counts should use the corresponding true-positive metrics where available.

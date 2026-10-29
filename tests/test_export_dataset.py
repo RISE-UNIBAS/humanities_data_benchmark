@@ -284,9 +284,10 @@ def test_the_dictionary_separates_parameters_from_measurements():
     assert M.BY_ID["company_lists.request.true_positives"]["metric_role"] == "count"
 
 
-def test_fuzzy_is_scoped_by_benchmark_because_its_scale_differs():
-    assert M.BY_ID["book_advert_xml.run.fuzzy"]["unit"] == "ratio_0_100"
-    assert M.BY_ID["bibliographic_data.run.fuzzy"]["unit"] == "ratio_0_1"
+def test_metrics_are_scoped_by_benchmark_because_the_same_name_counts_different_things():
+    assert M.BY_ID["book_advert_xml.run.total_tp"]["unit"] == "edits"
+    assert M.BY_ID["company_lists.run.total_tp"]["unit"] == "instances"
+    assert "book_advert_xml.run.fuzzy" not in M.BY_ID
 
 
 # --------------------------------------------------------------------------------
