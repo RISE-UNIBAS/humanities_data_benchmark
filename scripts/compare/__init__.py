@@ -1,6 +1,7 @@
 """Comparison data for the website, built here because it re-scores runs with the benchmarks'
-own scorers: `collected_results/compare_detail/` and `compare_index.json`. The website
-(benchmark-frontend) reads them with the rest of this repository's files.
+own scorers: `collected_results/compare_detail/` and `compare_index.json`; also the run counts per
+benchmark version, `benchmark_versions.json`, which need the version history's commit times. The
+website (benchmark-frontend) reads them with the rest of this repository's files.
 
 Paths and reading go through `scripts/results_index.py`, the reader shared with the dataset
 export; these helpers keep the warnings this pipeline prints.
