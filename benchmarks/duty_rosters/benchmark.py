@@ -16,6 +16,7 @@ class DutyRosters(Benchmark):
 
     # Send header + icons with every request (works across all providers)
     cache_context_per_request = True
+    score_unparseable_as_miss = True
     max_output_tokens = 98304  # Rosters legitimately reach ~94k output tokens
 
     def get_shared_context_images(self) -> List[str]:
@@ -27,6 +28,8 @@ class DutyRosters(Benchmark):
 
     def score_request_answer(self, image_name: str, response: dict, ground_truth: dict) -> dict:
         data = self.prepare_scoring_data(response)
+        if not isinstance(data, dict):
+            data = {}  # an unparseable response: every ground-truth field is missed
 
         logging.info(image_name)
         logging.debug(f"response: {data}")
@@ -40,6 +43,9 @@ class DutyRosters(Benchmark):
         # Filter out parent keys when child keys exist
         filtered_keys = []
         for key in all_keys:
+            # The section label a row belongs to is printed above it and not in the row image.
+            if key.endswith(".profession"):
+                continue
             has_children = any(
                 other_key.startswith(key + '.') or other_key.startswith(key + '[')
                 for other_key in all_keys if other_key != key

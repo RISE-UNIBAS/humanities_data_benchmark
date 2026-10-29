@@ -5,22 +5,30 @@ stored numeric run scores, and resolved prices. Account for representation
 differences: the dataset retains request-level records and original score scales,
 while the frontend includes normalized scores and selected request metadata.
 
-Both pipelines use scripts.results_index, so this comparison cannot detect
-errors shared by that reader. The packager runs the cross-check before release.
+The frontend export is the website's run export, written by the benchmark-frontend
+repository (``python -m generate --data-repo <this repository>``) with its own reader of
+this repository's files. Its location is ``BENCHMARK_FRONTEND_EXPORT``, by default the
+sibling checkout's ``generated/test_runs_export.json``. The frontend records no price, so
+the price it stands for is resolved here: the shared resolver applied to the run's
+selected request identity (else its configured one) on the run's date, unbounded in age.
+The packager runs the cross-check before release.
 
 Run ``python -m scripts.export_dataset.crosscheck --dataset dataset``.
 Return a nonzero exit status when the comparison reports findings.
 """
 import argparse
 import json
+import os
 import sys
 from pathlib import Path
 
 import pyarrow.parquet as pq
 
-from scripts.results_index import COLLECTED_RESULTS_PATH
+from scripts.pricing_resolver import resolve_pricing
+from scripts.results_index import PROJECT_ROOT
 
-FRONTEND_EXPORT = COLLECTED_RESULTS_PATH / "test_runs_export.json"
+FRONTEND_EXPORT = Path(os.environ.get("BENCHMARK_FRONTEND_EXPORT")
+                       or PROJECT_ROOT.parent / "benchmark-frontend" / "generated" / "test_runs_export.json")
 
 EXPECTED_DIFFERENCES = """Expected, by design:
   * normalized_score        frontend only -- a value-based scale heuristic, deliberately
@@ -30,18 +38,44 @@ EXPECTED_DIFFERENCES = """Expected, by design:
                             run-level timing. The dataset exports every request instead,
                             and the payload sidecars carry the full records.
   * derived_* costs         dataset only -- recomputed per request. The frontend records
-                            the price in force but does not apply it.
+                            no price; the one it stands for is resolved here.
   * per-request rows        dataset only -- the frontend keeps one arbitrary request per
                             run, so it cannot express per-request cost or score.
 """
 
 
+def frontend_price(record):
+    """The price in force for a frontend run record, or None.
+
+    The provider/model of its selected request where recorded, as the alias map is keyed
+    on those, else the configured ones; the run's date; no age limit, so a stale bucket
+    resolves with its age rather than not at all.
+    """
+    request = record.get("results")
+    provider = model = None
+    if isinstance(request, dict):
+        provider, model = request.get("provider"), request.get("model")
+    if not (provider and model):
+        config = record.get("config") or {}
+        provider, model = config.get("provider"), config.get("model")
+    if not (provider and model and record.get("date")):
+        return None
+    pricing = resolve_pricing(provider, model, record["date"], max_age_days=None)
+    if pricing is None:
+        return None
+    return {"bucket_date": pricing.bucket_date, "age_days": pricing.age_days,
+            "input_price_per_million": pricing.input_price,
+            "output_price_per_million": pricing.output_price}
+
+
 def load_frontend():
     if not FRONTEND_EXPORT.is_file():
-        raise SystemExit("No frontend export at %s. Run "
-                         "`python -m scripts.ndr_export.generate_all` first."
-                         % FRONTEND_EXPORT)
+        raise SystemExit("No frontend export at %s. Run `python -m generate --data-repo %s` in "
+                         "benchmark-frontend first, or set BENCHMARK_FRONTEND_EXPORT."
+                         % (FRONTEND_EXPORT, PROJECT_ROOT))
     records = json.loads(FRONTEND_EXPORT.read_bytes().decode("utf-8"))
+    for record in records:
+        record["pricing"] = frontend_price(record)
     return dict(("%s@%s" % (r["test_id"], r["date"]), r) for r in records)
 
 
@@ -131,7 +165,7 @@ def compare(runs, requests, scores, frontend):
                 note("recorded_cost", "%s %s: %r vs %r" % (run_id, key, mine, theirs))
 
     # --- 5. the price each pipeline resolved --------------------------------------
-    # Both call the same resolver, so a disagreement means they fed it different
+    # Both sides use the same resolver, so a disagreement means they fed it different
     # provider/model identities -- which is exactly the aliasing question the dataset
     # exports two columns for.
     #

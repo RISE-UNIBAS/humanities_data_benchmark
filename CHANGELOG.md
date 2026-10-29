@@ -13,15 +13,59 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `dataset/` documentation: `datapackage.json`, README, changelog and `CITATION.cff`; data licensed CC BY 4.0.
 - `dataset/examples/business_letters_cost.py`: cost per correct extraction by provider and date.
 - `scripts/package_dataset.py`: packages a release with a separate payload archive and `SHA256SUMS`.
-- `scripts/export_dataset/crosscheck.py`: reconciles the dataset with `test_runs_export.json` before packaging.
-- `scripts/results_index.py`: one shared reader for `results/` and `benchmarks_tests.csv`.
+- `scripts/export_dataset/crosscheck.py`: reconciles the dataset with the website's run export from benchmark-frontend before packaging.
+- `scripts/results_index.py`: one shared reader for `results/` and `benchmarks_tests.csv`, also used by `scripts/compare/`.
+- README: slides from DaSCHCon 2026 and the SGG workshop under Publications; the Results section describes the new website.
+
+### Changed
+- `magazine_pages` example image: a page with seven advertisements.
+- Website code moved to the benchmark-frontend repository; `scripts/ndr_export/` is now `scripts/compare/`, which builds only the comparison data, and `pricing_resolver.py` moved to `scripts/`.
 
 ### Removed
-- `collected_results/compare_detail/` is no longer committed; the deploy regenerates it.
+- NDR Core exports (multi-select data, visualizations, vars), `scripts/sync_benchmark_pages.py`, the site fields of `contributors.json` (`photo`, `website`, `core`) and the unused `mkdocs.yml`.
 
 ### Fixed
-- `benchmark_export.json` and `test_runs_export.json`: run order no longer depends on filesystem order.
 - `generate_compare_detail.py`: removes a detail file once its run no longer needs one.
+
+## [v0.7.1] - 2026-10-26
+
+### Added
+- 21 new models with 14 benchmark test configurations each (T1900-T2221), `company_lists` on `prompt_v2.txt` only: `claude-haiku-5-5` (Anthropic), `gpt-6.1-sol` (OpenAI), `mistral-large-4`, `mistral-small-2603`, `ministral-3b-2512` (Mistral), `command-a-plus-05-2026` (Cohere), and via OpenRouter `minimax/minimax-m3.1-flash`, `nvidia/nemotron-3.5-super-vl`, `meta/muse-spark-open`, `meta/muse-wonder`, `stepfun/step-5-preview`, `qwen/qwen3.8-max-prime`, `xiaomi/mimo-v2.6-pro`, `xiaomi/mimo-v2.6-flash`, `inclusionai/ling-3.0-flash-vl`, `perceptron/perceptron-mk1.5`, `elorian/glimpse`, `fireworks/ember-1`, `bytedance-seed/seed-2-1-turbo`, `nex-agi/nex-n2.5-mini`, `nex-agi/nex-n2.5-pro`; `pricing.json` metadata bumped to version 1.58.
+- Results for 2026-10-24: 175 tests in T1900-T2185 (7,972 requests) for 15 of the new models, `mistral-large-4` with one; `inclusionai/ling-3.0-flash-vl` not run.
+- Results for 2026-10-25: 88 tests in T2068-T2218 (3,956 requests) for `qwen/qwen3.8-max-prime`, `xiaomi/mimo-v2.6-pro`, `xiaomi/mimo-v2.6-flash`, `fireworks/ember-1`, `bytedance-seed/seed-2-1-turbo`, `nex-agi/nex-n2.5-mini`, `nex-agi/nex-n2.5-pro`.
+- Results for 2026-10-26: T2219-T2221 (3 tests, 70 requests) for `nex-agi/nex-n2.5-pro`.
+
+### Fixed
+- Mistral requests at temperature 0 send `top_p=1`, which `mistral-large-4` requires; its chunked thinking/text answers are parsed from the text chunks. `command-a-plus-05-2026` output cap clamped to its 64,000 ceiling.
+
+## [v0.7.0] - 2026-10-19
+
+### Added
+- New model `gemini-4-argon` (GenAI), with 15 benchmark test configurations (T1885-T1899); `pricing.json` metadata bumped to version 1.56.
+- Results for 2026-10-14: T1885-T1899 (15 tests, 649 requests) for `gemini-4-argon`; `magazine_pages` on `prompt_explicit-json.txt`.
+- Results for 2026-10-17: T0203-T0208, T0285, T0317, T0363, T0364, T0460, T0589, T0785, T1229, T1282 (15 tests, 649 requests) for `gemini-2.5-flash-lite`, a regression check of the 2.0.0 benchmarks.
+- BenchmarkCard READMEs (#89) for all 12 benchmarks, each with `benchmark_card.json` and a generated How to Cite; `scripts/benchmark_cards.py` and an integrity test; `scripts/sync_benchmark_pages.py` points a card's site page at the `benchmark_card` widget and the result page at `benchmark_results`, the test-run search at `test_runs` and the leaderboard at `dashboard` at deploy; `benchmark_export.json` runs carry `cost_usd`, `prompt_file` and `legacy`; one card template replaces both README templates; benchmark versions are MAJOR.MINOR.PATCH. `README.md` introduces the cards and benchmark versions and takes its descriptions from them; its benchmark guide moved into `CONTRIBUTING.md`, which adds scorer tests. Reviewed all cards and both fixture READMEs against prompts, schemas, data and scorers; corrected score interpretation, failure handling, personnel interpretation rules and provenance claims, added run guidance and reproducible diagnostics, and recorded per-benchmark findings and open issues in `benchmarks/DOCUMENTATION_REVIEW.md`.
+- Site data layer: `scripts/ndr_export/generate_site_data.py` (last step of `generate_all`) collects everything the website's widgets read into `collected_results/site/` (cards with web-sized example images, export, per-benchmark scoring, test configurations, CHANGELOG, CITATION, CONTRIBUTING, contributors, and news/about from the new `benchmark-frontend` repository); the deploy serves it at `/benchmarks/media/site/` and the widgets no longer read GitHub. News, Contribute and About pages built from it. `CONTRIBUTING.md` gains a step-by-step guide to creating and submitting a benchmark; `contributors.json` gains `photo`, `website`, `core`.
+- Benchmark cards state two licences: the source material's and CC BY 4.0 for all data the benchmark creates; Audience may name humanities readers (an extension of the EvalEval vocabulary).
+- Scorer tests for `duty_rosters`, `general_meeting_minutes` and `magazine_pages`; an integrity test requires them for every benchmark.
+- `create_benchmark.py` scaffolds a working fuzzy scorer that scores unparseable answers as misses, a scorer test file and `meta.json` `added`, and no `.gitkeep` in input folders; the card validator accepts `Not specified` for Audience.
+
+### Removed
+- `collected_results/compare_detail/` is no longer committed; the deploy regenerates it on the VM and copies it into the comparison widget's media directory, which now reads it from there instead of raw.githubusercontent. `export_dataset` still hashes it into `source_manifest.jsonl` as if committed.
+
+### Fixed
+- `business_letters` 2.0.0: unparseable responses scored as misses, stored runs re-scored; ground truth is JSON only; its CSV exports, per-run regeneration and dead scorer code removed, and `NaN` in `persons.json` replaced by `null`, scores unchanged.
+- `company_lists` 3.0.0: `page_id` and `entry_id` no longer scored; unparseable responses scored as misses; all stored runs re-scored with `scripts/rewrite_scores.py`; `prompt_v2.txt` for new tests.
+- `duty_rosters` 3.0.0: ground truth of rows SaA410, S402 (staff ids) and 109 (29 April) corrected; `profession` no longer scored (not in the row images); unparseable responses scored as misses; stored runs re-scored.
+- `personnel_cards` 2.0.0: unparseable responses scored as misses; stored runs re-scored. 3.0.0: a card without rows answered without rows scores 1, not 0; stored runs re-scored.
+- `blacklist_cards` 2.0.0: Montaner card's date and address corrected; empty `information` is `null` in the ground truth and `[]` counts as empty; unparseable responses scored as misses; dead code removed; stored runs re-scored.
+- `magazine_pages`: five runs from before unparseable pages counted as misses re-scored under that rule.
+- `medieval_manuscripts` 2.0.0: folio [69r] numbered 69; unparseable responses scored as misses; stored runs re-scored.
+- `fraktur_adverts` 3.0.0: unparseable responses scored as misses; `image_5` adverts 4 (raw database format) and 5 (numbered 3) corrected; ground truth in one format; scorer simplified, behavior unchanged; stored runs re-scored.
+- `general_meeting_minutes` 3.0.0: unparseable responses scored as misses; degree signs in the ground truth corrected (`U+00B0` → `°`); unused `context/` removed; the four prompt-variant tests retired as legacy; stored runs re-scored.
+- `bibliographic_data` 2.0.0: ground truth checked against the scans and conformed to the response schema (transcription errors, six missing entries, nested entries, `relation` as id); entries aligned in page order instead of by position; wrapped responses unwrapped; unparseable responses scored as misses; `prompt_v2.txt` for new tests (printed page number, `id` as the printed number); scorer tests; stored runs re-scored.
+- `book_advert_xml` 2.0.0: scored by edits (F1 of the model's edits against the reference's, `f1_macro`) instead of fuzzy similarity, which unchanged input won at 99; ground truth curated to input text plus tag repairs, all 50 well-formed, unscored keys dropped; unparseable responses scored as misses; `prompt_v2.txt` for new tests; stored runs re-scored.
+- `library_cards` 3.0.0: year of `00575005` corrected; unparseable responses scored as misses; ground-truth files hold only the card record; the two files without an image and the annotation tools removed; stored runs re-scored.
 
 ## [v0.6.1] - 2026-09-29
 
@@ -382,5 +426,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [v0.5.4]: https://github.com/RISE-UNIBAS/humanities_data_benchmark/releases/tag/v0.5.4
 [v0.5.5]: https://github.com/RISE-UNIBAS/humanities_data_benchmark/releases/tag/v0.5.5
 [v0.6.0]: https://github.com/RISE-UNIBAS/humanities_data_benchmark/releases/tag/v0.6.0
-
 [v0.6.1]: https://github.com/RISE-UNIBAS/humanities_data_benchmark/releases/tag/v0.6.1
+[v0.7.0]: https://github.com/RISE-UNIBAS/humanities_data_benchmark/releases/tag/v0.7.0
+[v0.7.1]: https://github.com/RISE-UNIBAS/humanities_data_benchmark/releases/tag/v0.7.1

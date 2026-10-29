@@ -1,0 +1,81 @@
+{
+    "text": "{\"advertisements\":[{\"box\":[184.0,345.0,2195.0,1740.0]},{\"box\":[184.0,1799.0,2195.0,3214.0]}]}",
+    "model": "nex-agi/nex-n2.5-pro",
+    "provider": "openrouter",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 3060,
+        "output_tokens": 1298,
+        "total_tokens": 4358,
+        "reasoning_tokens": 0,
+        "input_cost_usd": 0.0002295,
+        "output_cost_usd": 0.0003245,
+        "estimated_cost_usd": 0.000554
+    },
+    "duration": 24.35463237762451,
+    "timestamp": "2026-10-26T09:16:51.614456",
+    "parsed": {
+        "advertisements": [
+            {
+                "box": [
+                    184.0,
+                    345.0,
+                    2195.0,
+                    1740.0
+                ]
+            },
+            {
+                "box": [
+                    184.0,
+                    1799.0,
+                    2195.0,
+                    3214.0
+                ]
+            }
+        ]
+    },
+    "conversation_id": "785d135b-ce1b-4eb1-9134-171948f44740",
+    "score": {
+        "field_scores": {
+            "box 0": {
+                "response": [
+                    184.0,
+                    345.0,
+                    2195.0,
+                    1740.0
+                ],
+                "ground_truth": [
+                    179,
+                    321,
+                    2175,
+                    1730
+                ],
+                "score": 0.964
+            },
+            "box 1": {
+                "response": [
+                    184.0,
+                    1799.0,
+                    2195.0,
+                    3214.0
+                ],
+                "ground_truth": [
+                    179,
+                    1765,
+                    2163,
+                    3165
+                ],
+                "score": 0.926
+            }
+        },
+        "f1": 1.0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "mean_iou": 0.945,
+        "true_positives": 2,
+        "false_positives": 0,
+        "false_negatives": 0,
+        "iou_threshold": 0.5
+    },
+    "raw_response": "{\"id\":\"gen-1793002587-GJFsfU7kBaY150bY306G\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\n  \\\"advertisements\\\": [\\n    {\\n      \\\"box\\\": [184, 345, 2195, 1740]\\n    },\\n    {\\n      \\\"box\\\": [184, 1799, 2195, 3214]\\n    }\\n  ]\\n}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"advertisements\":[{\"box\":[184.0,345.0,2195.0,1740.0]},{\"box\":[184.0,1799.0,2195.0,3214.0]}]},\"reasoning\":\"\\nWe need answer only JSON. Need identify advertisements bounding boxes in page. We are historian analyzing historical magazine page. Need extract all advertisements. Image page has header with date/gazette/page number. Main content appears two large advertisements? Top ad for \\\"Die Britische Industrie-Messe 1927\\\" within border. Bottom ad/application for admission to membership in British Chamber of Commerce for Switzerland. Are these advertisements? Need include all ads. Could include top ad as one box and bottom as one. Maybe top ad contains internal boxes but overall ad is one. Bottom maybe not advertisement? It is an application form for membership, promotional/advertisement for chamber. likely ad. Need coordinates in original 2479x3508. Need estimate.\\n\\nLet's inspect image dimensions: 2479 x 3508. Page visible from x about 31 to 2433, y 177? Wait image includes black background and scan. Need coordinate boxes relative to full image. Need determine ad boundaries.\\n\\nLet's parse image: There is top header at y~225? Actually top of page at y~176? Let's set.\\n\\nImage 2479 wide, 3508 high. Page beige from x 34? left edge to 2430? right edge. Top page starts y 176? black strip top 0-176? Actually image top has black background, page top at y=177. Header y 225-292. Main ad top border from x~185 to 2194, y~345 to 1739? Bottom ad border x~185 to 2195, y~1798 to 3213? Need accurate.\\n\\nLet's zoom mentally. Top ad: thick black border with outer rectangle. Left x about 184, right x about 2195, top y about 344, bottom y about 1739. It contains top large text and two boxes. Bottom ad: x about 184, y 1799, right 2194, bottom 3213. There is a gap between. Need maybe include entire top advertisement and entire bottom application.\\n\\nNeed maybe include a small ad at left edge? The left page margin shows partial previous page content maybe not part of current page. It has some text and ads? But request page likely current page; all advertisements on page. Ignore adjacent page.\\n\\nNeed produce JSON with two boxes.\\n\\nNeed ensure coordinates. Let's derive more accurately from image.\\n\\nWe can use visual coordinate mapping. The image is 2479 x 3508. The main page rectangle extends from x maybe 32 to x 2430; y 176 to 3323? But ads inside.\\n\\nLet's estimate via features. Top ad outer border: I see left border at x 185? Right border at x 2196? top at y 344? bottom at y 1740. The border line is thick, maybe 12 px. We can choose x0=184, y0=345, x1=2195, y1=1740.\\n\\nBottom ad: top border y=1799, bottom y=3213, x0=184, x1=2195.\\n\\nLet's maybe include bottom ad from y=1798 to 3214.\\n\\nNeed check if top ad is actually two ads? It is one ad for British Industries Fair, with text and contact boxes. It is enclosed as one. Bottom application form maybe not an advertisement but likely a chamber ad. The prompt \\\"Extract all advertisements\\\" - it could include \\\"Die Britische Industrie-Messe 1927\\\" and \\\"Application for Admission to Membership\\\" (membership ad). I think yes.\\n\\nNeed return only JSON.\\n\\nBut let's be cautious: There may be a \\\"THE ANGLO-SWISS COMMERCIAL GAZETTE\\\" header not ad. no.\\n\\nMaybe the page is an advertisement page with two ads. Need include.\\n\\nNeed maybe include separate boxes for the two dashed internal boxes? They are not separate ads but parts of top ad. The task \\\"all advertisements and bounding boxes\\\" usually each ad region. If an ad contains multiple components, one box.\\n\\nLet's consider if \\\"APPLICATION FOR ADMISSION TO MEMBERSHIP\\\" is not an advertisement but an application form. However it is in a large bordered box, likely an advertisement for membership. Include.\\n\\nNeed maybe include exact coordinates from original. Let's refine.\\n\\nCoordinate mapping:\\n- Top ad outer border: left vertical line x=186? top horizontal y=345? right vertical x=2194? bottom y=1738? The top ad's outer border is a thick double line? It extends from x=185 to 2195. Top horizontal line at y=345. Bottom at y=1738. There is a gap to bottom ad top at y=1799. Good.\\n\\n- Bottom ad outer border: top y=1800, bottom y=3213. left x=185, right x=2195.\\n\\nLet's maybe use [184,345,2195,1740] and [184,1799,2195,3214].\\n\\nNeed no extra.\\n\",\"reasoning_details\":[{\"type\":\"reasoning.text\",\"text\":\"\\nWe need answer only JSON. Need identify advertisements bounding boxes in page. We are historian analyzing historical magazine page. Need extract all advertisements. Image page has header with date/gazette/page number. Main content appears two large advertisements? Top ad for \\\"Die Britische Industrie-Messe 1927\\\" within border. Bottom ad/application for admission to membership in British Chamber of Commerce for Switzerland. Are these advertisements? Need include all ads. Could include top ad as one box and bottom as one. Maybe top ad contains internal boxes but overall ad is one. Bottom maybe not advertisement? It is an application form for membership, promotional/advertisement for chamber. likely ad. Need coordinates in original 2479x3508. Need estimate.\\n\\nLet's inspect image dimensions: 2479 x 3508. Page visible from x about 31 to 2433, y 177? Wait image includes black background and scan. Need coordinate boxes relative to full image. Need determine ad boundaries.\\n\\nLet's parse image: There is top header at y~225? Actually top of page at y~176? Let's set.\\n\\nImage 2479 wide, 3508 high. Page beige from x 34? left edge to 2430? right edge. Top page starts y 176? black strip top 0-176? Actually image top has black background, page top at y=177. Header y 225-292. Main ad top border from x~185 to 2194, y~345 to 1739? Bottom ad border x~185 to 2195, y~1798 to 3213? Need accurate.\\n\\nLet's zoom mentally. Top ad: thick black border with outer rectangle. Left x about 184, right x about 2195, top y about 344, bottom y about 1739. It contains top large text and two boxes. Bottom ad: x about 184, y 1799, right 2194, bottom 3213. There is a gap between. Need maybe include entire top advertisement and entire bottom application.\\n\\nNeed maybe include a small ad at left edge? The left page margin shows partial previous page content maybe not part of current page. It has some text and ads? But request page likely current page; all advertisements on page. Ignore adjacent page.\\n\\nNeed produce JSON with two boxes.\\n\\nNeed ensure coordinates. Let's derive more accurately from image.\\n\\nWe can use visual coordinate mapping. The image is 2479 x 3508. The main page rectangle extends from x maybe 32 to x 2430; y 176 to 3323? But ads inside.\\n\\nLet's estimate via features. Top ad outer border: I see left border at x 185? Right border at x 2196? top at y 344? bottom at y 1740. The border line is thick, maybe 12 px. We can choose x0=184, y0=345, x1=2195, y1=1740.\\n\\nBottom ad: top border y=1799, bottom y=3213, x0=184, x1=2195.\\n\\nLet's maybe include bottom ad from y=1798 to 3214.\\n\\nNeed check if top ad is actually two ads? It is one ad for British Industries Fair, with text and contact boxes. It is enclosed as one. Bottom application form maybe not an advertisement but likely a chamber ad. The prompt \\\"Extract all advertisements\\\" - it could include \\\"Die Britische Industrie-Messe 1927\\\" and \\\"Application for Admission to Membership\\\" (membership ad). I think yes.\\n\\nNeed return only JSON.\\n\\nBut let's be cautious: There may be a \\\"THE ANGLO-SWISS COMMERCIAL GAZETTE\\\" header not ad. no.\\n\\nMaybe the page is an advertisement page with two ads. Need include.\\n\\nNeed maybe include separate boxes for the two dashed internal boxes? They are not separate ads but parts of top ad. The task \\\"all advertisements and bounding boxes\\\" usually each ad region. If an ad contains multiple components, one box.\\n\\nLet's consider if \\\"APPLICATION FOR ADMISSION TO MEMBERSHIP\\\" is not an advertisement but an application form. However it is in a large bordered box, likely an advertisement for membership. Include.\\n\\nNeed maybe include exact coordinates from original. Let's refine.\\n\\nCoordinate mapping:\\n- Top ad outer border: left vertical line x=186? top horizontal y=345? right vertical x=2194? bottom y=1738? The top ad's outer border is a thick double line? It extends from x=185 to 2195. Top horizontal line at y=345. Bottom at y=1738. There is a gap to bottom ad top at y=1799. Good.\\n\\n- Bottom ad outer border: top y=1800, bottom y=3213. left x=185, right x=2195.\\n\\nLet's maybe use [184,345,2195,1740] and [184,1799,2195,3214].\\n\\nNeed no extra.\\n\",\"format\":\"unknown\",\"index\":0}]},\"native_finish_reason\":\"stop\"}],\"created\":1793002587,\"model\":\"nex-agi/nex-n2.5-pro\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":null,\"usage\":{\"completion_tokens\":1298,\"prompt_tokens\":3060,\"total_tokens\":4358,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":0,\"reasoning_tokens\":1044,\"rejected_prediction_tokens\":null,\"image_tokens\":0},\"prompt_tokens_details\":{\"audio_tokens\":0,\"cached_tokens\":0,\"cache_write_tokens\":0,\"video_tokens\":0},\"cost\":0.000554,\"is_byok\":false,\"cost_details\":{\"upstream_inference_cost\":0.000554,\"upstream_inference_prompt_cost\":0.0002295,\"upstream_inference_completions_cost\":0.0003245}},\"provider\":\"Nex AGI\"}"
+}

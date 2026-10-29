@@ -17,6 +17,8 @@ class MedievalManuscripts(Benchmark):
     between the model's predictions and ground truth data.
     """
 
+    score_unparseable_as_miss = True
+
     @staticmethod
     def normalize_empty(value):
         """
@@ -204,8 +206,8 @@ class MedievalManuscripts(Benchmark):
         """
         results = []
 
-        # Get folios list from response
-        response_folios_list = response.get("folios", [])
+        # An unparseable response has no folios: every ground-truth field counts as missed.
+        response_folios_list = response.get("folios", []) if isinstance(response, dict) else []
         if not isinstance(response_folios_list, list):
             response_folios_list = []
 

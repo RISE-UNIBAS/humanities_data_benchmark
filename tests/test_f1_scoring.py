@@ -3,17 +3,20 @@
 company_lists, library_cards and personnel_cards share an identical
 score_benchmark (micro/macro aggregation) but differ in score_request_answer:
   - company_lists: wraps a bare-list response into {"entries": ...}; filters metadata.*
-  - library_cards: reads ground_truth["response_text"]; filters examination.* and a
-    couple of removed keys.
+  - library_cards: filters examination.* and a couple of removed keys.
   - personnel_cards: filters by self.rules and always skips row_number.
 """
 import importlib
+import json
+import os
 
 import pytest
 
 CompanyLists = importlib.import_module("benchmarks.company_lists.benchmark").CompanyLists
 LibraryCards = importlib.import_module("benchmarks.library_cards.benchmark").LibraryCards
 PersonnelCards = importlib.import_module("benchmarks.personnel_cards.benchmark").PersonnelCards
+
+COMPANY_LISTS_GT = os.path.join(os.path.dirname(__file__), "..", "benchmarks", "company_lists", "ground_truths")
 
 
 # --------------------------------------------------------------------------- #
@@ -87,9 +90,33 @@ class TestCompanyLists:
         result = scorer.score_request_answer("img", response(parsed=pred), gt)
         assert (result["true_positives"], result["false_positives"], result["false_negatives"]) == (1, 0, 0)
 
+    def test_unparseable_response_is_a_miss(self, scorer, response):
+        assert CompanyLists.score_unparseable_as_miss is True
+        gt = {"page_id": "p", "entries": [{"entry_id": "p-1", "company_name": "Acme", "location": "Basel"}]}
+        result = scorer.score_request_answer("img", response(parsed=None, text="prose"), gt)
+        assert (result["true_positives"], result["false_positives"], result["false_negatives"]) == (0, 0, 2)
+
+    def test_identifiers_ignored(self, scorer, response):
+        gt = {"page_id": "156089_1321081_14", "entries": [{"entry_id": "156089_1321081_14-1",
+                                                           "company_name": "Acme", "location": "Basel"}]}
+        pred = {"page_id": "page_24", "entries": [{"entry_id": "page_24-1",
+                                                   "company_name": "Acme", "location": "Basel"}]}
+        result = scorer.score_request_answer("img", response(parsed=pred), gt)
+        assert (result["true_positives"], result["false_positives"], result["false_negatives"]) == (2, 0, 0)
+        assert "page_id" not in result["field_scores"]
+
+    @pytest.mark.parametrize("name", sorted(
+        f[:-5] for f in os.listdir(COMPANY_LISTS_GT) if f.endswith(".json")))
+    def test_every_ground_truth_matches_itself(self, scorer, response, name):
+        with open(os.path.join(COMPANY_LISTS_GT, f"{name}.json"), encoding="utf-8") as f:
+            gt = json.load(f)
+        result = scorer.score_request_answer(name, response(parsed=gt), gt)
+        assert (result["false_positives"], result["false_negatives"]) == (0, 0)
+        assert result["f1_score"] == 1.0
+
 
 # --------------------------------------------------------------------------- #
-# library_cards score_request_answer (ground truth nested under response_text)
+# library_cards score_request_answer
 # --------------------------------------------------------------------------- #
 class TestLibraryCards:
     @pytest.fixture
@@ -98,19 +125,24 @@ class TestLibraryCards:
 
     def test_perfect_match(self, scorer, response):
         fields = {"title": "Book", "author": "Smith"}
-        result = scorer.score_request_answer("img", response(parsed=fields), {"response_text": fields})
+        result = scorer.score_request_answer("img", response(parsed=fields), fields)
         assert (result["true_positives"], result["false_positives"], result["false_negatives"]) == (2, 0, 0)
         assert result["f1_score"] == 1.0
 
+    def test_unparseable_response_is_a_miss(self, scorer, response):
+        assert LibraryCards.score_unparseable_as_miss is True
+        result = scorer.score_request_answer("img", response(parsed=None, text="prose"), {"title": "Book", "year": "1950"})
+        assert (result["true_positives"], result["false_positives"], result["false_negatives"]) == (0, 0, 2)
+
     def test_examination_fields_ignored(self, scorer, response):
-        gt = {"response_text": {"title": "Book", "examination": {"note": "x"}}}
+        gt = {"title": "Book", "examination": {"note": "x"}}
         pred = {"title": "Book", "examination": {"note": "WRONG"}}
         result = scorer.score_request_answer("img", response(parsed=pred), gt)
         # examination.* filtered out -> only title scored
         assert (result["true_positives"], result["false_positives"], result["false_negatives"]) == (1, 0, 0)
 
     def test_mismatch_is_fp_and_fn(self, scorer, response):
-        gt = {"response_text": {"title": "Original Title"}}
+        gt = {"title": "Original Title"}
         pred = {"title": "Nothing Alike Here"}
         result = scorer.score_request_answer("img", response(parsed=pred), gt)
         assert (result["true_positives"], result["false_positives"], result["false_negatives"]) == (0, 1, 1)
@@ -154,3 +186,27 @@ class TestPersonnelCards:
         assert with_default["false_positives"] >= 1 and with_default["false_negatives"] >= 1
         assert (with_rule_off["false_positives"], with_rule_off["false_negatives"]) == (0, 0)
         assert with_rule_off["f1_score"] == 1.0
+
+def test_personnel_cards_scores_unparseable_answers_as_misses(make_scorer, response):
+    assert PersonnelCards.score_unparseable_as_miss is True
+    result = make_scorer(PersonnelCards).score_request_answer(
+        "img", response(parsed=None, text="prose"), {"rows": [{"row_number": 1, "dienstort": {"diplomatic_transcript": "Bern"}}]})
+    assert result["true_positives"] == 0 and result["false_negatives"] > 0
+
+
+PERSONNEL_CARDS_GT = os.path.join(os.path.dirname(__file__), "..", "benchmarks", "personnel_cards", "ground_truths")
+
+
+def test_personnel_cards_empty_card_answered_empty_scores_one(make_scorer, response):
+    scorer = make_scorer(PersonnelCards, rules=None)
+    assert scorer.score_request_answer("img", response(parsed={"rows": []}), {"rows": []})["f1_score"] == 1.0
+    assert scorer.score_request_answer("img", response(parsed=_row()), {"rows": []})["f1_score"] == 0.0
+
+
+@pytest.mark.parametrize("name", sorted(f[:-5] for f in os.listdir(PERSONNEL_CARDS_GT) if f.endswith(".json")))
+def test_personnel_cards_every_ground_truth_matches_itself(make_scorer, response, name):
+    with open(os.path.join(PERSONNEL_CARDS_GT, f"{name}.json"), encoding="utf-8") as f:
+        gt = json.load(f)
+    result = make_scorer(PersonnelCards, rules=None).score_request_answer(name, response(parsed=gt), gt)
+    assert (result["false_positives"], result["false_negatives"]) == (0, 0)
+    assert result["f1_score"] == 1.0

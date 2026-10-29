@@ -143,9 +143,9 @@ def release_preflight(dataset, manifest, reconcile=True):
 def _reconciliation_blockers(dataset):
     """Return blockers from reconciling the dataset against the frontend export.
 
-    Both pipelines read the same corpus and the dataset embeds one of the frontend's
-    artifacts, so the two can disagree about a run's identity, visibility, recorded scores
-    or resolved prices. Reconciliation runs as part of the release decision rather than as
+    The website's export (benchmark-frontend) reads the same corpus with its own reader, and
+    the dataset embeds one of the comparison artifacts, so the two can disagree about a run's
+    identity, visibility, recorded scores or resolved prices. Reconciliation runs as part of the release decision rather than as
     a separate command.
 
     An absent frontend export is itself a blocker: it records that no reconciliation took
@@ -155,8 +155,8 @@ def _reconciliation_blockers(dataset):
 
     if not crosscheck.FRONTEND_EXPORT.is_file():
         return ["no frontend export at %s, so nothing reconciled this build; run "
-                "python -m scripts.ndr_export.generate_all"
-                % _relative_to_project(crosscheck.FRONTEND_EXPORT)]
+                "python -m generate in benchmark-frontend, or set BENCHMARK_FRONTEND_EXPORT"
+                % crosscheck.FRONTEND_EXPORT]
     try:
         frontend = crosscheck.load_frontend()
         runs, requests, scores = crosscheck.load_dataset(dataset)
@@ -171,11 +171,6 @@ def _reconciliation_blockers(dataset):
                                  findings[0]["detail"])]
     print("  crosscheck: no unexpected differences over %d shared runs" % shared)
     return []
-
-
-def _relative_to_project(path):
-    from scripts.export_dataset.inventory import relative_path
-    return relative_path(path)
 
 
 def build_release_tree(dataset, out, payload_archive=None):

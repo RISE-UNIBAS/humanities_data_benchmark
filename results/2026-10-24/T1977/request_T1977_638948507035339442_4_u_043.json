@@ -1,0 +1,75 @@
+{
+    "text": "{\"company\":{\"transcription\":\"Beatus A.G.\"},\"location\":{\"transcription\":\"Basel\"},\"b_id\":{\"transcription\":\"B.51.322.GB.608\"},\"date\":\"\",\"information\":[{\"transcription\":\"Britische schwarze Liste\\n10. Amendment vom Juli 1942.\"},{\"transcription\":\"gestrichen:\\nAmendment 13, 23. November 1945.\"}]}",
+    "model": "command-a-plus-05-2026",
+    "provider": "cohere",
+    "finish_reason": "complete",
+    "usage": {
+        "input_tokens": 650,
+        "output_tokens": 2015,
+        "total_tokens": 2665,
+        "reasoning_tokens": 0,
+        "input_cost_usd": 0.0,
+        "output_cost_usd": 0.0,
+        "reasoning_cost_usd": 0.0,
+        "estimated_cost_usd": 0.0
+    },
+    "duration": 11.048539161682129,
+    "timestamp": "2026-10-24T21:27:50.064376",
+    "parsed": {
+        "company": {
+            "transcription": "Beatus A.G."
+        },
+        "location": {
+            "transcription": "Basel"
+        },
+        "b_id": {
+            "transcription": "B.51.322.GB.608"
+        },
+        "date": "",
+        "information": [
+            {
+                "transcription": "Britische schwarze Liste\n10. Amendment vom Juli 1942."
+            },
+            {
+                "transcription": "gestrichen:\nAmendment 13, 23. November 1945."
+            }
+        ]
+    },
+    "conversation_id": "40f6f1b9-6711-4ec2-9328-505ce748b978",
+    "score": {
+        "fuzzy": 1.0,
+        "field_scores": {
+            "b_id.transcription": {
+                "response": "B.51.322.GB.608",
+                "ground_truth": "B.51.322.GB.608",
+                "score": 1.0
+            },
+            "company.transcription": {
+                "response": "Beatus A.G.",
+                "ground_truth": "Beatus A.G.",
+                "score": 1.0
+            },
+            "date": {
+                "response": "",
+                "ground_truth": "",
+                "score": 1.0
+            },
+            "information[0].transcription": {
+                "response": "Britische schwarze Liste\n10. Amendment vom Juli 1942.",
+                "ground_truth": "Britische schwarze Liste\n10. Amendment vom Juli 1942.",
+                "score": 1.0
+            },
+            "information[1].transcription": {
+                "response": "gestrichen:\nAmendment 13, 23. November 1945.",
+                "ground_truth": "gestrichen:\nAmendment 13, 23. November 1945.",
+                "score": 1.0
+            },
+            "location.transcription": {
+                "response": "Basel",
+                "ground_truth": "Basel",
+                "score": 1.0
+            }
+        }
+    },
+    "raw_response": "{\"id\":\"f8887d35-bf76-40dd-8d7b-8763a969793e\",\"finish_reason\":\"COMPLETE\",\"message\":{\"role\":\"assistant\",\"content\":[{\"type\":\"thinking\",\"thinking\":\"The user wants a JSON object extracted from the index card image. The JSON must follow a specific schema.\\n\\nThe schema defines:\\n- company: object with \\\"transcription\\\"\\n- location: object with \\\"transcription\\\"\\n- b_id: object with \\\"transcription\\\"\\n- date: string (or null)\\n- information: array of objects with \\\"transcription\\\"\\n\\nThe fields to extract:\\n- \\\"company\\\": primary company name, usually top-left, exclude location.\\n- \\\"location\\\": city or town, often following company name.\\n- \\\"b_id\\\": identifier code, usually top-right, starting with \\\"B.\\\".\\n- \\\"date\\\": any stamped dates on the card in YYYY-MM-DD format. If no date, empty string.\\n- \\\"information\\\": list of text blocks from main body. Each block separate string. Maintain line breaks with \\\\n.\\n\\nWe need to parse the image.\\n\\nThe image appears to be a card with typed text.\\n\\nLet's read the image content:\\n\\nThe card appears to have a grid layout with two columns (maybe). The left column contains:\\n- Top-left: \\\"Beatus A.G.\\\"\\n- Below that: \\\"Basel.\\\"\\n- Then a blank line? Actually, there is a line break.\\n- Then \\\"Britische schwarze Liste\\\"\\n- Then \\\"10. Amendment vom Juli 1942.\\\"\\n- Then a blank line? Then \\\"gestrichen:\\\" (crossed out:)\\n- Then \\\"Amendment 13, 23. November 1945.\\\"\\n\\nThe right column contains:\\n- Top-right: \\\"B.51.322.GB.608\\\"\\n- Then blank? Possibly other text but seems empty.\\n\\nThere is also a bottom left \\\"47019\\\" which might be a reference number.\\n\\nNow we need to extract:\\n\\n- company: \\\"Beatus A.G.\\\" (exclude location)\\n- location: \\\"Basel\\\" (city/town)\\n- b_id: \\\"B.51.322.GB.608\\\" (starts with B.)\\n- date: any stamped dates. The card has \\\"Juli 1942\\\" (July 1942) and \\\"23. November 1945\\\". Are these stamped dates? They appear typed, not stamped. The prompt says \\\"any stamped dates on the card\\\". We cannot assume typed dates are stamped. However, we might not have any stamped dates. The instruction says if no date present, use empty string. So we should probably leave date empty unless we see a clear stamp. There is no visible stamp like a rubber stamp. The typed dates are likely not stamps. So date = \\\"\\\".\\n\\nBut we need to be careful: The user might consider typed dates as dates present. But they explicitly said \\\"stamped dates\\\". Usually, index cards might have a stamp for the date of entry or update. In this image, we see typed dates. There's no obvious stamp mark. So we should leave date empty.\\n\\nHowever, we could also interpret \\\"any stamped dates\\\" as \\\"any dates that appear as stamps\\\", but we cannot differentiate. The safe approach is to leave date empty.\\n\\nBut we might also include the dates in information blocks. That's fine.\\n\\nNow information: list of text blocks from the main body of the card. Each block should be a separate string. Maintain line breaks with \\\\n.\\n\\nWe need to decide what counts as a block. Likely each distinct line of text in the main body (excluding company/location/b_id header) should be a block.\\n\\nThe main body likely includes:\\n- \\\"Britische schwarze Liste\\\"\\n- \\\"10. Amendment vom Juli 1942.\\\"\\n- \\\"gestrichen:\\\"\\n- \\\"Amendment 13, 23. November 1945.\\\"\\n\\nBut we need to maintain line breaks. The original lines are:\\n\\nLine 1: \\\"Britische schwarze Liste\\\"\\nLine 2: \\\"10. Amendment vom Juli 1942.\\\"\\n(blank line)\\nLine 3: \\\"gestrichen:\\\"\\nLine 4: \\\"Amendment 13, 23. November 1945.\\\"\\n\\nWe need to decide if we combine \\\"gestrichen:\\\" and \\\"Amendment 13...\\\" as separate blocks or one block. The instruction says \\\"list of text blocks from the main body of the card. Each block should be a separate string in the list. Maintain line breaks with \\\\n.\\\"\\n\\nThus each block can contain multiple lines separated by \\\\n. We need to group logically contiguous text. For example, \\\"Britische schwarze Liste\\\" and \\\"10. Amendment vom Juli 1942.\\\" are separate lines but maybe part of the same block? But they are separate lines. However, we could treat each line as a block. But it's ambiguous.\\n\\nBetter approach: treat each distinct paragraph as a block. Paragraphs separated by blank line. In this case, there is a blank line after \\\"10. Amendment vom Juli 1942.\\\" and before \\\"gestrichen:\\\". So we have two paragraphs:\\n\\nParagraph 1:\\n\\\"Britische schwarze Liste\\\\n10. Amendment vom Juli 1942.\\\"\\n\\nParagraph 2:\\n\\\"gestrichen:\\\\nAmendment 13, 23. November 1945.\\\"\\n\\nAlternatively, we could treat each line as a separate block, but that might be too granular.\\n\\nThe instruction says \\\"list of text blocks from the main body of the card.\\\" Usually, a \\\"block\\\" is a contiguous piece of text, perhaps a paragraph. So grouping by paragraphs seems appropriate.\\n\\nThus information list could be:\\n[\\n  {\\\"transcription\\\": \\\"Britische schwarze Liste\\\\n10. Amendment vom Juli 1942.\\\"},\\n  {\\\"transcription\\\": \\\"gestrichen:\\\\nAmendment 13, 23. November 1945.\\\"}\\n]\\n\\nBut we need to ensure we maintain line breaks with \\\\n. So within each transcription string, we need to include \\\\n where line breaks occur.\\n\\nNow we need to produce the JSON with the proper structure.\\n\\nThe top-level object has fields:\\n- company: {\\\"transcription\\\": \\\"Beatus A.G.\\\"}\\n- location: {\\\"transcription\\\": \\\"Basel\\\"}\\n- b_id: {\\\"transcription\\\": \\\"B.51.322.GB.608\\\"}\\n- date: \\\"\\\" (empty string)\\n- information: [ {\\\"transcription\\\": \\\"...\\\"}, {\\\"transcription\\\": \\\"...\\\"} ]\\n\\nNote: The schema expects \\\"date\\\" can be null or string. The instruction says \\\"If no date is present, use an empty string.\\\" So we set date to \\\"\\\".\\n\\nNow we need to ensure we follow JSON format exactly, no extra spaces? It can have spaces.\\n\\nAlso, we must not include any explanatory text outside the JSON object. So just output the JSON.\\n\\nNow we need to double-check the extracted data.\\n\\nCompany: \\\"Beatus A.G.\\\" - correct.\\n\\nLocation: \\\"Basel\\\" - correct.\\n\\nb_id: \\\"B.51.322.GB.608\\\" - correct.\\n\\nDate: No stamped date, so empty string.\\n\\nInformation blocks:\\n\\nBlock 1: \\\"Britische schwarze Liste\\\\n10. Amendment vom Juli 1942.\\\"\\n\\nBlock 2: \\\"gestrichen:\\\\nAmendment 13, 23. November 1945.\\\"\\n\\nBut we need to check if there is any other text like \\\"47019\\\" at bottom left. That might be a reference number, but it's not part of the main body? It could be considered part of the card, but likely not part of the information. The instruction says \\\"list of text blocks from the main body of the card.\\\" The \\\"main body\\\" likely excludes header and footer reference numbers. So we can ignore \\\"47019\\\".\\n\\nNow we need to ensure we preserve any punctuation and spaces exactly as they appear.\\n\\nOriginal lines:\\n\\\"Britische schwarze Liste\\\"\\n\\\"10. Amendment vom Juli 1942.\\\"\\n(blank line)\\n\\\"gestrichen:\\\"\\n\\\"Amendment 13, 23. November 1945.\\\"\\n\\nThus block 1 should be \\\"Britische schwarze Liste\\\\n10. Amendment vom Juli 1942.\\\" (no trailing spaces). Block 2 should be \\\"gestrichen:\\\\nAmendment 13, 23. November 1945.\\\"\\n\\nNow we need to output JSON.\\n\\nThe JSON object will be:\\n\\n{\\n  \\\"company\\\": {\\\"transcription\\\": \\\"Beatus A.G.\\\"},\\n  \\\"location\\\": {\\\"transcription\\\": \\\"Basel\\\"},\\n  \\\"b_id\\\": {\\\"transcription\\\": \\\"B.51.322.GB.608\\\"},\\n  \\\"date\\\": \\\"\\\",\\n  \\\"information\\\": [\\n    {\\\"transcription\\\": \\\"Britische schwarze Liste\\\\n10. Amendment vom Juli 1942.\\\"},\\n    {\\\"transcription\\\": \\\"gestrichen:\\\\nAmendment 13, 23. November 1945.\\\"}\\n  ]\\n}\\n\\nMake sure to escape newline characters as \\\\n in JSON string. That's correct.\\n\\nNow we need to ensure that we follow the schema: The \\\"information\\\" field is an array of \\\"Entry\\\" objects, each with \\\"transcription\\\". That's fine.\\n\\nNow we need to check if any other dates appear that might be considered \\\"stamped\\\". The typed dates are not stamps. So we leave date empty.\\n\\nOne more nuance: The card has \\\"B.51.322.GB.608\\\" in the top-right. That matches the b_id format.\\n\\nNow we need to output only the JSON object, no extra text.\\n\\nThus final answer is the JSON object as above.\\n\\nBut we need to ensure we don't include any extraneous whitespace before or after the JSON. Usually it's fine.\\n\\nNow produce the final answer.\"},{\"type\":\"text\",\"text\":\"{\\n  \\\"company\\\": {\\\"transcription\\\": \\\"Beatus A.G.\\\"},\\n  \\\"location\\\": {\\\"transcription\\\": \\\"Basel\\\"},\\n  \\\"b_id\\\": {\\\"transcription\\\": \\\"B.51.322.GB.608\\\"},\\n  \\\"date\\\": \\\"\\\",\\n  \\\"information\\\": [\\n    {\\\"transcription\\\": \\\"Britische schwarze Liste\\\\n10. Amendment vom Juli 1942.\\\"},\\n    {\\\"transcription\\\": \\\"gestrichen:\\\\nAmendment 13, 23. November 1945.\\\"}\\n  ]\\n}\"}]},\"usage\":{\"billed_units\":{\"input_tokens\":3932.0,\"output_tokens\":2011.0},\"tokens\":{\"input_tokens\":650.0,\"output_tokens\":2015.0,\"reasoning_tokens\":1907,\"image_tokens\":3343},\"cached_tokens\":16.0}}"
+}

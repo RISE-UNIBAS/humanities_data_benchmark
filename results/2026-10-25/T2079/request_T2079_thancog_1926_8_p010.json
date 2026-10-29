@@ -1,0 +1,91 @@
+{
+    "text": "{\"advertisements\":[{\"box\":[551.0,506.0,928.0,708.0]},{\"box\":[124.0,711.0,926.0,896.0]}]}",
+    "model": "qwen/qwen3.8-max-prime",
+    "provider": "openrouter",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 2915,
+        "output_tokens": 2435,
+        "total_tokens": 5350,
+        "reasoning_tokens": 0,
+        "input_cost_usd": 0.01166,
+        "output_cost_usd": 0.02922,
+        "estimated_cost_usd": 0.04088
+    },
+    "duration": 35.42573356628418,
+    "timestamp": "2026-10-25T06:18:41.666136",
+    "parsed": {
+        "advertisements": [
+            {
+                "box": [
+                    551.0,
+                    506.0,
+                    928.0,
+                    708.0
+                ]
+            },
+            {
+                "box": [
+                    124.0,
+                    711.0,
+                    926.0,
+                    896.0
+                ]
+            }
+        ]
+    },
+    "conversation_id": "a86940b9-4c57-4a6a-9f63-b944f4073ade",
+    "score": {
+        "field_scores": {
+            "box 0": {
+                "response": null,
+                "ground_truth": [
+                    346,
+                    2537,
+                    2260,
+                    3109
+                ],
+                "score": 0.0
+            },
+            "box 1": {
+                "response": null,
+                "ground_truth": [
+                    1372,
+                    1786,
+                    2293,
+                    2481
+                ],
+                "score": 0.0
+            },
+            "unmatched prediction 0": {
+                "response": [
+                    551.0,
+                    506.0,
+                    928.0,
+                    708.0
+                ],
+                "ground_truth": null,
+                "score": 0.0
+            },
+            "unmatched prediction 1": {
+                "response": [
+                    124.0,
+                    711.0,
+                    926.0,
+                    896.0
+                ],
+                "ground_truth": null,
+                "score": 0.0
+            }
+        },
+        "f1": 0.0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "mean_iou": 0.0,
+        "true_positives": 0,
+        "false_positives": 2,
+        "false_negatives": 2,
+        "iou_threshold": 0.5
+    },
+    "raw_response": "{\"id\":\"gen-1792905486-zMgtEN74d2LAqcah6ZZ1\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\n    \\\"advertisements\\\": [\\n        {\\\"box\\\": [551, 506, 928, 708]},\\n        {\\\"box\\\": [124, 711, 926, 896]}\\n    ]\\n}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"advertisements\":[{\"box\":[551.0,506.0,928.0,708.0]},{\"box\":[124.0,711.0,926.0,896.0]}]},\"reasoning\":\"The page contains two advertisements:\\n\\n1. The boxed advertisement for \\\"Fr. Klingelfuss & Co.\\\" in the right column, roughly from (550, 505) to (928, 707).\\n2. The large bordered advertisement at the bottom for \\\"Banque F\u00e9d\u00e9rale S.A. / Eidgen\u00f6ssische Bank A.G.\\\", roughly from (122, 710) to (925, 897).\\n\\nLet me estimate the coordinates. The page is 2479 x 3508. The displayed image seems to be at some scale. Looking at the layout: the Klingelfuss ad box is approximately x from 550 to 928, y from 505 to 707 (in the displayed image coordinates which appear to be about 1000 wide?). Wait, the original size is 2479 x 3508. The image I'm seeing is probably scaled. I need to guess coordinates in the original pixel space.\\n\\nUsually, in tasks like this, the coordinates correspond to the original page size. Let me map: the displayed image width is probably 1000? Actually, the image given in the conversation is usually rendered at some resolution; but I should output coordinates in the original 2479x3508 space.\\n\\nEstimating proportions: the Klingelfuss ad occupies roughly x from 0.55 to 0.93 of the page width? Hmm, the page includes margins. Let me look: the page content spans from about x=100 to about x=950 in the displayed image (width about 1000?). Actually, the displayed image dimensions are unknown; but I can estimate relative positions.\\n\\nLooking at the image: the header is at the top. The Klingelfuss ad box: left edge about 552, right edge about 928, top about 505, bottom about 707 (in an image of width about 1000, height about 1500?). Hmm, the image aspect ratio: 2479x3508 \u2248 0.7067. If width is 1000, height is about 1414.\\n\\nLet me set up: displayed image coordinates probably width 1000, height 1414? The image shown in the prompt appears to be about 1000x1500? Hard to tell.\\n\\nBetter approach: estimate fractions directly from the visual.\\n\\nKlingelfuss ad: box starts just below the \\\"Consult the British Chamber...\\\" text, around the middle of the right column. In fractions: x0 \u2248 0.55 of width? The right column spans from about 0.55 to 0.93 of the page width? Actually, the page content spans from about 0.12 to about 0.95? Hmm, the page image includes black borders at top and bottom and the page itself.\\n\\nLet me look at the layout: page number \\\"10\\\" at top left around x=150/1000. Header \\\"THE ANGLO-SWISS COMMERCIAL GAZETTE\\\" centered around 530/1000. \\\"August, 1926.\\\" at right around 870/1000.\\n\\nLeft column text spans x from about 125 to about 515. Right column from about 550 to about 930.\\n\\nKlingelfuss ad box: x from about 552 to about 928, y from about 505 to about 707 (in a 1000-wide image with height about 1414? y coordinates: top of page about 40, header about 60, \\\"TRADE OPENINGS\\\" about 85, ... bottom ad about 710-895, bottom of page about 950?). Hmm, if height is 1414 then bottom ad at y about 1000-1270? My y estimates above were based on an image of height about 1000? Let me think again.\\n\\nThe image rendered in the prompt: I perceive it as roughly 1000 wide and 1500 tall? Actual pixel dimensions unknown. Safer: use fractions of the whole page.\\n\\nEstimating fractions from the visual:\\n\\n- Klingelfuss ad: top edge at about 50.5% of height? Hmm.\\n\\nLet me think of typical layout: page height 3508. Header at about 5% (y\u2248175). Trade openings heading at about 8% (y\u2248280). Columns run from about 12% to about 70%. Klingelfuss ad box: top about 50.5% (y\u22481770), bottom about 70.7% (y\u22482480). Left about 55% (x\u22481365), right about 93% (x\u22482305).\\n\\n- Banque F\u00e9d\u00e9rale ad: top about 71% (y\u22482490), bottom about 89.5% (y\u22483140). Left about 12.5% (x\u2248310), right about 92.5% (x\u22482295).\\n\\nHmm, but my earlier y estimates in a 1000x1500 space: Klingelfuss top about 505/1500 = 33.7%? Wait, I need to be consistent.\\n\\nLet me look at the image again mentally: the image shows the entire page including black borders at top and bottom. The page content: header at top about y=60 (in a 1000x1500 rendering?). Hmm.\\n\\nActually, the image provided in the conversation is usually already at original resolution? The prompt says \\\"the original size of the page is 2479 x 3508 pixels.\\\" The image I see might be downscaled. I need to output coordinates in original pixels.\\n\\nLet me define fractions based on visual layout:\\n\\nVertical layout (fraction of page height):\\n- Black top border: 0 to about 0.02\\n- Page top edge about 0.04\\n- Header line (page number, title, date): about 0.06\\n- \\\"TRADE OPENINGS.\\\" heading: about 0.085\\n- Columns start: about 0.10\\n- Left column entries continue to about 0.70\\n- Right column: entries to about 0.47, then \\\"Consult the British Chamber...\\\" paragraph about 0.47-0.50, then Klingelfuss ad box about 0.505 to about 0.705.\\n- Bottom large ad (Banque F\u00e9d\u00e9rale): about 0.71 to about 0.895.\\n- Page bottom edge about 0.95, black border to 1.0.\\n\\nHorizontal:\\n- Page left edge about 0.04, right edge about 0.98 (including partial next page at right? There's a sliver of the next page at right edge about 0.98-1.0).\\n- Left column: 0.125 to 0.515.\\n- Right column: 0.55 to 0.93.\\n- Klingelfuss ad box: 0.55 to 0.93.\\n- Bottom ad: 0.12 to 0.925.\\n\\nNow convert to pixels (width 2479, height 3508):\\n\\nKlingelfuss: x0 = 0.55*2479 \u2248 1363, y0 = 0.505*3508 \u2248 1772, x1 = 0.93*2479 \u2248 2305, y1 = 0.705*3508 \u2248 2473.\\n\\nBanque F\u00e9d\u00e9rale: x0 = 0.12*2479 \u2248 297, y0 = 0.71*3508 \u2248 2491, x1 = 0.925*2479 \u2248 2293, y1 = 0.895*3508 \u2248 3140.\\n\\nThese seem reasonable.\\n\\nCross-check with visual: in the displayed image (assume width 1000, height 1414), Klingelfuss box top at about y=505/1414? Hmm, earlier I guessed 505 in a 1500-tall image => 0.337. That contradicts 0.505.\\n\\nLet me look at the image more carefully: the image shows the Klingelfuss ad starting around the middle of the page vertically? The right column contains many entries: E 1507 ... down to BE 266, then Consult paragraph, then ad box. The ad box occupies from about half the page height down to about 70%. Yes, in the visual, the top of the Klingelfuss box is at about 50% of the page height? The visual shows the box starting at about y=505 in an image of height about 1000? Hmm, the image in the prompt appears to be about 1000x1500? Ugh.\\n\\nLet me think of the visual proportions: the entire page image (including black borders) height H. The bottom ad occupies roughly the bottom fifth above the page bottom. The Klingelfuss box occupies from about middle to about 70%.\\n\\nIn the thumbnail I perceive: the Klingelfuss box top edge is at about 51% of the height? The box contains \\\"Fr. Klingelfuss & Co.\\\" etc., ending at about 70.5%. The bottom ad from about 71% to about 89.5%. Yes.\\n\\nThus final coordinates:\\n\\nAd 1 (Klingelfuss): [1363, 1772, 2305, 2473]\\nAd 2 (Banque F\u00e9d\u00e9rale): [297, 2491, 2293, 3140]\\n\\nRound nicely: maybe [1360, 1770, 2300, 2475] and [300, 2490, 2295, 3140].\\n\\nI'll provide these.\",\"reasoning_details\":[{\"type\":\"reasoning.text\",\"text\":\"The page contains two advertisements:\\n\\n1. The boxed advertisement for \\\"Fr. Klingelfuss & Co.\\\" in the right column, roughly from (550, 505) to (928, 707).\\n2. The large bordered advertisement at the bottom for \\\"Banque F\u00e9d\u00e9rale S.A. / Eidgen\u00f6ssische Bank A.G.\\\", roughly from (122, 710) to (925, 897).\\n\\nLet me estimate the coordinates. The page is 2479 x 3508. The displayed image seems to be at some scale. Looking at the layout: the Klingelfuss ad box is approximately x from 550 to 928, y from 505 to 707 (in the displayed image coordinates which appear to be about 1000 wide?). Wait, the original size is 2479 x 3508. The image I'm seeing is probably scaled. I need to guess coordinates in the original pixel space.\\n\\nUsually, in tasks like this, the coordinates correspond to the original page size. Let me map: the displayed image width is probably 1000? Actually, the image given in the conversation is usually rendered at some resolution; but I should output coordinates in the original 2479x3508 space.\\n\\nEstimating proportions: the Klingelfuss ad occupies roughly x from 0.55 to 0.93 of the page width? Hmm, the page includes margins. Let me look: the page content spans from about x=100 to about x=950 in the displayed image (width about 1000?). Actually, the displayed image dimensions are unknown; but I can estimate relative positions.\\n\\nLooking at the image: the header is at the top. The Klingelfuss ad box: left edge about 552, right edge about 928, top about 505, bottom about 707 (in an image of width about 1000, height about 1500?). Hmm, the image aspect ratio: 2479x3508 \u2248 0.7067. If width is 1000, height is about 1414.\\n\\nLet me set up: displayed image coordinates probably width 1000, height 1414? The image shown in the prompt appears to be about 1000x1500? Hard to tell.\\n\\nBetter approach: estimate fractions directly from the visual.\\n\\nKlingelfuss ad: box starts just below the \\\"Consult the British Chamber...\\\" text, around the middle of the right column. In fractions: x0 \u2248 0.55 of width? The right column spans from about 0.55 to 0.93 of the page width? Actually, the page content spans from about 0.12 to about 0.95? Hmm, the page image includes black borders at top and bottom and the page itself.\\n\\nLet me look at the layout: page number \\\"10\\\" at top left around x=150/1000. Header \\\"THE ANGLO-SWISS COMMERCIAL GAZETTE\\\" centered around 530/1000. \\\"August, 1926.\\\" at right around 870/1000.\\n\\nLeft column text spans x from about 125 to about 515. Right column from about 550 to about 930.\\n\\nKlingelfuss ad box: x from about 552 to about 928, y from about 505 to about 707 (in a 1000-wide image with height about 1414? y coordinates: top of page about 40, header about 60, \\\"TRADE OPENINGS\\\" about 85, ... bottom ad about 710-895, bottom of page about 950?). Hmm, if height is 1414 then bottom ad at y about 1000-1270? My y estimates above were based on an image of height about 1000? Let me think again.\\n\\nThe image rendered in the prompt: I perceive it as roughly 1000 wide and 1500 tall? Actual pixel dimensions unknown. Safer: use fractions of the whole page.\\n\\nEstimating fractions from the visual:\\n\\n- Klingelfuss ad: top edge at about 50.5% of height? Hmm.\\n\\nLet me think of typical layout: page height 3508. Header at about 5% (y\u2248175). Trade openings heading at about 8% (y\u2248280). Columns run from about 12% to about 70%. Klingelfuss ad box: top about 50.5% (y\u22481770), bottom about 70.7% (y\u22482480). Left about 55% (x\u22481365), right about 93% (x\u22482305).\\n\\n- Banque F\u00e9d\u00e9rale ad: top about 71% (y\u22482490), bottom about 89.5% (y\u22483140). Left about 12.5% (x\u2248310), right about 92.5% (x\u22482295).\\n\\nHmm, but my earlier y estimates in a 1000x1500 space: Klingelfuss top about 505/1500 = 33.7%? Wait, I need to be consistent.\\n\\nLet me look at the image again mentally: the image shows the entire page including black borders at top and bottom. The page content: header at top about y=60 (in a 1000x1500 rendering?). Hmm.\\n\\nActually, the image provided in the conversation is usually already at original resolution? The prompt says \\\"the original size of the page is 2479 x 3508 pixels.\\\" The image I see might be downscaled. I need to output coordinates in original pixels.\\n\\nLet me define fractions based on visual layout:\\n\\nVertical layout (fraction of page height):\\n- Black top border: 0 to about 0.02\\n- Page top edge about 0.04\\n- Header line (page number, title, date): about 0.06\\n- \\\"TRADE OPENINGS.\\\" heading: about 0.085\\n- Columns start: about 0.10\\n- Left column entries continue to about 0.70\\n- Right column: entries to about 0.47, then \\\"Consult the British Chamber...\\\" paragraph about 0.47-0.50, then Klingelfuss ad box about 0.505 to about 0.705.\\n- Bottom large ad (Banque F\u00e9d\u00e9rale): about 0.71 to about 0.895.\\n- Page bottom edge about 0.95, black border to 1.0.\\n\\nHorizontal:\\n- Page left edge about 0.04, right edge about 0.98 (including partial next page at right? There's a sliver of the next page at right edge about 0.98-1.0).\\n- Left column: 0.125 to 0.515.\\n- Right column: 0.55 to 0.93.\\n- Klingelfuss ad box: 0.55 to 0.93.\\n- Bottom ad: 0.12 to 0.925.\\n\\nNow convert to pixels (width 2479, height 3508):\\n\\nKlingelfuss: x0 = 0.55*2479 \u2248 1363, y0 = 0.505*3508 \u2248 1772, x1 = 0.93*2479 \u2248 2305, y1 = 0.705*3508 \u2248 2473.\\n\\nBanque F\u00e9d\u00e9rale: x0 = 0.12*2479 \u2248 297, y0 = 0.71*3508 \u2248 2491, x1 = 0.925*2479 \u2248 2293, y1 = 0.895*3508 \u2248 3140.\\n\\nThese seem reasonable.\\n\\nCross-check with visual: in the displayed image (assume width 1000, height 1414), Klingelfuss box top at about y=505/1414? Hmm, earlier I guessed 505 in a 1500-tall image => 0.337. That contradicts 0.505.\\n\\nLet me look at the image more carefully: the image shows the Klingelfuss ad starting around the middle of the page vertically? The right column contains many entries: E 1507 ... down to BE 266, then Consult paragraph, then ad box. The ad box occupies from about half the page height down to about 70%. Yes, in the visual, the top of the Klingelfuss box is at about 50% of the page height? The visual shows the box starting at about y=505 in an image of height about 1000? Hmm, the image in the prompt appears to be about 1000x1500? Ugh.\\n\\nLet me think of the visual proportions: the entire page image (including black borders) height H. The bottom ad occupies roughly the bottom fifth above the page bottom. The Klingelfuss box occupies from about middle to about 70%.\\n\\nIn the thumbnail I perceive: the Klingelfuss box top edge is at about 51% of the height? The box contains \\\"Fr. Klingelfuss & Co.\\\" etc., ending at about 70.5%. The bottom ad from about 71% to about 89.5%. Yes.\\n\\nThus final coordinates:\\n\\nAd 1 (Klingelfuss): [1363, 1772, 2305, 2473]\\nAd 2 (Banque F\u00e9d\u00e9rale): [297, 2491, 2293, 3140]\\n\\nRound nicely: maybe [1360, 1770, 2300, 2475] and [300, 2490, 2295, 3140].\\n\\nI'll provide these.\",\"format\":\"unknown\",\"index\":0}]},\"native_finish_reason\":\"stop\"}],\"created\":1792905486,\"model\":\"qwen/qwen3.8-max-prime\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":null,\"usage\":{\"completion_tokens\":2435,\"prompt_tokens\":2915,\"total_tokens\":5350,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":0,\"reasoning_tokens\":2367,\"rejected_prediction_tokens\":null,\"image_tokens\":0},\"prompt_tokens_details\":{\"audio_tokens\":0,\"cached_tokens\":0,\"cache_write_tokens\":0,\"video_tokens\":0},\"cost\":0.04088,\"is_byok\":false,\"cost_details\":{\"upstream_inference_cost\":0.04088,\"upstream_inference_prompt_cost\":0.01166,\"upstream_inference_completions_cost\":0.02922}},\"provider\":\"Alibaba\"}"
+}

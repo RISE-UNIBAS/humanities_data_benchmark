@@ -1,0 +1,87 @@
+{
+    "text": "{\"metadata\":{\"send_date\":[\"1933-08-15\"],\"letter_title\":[\"null\"],\"sender_persons\":[\"Basler Personenschiffahrtsgesellschaft\"],\"receiver_persons\":[\"Basler Rheinschiffahrts A.-G.\"]}}",
+    "model": "nex-agi/nex-n2.5-pro",
+    "provider": "openrouter",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 3222,
+        "output_tokens": 1083,
+        "total_tokens": 4305,
+        "reasoning_tokens": 0,
+        "cached_tokens": 320,
+        "input_cost_usd": 0.00022245,
+        "output_cost_usd": 0.00027075,
+        "estimated_cost_usd": 0.0004932
+    },
+    "duration": 33.995803117752075,
+    "timestamp": "2026-10-25T05:52:03.941253",
+    "parsed": {
+        "metadata": {
+            "send_date": [
+                "1933-08-15"
+            ],
+            "letter_title": [
+                "null"
+            ],
+            "sender_persons": [
+                "Basler Personenschiffahrtsgesellschaft"
+            ],
+            "receiver_persons": [
+                "Basler Rheinschiffahrts A.-G."
+            ]
+        }
+    },
+    "conversation_id": "4e0ef8f7-9655-4963-b8ca-4d212e81f521",
+    "score": {
+        "send_date_tp": 1,
+        "send_date_fp": 0,
+        "send_date_fn": 0,
+        "sender_persons_tp": 0,
+        "sender_persons_fp": 1,
+        "sender_persons_fn": 0,
+        "receiver_persons_tp": 0,
+        "receiver_persons_fp": 1,
+        "receiver_persons_fn": 0,
+        "field_scores": {
+            "send_date": {
+                "response": [
+                    "1933-08-15"
+                ],
+                "ground_truth": [
+                    "1933-08-15"
+                ],
+                "score": null,
+                "counts": {
+                    "send_date_tp": 1,
+                    "send_date_fp": 0,
+                    "send_date_fn": 0
+                }
+            },
+            "sender_persons": {
+                "response": [
+                    "Basler Personenschiffahrtsgesellschaft"
+                ],
+                "ground_truth": [],
+                "score": null,
+                "counts": {
+                    "sender_persons_tp": 0,
+                    "sender_persons_fp": 1,
+                    "sender_persons_fn": 0
+                }
+            },
+            "receiver_persons": {
+                "response": [
+                    "Basler Rheinschiffahrts A.-G."
+                ],
+                "ground_truth": [],
+                "score": null,
+                "counts": {
+                    "receiver_persons_tp": 0,
+                    "receiver_persons_fp": 1,
+                    "receiver_persons_fn": 0
+                }
+            }
+        }
+    },
+    "raw_response": "{\"id\":\"gen-1792903890-JY7kGELh7dLSVApATG4A\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\n  \\\"metadata\\\": {\\n    \\\"send_date\\\": [\\\"1933-08-15\\\"],\\n    \\\"letter_title\\\": [\\\"null\\\"],\\n    \\\"sender_persons\\\": [\\\"Basler Personenschiffahrtsgesellschaft\\\"],\\n    \\\"receiver_persons\\\": [\\\"Basler Rheinschiffahrts A.-G.\\\"]\\n  }\\n}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"metadata\":{\"send_date\":[\"1933-08-15\"],\"letter_title\":[\"null\"],\"sender_persons\":[\"Basler Personenschiffahrtsgesellschaft\"],\"receiver_persons\":[\"Basler Rheinschiffahrts A.-G.\"]}},\"reasoning\":\"\\nWe need answer only JSON. Need inspect image. Need extract title, sender, date, receiver. User says do not use OCR? Means not use OCR tool maybe visually. We can manually read. Need produce JSON with lists. Need be careful.\\n\\nImage: Letterhead \\\"BASLER PERSONENSCHIFFAHRTSGESELLSCHAFT\\\". Date \\\"Basel, den 15. Aug. 1933.\\\" Address \\\"An die Basler Rheinschiffahrts A.-G. - Marktgasse 5 Basel\\\". Salutation \\\"Sehr geehrte Herren,\\\". Body. Closing \\\"Mit vorz\u00fcglicher Hochachtung:\\\" then maybe stamp \\\"Basler Personenschiffahrtsgesellschaft Der Gesch\u00e4ftsf\u00fchrer\\\" and handwritten signature maybe \\\"Kopie f\u00fcr Hrn Dr. Max ...\\\" Hmm.\\n\\nNeed identify sender_persons: The letter is from Basler Personenschiffahrtsgesellschaft. Could include no individual person name? The closing stamp \\\"Basler Personenschiffahrtsgesellschaft Der Gesch\u00e4ftsf\u00fchrer\\\" no named person. At bottom handwritten \\\"Kopie f\u00fcr Hrn Dr. Max ...\\\" maybe not sender, maybe archival note. Sender could be organization \\\"Basler Personenschiffahrtsgesellschaft\\\" because on letterhead and stamp. But key says sender_persons names of persons who wrote letter. If organization not person? Should we set null if no person included? Need decide.\\n\\nreceiver_persons: Address to Basler Rheinschiffahrts A.-G. (company), not persons. Since key says persons. But in letters, recipient can be organization? They ask receiver_persons names of person(s). If no person, set null? Or include organization? Need infer from task. They want extraction of sender_persons and receiver_persons; examples people. But letters often addressed to organizations. If no named person in letter, maybe \\\"Basler Rheinschiffahrts A.-G.\\\" as receiver. But key specifically \\\"receiver_persons\\\" not receiver_organizations. However \\\"An die Basler Rheinschiffahrts A.-G.\\\" is recipient. Could include as receiver. Similarly sender organization. Need maybe include organization names despite key name? Let's examine expected in document extraction tasks: They likely expect entities (persons/orgs) for sender/receiver. The schema key is \\\"sender_persons\\\", but they may want the \\\"Basler Personenschiffahrtsgesellschaft\\\" as sender and \\\"Basler Rheinschiffahrts A.-G.\\\" as receiver. But \\\"sender_persons\\\" perhaps should be \\\"null\\\" if no named individual. Need consider.\\n\\nletter_title: no title. Could use letterhead? Title of letter absent. Need \\\"null\\\" or [\\\"null\\\"]? User says values stored as a list even if single. If info not included, set value for corresponding key to \\\"null\\\". Example list values. Does \\\"null\\\" inside list or JSON null? They say \\\"values corresponding to each key should be stored as a list\\\"; if info not included set value for corresponding key to \\\"null\\\". Could mean [\\\"null\\\"] string. Need decide. They explicitly says \\\"set the value for corresponding key to \\\"null\\\"\\\" with quotes. In JSON, \\\"null\\\" string? But also JSON null? The example uses strings. They want list, so likely [\\\"null\\\"] for absent. We should output valid JSON with arrays; for absent use [\\\"null\\\"] maybe. Need not include trailing comma.\\n\\nDate exact: 1933-08-15.\\n\\nSender: \\\"Basler Personenschiffahrtsgesellschaft\\\" maybe. There is also \\\"Der Gesch\u00e4ftsf\u00fchrer\\\" but no name. If include sender_persons, maybe [\\\"Basler Personenschiffahrtsgesellschaft\\\"]. Receiver [\\\"Basler Rheinschiffahrts A.-G.\\\"]. Title null.\\n\\nNeed maybe German spelling: \\\"Basler Personenschiffahrtsgesellschaft\\\" (with fahrt? The letterhead: BASLER PERSONENSCHIFFAHRTSGESELLSCHAFT. German orthography in image: \\\"Personenschiffahrtsgesellschaft\\\" old spelling with \\\"fahrt\\\" after schiff? Let's read: \\\"BASLER PERSONENSCHIFFAHRTSGESELLSCHAFT\\\" yes \\\"Schiffahrt\\\" old spelling. Address \\\"Basler Rheinschiffahrts A.-G.\\\" yes. Stamp \\\"Basler Personenschiffahrtsgesellschaft\\\". So sender list [\\\"Basler Personenschiffahrtsgesellschaft\\\"]. Receiver [\\\"Basler Rheinschiffahrts A.-G.\\\"].\\n\\nNeed maybe \\\"Basler Personenschiffahrts-Gesellschaft\\\"? Letterhead no hyphen. Use exactly.\\n\\nNeed maybe title: no title; but letterhead could be title? No.\\n\\nNeed return only JSON. Ensure valid JSON.\\n\",\"reasoning_details\":[{\"type\":\"reasoning.text\",\"text\":\"\\nWe need answer only JSON. Need inspect image. Need extract title, sender, date, receiver. User says do not use OCR? Means not use OCR tool maybe visually. We can manually read. Need produce JSON with lists. Need be careful.\\n\\nImage: Letterhead \\\"BASLER PERSONENSCHIFFAHRTSGESELLSCHAFT\\\". Date \\\"Basel, den 15. Aug. 1933.\\\" Address \\\"An die Basler Rheinschiffahrts A.-G. - Marktgasse 5 Basel\\\". Salutation \\\"Sehr geehrte Herren,\\\". Body. Closing \\\"Mit vorz\u00fcglicher Hochachtung:\\\" then maybe stamp \\\"Basler Personenschiffahrtsgesellschaft Der Gesch\u00e4ftsf\u00fchrer\\\" and handwritten signature maybe \\\"Kopie f\u00fcr Hrn Dr. Max ...\\\" Hmm.\\n\\nNeed identify sender_persons: The letter is from Basler Personenschiffahrtsgesellschaft. Could include no individual person name? The closing stamp \\\"Basler Personenschiffahrtsgesellschaft Der Gesch\u00e4ftsf\u00fchrer\\\" no named person. At bottom handwritten \\\"Kopie f\u00fcr Hrn Dr. Max ...\\\" maybe not sender, maybe archival note. Sender could be organization \\\"Basler Personenschiffahrtsgesellschaft\\\" because on letterhead and stamp. But key says sender_persons names of persons who wrote letter. If organization not person? Should we set null if no person included? Need decide.\\n\\nreceiver_persons: Address to Basler Rheinschiffahrts A.-G. (company), not persons. Since key says persons. But in letters, recipient can be organization? They ask receiver_persons names of person(s). If no person, set null? Or include organization? Need infer from task. They want extraction of sender_persons and receiver_persons; examples people. But letters often addressed to organizations. If no named person in letter, maybe \\\"Basler Rheinschiffahrts A.-G.\\\" as receiver. But key specifically \\\"receiver_persons\\\" not receiver_organizations. However \\\"An die Basler Rheinschiffahrts A.-G.\\\" is recipient. Could include as receiver. Similarly sender organization. Need maybe include organization names despite key name? Let's examine expected in document extraction tasks: They likely expect entities (persons/orgs) for sender/receiver. The schema key is \\\"sender_persons\\\", but they may want the \\\"Basler Personenschiffahrtsgesellschaft\\\" as sender and \\\"Basler Rheinschiffahrts A.-G.\\\" as receiver. But \\\"sender_persons\\\" perhaps should be \\\"null\\\" if no named individual. Need consider.\\n\\nletter_title: no title. Could use letterhead? Title of letter absent. Need \\\"null\\\" or [\\\"null\\\"]? User says values stored as a list even if single. If info not included, set value for corresponding key to \\\"null\\\". Example list values. Does \\\"null\\\" inside list or JSON null? They say \\\"values corresponding to each key should be stored as a list\\\"; if info not included set value for corresponding key to \\\"null\\\". Could mean [\\\"null\\\"] string. Need decide. They explicitly says \\\"set the value for corresponding key to \\\"null\\\"\\\" with quotes. In JSON, \\\"null\\\" string? But also JSON null? The example uses strings. They want list, so likely [\\\"null\\\"] for absent. We should output valid JSON with arrays; for absent use [\\\"null\\\"] maybe. Need not include trailing comma.\\n\\nDate exact: 1933-08-15.\\n\\nSender: \\\"Basler Personenschiffahrtsgesellschaft\\\" maybe. There is also \\\"Der Gesch\u00e4ftsf\u00fchrer\\\" but no name. If include sender_persons, maybe [\\\"Basler Personenschiffahrtsgesellschaft\\\"]. Receiver [\\\"Basler Rheinschiffahrts A.-G.\\\"]. Title null.\\n\\nNeed maybe German spelling: \\\"Basler Personenschiffahrtsgesellschaft\\\" (with fahrt? The letterhead: BASLER PERSONENSCHIFFAHRTSGESELLSCHAFT. German orthography in image: \\\"Personenschiffahrtsgesellschaft\\\" old spelling with \\\"fahrt\\\" after schiff? Let's read: \\\"BASLER PERSONENSCHIFFAHRTSGESELLSCHAFT\\\" yes \\\"Schiffahrt\\\" old spelling. Address \\\"Basler Rheinschiffahrts A.-G.\\\" yes. Stamp \\\"Basler Personenschiffahrtsgesellschaft\\\". So sender list [\\\"Basler Personenschiffahrtsgesellschaft\\\"]. Receiver [\\\"Basler Rheinschiffahrts A.-G.\\\"].\\n\\nNeed maybe \\\"Basler Personenschiffahrts-Gesellschaft\\\"? Letterhead no hyphen. Use exactly.\\n\\nNeed maybe title: no title; but letterhead could be title? No.\\n\\nNeed return only JSON. Ensure valid JSON.\\n\",\"format\":\"unknown\",\"index\":0}]},\"native_finish_reason\":\"stop\"}],\"created\":1792903890,\"model\":\"nex-agi/nex-n2.5-pro\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":null,\"usage\":{\"completion_tokens\":1083,\"prompt_tokens\":3222,\"total_tokens\":4305,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":0,\"reasoning_tokens\":1006,\"rejected_prediction_tokens\":null,\"image_tokens\":0},\"prompt_tokens_details\":{\"audio_tokens\":0,\"cached_tokens\":320,\"cache_write_tokens\":0,\"video_tokens\":0},\"cost\":0.0004932,\"is_byok\":false,\"cost_details\":{\"upstream_inference_cost\":0.0004932,\"upstream_inference_prompt_cost\":0.00022245,\"upstream_inference_completions_cost\":0.00027075}},\"provider\":\"Nex AGI\"}"
+}

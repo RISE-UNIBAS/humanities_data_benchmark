@@ -391,7 +391,7 @@ To rebuild this dataset, use the source repository at the commit recorded in
 `manifest.json`, with the recorded inputs and dependencies. Run from the repository root:
 
 ```console
-python -m scripts.ndr_export.generate_compare_detail
+python -m scripts.compare.generate_compare_detail
 python -m scripts.export_dataset --dataset-version {version}
 ```
 

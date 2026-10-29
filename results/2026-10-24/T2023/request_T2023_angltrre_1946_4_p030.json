@@ -1,0 +1,58 @@
+{
+    "text": "{\"advertisements\":[{\"box\":[332.0,2832.0,2248.0,3146.0]}]}",
+    "model": "nvidia/nemotron-3.5-super-vl",
+    "provider": "openrouter",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 3118,
+        "output_tokens": 1119,
+        "total_tokens": 4237,
+        "reasoning_tokens": 0,
+        "input_cost_usd": 0.0004677,
+        "output_cost_usd": 0.0005595,
+        "estimated_cost_usd": 0.0010272
+    },
+    "duration": 10.484411716461182,
+    "timestamp": "2026-10-24T21:12:15.021393",
+    "parsed": {
+        "advertisements": [
+            {
+                "box": [
+                    332.0,
+                    2832.0,
+                    2248.0,
+                    3146.0
+                ]
+            }
+        ]
+    },
+    "conversation_id": "80b3baf0-771d-482a-a104-61f0fba840ec",
+    "score": {
+        "field_scores": {
+            "box 0": {
+                "response": [
+                    332.0,
+                    2832.0,
+                    2248.0,
+                    3146.0
+                ],
+                "ground_truth": [
+                    314,
+                    2805,
+                    2279,
+                    3218
+                ],
+                "score": 0.741
+            }
+        },
+        "f1": 1.0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "mean_iou": 0.741,
+        "true_positives": 1,
+        "false_positives": 0,
+        "false_negatives": 0,
+        "iou_threshold": 0.5
+    },
+    "raw_response": "{\"id\":\"gen-1792869124-JQP9zafzujzQSZ80sVIa\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\n    \\\"advertisements\\\": [\\n        {\\\"box\\\": [332, 2832, 2248, 3146]}\\n    ]\\n}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"advertisements\":[{\"box\":[332.0,2832.0,2248.0,3146.0]}]},\"reasoning\":\"The user wants me to identify and extract bounding boxes for advertisements in the provided image.\\n\\n1.  **Analyze the image:** The image is a scanned page from a magazine or journal. It contains several columns of text.\\n2.  **Scan for advertisements:** I need to look for visual cues that distinguish an ad from regular editorial content.\\n    *   Most of the page is dense text with headers like \\\"BRITAIN LEADS AT DUTCH FAIR\\\", \\\"MOST VERSATILE TRACTOR\\\", \\\"ENGINEERING INDUSTRIES ASSOCIATION\\\", \\\"BRITAIN'S BUDGET\\\". These look like articles.\\n    *   At the bottom, there is a distinct box separated by a border.\\n    *   Inside the box, there is a large script title \\\"Modern Printing\\\".\\n    *   Below that, \\\"VOGT-SCHILD Ltd., PRINTERS, SOLEURE\\\".\\n    *   To the right, there is a block of text: \\\"Our staff and machinery are at the service of all our clients...\\\". This is clearly an advertisement for a printing company.\\n\\n3.  **Determine the bounding box:**\\n    *   The ad is located at the bottom of the page.\\n    *   It spans across the width of the text columns, roughly from the left margin to the right margin of the text area.\\n    *   Let's estimate coordinates based on the image size (2479 x 3508).\\n    *   Top edge (y0): Just below the last paragraph of the main text column on the left (\\\"...towards freer economy.\\\"). It looks like it starts around y=2800. Wait, let's look closer. The box starts a bit lower. Let's trace the lines.\\n    *   The box seems to start around y=2830.\\n    *   Left edge (x0): It aligns with the left column text start. Around x=330.\\n    *   Right edge (x1): It aligns with the right column text end. Around x=2250.\\n    *   Bottom edge (y1): It ends just above the page number \\\"140\\\". Around y=3150.\\n\\n    Let's refine the box.\\n    The box contains \\\"Modern Printing\\\" and the Vogt-Schild text.\\n    y0: The top border line is visible. It's below the text \\\"The United Kingdom came out of the war...\\\". Let's say around 2830.\\n    x0: The left border line. Around 330.\\n    x1: The right border line. Around 2250.\\n    y1: The bottom border line. Around 3150.\\n\\n    Let's check if there are other ads.\\n    - Top left column: Text about token imports. Not an ad.\\n    - Top right column: \\\"BRITAIN LEADS AT DUTCH FAIR\\\". Article.\\n    - Middle right: \\\"MOST VERSATILE TRACTOR\\\". Article about Nuffield tractor. Could be promotional, but reads like a news article (\\\"A new tractor claimed to possess...\\\"). Usually, these are editorial unless clearly marked as an ad. It lacks a company logo or call to action typical of ads.\\n    - Bottom right: \\\"ENGINEERING INDUSTRIES ASSOCIATION\\\". Article.\\n    - Bottom right corner: \\\"BRITAIN'S BUDGET\\\". Article.\\n\\n    So, only the bottom box is a clear advertisement.\\n\\n    Coordinates estimation:\\n    Image width: 2479. Image height: 3508.\\n    The box is at the bottom.\\n    y0: ~2830\\n    x0: ~330\\n    x1: ~2250\\n    y1: ~3150\\n\\n    Let's look at the \\\"Modern Printing\\\" box specifically.\\n    Top border: Just below the text block ending with \\\"freer economy.\\\"\\n    Left border: Aligned with left text column.\\n    Right border: Aligned with right text column.\\n    Bottom border: Above page number 140.\\n\\n    Let's try to be precise.\\n    y0: 2832\\n    x0: 332\\n    x1: 2248\\n    y1: 3146\\n\\n    Wait, is the \\\"Most Versatile Tractor\\\" section an ad? It talks about Nuffield Motorcar Organisation. It reads like a press release or news item. \\\"A new tractor claimed to possess...\\\". It doesn't have the visual distinctiveness of the bottom box. I will stick to just the bottom box as the definitive advertisement.\\n\\n    Let's re-verify the coordinates.\\n    The page number 140 is at the bottom left.\\n    The box is above it.\\n    The box spans the full width of the text area.\\n    Left x: ~330.\\n    Right x: ~2250.\\n    Top y: ~2830.\\n    Bottom y: ~3150.\\n\\n    Let's format the JSON.\",\"reasoning_details\":[{\"type\":\"reasoning.text\",\"text\":\"The user wants me to identify and extract bounding boxes for advertisements in the provided image.\\n\\n1.  **Analyze the image:** The image is a scanned page from a magazine or journal. It contains several columns of text.\\n2.  **Scan for advertisements:** I need to look for visual cues that distinguish an ad from regular editorial content.\\n    *   Most of the page is dense text with headers like \\\"BRITAIN LEADS AT DUTCH FAIR\\\", \\\"MOST VERSATILE TRACTOR\\\", \\\"ENGINEERING INDUSTRIES ASSOCIATION\\\", \\\"BRITAIN'S BUDGET\\\". These look like articles.\\n    *   At the bottom, there is a distinct box separated by a border.\\n    *   Inside the box, there is a large script title \\\"Modern Printing\\\".\\n    *   Below that, \\\"VOGT-SCHILD Ltd., PRINTERS, SOLEURE\\\".\\n    *   To the right, there is a block of text: \\\"Our staff and machinery are at the service of all our clients...\\\". This is clearly an advertisement for a printing company.\\n\\n3.  **Determine the bounding box:**\\n    *   The ad is located at the bottom of the page.\\n    *   It spans across the width of the text columns, roughly from the left margin to the right margin of the text area.\\n    *   Let's estimate coordinates based on the image size (2479 x 3508).\\n    *   Top edge (y0): Just below the last paragraph of the main text column on the left (\\\"...towards freer economy.\\\"). It looks like it starts around y=2800. Wait, let's look closer. The box starts a bit lower. Let's trace the lines.\\n    *   The box seems to start around y=2830.\\n    *   Left edge (x0): It aligns with the left column text start. Around x=330.\\n    *   Right edge (x1): It aligns with the right column text end. Around x=2250.\\n    *   Bottom edge (y1): It ends just above the page number \\\"140\\\". Around y=3150.\\n\\n    Let's refine the box.\\n    The box contains \\\"Modern Printing\\\" and the Vogt-Schild text.\\n    y0: The top border line is visible. It's below the text \\\"The United Kingdom came out of the war...\\\". Let's say around 2830.\\n    x0: The left border line. Around 330.\\n    x1: The right border line. Around 2250.\\n    y1: The bottom border line. Around 3150.\\n\\n    Let's check if there are other ads.\\n    - Top left column: Text about token imports. Not an ad.\\n    - Top right column: \\\"BRITAIN LEADS AT DUTCH FAIR\\\". Article.\\n    - Middle right: \\\"MOST VERSATILE TRACTOR\\\". Article about Nuffield tractor. Could be promotional, but reads like a news article (\\\"A new tractor claimed to possess...\\\"). Usually, these are editorial unless clearly marked as an ad. It lacks a company logo or call to action typical of ads.\\n    - Bottom right: \\\"ENGINEERING INDUSTRIES ASSOCIATION\\\". Article.\\n    - Bottom right corner: \\\"BRITAIN'S BUDGET\\\". Article.\\n\\n    So, only the bottom box is a clear advertisement.\\n\\n    Coordinates estimation:\\n    Image width: 2479. Image height: 3508.\\n    The box is at the bottom.\\n    y0: ~2830\\n    x0: ~330\\n    x1: ~2250\\n    y1: ~3150\\n\\n    Let's look at the \\\"Modern Printing\\\" box specifically.\\n    Top border: Just below the text block ending with \\\"freer economy.\\\"\\n    Left border: Aligned with left text column.\\n    Right border: Aligned with right text column.\\n    Bottom border: Above page number 140.\\n\\n    Let's try to be precise.\\n    y0: 2832\\n    x0: 332\\n    x1: 2248\\n    y1: 3146\\n\\n    Wait, is the \\\"Most Versatile Tractor\\\" section an ad? It talks about Nuffield Motorcar Organisation. It reads like a press release or news item. \\\"A new tractor claimed to possess...\\\". It doesn't have the visual distinctiveness of the bottom box. I will stick to just the bottom box as the definitive advertisement.\\n\\n    Let's re-verify the coordinates.\\n    The page number 140 is at the bottom left.\\n    The box is above it.\\n    The box spans the full width of the text area.\\n    Left x: ~330.\\n    Right x: ~2250.\\n    Top y: ~2830.\\n    Bottom y: ~3150.\\n\\n    Let's format the JSON.\",\"format\":\"unknown\",\"index\":0}]},\"native_finish_reason\":\"stop\"}],\"created\":1792869124,\"model\":\"nvidia/nemotron-3.5-super-vl\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":null,\"usage\":{\"completion_tokens\":1119,\"prompt_tokens\":3118,\"total_tokens\":4237,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":0,\"reasoning_tokens\":1083,\"rejected_prediction_tokens\":null,\"image_tokens\":0},\"prompt_tokens_details\":{\"audio_tokens\":0,\"cached_tokens\":0,\"cache_write_tokens\":0,\"video_tokens\":0},\"cost\":0.0010272,\"is_byok\":false,\"cost_details\":{\"upstream_inference_cost\":0.0010272,\"upstream_inference_prompt_cost\":0.0004677,\"upstream_inference_completions_cost\":0.0005595}},\"provider\":\"CoreWeave\"}"
+}

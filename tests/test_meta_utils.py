@@ -1,4 +1,4 @@
-"""`meta_utils.load_json` and `get_meta`, whose stdout is part of their contract.
+"""`scripts.compare.load_json` and `get_meta`, whose stdout is part of their contract.
 
 Both now sit on `results_index.read_json`, which is silent and returns a status. The
 messages stayed behind, because a generator that cannot parse a file says so on stdout and
@@ -14,7 +14,7 @@ Run with the rest of the logic-only suite: pytest -m "not integrity".
 """
 import pytest
 
-from scripts.ndr_export.meta_utils import get_meta, load_json
+from scripts.compare import get_meta, load_json
 
 
 def test_load_json_returns_the_decoded_value_and_says_nothing(tmp_path, capsys):
@@ -66,10 +66,10 @@ def benchmarks_dir(tmp_path, monkeypatch):
     """Point both modules' BENCHMARKS_PATH at a scratch tree.
 
     `benchmark_meta` reads the constant at call time, and `get_meta` builds the path it
-    prints from `ndr_export`'s copy, so both have to move together.
+    prints from `scripts.compare`'s copy, so both have to move together.
     """
     monkeypatch.setattr("scripts.results_index.BENCHMARKS_PATH", tmp_path)
-    monkeypatch.setattr("scripts.ndr_export.meta_utils.BENCHMARKS_PATH", tmp_path)
+    monkeypatch.setattr("scripts.compare.BENCHMARKS_PATH", tmp_path)
     return tmp_path
 
 

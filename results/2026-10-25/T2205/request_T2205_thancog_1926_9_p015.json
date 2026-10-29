@@ -1,0 +1,82 @@
+{
+    "text": "{\"advertisements\":[{\"box\":[181.0,320.0,2092.0,1670.0]},{\"box\":[181.0,1693.0,2092.0,3096.0]}]}",
+    "model": "nex-agi/nex-n2.5-mini",
+    "provider": "openrouter",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 3060,
+        "output_tokens": 1216,
+        "total_tokens": 4276,
+        "reasoning_tokens": 0,
+        "cached_tokens": 128,
+        "input_cost_usd": 7.362e-05,
+        "output_cost_usd": 0.0001216,
+        "estimated_cost_usd": 0.00019522
+    },
+    "duration": 15.302244663238525,
+    "timestamp": "2026-10-25T04:40:07.244851",
+    "parsed": {
+        "advertisements": [
+            {
+                "box": [
+                    181.0,
+                    320.0,
+                    2092.0,
+                    1670.0
+                ]
+            },
+            {
+                "box": [
+                    181.0,
+                    1693.0,
+                    2092.0,
+                    3096.0
+                ]
+            }
+        ]
+    },
+    "conversation_id": "7e88991a-37a9-41ea-96bb-ff240302cea2",
+    "score": {
+        "field_scores": {
+            "box 0": {
+                "response": [
+                    181.0,
+                    320.0,
+                    2092.0,
+                    1670.0
+                ],
+                "ground_truth": [
+                    179,
+                    321,
+                    2175,
+                    1730
+                ],
+                "score": 0.916
+            },
+            "box 1": {
+                "response": [
+                    181.0,
+                    1693.0,
+                    2092.0,
+                    3096.0
+                ],
+                "ground_truth": [
+                    179,
+                    1765,
+                    2163,
+                    3165
+                ],
+                "score": 0.873
+            }
+        },
+        "f1": 1.0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "mean_iou": 0.894,
+        "true_positives": 2,
+        "false_positives": 0,
+        "false_negatives": 0,
+        "iou_threshold": 0.5
+    },
+    "raw_response": "{\"id\":\"gen-1792899592-AKNWVzGh7HEo4YKdBH0k\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\n  \\\"advertisements\\\": [\\n    {\\n      \\\"box\\\": [181, 320, 2092, 1670]\\n    },\\n    {\\n      \\\"box\\\": [181, 1693, 2092, 3096]\\n    }\\n  ]\\n}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"advertisements\":[{\"box\":[181.0,320.0,2092.0,1670.0]},{\"box\":[181.0,1693.0,2092.0,3096.0]}]},\"reasoning\":\"\\nWe need answer only JSON object with bounding boxes of advertisements. Need inspect image. Need identify ad regions. Page 2479x3508. There are two main advertisements: top large British Industry-Messe 1927 ad from approx x=181? to 2088? y=319? to 1670? maybe. bottom application form ad from x=183? y=1693? to 2084? y=3095? Need exact enough. Need return boxes [x0,y0,x1,y1]. Need not include header page. Need maybe include left partial side? User asks extract all advertisements on page. Main page has two boxed advertisements. Need bounding boxes in original pixel coordinates.\\n\\nNeed determine coordinates from image. Need use visual. Let's parse.\\n\\nImage dimensions 2479 x 3508. The page visible from x around 74 to 2279? The ad content boxes. Need identify outer rectangle bounds.\\n\\nTop ad: Outer double border. Coordinates:\\nLeft outer border vertical at maybe x=180? right at x=2092? top at y=320? bottom at y=1668? The top ad includes border around large area. It starts after header at y=318? and ends y=1670. The bottom border maybe y=1670. Outer left x=180, right x=2090. Need estimate.\\n\\nBottom ad: Outer border at x=181? y=1693? x1=2092? y1=3096? It includes note and border. Need maybe y=1693 top, y=3096 bottom.\\n\\nNeed answer JSON only. But let's think if top ad has internal dotted boxes. Are those advertisements? The prompt: extract all advertisements. The whole top is one ad, bottom is one ad. Could internal boxes be considered separate ads? They are sections within top ad, not separate. Return two boxes.\\n\\nNeed maybe include ad from top with two sections? The top is an announcement for British Industry-Messe, includes buyer boxes. The bottom is application form. They are advertisements? Yes.\\n\\nNeed produce exact format.\\n\\nLet's refine coordinates.\\n\\nLet's inspect image coordinate geometry. Original 2479x3508. The page starts at x ~74, y=161? top of page. Header at y=227? There is a horizontal line at y=270? The top ad begins at y=320? Let's approximate from image.\\n\\nMaybe can infer from actual page layout. The top ad outer rectangle:\\n- x left: 181 (thin outer border). There is outer black line width maybe 10? The box interior starts x=193. Outer border left at x=181, right at x=2093.\\n- y top: 320 (outer line). y bottom: 1669.\\n\\nBottom ad outer rectangle:\\n- x left: 181? right: 2091? y top: 1693? y bottom: 3096? The bottom ad's top border is at y=1692? There is gap between top ad bottom and bottom ad top about 23 px. Top ad bottom outer line at y=1669; bottom ad top at y=1693.\\n\\nNeed maybe include only visible ad rectangles excluding page border? yes.\\n\\nLet's see if there is an advertisement in the left margin? At far left, a partial page from adjacent page with text, not advertisement? It is not on this page. Ignore.\\n\\nNeed maybe include top header? no.\\n\\nLet's ensure JSON valid. Coordinates integer. Use [181, 320, 2092, 1670] and [181, 1693, 2092, 3096].\\n\\nNeed maybe x1 not inclusive? Usually bounding boxes top-left bottom-right. Use outer border.\\n\\nLet's consider if top ad's top-left is (180, 319), bottom-right (2092, 1671). The image is 2479x3508; top ad width about 1910 px. The page width visible from x=74 to x=2280. The ad is centered, margin 106 px. x=180 to 2092 width 1912. Good.\\n\\nBottom ad maybe same x.\\n\\nLet's maybe use [181, 320, 2091, 1670] and [181, 1693, 2091, 3096]. The exact border line may be 10 px thick; x1 should be outer edge. If left border at 181, right border at 2091. Use x1=2092? Need not exact.\\n\\nNeed final only JSON.\",\"reasoning_details\":[{\"type\":\"reasoning.text\",\"text\":\"\\nWe need answer only JSON object with bounding boxes of advertisements. Need inspect image. Need identify ad regions. Page 2479x3508. There are two main advertisements: top large British Industry-Messe 1927 ad from approx x=181? to 2088? y=319? to 1670? maybe. bottom application form ad from x=183? y=1693? to 2084? y=3095? Need exact enough. Need return boxes [x0,y0,x1,y1]. Need not include header page. Need maybe include left partial side? User asks extract all advertisements on page. Main page has two boxed advertisements. Need bounding boxes in original pixel coordinates.\\n\\nNeed determine coordinates from image. Need use visual. Let's parse.\\n\\nImage dimensions 2479 x 3508. The page visible from x around 74 to 2279? The ad content boxes. Need identify outer rectangle bounds.\\n\\nTop ad: Outer double border. Coordinates:\\nLeft outer border vertical at maybe x=180? right at x=2092? top at y=320? bottom at y=1668? The top ad includes border around large area. It starts after header at y=318? and ends y=1670. The bottom border maybe y=1670. Outer left x=180, right x=2090. Need estimate.\\n\\nBottom ad: Outer border at x=181? y=1693? x1=2092? y1=3096? It includes note and border. Need maybe y=1693 top, y=3096 bottom.\\n\\nNeed answer JSON only. But let's think if top ad has internal dotted boxes. Are those advertisements? The prompt: extract all advertisements. The whole top is one ad, bottom is one ad. Could internal boxes be considered separate ads? They are sections within top ad, not separate. Return two boxes.\\n\\nNeed maybe include ad from top with two sections? The top is an announcement for British Industry-Messe, includes buyer boxes. The bottom is application form. They are advertisements? Yes.\\n\\nNeed produce exact format.\\n\\nLet's refine coordinates.\\n\\nLet's inspect image coordinate geometry. Original 2479x3508. The page starts at x ~74, y=161? top of page. Header at y=227? There is a horizontal line at y=270? The top ad begins at y=320? Let's approximate from image.\\n\\nMaybe can infer from actual page layout. The top ad outer rectangle:\\n- x left: 181 (thin outer border). There is outer black line width maybe 10? The box interior starts x=193. Outer border left at x=181, right at x=2093.\\n- y top: 320 (outer line). y bottom: 1669.\\n\\nBottom ad outer rectangle:\\n- x left: 181? right: 2091? y top: 1693? y bottom: 3096? The bottom ad's top border is at y=1692? There is gap between top ad bottom and bottom ad top about 23 px. Top ad bottom outer line at y=1669; bottom ad top at y=1693.\\n\\nNeed maybe include only visible ad rectangles excluding page border? yes.\\n\\nLet's see if there is an advertisement in the left margin? At far left, a partial page from adjacent page with text, not advertisement? It is not on this page. Ignore.\\n\\nNeed maybe include top header? no.\\n\\nLet's ensure JSON valid. Coordinates integer. Use [181, 320, 2092, 1670] and [181, 1693, 2092, 3096].\\n\\nNeed maybe x1 not inclusive? Usually bounding boxes top-left bottom-right. Use outer border.\\n\\nLet's consider if top ad's top-left is (180, 319), bottom-right (2092, 1671). The image is 2479x3508; top ad width about 1910 px. The page width visible from x=74 to x=2280. The ad is centered, margin 106 px. x=180 to 2092 width 1912. Good.\\n\\nBottom ad maybe same x.\\n\\nLet's maybe use [181, 320, 2091, 1670] and [181, 1693, 2091, 3096]. The exact border line may be 10 px thick; x1 should be outer edge. If left border at 181, right border at 2091. Use x1=2092? Need not exact.\\n\\nNeed final only JSON.\",\"format\":\"unknown\",\"index\":0}]},\"native_finish_reason\":\"stop\"}],\"created\":1792899592,\"model\":\"nex-agi/nex-n2.5-mini\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":null,\"usage\":{\"completion_tokens\":1216,\"prompt_tokens\":3060,\"total_tokens\":4276,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":0,\"reasoning_tokens\":883,\"rejected_prediction_tokens\":null,\"image_tokens\":0},\"prompt_tokens_details\":{\"audio_tokens\":0,\"cached_tokens\":128,\"cache_write_tokens\":0,\"video_tokens\":0},\"cost\":0.00019522,\"is_byok\":false,\"cost_details\":{\"upstream_inference_cost\":0.00019522,\"upstream_inference_prompt_cost\":0.00007362,\"upstream_inference_completions_cost\":0.0001216}},\"provider\":\"Nex AGI\"}"
+}

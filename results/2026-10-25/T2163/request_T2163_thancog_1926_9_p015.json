@@ -1,0 +1,81 @@
+{
+    "text": "{\"advertisements\":[{\"box\":[188.0,337.0,2156.0,1718.0]},{\"box\":[186.0,1776.0,2158.0,3157.0]}]}",
+    "model": "fireworks/ember-1",
+    "provider": "openrouter",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 4331,
+        "output_tokens": 1349,
+        "total_tokens": 5680,
+        "reasoning_tokens": 0,
+        "input_cost_usd": 0.012993,
+        "output_cost_usd": 0.020235,
+        "estimated_cost_usd": 0.033228
+    },
+    "duration": 18.552188396453857,
+    "timestamp": "2026-10-25T00:55:13.109246",
+    "parsed": {
+        "advertisements": [
+            {
+                "box": [
+                    188.0,
+                    337.0,
+                    2156.0,
+                    1718.0
+                ]
+            },
+            {
+                "box": [
+                    186.0,
+                    1776.0,
+                    2158.0,
+                    3157.0
+                ]
+            }
+        ]
+    },
+    "conversation_id": "b2775a9f-2cc7-48e5-80a5-ef234125a9b0",
+    "score": {
+        "field_scores": {
+            "box 1": {
+                "response": [
+                    186.0,
+                    1776.0,
+                    2158.0,
+                    3157.0
+                ],
+                "ground_truth": [
+                    179,
+                    1765,
+                    2163,
+                    3165
+                ],
+                "score": 0.98
+            },
+            "box 0": {
+                "response": [
+                    188.0,
+                    337.0,
+                    2156.0,
+                    1718.0
+                ],
+                "ground_truth": [
+                    179,
+                    321,
+                    2175,
+                    1730
+                ],
+                "score": 0.966
+            }
+        },
+        "f1": 1.0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "mean_iou": 0.973,
+        "true_positives": 2,
+        "false_positives": 0,
+        "false_negatives": 0,
+        "iou_threshold": 0.5
+    },
+    "raw_response": "{\"id\":\"gen-1792882494-qdPljIJIiHNWJ0Y2QPga\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\n\\\"advertisements\\\": [\\n{\\\"box\\\": [188, 337, 2156, 1718]},\\n{\\\"box\\\": [186, 1776, 2158, 3157]}\\n]\\n}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"advertisements\":[{\"box\":[188.0,337.0,2156.0,1718.0]},{\"box\":[186.0,1776.0,2158.0,3157.0]}]},\"reasoning\":\"The user wants me to extract all advertisements from the page and return their bounding boxes.\\n\\nLooking at the image, I can see:\\n1. A large advertisement at the top for \\\"Die Britische Industrie-Messe 1927\\\" (The British Industry Fair 1927) - this is clearly an advertisement with a border around it. It spans roughly from x=185 to x=2155, y=335 to y=1715.\\n\\n2. Below that, there's an \\\"APPLICATION FOR ADMISSION TO MEMBERSHIP\\\" form for the British Chamber of Commerce for Switzerland. This is a membership application form, which could be considered an advertisement or a form. It has a border around it too, spanning roughly from x=185 to x=2155, y=1775 to y=3155.\\n\\nLet me think about whether the membership application is an advertisement. It's an application form for membership in the British Chamber of Commerce. In the context of a commercial gazette, this is promotional content soliciting members, so it could be classified as an advertisement. It has a distinct border and is a self-contained promotional unit.\\n\\nThe first one is definitely an advertisement (for the British Industries Fair).\\n\\nThe second is an application for membership - it's soliciting membership/subscriptions, which is a form of advertisement. Given the context of the task (extracting advertisements from magazine pages), membership application forms like this are typically considered advertisements.\\n\\nLet me estimate coordinates more precisely.\\n\\nThe page is 2479 x 3508 pixels.\\n\\nTop advertisement (Die Britische Industrie-Messe 1927):\\n- Left border: around x=185\\n- Right border: around x=2155\\n- Top border: around y=335\\n- Bottom border: around y=1715\\n\\nLooking more carefully:\\n- The outer border starts at about x=188, y=338\\n- The right edge is at about x=2152\\n- The bottom edge of the top ad is at about y=1712\\n\\nBottom advertisement (Application for Admission to Membership):\\n- Left border: around x=185\\n- Right border: around x=2158\\n- Top border: around y=1778\\n- Bottom border: around y=3155\\n\\nLet me refine. The image shows the page with some margin. The actual page content area:\\n- The header \\\"September, 1926. THE ANGLO-SWISS COMMERCIAL GAZETTE 15\\\" is at top around y=240-270.\\n\\nFirst ad box:\\n- Top-left: The border starts around x=190, y=340\\n- The border is a thick black frame\\n- Looking at the image, left edge of frame ~188, right edge ~2155, top ~338, bottom ~1715\\n\\nSecond ad box:\\n- Top edge ~1778, bottom ~3155, left ~185, right ~2160\\n\\nLet me provide reasonable estimates.\\n\\nFor the first advertisement:\\n[188, 338, 2155, 1718]\\n\\nFor the second advertisement (membership application):\\n[185, 1775, 2160, 3158]\\n\\nActually, let me reconsider whether the membership application counts as an advertisement. The task says \\\"Extract all advertisements\\\". An application for admission to membership is a solicitation - it's asking people to join and pay subscription. In historical newspaper/magazine ad detection, such membership application forms are usually considered advertisements/notices. Given it's in a bordered box similar to the ad above, and it's promotional content for the British Chamber of Commerce, I'll include it.\\n\\nBoth bordered boxes are advertisements/promotional content. I'll return both.\\n\\nLet me finalize coordinates by looking at proportions.\\n\\nImage dimensions in the prompt: the displayed image is 1456 x 2048 roughly (based on the markdown image), but original is 2479 x 3508. The ratio is 2479/1456 = 1.7026, and 3508/2048 = 1.7129. Close enough; the displayed image might be slightly different. Let me use the original coordinates directly by estimating from the image.\\n\\nActually, the image shown has dimensions that I need to map to 2479x3508. Let me estimate based on the visual proportions.\\n\\nThe page (paper) appears to span from about x=30 to x=2390 in original coordinates (there's black background on left and right). Actually, looking at the image, the page right edge is around x=2380, left edge around x=60 (with the spine on left).\\n\\nThe ad frames:\\n- Left frame edge: The vertical line is at about 7.6% of page width. 0.076 * 2479 = 188. So x0 \u2248 188.\\n- Right frame edge: at about 86.9% of width. 0.869 * 2479 = 2154. So x1 \u2248 2154.\\n\\nTop ad:\\n- Top edge: at about 9.6% of height. 0.096 * 3508 = 337. y0 \u2248 337.\\n- Bottom edge: at about 48.9% of height. 0.489 * 3508 = 1715. y1 \u2248 1715.\\n\\nBottom ad:\\n- Top edge: at about 50.7% of height. 0.507 * 3508 = 1778. y0 \u2248 1778.\\n- Bottom edge: at about 90% of height. 0.90 * 3508 = 3157. y1 \u2248 3157.\\n\\nThese match my earlier estimates. Let me finalize.\\n\\nFirst ad: [188, 337, 2155, 1716]\\nSecond ad: [186, 1776, 2158, 3156]\\n\\nI'll round to reasonable values.\\n\\nActually, looking again at the bottom of the second box, the border bottom is at around y=3150, and there's a note inside. The outer border bottom line is around y=3155.\\n\\nLet me provide:\\n{\\\"box\\\": [190, 338, 2154, 1716]}\\n{\\\"box\\\": [188, 1778, 2156, 3155]}\\n\\nThese are good estimates.\",\"reasoning_details\":[{\"type\":\"reasoning.text\",\"text\":\"The user wants me to extract all advertisements from the page and return their bounding boxes.\\n\\nLooking at the image, I can see:\\n1. A large advertisement at the top for \\\"Die Britische Industrie-Messe 1927\\\" (The British Industry Fair 1927) - this is clearly an advertisement with a border around it. It spans roughly from x=185 to x=2155, y=335 to y=1715.\\n\\n2. Below that, there's an \\\"APPLICATION FOR ADMISSION TO MEMBERSHIP\\\" form for the British Chamber of Commerce for Switzerland. This is a membership application form, which could be considered an advertisement or a form. It has a border around it too, spanning roughly from x=185 to x=2155, y=1775 to y=3155.\\n\\nLet me think about whether the membership application is an advertisement. It's an application form for membership in the British Chamber of Commerce. In the context of a commercial gazette, this is promotional content soliciting members, so it could be classified as an advertisement. It has a distinct border and is a self-contained promotional unit.\\n\\nThe first one is definitely an advertisement (for the British Industries Fair).\\n\\nThe second is an application for membership - it's soliciting membership/subscriptions, which is a form of advertisement. Given the context of the task (extracting advertisements from magazine pages), membership application forms like this are typically considered advertisements.\\n\\nLet me estimate coordinates more precisely.\\n\\nThe page is 2479 x 3508 pixels.\\n\\nTop advertisement (Die Britische Industrie-Messe 1927):\\n- Left border: around x=185\\n- Right border: around x=2155\\n- Top border: around y=335\\n- Bottom border: around y=1715\\n\\nLooking more carefully:\\n- The outer border starts at about x=188, y=338\\n- The right edge is at about x=2152\\n- The bottom edge of the top ad is at about y=1712\\n\\nBottom advertisement (Application for Admission to Membership):\\n- Left border: around x=185\\n- Right border: around x=2158\\n- Top border: around y=1778\\n- Bottom border: around y=3155\\n\\nLet me refine. The image shows the page with some margin. The actual page content area:\\n- The header \\\"September, 1926. THE ANGLO-SWISS COMMERCIAL GAZETTE 15\\\" is at top around y=240-270.\\n\\nFirst ad box:\\n- Top-left: The border starts around x=190, y=340\\n- The border is a thick black frame\\n- Looking at the image, left edge of frame ~188, right edge ~2155, top ~338, bottom ~1715\\n\\nSecond ad box:\\n- Top edge ~1778, bottom ~3155, left ~185, right ~2160\\n\\nLet me provide reasonable estimates.\\n\\nFor the first advertisement:\\n[188, 338, 2155, 1718]\\n\\nFor the second advertisement (membership application):\\n[185, 1775, 2160, 3158]\\n\\nActually, let me reconsider whether the membership application counts as an advertisement. The task says \\\"Extract all advertisements\\\". An application for admission to membership is a solicitation - it's asking people to join and pay subscription. In historical newspaper/magazine ad detection, such membership application forms are usually considered advertisements/notices. Given it's in a bordered box similar to the ad above, and it's promotional content for the British Chamber of Commerce, I'll include it.\\n\\nBoth bordered boxes are advertisements/promotional content. I'll return both.\\n\\nLet me finalize coordinates by looking at proportions.\\n\\nImage dimensions in the prompt: the displayed image is 1456 x 2048 roughly (based on the markdown image), but original is 2479 x 3508. The ratio is 2479/1456 = 1.7026, and 3508/2048 = 1.7129. Close enough; the displayed image might be slightly different. Let me use the original coordinates directly by estimating from the image.\\n\\nActually, the image shown has dimensions that I need to map to 2479x3508. Let me estimate based on the visual proportions.\\n\\nThe page (paper) appears to span from about x=30 to x=2390 in original coordinates (there's black background on left and right). Actually, looking at the image, the page right edge is around x=2380, left edge around x=60 (with the spine on left).\\n\\nThe ad frames:\\n- Left frame edge: The vertical line is at about 7.6% of page width. 0.076 * 2479 = 188. So x0 \u2248 188.\\n- Right frame edge: at about 86.9% of width. 0.869 * 2479 = 2154. So x1 \u2248 2154.\\n\\nTop ad:\\n- Top edge: at about 9.6% of height. 0.096 * 3508 = 337. y0 \u2248 337.\\n- Bottom edge: at about 48.9% of height. 0.489 * 3508 = 1715. y1 \u2248 1715.\\n\\nBottom ad:\\n- Top edge: at about 50.7% of height. 0.507 * 3508 = 1778. y0 \u2248 1778.\\n- Bottom edge: at about 90% of height. 0.90 * 3508 = 3157. y1 \u2248 3157.\\n\\nThese match my earlier estimates. Let me finalize.\\n\\nFirst ad: [188, 337, 2155, 1716]\\nSecond ad: [186, 1776, 2158, 3156]\\n\\nI'll round to reasonable values.\\n\\nActually, looking again at the bottom of the second box, the border bottom is at around y=3150, and there's a note inside. The outer border bottom line is around y=3155.\\n\\nLet me provide:\\n{\\\"box\\\": [190, 338, 2154, 1716]}\\n{\\\"box\\\": [188, 1778, 2156, 3155]}\\n\\nThese are good estimates.\",\"format\":\"unknown\",\"index\":0}]},\"native_finish_reason\":\"stop\"}],\"created\":1792882494,\"model\":\"fireworks/ember-1\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":null,\"usage\":{\"completion_tokens\":1349,\"prompt_tokens\":4331,\"total_tokens\":5680,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":0,\"reasoning_tokens\":1272,\"rejected_prediction_tokens\":null,\"image_tokens\":0},\"prompt_tokens_details\":{\"audio_tokens\":0,\"cached_tokens\":0,\"cache_write_tokens\":0,\"video_tokens\":0},\"cost\":0.033228,\"is_byok\":false,\"cost_details\":{\"upstream_inference_cost\":0.033228,\"upstream_inference_prompt_cost\":0.012993,\"upstream_inference_completions_cost\":0.020235}},\"provider\":\"Fireworks\"}"
+}

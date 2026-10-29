@@ -1,0 +1,114 @@
+{
+    "text": "{\"advertisements\":[{\"box\":[135.0,225.0,2225.0,915.0]},{\"box\":[1235.0,925.0,2195.0,1615.0]},{\"box\":[1250.0,1695.0,2235.0,3145.0]}]}",
+    "model": "meta/muse-spark-open",
+    "provider": "openrouter",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 4144,
+        "output_tokens": 685,
+        "total_tokens": 4829,
+        "reasoning_tokens": 0,
+        "input_cost_usd": 0.00518,
+        "output_cost_usd": 0.00291125,
+        "estimated_cost_usd": 0.00809125
+    },
+    "duration": 5.135000467300415,
+    "timestamp": "2026-10-24T21:43:28.059461",
+    "parsed": {
+        "advertisements": [
+            {
+                "box": [
+                    135.0,
+                    225.0,
+                    2225.0,
+                    915.0
+                ]
+            },
+            {
+                "box": [
+                    1235.0,
+                    925.0,
+                    2195.0,
+                    1615.0
+                ]
+            },
+            {
+                "box": [
+                    1250.0,
+                    1695.0,
+                    2235.0,
+                    3145.0
+                ]
+            }
+        ]
+    },
+    "conversation_id": "1baf416c-fa5a-4d08-b659-b241588e6687",
+    "score": {
+        "field_scores": {
+            "box 1": {
+                "response": [
+                    1250.0,
+                    1695.0,
+                    2235.0,
+                    3145.0
+                ],
+                "ground_truth": [
+                    1246,
+                    1781,
+                    2247,
+                    3102
+                ],
+                "score": 0.898
+            },
+            "box 0": {
+                "response": [
+                    135.0,
+                    225.0,
+                    2225.0,
+                    915.0
+                ],
+                "ground_truth": [
+                    140,
+                    293,
+                    2226,
+                    972
+                ],
+                "score": 0.83
+            },
+            "box 2": {
+                "response": [
+                    1235.0,
+                    925.0,
+                    2195.0,
+                    1615.0
+                ],
+                "ground_truth": [
+                    1226,
+                    963,
+                    2235,
+                    1690
+                ],
+                "score": 0.813
+            },
+            "box 3": {
+                "response": null,
+                "ground_truth": [
+                    233,
+                    642,
+                    905,
+                    823
+                ],
+                "score": 0.0
+            }
+        },
+        "f1": 0.857,
+        "precision": 1.0,
+        "recall": 0.75,
+        "mean_iou": 0.847,
+        "true_positives": 3,
+        "false_positives": 0,
+        "false_negatives": 1,
+        "iou_threshold": 0.5
+    },
+    "raw_response": "{\"id\":\"gen-1792871003-3NpOzYQLpWTmRqetbXDM\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\n    \\\"advertisements\\\": [\\n        {\\\"box\\\": [135, 225, 2225, 915]},\\n        {\\\"box\\\": [1235, 925, 2195, 1615]},\\n        {\\\"box\\\": [1250, 1695, 2235, 3145]}\\n    ]\\n}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"advertisements\":[{\"box\":[135.0,225.0,2225.0,915.0]},{\"box\":[1235.0,925.0,2195.0,1615.0]},{\"box\":[1250.0,1695.0,2235.0,3145.0]}]},\"reasoning\":\"We need to extract advertisements and return bounding boxes. Page size 2479x3508.\\n\\nWe have page with:\\n\\nTop banner: LA MONDIALE EXPRESS TRANSPORTS S.A. GENEVE - that's an advertisement. Box at top.\\n\\nThen right side: Banque Cantonale Neuch\u00e2teloise - advertisement.\\n\\nBottom right: CHOCOLATS PETER, CAILLER, KOHLER. - advertisement with woman.\\n\\nAre there any other? Those three are ads.\\n\\nWe need bounding boxes in pixels original size.\\n\\nWe need estimate coordinates.\\n\\nWe have image. Let's approximate.\\n\\nTop ad: spans across top. x0 maybe ~55, y0 ~70, x1 ~895, y1 ~275? Need to convert to 2479x3508.\\n\\nWe need to give boxes in pixel coordinates.\\n\\nWe need to estimate relative positions.\\n\\nLet's define image coordinates: 0,0 top-left.\\n\\nTop ad: left ~5% from left, right ~90% from left, top ~7% down, bottom ~27% down.\\n\\nMore precise: Look at image: top ad has decorative border. It occupies full width minus margins. So x0 ~ 55? Let's estimate normalized.\\n\\nWe need to output pixel values.\\n\\nWe can approximate:\\n\\nFor 2479 width, 3508 height.\\n\\nTop ad: x0 = 130, y0 = 210, x1 = 2220, y1 = 910 ? Let's check.\\n\\nWe need to be careful: The page header \\\"September, 1921. THE ANGLO-SWISS REVIEW 37\\\" is above ad. So ad starts below that.\\n\\nSo y0 maybe ~ 200-250.\\n\\nBottom of top ad is around 27% of page height. 0.27*3508 \u2248 947.\\n\\nSo y1 ~ 950.\\n\\nSecond ad: Banque Cantonale Neuch\u00e2teloise on right middle. x0 ~ 1220, y0 ~ 920, x1 ~ 2200, y1 ~ 1620.\\n\\nThird ad: Chocolats Peter... bottom right. x0 ~ 1240, y0 ~ 1680, x1 ~ 2240, y1 ~ 3150.\\n\\nWe need to provide boxes.\\n\\nWe should give three boxes.\\n\\nWe must ensure format: {\\\"advertisements\\\": [{\\\"box\\\": [x0,y0,x1,y1]}, ...]}\\n\\nWe need to estimate reasonably.\\n\\nLet's refine using visual proportions.\\n\\nWe can attempt to measure relative to image.\\n\\nAssume image displayed has margins. But original page size includes full page.\\n\\nWe can give approximate boxes:\\n\\nTop: [135, 225, 2225, 915]\\n\\nMiddle right: [1235, 925, 2195, 1615]\\n\\nBottom right: [1250, 1695, 2235, 3145]\\n\\nWe should ensure boxes don't overlap and cover ads.\\n\\nProvide that.\\n\\nWe need to return only JSON object.\\n\\n\",\"reasoning_details\":[{\"type\":\"reasoning.text\",\"text\":\"We need to extract advertisements and return bounding boxes. Page size 2479x3508.\\n\\nWe have page with:\\n\\nTop banner: LA MONDIALE EXPRESS TRANSPORTS S.A. GENEVE - that's an advertisement. Box at top.\\n\\nThen right side: Banque Cantonale Neuch\u00e2teloise - advertisement.\\n\\nBottom right: CHOCOLATS PETER, CAILLER, KOHLER. - advertisement with woman.\\n\\nAre there any other? Those three are ads.\\n\\nWe need bounding boxes in pixels original size.\\n\\nWe need estimate coordinates.\\n\\nWe have image. Let's approximate.\\n\\nTop ad: spans across top. x0 maybe ~55, y0 ~70, x1 ~895, y1 ~275? Need to convert to 2479x3508.\\n\\nWe need to give boxes in pixel coordinates.\\n\\nWe need to estimate relative positions.\\n\\nLet's define image coordinates: 0,0 top-left.\\n\\nTop ad: left ~5% from left, right ~90% from left, top ~7% down, bottom ~27% down.\\n\\nMore precise: Look at image: top ad has decorative border. It occupies full width minus margins. So x0 ~ 55? Let's estimate normalized.\\n\\nWe need to output pixel values.\\n\\nWe can approximate:\\n\\nFor 2479 width, 3508 height.\\n\\nTop ad: x0 = 130, y0 = 210, x1 = 2220, y1 = 910 ? Let's check.\\n\\nWe need to be careful: The page header \\\"September, 1921. THE ANGLO-SWISS REVIEW 37\\\" is above ad. So ad starts below that.\\n\\nSo y0 maybe ~ 200-250.\\n\\nBottom of top ad is around 27% of page height. 0.27*3508 \u2248 947.\\n\\nSo y1 ~ 950.\\n\\nSecond ad: Banque Cantonale Neuch\u00e2teloise on right middle. x0 ~ 1220, y0 ~ 920, x1 ~ 2200, y1 ~ 1620.\\n\\nThird ad: Chocolats Peter... bottom right. x0 ~ 1240, y0 ~ 1680, x1 ~ 2240, y1 ~ 3150.\\n\\nWe need to provide boxes.\\n\\nWe should give three boxes.\\n\\nWe must ensure format: {\\\"advertisements\\\": [{\\\"box\\\": [x0,y0,x1,y1]}, ...]}\\n\\nWe need to estimate reasonably.\\n\\nLet's refine using visual proportions.\\n\\nWe can attempt to measure relative to image.\\n\\nAssume image displayed has margins. But original page size includes full page.\\n\\nWe can give approximate boxes:\\n\\nTop: [135, 225, 2225, 915]\\n\\nMiddle right: [1235, 925, 2195, 1615]\\n\\nBottom right: [1250, 1695, 2235, 3145]\\n\\nWe should ensure boxes don't overlap and cover ads.\\n\\nProvide that.\\n\\nWe need to return only JSON object.\\n\\n\",\"format\":\"unknown\",\"index\":0}]},\"native_finish_reason\":\"stop\"}],\"created\":1792871003,\"model\":\"meta/muse-spark-open\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":null,\"usage\":{\"completion_tokens\":685,\"prompt_tokens\":4144,\"total_tokens\":4829,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":0,\"reasoning_tokens\":543,\"rejected_prediction_tokens\":null,\"image_tokens\":0},\"prompt_tokens_details\":{\"audio_tokens\":0,\"cached_tokens\":0,\"cache_write_tokens\":0,\"video_tokens\":0},\"cost\":0.00809125,\"is_byok\":false,\"cost_details\":{\"upstream_inference_cost\":0.00809125,\"upstream_inference_prompt_cost\":0.00518,\"upstream_inference_completions_cost\":0.00291125}},\"provider\":\"Modal\"}"
+}

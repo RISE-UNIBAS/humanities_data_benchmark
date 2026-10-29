@@ -1,0 +1,81 @@
+{
+    "text": "{\"advertisements\":[{\"box\":[330.0,210.0,2370.0,1700.0]},{\"box\":[320.0,1755.0,2370.0,3250.0]}]}",
+    "model": "elorian/glimpse",
+    "provider": "openrouter",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 3252,
+        "output_tokens": 1488,
+        "total_tokens": 4740,
+        "reasoning_tokens": 0,
+        "input_cost_usd": 0.0019512,
+        "output_cost_usd": 0.004464,
+        "estimated_cost_usd": 0.0064152
+    },
+    "duration": 11.079586505889893,
+    "timestamp": "2026-10-24T23:48:34.858249",
+    "parsed": {
+        "advertisements": [
+            {
+                "box": [
+                    330.0,
+                    210.0,
+                    2370.0,
+                    1700.0
+                ]
+            },
+            {
+                "box": [
+                    320.0,
+                    1755.0,
+                    2370.0,
+                    3250.0
+                ]
+            }
+        ]
+    },
+    "conversation_id": "c88bb6db-2e9b-4a36-b2b1-6b2afdca49b0",
+    "score": {
+        "field_scores": {
+            "box 1": {
+                "response": [
+                    330.0,
+                    210.0,
+                    2370.0,
+                    1700.0
+                ],
+                "ground_truth": [
+                    342,
+                    223,
+                    2368,
+                    1705
+                ],
+                "score": 0.981
+            },
+            "box 0": {
+                "response": [
+                    320.0,
+                    1755.0,
+                    2370.0,
+                    3250.0
+                ],
+                "ground_truth": [
+                    332,
+                    1772,
+                    2361,
+                    3263
+                ],
+                "score": 0.97
+            }
+        },
+        "f1": 1.0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "mean_iou": 0.976,
+        "true_positives": 2,
+        "false_positives": 0,
+        "false_negatives": 0,
+        "iou_threshold": 0.5
+    },
+    "raw_response": "{\"id\":\"gen-1792878504-3D2jDFnoPjOg2UwkexDI\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\n    \\\"advertisements\\\": [\\n        {\\\"box\\\": [330, 210, 2370, 1700]},\\n        {\\\"box\\\": [320, 1755, 2370, 3250]}\\n    ]\\n}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"advertisements\":[{\"box\":[330.0,210.0,2370.0,1700.0]},{\"box\":[320.0,1755.0,2370.0,3250.0]}]},\"reasoning\":\"The user wants me to extract the advertisements from this magazine page and return their bounding boxes.\\n\\nLooking at the page, there are two clear advertisements:\\n\\n1. Top advertisement: Crowe & Co. Ltd. \u2014 \\\"The Reliable Forwarding Agent\\\" \u2014 a freight agent ad with a list of companies, the Crowe logo, and allied firms. This ad is enclosed by a border, roughly from y=60 to y=485, x=135 to x=955.\\n\\n2. Bottom advertisement: Nivada watches \u2014 \\\"Elegance\\\" \u2014 a watch ad with a black background, enclosed by a border, roughly from y=500 to y=925, x=130 to x=955.\\n\\nLet me look at the image more carefully and estimate the coordinates more precisely.\\n\\nThe page size is 2479 x 3508 pixels. The displayed image seems to be scaled. Let me think about the actual pixel coordinates. The image shown in the conversation is probably at some scale, but I need to return coordinates in the original page pixels (2479 x 3508).\\n\\nLet me estimate based on the visual layout. The image displayed in the conversation is probably around 1700 wide? Actually, I should estimate proportionally.\\n\\nTop ad border: The top edge of the border is around y=60/1700 of the height? Let me think in ratios.\\n\\nLooking at the image: the top ad's box starts near the top at about 6% of the height and ends at about 48.5% of the height. The left edge is about 13.5% of the width, the right edge about 95.5%.\\n\\nBottom ad: from about 50% to about 92.5% of the height, left about 13%, right about 95.5%.\\n\\nLet me convert to pixels: width 2479, height 3508.\\n\\nTop ad:\\nx0 = 0.135 * 2479 \u2248 335\\nx1 = 0.955 * 2479 \u2248 2367\\ny0 = 0.06 * 3508 \u2248 210\\ny1 = 0.485 * 3508 \u2248 1701\\n\\nBottom ad:\\nx0 = 0.13 * 2479 \u2248 322\\nx1 = 0.955 * 2479 \u2248 2367\\ny0 = 0.50 * 3508 \u2248 1754\\ny1 = 0.925 * 3508 \u2248 3245\\n\\nLet me look at the image more carefully and refine. The image dimensions in the prompt: the rendered image looks like about 1700x2400? Hard to tell. Let me use relative positions based on typical rendering.\\n\\nActually, I can use the coordinates within the displayed image to estimate more carefully. The displayed image seems to be about 1700 wide and 2400 tall (aspect ratio 2479:3508 \u2248 0.7067; 1700/2400 \u2248 0.708, matches).\\n\\nTop ad border: top edge at about y=62 in the displayed image? The border line appears at about y=60-65. Left edge at about x=135. Right edge at about x=955? Wait, the displayed width is 1700, so the right edge should be around x=1620? Hmm, I need to be careful.\\n\\nLet me reconsider: the image shown in the conversation is scaled to some size. I can't measure directly, but I can reason about ratios from the layout description.\\n\\nLet me just estimate ratios from the visual: the page has margins. The left margin is about 4% of the width (the dark edge of the book). The ad box starts at about 13% of the width? Actually, looking at the image, the left edge of the top ad's border is at about x=135 out of a displayed width of about 1700? That would be 8%. Hmm.\\n\\nLet me think about the actual pixel coordinates in the original 2479x3508 image. The page scan: the left edge of the ad box is probably around x=330. The right edge around x=2370. The top edge around y=210. The bottom edge of the top ad around y=1700. The top edge of the bottom ad around y=1760. The bottom edge around y=3250.\\n\\nThese are reasonable estimates.\\n\\nGiven the task, approximate bounding boxes are acceptable. Let me provide the following:\\n\\nTop ad: [330, 210, 2370, 1700]\\nBottom ad: [320, 1760, 2370, 3250]\\n\\nLet me double-check the vertical positions: the top ad occupies roughly the top half of the page. The page height is 3508. The top ad's border top is at about 6% => 210. The bottom border of the top ad is at about 48.5% => 1700. The top border of the bottom ad is at about 50% => 1754. The bottom border of the bottom ad is at about 92.5% => 3245. The page number \\\"26\\\" is at about 94% => 3300.\\n\\nHorizontal: left border at about 13% => 322; right border at about 95.5% => 2367.\\n\\nI'll return these two boxes.\\n\\nFormat: JSON with an \\\"advertisements\\\" key, each element being {\\\"box\\\": [x0,y0,x1,y1]}.\\n\\nFinal answer:\\n\\n{\\n    \\\"advertisements\\\": [\\n        {\\\"box\\\": [330, 210, 2370, 1700]},\\n        {\\\"box\\\": [320, 1755, 2370, 3250]}\\n    ]\\n}\\n\",\"reasoning_details\":[{\"type\":\"reasoning.text\",\"text\":\"The user wants me to extract the advertisements from this magazine page and return their bounding boxes.\\n\\nLooking at the page, there are two clear advertisements:\\n\\n1. Top advertisement: Crowe & Co. Ltd. \u2014 \\\"The Reliable Forwarding Agent\\\" \u2014 a freight agent ad with a list of companies, the Crowe logo, and allied firms. This ad is enclosed by a border, roughly from y=60 to y=485, x=135 to x=955.\\n\\n2. Bottom advertisement: Nivada watches \u2014 \\\"Elegance\\\" \u2014 a watch ad with a black background, enclosed by a border, roughly from y=500 to y=925, x=130 to x=955.\\n\\nLet me look at the image more carefully and estimate the coordinates more precisely.\\n\\nThe page size is 2479 x 3508 pixels. The displayed image seems to be scaled. Let me think about the actual pixel coordinates. The image shown in the conversation is probably at some scale, but I need to return coordinates in the original page pixels (2479 x 3508).\\n\\nLet me estimate based on the visual layout. The image displayed in the conversation is probably around 1700 wide? Actually, I should estimate proportionally.\\n\\nTop ad border: The top edge of the border is around y=60/1700 of the height? Let me think in ratios.\\n\\nLooking at the image: the top ad's box starts near the top at about 6% of the height and ends at about 48.5% of the height. The left edge is about 13.5% of the width, the right edge about 95.5%.\\n\\nBottom ad: from about 50% to about 92.5% of the height, left about 13%, right about 95.5%.\\n\\nLet me convert to pixels: width 2479, height 3508.\\n\\nTop ad:\\nx0 = 0.135 * 2479 \u2248 335\\nx1 = 0.955 * 2479 \u2248 2367\\ny0 = 0.06 * 3508 \u2248 210\\ny1 = 0.485 * 3508 \u2248 1701\\n\\nBottom ad:\\nx0 = 0.13 * 2479 \u2248 322\\nx1 = 0.955 * 2479 \u2248 2367\\ny0 = 0.50 * 3508 \u2248 1754\\ny1 = 0.925 * 3508 \u2248 3245\\n\\nLet me look at the image more carefully and refine. The image dimensions in the prompt: the rendered image looks like about 1700x2400? Hard to tell. Let me use relative positions based on typical rendering.\\n\\nActually, I can use the coordinates within the displayed image to estimate more carefully. The displayed image seems to be about 1700 wide and 2400 tall (aspect ratio 2479:3508 \u2248 0.7067; 1700/2400 \u2248 0.708, matches).\\n\\nTop ad border: top edge at about y=62 in the displayed image? The border line appears at about y=60-65. Left edge at about x=135. Right edge at about x=955? Wait, the displayed width is 1700, so the right edge should be around x=1620? Hmm, I need to be careful.\\n\\nLet me reconsider: the image shown in the conversation is scaled to some size. I can't measure directly, but I can reason about ratios from the layout description.\\n\\nLet me just estimate ratios from the visual: the page has margins. The left margin is about 4% of the width (the dark edge of the book). The ad box starts at about 13% of the width? Actually, looking at the image, the left edge of the top ad's border is at about x=135 out of a displayed width of about 1700? That would be 8%. Hmm.\\n\\nLet me think about the actual pixel coordinates in the original 2479x3508 image. The page scan: the left edge of the ad box is probably around x=330. The right edge around x=2370. The top edge around y=210. The bottom edge of the top ad around y=1700. The top edge of the bottom ad around y=1760. The bottom edge around y=3250.\\n\\nThese are reasonable estimates.\\n\\nGiven the task, approximate bounding boxes are acceptable. Let me provide the following:\\n\\nTop ad: [330, 210, 2370, 1700]\\nBottom ad: [320, 1760, 2370, 3250]\\n\\nLet me double-check the vertical positions: the top ad occupies roughly the top half of the page. The page height is 3508. The top ad's border top is at about 6% => 210. The bottom border of the top ad is at about 48.5% => 1700. The top border of the bottom ad is at about 50% => 1754. The bottom border of the bottom ad is at about 92.5% => 3245. The page number \\\"26\\\" is at about 94% => 3300.\\n\\nHorizontal: left border at about 13% => 322; right border at about 95.5% => 2367.\\n\\nI'll return these two boxes.\\n\\nFormat: JSON with an \\\"advertisements\\\" key, each element being {\\\"box\\\": [x0,y0,x1,y1]}.\\n\\nFinal answer:\\n\\n{\\n    \\\"advertisements\\\": [\\n        {\\\"box\\\": [330, 210, 2370, 1700]},\\n        {\\\"box\\\": [320, 1755, 2370, 3250]}\\n    ]\\n}\\n\",\"format\":\"unknown\",\"index\":0}]},\"native_finish_reason\":\"stop\"}],\"created\":1792878504,\"model\":\"elorian/glimpse\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":\"default\",\"usage\":{\"completion_tokens\":1488,\"prompt_tokens\":3252,\"total_tokens\":4740,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":0,\"reasoning_tokens\":1417,\"rejected_prediction_tokens\":null,\"image_tokens\":0},\"prompt_tokens_details\":{\"audio_tokens\":0,\"cached_tokens\":0,\"cache_write_tokens\":0,\"video_tokens\":0},\"cost\":0.0064152,\"is_byok\":false,\"cost_details\":{\"upstream_inference_cost\":0.0064152,\"upstream_inference_prompt_cost\":0.0019512,\"upstream_inference_completions_cost\":0.004464}},\"provider\":\"Together\"}"
+}

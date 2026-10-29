@@ -1,0 +1,95 @@
+{
+  "benchmark_card": {
+    "benchmark_details": {
+      "name": "Bibliographic Data",
+      "overview": "Tests models on extracting structured entries (author, title, publisher, place, year, pages, cross-references) from the pages of a printed 1961 bibliography of the philosophy of history.",
+      "data_type": "image",
+      "domains": [
+        "bibliography",
+        "library science",
+        "philosophy of history"
+      ],
+      "languages": [
+        "English"
+      ],
+      "similar_benchmarks": [
+        "Not specified"
+      ],
+      "resources": [
+        "https://rise-services.rise.unibas.ch/benchmarks/p/benchmarks/bibliographic_data",
+        "https://github.com/RISE-UNIBAS/humanities_data_benchmark/tree/main/benchmarks/bibliographic_data"
+      ],
+      "authors": [
+        "Pema Frick",
+        "Sven Burkhardt",
+        "Sorin Marti"
+      ]
+    },
+    "purpose_and_intended_users": {
+      "goal": "Measure how well vision-language models turn a printed scholarly bibliography page into structured, citation-style records (CSL-like JSON): splitting the page into entries, classifying each entry, separating authors into family and given names, and recording publication details, cross-references between entries and entries that continue on the next page. The results serve researchers and developers comparing models on structured extraction from printed sources, and practitioners in libraries, historical research and digital humanities projects who choose a model for converting printed bibliographies into databases.",
+      "audience": [
+        "humanities researchers",
+        "archivists and librarians",
+        "AI researchers",
+        "model developers"
+      ],
+      "tasks": [
+        "segmentation of a printed list into bibliographic entries",
+        "structured extraction of bibliographic fields from images",
+        "classification of entry types",
+        "linking reviews to the entries they review",
+        "detection of entries that continue on the next page"
+      ],
+      "limitations": "The benchmark covers five pages of a single printed bibliography (philosophy of history, works of 1945–1957), with an English-language apparatus and titles in several European languages. Results do not transfer to other citation styles, periods or layouts.\n\nEntries are aligned in page order before scoring (see Calculation), so a missed or split entry costs only its own fields. Only fields present in the ground truth are scored, so extra entries and extra fields in a response cost nothing.\n\nThe ground truth records what each entry prints, and the schema leaves some conventions open that `prompt.txt` does not settle: the `id` is the printed running number (stated in `prompt_v2.txt`), a year is recorded only where the entry prints one, and a parenthetical or bracketed remark goes into `note` as printed. A model that numbers entries its own way loses every `id` and `relation`; a year inferred from the section heading where none is printed costs nothing. Top models score close to 1 (see Baseline Results), so the benchmark separates weaker models more than strong ones.",
+      "out_of_scope_uses": [
+        "drawing conclusions about the works or authors listed",
+        "evaluating citation parsing from born-digital text",
+        "ranking models on bibliographies in other styles, languages or periods"
+      ]
+    },
+    "data": {
+      "source": "Five page images of the \"Bibliography of Works in the Philosophy of History, 1945–1957\", compiled by John C. Rule and published as \"Chronological List\" in History and Theory, Beiheft 1 ('s-Gravenhage: Mouton, 1961), pp. 1–74, digitised on JSTOR: http://www.jstor.org/stable/2504495. The pages list books, journal articles and reviews by year, with author, title, publisher, place, year, volume and pages, and with cross-references between entries.",
+      "size": "5 evaluated objects",
+      "format": "One JPEG scan per page, about 1,750–1,910 × 2,880–2,950 px and 300–400 KB each. The ground truth is one JSON file per page in the shape of the response schema; the excerpt below is from `page_2.json`:\n\n```json\n{\n  \"metadata\": { \"title\": \"Books\", \"year\": \"1945\", \"page_number\": 1 },\n  \"entries\": [\n    {\n      \"id\": \"5\",\n      \"type\": \"book\",\n      \"title\": \"The Use of Personal Documents in History, Anthropology, and Sociology\",\n      \"author\": [\n        { \"family\": \"Gottschalk\", \"given\": \"L.\" },\n        { \"family\": \"Kluckhohn\", \"given\": \"C.\" },\n        { \"family\": \"Angell\", \"given\": \"R.\" }\n      ],\n      \"publisher\": \"Social Science Research Council\",\n      \"publisher_place\": \"New York\",\n      \"note\": \"Bulletin 53\"\n    },\n    {\n      \"id\": \"6\",\n      \"type\": \"journal-article\",\n      \"author\": [ { \"family\": \"Lapiere\", \"given\": \"R. T.\" } ],\n      \"container_title\": \"The American Journal of Sociology\",\n      \"volume\": \"LII\",\n      \"page\": \"156-157\",\n      \"issued\": \"1946\",\n      \"relation\": \"5\"\n    }\n  ]\n}\n```\n\nThe five pages hold 91 entries (14–21 per page) and 741 scored fields. `id` is the running number printed in the bibliography; `relation` holds the `id` of the reviewed entry; `related` lists the entries a volume contains. The first entry of `page_3` is the end of entry 14 from the previous page and has no `id`. Fields the page does not print are left out, even where the schema requires them (the `title` of eight untitled reviews, and the `title` and `id` of that continued entry); fields left out are not scored.",
+      "annotation": "Sven Burkhardt and Pema Frick created the ground truth by hand, with Pema Frick as domain expert. They structured each entry in a CSL-like representation, including cross-references and entries that continue across pages. For version 2.0.0 the ground truth was checked entry by entry against the scans and brought into the shape of the response schema: transcription errors corrected (names, titles, volumes, pages, years), six missing entries of `page_5` (64–69) added, entries 146–148 of `page_10` made entries of their own, untitled reviews left without a title, notes given as printed, years kept only where the entry prints one, and initials written with spaces as printed.",
+      "size_breakdown": {
+        "image files": 5
+      },
+      "collection_date": "Source documents: works published 1945–1957, listed in a bibliography published in 1961. Added to the benchmark: February 2025 (pages 2 and 10), April 2025 (pages 3–5).",
+      "contamination_controls": "None. The page images, prompt and ground truth have been public in this repository since February 2025."
+    },
+    "methodology": {
+      "methods": [
+        "zero-shot structured extraction from a single image per request",
+        "structured JSON output requested using the `Document` dataclass",
+        "[prompt.txt](prompts/prompt.txt), used by all existing tests, adds three instructions to the schema: the page number (taken from the file name, so `page_2` is told it is page 2 though it is printed page 1), the `id` of the reviewed entry in `relation`, and `incomplete` for an entry that continues on the next page. New tests use [prompt_v2.txt](prompts/prompt_v2.txt), which gives the printed page number and says that `id` is the running number printed in front of an entry. All other conventions come from the schema alone",
+        "output cap: the repository default of 16,384 tokens per request, adjusted per model in `scripts/benchmark_base.py`"
+      ],
+      "metrics": [
+        "Fuzzy similarity (`fuzzy`, used for ranking)"
+      ],
+      "calculation": "Response entries are first aligned to ground-truth entries: an alignment that keeps both page orders and maximises the summed similarity of aligned entries, where the similarity of two entries is the mean field score below over the ground-truth entry's fields. Every terminal field of the ground truth outside `metadata` (for example `entries[3].author[0].family`) is then looked up at the same path in the aligned response entry. A ground-truth entry without a counterpart scores 0 in every field; response entries without a counterpart and fields only in the response are ignored.\n\n- identical values (after converting both to strings) score 1.0\n- a missing value in the response scores 0.0\n- otherwise the score is the rapidfuzz `ratio` divided by 100, between 0 and 1; there is no threshold\n\nThe page score is the mean over that page's fields. The benchmark score is the mean of the page scores, so each page counts equally regardless of how many entries it holds. A response whose Document is nested under a single wrapper key (as some providers' tool calls return it) is unwrapped; a response that cannot be parsed scores 0.",
+      "interpretation": "Scores range from 0 to 1; higher is better. Because partial string similarity earns partial credit, a wrong but similar value (for example `Journal of Philosphy` for `Journal of Philosophy`, 0.98) still scores high; a score near 1 means near-exact records, not a share of correct entries.",
+      "baseline_results": "Model results are available on the [benchmark page](https://rise-services.rise.unibas.ch/benchmarks/p/benchmarks/bibliographic_data) and in `results/<date>/<test_id>/` at the repository root. Compare runs with the same prompt, scoring rules and ground-truth revision. No fixed baseline run is designated. Across the latest run of each of the 95 non-legacy tests, `fuzzy` has a median of 0.95 and a best of 0.99 (gpt-6-astra).\n\nObserved across models: averaged over all scored fields of those runs, `note` (0.55), `relation` (0.71) and `issued` (0.73) score lowest, since they depend on conventions the prompt leaves open; names, titles, publishers and pages score about 0.9.",
+      "validation": "The annotators created the ground truth by hand; for version 2.0.0 every entry was checked against the scans, guided by the fields on which most of the ten best-scoring models agreed against the ground truth. Scoring is deterministic; the scorer is covered by `tests/test_bibliographic_data_scoring.py` and `tests/test_simple_averagers_scoring.py`, including a check that every ground-truth file scores 1 against itself.",
+      "human_baseline": "Not specified",
+      "judge_uses_llm": false,
+      "judge_num": "Not specified",
+      "judge_models": [
+        "Not specified"
+      ],
+      "judge_score_consolidation": "Not specified",
+      "validity_justification": "Field-level similarity reflects the downstream use: each field becomes a value in a bibliographic record, and near-misses need less correction than wrong values."
+    },
+    "ethical_and_legal_considerations": {
+      "privacy_and_anonymity": "The pages name the authors, editors and reviewers of scholarly works published 1945–1957, as printed in a published bibliography. They contain no personal data beyond what is in the published record.",
+      "data_licensing": "Source material: Not specified. Ground truth, prompts and other data created for this benchmark: CC BY 4.0.",
+      "consent_procedures": "Not specified",
+      "compliance_with_regulations": "The page images are JSTOR scans of a 1961 journal supplement that is still under copyright (the journal is now published by Wiley). No licence or permission to redistribute them is held; they are used for non-commercial academic research. The ground truth records the bibliographic data of the entries, which are facts rather than protected expression. No ethical review was carried out."
+    }
+  },
+  "card_info": {
+    "schema": "evaleval/auto-benchmarkcard@342c1ac7d278a93be75de713c151142b25f635d0",
+    "source": "README.md"
+  }
+}

@@ -1,0 +1,97 @@
+{
+  "benchmark_card": {
+    "benchmark_details": {
+      "name": "General Meeting Minutes",
+      "overview": "Evaluates models' ability to extract shareholder rows (names, addresses, share counts, votes and signatures) and page totals from the attendance registers of the general meetings of Mines de Costano S.A., 1951–1968.",
+      "data_type": "image",
+      "domains": [
+        "business history",
+        "economic history",
+        "archival science"
+      ],
+      "languages": [
+        "Italian",
+        "French",
+        "German"
+      ],
+      "similar_benchmarks": [
+        "Not specified"
+      ],
+      "resources": [
+        "https://rise-services.rise.unibas.ch/benchmarks/p/benchmarks/general_meeting_minutes",
+        "https://github.com/RISE-UNIBAS/humanities_data_benchmark/tree/main/benchmarks/general_meeting_minutes"
+      ],
+      "authors": [
+        "Alexandra Binnenkade",
+        "Sven Lienhard",
+        "Sorin Marti"
+      ]
+    },
+    "purpose_and_intended_users": {
+      "goal": "Measure how well vision-language models turn the attendance registers of a company's general meetings, printed forms filled in by typewriter and by hand, into structured records: one row per shareholder with name and address split apart, share counts by class, votes, and the presence and text of a signature, plus the carried-forward totals. The results are meant to guide historians, archivists and digital humanities projects in choosing a model for digitising tabular business records.",
+      "audience": [
+        "humanities researchers",
+        "archivists and librarians",
+        "AI researchers",
+        "model developers"
+      ],
+      "tasks": [
+        "table extraction from page images",
+        "splitting a combined name-and-address cell into two fields",
+        "detection and transcription of handwritten signatures",
+        "transcription of share counts and page totals"
+      ],
+      "limitations": "Nine pages from the registers of a single company, 1951–1968, 85 rows in all; results do not transfer automatically to other forms, hands or record types. Several images are two-page spreads, so the number of rows per image varies from 6 to 20.\n\nThe scorer has several blind spots:\n\n- Rows are compared by position (`entries[0]` with `entries[0]`), not by row number or name. A model that skips or inserts one row is scored against the wrong ground-truth row for every row after it.\n- Only fields present in the ground truth are scored. Rows the model adds beyond the last ground-truth row cost nothing.\n- About a fifth of the scored fields are empty strings (empty share columns, missing totals, absent signatures); a model that returns `\"\"` there scores 1.0 for them.\n- `document` and `page_number` are given in the prompt, so they are close to free points.\n- A wrong `signature_present` value scores 0.22, not 0, because the booleans are compared as the strings `True` and `False`.\n- Scores are similarities, not matches: a field that is 80% similar contributes 0.8, so mean scores look higher than a thresholded F1 would.",
+      "out_of_scope_uses": [
+        "evaluating signature verification or writer identification",
+        "evaluating arithmetic on the share columns (totals must be transcribed, not computed)",
+        "drawing conclusions about the shareholders named in the registers"
+      ]
+    },
+    "data": {
+      "source": "Attendance registers of the general meetings of Mines de Costano S.A., the company that operated the gold mine of Sessa (Malcantone, Ticino) from 1933, from the company's private archive. Each page is a printed form with the columns *N° d'ordre*, *Nom, prénoms et domicile des actionnaires*, *Actions* (two columns, *de priorité* and *ordinaire*, whose order varies between forms), *Nombre de voix* and *Signature des actionnaires ou des mandataires*, with a carried-forward total (*report*, *à reporter*). Names and addresses are typed; share counts and totals are typed or handwritten; signatures are handwritten.",
+      "size": "9 evaluated objects",
+      "format": "One JPG per page or two-page spread, 2,263–2,480 px wide, 2,975–3,509 px high and 0.9–2 MB. The ground truth is one JSON file per image, following the `MinutesPage` dataclass in `dataclass.py`:\n\n```json\n{\n  \"document\": \"Se_19_Assemblée Mine d. Costano_2.9_12.1962_page_4\",\n  \"page_number\": 4,\n  \"entries\": [\n    {\n      \"number\": \"1\",\n      \"name\": \"M. BREHAM Alain\",\n      \"address\": \"45 Boulevard Charcot - Neuilly s/Seine (Seine\",\n      \"actions_o\": \"179\",\n      \"actions_p\": \"520\",\n      \"no_de_voix\": \"699\",\n      \"signature_present\": true,\n      \"signature\": \"Pa\"\n    }\n  ],\n  \"total_actions\": {\"total_o\": \"659\", \"total_p\": \"2310\", \"total_voix\": \"2964\"}\n}\n```\n\n- `document`, `page_number`: taken from the file name and passed to the model in the prompt\n- `entries`: one object per table row; `name` and `address` come from the same cell and are split into two fields; every value except `signature_present` is a string, empty when the cell is empty\n- `total_actions`: the totals written at the foot of the page, empty strings where none are written",
+      "annotation": "Sven Lienhard (annotator) transcribed and curated the ground truth by hand: diplomatic transcription without added accents, line breaks inside addresses kept, the dash separating name and address removed, totals transcribed only where written on the page.",
+      "size_breakdown": {
+        "image files": 9
+      },
+      "collection_date": "Source documents: 1951–1968 (the file names give 1951, 1961, 1962, 1965, 1967 and 1968; for the `Bilanz` files the year may be that of the balance sheet rather than of the meeting). Added to the benchmark: March 2026.",
+      "contamination_controls": "None. The images, prompts and ground truth have been public in this repository since March 2026."
+    },
+    "methodology": {
+      "methods": [
+        "zero-shot structured extraction from a single page image per request, with the file name and page number given in the prompt",
+        "structured JSON output requested using the `MinutesPage` dataclass",
+        "benchmark default output cap of 40,960 tokens; test rules can override it and model-specific ceilings can lower it",
+        "prompt `prompts/prompt.txt` (short instructions on splitting name and address). Four longer variants (`extended_prompt.txt`, `prompt_first_reformulated.txt`, `updated_prompt.txt`, `updated_prompt_steps.txt`) were tried on three OpenAI models and are retired as legacy tests; their scores are not comparable with `prompt.txt`",
+        "no shared context: each page is sent on its own, and signatures are scored as ordinary fields"
+      ],
+      "metrics": [
+        "Fuzzy similarity (`fuzzy`, used for ranking)"
+      ],
+      "calculation": "For each page, every terminal field of the ground-truth JSON is enumerated (`document`, `page_number`, `entries[i].*`, `total_actions.*`) and the response value at the same path is compared with it:\n\n- identical values (including two empty strings, or the same number as integer and string) score 1.0\n- a value missing from the response (path absent or `null`) scores 0.0\n- otherwise the score is the rapidfuzz `ratio` of the two values as strings, divided by 100, case-sensitive and unnormalised\n\nThe page score is the unrounded mean over its fields; the benchmark score is the mean of the page scores, so every page weighs the same whatever its number of rows. A response that cannot be parsed is scored as a miss: every ground-truth field scores 0.",
+      "interpretation": "Scores range from 0 to 1; higher is better. Partial credit and free empty fields (see Limitations) make absolute scores run high, so compare models with each other rather than against a fixed bar. A low score on one page often means a skipped or inserted row rather than poor reading, because the rows after it are misaligned. Across the 89 active test configurations, the score has a median of 0.83 and an interquartile range of 0.75–0.88; the best reach 0.96.",
+      "baseline_results": "Model results are available on the [benchmark page](https://rise-services.rise.unibas.ch/benchmarks/p/benchmarks/general_meeting_minutes) and in `results/<date>/<test_id>/` at the repository root. Compare runs with the same prompt, scoring rules and ground-truth revision. There is no fixed model baseline with a run ID and date.\n\nObserved across models: share counts and signatures are read worst (mean field score about 0.5 for `actions_o`, `actions_p`, the page totals and `signature`), names, addresses and row numbers well (0.85–0.89), and the vote count best (0.93). Part of the share-count error is the column order, which varies between forms.",
+      "validation": "The ground truth was created by Sven Lienhard, annotator and domain expert; no second check is recorded. Scoring is deterministic; the scorer is covered by `tests/test_general_meeting_minutes_scoring.py`.",
+      "human_baseline": "Not specified",
+      "judge_uses_llm": false,
+      "judge_num": "Not specified",
+      "judge_models": [
+        "Not specified"
+      ],
+      "judge_score_consolidation": "Not specified",
+      "validity_justification": "Not specified"
+    },
+    "ethical_and_legal_considerations": {
+      "privacy_and_anonymity": "The registers name shareholders and their proxies, private persons and companies, with their home addresses, share holdings and signatures, 1951–1968. They are not anonymised. They are company records of shareholdings, and publishing them raises no personal-rights issue.",
+      "data_licensing": "Source material: used with the permission of the owner of the Mines de Costano S.A. archive; no licence published. Ground truth, prompts and other data created for this benchmark: CC BY 4.0.",
+      "consent_procedures": "Not specified",
+      "compliance_with_regulations": "The registers come from the company's private archive, so no public archival law sets a protection period for them; they are used with the permission of the archive's owner, who has published no licence for them. No ethical review was carried out."
+    }
+  },
+  "card_info": {
+    "schema": "evaleval/auto-benchmarkcard@342c1ac7d278a93be75de713c151142b25f635d0",
+    "source": "README.md"
+  }
+}

@@ -359,7 +359,7 @@ def test_summary_reasoning_cost_is_null_when_nothing_priced_it(tmp_path, prices)
 
 def test_pricing_window_boundary(tmp_path, monkeypatch):
     """A bucket 30 days before the run counts; 31 does not, and neither does a later one."""
-    from scripts.ndr_export import pricing_resolver
+    from scripts import pricing_resolver
 
     table = {"pricing": {
         "2026-01-02": {"genai": {"m": {"input_price": 1.0, "output_price": 2.0}}},

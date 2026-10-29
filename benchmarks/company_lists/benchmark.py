@@ -5,6 +5,8 @@ from scripts.scoring_helper import get_all_keys, get_nested_value, calculate_fuz
 
 class CompanyLists(Benchmark):
 
+    score_unparseable_as_miss = True
+
     def score_benchmark(self, all_scores):
         """
         Calculate macro and micro F1 scores across all test instances.
@@ -67,6 +69,8 @@ class CompanyLists(Benchmark):
         if isinstance(data, list) and "entries" in ground_truth:
             # Create entries wrapper to match ground truth structure
             data = {"entries": data}
+        if not isinstance(data, dict):
+            data = {}  # an unparseable response: every ground-truth field is missed
 
         logging.info(image_name)
         logging.debug(f"response: {data}")
@@ -87,10 +91,11 @@ class CompanyLists(Benchmark):
         # Get all unique keys from both datasets
         all_keys = set(response_keys + gt_keys)
 
-        # Filter out metadata fields
+        # Metadata and identifiers are not scored: page_id and entry_id are bookkeeping the
+        # model cannot read off the page.
         filtered_keys_temp = []
         for key in all_keys:
-            if key.startswith("metadata"):
+            if key.startswith("metadata") or key == "page_id" or key.endswith(".entry_id"):
                 continue
             filtered_keys_temp.append(key)
 

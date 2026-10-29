@@ -133,7 +133,7 @@ def make_pricing(tmp_path, monkeypatch):
         alias_file = tmp_path / "model_aliases.json"
         alias_file.write_text(_json.dumps({"aliases": aliases or {}}), encoding="utf-8")
 
-        from scripts.ndr_export import pricing_resolver
+        from scripts import pricing_resolver
         monkeypatch.setattr(pricing_resolver, "PRICING_FILE", pricing)
         monkeypatch.setattr(pricing_resolver, "ALIAS_FILE", alias_file)
         monkeypatch.setattr(pricing_resolver, "_pricing_cache", None)

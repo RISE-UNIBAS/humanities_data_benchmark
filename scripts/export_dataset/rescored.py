@@ -187,7 +187,7 @@ def coverage_diagnostics(rows, runs, stored_field_run_ids):
             "severity": "blocking",
             "handling": "%d run(s) dated after the last regeneration (%s) have no "
                         "field-level detail from either source, the newest dated %s. "
-                        "Regenerate with python -m scripts.ndr_export.generate_compare_detail "
+                        "Regenerate with python -m scripts.compare.generate_compare_detail "
                         "and rebuild." % (len(stale), last,
                                           max(run["date"] for run in stale)),
         })

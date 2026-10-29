@@ -1,0 +1,62 @@
+{
+    "text": "{\"company\":{\"transcription\":\"Schweizerische Sodafabrik\"},\"location\":{\"transcription\":\"ZURZACH\"},\"b_id\":{\"transcription\":\"B.51.322.01\"},\"date\":\"\",\"information\":[]}",
+    "model": "nvidia/nemotron-3.5-super-vl",
+    "provider": "openrouter",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 2650,
+        "output_tokens": 754,
+        "total_tokens": 3404,
+        "reasoning_tokens": 0,
+        "input_cost_usd": 0.000265,
+        "output_cost_usd": 0.0003016,
+        "estimated_cost_usd": 0.0005666
+    },
+    "duration": 3.8353896141052246,
+    "timestamp": "2026-10-24T20:51:54.551563",
+    "parsed": {
+        "company": {
+            "transcription": "Schweizerische Sodafabrik"
+        },
+        "location": {
+            "transcription": "ZURZACH"
+        },
+        "b_id": {
+            "transcription": "B.51.322.01"
+        },
+        "date": "",
+        "information": []
+    },
+    "conversation_id": "b366630b-81c7-43f7-897a-790769231055",
+    "score": {
+        "fuzzy": 0.8,
+        "field_scores": {
+            "b_id.transcription": {
+                "response": "B.51.322.01",
+                "ground_truth": "B.51.322.01",
+                "score": 1.0
+            },
+            "company.transcription": {
+                "response": "Schweizerische Sodafabrik",
+                "ground_truth": "Schweizerische Sodafabrik",
+                "score": 1.0
+            },
+            "date": {
+                "response": "",
+                "ground_truth": "",
+                "score": 1.0
+            },
+            "information[0].transcription": {
+                "response": "",
+                "ground_truth": "(U'Chemise)",
+                "score": 0.0
+            },
+            "location.transcription": {
+                "response": "ZURZACH",
+                "ground_truth": "ZURZACH",
+                "score": 1.0
+            }
+        }
+    },
+    "raw_response": "{\"id\":\"gen-1792867910-MrAUjJo1t4uvkd3dwEzy\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\n  \\\"company\\\": {\\\"transcription\\\": \\\"Schweizerische Sodafabrik\\\"},\\n  \\\"location\\\": {\\\"transcription\\\": \\\"ZURZACH\\\"},\\n  \\\"b_id\\\": {\\\"transcription\\\": \\\"B.51.322.01\\\"},\\n  \\\"date\\\": \\\"\\\",\\n  \\\"information\\\": []\\n}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"company\":{\"transcription\":\"Schweizerische Sodafabrik\"},\"location\":{\"transcription\":\"ZURZACH\"},\"b_id\":{\"transcription\":\"B.51.322.01\"},\"date\":\"\",\"information\":[]},\"reasoning\":\"The user wants me to extract information from an index card image and return it as a JSON object.\\n\\n**1. Analyze the image:**\\n- It's an index card, yellowish paper with blue lines and a red vertical line on the right.\\n- Top left text: \\\"Schweizerische Sodafabrik, ZURZACH\\\"\\n- Top right text: \\\"B.51.322.01\\\" and below it \\\"(U'Chemise)\\\" crossed out or underlined. Wait, let's look closer. It says \\\"B.51.322.01\\\" and underneath \\\"(U'Chemise)\\\". The prompt asks for `b_id` starting with \\\"B.\\\". So \\\"B.51.322.01\\\".\\n- The prompt asks for `company` (primary company name, usually top-left, exclude location).\\n- The prompt asks for `location` (city or town, often following company name).\\n- The prompt asks for `date` (stamped dates in YYYY-MM-DD). I don't see any stamped dates.\\n- The prompt asks for `information` (list of text blocks from main body). The main body is empty.\\n\\n**2. Extract fields:**\\n- **Company:** \\\"Schweizerische Sodafabrik\\\"\\n- **Location:** \\\"ZURZACH\\\"\\n- **b_id:** \\\"B.51.322.01\\\"\\n- **date:** \\\"\\\" (empty string)\\n- **information:** [] (empty list, as the body is blank)\\n\\n**3. Format JSON:**\\n```json\\n{\\n  \\\"company\\\": {\\\"transcription\\\": \\\"Schweizerische Sodafabrik\\\"},\\n  \\\"location\\\": {\\\"transcription\\\": \\\"ZURZACH\\\"},\\n  \\\"b_id\\\": {\\\"transcription\\\": \\\"B.51.322.01\\\"},\\n  \\\"date\\\": \\\"\\\",\\n  \\\"information\\\": []\\n}\\n```\\nWait, looking at the `information` field description: \\\"A list of text blocks from the main body of the card. Each block should be a separate string in the list. Maintain line breaks with \\\\\\\\n.\\\" Since the body is empty, the list should be empty `[]`.\\n\\nLet's double check the text.\\nTop line: \\\"Schweizerische Sodafabrik, ZURZACH\\\"\\nSo company is \\\"Schweizerische Sodafabrik\\\" and location is \\\"ZURZACH\\\".\\nTop right: \\\"B.51.322.01\\\". Below it is \\\"(U'Chemise)\\\". The prompt says `b_id` is the identifier code usually in top-right starting with \\\"B.\\\". So just the code.\\n\\nLet's refine the JSON structure based on the example provided in the prompt.\\nThe example shows:\\n{\\n  \\\"company\\\": {\\\"transcription\\\": \\\"\\\"},\\n  \\\"location\\\": {\\\"transcription\\\": \\\"\\\"},\\n  \\\"b_id\\\": {\\\"transcription\\\": \\\"\\\"},\\n  \\\"date\\\": \\\"\\\",\\n  \\\"information\\\": [\\n    {\\\"transcription\\\": \\\"\\\"}\\n  ]\\n}\\n\\nSo I need to follow this structure exactly.\\n\\nFinal check on values:\\n- company: Schweizerische Sodafabrik\\n- location: ZURZACH\\n- b_id: B.51.322.01\\n- date: \\\"\\\"\\n- information: []\\n\\nLet's construct the final JSON.\",\"reasoning_details\":[{\"type\":\"reasoning.text\",\"text\":\"The user wants me to extract information from an index card image and return it as a JSON object.\\n\\n**1. Analyze the image:**\\n- It's an index card, yellowish paper with blue lines and a red vertical line on the right.\\n- Top left text: \\\"Schweizerische Sodafabrik, ZURZACH\\\"\\n- Top right text: \\\"B.51.322.01\\\" and below it \\\"(U'Chemise)\\\" crossed out or underlined. Wait, let's look closer. It says \\\"B.51.322.01\\\" and underneath \\\"(U'Chemise)\\\". The prompt asks for `b_id` starting with \\\"B.\\\". So \\\"B.51.322.01\\\".\\n- The prompt asks for `company` (primary company name, usually top-left, exclude location).\\n- The prompt asks for `location` (city or town, often following company name).\\n- The prompt asks for `date` (stamped dates in YYYY-MM-DD). I don't see any stamped dates.\\n- The prompt asks for `information` (list of text blocks from main body). The main body is empty.\\n\\n**2. Extract fields:**\\n- **Company:** \\\"Schweizerische Sodafabrik\\\"\\n- **Location:** \\\"ZURZACH\\\"\\n- **b_id:** \\\"B.51.322.01\\\"\\n- **date:** \\\"\\\" (empty string)\\n- **information:** [] (empty list, as the body is blank)\\n\\n**3. Format JSON:**\\n```json\\n{\\n  \\\"company\\\": {\\\"transcription\\\": \\\"Schweizerische Sodafabrik\\\"},\\n  \\\"location\\\": {\\\"transcription\\\": \\\"ZURZACH\\\"},\\n  \\\"b_id\\\": {\\\"transcription\\\": \\\"B.51.322.01\\\"},\\n  \\\"date\\\": \\\"\\\",\\n  \\\"information\\\": []\\n}\\n```\\nWait, looking at the `information` field description: \\\"A list of text blocks from the main body of the card. Each block should be a separate string in the list. Maintain line breaks with \\\\\\\\n.\\\" Since the body is empty, the list should be empty `[]`.\\n\\nLet's double check the text.\\nTop line: \\\"Schweizerische Sodafabrik, ZURZACH\\\"\\nSo company is \\\"Schweizerische Sodafabrik\\\" and location is \\\"ZURZACH\\\".\\nTop right: \\\"B.51.322.01\\\". Below it is \\\"(U'Chemise)\\\". The prompt says `b_id` is the identifier code usually in top-right starting with \\\"B.\\\". So just the code.\\n\\nLet's refine the JSON structure based on the example provided in the prompt.\\nThe example shows:\\n{\\n  \\\"company\\\": {\\\"transcription\\\": \\\"\\\"},\\n  \\\"location\\\": {\\\"transcription\\\": \\\"\\\"},\\n  \\\"b_id\\\": {\\\"transcription\\\": \\\"\\\"},\\n  \\\"date\\\": \\\"\\\",\\n  \\\"information\\\": [\\n    {\\\"transcription\\\": \\\"\\\"}\\n  ]\\n}\\n\\nSo I need to follow this structure exactly.\\n\\nFinal check on values:\\n- company: Schweizerische Sodafabrik\\n- location: ZURZACH\\n- b_id: B.51.322.01\\n- date: \\\"\\\"\\n- information: []\\n\\nLet's construct the final JSON.\",\"format\":\"unknown\",\"index\":0}]},\"native_finish_reason\":\"stop\"}],\"created\":1792867910,\"model\":\"nvidia/nemotron-3.5-super-vl\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":null,\"usage\":{\"completion_tokens\":754,\"prompt_tokens\":2650,\"total_tokens\":3404,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":0,\"reasoning_tokens\":686,\"rejected_prediction_tokens\":null,\"image_tokens\":0},\"prompt_tokens_details\":{\"audio_tokens\":0,\"cached_tokens\":0,\"cache_write_tokens\":0,\"video_tokens\":0},\"cost\":0.0005666,\"is_byok\":false,\"cost_details\":{\"upstream_inference_cost\":0.0005666,\"upstream_inference_prompt_cost\":0.000265,\"upstream_inference_completions_cost\":0.0003016}},\"provider\":\"Crusoe\"}"
+}

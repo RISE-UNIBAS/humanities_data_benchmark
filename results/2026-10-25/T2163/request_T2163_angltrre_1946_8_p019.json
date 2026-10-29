@@ -1,0 +1,58 @@
+{
+    "text": "{\"advertisements\":[{\"box\":[307.0,2968.0,2058.0,3240.0]}]}",
+    "model": "fireworks/ember-1",
+    "provider": "openrouter",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 4331,
+        "output_tokens": 1113,
+        "total_tokens": 5444,
+        "reasoning_tokens": 0,
+        "input_cost_usd": 0.012993,
+        "output_cost_usd": 0.016695,
+        "estimated_cost_usd": 0.029688
+    },
+    "duration": 14.862625122070312,
+    "timestamp": "2026-10-25T00:53:33.506224",
+    "parsed": {
+        "advertisements": [
+            {
+                "box": [
+                    307.0,
+                    2968.0,
+                    2058.0,
+                    3240.0
+                ]
+            }
+        ]
+    },
+    "conversation_id": "cdfe42a2-e99d-4531-a37a-be63fa484c20",
+    "score": {
+        "field_scores": {
+            "box 0": {
+                "response": [
+                    307.0,
+                    2968.0,
+                    2058.0,
+                    3240.0
+                ],
+                "ground_truth": [
+                    304,
+                    2982,
+                    2062,
+                    3262
+                ],
+                "score": 0.874
+            }
+        },
+        "f1": 1.0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "mean_iou": 0.874,
+        "true_positives": 1,
+        "false_positives": 0,
+        "false_negatives": 0,
+        "iou_threshold": 0.5
+    },
+    "raw_response": "{\"id\":\"gen-1792882398-diNveSML9e0OW166VCmQ\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\n\\\"advertisements\\\": [\\n{\\\"box\\\": [307, 2968, 2058, 3240]}\\n]\\n}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"advertisements\":[{\"box\":[307.0,2968.0,2058.0,3240.0]}]},\"reasoning\":\"The user wants me to extract all advertisements from the page and return their bounding boxes. Looking at the image, I can see a magazine page with mostly text listings (classified-style entries for goods offered/wanted), and at the bottom there's a clear advertisement banner for \\\"GLYCINE\\\" with a trademark slogan.\\n\\nThe page is 2479 x 3508 pixels. The image displayed appears to be scaled. Let me estimate the bounding box of the GLYCINE advertisement at the bottom.\\n\\nLooking at the image, the GLYCINE ad is at the bottom. There's a horizontal line above it, then the black banner with \\\"GLYCINE\\\" logo and text \\\"The Trademark GLYCINE is for you a guarantee, for us an obligation\\\".\\n\\nIn the displayed image (which appears to be roughly 1447 x 2048 based on the image dimensions shown), the ad banner spans from about x=180 to x=1200 horizontally, and y=1730 to y=1890 vertically.\\n\\nLet me convert to original coordinates. The displayed image in the prompt - I need to figure out the scale. The original is 2479 x 3508. The image shown has aspect ratio 2479/3508 = 0.7067. \\n\\nLooking at the image provided, it seems to be displayed at some resolution. Let me estimate based on the original page dimensions directly.\\n\\nThe GLYCINE advertisement banner:\\n- Left edge: around 7% from left = ~175 px\\n- Right edge: around 83% from left = ~2055 px\\n- Top edge: around 84.5% from top = ~2965 px\\n- Bottom edge: around 92.5% from top = ~3245 px\\n\\nLet me look more carefully. The horizontal rule above the ad is at about y=1690 in displayed coordinates. The ad black box starts below that.\\n\\nIn the displayed image (assuming it's 1447 wide x 2048 tall based on typical rendering):\\n- The black GLYCINE banner: left ~180, right ~1200, top ~1735, bottom ~1890\\n\\nScale factor: 2479/1447 = 1.713, 3508/2048 = 1.713. Consistent.\\n\\nSo in original coordinates:\\n- x0 = 180 * 1.713 = 308\\n- x1 = 1200 * 1.713 = 2056\\n- y0 = 1735 * 1.713 = 2972\\n- y1 = 1890 * 1.713 = 3238\\n\\nHmm, let me reconsider the displayed image dimensions. The image in the prompt shows \\\"1447 \u00d7 2048\\\" implicitly? Actually the user says original is 2479 x 3508. The image I see - let me estimate proportions directly.\\n\\nThe GLYCINE ad black rectangle:\\n- Starts at about 12.5% from left edge of page\\n- Ends at about 83% from left edge\\n- Top at about 85% from top\\n- Bottom at about 92.3% from top\\n\\nx0 = 0.125 * 2479 = 310\\nx1 = 0.83 * 2479 = 2058\\ny0 = 0.85 * 3508 = 2982\\ny1 = 0.923 * 3508 = 3238\\n\\nLooking again at the image: the black banner with GLYCINE. The left edge of the black box is around x=180/1447 = 12.4%. The right edge (including the white flag part) extends to about x=1200/1447 = 82.9%. The top of black box is around y=1735/2048 = 84.7%. Bottom around y=1888/2048 = 92.2%.\\n\\nSo:\\nx0 = 0.124 * 2479 = 307\\ny0 = 0.847 * 3508 = 2971\\nx1 = 0.829 * 2479 = 2055\\ny1 = 0.922 * 3508 = 3234\\n\\nLet me refine. The ad includes the black rectangular banner and the white ribbon/flag on the right with text. The whole advertisement block appears to span from the left black box (with globe logo) through the GLYCINE letters to the white flag on the right.\\n\\nBounding box approximately: [308, 2970, 2058, 3240]\\n\\nActually, looking more carefully at the bottom: there's the page number \\\"279\\\" at bottom right around y=1900 displayed, which is below the ad. The ad bottom is around y=1890 displayed.\\n\\nLet me settle on: [307, 2968, 2057, 3238]\\n\\nI'll provide one advertisement bounding box for the GLYCINE ad. The rest of the page consists of classified text listings (goods offered/wanted) which are not display advertisements - they're more like directory/classified listings. The only true advertisement with graphic design is the GLYCINE banner at the bottom.\\n\\nFinal answer with the GLYCINE ad box.\",\"reasoning_details\":[{\"type\":\"reasoning.text\",\"text\":\"The user wants me to extract all advertisements from the page and return their bounding boxes. Looking at the image, I can see a magazine page with mostly text listings (classified-style entries for goods offered/wanted), and at the bottom there's a clear advertisement banner for \\\"GLYCINE\\\" with a trademark slogan.\\n\\nThe page is 2479 x 3508 pixels. The image displayed appears to be scaled. Let me estimate the bounding box of the GLYCINE advertisement at the bottom.\\n\\nLooking at the image, the GLYCINE ad is at the bottom. There's a horizontal line above it, then the black banner with \\\"GLYCINE\\\" logo and text \\\"The Trademark GLYCINE is for you a guarantee, for us an obligation\\\".\\n\\nIn the displayed image (which appears to be roughly 1447 x 2048 based on the image dimensions shown), the ad banner spans from about x=180 to x=1200 horizontally, and y=1730 to y=1890 vertically.\\n\\nLet me convert to original coordinates. The displayed image in the prompt - I need to figure out the scale. The original is 2479 x 3508. The image shown has aspect ratio 2479/3508 = 0.7067. \\n\\nLooking at the image provided, it seems to be displayed at some resolution. Let me estimate based on the original page dimensions directly.\\n\\nThe GLYCINE advertisement banner:\\n- Left edge: around 7% from left = ~175 px\\n- Right edge: around 83% from left = ~2055 px\\n- Top edge: around 84.5% from top = ~2965 px\\n- Bottom edge: around 92.5% from top = ~3245 px\\n\\nLet me look more carefully. The horizontal rule above the ad is at about y=1690 in displayed coordinates. The ad black box starts below that.\\n\\nIn the displayed image (assuming it's 1447 wide x 2048 tall based on typical rendering):\\n- The black GLYCINE banner: left ~180, right ~1200, top ~1735, bottom ~1890\\n\\nScale factor: 2479/1447 = 1.713, 3508/2048 = 1.713. Consistent.\\n\\nSo in original coordinates:\\n- x0 = 180 * 1.713 = 308\\n- x1 = 1200 * 1.713 = 2056\\n- y0 = 1735 * 1.713 = 2972\\n- y1 = 1890 * 1.713 = 3238\\n\\nHmm, let me reconsider the displayed image dimensions. The image in the prompt shows \\\"1447 \u00d7 2048\\\" implicitly? Actually the user says original is 2479 x 3508. The image I see - let me estimate proportions directly.\\n\\nThe GLYCINE ad black rectangle:\\n- Starts at about 12.5% from left edge of page\\n- Ends at about 83% from left edge\\n- Top at about 85% from top\\n- Bottom at about 92.3% from top\\n\\nx0 = 0.125 * 2479 = 310\\nx1 = 0.83 * 2479 = 2058\\ny0 = 0.85 * 3508 = 2982\\ny1 = 0.923 * 3508 = 3238\\n\\nLooking again at the image: the black banner with GLYCINE. The left edge of the black box is around x=180/1447 = 12.4%. The right edge (including the white flag part) extends to about x=1200/1447 = 82.9%. The top of black box is around y=1735/2048 = 84.7%. Bottom around y=1888/2048 = 92.2%.\\n\\nSo:\\nx0 = 0.124 * 2479 = 307\\ny0 = 0.847 * 3508 = 2971\\nx1 = 0.829 * 2479 = 2055\\ny1 = 0.922 * 3508 = 3234\\n\\nLet me refine. The ad includes the black rectangular banner and the white ribbon/flag on the right with text. The whole advertisement block appears to span from the left black box (with globe logo) through the GLYCINE letters to the white flag on the right.\\n\\nBounding box approximately: [308, 2970, 2058, 3240]\\n\\nActually, looking more carefully at the bottom: there's the page number \\\"279\\\" at bottom right around y=1900 displayed, which is below the ad. The ad bottom is around y=1890 displayed.\\n\\nLet me settle on: [307, 2968, 2057, 3238]\\n\\nI'll provide one advertisement bounding box for the GLYCINE ad. The rest of the page consists of classified text listings (goods offered/wanted) which are not display advertisements - they're more like directory/classified listings. The only true advertisement with graphic design is the GLYCINE banner at the bottom.\\n\\nFinal answer with the GLYCINE ad box.\",\"format\":\"unknown\",\"index\":0}]},\"native_finish_reason\":\"stop\"}],\"created\":1792882398,\"model\":\"fireworks/ember-1\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":null,\"usage\":{\"completion_tokens\":1113,\"prompt_tokens\":4331,\"total_tokens\":5444,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":0,\"reasoning_tokens\":963,\"rejected_prediction_tokens\":null,\"image_tokens\":0},\"prompt_tokens_details\":{\"audio_tokens\":0,\"cached_tokens\":0,\"cache_write_tokens\":0,\"video_tokens\":0},\"cost\":0.029688,\"is_byok\":false,\"cost_details\":{\"upstream_inference_cost\":0.029688,\"upstream_inference_prompt_cost\":0.012993,\"upstream_inference_completions_cost\":0.016695}},\"provider\":\"Fireworks\"}"
+}

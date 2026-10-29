@@ -3,7 +3,7 @@ import json
 
 import pytest
 
-from scripts.ndr_export import generate_compare_detail as g
+from scripts.compare import generate_compare_detail as g
 
 
 @pytest.fixture

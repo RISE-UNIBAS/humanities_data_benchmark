@@ -74,6 +74,7 @@ class PricingUpdater:
         'gpt-6-astra':         'https://developers.openai.com/api/docs/models/gpt-6-astra',
         'gpt-6-sol':           'https://developers.openai.com/api/docs/models/gpt-6-sol',
         'gpt-6-luna':          'https://developers.openai.com/api/docs/models/gpt-6-luna',
+        'gpt-6.1-sol':         'https://developers.openai.com/api/docs/models/gpt-6.1-sol',
         'o3':                  'https://developers.openai.com/api/docs/models/o3',
     }
 
@@ -83,6 +84,7 @@ class PricingUpdater:
         'command-r7b-12-2024':      'https://docs.cohere.com/docs/command-r7b',
         'command-a-03-2025':        'https://docs.cohere.com/docs/command-a',
         'command-a-vision-07-2025': 'https://docs.cohere.com/docs/command-a-vision',
+        'command-a-plus-05-2026':   'https://docs.cohere.com/docs/command-a-plus',
     }
 
     DEEPSEEK_MODEL_URLS = {
@@ -96,13 +98,16 @@ class PricingUpdater:
 
     MISTRAL_MODEL_URLS = {
         'mistral-large-2512':    'https://docs.mistral.ai/models/mistral-large-3-25-12',
+        'mistral-large-4':       'https://docs.mistral.ai/models/mistral-large-4-0',
         'mistral-large-2411':    'https://docs.mistral.ai/models/mistral-large-2-1-24-11',
         'mistral-medium-3.5':    'https://docs.mistral.ai/models/model-cards/mistral-medium-3-5-26-04',
         'mistral-medium-2508':   'https://docs.mistral.ai/models/mistral-medium-3-1-25-08',
         'mistral-medium-2505':   'https://docs.mistral.ai/models/mistral-medium-3-25-05',
         'mistral-small-2506':    'https://docs.mistral.ai/models/mistral-small-3-2-25-06',
+        'mistral-small-2603':    'https://docs.mistral.ai/models/mistral-small-4-0-26-03',
         'ministral-14b-2512':    'https://docs.mistral.ai/models/ministral-3-14b-25-12',
         'ministral-8b-2512':     'https://docs.mistral.ai/models/ministral-3-8b-25-12',
+        'ministral-3b-2512':     'https://docs.mistral.ai/models/ministral-3-3b-25-12',
         'magistral-medium-2509': 'https://docs.mistral.ai/models/magistral-medium-1-2-25-09',
         'magistral-small-2509':  'https://docs.mistral.ai/models/magistral-small-1-2-25-09',
         'pixtral-large-2411':    'https://docs.mistral.ai/models/pixtral-large-24-11',
@@ -980,6 +985,7 @@ Return only JSON:"""
         'gemini-3.5-flash-lite':         'https://ai.google.dev/gemini-api/docs/pricing',
         'gemini-3.7-flash':              'https://ai.google.dev/gemini-api/docs/pricing',
         'gemini-3.8-flash':              'https://ai.google.dev/gemini-api/docs/pricing',
+        'gemini-4-argon':                'https://ai.google.dev/gemini-api/docs/pricing',
     }
 
     OPENROUTER_MODEL_URLS = {
@@ -1010,6 +1016,21 @@ Return only JSON:"""
         'meta-llama/llama-4-scout': 'https://openrouter.ai/meta-llama/llama-4-scout',
         'stepfun/step-3.7-flash': 'https://openrouter.ai/stepfun/step-3.7-flash',
         'moonshotai/kimi-k3':             'https://openrouter.ai/moonshotai/kimi-k3',
+        'minimax/minimax-m3.1-flash':     'https://openrouter.ai/minimax/minimax-m3.1-flash',
+        'nvidia/nemotron-3.5-super-vl':   'https://openrouter.ai/nvidia/nemotron-3.5-super-vl',
+        'meta/muse-spark-open':           'https://openrouter.ai/meta/muse-spark-open',
+        'meta/muse-wonder':               'https://openrouter.ai/meta/muse-wonder',
+        'stepfun/step-5-preview':         'https://openrouter.ai/stepfun/step-5-preview',
+        'qwen/qwen3.8-max-prime':         'https://openrouter.ai/qwen/qwen3.8-max-prime',
+        'xiaomi/mimo-v2.6-pro':           'https://openrouter.ai/xiaomi/mimo-v2.6-pro',
+        'xiaomi/mimo-v2.6-flash':         'https://openrouter.ai/xiaomi/mimo-v2.6-flash',
+        'inclusionai/ling-3.0-flash-vl':  'https://openrouter.ai/inclusionai/ling-3.0-flash-vl',
+        'perceptron/perceptron-mk1.5':    'https://openrouter.ai/perceptron/perceptron-mk1.5',
+        'elorian/glimpse':                'https://openrouter.ai/elorian/glimpse',
+        'fireworks/ember-1':              'https://openrouter.ai/fireworks/ember-1',
+        'bytedance-seed/seed-2-1-turbo':  'https://openrouter.ai/bytedance-seed/seed-2-1-turbo',
+        'nex-agi/nex-n2.5-mini':          'https://openrouter.ai/nex-agi/nex-n2.5-mini',
+        'nex-agi/nex-n2.5-pro':           'https://openrouter.ai/nex-agi/nex-n2.5-pro',
     }
 
     HUGGINGFACE_MODEL_URLS = {

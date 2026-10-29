@@ -1,0 +1,89 @@
+{
+    "text": "{\"metadata\":{\"send_date\":[\"1928-09-28\"],\"letter_title\":null,\"sender_persons\":[\"Jean Frey\"],\"receiver_persons\":[\"Max Vischer\"]}}",
+    "model": "command-a-plus-05-2026",
+    "provider": "cohere",
+    "finish_reason": "complete",
+    "usage": {
+        "input_tokens": 628,
+        "output_tokens": 894,
+        "total_tokens": 1522,
+        "reasoning_tokens": 0,
+        "input_cost_usd": 0.0,
+        "output_cost_usd": 0.0,
+        "reasoning_cost_usd": 0.0,
+        "estimated_cost_usd": 0.0
+    },
+    "duration": 8.349991083145142,
+    "timestamp": "2026-10-24T20:31:54.884394",
+    "parsed": {
+        "metadata": {
+            "letter_title": null,
+            "sender_persons": [
+                "Jean Frey"
+            ],
+            "send_date": [
+                "1928-09-28"
+            ],
+            "receiver_persons": [
+                "Max Vischer"
+            ]
+        }
+    },
+    "conversation_id": "ab99e59d-d687-4a5c-a167-aed10abe9021",
+    "score": {
+        "send_date_tp": 1,
+        "send_date_fp": 0,
+        "send_date_fn": 0,
+        "sender_persons_tp": 0,
+        "sender_persons_fp": 1,
+        "sender_persons_fn": 1,
+        "receiver_persons_tp": 1,
+        "receiver_persons_fp": 0,
+        "receiver_persons_fn": 0,
+        "field_scores": {
+            "send_date": {
+                "response": [
+                    "1928-09-28"
+                ],
+                "ground_truth": [
+                    "1928-09-28"
+                ],
+                "score": null,
+                "counts": {
+                    "send_date_tp": 1,
+                    "send_date_fp": 0,
+                    "send_date_fn": 0
+                }
+            },
+            "sender_persons": {
+                "response": [
+                    "Jean Frey"
+                ],
+                "ground_truth": [
+                    "Frey-Weber, Jean Richard"
+                ],
+                "score": null,
+                "counts": {
+                    "sender_persons_tp": 0,
+                    "sender_persons_fp": 1,
+                    "sender_persons_fn": 1
+                }
+            },
+            "receiver_persons": {
+                "response": [
+                    "Vischer-von Planta, Max"
+                ],
+                "ground_truth": [
+                    "Vischer-von Planta, Max"
+                ],
+                "score": null,
+                "counts": {
+                    "receiver_persons_tp": 1,
+                    "receiver_persons_fp": 0,
+                    "receiver_persons_fn": 0
+                }
+            }
+        }
+    },
+    "raw_response": "{\"id\":\"eddd3ac8-69da-4492-bb7c-1982fcad9884\",\"finish_reason\":\"COMPLETE\",\"message\":{\"role\":\"assistant\",\"content\":[{\"type\":\"thinking\",\"thinking\":\"We need to extract letter_title, sender_persons, send_date, receiver_persons.\\n\\nWe have a letter. Let's parse.\\n\\nHeader: \\\"VEREIN F\u00dcR DIE SCHIFFFAHRT AUF DEM OBERRHEIN\\\" - this is the organization. Possibly letter title? Usually letter title is something like \\\"Entlastung der Aktenden der Personenschifffahrtsgesellschaft\\\". But we need to find a title. The letter may not have an explicit title. The instruction: If a piece of information is not included in the letter, set the value for the corresponding key to \\\"null\\\". So we need to decide if there is a title. The letter content: \\\"Anbei \u00fcbermitteln wir Ihnen zu unserer Entlastung die Akten der Personenschifffahrtsgesellschaft, die Sie uns s.Z. leihweise \u00fcberlassen hatten, bestens dankend.\\\" So the letter is about sending files for discharge. Could be considered the letter's purpose. But is there a formal title? Usually letters have a subject line. Not present. So letter_title likely null.\\n\\nSender_persons: The letter is from the \\\"Verein f\u00fcr die Schiffahrt auf dem Oberrhein\\\" (the organization). Possibly signed by a person. At bottom, there is a signature: \\\"Jean Frey\\\"? Actually signature appears to be \\\"Jean Frey\\\". The typed name is not present, only signature. The letter is on behalf of the organization. The sender persons could be the organization, but we need person(s). The signature indicates a person, maybe the secretary. The letterhead includes \\\"ST\u00c4NDIGES SEKRETARIAT: BASEL, BLUMMENRAIN 38\\\". So the sender could be the organization, but we need person(s). The signature is \\\"Jean Frey\\\". That is a person. Also the letter is addressed to \\\"Herrn D.r Max Vischer, Advokat & Notar Basel.\\\" So receiver is that person.\\n\\nThus sender_persons: [\\\"Jean Frey\\\"]? Or maybe also the organization? The instruction: Name(s) of the person(s) who wrote the letter. The letter is typed, but signed by Jean Frey. So we can consider Jean Frey as the author. Could also include the organization as a sender, but they ask for person(s). So we list the person(s). So [\\\"Jean Frey\\\"].\\n\\nReceiver_persons: \\\"Herrn D.r Max Vischer, Advokat & Notar Basel.\\\" So [\\\"Max Vischer\\\"].\\n\\nSend_date: The letter is dated \\\"28 Sept. 1928.\\\" So date is 1928-09-28. Use ISO format.\\n\\nThus JSON:\\n\\n{\\n  \\\"letter_title\\\": null,\\n  \\\"sender_persons\\\": [\\\"Jean Frey\\\"],\\n  \\\"send_date\\\": [\\\"1928-09-28\\\"],\\n  \\\"receiver_persons\\\": [\\\"Max Vischer\\\"]\\n}\\n\\nBut need to ensure null is actual null, not string \\\"null\\\". In JSON, null is literal. The schema expects anyOf: array of strings or null. So we can set null.\\n\\nThus final JSON:\\n\\n{\\n  \\\"metadata\\\": {\\n    \\\"letter_title\\\": null,\\n    \\\"sender_persons\\\": [\\\"Jean Frey\\\"],\\n    \\\"send_date\\\": [\\\"1928-09-28\\\"],\\n    \\\"receiver_persons\\\": [\\\"Max Vischer\\\"]\\n  }\\n}\\n\\nCheck if any other info: The letter includes \\\"Verein f\u00fcr die Schiffahrt auf dem Oberrhein\\\" as organization. Could be considered sender. But they ask for person(s). So we list the person(s). The signature is \\\"Jean Frey\\\". That is likely the secretary. So okay.\\n\\nPotential nuance: The letter may be from the \\\"Verein f\u00fcr die Schiffahrt auf dem Oberrhein\\\" as a whole, not an individual. But we have a signature. So we can include both? The instruction: Name(s) of the person(s) who wrote the letter. If multiple persons wrote, list them. Here the letter is typed, but the signature indicates the person who signed. So we list that person.\\n\\nThus final answer.\\n\\nCheck formatting: Must output only JSON, no extra text. Ensure proper quoting.\\n\\nThus final.\"},{\"type\":\"text\",\"text\":\"{\\n  \\\"metadata\\\": {\\n    \\\"letter_title\\\": null,\\n    \\\"sender_persons\\\": [\\\"Jean Frey\\\"],\\n    \\\"send_date\\\": [\\\"1928-09-28\\\"],\\n    \\\"receiver_persons\\\": [\\\"Max Vischer\\\"]\\n  }\\n}\"}]},\"usage\":{\"billed_units\":{\"input_tokens\":3910.0,\"output_tokens\":889.0},\"tokens\":{\"input_tokens\":628.0,\"output_tokens\":894.0,\"reasoning_tokens\":839,\"image_tokens\":3343},\"cached_tokens\":576.0}}"
+}

@@ -1,0 +1,78 @@
+{
+    "text": "{\"metadata\":{\"send_date\":[\"1932-10-07\"],\"letter_title\":null,\"sender_persons\":null,\"receiver_persons\":null}}",
+    "model": "fireworks/ember-1",
+    "provider": "openrouter",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 4505,
+        "output_tokens": 1157,
+        "total_tokens": 5662,
+        "reasoning_tokens": 0,
+        "input_cost_usd": 0.013515,
+        "output_cost_usd": 0.017355,
+        "estimated_cost_usd": 0.03087
+    },
+    "duration": 15.109233617782593,
+    "timestamp": "2026-10-25T00:02:12.339245",
+    "parsed": {
+        "metadata": {
+            "send_date": [
+                "1932-10-07"
+            ],
+            "letter_title": null,
+            "sender_persons": null,
+            "receiver_persons": null
+        }
+    },
+    "conversation_id": "8838c8b9-1e10-4b5f-9f24-e201a33e17c6",
+    "score": {
+        "send_date_tp": 1,
+        "send_date_fp": 0,
+        "send_date_fn": 0,
+        "sender_persons_tp": 0,
+        "sender_persons_fp": 0,
+        "sender_persons_fn": 1,
+        "receiver_persons_tp": 0,
+        "receiver_persons_fp": 0,
+        "receiver_persons_fn": 0,
+        "field_scores": {
+            "send_date": {
+                "response": [
+                    "1932-10-07"
+                ],
+                "ground_truth": [
+                    "1932-10-07"
+                ],
+                "score": null,
+                "counts": {
+                    "send_date_tp": 1,
+                    "send_date_fp": 0,
+                    "send_date_fn": 0
+                }
+            },
+            "sender_persons": {
+                "response": [],
+                "ground_truth": [
+                    "Oettinger-Meili, Artur"
+                ],
+                "score": null,
+                "counts": {
+                    "sender_persons_tp": 0,
+                    "sender_persons_fp": 0,
+                    "sender_persons_fn": 1
+                }
+            },
+            "receiver_persons": {
+                "response": [],
+                "ground_truth": [],
+                "score": null,
+                "counts": {
+                    "receiver_persons_tp": 0,
+                    "receiver_persons_fp": 0,
+                    "receiver_persons_fn": 0
+                }
+            }
+        }
+    },
+    "raw_response": "{\"id\":\"gen-1792879317-Q3kJ6Dl8i8MAj72bntGJ\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\\"metadata\\\":{\\\"letter_title\\\":null,\\\"receiver_persons\\\":null,\\\"send_date\\\":[\\\"1932-10-07\\\"],\\\"sender_persons\\\":null}}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"metadata\":{\"send_date\":[\"1932-10-07\"],\"letter_title\":null,\"sender_persons\":null,\"receiver_persons\":null}},\"reasoning\":\"The user wants me to extract metadata from a historical letter image. Let me analyze the image carefully.\\n\\nThe letter is in German. Let me read it:\\n\\nHeader: \\\"BASLER PERSONENSCHIFFAHRTS-GESELLSCHAFT\\\"\\n\\nDate: \\\"Basel, den 7. Oktober 1932.\\\"\\n\\nReference: \\\"O/J\\\"\\n\\nAddressed to:\\n\\\"An die\\nVorstandsmitglieder der Basler Personenschiffahrts-gesellschaft\\nBasel\\\"\\n\\nSalutation: \\\"Sehr geehrte Herren,\\\"\\n\\nBody mentions:\\n- \\\"Als Beilage erhalten Sie Copie des Expos\u00e9 der B.R.S.A.G. vom 4. Oktober 1932 gem\u00e4ss Beschluss 2 und Auftrag b des Protokolls der Vorstandssitzung vom 22. September 1932.\\\"\\n- \\\"Wir bitten Sie, sich bis 15. Oktober schriftlich zu \u00e4ussern, ob Ihnen das Expos\u00e9 gen\u00fcgt und ob Sie einverstanden sind, dass Ihr Pr\u00e4sident gem\u00e4ss Beschluss 3 & 4 des obigen Protokolls in weitere Verhandlungen mit der B.R.S.A.G. eintritt.\\\"\\n\\nClosing: \\\"Hochachtungsvoll\\\"\\n\\\"Basler Personenschiffahrtsgesellschaft\\\"\\n\\\"Der Gesch\u00e4ftsf\u00fchrer:\\\"\\nSignature (illegible)\\n\\n\\\"1 Beilage.\\\"\\n\\nNow for the JSON:\\n\\n- letter_title: There is no explicit title. The letterhead is \\\"BASLER PERSONENSCHIFFAHRTS-GESELLSCHAFT\\\" but that's the sender organization, not a title. The letter doesn't have a title per se. Set to null.\\n\\n- sender_persons: The letter is signed by \\\"Der Gesch\u00e4ftsf\u00fchrer\\\" (the managing director) of Basler Personenschiffahrtsgesellschaft. The signature is illegible. No specific person name is given. The sender is the organization \\\"Basler Personenschiffahrtsgesellschaft\\\" but the key asks for persons. Since no person name is legible/included, set to null. Actually, the signature might be readable but I cannot reliably read it. The printed text says \\\"Der Gesch\u00e4ftsf\u00fchrer:\\\" with a signature. No name is typed. So sender_persons = null.\\n\\nWait, but the sender is clearly the Basler Personenschiffahrtsgesellschaft. However the key is \\\"sender_persons\\\" - name(s) of person(s) who wrote the letter. The letter was written by the Gesch\u00e4ftsf\u00fchrer but his name is not given (only signature). So null.\\n\\n- send_date: \\\"Basel, den 7. Oktober 1932\\\" \u2192 1932-10-07.\\n\\n- receiver_persons: \\\"Vorstandsmitglieder der Basler Personenschiffahrtsgesellschaft\\\" - these are board members, not named individuals. The key asks for names of persons. Since no specific names are given, set to null. But the receiver is a group. The instruction says \\\"Name(s) of the person(s) who received the letter.\\\" The recipients are \\\"Vorstandsmitglieder der Basler Personenschiffahrtsgesellschaft\\\" - not individual names. I think this should be null since no person names are included. However, one could argue the receiver is the group. But the key specifically says \\\"persons\\\" and \\\"Name(s)\\\". Since no names are given, null.\\n\\nHmm, but let me reconsider. The receiver is \\\"die Vorstandsmitglieder der Basler Personenschiffahrtsgesellschaft\\\". This is a collective body, not named persons. The example uses individual names. Since no individual names are present, I'll set receiver_persons to null.\\n\\nActually, let me think about whether to include the organization as receiver. The schema allows list of strings or null. The instruction: \\\"If a piece of information is not included in the letter, set the value for the corresponding key to 'null'.\\\" The receiver persons' names are not included (only their role). So null is appropriate.\\n\\nFor sender_persons similarly: the Gesch\u00e4ftsf\u00fchrer signed but name not typed/legible. Null.\\n\\nletter_title: No title. Null.\\n\\nsend_date: 1932-10-07.\\n\\nLet me format according to schema: top-level \\\"metadata\\\" object containing the four keys.\\n\\nThe schema requires: send_date, letter_title, sender_persons, receiver_persons. Each can be array of strings or null.\\n\\nFinal JSON:\\n{\\n  \\\"metadata\\\": {\\n    \\\"letter_title\\\": null,\\n    \\\"send_date\\\": [\\\"1932-10-07\\\"],\\n    \\\"sender_persons\\\": null,\\n    \\\"receiver_persons\\\": null\\n  }\\n}\\n\\nWait, should send_date be a list even if single value? Yes: \\\"the values corresponding to each key should be stored as a list, even if there is only a single value for a key\\\". So send_date: [\\\"1932-10-07\\\"]. For null values, the schema allows null directly. The instruction says set value to \\\"null\\\" if not included. So use null (not [\\\"null\\\"]).\\n\\nLet me double check the date: \\\"Basel, den 7. Oktober 1932.\\\" Yes, 1932-10-07.\\n\\nI'm confident.\",\"reasoning_details\":[{\"type\":\"reasoning.text\",\"text\":\"The user wants me to extract metadata from a historical letter image. Let me analyze the image carefully.\\n\\nThe letter is in German. Let me read it:\\n\\nHeader: \\\"BASLER PERSONENSCHIFFAHRTS-GESELLSCHAFT\\\"\\n\\nDate: \\\"Basel, den 7. Oktober 1932.\\\"\\n\\nReference: \\\"O/J\\\"\\n\\nAddressed to:\\n\\\"An die\\nVorstandsmitglieder der Basler Personenschiffahrts-gesellschaft\\nBasel\\\"\\n\\nSalutation: \\\"Sehr geehrte Herren,\\\"\\n\\nBody mentions:\\n- \\\"Als Beilage erhalten Sie Copie des Expos\u00e9 der B.R.S.A.G. vom 4. Oktober 1932 gem\u00e4ss Beschluss 2 und Auftrag b des Protokolls der Vorstandssitzung vom 22. September 1932.\\\"\\n- \\\"Wir bitten Sie, sich bis 15. Oktober schriftlich zu \u00e4ussern, ob Ihnen das Expos\u00e9 gen\u00fcgt und ob Sie einverstanden sind, dass Ihr Pr\u00e4sident gem\u00e4ss Beschluss 3 & 4 des obigen Protokolls in weitere Verhandlungen mit der B.R.S.A.G. eintritt.\\\"\\n\\nClosing: \\\"Hochachtungsvoll\\\"\\n\\\"Basler Personenschiffahrtsgesellschaft\\\"\\n\\\"Der Gesch\u00e4ftsf\u00fchrer:\\\"\\nSignature (illegible)\\n\\n\\\"1 Beilage.\\\"\\n\\nNow for the JSON:\\n\\n- letter_title: There is no explicit title. The letterhead is \\\"BASLER PERSONENSCHIFFAHRTS-GESELLSCHAFT\\\" but that's the sender organization, not a title. The letter doesn't have a title per se. Set to null.\\n\\n- sender_persons: The letter is signed by \\\"Der Gesch\u00e4ftsf\u00fchrer\\\" (the managing director) of Basler Personenschiffahrtsgesellschaft. The signature is illegible. No specific person name is given. The sender is the organization \\\"Basler Personenschiffahrtsgesellschaft\\\" but the key asks for persons. Since no person name is legible/included, set to null. Actually, the signature might be readable but I cannot reliably read it. The printed text says \\\"Der Gesch\u00e4ftsf\u00fchrer:\\\" with a signature. No name is typed. So sender_persons = null.\\n\\nWait, but the sender is clearly the Basler Personenschiffahrtsgesellschaft. However the key is \\\"sender_persons\\\" - name(s) of person(s) who wrote the letter. The letter was written by the Gesch\u00e4ftsf\u00fchrer but his name is not given (only signature). So null.\\n\\n- send_date: \\\"Basel, den 7. Oktober 1932\\\" \u2192 1932-10-07.\\n\\n- receiver_persons: \\\"Vorstandsmitglieder der Basler Personenschiffahrtsgesellschaft\\\" - these are board members, not named individuals. The key asks for names of persons. Since no specific names are given, set to null. But the receiver is a group. The instruction says \\\"Name(s) of the person(s) who received the letter.\\\" The recipients are \\\"Vorstandsmitglieder der Basler Personenschiffahrtsgesellschaft\\\" - not individual names. I think this should be null since no person names are included. However, one could argue the receiver is the group. But the key specifically says \\\"persons\\\" and \\\"Name(s)\\\". Since no names are given, null.\\n\\nHmm, but let me reconsider. The receiver is \\\"die Vorstandsmitglieder der Basler Personenschiffahrtsgesellschaft\\\". This is a collective body, not named persons. The example uses individual names. Since no individual names are present, I'll set receiver_persons to null.\\n\\nActually, let me think about whether to include the organization as receiver. The schema allows list of strings or null. The instruction: \\\"If a piece of information is not included in the letter, set the value for the corresponding key to 'null'.\\\" The receiver persons' names are not included (only their role). So null is appropriate.\\n\\nFor sender_persons similarly: the Gesch\u00e4ftsf\u00fchrer signed but name not typed/legible. Null.\\n\\nletter_title: No title. Null.\\n\\nsend_date: 1932-10-07.\\n\\nLet me format according to schema: top-level \\\"metadata\\\" object containing the four keys.\\n\\nThe schema requires: send_date, letter_title, sender_persons, receiver_persons. Each can be array of strings or null.\\n\\nFinal JSON:\\n{\\n  \\\"metadata\\\": {\\n    \\\"letter_title\\\": null,\\n    \\\"send_date\\\": [\\\"1932-10-07\\\"],\\n    \\\"sender_persons\\\": null,\\n    \\\"receiver_persons\\\": null\\n  }\\n}\\n\\nWait, should send_date be a list even if single value? Yes: \\\"the values corresponding to each key should be stored as a list, even if there is only a single value for a key\\\". So send_date: [\\\"1932-10-07\\\"]. For null values, the schema allows null directly. The instruction says set value to \\\"null\\\" if not included. So use null (not [\\\"null\\\"]).\\n\\nLet me double check the date: \\\"Basel, den 7. Oktober 1932.\\\" Yes, 1932-10-07.\\n\\nI'm confident.\",\"format\":\"unknown\",\"index\":0}]},\"native_finish_reason\":\"stop\"}],\"created\":1792879317,\"model\":\"fireworks/ember-1\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":null,\"usage\":{\"completion_tokens\":1157,\"prompt_tokens\":4505,\"total_tokens\":5662,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":0,\"reasoning_tokens\":1099,\"rejected_prediction_tokens\":null,\"image_tokens\":0},\"prompt_tokens_details\":{\"audio_tokens\":0,\"cached_tokens\":0,\"cache_write_tokens\":0,\"video_tokens\":0},\"cost\":0.03087,\"is_byok\":false,\"cost_details\":{\"upstream_inference_cost\":0.03087,\"upstream_inference_prompt_cost\":0.013515,\"upstream_inference_completions_cost\":0.017355}},\"provider\":\"Fireworks\"}"
+}

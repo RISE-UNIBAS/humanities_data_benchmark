@@ -15,8 +15,8 @@ class Metadata(BaseModel):
         """Drop null and blank entries from the list.
 
         `Optional[List[str]]` allows the list itself to be null but not an entry within it, and
-        models return `[null]` or `["Betreff", null]`. Ground truth is built by `_split_by_pipe`,
-        which discards empties, so dropping them here keeps the two sides comparable. The fields
+        models return `[null]` or `["Betreff", null]`. The ground truth holds no empty entries, so
+        dropping them here keeps the two sides comparable. The fields
         stay required: a missing key is still a failed extraction.
         """
         if isinstance(value, list):

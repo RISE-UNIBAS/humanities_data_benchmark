@@ -1,0 +1,92 @@
+{
+    "text": "{\"advertisements\":[{\"box\":[1328.0,1215.0,2312.0,1915.0]},{\"box\":[312.0,1945.0,2325.0,2535.0]}]}",
+    "model": "meta/muse-spark-open",
+    "provider": "openrouter",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 4391,
+        "output_tokens": 659,
+        "total_tokens": 5050,
+        "reasoning_tokens": 0,
+        "cached_tokens": 512,
+        "input_cost_usd": 0.00492555,
+        "output_cost_usd": 0.00280075,
+        "estimated_cost_usd": 0.0077263
+    },
+    "duration": 7.479090929031372,
+    "timestamp": "2026-10-24T21:43:43.479483",
+    "parsed": {
+        "advertisements": [
+            {
+                "box": [
+                    1328.0,
+                    1215.0,
+                    2312.0,
+                    1915.0
+                ]
+            },
+            {
+                "box": [
+                    312.0,
+                    1945.0,
+                    2325.0,
+                    2535.0
+                ]
+            }
+        ]
+    },
+    "conversation_id": "71c8f52a-97b9-4692-8ce9-58e1b615bf82",
+    "score": {
+        "field_scores": {
+            "box 0": {
+                "response": null,
+                "ground_truth": [
+                    328,
+                    2516,
+                    2309,
+                    3188
+                ],
+                "score": 0.0
+            },
+            "box 1": {
+                "response": null,
+                "ground_truth": [
+                    1375,
+                    1809,
+                    2314,
+                    2509
+                ],
+                "score": 0.0
+            },
+            "unmatched prediction 0": {
+                "response": [
+                    1328.0,
+                    1215.0,
+                    2312.0,
+                    1915.0
+                ],
+                "ground_truth": null,
+                "score": 0.0
+            },
+            "unmatched prediction 1": {
+                "response": [
+                    312.0,
+                    1945.0,
+                    2325.0,
+                    2535.0
+                ],
+                "ground_truth": null,
+                "score": 0.0
+            }
+        },
+        "f1": 0.0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "mean_iou": 0.0,
+        "true_positives": 0,
+        "false_positives": 2,
+        "false_negatives": 2,
+        "iou_threshold": 0.5
+    },
+    "raw_response": "{\"id\":\"gen-1792871016-vcXUiFnCIGoasGVZTOZC\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\\"advertisements\\\": [{\\\"box\\\": [1328,1215,2312,1915]}, {\\\"box\\\": [312,1945,2325,2535]}]}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"advertisements\":[{\"box\":[1328.0,1215.0,2312.0,1915.0]},{\"box\":[312.0,1945.0,2325.0,2535.0]}]},\"reasoning\":\"We need to extract advertisements and return bounding boxes. Page is 2479x3508.\\n\\nWe have two advertisements:\\n\\n- Fr. Klingelfuss & Co. BASLE ... X-RAYS APPARATUS etc. Box in middle right.\\n- Banque F\u00e9d\u00e9rale S.A. Eidgen\u00f6ssische Bank A.G. at bottom.\\n\\nNeed to estimate coordinates.\\n\\nWe must provide box [x0,y0,x1,y1].\\n\\nWe need to approximate pixel coordinates.\\n\\nOriginal size 2479 x 3508.\\n\\nLet's estimate.\\n\\nThe page image: top header, then trade openings text occupies most.\\n\\nThe Fr. Klingelfuss ad is on right side, lower middle. Let's estimate its box.\\n\\nLooking at image: left margin ~ maybe 80px? Right margin similar. The ad's border: x0 maybe around 1330? Actually vertical divider line in middle. The ad is on right column. So x0 ~ 1325, x1 ~ 2310, y0 ~ 1220, y1 ~ 1900? Need more precise.\\n\\nSecond ad at bottom spanning full width: x0 ~ 310, x1 ~ 2320, y0 ~ 1950, y1 ~ 2450? Wait bottom ad is near bottom. Let's see: bottom ad occupies from about y=1970 to y=2500? Let's estimate.\\n\\nWe need to give plausible boxes. Since evaluation likely uses IoU tolerance, need reasonable.\\n\\nWe should provide two boxes.\\n\\nLet's try to get coordinates more accurately by visual estimation.\\n\\nAssume page width 2479, height 3508.\\n\\nTop of page y=0. Header at y~100. Trade openings title at y~180.\\n\\nFr. Klingelfuss box: top edge maybe at y=1230, bottom at y=1920. Left edge at x=1335, right at x=2305.\\n\\nBanque Federale box: decorative border. Top at y=1960, bottom at y=2520. Left at x=315, right at x=2315.\\n\\nWe need to output JSON with advertisements list.\\n\\nMake sure format exactly: {\\\"advertisements\\\": [{\\\"box\\\": [...]}, {\\\"box\\\": [...]}]}\\n\\nNo extra commentary.\\n\\nProvide two entries.\\n\\nPotential nuance: Are there any other ads? The whole page is trade openings but those two are clearly advertisements. So two.\\n\\nReturn empty list if none - not case.\\n\\nProvide boxes as integers.\\n\\nLet's craft final answer with estimated boxes:\\n\\nFirst ad (Fr. Klingelfuss): [1328, 1215, 2312, 1915]\\nSecond ad (Banque Federale): [312, 1945, 2325, 2535]\\n\\nCheck proportions: Height 3508, so y up to 3508. Our y values are within. Good.\\n\\nMaybe need to adjust to be safe: Use slightly larger boxes to ensure coverage.\\n\\nWe could also swap order; order doesn't matter.\\n\\nEnsure valid JSON.\\n\\n\",\"reasoning_details\":[{\"type\":\"reasoning.text\",\"text\":\"We need to extract advertisements and return bounding boxes. Page is 2479x3508.\\n\\nWe have two advertisements:\\n\\n- Fr. Klingelfuss & Co. BASLE ... X-RAYS APPARATUS etc. Box in middle right.\\n- Banque F\u00e9d\u00e9rale S.A. Eidgen\u00f6ssische Bank A.G. at bottom.\\n\\nNeed to estimate coordinates.\\n\\nWe must provide box [x0,y0,x1,y1].\\n\\nWe need to approximate pixel coordinates.\\n\\nOriginal size 2479 x 3508.\\n\\nLet's estimate.\\n\\nThe page image: top header, then trade openings text occupies most.\\n\\nThe Fr. Klingelfuss ad is on right side, lower middle. Let's estimate its box.\\n\\nLooking at image: left margin ~ maybe 80px? Right margin similar. The ad's border: x0 maybe around 1330? Actually vertical divider line in middle. The ad is on right column. So x0 ~ 1325, x1 ~ 2310, y0 ~ 1220, y1 ~ 1900? Need more precise.\\n\\nSecond ad at bottom spanning full width: x0 ~ 310, x1 ~ 2320, y0 ~ 1950, y1 ~ 2450? Wait bottom ad is near bottom. Let's see: bottom ad occupies from about y=1970 to y=2500? Let's estimate.\\n\\nWe need to give plausible boxes. Since evaluation likely uses IoU tolerance, need reasonable.\\n\\nWe should provide two boxes.\\n\\nLet's try to get coordinates more accurately by visual estimation.\\n\\nAssume page width 2479, height 3508.\\n\\nTop of page y=0. Header at y~100. Trade openings title at y~180.\\n\\nFr. Klingelfuss box: top edge maybe at y=1230, bottom at y=1920. Left edge at x=1335, right at x=2305.\\n\\nBanque Federale box: decorative border. Top at y=1960, bottom at y=2520. Left at x=315, right at x=2315.\\n\\nWe need to output JSON with advertisements list.\\n\\nMake sure format exactly: {\\\"advertisements\\\": [{\\\"box\\\": [...]}, {\\\"box\\\": [...]}]}\\n\\nNo extra commentary.\\n\\nProvide two entries.\\n\\nPotential nuance: Are there any other ads? The whole page is trade openings but those two are clearly advertisements. So two.\\n\\nReturn empty list if none - not case.\\n\\nProvide boxes as integers.\\n\\nLet's craft final answer with estimated boxes:\\n\\nFirst ad (Fr. Klingelfuss): [1328, 1215, 2312, 1915]\\nSecond ad (Banque Federale): [312, 1945, 2325, 2535]\\n\\nCheck proportions: Height 3508, so y up to 3508. Our y values are within. Good.\\n\\nMaybe need to adjust to be safe: Use slightly larger boxes to ensure coverage.\\n\\nWe could also swap order; order doesn't matter.\\n\\nEnsure valid JSON.\\n\\n\",\"format\":\"unknown\",\"index\":0}]},\"native_finish_reason\":\"stop\"}],\"created\":1792871016,\"model\":\"meta/muse-spark-open\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":null,\"usage\":{\"completion_tokens\":659,\"prompt_tokens\":4391,\"total_tokens\":5050,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":0,\"reasoning_tokens\":616,\"rejected_prediction_tokens\":null,\"image_tokens\":0},\"prompt_tokens_details\":{\"audio_tokens\":0,\"cached_tokens\":512,\"cache_write_tokens\":0,\"video_tokens\":0},\"cost\":0.0077263,\"is_byok\":false,\"cost_details\":{\"upstream_inference_cost\":0.0077263,\"upstream_inference_prompt_cost\":0.00492555,\"upstream_inference_completions_cost\":0.00280075}},\"provider\":\"Nebius\"}"
+}

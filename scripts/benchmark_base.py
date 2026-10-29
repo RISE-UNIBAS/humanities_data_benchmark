@@ -14,6 +14,7 @@ from data_loader import read_file, write_file
 from ai_client import create_ai_client, LLMResponse, Usage
 from ai_client.pricing import apply_costs, set_pricing_file
 import ai_client.openai_client as _openai_client
+import ai_client.mistral_client as _mistral_client
 from local import is_local_provider, get_backend
 from local.backends.base import LocalRequest
 
@@ -30,6 +31,27 @@ else:
 # client retries without it. Drop once generic-llm-api-client lists the family itself.
 if "gpt-6" not in _openai_client.FIXED_TEMPERATURE_FAMILIES:
     _openai_client.FIXED_TEMPERATURE_FAMILIES += ("gpt-6",)
+
+# Mistral reasoning models (mistral-large-4) return content as thinking and text chunks, which the
+# client parses as if it were a string. Parse the text chunks only; the raw response keeps both.
+# Drop once generic-llm-api-client joins chunked content itself.
+_mistral_create_response = _mistral_client.MistralClient._create_response_from_raw
+
+
+def _create_response_from_text_chunks(self, raw_response, model, response_format):
+    message = raw_response.choices[0].message
+    content = getattr(message, "content", None)
+    if not isinstance(content, list):
+        return _mistral_create_response(self, raw_response, model, response_format)
+    message.content = "".join(getattr(c, "text", "") for c in content
+                              if getattr(c, "type", None) == "text")
+    try:
+        return _mistral_create_response(self, raw_response, model, response_format)
+    finally:
+        message.content = content
+
+
+_mistral_client.MistralClient._create_response_from_raw = _create_response_from_text_chunks
 
 
 DEFAULT_MAX_OUTPUT_TOKENS = 16384
@@ -57,6 +79,7 @@ MODEL_MAX_OUTPUT_TOKENS = {
     "command-r7b-12-2024": 4096,
     "command-a-03-2025": 8192,
     "command-a-vision-07-2025": 8192,
+    "command-a-plus-05-2026": 64000,
     # Anthropic: 400 above 64,000 on these three; later Claude models allow 128,000.
     "claude-haiku-4-5-20251001": 64000,
     "claude-opus-4-5-20251101": 64000,
@@ -377,6 +400,9 @@ class Benchmark(ABC):
         # The client strips it on the chat path only; the Responses path sends it regardless.
         if self.provider == "openai" and _openai_client.OpenAIClient._rejects_custom_temperature(self.model):
             del kwargs["temperature"]
+        # mistral-large-4 defaults top_p below 1 and then refuses temperature 0 as greedy sampling.
+        if self.provider == "mistral" and self.temperature == 0:
+            kwargs["top_p"] = 1
         image_paths = self.get_image_paths(object_basename)
         text_paths = self.get_text_paths(object_basename)
         prompt = self.load_prompt(object_basename)  # local var avoids race condition in parallel runs

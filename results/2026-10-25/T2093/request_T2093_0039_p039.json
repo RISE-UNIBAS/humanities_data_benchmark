@@ -1,0 +1,129 @@
+{
+    "text": "{\"advertisements\":[{\"box\":[132.0,142.0,2225.0,483.0]},{\"box\":[852.0,476.0,1542.0,836.0]},{\"box\":[851.0,901.0,1553.0,1601.0]}]}",
+    "model": "xiaomi/mimo-v2.6-pro",
+    "provider": "openrouter",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 3047,
+        "output_tokens": 771,
+        "total_tokens": 3818,
+        "reasoning_tokens": 0,
+        "input_cost_usd": 0.001325445,
+        "output_cost_usd": 0.00067077,
+        "estimated_cost_usd": 0.001996215
+    },
+    "duration": 16.436139822006226,
+    "timestamp": "2026-10-25T02:14:53.226215",
+    "parsed": {
+        "advertisements": [
+            {
+                "box": [
+                    132.0,
+                    142.0,
+                    2225.0,
+                    483.0
+                ]
+            },
+            {
+                "box": [
+                    852.0,
+                    476.0,
+                    1542.0,
+                    836.0
+                ]
+            },
+            {
+                "box": [
+                    851.0,
+                    901.0,
+                    1553.0,
+                    1601.0
+                ]
+            }
+        ]
+    },
+    "conversation_id": "7028a809-cf5c-46a0-b6c2-7974886718ec",
+    "score": {
+        "field_scores": {
+            "box 0": {
+                "response": null,
+                "ground_truth": [
+                    140,
+                    293,
+                    2226,
+                    972
+                ],
+                "score": 0.0
+            },
+            "box 1": {
+                "response": null,
+                "ground_truth": [
+                    1246,
+                    1781,
+                    2247,
+                    3102
+                ],
+                "score": 0.0
+            },
+            "box 2": {
+                "response": null,
+                "ground_truth": [
+                    1226,
+                    963,
+                    2235,
+                    1690
+                ],
+                "score": 0.0
+            },
+            "box 3": {
+                "response": null,
+                "ground_truth": [
+                    233,
+                    642,
+                    905,
+                    823
+                ],
+                "score": 0.0
+            },
+            "unmatched prediction 0": {
+                "response": [
+                    132.0,
+                    142.0,
+                    2225.0,
+                    483.0
+                ],
+                "ground_truth": null,
+                "score": 0.0
+            },
+            "unmatched prediction 1": {
+                "response": [
+                    852.0,
+                    476.0,
+                    1542.0,
+                    836.0
+                ],
+                "ground_truth": null,
+                "score": 0.0
+            },
+            "unmatched prediction 2": {
+                "response": [
+                    851.0,
+                    901.0,
+                    1553.0,
+                    1601.0
+                ],
+                "ground_truth": null,
+                "score": 0.0
+            }
+        },
+        "f1": 0.0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "mean_iou": 0.0,
+        "true_positives": 0,
+        "false_positives": 3,
+        "false_negatives": 4,
+        "iou_threshold": 0.5
+    },
+    "raw_response": "{\"id\":\"gen-1792887277-3qJoC6fHQ0UYGKEBtz0D\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\n    \\\"advertisements\\\": [\\n        {\\\"box\\\": [132, 142, 2225, 483]},\\n        {\\\"box\\\": [852, 476, 1542, 836]},\\n        {\\\"box\\\": [851, 901, 1553, 1601]}\\n    ]\\n}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"advertisements\":[{\"box\":[132.0,142.0,2225.0,483.0]},{\"box\":[852.0,476.0,1542.0,836.0]},{\"box\":[851.0,901.0,1553.0,1601.0]}]},\"reasoning\":\"Got it, let's look at the page. First, the top big ad: LA MONDIALE EXPRESS TRANSPORTS S.A. Then the Banque Cantonale Neuch\u00e2teloise box, then the CHOCOLATS / PETER,CAILLER,KOHLER ad. Let's get their coordinates.\\n\\nFirst ad: top left ~82, top ~85, right ~1293, bottom ~275. Wait, let's check the page size 2479x3508? Wait no, the image here is 1440x2000? Wait no, the user says original page is 2479x3508. Oh right, so we need to scale the coordinates. Let's see:\\n\\nFirst ad: [80, 82, 1295, 273] \u2192 scaled to original:2479/1440 \u22481.7215, 3508/2000\u22481.754. So x0=80*1.7215\u2248138, y0=82*1.754\u2248144, x1=1295*1.7215\u22482230, y1=273*1.754\u2248480. Wait, maybe better to estimate based on the actual positions.\\n\\nWait the second ad: Banque Cantonale Neuch\u00e2teloise is at [498, 272, 898, 478]. Scaled: x0=498*1.7215\u2248857, y0=272*1.754\u2248477, x1=898*1.7215\u22481546, y1=478*1.754\u2248838.\\n\\nThird ad: the CHOCOLATS / PETER... is at [496, 513, 905, 912]. Scaled: x0=496*1.7215\u2248854, y0=513*1.754\u2248900, x1=905*1.7215\u22481558, y1=912*1.754\u22481600.\\n\\nWait let's confirm each ad:\\n\\n1. Top full width ad: LA MONDIALE EXPRESS TRANSPORTS S.A. \u2192 box [135, 140, 2228, 485]\\n2. Bank ad: [855, 475, 1545, 835]\\n3. Chocolate ad (Peter, Cailler, Kohler): [850, 900, 1555, 1602]\\n\\nWait maybe more accurate. Let's list all three ads. Let's make sure:\\n\\nYes, three advertisements: the top transport one, the bank, and the chocolate. Now format as JSON.\",\"reasoning_details\":[{\"type\":\"reasoning.text\",\"text\":\"Got it, let's look at the page. First, the top big ad: LA MONDIALE EXPRESS TRANSPORTS S.A. Then the Banque Cantonale Neuch\u00e2teloise box, then the CHOCOLATS / PETER,CAILLER,KOHLER ad. Let's get their coordinates.\\n\\nFirst ad: top left ~82, top ~85, right ~1293, bottom ~275. Wait, let's check the page size 2479x3508? Wait no, the image here is 1440x2000? Wait no, the user says original page is 2479x3508. Oh right, so we need to scale the coordinates. Let's see:\\n\\nFirst ad: [80, 82, 1295, 273] \u2192 scaled to original:2479/1440 \u22481.7215, 3508/2000\u22481.754. So x0=80*1.7215\u2248138, y0=82*1.754\u2248144, x1=1295*1.7215\u22482230, y1=273*1.754\u2248480. Wait, maybe better to estimate based on the actual positions.\\n\\nWait the second ad: Banque Cantonale Neuch\u00e2teloise is at [498, 272, 898, 478]. Scaled: x0=498*1.7215\u2248857, y0=272*1.754\u2248477, x1=898*1.7215\u22481546, y1=478*1.754\u2248838.\\n\\nThird ad: the CHOCOLATS / PETER... is at [496, 513, 905, 912]. Scaled: x0=496*1.7215\u2248854, y0=513*1.754\u2248900, x1=905*1.7215\u22481558, y1=912*1.754\u22481600.\\n\\nWait let's confirm each ad:\\n\\n1. Top full width ad: LA MONDIALE EXPRESS TRANSPORTS S.A. \u2192 box [135, 140, 2228, 485]\\n2. Bank ad: [855, 475, 1545, 835]\\n3. Chocolate ad (Peter, Cailler, Kohler): [850, 900, 1555, 1602]\\n\\nWait maybe more accurate. Let's list all three ads. Let's make sure:\\n\\nYes, three advertisements: the top transport one, the bank, and the chocolate. Now format as JSON.\",\"format\":\"unknown\",\"index\":0}]},\"native_finish_reason\":\"stop\"}],\"created\":1792887277,\"model\":\"xiaomi/mimo-v2.6-pro\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":null,\"usage\":{\"completion_tokens\":771,\"prompt_tokens\":3047,\"total_tokens\":3818,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":0,\"reasoning_tokens\":681,\"rejected_prediction_tokens\":null,\"image_tokens\":0},\"prompt_tokens_details\":{\"audio_tokens\":0,\"cached_tokens\":0,\"cache_write_tokens\":0,\"video_tokens\":0},\"cost\":0.001996215,\"is_byok\":false,\"cost_details\":{\"upstream_inference_cost\":0.001996215,\"upstream_inference_prompt_cost\":0.001325445,\"upstream_inference_completions_cost\":0.00067077}},\"provider\":\"Xiaomi\"}"
+}

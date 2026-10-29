@@ -1,0 +1,87 @@
+{
+    "text": "{\"metadata\":{\"send_date\":[\"1928-06-19\"],\"letter_title\":null,\"sender_persons\":[\"Dr. Rudolf Leupold\"],\"receiver_persons\":[\"Basler Personenschifffahrtsgesellschaft\"]}}",
+    "model": "command-a-plus-05-2026",
+    "provider": "cohere",
+    "finish_reason": "complete",
+    "usage": {
+        "input_tokens": 628,
+        "output_tokens": 1213,
+        "total_tokens": 1841,
+        "reasoning_tokens": 0,
+        "input_cost_usd": 0.0,
+        "output_cost_usd": 0.0,
+        "reasoning_cost_usd": 0.0,
+        "estimated_cost_usd": 0.0
+    },
+    "duration": 5.704875469207764,
+    "timestamp": "2026-10-24T20:16:31.301689",
+    "parsed": {
+        "metadata": {
+            "letter_title": null,
+            "send_date": [
+                "1928-06-19"
+            ],
+            "sender_persons": [
+                "Dr. Rudolf Leupold"
+            ],
+            "receiver_persons": [
+                "Basler Personenschifffahrtsgesellschaft"
+            ]
+        }
+    },
+    "conversation_id": "49ae9c13-09d3-4cda-a571-8a6600858361",
+    "score": {
+        "send_date_tp": 1,
+        "send_date_fp": 0,
+        "send_date_fn": 0,
+        "sender_persons_tp": 1,
+        "sender_persons_fp": 0,
+        "sender_persons_fn": 0,
+        "receiver_persons_tp": 0,
+        "receiver_persons_fp": 1,
+        "receiver_persons_fn": 0,
+        "field_scores": {
+            "send_date": {
+                "response": [
+                    "1928-06-19"
+                ],
+                "ground_truth": [
+                    "1928-06-19"
+                ],
+                "score": null,
+                "counts": {
+                    "send_date_tp": 1,
+                    "send_date_fp": 0,
+                    "send_date_fn": 0
+                }
+            },
+            "sender_persons": {
+                "response": [
+                    "Leupold, Rudolf"
+                ],
+                "ground_truth": [
+                    "Leupold, Rudolf"
+                ],
+                "score": null,
+                "counts": {
+                    "sender_persons_tp": 1,
+                    "sender_persons_fp": 0,
+                    "sender_persons_fn": 0
+                }
+            },
+            "receiver_persons": {
+                "response": [
+                    "Basler Personenschifffahrtsgesellschaft"
+                ],
+                "ground_truth": [],
+                "score": null,
+                "counts": {
+                    "receiver_persons_tp": 0,
+                    "receiver_persons_fp": 1,
+                    "receiver_persons_fn": 0
+                }
+            }
+        }
+    },
+    "raw_response": "{\"id\":\"3f13ce06-1e31-4174-a7d8-103553d02879\",\"finish_reason\":\"COMPLETE\",\"message\":{\"role\":\"assistant\",\"content\":[{\"type\":\"thinking\",\"thinking\":\"We need to extract letter_title, sender_persons, send_date, receiver_persons.\\n\\nWe have a letter. Let's parse.\\n\\nThe letter appears to be a business letter from a law office (Dr. Adolf Bieder, Dr. Hans Burckhardt, Dr. Rudolf Leupold, Advokatur & Notariat Basel). The date is \\\"Basel, den 19. Juni 1928\\\". So send_date = 1928-06-19.\\n\\nThe letter is addressed to \\\"An die Basler Personenschifffahrtsgesellschaft\\\" (To the Basel Passenger Shipping Company) at \\\"Alpenstrasse 8\\\" (maybe \\\"Alpenstrasse\\\"? Actually \\\"Alpenstrasse 8\\\"? The text says \\\"Alpenstrasse 8\\\"? Let's read: \\\"An die Basler Personenschifffahrtsgesellschaft Alpenstrasse 8 BASEL\\\". So receiver is the company. Possibly also the address. So receiver_persons: likely the company name, not individuals. The key expects name(s) of person(s) who received the letter. If it's a company, we can list the company name. So receiver_persons = [\\\"Basler Personenschifffahrtsgesellschaft\\\"].\\n\\nSender persons: The letter is from the law office. The signature at bottom appears to be \\\"R. Leupold\\\". The typed header includes three doctors. The letter is likely from the law firm, but the signature indicates R. Leupold. The question: \\\"Name(s) of the person(s) who wrote the letter.\\\" Could be the signatory, or the firm. Usually the sender persons are the individuals who wrote it. The signature is R. Leupold, which is Dr. Rudolf Leupold. So sender_persons = [\\\"Dr. Rudolf Leupold\\\"].\\n\\nBut also the header includes Dr. Adolf Bieder, Dr. Hans Burckhardt, Dr. Rudolf Leupold. However, the letter is likely from the firm, but the signatory is R. Leupold. The instruction: \\\"Name(s) of the person(s) who wrote the letter.\\\" Could include all three? But only one wrote the letter. The letter is typed on the firm's letterhead, but the actual writer is the signatory. So we should list the signatory. However, we could also list all three as the firm's partners. But the safest is to list the signatory. The question may expect the sender persons as the individuals in the header? Let's examine typical metadata extraction tasks: they often extract the sender from the letterhead (the organization) and the signatory as the person. But the key is \\\"sender_persons\\\". Could be multiple. In the example, they used individuals. So we should list the person(s) who wrote the letter. The letter is signed by \\\"R. Leupold\\\". So we list \\\"Dr. Rudolf Leupold\\\". Possibly also \\\"Dr. Adolf Bieder\\\" and \\\"Dr. Hans Burckhardt\\\"? But they didn't sign. So likely just Leupold.\\n\\nLetter title: Usually the subject line. The letter doesn't have an explicit title. Could be inferred from content: it's about sending a ship letter \\\"Albatros\\\" and a shipping registration. Could be \\\"Shipping letter Albatros\\\". But if no explicit title, we set null. The instruction: If a piece of information is not included in the letter, set the value for the corresponding key to \\\"null\\\". So letter_title likely null.\\n\\nBut maybe the letter includes a subject line? The first line after date: \\\"An die Basler Personenschifffahrtsgesellschaft\\\". That's the salutation, not title. No subject. So letter_title = null.\\n\\nNow we need to output JSON with metadata key containing the four fields each as list (even if single). So:\\n\\n{\\n  \\\"metadata\\\": {\\n    \\\"letter_title\\\": [\\\"null\\\"]? Actually they want null if not included. The spec: \\\"If a piece of information is not included in the letter, set the value for the corresponding key to \\\"null\\\".\\\" But the JSON schema expects each field to be either an array of strings or null. So we can set null directly, not [\\\"null\\\"]. The example shows arrays of strings. But they said \\\"set the value for the corresponding key to \\\"null\\\".\\\" So we should set the value to null (not an array). However the schema says \\\"anyOf\\\": [{\\\"items\\\": {\\\"type\\\": \\\"string\\\"}, \\\"type\\\": \\\"array\\\"}, {\\\"type\\\": \\\"null\\\"}]. So we can set null. So for missing fields, we set null.\\n\\nThus:\\n\\nletter_title: null\\nsend_date: [\\\"1928-06-19\\\"]\\nsender_persons: [\\\"Dr. Rudolf Leupold\\\"]\\nreceiver_persons: [\\\"Basler Personenschifffahrtsgesellschaft\\\"]\\n\\nBut we need to ensure the date format is ISO: YYYY-MM-DD. So \\\"1928-06-19\\\". Good.\\n\\nNow we need to output JSON object with key \\\"metadata\\\". The top-level object should be {\\\"metadata\\\": {...}}. The schema expects that.\\n\\nThus final JSON:\\n\\n{\\n  \\\"metadata\\\": {\\n    \\\"letter_title\\\": null,\\n    \\\"send_date\\\": [\\\"1928-06-19\\\"],\\n    \\\"sender_persons\\\": [\\\"Dr. Rudolf Leup0...\\\"? Actually \\\"Dr. Rudolf Leupold\\\"],\\n    \\\"receiver_persons\\\": [\\\"Basler Personenschifffahrtsgesellschaft\\\"]\\n  }\\n}\\n\\nCheck spelling: \\\"Dr. Rudolf Leupold\\\". The signature is \\\"R. Leupold\\\". But we can include full name.\\n\\nNow we need to ensure no extra spaces or line breaks. Provide JSON only.\\n\\nThus final answer.\"},{\"type\":\"text\",\"text\":\"{\\n  \\\"metadata\\\": {\\n    \\\"letter_title\\\": null,\\n    \\\"send_date\\\": [\\\"1928-06-19\\\"],\\n    \\\"sender_persons\\\": [\\\"Dr. Rudolf Leupold\\\"],\\n    \\\"receiver_persons\\\": [\\\"Basler Personenschifffahrtsgesellschaft\\\"]\\n  }\\n}\"}]},\"usage\":{\"billed_units\":{\"input_tokens\":3910.0,\"output_tokens\":1209.0},\"tokens\":{\"input_tokens\":628.0,\"output_tokens\":1213.0,\"reasoning_tokens\":1149,\"image_tokens\":3343},\"cached_tokens\":576.0}}"
+}

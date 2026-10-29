@@ -24,7 +24,7 @@ from scripts.export_dataset import (columns, coverage, docs, inventory, metrics,
 from scripts.export_dataset.extract import Extractor
 from scripts.export_dataset.paths import check as check_paths
 from scripts.export_dataset.schema import SCHEMAS_FOR_DOCS, SORT_KEYS, TABLES, UNIQUE_KEYS
-from scripts.ndr_export.pricing_resolver import pricing_table_version
+from scripts.pricing_resolver import pricing_table_version
 from scripts.results_index import PROJECT_ROOT, RESULTS_PATH, TestCatalog, iter_run_dirs
 
 
@@ -87,7 +87,7 @@ def build(source=RESULTS_PATH, out=DATASET_PATH, date=None, benchmark=None, limi
     # rescored detail and say nothing.
     if not rescored.detail_files():
         raise FileNotFoundError("No comparison detail at %s; run python -m "
-                                "scripts.ndr_export.generate_compare_detail first."
+                                "scripts.compare.generate_compare_detail first."
                                 % rescored.DETAIL_DIR)
 
     if staging.exists():
@@ -121,7 +121,7 @@ def build(source=RESULTS_PATH, out=DATASET_PATH, date=None, benchmark=None, limi
     print("Rescored field detail ...")
     rescored_rows, rescored_payloads, rescored_diagnostics = rescored.extract(
         benchmark_of=catalog.benchmark_map())
-    print("  %d observations from %d inputs, produced by the frontend pipeline"
+    print("  %d observations from %d inputs, produced by scripts/compare"
           % (len(rescored_rows), len(rescored_payloads)))
     rescored_rows, rescored_payloads, restrict_diagnostics = rescored.restrict(
         rescored_rows, rescored_payloads, extractor.requests, partial)

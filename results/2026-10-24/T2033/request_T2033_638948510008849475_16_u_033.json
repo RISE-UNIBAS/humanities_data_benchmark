@@ -1,0 +1,74 @@
+{
+    "text": "{\"company\":{\"transcription\":\"Florentin Max & Adrienne, Marie Gabrielle,\"},\"location\":{\"transcription\":\"GENEVE\"},\"b_id\":{\"transcription\":\"B.51.322.GB.1392.\"},\"date\":\"1944-12-20\",\"information\":[{\"transcription\":\"Britische schwarze Liste.\\nAmendment 11, September 1944.\"},{\"transcription\":\"gestrichen:\\nAmendment 10, 18. September 1945.\"}]}",
+    "model": "meta/muse-spark-open",
+    "provider": "openrouter",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 3843,
+        "output_tokens": 1183,
+        "total_tokens": 5026,
+        "reasoning_tokens": 0,
+        "input_cost_usd": 0.00480375,
+        "output_cost_usd": 0.00502775,
+        "estimated_cost_usd": 0.0098315
+    },
+    "duration": 10.176333665847778,
+    "timestamp": "2026-10-24T21:38:33.452952",
+    "parsed": {
+        "company": {
+            "transcription": "Florentin Max & Adrienne, Marie Gabrielle,"
+        },
+        "location": {
+            "transcription": "GENEVE"
+        },
+        "b_id": {
+            "transcription": "B.51.322.GB.1392."
+        },
+        "date": "1944-12-20",
+        "information": [
+            {
+                "transcription": "Britische schwarze Liste.\nAmendment 11, September 1944."
+            },
+            {
+                "transcription": "gestrichen:\nAmendment 10, 18. September 1945."
+            }
+        ]
+    },
+    "conversation_id": "e7fb954a-d2a6-4424-ac61-153570c231ae",
+    "score": {
+        "fuzzy": 0.9929414628209808,
+        "field_scores": {
+            "b_id.transcription": {
+                "response": "B.51.322.GB.1392.",
+                "ground_truth": "B.51.322.GB.1392",
+                "score": 0.9696969696969697
+            },
+            "company.transcription": {
+                "response": "Florentin Max & Adrienne, Marie Gabrielle,",
+                "ground_truth": "Florentin Max & Adrienne, Marie Gabrielle",
+                "score": 0.9879518072289156
+            },
+            "date": {
+                "response": "1944-12-20",
+                "ground_truth": "1944-12-20",
+                "score": 1.0
+            },
+            "information[0].transcription": {
+                "response": "Britische schwarze Liste.\nAmendment 11, September 1944.",
+                "ground_truth": "Britische schwarze Liste.\nAmendment 11, September 1944.",
+                "score": 1.0
+            },
+            "information[1].transcription": {
+                "response": "gestrichen:\nAmendment 10, 18. September 1945.",
+                "ground_truth": "gestrichen:\nAmendment 10, 18. September 1945.",
+                "score": 1.0
+            },
+            "location.transcription": {
+                "response": "GENEVE",
+                "ground_truth": "GENEVE",
+                "score": 1.0
+            }
+        }
+    },
+    "raw_response": "{\"id\":\"gen-1792870703-AGIgdC21HWe0tWM8vmyZ\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\\"company\\\":{\\\"transcription\\\":\\\"Florentin Max & Adrienne, Marie Gabrielle,\\\"},\\\"location\\\":{\\\"transcription\\\":\\\"GENEVE\\\"},\\\"b_id\\\":{\\\"transcription\\\":\\\"B.51.322.GB.1392.\\\"},\\\"date\\\":\\\"1944-12-20\\\",\\\"information\\\":[{\\\"transcription\\\":\\\"Britische schwarze Liste.\\\\nAmendment 11, September 1944.\\\"},{\\\"transcription\\\":\\\"gestrichen:\\\\nAmendment 10, 18. September 1945.\\\"}]}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"company\":{\"transcription\":\"Florentin Max & Adrienne, Marie Gabrielle,\"},\"location\":{\"transcription\":\"GENEVE\"},\"b_id\":{\"transcription\":\"B.51.322.GB.1392.\"},\"date\":\"1944-12-20\",\"information\":[{\"transcription\":\"Britische schwarze Liste.\\nAmendment 11, September 1944.\"},{\"transcription\":\"gestrichen:\\nAmendment 10, 18. September 1945.\"}]},\"reasoning\":\"We need to extract:\\n\\ncompany: primary company name, usually top-left. Exclude location. Top-left says \\\"Florentin Max & Adrienne, Marie Gabrielle, GENEVE\\\" So company is \\\"Florentin Max & Adrienne, Marie Gabrielle,\\\" ? Location is GENEVE.\\n\\nb_id: identifier code, usually top-right, starting with B. => \\\"B.51.322.GB.1392.\\\" Note includes dot at end? In image: B.51.322.GB.1392. Probably include period. Let's see transcription exactly. Should include as seen. Might be \\\"B.51.322.GB.1392.\\\" Keep.\\n\\ndate: Any stamped dates on the card in YYYY-MM-DD format. If no date present, use empty string. There's a stamp: \\\"20 Dez 1944\\\" That's 1944-12-20. Need format YYYY-MM-DD. So \\\"1944-12-20\\\". The schema says date anyOf string or null, title Date. Example shows \\\"\\\". But we should output \\\"1944-12-20\\\".\\n\\ninformation: list of text blocks from main body. Each block should be separate string. Maintain line breaks with \\\\n.\\n\\nMain body has:\\n\\nBritische schwarze Liste.\\nAmendment 11, September 1944.\\n\\ngestrichen:\\nAmendment 10, 18. September 1945.\\n\\nAlso there is \\\"(Matas, Genf)\\\" maybe? That is under B ID but could be considered part of b_id? Or information? The instruction: b_id is identifier code, usually top-right starting with B. So that is B.51.322.GB.1392. The (Matas, Genf) is maybe additional info but not part of b_id. However the card layout: top right cell contains two lines: B.51.322.GB.1392. and (Matas, Genf). Should we include (Matas, Genf) as part of b_id transcription? The schema says b_id transcription. Probably only the B... code. But maybe they want including the parenthetical? Let's look at typical tasks: Often b_id includes only the code. The location of (Matas, Genf) might be considered part of b_id field but maybe they want just code. To be safe, include exactly \\\"B.51.322.GB.1392.\\\" The example in prompt says exclude location from company, so similar logic.\\n\\nInformation blocks: There are two blocks:\\n\\n1. \\\"Britische schwarze Liste.\\\\nAmendment 11, September 1944.\\\"\\n\\n2. \\\"gestrichen:\\\\nAmendment 10, 18. September 1945.\\\"\\n\\nShould we include the date stamp as information? No, date is separate.\\n\\nNeed to ensure JSON format exactly as required:\\n\\n{\\n  \\\"company\\\": {\\\"transcription\\\": \\\"\\\"},\\n  \\\"location\\\": {\\\"transcription\\\": \\\"\\\"},\\n  \\\"b_id\\\": {\\\"transcription\\\": \\\"\\\"},\\n  \\\"date\\\": \\\"\\\",\\n  \\\"information\\\": [\\n    {\\\"transcription\\\": \\\"\\\"}\\n  ]\\n}\\n\\nNote date is not object, it's string directly. In schema, date is anyOf string/null, title Date. So output like \\\"1944-12-20\\\".\\n\\nProvide company transcription: \\\"Florentin Max & Adrienne, Marie Gabrielle,\\\"\\n\\nCheck spelling: In image: \\\"F l o r e n t i n Max & Adrienne, Marie Gabrielle,\\\" Actually \\\"Florentin\\\" with spacing due to typing. So correct is \\\"Florentin Max & Adrienne, Marie Gabrielle,\\\"\\n\\nLocation: \\\"GENEVE\\\"\\n\\nb_id: \\\"B.51.322.GB.1392.\\\"\\n\\ninformation: two entries.\\n\\nMake sure to escape \\\\n correctly in JSON string. The JSON string should contain actual newline escaped as \\\\n. Provide as \\\"\\\\\\\\n\\\" in raw JSON.\\n\\nDouble-check date conversion: 20 Dez 1944 => 1944-12-20. Dez = December.\\n\\nPotential nuance: Could also have second date? Amendment 10, 18. September 1945 is typed, not stamped. The date field is only stamped dates. So only 1944-12-20.\\n\\nCheck if any other stamped dates? Only that one.\\n\\nReturn JSON only, no code fence.\\n\\nEnsure valid JSON.\\n\\nEdge: company transcription might include \\\"Florentin Max & Adrienne, Marie Gabrielle,\\\" with comma at end. Keep as is.\\n\\nLocation transcription: \\\"GENEVE\\\"\\n\\nb_id transcription: \\\"B.51.322.GB.1392.\\\"\\n\\nInformation transcriptions: Need exact text.\\n\\nFirst block: \\\"Britische schwarze Liste.\\\\nAmendment 11, September 1944.\\\"\\n\\nSecond: \\\"gestrichen:\\\\nAmendment 10, 18. September 1945.\\\"\\n\\nShould we include underline? No.\\n\\nMake sure to preserve punctuation.\\n\\nReturn final JSON.\\n\\nPotential alternative: Some archivists might include \\\"(Matas, Genf)\\\" as part of information? But instruction says information is list of text blocks from main body. Top right parenthetical might be considered not main body. So ignore.\\n\\nThus final answer JSON.\\n\\nCheck required fields: company, location, b_id, date, information.\\n\\nAll present.\\n\\nOutput only JSON object.\\n\\n\",\"reasoning_details\":[{\"type\":\"reasoning.text\",\"text\":\"We need to extract:\\n\\ncompany: primary company name, usually top-left. Exclude location. Top-left says \\\"Florentin Max & Adrienne, Marie Gabrielle, GENEVE\\\" So company is \\\"Florentin Max & Adrienne, Marie Gabrielle,\\\" ? Location is GENEVE.\\n\\nb_id: identifier code, usually top-right, starting with B. => \\\"B.51.322.GB.1392.\\\" Note includes dot at end? In image: B.51.322.GB.1392. Probably include period. Let's see transcription exactly. Should include as seen. Might be \\\"B.51.322.GB.1392.\\\" Keep.\\n\\ndate: Any stamped dates on the card in YYYY-MM-DD format. If no date present, use empty string. There's a stamp: \\\"20 Dez 1944\\\" That's 1944-12-20. Need format YYYY-MM-DD. So \\\"1944-12-20\\\". The schema says date anyOf string or null, title Date. Example shows \\\"\\\". But we should output \\\"1944-12-20\\\".\\n\\ninformation: list of text blocks from main body. Each block should be separate string. Maintain line breaks with \\\\n.\\n\\nMain body has:\\n\\nBritische schwarze Liste.\\nAmendment 11, September 1944.\\n\\ngestrichen:\\nAmendment 10, 18. September 1945.\\n\\nAlso there is \\\"(Matas, Genf)\\\" maybe? That is under B ID but could be considered part of b_id? Or information? The instruction: b_id is identifier code, usually top-right starting with B. So that is B.51.322.GB.1392. The (Matas, Genf) is maybe additional info but not part of b_id. However the card layout: top right cell contains two lines: B.51.322.GB.1392. and (Matas, Genf). Should we include (Matas, Genf) as part of b_id transcription? The schema says b_id transcription. Probably only the B... code. But maybe they want including the parenthetical? Let's look at typical tasks: Often b_id includes only the code. The location of (Matas, Genf) might be considered part of b_id field but maybe they want just code. To be safe, include exactly \\\"B.51.322.GB.1392.\\\" The example in prompt says exclude location from company, so similar logic.\\n\\nInformation blocks: There are two blocks:\\n\\n1. \\\"Britische schwarze Liste.\\\\nAmendment 11, September 1944.\\\"\\n\\n2. \\\"gestrichen:\\\\nAmendment 10, 18. September 1945.\\\"\\n\\nShould we include the date stamp as information? No, date is separate.\\n\\nNeed to ensure JSON format exactly as required:\\n\\n{\\n  \\\"company\\\": {\\\"transcription\\\": \\\"\\\"},\\n  \\\"location\\\": {\\\"transcription\\\": \\\"\\\"},\\n  \\\"b_id\\\": {\\\"transcription\\\": \\\"\\\"},\\n  \\\"date\\\": \\\"\\\",\\n  \\\"information\\\": [\\n    {\\\"transcription\\\": \\\"\\\"}\\n  ]\\n}\\n\\nNote date is not object, it's string directly. In schema, date is anyOf string/null, title Date. So output like \\\"1944-12-20\\\".\\n\\nProvide company transcription: \\\"Florentin Max & Adrienne, Marie Gabrielle,\\\"\\n\\nCheck spelling: In image: \\\"F l o r e n t i n Max & Adrienne, Marie Gabrielle,\\\" Actually \\\"Florentin\\\" with spacing due to typing. So correct is \\\"Florentin Max & Adrienne, Marie Gabrielle,\\\"\\n\\nLocation: \\\"GENEVE\\\"\\n\\nb_id: \\\"B.51.322.GB.1392.\\\"\\n\\ninformation: two entries.\\n\\nMake sure to escape \\\\n correctly in JSON string. The JSON string should contain actual newline escaped as \\\\n. Provide as \\\"\\\\\\\\n\\\" in raw JSON.\\n\\nDouble-check date conversion: 20 Dez 1944 => 1944-12-20. Dez = December.\\n\\nPotential nuance: Could also have second date? Amendment 10, 18. September 1945 is typed, not stamped. The date field is only stamped dates. So only 1944-12-20.\\n\\nCheck if any other stamped dates? Only that one.\\n\\nReturn JSON only, no code fence.\\n\\nEnsure valid JSON.\\n\\nEdge: company transcription might include \\\"Florentin Max & Adrienne, Marie Gabrielle,\\\" with comma at end. Keep as is.\\n\\nLocation transcription: \\\"GENEVE\\\"\\n\\nb_id transcription: \\\"B.51.322.GB.1392.\\\"\\n\\nInformation transcriptions: Need exact text.\\n\\nFirst block: \\\"Britische schwarze Liste.\\\\nAmendment 11, September 1944.\\\"\\n\\nSecond: \\\"gestrichen:\\\\nAmendment 10, 18. September 1945.\\\"\\n\\nShould we include underline? No.\\n\\nMake sure to preserve punctuation.\\n\\nReturn final JSON.\\n\\nPotential alternative: Some archivists might include \\\"(Matas, Genf)\\\" as part of information? But instruction says information is list of text blocks from main body. Top right parenthetical might be considered not main body. So ignore.\\n\\nThus final answer JSON.\\n\\nCheck required fields: company, location, b_id, date, information.\\n\\nAll present.\\n\\nOutput only JSON object.\\n\\n\",\"format\":\"unknown\",\"index\":0}]},\"native_finish_reason\":\"stop\"}],\"created\":1792870703,\"model\":\"meta/muse-spark-open\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":null,\"usage\":{\"completion_tokens\":1183,\"prompt_tokens\":3843,\"total_tokens\":5026,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":0,\"reasoning_tokens\":1078,\"rejected_prediction_tokens\":null,\"image_tokens\":0},\"prompt_tokens_details\":{\"audio_tokens\":0,\"cached_tokens\":0,\"cache_write_tokens\":0,\"video_tokens\":0},\"cost\":0.0098315,\"is_byok\":false,\"cost_details\":{\"upstream_inference_cost\":0.0098315,\"upstream_inference_prompt_cost\":0.00480375,\"upstream_inference_completions_cost\":0.00502775}},\"provider\":\"Nebius\"}"
+}

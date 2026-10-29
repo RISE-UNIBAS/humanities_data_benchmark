@@ -17,7 +17,7 @@ from datetime import datetime, timezone
 from scripts.export_dataset import metrics as M
 from scripts.export_dataset.inventory import relative_path
 from scripts.export_dataset.schema import empty_string_is_null
-from scripts.ndr_export.pricing_resolver import resolve_pricing
+from scripts.pricing_resolver import resolve_pricing
 from scripts.reasoning_tokens import uncounted_reasoning
 from scripts.results_index import (TestCatalog, benchmark_meta, iter_request_records,
                                    iter_run_dirs, read_run, read_scoring)

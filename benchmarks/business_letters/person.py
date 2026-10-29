@@ -24,8 +24,8 @@ class Person:
     def from_string(person: str) -> "Person":
         """Create a Person object from a string.
 
-        Used to parse persons in persons.csv exported from Google Sheets. Inferred attributes are set to True given
-        the angle brackets conventions.
+        Parses the person names of a letter. `<Name>` marks a person inferred from function and date,
+        `<<Name>>` one inferred from the correspondence history.
 
         :param person: string representation of a person (i.e., their name)
         """

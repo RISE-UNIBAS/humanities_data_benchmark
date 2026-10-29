@@ -1,0 +1,89 @@
+{
+    "text": "{\"metadata\":{\"send_date\":[\"1928-05-26\"],\"letter_title\":null,\"sender_persons\":[\"Dr. Rud. Speich\"],\"receiver_persons\":[\"Dr. Max Vischer\"]}}",
+    "model": "command-a-plus-05-2026",
+    "provider": "cohere",
+    "finish_reason": "complete",
+    "usage": {
+        "input_tokens": 629,
+        "output_tokens": 999,
+        "total_tokens": 1628,
+        "reasoning_tokens": 0,
+        "input_cost_usd": 0.0,
+        "output_cost_usd": 0.0,
+        "reasoning_cost_usd": 0.0,
+        "estimated_cost_usd": 0.0
+    },
+    "duration": 9.256202697753906,
+    "timestamp": "2026-10-24T20:29:35.184721",
+    "parsed": {
+        "metadata": {
+            "letter_title": null,
+            "send_date": [
+                "1928-05-26"
+            ],
+            "sender_persons": [
+                "Dr. Rud. Speich"
+            ],
+            "receiver_persons": [
+                "Dr. Max Vischer"
+            ]
+        }
+    },
+    "conversation_id": "f6f3c85d-238c-4356-bab1-53664113a5f3",
+    "score": {
+        "send_date_tp": 1,
+        "send_date_fp": 0,
+        "send_date_fn": 0,
+        "sender_persons_tp": 0,
+        "sender_persons_fp": 1,
+        "sender_persons_fn": 1,
+        "receiver_persons_tp": 1,
+        "receiver_persons_fp": 0,
+        "receiver_persons_fn": 0,
+        "field_scores": {
+            "send_date": {
+                "response": [
+                    "1928-05-26"
+                ],
+                "ground_truth": [
+                    "1928-05-26"
+                ],
+                "score": null,
+                "counts": {
+                    "send_date_tp": 1,
+                    "send_date_fp": 0,
+                    "send_date_fn": 0
+                }
+            },
+            "sender_persons": {
+                "response": [
+                    "Dr. Rud. Speich"
+                ],
+                "ground_truth": [
+                    "Speich, Rudolf"
+                ],
+                "score": null,
+                "counts": {
+                    "sender_persons_tp": 0,
+                    "sender_persons_fp": 1,
+                    "sender_persons_fn": 1
+                }
+            },
+            "receiver_persons": {
+                "response": [
+                    "Vischer-von Planta, Max"
+                ],
+                "ground_truth": [
+                    "Vischer-von Planta, Max"
+                ],
+                "score": null,
+                "counts": {
+                    "receiver_persons_tp": 1,
+                    "receiver_persons_fp": 0,
+                    "receiver_persons_fn": 0
+                }
+            }
+        }
+    },
+    "raw_response": "{\"id\":\"4c3869f0-9569-4627-8cd3-c1d339cb8f5d\",\"finish_reason\":\"COMPLETE\",\"message\":{\"role\":\"assistant\",\"content\":[{\"type\":\"thinking\",\"thinking\":\"We need to extract letter_title, send_date, sender_persons, receiver_persons.\\n\\nWe have two pages of a letter. The first page includes header: Dr. RUD. SPEICH, Basel, address, date \\\"Basel, den 26. Mai 1928. SP/EP\\\". The letter is addressed to \\\"Herrn Dr. Max Vischer\\\" at \\\"St.Albangraben 8\\\" in Basel. So sender is Dr. Rud. Speich. Receiver is Dr. Max Vischer.\\n\\nLetter title? Usually a letter may not have a formal title. The content is about a dispute regarding an article in \\\"Rheinquellen\\\" by Herr J.R. Frey. The letter is a response to a previous letter. There's no explicit title. So letter_title likely null.\\n\\nBut we need to check if any title appears. The letter begins \\\"Sehr geehrter Herr Dr.Vischer,\\\". No title. The header includes \\\"Dr. RUD. SPEICH\\\". Not a title of the letter. So letter_title = null.\\n\\nsend_date: \\\"26. Mai 1928\\\". Convert to ISO: 1928-05-26. The format is day month year. So 1928-05-26.\\n\\nsender_persons: \\\"Dr. Rud. Speich\\\". Possibly full name \\\"Dr. Rud. Speich\\\". Should we include the title? The name includes Dr. So \\\"Dr. Rud. Speich\\\". Could also be \\\"Rud. Speich\\\". But better to include as appears: \\\"Dr. Rud. Speich\\\". Also the letter is typed with \\\"Dr. RUD. SPEICH\\\" uppercase at top. So we can use \\\"Dr. Rud. Speich\\\". Or \\\"Dr. RUD. SPEICH\\\". Use consistent case? The spec doesn't require case sensitivity. Use as appears: \\\"Dr. Rud. Speich\\\". Or maybe \\\"Dr. Rud. Speich\\\". We'll include \\\"Dr. Rud. Speich\\\". Could also include \\\"Dr. RUD. SPEICH\\\". But we can standardize. Use \\\"Dr. Rud. Speich\\\". It's a list with one element.\\n\\nreceiver_persons: \\\"Dr. Max Vischer\\\". The address includes \\\"Herrn Dr. Max Vischer\\\". So \\\"Dr. Max Vischer\\\". Use that.\\n\\nCheck for any other recipients? The letter is addressed to Dr. Max Vischer only. So list with one element.\\n\\nNow we need to output JSON with metadata key containing the object.\\n\\nThe schema: {\\\"properties\\\": {\\\"metadata\\\": {\\\"$ref\\\": \\\"#/$defs/Metadata\\\"}}, \\\"required\\\": [\\\"metadata\\\"], \\\"type\\\": \\\"object\\\", \\\"$defs\\\": {\\\"Metadata\\\": {\\\"properties\\\": {\\\"send_date\\\": {\\\"anyOf\\\": [{\\\"items\\\": {\\\"type\\\": \\\"string\\\"}, \\\"type\\\": \\\"array\\\"}, {\\\"type\\\": \\\"null\\\"}], \\\"title\\\": \\\"Send Date\\\"}, \\\"letter_title\\\": {\\\"anyOf\\\": [{\\\"items\\\": {\\\"type\\\": \\\"string\\\"}, \\\"type\\\": \\\"array\\\"}, {\\\"type\\\": \\\"null\\\"}], \\\"title\\\": \\\"Letter Title\\\"}, \\\"sender_persons\\\": {\\\"anyOf\\\": [{\\\"items\\\": {\\\"type\\\": \\\"string\\\"}, \\\"type\\\": \\\"array\\\"}, {\\\"type\\\": \\\"null\\\"}], \\\"title\\\": \\\"Sender Persons\\\"}, \\\"receiver_persons\\\": {\\\"anyOf\\\": [{\\\"items\\\": {\\\"type\\\": \\\"string\\\"}, \\\"type\\\": \\\"array\\\"}, {\\\"type\\\": \\\"null\\\"}], \\\"title\\\": \\\"Receiver Persons\\\"}}, \\\"required\\\": [\\\"send_date\\\", \\\"letter_title\\\", \\\"sender_persons\\\", \\\"receiver_persons\\\"], \\\"type\\\": \\\"object\\\"}}} So we need to output {\\\"metadata\\\": {...}}.\\n\\nWe need to ensure send_date is a list with one string, even if single. letter_title is null (not a list). The spec says: \\\"set the value for the corresponding key to 'null'.\\\" So letter_title: null (not list). But the schema allows null or array. So we set null.\\n\\nsender_persons: list with one string. receiver_persons: list with one string.\\n\\nThus JSON:\\n\\n{\\n  \\\"metadata\\\": {\\n    \\\"letter_title\\\": null,\\n    \\\"send_date\\\": [\\\"1928-05-26\\\"],\\n    \\\"sender_persons\\\": [\\\"Dr. Rud. Speich\\\"],\\n    \\\"receiver_persons\\\": [\\\"Dr. Max Vischer\\\"]\\n  }\\n}\\n\\nCheck if any other info: The letter includes a reference to \\\"Herrn Dr. Max Vischer\\\". So correct.\\n\\nPotential nuance: The letter may be part of a larger correspondence, but we only have this letter.\\n\\nThus final answer.\\n\\nWe must output only JSON, no extra text. Ensure no code fences.\"},{\"type\":\"text\",\"text\":\"{\\n  \\\"metadata\\\": {\\n    \\\"letter_title\\\": null,\\n    \\\"send_date\\\": [\\\"1928-05-26\\\"],\\n    \\\"sender_persons\\\": [\\\"Dr. Rud. Speich\\\"],\\n    \\\"receiver_persons\\\": [\\\"Dr. Max Vischer\\\"]\\n  }\\n}\"}]},\"usage\":{\"billed_units\":{\"input_tokens\":7253.0,\"output_tokens\":996.0},\"tokens\":{\"input_tokens\":629.0,\"output_tokens\":999.0,\"reasoning_tokens\":940,\"image_tokens\":6686},\"cached_tokens\":576.0}}"
+}

@@ -1,0 +1,81 @@
+{
+    "text": "{\"company\":{\"transcription\":\"Florentin Max & Adrienne, Marie Gabrielle\"},\"location\":{\"transcription\":\"GENEVE\"},\"b_id\":{\"transcription\":\"B.51.322.GB.1392\"},\"date\":\"1944-12-20\",\"information\":[{\"transcription\":\"Britische schwarze Liste.\"},{\"transcription\":\"Amendment 11, September 1944.\"},{\"transcription\":\"gestrichen:\"},{\"transcription\":\"Amendment 10, 18. September 1945.\"}]}",
+    "model": "command-a-plus-05-2026",
+    "provider": "cohere",
+    "finish_reason": "complete",
+    "usage": {
+        "input_tokens": 650,
+        "output_tokens": 2360,
+        "total_tokens": 3010,
+        "reasoning_tokens": 0,
+        "input_cost_usd": 0.0,
+        "output_cost_usd": 0.0,
+        "reasoning_cost_usd": 0.0,
+        "estimated_cost_usd": 0.0
+    },
+    "duration": 11.565261840820312,
+    "timestamp": "2026-10-24T21:29:19.144480",
+    "parsed": {
+        "company": {
+            "transcription": "Florentin Max & Adrienne, Marie Gabrielle"
+        },
+        "location": {
+            "transcription": "GENEVE"
+        },
+        "b_id": {
+            "transcription": "B.51.322.GB.1392"
+        },
+        "date": "1944-12-20",
+        "information": [
+            {
+                "transcription": "Britische schwarze Liste."
+            },
+            {
+                "transcription": "Amendment 11, September 1944."
+            },
+            {
+                "transcription": "gestrichen:"
+            },
+            {
+                "transcription": "Amendment 10, 18. September 1945."
+            }
+        ]
+    },
+    "conversation_id": "6343ed37-0120-4605-9cc2-ffa20d2a040d",
+    "score": {
+        "fuzzy": 0.892454954954955,
+        "field_scores": {
+            "b_id.transcription": {
+                "response": "B.51.322.GB.1392",
+                "ground_truth": "B.51.322.GB.1392",
+                "score": 1.0
+            },
+            "company.transcription": {
+                "response": "Florentin Max & Adrienne, Marie Gabrielle",
+                "ground_truth": "Florentin Max & Adrienne, Marie Gabrielle",
+                "score": 1.0
+            },
+            "date": {
+                "response": "1944-12-20",
+                "ground_truth": "1944-12-20",
+                "score": 1.0
+            },
+            "information[0].transcription": {
+                "response": "Britische schwarze Liste.",
+                "ground_truth": "Britische schwarze Liste.\nAmendment 11, September 1944.",
+                "score": 0.625
+            },
+            "information[1].transcription": {
+                "response": "Amendment 11, September 1944.",
+                "ground_truth": "gestrichen:\nAmendment 10, 18. September 1945.",
+                "score": 0.7297297297297297
+            },
+            "location.transcription": {
+                "response": "GENEVE",
+                "ground_truth": "GENEVE",
+                "score": 1.0
+            }
+        }
+    },
+    "raw_response": "{\"id\":\"b1110c28-7829-4cf4-83b0-7b09bc230a11\",\"finish_reason\":\"COMPLETE\",\"message\":{\"role\":\"assistant\",\"content\":[{\"type\":\"thinking\",\"thinking\":\"We need to parse the image and extract fields according to the spec.\\n\\nWe need to produce JSON with fields:\\n\\n- \\\"company\\\": object with \\\"transcription\\\": string. The primary company name, usually in the top-left. Exclude the location.\\n\\n- \\\"location\\\": object with \\\"transcription\\\": string. The city or town, often following the company name.\\n\\n- \\\"b_id\\\": object with \\\"transcription\\\": string. The identifier code, usually in the top-right, starting with \\\"B.\\\"\\n\\n- \\\"date\\\": string, any stamped dates on the card in YYYY-MM-DD format. If no date present, empty string.\\n\\n- \\\"information\\\": list of objects each with \\\"transcription\\\": string. Each block should be a separate string in the list. Maintain line breaks with \\\\n.\\n\\nWe need to identify these fields.\\n\\nThe image appears to be a card with text.\\n\\nLet's transcribe the content:\\n\\nFirst line: \\\"Florentin Max & Adrienne,\\\" then \\\"Marie Gabrielle,\\\" then \\\"GENEVE\\\". Possibly the company name includes \\\"Florentin Max & Adrienne, Marie Gabrielle,\\\"? The location is GENEVE (Geneva). The company name is likely \\\"Florentin Max & Adrienne, Marie Gabrielle\\\". But the spec says exclude the location. So we need to extract the company name, which is the primary company name, usually in the top-left. That seems to be \\\"Florentin Max & Adrienne, Marie Gabrielle\\\". Possibly we need to include both lines? The top-left includes \\\"Florentin Max & Adrienne,\\\" then \\\"Marie Gabrielle,\\\". The location \\\"GENEVE\\\" appears after a comma, maybe separate.\\n\\nThus company transcription: \\\"Florentin Max & Adrienne, Marie Gabrielle\\\". Possibly include the comma? The text shows \\\"Florentin Max & Adrienne,\\\" then newline \\\"Marie Gabrielle,\\\". So combine them? Could be \\\"Florentin Max & Adrienne, Marie Gabrielle\\\". We'll include both names separated by a space or comma? The spec says transcription string; we can include as we see.\\n\\nLocation: \\\"GENEVE\\\". That's the city.\\n\\nb_id: top-right: \\\"B.51.322.GB.1392\\\". Also there is \\\"(Matas, Genf)\\\" after it. The identifier code is B.51.322.GB.1392. So transcription: \\\"B.51.322.GB.1392\\\". Possibly include the parentheses? The spec says identifier code, usually in the top-right, starting with \\\"B.\\\" So we should just include that code.\\n\\ndate: any stamped dates. There is \\\"20 Dez 1944\\\" on the right side. That's a stamped date? It appears handwritten or stamped. Format is \\\"20 Dez 1944\\\". Convert to YYYY-MM-DD: 1944-12-20 (assuming Dez = December). Also there is \\\"Amendment 11, September 1944.\\\" and \\\"Amendment 10, 18. September 1945.\\\" Those are not stamped dates but part of information. The stamped date is likely \\\"20 Dez 1944\\\". So date field should be \\\"1944-12-20\\\". If there are multiple dates, perhaps only stamped? The spec says any stamped dates on the card. \\\"20 Dez 1944\\\" appears as a stamp. So use that.\\n\\ninformation: list of text blocks from the main body of the card. Each block separate string. Maintain line breaks with \\\\n. We need to capture each block of text. The main body includes several lines:\\n\\n- \\\"Britische schwarze Liste.\\\" (British black list.)\\n- \\\"Amendment 11, September 1944.\\\"\\n- \\\"gestrichen:\\\" (deleted:)\\n- \\\"Amendment 10, 18. September 1945.\\\"\\n\\nBut also there is the top lines? The top lines include company and location, but those are not part of information? Usually information includes the main body after the header. The spec says \\\"list of text blocks from the main body of the card.\\\" So we should include the textual content after the header, but maybe include everything except the company/location/b_id? However, typical approach: include all textual content that is not part of the structured fields. So we need to include the lines:\\n\\n- \\\"Britische schwarze Liste.\\\"\\n- \\\"Amendment 11, September 1944.\\\"\\n- \\\"gestrichen:\\\"\\n- \\\"Amendment 10, 18. September 1945.\\\"\\n\\nPotentially also include the \\\"20 Dez 1944\\\"? That is a date stamp on the right side, maybe not part of information but could be considered part of the card. But it's a stamped date, we already captured in date field. Should we include it in information? Probably not, as it's a stamp, not part of the main body text. However, the spec says \\\"list of text blocks from the main body of the card.\\\" The stamp might be considered part of the body but we can include it as a separate block? Safer to include all visible text that is not part of the structured fields. But the stamp is a date, we have date field. It might be okay to include it in information as well, but then duplicate. Usually they want only the main textual content, not the stamp.\\n\\nThus information blocks:\\n\\nWe need to preserve line breaks with \\\\n. So each block is a string; we can include multiple lines within a block if they belong together? The spec says each block should be a separate string in the list. Maintain line breaks with \\\\n. So each block can contain multiple lines separated by \\\\n. We need to decide grouping. Possibly each logical paragraph is a block. The card seems to have separate lines, maybe each line is a block. But we can group them as separate blocks each containing one line. However, we need to preserve line breaks within each block. If each block is a single line, there would be no line breaks inside. That's fine.\\n\\nThus we can have:\\n\\n- \\\"Britische schwarze Liste.\\\"\\n- \\\"Amendment 11, September 1944.\\\"\\n- \\\"gestrichen:\\\"\\n- \\\"Amendment 10, 18. September 1945.\\\"\\n\\nAlternatively, we could combine \\\"Britische schwarze Liste. Amendment 11, September 1944.\\\" as one block, but they are separate lines separated by a line break. The spec is ambiguous. Usually they want each block as a separate entry, each preserving internal line breaks. So we can treat each line as a block.\\n\\nThus information list will contain objects each with transcription equal to the line string.\\n\\nNow we need to produce JSON with the required structure.\\n\\nThe JSON schema expects:\\n\\n{\\n  \\\"company\\\": {\\\"transcription\\\": \\\"...\\\"},\\n  \\\"location\\\": {\\\"transcription\\\": \\\"...\\\"},\\n  \\\"b_id\\\": {\\\"transcription\\\": \\\"...\\\"},\\n  \\\"date\\\": \\\"\\\",\\n  \\\"information\\\": [\\n    {\\\"transcription\\\": \\\"...\\\"},\\n    ...\\n  ]\\n}\\n\\nIf date is present, we need to set it to the formatted date string, not null. The spec says date: anyOf string or null default null. So we can set string.\\n\\nThus final JSON:\\n\\n{\\n  \\\"company\\\": {\\\"transcription\\\": \\\"Florentin Max & Adrienne, Marie Gabrielle\\\"},\\n  \\\"location\\\": {\\\"transcription\\\": \\\"GENEVE\\\"},\\n  \\\"b_id\\\": {\\\"transcription\\\": \\\"B.51.322.GB.1392\\\"},\\n  \\\"date\\\": \\\"1944-12-20\\\",\\n  \\\"information\\\": [\\n    {\\\"transcription\\\": \\\"Britische schwarze Liste.\\\"},\\n    {\\\"transcription\\\": \\\"Amendment 11, September 1944.\\\"},\\n    {\\\"transcription\\\": \\\"gestrichen:\\\"},\\n    {\\\"transcription\\\": \\\"Amendment 10, 18. September 1945.\\\"}\\n  ]\\n}\\n\\nCheck if any other text should be included: There's also \\\"20 Dez 1944\\\" as a stamp. Possibly include as separate block? But it's a date stamp. Might be considered part of information. But we have date field. Usually they want date field only for stamped dates, and information for other textual content. So we can omit the stamp from information.\\n\\nAlso there is \\\"B.51.322.GB.1392 (Matas, Genf)\\\" includes extra parenthetical. Should we include that part? The identifier code is \\\"B.51.322.GB.1392\\\". The parentheses may be separate. The spec says identifier code usually in top-right starting with \\\"B.\\\" So we should just include the code. The parenthetical might be additional info (maybe archive location). So we omit.\\n\\nNow check for any other potential company name: \\\"Florentin Max & Adrienne, Marie Gabrielle,\\\" includes trailing comma after Gabrielle. We can include as is: \\\"Florentin Max & Adrienne, Marie Gabrielle\\\". The trailing comma may be part of the text but we can omit for clarity. But we could include exactly as appears: \\\"Florentin Max & Adrienne, Marie Gabrielle\\\". The original has a line break after \\\"Florentin Max & Adrienne,\\\" then \\\"Marie Gabrielle,\\\". So we can combine them with a space: \\\"Florentin Max & Adrienne Marie Gabrielle\\\". But the comma after Adrienne may be part of the phrase \\\"Florentin Max & Adrienne,\\\" indicating the company name includes both partners? Possibly the company is \\\"Florentin Max & Adrienne\\\". Then \\\"Marie Gabrielle\\\" is a person? But the spec says company name usually in the top-left; exclude location. So we need to decide what is the company name. The top-left includes \\\"Florentin Max & Adrienne,\\\" on first line, then \\\"Marie Gabrielle,\\\" on second line. Could be the company name includes both lines: \\\"Florentin Max & Adrienne, Marie Gabrielle\\\". That seems plausible: a company named after two individuals. So we will combine them.\\n\\nThus final JSON.\\n\\nCheck date format: \\\"20 Dez 1944\\\". Dez is German for December. So YYYY-MM-DD: 1944-12-20.\\n\\nNow ensure JSON is valid. The \\\"information\\\" field is an array of objects each with \\\"transcription\\\". That matches schema.\\n\\nNow produce final answer as JSON only, no extra text.\\n\\nThus final output:\\n\\n{\\n  \\\"company\\\": {\\\"transcription\\\": \\\"Florentin Max & Adrienne, Marie Gabrielle\\\"},\\n  \\\"location\\\": {\\\"transcription\\\": \\\"GENEVE\\\"},\\n  \\\"b_id\\\": {\\\"transcription\\\": \\\"B.51.322.GB.1392\\\"},\\n  \\\"date\\\": \\\"1944-12-20\\\",\\n  \\\"information\\\": [\\n    {\\\"transcription\\\": \\\"Britische schwarze Liste.\\\"},\\n    {\\\"transcription\\\": \\\"Amendment 11, September 1944.\\\"},\\n    {\\\"transcription\\\": \\\"gestrichen:\\\"},\\n    {\\\"transcription\\\": \\\"Amendment 10, 18. September 1945.\\\"}\\n  ]\\n}\\n\\nMake sure there are no trailing commas.\\n\\nNow output.\"},{\"type\":\"text\",\"text\":\"{\\n  \\\"company\\\": {\\\"transcription\\\": \\\"Florentin Max & Adrienne, Marie Gabrielle\\\"},\\n  \\\"location\\\": {\\\"transcription\\\": \\\"GENEVE\\\"},\\n  \\\"b_id\\\": {\\\"transcription\\\": \\\"B.51.322.GB.1392\\\"},\\n  \\\"date\\\": \\\"1944-12-20\\\",\\n  \\\"information\\\": [\\n    {\\\"transcription\\\": \\\"Britische schwarze Liste.\\\"},\\n    {\\\"transcription\\\": \\\"Amendment 11, September 1944.\\\"},\\n    {\\\"transcription\\\": \\\"gestrichen:\\\"},\\n    {\\\"transcription\\\": \\\"Amendment 10, 18. September 1945.\\\"}\\n  ]\\n}\"}]},\"usage\":{\"billed_units\":{\"input_tokens\":3932.0,\"output_tokens\":2335.0},\"tokens\":{\"input_tokens\":650.0,\"output_tokens\":2360.0,\"reasoning_tokens\":2205,\"image_tokens\":3343},\"cached_tokens\":16.0}}"
+}

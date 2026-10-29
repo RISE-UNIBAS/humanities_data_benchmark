@@ -1,0 +1,59 @@
+{
+    "text": "{\"advertisements\":[{\"box\":[56.0,47.0,2399.0,3298.0]}]}",
+    "model": "nex-agi/nex-n2.5-mini",
+    "provider": "openrouter",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 3060,
+        "output_tokens": 1339,
+        "total_tokens": 4399,
+        "reasoning_tokens": 0,
+        "cached_tokens": 128,
+        "input_cost_usd": 7.362e-05,
+        "output_cost_usd": 0.0001339,
+        "estimated_cost_usd": 0.00020752
+    },
+    "duration": 16.259178161621094,
+    "timestamp": "2026-10-25T04:30:59.499773",
+    "parsed": {
+        "advertisements": [
+            {
+                "box": [
+                    56.0,
+                    47.0,
+                    2399.0,
+                    3298.0
+                ]
+            }
+        ]
+    },
+    "conversation_id": "d0a1fbbe-ae10-4910-985e-ff4377a6abf6",
+    "score": {
+        "field_scores": {
+            "box 0": {
+                "response": [
+                    56.0,
+                    47.0,
+                    2399.0,
+                    3298.0
+                ],
+                "ground_truth": [
+                    140,
+                    105,
+                    2374,
+                    3262
+                ],
+                "score": 0.926
+            }
+        },
+        "f1": 1.0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "mean_iou": 0.926,
+        "true_positives": 1,
+        "false_positives": 0,
+        "false_negatives": 0,
+        "iou_threshold": 0.5
+    },
+    "raw_response": "{\"id\":\"gen-1792899043-MCAVOKejjqppl6tjbCGC\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\n  \\\"advertisements\\\": [\\n    {\\n      \\\"box\\\": [56, 47, 2399, 3298]\\n    }\\n  ]\\n}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"advertisements\":[{\"box\":[56.0,47.0,2399.0,3298.0]}]},\"reasoning\":\"\\nWe need answer JSON only. Need extract advertisements bounding boxes from image. Need identify ad area(s). Page is full-page Breitling ad, perhaps entire page image excluding black margins/white page border? Need bounding boxes in original page 2479x3508. Need return all advertisements. There is one advertisement occupying central page area. Need provide box [x0,y0,x1,y1]. Need estimate coordinates.\\n\\nWe have image of page. Original size 2479 x 3508. Need bounding box of advertisement. It appears the ad covers most of page, with white margins top and bottom, black border left/right maybe book edges. Need detect ad boundaries.\\n\\nLet's inspect image dimensions. The ad page occupies from x about 55 to 2398? y about 46 to 3405? Need be precise.\\n\\nWe need output JSON object. Let's analyze visual.\\n\\nThe original page is 2479 wide x 3508 tall. Image shows a magazine page with black background around it, white page edge. The ad starts at y around 46 (top white margin below black top, page top). It ends at y around 3387 maybe (bottom white margin). Left edge of page at x=56? right edge at x=2400? But black side margins: left black strip 0-56, right black strip 2400-2479. The ad area within page maybe x=56 to 2399, y=47 to 3388.\\n\\nNeed decide what constitutes ad bounding box. Since entire page is advertisement; include the ad content only or page rectangle? The instructions: extract all advertisements and return bounding boxes. Usually bounding box should encompass advertisement content, not necessarily full page. Here ad has background from top to bottom within page, with white margins above and below. The ad itself maybe starts at y=47 and ends y=3389, x=56 to 2400. It includes white margins? Hmm.\\n\\nLet's parse image. At top: black strip y=0-27? Then white margin y=28-46 maybe, then red ad begins y=47. At bottom: red ad ends at y=3298? Then white margin y=3299-3411? Then black y=3412-3508. Page edges: left x=0-27 black, x=28-56 white page edge? Wait the visible page is within black background; left white margin maybe page edge from x=28 to 55, ad starts x=56. Right page edge white from x=2399 to 2450, black after x=2451. The red ad doesn't cover entire page width; there is white margin at left and right. The ad background starts at x=56 and ends at x=2399. Top white margin y=28-47. Bottom white margin y=3298-3411. So ad bounding box [56,47,2399,3298] maybe.\\n\\nNeed maybe include text/branding at bottom; ad extends to y=3299. The red/orange design fills from x=56 to 2399, y=47 to 3298. There is a small black/white clip at top center outside ad? Not part of ad.\\n\\nLet's think about coordinate mapping. The provided image is 2479x3508. Need estimate from visual.\\n\\nLet's examine image details. The page is a scan; black background left/right. The top white margin is at y~28-47. The red ad begins at y=47. The bottom white margin is y~3298-3411. The red ad ends at y=3298. Left page edge x=28-56, right x=2399-2451. So ad bbox [56,47,2399,3298]. But if the ad includes the entire page including white margins, bbox [28,28,2451,3411]. Which is expected? \\\"original size of the page\\\" maybe page is the whole page, not the image. The page itself includes white margins. The advertisement is printed on the page; bounding box should be ad content, not page. But if ad is full-page, the white margins are part of page not ad. However many OCR tasks expect bounding box around ad area, including all visible content of ad, not page border. The ad background begins at red area, so [56,47,2399,3298].\\n\\nNeed maybe there are multiple ads? Only one Breitling ad. Return one object.\\n\\nLet's ensure no other ad in top/bottom black? no.\\n\\nNeed output exactly JSON. Coordinates integers. Could include [56,47,2399,3298]. Let's consider if x1 should be 2400? The red ad right edge at x=2399 maybe. The page edge white begins after. The image width 2479, right black strip maybe x=2451-2479, white margin x=2400-2450. So ad right x=2399. Left x=56. Top y=47, bottom y=3298. Good.\\n\\nNeed maybe include the watch face and logo? The ad extends to bottom text \\\"G. L\u00c9ON BREITLING S.A. LA CHAUX-DE-FONDS (SUISSE)\\\" at y~3000. The red background extends to y=3298. So yes.\\n\\nLet's craft final JSON only.\",\"reasoning_details\":[{\"type\":\"reasoning.text\",\"text\":\"\\nWe need answer JSON only. Need extract advertisements bounding boxes from image. Need identify ad area(s). Page is full-page Breitling ad, perhaps entire page image excluding black margins/white page border? Need bounding boxes in original page 2479x3508. Need return all advertisements. There is one advertisement occupying central page area. Need provide box [x0,y0,x1,y1]. Need estimate coordinates.\\n\\nWe have image of page. Original size 2479 x 3508. Need bounding box of advertisement. It appears the ad covers most of page, with white margins top and bottom, black border left/right maybe book edges. Need detect ad boundaries.\\n\\nLet's inspect image dimensions. The ad page occupies from x about 55 to 2398? y about 46 to 3405? Need be precise.\\n\\nWe need output JSON object. Let's analyze visual.\\n\\nThe original page is 2479 wide x 3508 tall. Image shows a magazine page with black background around it, white page edge. The ad starts at y around 46 (top white margin below black top, page top). It ends at y around 3387 maybe (bottom white margin). Left edge of page at x=56? right edge at x=2400? But black side margins: left black strip 0-56, right black strip 2400-2479. The ad area within page maybe x=56 to 2399, y=47 to 3388.\\n\\nNeed decide what constitutes ad bounding box. Since entire page is advertisement; include the ad content only or page rectangle? The instructions: extract all advertisements and return bounding boxes. Usually bounding box should encompass advertisement content, not necessarily full page. Here ad has background from top to bottom within page, with white margins above and below. The ad itself maybe starts at y=47 and ends y=3389, x=56 to 2400. It includes white margins? Hmm.\\n\\nLet's parse image. At top: black strip y=0-27? Then white margin y=28-46 maybe, then red ad begins y=47. At bottom: red ad ends at y=3298? Then white margin y=3299-3411? Then black y=3412-3508. Page edges: left x=0-27 black, x=28-56 white page edge? Wait the visible page is within black background; left white margin maybe page edge from x=28 to 55, ad starts x=56. Right page edge white from x=2399 to 2450, black after x=2451. The red ad doesn't cover entire page width; there is white margin at left and right. The ad background starts at x=56 and ends at x=2399. Top white margin y=28-47. Bottom white margin y=3298-3411. So ad bounding box [56,47,2399,3298] maybe.\\n\\nNeed maybe include text/branding at bottom; ad extends to y=3299. The red/orange design fills from x=56 to 2399, y=47 to 3298. There is a small black/white clip at top center outside ad? Not part of ad.\\n\\nLet's think about coordinate mapping. The provided image is 2479x3508. Need estimate from visual.\\n\\nLet's examine image details. The page is a scan; black background left/right. The top white margin is at y~28-47. The red ad begins at y=47. The bottom white margin is y~3298-3411. The red ad ends at y=3298. Left page edge x=28-56, right x=2399-2451. So ad bbox [56,47,2399,3298]. But if the ad includes the entire page including white margins, bbox [28,28,2451,3411]. Which is expected? \\\"original size of the page\\\" maybe page is the whole page, not the image. The page itself includes white margins. The advertisement is printed on the page; bounding box should be ad content, not page. But if ad is full-page, the white margins are part of page not ad. However many OCR tasks expect bounding box around ad area, including all visible content of ad, not page border. The ad background begins at red area, so [56,47,2399,3298].\\n\\nNeed maybe there are multiple ads? Only one Breitling ad. Return one object.\\n\\nLet's ensure no other ad in top/bottom black? no.\\n\\nNeed output exactly JSON. Coordinates integers. Could include [56,47,2399,3298]. Let's consider if x1 should be 2400? The red ad right edge at x=2399 maybe. The page edge white begins after. The image width 2479, right black strip maybe x=2451-2479, white margin x=2400-2450. So ad right x=2399. Left x=56. Top y=47, bottom y=3298. Good.\\n\\nNeed maybe include the watch face and logo? The ad extends to bottom text \\\"G. L\u00c9ON BREITLING S.A. LA CHAUX-DE-FONDS (SUISSE)\\\" at y~3000. The red background extends to y=3298. So yes.\\n\\nLet's craft final JSON only.\",\"format\":\"unknown\",\"index\":0}]},\"native_finish_reason\":\"stop\"}],\"created\":1792899043,\"model\":\"nex-agi/nex-n2.5-mini\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":null,\"usage\":{\"completion_tokens\":1339,\"prompt_tokens\":3060,\"total_tokens\":4399,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":0,\"reasoning_tokens\":1058,\"rejected_prediction_tokens\":null,\"image_tokens\":0},\"prompt_tokens_details\":{\"audio_tokens\":0,\"cached_tokens\":128,\"cache_write_tokens\":0,\"video_tokens\":0},\"cost\":0.00020752,\"is_byok\":false,\"cost_details\":{\"upstream_inference_cost\":0.00020752,\"upstream_inference_prompt_cost\":0.00007362,\"upstream_inference_completions_cost\":0.0001339}},\"provider\":\"Nex AGI\"}"
+}

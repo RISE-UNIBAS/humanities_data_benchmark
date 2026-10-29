@@ -1,0 +1,90 @@
+{
+    "text": "{\"metadata\":{\"send_date\":[\"1928-05-10\"],\"letter_title\":[\"Betr. Abrechnung\"],\"sender_persons\":[\"Basler Rheinschiffahrt-Aktiengesellschaft\"],\"receiver_persons\":[\"Basler Personenschiffahrtsgesellschaft\"]}}",
+    "model": "qwen/qwen3.8-max-prime",
+    "provider": "openrouter",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 3127,
+        "output_tokens": 874,
+        "total_tokens": 4001,
+        "reasoning_tokens": 0,
+        "cached_tokens": 3072,
+        "input_cost_usd": 0.001756,
+        "output_cost_usd": 0.010488,
+        "estimated_cost_usd": 0.012244
+    },
+    "duration": 15.027335166931152,
+    "timestamp": "2026-10-25T00:17:41.685909",
+    "parsed": {
+        "metadata": {
+            "send_date": [
+                "1928-05-10"
+            ],
+            "letter_title": [
+                "Betr. Abrechnung"
+            ],
+            "sender_persons": [
+                "Basler Rheinschiffahrt-Aktiengesellschaft"
+            ],
+            "receiver_persons": [
+                "Basler Personenschiffahrtsgesellschaft"
+            ]
+        }
+    },
+    "conversation_id": "99a84274-0794-4d88-8390-324f74fd2dff",
+    "score": {
+        "send_date_tp": 1,
+        "send_date_fp": 0,
+        "send_date_fn": 0,
+        "sender_persons_tp": 0,
+        "sender_persons_fp": 1,
+        "sender_persons_fn": 2,
+        "receiver_persons_tp": 0,
+        "receiver_persons_fp": 1,
+        "receiver_persons_fn": 0,
+        "field_scores": {
+            "send_date": {
+                "response": [
+                    "1928-05-10"
+                ],
+                "ground_truth": [
+                    "1928-05-10"
+                ],
+                "score": null,
+                "counts": {
+                    "send_date_tp": 1,
+                    "send_date_fp": 0,
+                    "send_date_fn": 0
+                }
+            },
+            "sender_persons": {
+                "response": [
+                    "Basler Rheinschiffahrt-Aktiengesellschaft"
+                ],
+                "ground_truth": [
+                    "Kachelhofer-Gerber, Frederick Charles",
+                    "Ritter-Dreier, Fritz"
+                ],
+                "score": null,
+                "counts": {
+                    "sender_persons_tp": 0,
+                    "sender_persons_fp": 1,
+                    "sender_persons_fn": 2
+                }
+            },
+            "receiver_persons": {
+                "response": [
+                    "Basler Personenschiffahrtsgesellschaft"
+                ],
+                "ground_truth": [],
+                "score": null,
+                "counts": {
+                    "receiver_persons_tp": 0,
+                    "receiver_persons_fp": 1,
+                    "receiver_persons_fn": 0
+                }
+            }
+        }
+    },
+    "raw_response": "{\"id\":\"gen-1792880246-kLZCjFmHd59TQYGUztW5\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\n  \\\"metadata\\\": {\\n    \\\"send_date\\\": [\\n      \\\"1928-05-10\\\"\\n    ],\\n    \\\"letter_title\\\": [\\n      \\\"Betr. Abrechnung\\\"\\n    ],\\n    \\\"sender_persons\\\": [\\n      \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"\\n    ],\\n    \\\"receiver_persons\\\": [\\n      \\\"Basler Personenschiffahrtsgesellschaft\\\"\\n    ]\\n  }\\n}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"metadata\":{\"send_date\":[\"1928-05-10\"],\"letter_title\":[\"Betr. Abrechnung\"],\"sender_persons\":[\"Basler Rheinschiffahrt-Aktiengesellschaft\"],\"receiver_persons\":[\"Basler Personenschiffahrtsgesellschaft\"]}},\"reasoning\":\"The letter is from Basler Rheinschiffahrt-Aktiengesellschaft (Buchhaltung / Accounting Department), Basel, dated 10 May 1928 (\\\"Basel, den 10. Mai /28\\\"), addressed to Basler Personenschiffahrtsgesellschaft, Basel. Subject: \\\"Betr. Abrechnung\\\" (Re: Settlement/Accounting).\\n\\nLetter title: probably \\\"Abrechnung\\\" or \\\"Betr. Abrechnung\\\". Sender: Basler Rheinschiffahrt-Aktiengesellschaft (the company). But sender_persons should be persons... The signature is illegible; the letter is signed on behalf of the company. The instructions say sender_persons: name(s) of the person(s) who wrote the letter. If it's a company, should I list the company? Hmm. Usually in these datasets (e.g., Swiss corporate archives), the sender can be an organization. But the schema says persons. The signature appears to be two handwritten signatures, illegible. Probably the sender is \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\" and the receiver is \\\"Basler Personenschiffahrtsgesellschaft\\\".\\n\\nGiven the task, I'd extract as follows:\\n- letter_title: [\\\"Abrechnung\\\"] or [\\\"Betr. Abrechnung\\\"]\\n- send_date: [\\\"1928-05-10\\\"]\\n- sender_persons: [\\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"] (or null?). Hmm.\\n\\nThe letterhead says \\\"Basler Rheinschiffahrt-Aktiengesellschaft ... Buchhaltung\\\". The closing says \\\"Hochachtend Basler Rheinschiffahrt - Aktiengesellschaft\\\" with signatures. The receiver is \\\"Basler Personenschiffahrtsgesellschaft Basel\\\".\\n\\nSince the sender is an organization rather than a person, should sender_persons be null? But usually in these extraction tasks, organizations are included as senders. The example shows persons. Hmm.\\n\\nLet me think: the document is a letter. Metadata fields: sender_persons, receiver_persons. In many archival datasets (e.g., \\\"Swiss Economic Archives\\\"), the sender can be a company. The instructions say \\\"name(s) of the person(s) who wrote the letter.\\\" The signature is illegible; the writing entity is the company. I think it's safest to put the company name as sender and receiver, since no individual names are given. But strictly, \\\"persons\\\"\u2014the signatures are unreadable.\\n\\nAlternative: sender_persons: null, receiver_persons: null. But then information is lost. Hmm.\\n\\nLooking at the image again: at the top right the addressee: \\\"Basler Personenschiffahrtsgesellschaft Basel\\\". The sender's letterhead: \\\"Basler Rheinschiffahrt-Aktiengesellschaft, Marktgasse 5, Basel, Buchhaltung\\\". Closing: \\\"Hochachtend Basler Rheinschiffahrt - Aktiengesellschaft\\\" with two signatures.\\n\\nGiven the ambiguity, I'd include the organizations as sender and receiver. Many ground-truth datasets for these kinds of letters (this seems to be from the \\\"Novartis archives\\\" or \\\"Swiss economic archives\\\" collection) list corporate bodies as senders/receivers.\\n\\nLetter title: \\\"Betr. Abrechnung\\\" \u2192 title probably \\\"Abrechnung\\\". Use \\\"Abrechnung\\\".\\n\\nDate: 10 May 1928 \u2192 \\\"1928-05-10\\\".\\n\\nSender: \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\" (Buchhaltung). Receiver: \\\"Basler Personenschiffahrtsgesellschaft\\\".\\n\\nProduce JSON accordingly.\\n\",\"reasoning_details\":[{\"type\":\"reasoning.text\",\"text\":\"The letter is from Basler Rheinschiffahrt-Aktiengesellschaft (Buchhaltung / Accounting Department), Basel, dated 10 May 1928 (\\\"Basel, den 10. Mai /28\\\"), addressed to Basler Personenschiffahrtsgesellschaft, Basel. Subject: \\\"Betr. Abrechnung\\\" (Re: Settlement/Accounting).\\n\\nLetter title: probably \\\"Abrechnung\\\" or \\\"Betr. Abrechnung\\\". Sender: Basler Rheinschiffahrt-Aktiengesellschaft (the company). But sender_persons should be persons... The signature is illegible; the letter is signed on behalf of the company. The instructions say sender_persons: name(s) of the person(s) who wrote the letter. If it's a company, should I list the company? Hmm. Usually in these datasets (e.g., Swiss corporate archives), the sender can be an organization. But the schema says persons. The signature appears to be two handwritten signatures, illegible. Probably the sender is \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\" and the receiver is \\\"Basler Personenschiffahrtsgesellschaft\\\".\\n\\nGiven the task, I'd extract as follows:\\n- letter_title: [\\\"Abrechnung\\\"] or [\\\"Betr. Abrechnung\\\"]\\n- send_date: [\\\"1928-05-10\\\"]\\n- sender_persons: [\\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"] (or null?). Hmm.\\n\\nThe letterhead says \\\"Basler Rheinschiffahrt-Aktiengesellschaft ... Buchhaltung\\\". The closing says \\\"Hochachtend Basler Rheinschiffahrt - Aktiengesellschaft\\\" with signatures. The receiver is \\\"Basler Personenschiffahrtsgesellschaft Basel\\\".\\n\\nSince the sender is an organization rather than a person, should sender_persons be null? But usually in these extraction tasks, organizations are included as senders. The example shows persons. Hmm.\\n\\nLet me think: the document is a letter. Metadata fields: sender_persons, receiver_persons. In many archival datasets (e.g., \\\"Swiss Economic Archives\\\"), the sender can be a company. The instructions say \\\"name(s) of the person(s) who wrote the letter.\\\" The signature is illegible; the writing entity is the company. I think it's safest to put the company name as sender and receiver, since no individual names are given. But strictly, \\\"persons\\\"\u2014the signatures are unreadable.\\n\\nAlternative: sender_persons: null, receiver_persons: null. But then information is lost. Hmm.\\n\\nLooking at the image again: at the top right the addressee: \\\"Basler Personenschiffahrtsgesellschaft Basel\\\". The sender's letterhead: \\\"Basler Rheinschiffahrt-Aktiengesellschaft, Marktgasse 5, Basel, Buchhaltung\\\". Closing: \\\"Hochachtend Basler Rheinschiffahrt - Aktiengesellschaft\\\" with two signatures.\\n\\nGiven the ambiguity, I'd include the organizations as sender and receiver. Many ground-truth datasets for these kinds of letters (this seems to be from the \\\"Novartis archives\\\" or \\\"Swiss economic archives\\\" collection) list corporate bodies as senders/receivers.\\n\\nLetter title: \\\"Betr. Abrechnung\\\" \u2192 title probably \\\"Abrechnung\\\". Use \\\"Abrechnung\\\".\\n\\nDate: 10 May 1928 \u2192 \\\"1928-05-10\\\".\\n\\nSender: \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\" (Buchhaltung). Receiver: \\\"Basler Personenschiffahrtsgesellschaft\\\".\\n\\nProduce JSON accordingly.\\n\",\"format\":\"unknown\",\"index\":0}]},\"native_finish_reason\":\"stop\"}],\"created\":1792880246,\"model\":\"qwen/qwen3.8-max-prime\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":null,\"usage\":{\"completion_tokens\":874,\"prompt_tokens\":3127,\"total_tokens\":4001,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":0,\"reasoning_tokens\":766,\"rejected_prediction_tokens\":null,\"image_tokens\":0},\"prompt_tokens_details\":{\"audio_tokens\":0,\"cached_tokens\":3072,\"cache_write_tokens\":0,\"video_tokens\":0},\"cost\":0.012244,\"is_byok\":false,\"cost_details\":{\"upstream_inference_cost\":0.012244,\"upstream_inference_prompt_cost\":0.001756,\"upstream_inference_completions_cost\":0.010488}},\"provider\":\"Alibaba\"}"
+}

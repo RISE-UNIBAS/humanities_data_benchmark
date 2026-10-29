@@ -266,7 +266,7 @@ def test_an_unreconciled_build_is_not_releasable(monkeypatch):
     """Absent is not clean. Nothing compared the two pipelines."""
     blockers = _blockers(monkeypatch, _Crosscheck(exists=False))
     assert len(blockers) == 1 and "nothing reconciled this build" in blockers[0]
-    assert "generate_all" in blockers[0], "say how to fix it"
+    assert "python -m generate" in blockers[0], "say how to fix it"
 
 
 def test_a_crosscheck_finding_blocks_the_release(monkeypatch):

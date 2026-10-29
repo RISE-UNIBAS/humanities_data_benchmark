@@ -5,11 +5,11 @@ skips what it cannot chart, keeps one request per run and normalises scores; the
 keeps everything and refuses to normalise. Those differences are the design. Anything else
 is one of them having misread a file the other read correctly.
 
-**This is a diagnostic, not an oracle.** Since the shared results layer landed, both
-pipelines walk the corpus through `scripts/results_index.py`, so a fault in that layer
-would move both exports together and go unseen here. What this still catches is the two
-disagreeing about a run's identity, its visibility, its recorded scores or the price each
-resolved -- places where they diverge after the shared read.
+**This is a diagnostic, not an oracle.** The frontend export comes from the
+benchmark-frontend repository, which reads the files with its own reader, so a fault in
+`scripts/results_index.py` shows up here as a disagreement. Both sides resolve prices with
+the same resolver, so a fault in it would move both together; what this catches there is
+the two disagreeing about which identity to price.
 
 Skipped unless a built dataset and a current frontend export are both present, since it
 compares two artifacts rather than testing code.

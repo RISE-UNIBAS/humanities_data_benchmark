@@ -1,0 +1,83 @@
+{
+    "text": "{\"metadata\":{\"send_date\":[\"1928-02-27\"],\"letter_title\":[],\"sender_persons\":[\"null\"],\"receiver_persons\":[\"Basler Rheinschiffahrt A.-G.\"]}}",
+    "model": "xiaomi/mimo-v2.6-pro",
+    "provider": "openrouter",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 3206,
+        "output_tokens": 859,
+        "total_tokens": 4065,
+        "reasoning_tokens": 0,
+        "cached_tokens": 3200,
+        "input_cost_usd": 1.413e-05,
+        "output_cost_usd": 0.00074733,
+        "estimated_cost_usd": 0.00076146
+    },
+    "duration": 17.05126690864563,
+    "timestamp": "2026-10-25T01:10:36.429444",
+    "parsed": {
+        "metadata": {
+            "send_date": [
+                "1928-02-27"
+            ],
+            "letter_title": [],
+            "sender_persons": [
+                "null"
+            ],
+            "receiver_persons": [
+                "Basler Rheinschiffahrt A.-G."
+            ]
+        }
+    },
+    "conversation_id": "02e82912-fcd3-4ed8-81da-2d4928f57132",
+    "score": {
+        "send_date_tp": 1,
+        "send_date_fp": 0,
+        "send_date_fn": 0,
+        "sender_persons_tp": 0,
+        "sender_persons_fp": 0,
+        "sender_persons_fn": 0,
+        "receiver_persons_tp": 0,
+        "receiver_persons_fp": 1,
+        "receiver_persons_fn": 0,
+        "field_scores": {
+            "send_date": {
+                "response": [
+                    "1928-02-27"
+                ],
+                "ground_truth": [
+                    "1928-02-27"
+                ],
+                "score": null,
+                "counts": {
+                    "send_date_tp": 1,
+                    "send_date_fp": 0,
+                    "send_date_fn": 0
+                }
+            },
+            "sender_persons": {
+                "response": [],
+                "ground_truth": [],
+                "score": null,
+                "counts": {
+                    "sender_persons_tp": 0,
+                    "sender_persons_fp": 0,
+                    "sender_persons_fn": 0
+                }
+            },
+            "receiver_persons": {
+                "response": [
+                    "Basler Rheinschiffahrt A.-G."
+                ],
+                "ground_truth": [],
+                "score": null,
+                "counts": {
+                    "receiver_persons_tp": 0,
+                    "receiver_persons_fp": 1,
+                    "receiver_persons_fn": 0
+                }
+            }
+        }
+    },
+    "raw_response": "{\"id\":\"gen-1792883419-cZsQMYtuD6xZrubtNNjh\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\n    \\\"metadata\\\": {\\n        \\\"send_date\\\": [\\\"1928-02-27\\\"]\\n    ,\\n    \\\"letter_title\\\": [\\\"\\\"],\\n    \\\"sender_persons\\\": [\\\"null\\\"],\\n    \\\"receiver_persons\\\": [\\\"Basler Rheinschiffahrt A.-G.\\\"]\\n} }\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"metadata\":{\"send_date\":[\"1928-02-27\"],\"letter_title\":[],\"sender_persons\":[\"null\"],\"receiver_persons\":[\"Basler Rheinschiffahrt A.-G.\"]}},\"reasoning\":\"The user wants me to extract specific information from an image of a letter and return it as a JSON object.\\n\\n**1. Analyze the Request:**\\n* **Role:** Historian with keyword knowledge, expert in 20th-century Swiss history.\\n*   **Input:** An image of a letter.\\n*   **Task:** Extract keys:\\n* `letter_title`: Title of the letter.\\n*   `sender_persons`: Name(s) of the writer(s).\\n*   `send_date`: Date written (ISO format YYYY-MM-DD).\\n*   `receiver_persons`: Name(s) of the recipient(s).\\n*   **Constraints:**\\n*   Values must be lists.\\n*   Use ISO date format.\\n*   Missing info -> \\\"null\\\".\\n*   Output ONLY the JSON.\\n*   Do not use OCR (implies I should interpret the visual content directly, though I am effectively performing OCR in my processing pipeline to understand the text). The instruction \\\"Do not use OCR\\\" likely means \\\"don't just run a naive OCR tool and paste the output\\\" but rather \\\"interpret and extract structured data\\\". However, looking at the prompt structure, it's likely a prompt engineering task where I simulate the expert reading.\\n\\n**2. Analyze the Image:**\\n*   **Language:** German.\\n*   **Header:**\\n*   \\\"Basel, den 27. Februar 1928.\\\" -> This is the date and location.\\n*   \\\"c/v\\\" -> Likely a reference code or personal shorthand, or \\\"per copy\\\". Usually not the title.\\n*   **Recipient Address:**\\n*   \\\"An die Basler Rheinschiffahrt A.-G.\\\"\\n*   \\\"Basel.\\\"\\n*   **Body:**\\n*   \\\"Ihr Vorschlag, laut Brief vom 18. Februar, hat der Vorstandssitzung vorgelegen...\\\" (Your proposal, according to letter of Feb 18, was presented to the board meeting...)\\n*   \\\"Dieser ist noch nicht zu einem Entschluss gekommen...\\\" (The board has not yet reached a decision...)\\n*   \\\"Immerhin ist die Meinung vorherrschend, dass die beiden Gesellschaften zusammen arbeiten sollen.\\\" (However, the prevailing opinion is that the two companies should work together.)\\n*   \\\"Ein Teil der Anwesenden w\u00fcnscht jedoch eine Betriebsgemeinschaft, statt der von Ihnen vorgeschlagenen Verpachtung unseres Schiffes.\\\" (Some present wish for a joint operation instead of the leasing of our ship proposed by you.)\\n*   \\\"D\u00fcrfen wir Sie bitten, uns auch eine kurze Offerte zu unterbreiten, wie Sie sich eine solche vorstellen.\\\" (May we ask you to present a short offer to us on how you envision such a thing.)\\n*   **Closing:**\\n*   \\\"Hochachtungsvoll\\\"\\n*   \\\"Basler Personenschiffahrtsgesellschaft\\\"\\n*   \\\"Der Gesch\u00e4ftsf\u00fchrer\\\" (The Managing Director)\\n\\n**3. Extracting the Data:**\\n\\n*   **letter_title:**\\n*   Does it have an explicit title? No, it's a standard business letter (Anschreiben).\\n*   Usually, if there is no title, I set it to \\\"null\\\". Sometimes people infer a title from the subject, but the prompt asks for \\\"Title of the letter\\\". A standard formal letter doesn't have a title like a report.\\n*   Let's check if \\\"c/v\\\" is a title. Unlikely.\\n*   Let's check the context. It's a reply regarding a proposal.\\n*   The prompt says \\\"If a piece of information is not included in the letter, set the value ... to 'null'\\\".\\n*   Verdict: \\\"null\\\".\",\"reasoning_details\":[{\"type\":\"reasoning.text\",\"text\":\"The user wants me to extract specific information from an image of a letter and return it as a JSON object.\\n\\n**1. Analyze the Request:**\\n* **Role:** Historian with keyword knowledge, expert in 20th-century Swiss history.\\n*   **Input:** An image of a letter.\\n*   **Task:** Extract keys:\\n* `letter_title`: Title of the letter.\\n*   `sender_persons`: Name(s) of the writer(s).\\n*   `send_date`: Date written (ISO format YYYY-MM-DD).\\n*   `receiver_persons`: Name(s) of the recipient(s).\\n*   **Constraints:**\\n*   Values must be lists.\\n*   Use ISO date format.\\n*   Missing info -> \\\"null\\\".\\n*   Output ONLY the JSON.\\n*   Do not use OCR (implies I should interpret the visual content directly, though I am effectively performing OCR in my processing pipeline to understand the text). The instruction \\\"Do not use OCR\\\" likely means \\\"don't just run a naive OCR tool and paste the output\\\" but rather \\\"interpret and extract structured data\\\". However, looking at the prompt structure, it's likely a prompt engineering task where I simulate the expert reading.\\n\\n**2. Analyze the Image:**\\n*   **Language:** German.\\n*   **Header:**\\n*   \\\"Basel, den 27. Februar 1928.\\\" -> This is the date and location.\\n*   \\\"c/v\\\" -> Likely a reference code or personal shorthand, or \\\"per copy\\\". Usually not the title.\\n*   **Recipient Address:**\\n*   \\\"An die Basler Rheinschiffahrt A.-G.\\\"\\n*   \\\"Basel.\\\"\\n*   **Body:**\\n*   \\\"Ihr Vorschlag, laut Brief vom 18. Februar, hat der Vorstandssitzung vorgelegen...\\\" (Your proposal, according to letter of Feb 18, was presented to the board meeting...)\\n*   \\\"Dieser ist noch nicht zu einem Entschluss gekommen...\\\" (The board has not yet reached a decision...)\\n*   \\\"Immerhin ist die Meinung vorherrschend, dass die beiden Gesellschaften zusammen arbeiten sollen.\\\" (However, the prevailing opinion is that the two companies should work together.)\\n*   \\\"Ein Teil der Anwesenden w\u00fcnscht jedoch eine Betriebsgemeinschaft, statt der von Ihnen vorgeschlagenen Verpachtung unseres Schiffes.\\\" (Some present wish for a joint operation instead of the leasing of our ship proposed by you.)\\n*   \\\"D\u00fcrfen wir Sie bitten, uns auch eine kurze Offerte zu unterbreiten, wie Sie sich eine solche vorstellen.\\\" (May we ask you to present a short offer to us on how you envision such a thing.)\\n*   **Closing:**\\n*   \\\"Hochachtungsvoll\\\"\\n*   \\\"Basler Personenschiffahrtsgesellschaft\\\"\\n*   \\\"Der Gesch\u00e4ftsf\u00fchrer\\\" (The Managing Director)\\n\\n**3. Extracting the Data:**\\n\\n*   **letter_title:**\\n*   Does it have an explicit title? No, it's a standard business letter (Anschreiben).\\n*   Usually, if there is no title, I set it to \\\"null\\\". Sometimes people infer a title from the subject, but the prompt asks for \\\"Title of the letter\\\". A standard formal letter doesn't have a title like a report.\\n*   Let's check if \\\"c/v\\\" is a title. Unlikely.\\n*   Let's check the context. It's a reply regarding a proposal.\\n*   The prompt says \\\"If a piece of information is not included in the letter, set the value ... to 'null'\\\".\\n*   Verdict: \\\"null\\\".\",\"format\":\"unknown\",\"index\":0}]},\"native_finish_reason\":\"stop\"}],\"created\":1792883419,\"model\":\"xiaomi/mimo-v2.6-pro\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":null,\"usage\":{\"completion_tokens\":859,\"prompt_tokens\":3206,\"total_tokens\":4065,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":0,\"reasoning_tokens\":790,\"rejected_prediction_tokens\":null,\"image_tokens\":0},\"prompt_tokens_details\":{\"audio_tokens\":0,\"cached_tokens\":3200,\"cache_write_tokens\":0,\"video_tokens\":0},\"cost\":0.00076146,\"is_byok\":false,\"cost_details\":{\"upstream_inference_cost\":0.00076146,\"upstream_inference_prompt_cost\":0.00001413,\"upstream_inference_completions_cost\":0.00074733}},\"provider\":\"Xiaomi\"}"
+}

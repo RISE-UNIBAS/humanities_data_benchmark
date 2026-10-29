@@ -6,6 +6,8 @@ from scripts.scoring_helper import get_all_keys, get_nested_value, calculate_fuz
 
 class LibraryCards(Benchmark):
 
+    score_unparseable_as_miss = True
+
     def score_benchmark(self, all_scores):
         """
         Calculate macro and micro F1 scores across all test instances.
@@ -64,7 +66,9 @@ class LibraryCards(Benchmark):
         """
 
         data = self.prepare_scoring_data(response)
-        ground_truth_data = ground_truth["response_text"]
+        if not isinstance(data, dict):
+            data = {}  # an unparseable response: every ground-truth field is missed
+        ground_truth_data = ground_truth
 
         logging.info(image_name)
         logging.debug(f"response: {data}")

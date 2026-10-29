@@ -10,7 +10,7 @@ LLMs perform on digital humanities (DH) tasks involving visual and text-like mat
 Tasks covered include transcription, structured information extraction, and document layout analysis, each scored
 against ground truths and recorded together with its cost and runtime.
 
-**[Explore the results dashboard](https://rise-services.rise.unibas.ch/benchmarks/)**
+**[Explore the results on the website](https://rise-services.rise.unibas.ch/benchmarks/)**
 
 [Why benchmark?](#why-benchmark) · [Results](#results) ·
 [Available benchmarks](#available-benchmarks) · [Quick start](#quick-start) ·
@@ -32,43 +32,54 @@ helping researchers make informed choices about which AI systems best suit their
 ## Results
 
 All scored runs are published on the
-**[results dashboard](https://rise-services.rise.unibas.ch/benchmarks/)**, which is the primary way
-to read this benchmark:
+**[website](https://rise-services.rise.unibas.ch/benchmarks/)**, which is the primary way to read
+this benchmark:
 
-- **[Leaderboard](https://rise-services.rise.unibas.ch/benchmarks/p/leaderboard/)** — aggregated
-  results showing which providers and models perform best on which kinds of data.
-- **[Datasets](https://rise-services.rise.unibas.ch/benchmarks/p/benchmarks/)** — browse the
-  benchmarks and the results recorded for each of them.
+- **[Leaderboard](https://rise-services.rise.unibas.ch/benchmarks/p/leaderboard/)** — every model's
+  best run on every benchmark, with its 95% sampling margin and cost per 1,000 documents; also
+  *Which model for me?*, the run list, cost and speed, and a side-by-side comparison of up to
+  four models, input by input.
+- **[Benchmarks](https://rise-services.rise.unibas.ch/benchmarks/p/benchmarks/)** — each
+  benchmark's card, an example input, its results and newest runs.
+- **Model pages** — one per model tested, legacy models included, linked from the leaderboard.
 - **[Test runs](https://rise-services.rise.unibas.ch/benchmarks/p/testruns/)** — search individual
   test runs and compare model output with the ground truths.
 
 Every score shown there traces back to a stored response in this repository, under
-`results/<date>/<test_id>/`, alongside the aggregated `scoring.json` for the run.
+`results/<date>/<test_id>/`, alongside the aggregated `scoring.json` for the run. The website is
+rebuilt from this repository every night that it changes.
 
 ## Available benchmarks
 
-This benchmark suite currently includes the following benchmarks for evaluating LLM performance on humanities tasks:
+This benchmark suite currently includes the following benchmarks for evaluating LLM performance on humanities tasks.
+Each benchmark's README is a [BenchmarkCard](benchmarks/README_TEMPLATE.md) (Sokol et al., NeurIPS 2025;
+schema from evaleval/auto-benchmarkcard), also stored as `benchmark_card.json`: sources and licences,
+the task, the metrics and how to read them, known limitations, versions and how to cite it.
 
 | Benchmark | Description |
 |-----------|-------------|
-| **[Bibliographic Data](benchmarks/bibliographic_data/)** | Extract bibliographic information (publication details, authors, dates, metadata) from historical documents |
-| **[Blacklist Cards](benchmarks/blacklist_cards/)** | Extract and structure information from historical blacklist cards |
-| **[Book Advert XML](benchmarks/book_advert_xml/)** | Correct malformed XML from 18th century book advertisements |
-| **[Business Letters](benchmarks/business_letters/)** | Extract structured metadata (names, organizations, dates, locations) from 20th century Swiss historical correspondence |
-| **[Company Lists](benchmarks/company_lists/)** | Extract structured company information from historical business listings and directories |
-| **[Duty Rosters](benchmarks/duty_rosters/)** | Extract structured schedule data (shift types, half-day splits, unit assignments, staff metadata) from Swiss nursing staff duty rosters |
-| **[Fraktur Adverts](benchmarks/fraktur_adverts/)** | Recognize and transcribe historical German Fraktur script (16th-20th centuries) |
-| **[General Meeting Minutes](benchmarks/general_meeting_minutes/)** | Extract structured data from general meeting minutes of historical companies |
-| **[Library Cards](benchmarks/library_cards/)** | Catalog card analysis and information extraction from historical library catalog systems |
-| **[Magazine Pages](benchmarks/magazine_pages/)** | Detect and locate advertisements on historical magazine pages using bounding boxes |
-| **[Medieval Manuscripts](benchmarks/medieval_manuscripts/)** | Page segmentation and handwritten text extraction from 15th century medieval German manuscripts |
-| **[Personnel Cards](benchmarks/personnel_cards/)** | Extract structured employment data (position, location, salary, dates) from 20th century Swiss personnel card tables |
+| **[Bibliographic Data](benchmarks/bibliographic_data/)** | Extract structured entries (author, title, publisher, place, year, pages, cross-references) from a printed 1961 bibliography of the philosophy of history |
+| **[Blacklist Cards](benchmarks/blacklist_cards/)** | Extract company, location, identification number, date and blacklist entries from Swiss Federal Archives index cards on the British trade blacklist, 1940–1946 |
+| **[Book Advert XML](benchmarks/book_advert_xml/)** | Repair malformed XML markup in transcribed adverts from the Basler Avisblatt (1729–1844) without changing the advert text |
+| **[Business Letters](benchmarks/business_letters/)** | Extract the send date, sender and receiver persons from German-language business letters, 1926–1935 |
+| **[Company Lists](benchmarks/company_lists/)** | Extract company names and locations from member lists and trade indexes of the British Chamber of Commerce for Switzerland, 1921–1958 |
+| **[Duty Rosters](benchmarks/duty_rosters/)** | Extract shift types, half-day splits, unit assignments and staff metadata from an icon-based Swiss nursing staff duty roster |
+| **[Fraktur Adverts](benchmarks/fraktur_adverts/)** | Transcribe 18th-century Fraktur adverts from the Basler Avisblatt, split into numbered adverts under their section headings |
+| **[General Meeting Minutes](benchmarks/general_meeting_minutes/)** | Extract shareholder rows and page totals from the attendance registers of Mines de Costano S.A., 1951–1968 |
+| **[Library Cards](benchmarks/library_cards/)** | Extract bibliographic records from typed, printed and handwritten cards of the University Library Basel's dissertation catalogue |
+| **[Magazine Pages](benchmarks/magazine_pages/)** | Locate advertisements on pages of the journal of the British Chamber of Commerce for Switzerland, 1921–1950, as bounding boxes |
+| **[Medieval Manuscripts](benchmarks/medieval_manuscripts/)** | Transcribe pages of a mid-15th-century late medieval German manuscript diplomatically, with folio number and marginal additions separated |
+| **[Personnel Cards](benchmarks/personnel_cards/)** | Transcribe and interpret the table entries on Swiss federal personnel cards, 1941–1961 (job title, place of service, salary class, salary, remarks) |
 
 The [test_benchmark](benchmarks/test_benchmark/) and [test_benchmark2](benchmarks/test_benchmark2/) fixtures validate the framework itself.
 
+Benchmarks are versioned MAJOR.MINOR.PATCH, listed under **Versions** in each card. A change that
+alters scores, such as a corrected ground truth or a new scoring rule, is a new MAJOR version, and all
+stored runs are re-scored under it, so scores of one benchmark are always comparable across runs.
+
 ## Quick start
 
-To inspect existing comparisons, open the [results dashboard](https://rise-services.rise.unibas.ch/benchmarks/).
+To inspect existing comparisons, open the [website](https://rise-services.rise.unibas.ch/benchmarks/).
 To run a new evaluation, follow the steps below. Python 3.12 or newer is recommended.
 
 ### Install
@@ -248,8 +259,10 @@ This benchmark suite currently tests models from the following providers:
 | | claude-opus-5                             | Claude Opus 5                                              |
 | | claude-opus-5-5                           | Claude Opus 5.5                                            |
 | | claude-sonnet-5-5                         | Claude Sonnet 5.5                                          |
+| | claude-haiku-5-5                          | Claude Haiku 5.5                                           |
 | **Cohere** | command-a-03-2025                         | Command A (Mar 2025)                                       |
 | | command-a-vision-07-2025                  | Command A Vision (Jul 2025); multimodal                    |
+| | command-a-plus-05-2026                    | Command A+ (May 2026); multimodal, reasoning               |
 | | command-r-08-2024                         | Command R (Aug 2024)                                       |
 | | command-r-plus-08-2024                    | Command R+ (Aug 2024)                                      |
 | | command-r7b-12-2024                       | Command R 7B (Dec 2024)                                    |
@@ -283,6 +296,7 @@ This benchmark suite currently tests models from the following providers:
 | | gemini-3.5-flash-lite                     | Gemini 3.5 Flash-Lite                                      |
 | | gemini-3.7-flash                          | Gemini 3.7 Flash                                           |
 | | gemini-3.8-flash                          | Gemini 3.8 Flash                                           |
+| | gemini-4-argon                            | Gemini 4 Argon                                             |
 | **Hugging Face** | swiss-ai/Apertus-v1.5-70B:publicai        | Apertus v1.5, 70B (Swiss AI Initiative); multimodal         |
 | | swiss-ai/Apertus-v1.5-8B:publicai         | Apertus v1.5, 8B (Swiss AI Initiative); multimodal          |
 | | Qwen/Qwen3-VL-235B-A22B-Instruct:deepinfra | Qwen3-VL 235B-A22B Instruct (Alibaba); multimodal          |
@@ -293,13 +307,16 @@ This benchmark suite currently tests models from the following providers:
 | **Mistral AI** | ~~magistral-medium-2509~~                 | ~~Magistral Medium (Sep 2025); reasoning~~ (legacy)        |
 | | ~~magistral-small-2509~~                  | ~~Magistral Small (Sep 2025); reasoning~~ (legacy)         |
 | | ministral-14b-2512                        | Ministral 3 14B (Dec 2025)                                 |
+| | ministral-3b-2512                         | Ministral 3 3B (Dec 2025)                                  |
 | | ministral-8b-2512                         | Ministral 3 8B (Dec 2025)                                  |
 | | ~~mistral-large-2411~~                    | ~~Mistral Large (Nov 2024)~~ (legacy)                      |
 | | mistral-large-2512                        | Mistral Large (Dec 2025)                                   |
+| | mistral-large-4                           | Mistral Large 4                                            |
 | | ~~mistral-medium-2505~~                   | ~~Mistral Medium (May 2025)~~ (legacy)                     |
 | | ~~mistral-medium-2508~~                   | ~~Mistral Medium (Aug 2025)~~ (legacy)                     |
 | | mistral-medium-3.5                        | Mistral Medium 3.5 (Apr 2026)                              |
 | | ~~mistral-small-2506~~                    | ~~Mistral Small (Jun 2025)~~ (legacy)                      |
+| | mistral-small-2603                        | Mistral Small 4 (Mar 2026); multimodal                     |
 | | ~~pixtral-12b~~                           | ~~Pixtral 12B; multimodal~~ (legacy)                       |
 | | ~~pixtral-large-2411~~                    | ~~Pixtral Large (Nov 2024); multimodal~~ (legacy)          |
 | **OpenAI** | gpt-4.1                                   | GPT-4.1                                                    |
@@ -320,6 +337,7 @@ This benchmark suite currently tests models from the following providers:
 | | gpt-6-astra                               | GPT-6 Astra                                                |
 | | gpt-6-sol                                 | GPT-6 Sol                                                  |
 | | gpt-6-luna                                | GPT-6 Luna                                                 |
+| | gpt-6.1-sol                               | GPT-6.1 Sol                                                |
 | | gpt-5-mini                                | GPT-5 Mini                                                 |
 | | gpt-5-nano                                | GPT-5 Nano                                                 |
 | | o3                                        | OpenAI o3; reasoning                                       |
@@ -350,6 +368,21 @@ This benchmark suite currently tests models from the following providers:
 | | z-ai/glm-5v-turbo                         | GLM-5V Turbo (Z.ai); multimodal                            |
 | | meta/muse-spark-1.3                       | Muse Spark 1.3 (Meta); multimodal                          |
 | | z-ai/glm-5.3-flash                        | GLM-5.3 Flash (Z.ai); multimodal                           |
+| | minimax/minimax-m3.1-flash                | MiniMax M3.1 Flash; multimodal                             |
+| | nvidia/nemotron-3.5-super-vl              | Nemotron 3.5 Super VL (NVIDIA); multimodal                 |
+| | meta/muse-spark-open                      | Muse Spark Open (Meta), open weights; multimodal           |
+| | meta/muse-wonder                          | Muse Wonder (Meta); multimodal                             |
+| | stepfun/step-5-preview                    | StepFun Step 5 (preview); multimodal                       |
+| | qwen/qwen3.8-max-prime                    | Qwen 3.8 Max Prime; multimodal                             |
+| | xiaomi/mimo-v2.6-pro                      | MiMo V2.6 Pro (Xiaomi); multimodal                         |
+| | xiaomi/mimo-v2.6-flash                    | MiMo V2.6 Flash (Xiaomi); multimodal                       |
+| | inclusionai/ling-3.0-flash-vl             | Ling 3.0 Flash VL (inclusionAI); multimodal                |
+| | perceptron/perceptron-mk1.5               | Perceptron Mk1.5; multimodal                               |
+| | elorian/glimpse                           | Glimpse (Elorian); multimodal                              |
+| | fireworks/ember-1                         | Ember 1 (Fireworks); multimodal                            |
+| | bytedance-seed/seed-2-1-turbo             | Seed 2.1 Turbo (ByteDance); multimodal                     |
+| | nex-agi/nex-n2.5-mini                     | Nex N2.5 Mini (Nex AGI); multimodal                        |
+| | nex-agi/nex-n2.5-pro                      | Nex N2.5 Pro (Nex AGI); multimodal                         |
 | **sciCORE** | ~~GLM-4.5V-FP8~~                              | ~~GLM-4.5V, FP8 quantization; multimodal (Univ. of Basel HPC)~~ (legacy) |
 | | ~~qwen3-235b-fp8~~                            | ~~Qwen3 235B, FP8 quantization (Univ. of Basel HPC)~~ (legacy)          |
 | | ~~qwen35-397b-a17b-fp8~~                  | ~~Qwen3.5 397B-A17B, FP8 quantization (Univ. of Basel HPC)~~ (legacy) |
@@ -375,7 +408,7 @@ The framework, datasets, and recorded results are included in this repository.
 
 ### Ground truths
 
-Model outputs are compared with the ground truth for the same inputs. Consult each benchmark's documentation for its sources, annotation process, and scoring rules. Interpret results in light of the sample size, source selection, and task definition.
+Model outputs are compared with the ground truth for the same inputs. Each benchmark's card documents its sources, annotation process, and scoring rules. Interpret results in light of the sample size, source selection, and task definition.
 
 ### Metrics
 
@@ -457,261 +490,11 @@ When using this benchmark suite for your own research, consider the following:
 ## Contributing
 
 Contributions can include new datasets, ground truths, scoring methods, model integrations, and documentation.
-See [CONTRIBUTING.md](CONTRIBUTING.md) for contribution roles and requirements, and the
-[benchmark template](benchmarks/README_TEMPLATE.md) for dataset documentation.
+See [CONTRIBUTING.md](CONTRIBUTING.md) for contribution roles and requirements, and its
+[step-by-step guide](CONTRIBUTING.md#create-and-submit-a-benchmark) to creating, documenting
+(as a [BenchmarkCard](benchmarks/README_TEMPLATE.md)), testing and submitting a benchmark.
 Report bugs, propose benchmarks, or discuss improvements through
 [GitHub Issues](https://github.com/rise-unibas/humanities_data_benchmark/issues).
-
-<details>
-<summary>Create a benchmark: technical guide</summary>
-
-Start with the CLI tool to create the basic structure:
-
-```
-python scripts/create_benchmark.py
-```
-The command creates the following benchmark structure:
-
-1. **Directory Structure:**
-   - `benchmarks/[your_benchmark_name]/`
-   - `images/` or `texts/` directories (based on your choice)
-   - `ground_truths/` directory
-   - `prompts/` directory
-
-2. **Required Files:**
-   - `benchmark.py` - Main benchmark class with scoring logic templates
-   - `meta.json` - Benchmark metadata
-   - `README.md` - Documentation
-   - `prompts/prompt.txt` - Default prompt
-   - `dataclass.py` - Pydantic schema (optional)
-
-**Step-by-Step Process**
-When starting the `create_benchmark.py` script, you will be guided through the creation of the following data:
-
-**1. Benchmark Name**
-- Must be lowercase with underscores (e.g., `personal_letters`)
-- **Important:** Should describe the SOURCE, not the task
-  - Good: `personal_letters`, `company_registers`, `manuscript_pages`
-  - Bad: `date_recognition`, `entity_extraction`
-- Choose a stable name, as test configurations and result paths refer to it.
-- Will be converted to CamelCase for the class name (e.g., `PersonalLetters`)
-
-**2. Basic Information**
-- **Title:** Full descriptive title
-- **Short Title:** Abbreviated version for displays
-- **Description:** Multi-line description (press Enter twice to finish)
-  - Should describe both SOURCES and TASK
-
-**3. Tags**
-- Structured tags from specific categories:
-  - **Source Type:** index-cards, letter-pages, manuscript-pages, book-pages, article-pages, essay-pages, registers, lists
-  - **Structure:** text-like, list-like, table-like, mixed
-  - **Text Type:** handwritten-source, typed-source, printed-source
-  - **Century:** century-15th, century-16th, century-17th, century-18th, century-19th, century-20th
-  - **Languages:** language-german, language-english
-  - **Entry Type:** company-entries, bibliographic-entries, ner-entries
-  - **Task:** ner-extraction, metadata-extraction, transcription, classification
-  - **Misc:** test-benchmark
-- Enter as comma-separated values
-
-**4. Contributors**
-- Add contributors by role:
-  - Domain Expert
-  - Data Curator
-  - Annotator
-  - Analyst
-  - Engineer
-- **Format:** firstname_lastname (e.g., john_doe, jane_smith)
-- Details of non-existing users can be added later
-
-**5. Scoring Configuration**
-- Defaults to `fuzzy` metric with `descending` order
-- Can be customized later in `meta.json`
-
-**6. Data Structure**
-- **Dataclass:** Strongly recommended - defines expected output structure using Pydantic
-  - Enables automatic validation
-  - Ensures consistent output format
-- **Dataclass Name:** Should reflect result content (e.g., Page, Letter, Document)
-  - Use CamelCase
-- **Images:** Whether the benchmark uses images
-- **Text Files:** Whether the benchmark uses text files
-
-**7. Prompt**
-- Enter the default prompt text (multi-line)
-- **This prompt is editable** and can be changed later in `prompts/prompt.txt`
-- Role description for system prompt
-
-**8. Review and Edit**
-- Review all collected settings
-- **Edit any field** by entering its number (1-12)
-- Enter 'c' to continue and create benchmark
-- Enter 'q' to quit without creating
-
-**After Creation:**
-
-1. **Add Context Data:**
-   - Place images in `benchmarks/[name]/images/`
-   - Place ground truth JSON files in `benchmarks/[name]/ground_truths/`
-   - Each ground truth filename must match its corresponding image (e.g., `image.jpg` → `image.json`)
-
-2. **Implement Scoring:**
-   - Edit `benchmarks/[name]/benchmark.py`
-   - Implement `score_request_answer()` method
-   - Implement `score_benchmark()` method
-
-3. **Define Schema (if using dataclass):**
-   - Edit `benchmarks/[name]/dataclass.py`
-   - Add fields to your Pydantic model
-
-**Add Context Data**
-You need to add at least one image or text file. This is the context data.
-Context data are the inputs that will be sent to the LLM. Depending on the benchmark, this may include:
-
-- .txt, .json and other text-only files (historical texts, metadata records, descriptions, OCR fragments)
-- .jpg, .png or other image types (manuscript pages, document snippets, photos)
-
-_Naming convention_:
-- The whole filename without its ending is treated as context object name
-- This means that all files with the same basename in the context directories (images, texts) are sent at the same time
-- For each basename you must provide a ground truth file
-
-**Implement Scoring**
-Each benchmark has a corresponding benchmark class in benchmark.py. Two methods have to be implemented in order for the scoring to work:
-
-_Implement the scoring of a single object/request:_
-Implement the scoring for a single request. The comparison should reflect the task and its ground truths; exact equality is not always an appropriate metric.
-
-```python
-def score_request_answer(self, object_name, response, ground_truth):
-   # object_name: basename of the processed files
-   # response: large language model response
-   # ground_truth: corresponding_ground_truth
-
-   calculated_score = 0
-   field_scores = {}
-   # implement scoring for one object, recording each comparison as you make it
-   field_scores["title"] = {"response": "Der Process",
-                            "ground_truth": "Der Proceß",
-                            "score": 0.8}
-
-   return {"fuzzy": calculated_score, "field_scores": field_scores}
-```
-
-Besides your metrics, record **`field_scores`**: the values you compared, keyed by whatever unit
-your scorer uses (a field name, a folio reference, a matched box). The result views display your
-scorer's own judgement and cannot derive it: one benchmark matches boxes by overlap, another aligns
-folios by position, so an independent comparison would contradict the score beside it. Use
-`score: None` where your scorer gives counts rather than a similarity, and keep everything
-JSON-serializable, because the dict is written verbatim into the stored answer.
-
-_Implement the scoring of the whole test run:_
-Define how request-level scores are aggregated for the test run, for example with an arithmetic mean.
-
-```python
-def score_benchmark(self, all_scores):
-       total_score = 0
-       for score in all_scores:
-           total_score += score['fuzzy']
-       return {"fuzzy": total_score / len(all_scores)}
-```
-
-`score_benchmark` receives those same dicts, `field_scores` included: read metrics by key, and do
-not log a whole score, which carries every comparison made for that object.
-
-Return at least one metric. Commonly used metrics are fuzzy, f1_score, cer
-
-**Define Schema**
-If you want the model to return structured output, define a Pydantic model in `benchmarks/[name]/dataclass.py` and
-reference its class name in the `dataclass` column of `benchmarks/benchmarks_tests.csv`. Nested models are supported, and field
-descriptions are passed on to the provider, so use them to disambiguate fields.
-
-```python
-from typing import List, Optional
-from pydantic import BaseModel, Field
-
-
-class Entry(BaseModel):
-    """A single entry on the page."""
-
-    name: str = Field(description="Name as written in the source")
-    year: Optional[str] = Field(default=None, description="Year, if given")
-
-
-class Page(BaseModel):
-    """Main output structure; its name goes into the `dataclass` column."""
-
-    entries: List[Entry] = Field(default_factory=list, description="All entries on the page")
-```
-
-Beyond the two mandatory scoring methods, the benchmark class inherits a number of methods from `Benchmark`
-(`scripts/benchmark_base.py`) that you can override to configure its behaviour:
-
-| Method | Purpose |
-|--------|---------|
-| `remove_none_values()` | Whether `None` values are stripped from the response before scoring (default `True`) |
-| `convert_truth_to_json()` | Whether a ground truth stored as a JSON string is parsed into an object (default `True`) |
-| `resize_images()` | Whether oversized images are resized before being sent to the model (default `False`) |
-| `get_title()` | Title of the benchmark as shown in the result table |
-| `get_prompt_kwargs(basename, filenames)` | Values interpolated into the prompt file, e.g. file information |
-| `skip_object(object_basename)` | Whether a given object is excluded from the run |
-
-</details>
-
-<details>
-<summary>Submission and review checklist</summary>
-
-**Before submitting**
-
-Before submitting a pull request, please make sure your benchmark meets all of the following criteria:
-
-**Data Requirements**
-- Dataset is not too large
-  Recommended: < 50 MB total
-- Ground truths are manually checked and reliable
-- Data is legally usable
-- Must be openly available
-- No copyrighted or sensitive data
-  - A clear license is indicated (preferably open license)
-- Context files are properly named and paired with ground_truths
-
-**Technical Requirements**
-- Benchmark runs locally without errors
-- Scoring metric is clearly defined and documented
-- Directory structure follows the template
-- README.md inside the benchmark folder is fully completed
-  (template is created automatically by create_benchmark.py)
-
-**Quality Requirements**
-- Outputs are deterministic enough for fair evaluation
-- The benchmark fills a clear research gap (new task, domain, or corpus)
-- Instructions do not bias the LLM toward “right answers” via over-specification
-
-**Create a pull request**
-- Fork `RISE-UNIBAS/humanities_data_benchmark` and push your benchmark to a branch on your fork.
-- Go to your fork on GitHub.
-- Click “Compare & pull request”.
-- Target: `RISE-UNIBAS/humanities_data_benchmark → main`
-
-Add a short description:
-- What your benchmark tests
-- Example ground truth formats
-- Scoring logic summary
-- How you validated the dataset
-- Any remaining issues or questions
-
-**Review and publication**
-The maintainers will:
-
-- run the benchmark locally
-- check the metric
-- confirm licensing
-- validate folder structure
-- potentially request revisions
-
-Once the review requirements are met, the maintainers can merge the benchmark into the main repository.
-
-</details>
 
 ## Citation and licensing
 
@@ -719,12 +502,17 @@ Once the review requirements are met, the maintainers can merge the benchmark in
 
 Use the metadata in [CITATION.cff](CITATION.cff) to cite the software and identify the release or commit used.
 Archived releases are available through the [project DOI](https://doi.org/10.5281/zenodo.16941752).
+To cite a single benchmark, use the **How to Cite** field of its card.
 
 ### Publications and background
 
 Hindermann, M., Kasper, L. K., Marti, S., &amp; Bosse, A. (2026). From Experiments to Epistemic Practice: The RISE Humanities Data Benchmark. *Journal of Open Humanities Data*, *12*(1), 38. https://doi.org/10.5334/johd.470
 
 Hindermann, M., Marti, S., Kasper, L. K., & Bosse, A. (2026). The RISE Humanities Data Benchmark: A Framework for Evaluating Large Language Models for Humanities Tasks. *Journal of Open Humanities Data*, *12*(1), 24. https://doi.org/10.5334/johd.481
+
+Hindermann, M. (2026). Der RISE Humanities Data Benchmark: KI-Modelle an echten Projektdaten messen. Workshop «Künstliche Intelligenz, historische Materialien und Methoden», Swiss Historical Society (SGG), Bern, Switzerland. Zenodo. https://doi.org/10.5281/zenodo.23596168
+
+Hindermann, M. (2026). Benchmark First: Making Model Choice a Routine Step in Research Data Workflows. DaSCHCon 2026, Bern, Switzerland. Zenodo. https://doi.org/10.5281/zenodo.23761273
 
 Hindermann, M., Marti, S., & Decker, E. (2026). "It Depends," But Now We Can Measure Why: Benchmarking Specialised and General-Purpose AI on Humanities Tasks. Transkribus User Conference 2026, Passau, Germany. Zenodo. https://doi.org/10.5281/zenodo.22898343
 
@@ -734,9 +522,10 @@ Hindermann, M., & Marti, S. (2025, March 19). *RISE Crash Course: "AI Benchmarki
 
 ### Licensing
 
-The benchmark software is licensed under [GNU GPL version 3](LICENSE).
-For benchmark input materials and ground truths, consult the relevant benchmark's documentation
-and source attribution for applicable reuse terms.
+The benchmark software is licensed under [GNU GPL version 3](LICENSE). Everything the benchmarks
+create (ground truths, prompts, annotations) is licensed under
+[CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). The source material (images and texts)
+keeps its own licence, which each benchmark's README states under Data Licensing.
 
 ## Contributors
 

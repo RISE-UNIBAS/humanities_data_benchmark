@@ -1,0 +1,90 @@
+{
+    "text": "{\"metadata\":{\"send_date\":[\"1928-03-01\"],\"letter_title\":[\"Betrifft Ihr Schreiben vom 27. Februar.\"],\"sender_persons\":[\"Basler Rheinschiffahrt-Aktiengesellschaft\"],\"receiver_persons\":[\"Basler Personenschiffahrtsgesellschaft, Basel\"]}}",
+    "model": "nex-agi/nex-n2.5-mini",
+    "provider": "openrouter",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 4372,
+        "output_tokens": 675,
+        "total_tokens": 5047,
+        "reasoning_tokens": 0,
+        "cached_tokens": 320,
+        "input_cost_usd": 0.0001021,
+        "output_cost_usd": 6.75e-05,
+        "estimated_cost_usd": 0.0001696
+    },
+    "duration": 23.278104305267334,
+    "timestamp": "2026-10-25T02:49:27.455677",
+    "parsed": {
+        "metadata": {
+            "send_date": [
+                "1928-03-01"
+            ],
+            "letter_title": [
+                "Betrifft Ihr Schreiben vom 27. Februar."
+            ],
+            "sender_persons": [
+                "Basler Rheinschiffahrt-Aktiengesellschaft"
+            ],
+            "receiver_persons": [
+                "Basler Personenschiffahrtsgesellschaft, Basel"
+            ]
+        }
+    },
+    "conversation_id": "77a5ab0f-3b65-431b-850a-2449584c1f7e",
+    "score": {
+        "send_date_tp": 1,
+        "send_date_fp": 0,
+        "send_date_fn": 0,
+        "sender_persons_tp": 0,
+        "sender_persons_fp": 1,
+        "sender_persons_fn": 2,
+        "receiver_persons_tp": 0,
+        "receiver_persons_fp": 1,
+        "receiver_persons_fn": 0,
+        "field_scores": {
+            "send_date": {
+                "response": [
+                    "1928-03-01"
+                ],
+                "ground_truth": [
+                    "1928-03-01"
+                ],
+                "score": null,
+                "counts": {
+                    "send_date_tp": 1,
+                    "send_date_fp": 0,
+                    "send_date_fn": 0
+                }
+            },
+            "sender_persons": {
+                "response": [
+                    "Basler Rheinschiffahrt-Aktiengesellschaft"
+                ],
+                "ground_truth": [
+                    "Groschupf-Jaeger, Louis",
+                    "Speich, Rudolf"
+                ],
+                "score": null,
+                "counts": {
+                    "sender_persons_tp": 0,
+                    "sender_persons_fp": 1,
+                    "sender_persons_fn": 2
+                }
+            },
+            "receiver_persons": {
+                "response": [
+                    "Basler Personenschiffahrtsgesellschaft, Basel"
+                ],
+                "ground_truth": [],
+                "score": null,
+                "counts": {
+                    "receiver_persons_tp": 0,
+                    "receiver_persons_fp": 1,
+                    "receiver_persons_fn": 0
+                }
+            }
+        }
+    },
+    "raw_response": "{\"id\":\"gen-1792892944-t9vfQ7JPgdwTXg34ghKU\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\n  \\\"metadata\\\": {\\n    \\\"send_date\\\": [\\n      \\\"1928-03-01\\\"\\n    ],\\n    \\\"letter_title\\\": [\\n      \\\"Betrifft Ihr Schreiben vom 27. Februar.\\\"\\n    ],\\n    \\\"sender_persons\\\": [\\n      \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"\\n    ],\\n    \\\"receiver_persons\\\": [\\n      \\\"Basler Personenschiffahrtsgesellschaft, Basel\\\"\\n    ]\\n  }\\n}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"metadata\":{\"send_date\":[\"1928-03-01\"],\"letter_title\":[\"Betrifft Ihr Schreiben vom 27. Februar.\"],\"sender_persons\":[\"Basler Rheinschiffahrt-Aktiengesellschaft\"],\"receiver_persons\":[\"Basler Personenschiffahrtsgesellschaft, Basel\"]}},\"reasoning\":\"\\nWe need answer only JSON. Need extract from images. Need identify title, sender, date, receiver. Let's inspect.\\n\\nImage 1 letterhead: \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\" (old spelling). Address. Top right: \\\"Basel, den 1. M\u00e4rz 1928.\\\" Red 17. Recipient: \\\"Basler Personenschiffahrtsgesellschaft, Basel.\\\" Under subject: \\\"Betrifft Ihr Schreiben vom 27. Februar.\\\" Letter content. Page 2 header: \\\"Basler Personenschiffahrtsgesellschaft, Basel. 1.3.28.\\\" Closing \\\"Hochachtend BASLER RHEINSCHIFFAHRT-AKTIENGESELLSCHAFT\\\" signed maybe \\\"Friedli\\\" and \\\"G\u00fcnthart\\\"? Need sender persons. Since sender is company, not person? Asked name(s) of persons who wrote letter. The letter is corporate; signatories handwritten maybe names. Need parse.\\n\\nNeed return JSON with lists. For sender_persons maybe [\\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"] or actual signatories? The instruction says persons, but from letter the writer is company. Need decide.\\n\\nLet's zoom mentally. Closing: \\\"Hochachtend BASLER RHEINSCHIFFAHRT-AKTIENGESELLSCHAFT\\\" then signature. It appears \\\"Friedli\\\" (or \\\"Friedl\\\") and \\\"G\u00fcnthart\\\" maybe. Need identify? Let's inspect image. There are two signatures in cursive. First: looks like \\\"Friedli\\\" perhaps with capital? Second: looks like \\\"G\u00fcnthart\\\" maybe. But if uncertain, maybe sender_persons should be company only? The key \\\"sender_persons\\\" not \\\"sender_companies\\\". But user asks values corresponding to keys from letter. The letterhead and closing indicate company as sender. We can include company in sender_persons? It's not a person but is sender. The expected likely wants sender persons: maybe \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\" as sender.\\n\\nNeed title: \\\"Betrifft Ihr Schreiben vom 27. Februar.\\\" Could be title of letter. They ask letter_title: Title. The only title-like line is subject. Could output [\\\"Betrifft Ihr Schreiben vom 27. Februar.\\\"] or maybe \\\"Betrifft Ihr Schreiben vom 27. Februar\\\". Should include exact.\\n\\nReceiver: \\\"Basler Personenschiffahrtsgesellschaft, Basel.\\\" No individual. Could output that. Date: 1928-03-01.\",\"reasoning_details\":[{\"type\":\"reasoning.text\",\"text\":\"\\nWe need answer only JSON. Need extract from images. Need identify title, sender, date, receiver. Let's inspect.\\n\\nImage 1 letterhead: \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\" (old spelling). Address. Top right: \\\"Basel, den 1. M\u00e4rz 1928.\\\" Red 17. Recipient: \\\"Basler Personenschiffahrtsgesellschaft, Basel.\\\" Under subject: \\\"Betrifft Ihr Schreiben vom 27. Februar.\\\" Letter content. Page 2 header: \\\"Basler Personenschiffahrtsgesellschaft, Basel. 1.3.28.\\\" Closing \\\"Hochachtend BASLER RHEINSCHIFFAHRT-AKTIENGESELLSCHAFT\\\" signed maybe \\\"Friedli\\\" and \\\"G\u00fcnthart\\\"? Need sender persons. Since sender is company, not person? Asked name(s) of persons who wrote letter. The letter is corporate; signatories handwritten maybe names. Need parse.\\n\\nNeed return JSON with lists. For sender_persons maybe [\\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\"] or actual signatories? The instruction says persons, but from letter the writer is company. Need decide.\\n\\nLet's zoom mentally. Closing: \\\"Hochachtend BASLER RHEINSCHIFFAHRT-AKTIENGESELLSCHAFT\\\" then signature. It appears \\\"Friedli\\\" (or \\\"Friedl\\\") and \\\"G\u00fcnthart\\\" maybe. Need identify? Let's inspect image. There are two signatures in cursive. First: looks like \\\"Friedli\\\" perhaps with capital? Second: looks like \\\"G\u00fcnthart\\\" maybe. But if uncertain, maybe sender_persons should be company only? The key \\\"sender_persons\\\" not \\\"sender_companies\\\". But user asks values corresponding to keys from letter. The letterhead and closing indicate company as sender. We can include company in sender_persons? It's not a person but is sender. The expected likely wants sender persons: maybe \\\"Basler Rheinschiffahrt-Aktiengesellschaft\\\" as sender.\\n\\nNeed title: \\\"Betrifft Ihr Schreiben vom 27. Februar.\\\" Could be title of letter. They ask letter_title: Title. The only title-like line is subject. Could output [\\\"Betrifft Ihr Schreiben vom 27. Februar.\\\"] or maybe \\\"Betrifft Ihr Schreiben vom 27. Februar\\\". Should include exact.\\n\\nReceiver: \\\"Basler Personenschiffahrtsgesellschaft, Basel.\\\" No individual. Could output that. Date: 1928-03-01.\",\"format\":\"unknown\",\"index\":0}]},\"native_finish_reason\":\"stop\"}],\"created\":1792892944,\"model\":\"nex-agi/nex-n2.5-mini\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":null,\"usage\":{\"completion_tokens\":675,\"prompt_tokens\":4372,\"total_tokens\":5047,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":0,\"reasoning_tokens\":517,\"rejected_prediction_tokens\":null,\"image_tokens\":0},\"prompt_tokens_details\":{\"audio_tokens\":0,\"cached_tokens\":320,\"cache_write_tokens\":0,\"video_tokens\":0},\"cost\":0.0001696,\"is_byok\":false,\"cost_details\":{\"upstream_inference_cost\":0.0001696,\"upstream_inference_prompt_cost\":0.0001021,\"upstream_inference_completions_cost\":0.0000675}},\"provider\":\"Nex AGI\"}"
+}

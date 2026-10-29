@@ -1,0 +1,81 @@
+{
+    "text": "{\"advertisements\":[{\"box\":[120.0,40.0,2335.0,1715.0]},{\"box\":[110.0,1730.0,2340.0,3220.0]}]}",
+    "model": "meta/muse-spark-open",
+    "provider": "openrouter",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 4391,
+        "output_tokens": 1136,
+        "total_tokens": 5527,
+        "reasoning_tokens": 0,
+        "input_cost_usd": 0.00548875,
+        "output_cost_usd": 0.004828,
+        "estimated_cost_usd": 0.01031675
+    },
+    "duration": 10.30003309249878,
+    "timestamp": "2026-10-24T21:43:33.227501",
+    "parsed": {
+        "advertisements": [
+            {
+                "box": [
+                    120.0,
+                    40.0,
+                    2335.0,
+                    1715.0
+                ]
+            },
+            {
+                "box": [
+                    110.0,
+                    1730.0,
+                    2340.0,
+                    3220.0
+                ]
+            }
+        ]
+    },
+    "conversation_id": "3e1ee3c9-cc47-4af8-9b31-644d36d24588",
+    "score": {
+        "field_scores": {
+            "box 0": {
+                "response": [
+                    110.0,
+                    1730.0,
+                    2340.0,
+                    3220.0
+                ],
+                "ground_truth": [
+                    265,
+                    1730,
+                    2344,
+                    3235
+                ],
+                "score": 0.92
+            },
+            "box 1": {
+                "response": [
+                    120.0,
+                    40.0,
+                    2335.0,
+                    1715.0
+                ],
+                "ground_truth": [
+                    300,
+                    187,
+                    2331,
+                    1703
+                ],
+                "score": 0.83
+            }
+        },
+        "f1": 1.0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "mean_iou": 0.875,
+        "true_positives": 2,
+        "false_positives": 0,
+        "false_negatives": 0,
+        "iou_threshold": 0.5
+    },
+    "raw_response": "{\"id\":\"gen-1792871003-ICFaLf68uHM1syVo4OWk\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\\"advertisements\\\": [{\\\"box\\\": [120, 40, 2335, 1715]}, {\\\"box\\\": [110, 1730, 2340, 3220]}]}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"advertisements\":[{\"box\":[120.0,40.0,2335.0,1715.0]},{\"box\":[110.0,1730.0,2340.0,3220.0]}]},\"reasoning\":\"We need to extract all advertisements and return bounding boxes. Page size 2479 x 3508.\\n\\nWe have two ads on page:\\n\\nTop ad: Stoffels / Stoffel & Co St Gall - 8 factories are working for you. That occupies top half.\\n\\nBottom ad: Georges Meyer & Co Ltd. Wohlen & Sarnen Switzerland Manufacturers of Staple...\\n\\nWe need bounding boxes.\\n\\nWe must estimate coordinates.\\n\\nOriginal size 2479 x 3508.\\n\\nWe need to give box [x0,y0,x1,y1].\\n\\nLet's approximate.\\n\\nTop advertisement: from left ~? The image shows dark background with white vertical strip. The bounding box likely covers entire top section. Let's estimate:\\n\\nx0 maybe 120, y0 maybe 40? Actually top margin. Let's look at page: There's a beige border around. The ad's black area extends near edges but not fully to page edge. We need to define box tightly around advertisement content.\\n\\nFor top ad: Left edge of black rectangle is about 122? Let's estimate percentages.\\n\\nWe can use relative coordinates: In image, page width 2479. Height 3508.\\n\\nTop ad occupies from y ~ 2% to ~ 49%. Bottom ad from ~50% to ~92%.\\n\\nWe need precise pixel estimates.\\n\\nLet's attempt to get coordinates by visual estimation.\\n\\nAssume page image has margins: left margin ~ 30px? But we should include advertisement border.\\n\\nBetter to estimate:\\n\\nTop ad box: x0 = 120, y0 = 40, x1 = 2350, y1 = 1715 ?\\n\\nCheck: In image, top ad's black background goes from x ~ 122 to 2320, y ~ 42 to 1700.\\n\\nBottom ad: bordered rectangle with thin black line. Its box: x0 ~ 110, y0 ~ 1730, x1 ~ 2345, y1 ~ 3210 ?\\n\\nLet's refine.\\n\\nWe need to provide JSON with two boxes.\\n\\nWe should ensure boxes don't overlap and cover each ad.\\n\\nWe could also consider that the whole page contains two advertisements, so we list both.\\n\\nProvide coordinates as integers.\\n\\nLet's propose:\\n\\nAdvertisement 1 (top): [118, 42, 2335, 1710]\\nAdvertisement 2 (bottom): [108, 1725, 2345, 3225]\\n\\nNeed to ensure within 0-2479 and 0-3508.\\n\\nAlternatively more conservative: Use normalized then scale.\\n\\nLet's check typical extraction: Often they want tight boxes around ad content including border.\\n\\nFor top ad, the leftmost dark bar is at x ~ 300? Wait image shows left dark vertical bar. Actually the ad's total width includes that dark bar. So x0 is left edge of dark bar.\\n\\nEstimate x0 = 300? No, looking: The page has outer beige margin. The dark bar starts maybe 120px from left edge. So x0 ~ 120.\\n\\nSimilarly x1 ~ 2320 (right edge of dark).\\n\\ny0 ~ 40 (top edge of dark). y1 ~ 1710 (bottom edge of dark).\\n\\nFor bottom ad, the thin border rectangle: x0 ~ 270? Wait image shows border inset from page edge. Let's see: bottom ad border is inside page margins, maybe x0 ~ 270? Actually in image, bottom ad's left border aligns roughly with top ad's left dark edge? Let's compare: Top ad's left dark edge is at same x as bottom ad's left border? In image, bottom ad's left border appears slightly left of top ad's dark left edge? Hard to tell.\\n\\nBut we can approximate bottom ad box as [110, 1735, 2340, 3220].\\n\\nWe should output two entries.\\n\\nMake sure JSON format correct.\\n\\nWe must return only JSON object.\\n\\nProvide advertisements array with two objects each with \\\"box\\\".\\n\\nEnsure order maybe top to bottom.\\n\\nLet's craft final answer:\\n\\n{\\n  \\\"advertisements\\\": [\\n    {\\\"box\\\": [120, 40, 2330, 1715]},\\n    {\\\"box\\\": [110, 1730, 2340, 3220]}\\n  ]\\n}\\n\\nWe could add more precise numbers: Use 121, 41 etc. But any reasonable estimate likely accepted if IoU > threshold? Need to be fairly accurate.\\n\\nWe should try to be as accurate as possible.\\n\\nLet's do more detailed estimation using image proportions.\\n\\nAssume image displayed is 1000px wide for estimation. But we have actual 2479 width.\\n\\nLet's estimate percentages:\\n\\nTop ad:\\n- Left: 4.8% => 119\\n- Top: 1.2% => 42\\n- Right: 94.2% => 2335\\n- Bottom: 48.8% => 1712\\n\\nBottom ad:\\n- Left: 4.4% => 109\\n- Top: 49.5% => 1736\\n- Right: 94.5% => 2343\\n- Bottom: 91.8% => 3220\\n\\nThose seem plausible.\\n\\nWe'll output those.\\n\\nPotential nuance: Some might consider the whole page as one advertisement? But clearly two distinct ads.\\n\\nWe will return two boxes.\\n\\nEnsure JSON valid.\\n\\n\",\"reasoning_details\":[{\"type\":\"reasoning.text\",\"text\":\"We need to extract all advertisements and return bounding boxes. Page size 2479 x 3508.\\n\\nWe have two ads on page:\\n\\nTop ad: Stoffels / Stoffel & Co St Gall - 8 factories are working for you. That occupies top half.\\n\\nBottom ad: Georges Meyer & Co Ltd. Wohlen & Sarnen Switzerland Manufacturers of Staple...\\n\\nWe need bounding boxes.\\n\\nWe must estimate coordinates.\\n\\nOriginal size 2479 x 3508.\\n\\nWe need to give box [x0,y0,x1,y1].\\n\\nLet's approximate.\\n\\nTop advertisement: from left ~? The image shows dark background with white vertical strip. The bounding box likely covers entire top section. Let's estimate:\\n\\nx0 maybe 120, y0 maybe 40? Actually top margin. Let's look at page: There's a beige border around. The ad's black area extends near edges but not fully to page edge. We need to define box tightly around advertisement content.\\n\\nFor top ad: Left edge of black rectangle is about 122? Let's estimate percentages.\\n\\nWe can use relative coordinates: In image, page width 2479. Height 3508.\\n\\nTop ad occupies from y ~ 2% to ~ 49%. Bottom ad from ~50% to ~92%.\\n\\nWe need precise pixel estimates.\\n\\nLet's attempt to get coordinates by visual estimation.\\n\\nAssume page image has margins: left margin ~ 30px? But we should include advertisement border.\\n\\nBetter to estimate:\\n\\nTop ad box: x0 = 120, y0 = 40, x1 = 2350, y1 = 1715 ?\\n\\nCheck: In image, top ad's black background goes from x ~ 122 to 2320, y ~ 42 to 1700.\\n\\nBottom ad: bordered rectangle with thin black line. Its box: x0 ~ 110, y0 ~ 1730, x1 ~ 2345, y1 ~ 3210 ?\\n\\nLet's refine.\\n\\nWe need to provide JSON with two boxes.\\n\\nWe should ensure boxes don't overlap and cover each ad.\\n\\nWe could also consider that the whole page contains two advertisements, so we list both.\\n\\nProvide coordinates as integers.\\n\\nLet's propose:\\n\\nAdvertisement 1 (top): [118, 42, 2335, 1710]\\nAdvertisement 2 (bottom): [108, 1725, 2345, 3225]\\n\\nNeed to ensure within 0-2479 and 0-3508.\\n\\nAlternatively more conservative: Use normalized then scale.\\n\\nLet's check typical extraction: Often they want tight boxes around ad content including border.\\n\\nFor top ad, the leftmost dark bar is at x ~ 300? Wait image shows left dark vertical bar. Actually the ad's total width includes that dark bar. So x0 is left edge of dark bar.\\n\\nEstimate x0 = 300? No, looking: The page has outer beige margin. The dark bar starts maybe 120px from left edge. So x0 ~ 120.\\n\\nSimilarly x1 ~ 2320 (right edge of dark).\\n\\ny0 ~ 40 (top edge of dark). y1 ~ 1710 (bottom edge of dark).\\n\\nFor bottom ad, the thin border rectangle: x0 ~ 270? Wait image shows border inset from page edge. Let's see: bottom ad border is inside page margins, maybe x0 ~ 270? Actually in image, bottom ad's left border aligns roughly with top ad's left dark edge? Let's compare: Top ad's left dark edge is at same x as bottom ad's left border? In image, bottom ad's left border appears slightly left of top ad's dark left edge? Hard to tell.\\n\\nBut we can approximate bottom ad box as [110, 1735, 2340, 3220].\\n\\nWe should output two entries.\\n\\nMake sure JSON format correct.\\n\\nWe must return only JSON object.\\n\\nProvide advertisements array with two objects each with \\\"box\\\".\\n\\nEnsure order maybe top to bottom.\\n\\nLet's craft final answer:\\n\\n{\\n  \\\"advertisements\\\": [\\n    {\\\"box\\\": [120, 40, 2330, 1715]},\\n    {\\\"box\\\": [110, 1730, 2340, 3220]}\\n  ]\\n}\\n\\nWe could add more precise numbers: Use 121, 41 etc. But any reasonable estimate likely accepted if IoU > threshold? Need to be fairly accurate.\\n\\nWe should try to be as accurate as possible.\\n\\nLet's do more detailed estimation using image proportions.\\n\\nAssume image displayed is 1000px wide for estimation. But we have actual 2479 width.\\n\\nLet's estimate percentages:\\n\\nTop ad:\\n- Left: 4.8% => 119\\n- Top: 1.2% => 42\\n- Right: 94.2% => 2335\\n- Bottom: 48.8% => 1712\\n\\nBottom ad:\\n- Left: 4.4% => 109\\n- Top: 49.5% => 1736\\n- Right: 94.5% => 2343\\n- Bottom: 91.8% => 3220\\n\\nThose seem plausible.\\n\\nWe'll output those.\\n\\nPotential nuance: Some might consider the whole page as one advertisement? But clearly two distinct ads.\\n\\nWe will return two boxes.\\n\\nEnsure JSON valid.\\n\\n\",\"format\":\"unknown\",\"index\":0}]},\"native_finish_reason\":\"stop\"}],\"created\":1792871003,\"model\":\"meta/muse-spark-open\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":null,\"usage\":{\"completion_tokens\":1136,\"prompt_tokens\":4391,\"total_tokens\":5527,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":0,\"reasoning_tokens\":1089,\"rejected_prediction_tokens\":null,\"image_tokens\":0},\"prompt_tokens_details\":{\"audio_tokens\":0,\"cached_tokens\":0,\"cache_write_tokens\":0,\"video_tokens\":0},\"cost\":0.01031675,\"is_byok\":false,\"cost_details\":{\"upstream_inference_cost\":0.01031675,\"upstream_inference_prompt_cost\":0.00548875,\"upstream_inference_completions_cost\":0.004828}},\"provider\":\"Nebius\"}"
+}

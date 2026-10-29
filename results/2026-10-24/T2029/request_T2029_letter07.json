@@ -1,0 +1,90 @@
+{
+    "text": "{\"metadata\":{\"send_date\":[\"1926-06-22\"],\"letter_title\":[\"null\"],\"sender_persons\":[\"null\"],\"receiver_persons\":[\"P. Christ - Wackernagel\"]}}",
+    "model": "meta/muse-spark-open",
+    "provider": "openrouter",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 4301,
+        "output_tokens": 1108,
+        "total_tokens": 5409,
+        "reasoning_tokens": 0,
+        "cached_tokens": 448,
+        "input_cost_usd": 0.00488345,
+        "output_cost_usd": 0.004709,
+        "estimated_cost_usd": 0.00959245
+    },
+    "duration": 16.3054780960083,
+    "timestamp": "2026-10-24T21:25:07.263662",
+    "parsed": {
+        "metadata": {
+            "send_date": [
+                "1926-06-22"
+            ],
+            "letter_title": [
+                "null"
+            ],
+            "sender_persons": [
+                "null"
+            ],
+            "receiver_persons": [
+                "P. Christ - Wackernagel"
+            ]
+        }
+    },
+    "conversation_id": "e2a520b1-fbe5-4a1d-acff-5317082079f2",
+    "score": {
+        "send_date_tp": 1,
+        "send_date_fp": 0,
+        "send_date_fn": 0,
+        "sender_persons_tp": 0,
+        "sender_persons_fp": 0,
+        "sender_persons_fn": 2,
+        "receiver_persons_tp": 1,
+        "receiver_persons_fp": 0,
+        "receiver_persons_fn": 0,
+        "field_scores": {
+            "send_date": {
+                "response": [
+                    "1926-06-22"
+                ],
+                "ground_truth": [
+                    "1926-06-22"
+                ],
+                "score": null,
+                "counts": {
+                    "send_date_tp": 1,
+                    "send_date_fp": 0,
+                    "send_date_fn": 0
+                }
+            },
+            "sender_persons": {
+                "response": [],
+                "ground_truth": [
+                    "Groschupf-Jaeger, Louis",
+                    "Ritter-Dreier, Fritz"
+                ],
+                "score": null,
+                "counts": {
+                    "sender_persons_tp": 0,
+                    "sender_persons_fp": 0,
+                    "sender_persons_fn": 2
+                }
+            },
+            "receiver_persons": {
+                "response": [
+                    "Christ-Wackernagel, Paul"
+                ],
+                "ground_truth": [
+                    "Christ-Wackernagel, Paul"
+                ],
+                "score": null,
+                "counts": {
+                    "receiver_persons_tp": 1,
+                    "receiver_persons_fp": 0,
+                    "receiver_persons_fn": 0
+                }
+            }
+        }
+    },
+    "raw_response": "{\"id\":\"gen-1792869891-1Xbl6kJLGW18D6M53lEC\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\n\\\"metadata\\\": {\\n\\\"letter_title\\\": [\\\"null\\\"],\\n\\\"send_date\\\": [\\\"1926-06-22\\\"],\\n\\\"sender_persons\\\": [\\\"null\\\"],\\n\\\"receiver_persons\\\": [\\\"P. Christ - Wackernagel\\\"]\\n}\\n}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"metadata\":{\"send_date\":[\"1926-06-22\"],\"letter_title\":[\"null\"],\"sender_persons\":[\"null\"],\"receiver_persons\":[\"P. Christ - Wackernagel\"]}},\"reasoning\":\"We need to extract values.\\n\\nLetter title: Title of the letter. Not included? The letter is about sending copy of letter to Dr Max Vischer. But no explicit title. So null.\\n\\nSender persons: Name(s) of person(s) who wrote letter. Letterhead: Basler Rheinschiffahrt-Aktiengesellschaft. Signatures: two signatures, one looks like A M\u00fcller? The other illegible. But sender is the company. However sender_persons expects persons. Could be null? Or maybe the signatories? But instruction says name(s) of person(s) who wrote letter. The letter is from Basler Rheinschiffahrt-Aktiengesellschaft. That's an organization, not a person. So sender_persons null? Or maybe we consider signatures as senders but names not typed. The typed sender is BASLER RHEINSCHIFFFAHRT-AKTIENGESELLSCHAFT. That's not a person. So null.\\n\\nBut maybe we should list the company as sender? However key is sender_persons. Example shows persons. If organization, maybe null.\\n\\nSend date: Basel, den 22. Juni 1926. So 1926-06-22.\\n\\nReceiver persons: Herrn P. Christ - Wackernagel, Basel. So P. Christ - Wackernagel. Possibly P. Christ-Wackernagel. Need to list as is.\\n\\nWe must return JSON with lists, even if single value. If not included, set value to \\\"null\\\" (string? Or null value?). Instruction says set value for corresponding key to \\\"null\\\". Example shows lists. Probably they want [\\\"null\\\"]? Or \\\"null\\\" string inside list? The instruction: If a piece of information is not included in the letter, set the value for the corresponding key to \\\"null\\\". Do not return anything except JSON file. Example shows lists. So likely they want [\\\"null\\\"]? Or null without quotes? The instruction says to \\\"null\\\" in quotes. Might mean JSON null? But says set value to \\\"null\\\" (string). Ambiguous. Usually these tasks want null (JSON null) or [\\\"null\\\"]. Let's interpret as string \\\"null\\\" inside list? The instruction: values corresponding to each key should be stored as a list, even if there is only a single value for a key. If not included, set value for corresponding key to \\\"null\\\". So that suggests if missing, value is \\\"null\\\" (maybe not a list?). But earlier says values should be stored as a list. Contradiction. Probably they want [\\\"null\\\"] or \\\"null\\\". Safer to follow instruction literally: if missing, value is \\\"null\\\" (string) not list. But example shows lists. Could do null JSON value.\\n\\nWe need to decide letter_title: null. So \\\"letter_title\\\": [\\\"null\\\"] or \\\"letter_title\\\": \\\"null\\\" or null.\\n\\nWe should output JSON with letter_title null, sender_persons null, etc.\\n\\nWe are historian with keyword knowledge and expert in 20th century Swiss history. But we must not use OCR, use ISO format.\\n\\nWe must return JSON only.\\n\\nLet's produce:\\n\\n{\\n  \\\"letter_title\\\": [\\\"null\\\"],\\n  \\\"send_date\\\": [\\\"1926-06-22\\\"],\\n  \\\"sender_persons\\\": [\\\"null\\\"],\\n  \\\"receiver_persons\\\": [\\\"P. Christ - Wackernagel\\\"]\\n}\\n\\nAlternatively sender_persons could be considered as Basler Rheinschiffahrt-Aktiengesellschaft but that's not a person. So null.\\n\\nIf we want to be safe, we could put sender as organization? But key is sender_persons, so null.\\n\\nReceiver: Herrn P. Christ - Wackernagel\\n\\nWe should include full name as appears: P. Christ - Wackernagel\\n\\nMaybe also include \\\"P. Christ-Wackernagel\\\"\\n\\nWe should output exactly JSON.\\n\\nWe must not add extra text.\\n\\nWe need to ensure ISO date.\\n\\nWe should also consider letter_title maybe null.\\n\\nWe will output JSON with 4 keys.\\n\\nWe need to decide format for null: Use \\\"null\\\" string inside list to satisfy both \\\"list\\\" and \\\"null\\\" requirement. Let's do [\\\"null\\\"].\\n\\nAlternatively we could do null (without quotes) but instruction says \\\"null\\\" in quotes.\\n\\nWe will do [\\\"null\\\"].\\n\\nWe must ensure valid JSON.\\n\\nWe should output:\\n\\n{\\n  \\\"letter_title\\\": [\\\"null\\\"],\\n  \\\"send_date\\\": [\\\"1926-06-22\\\"],\\n  \\\"sender_persons\\\": [\\\"null\\\"],\\n  \\\"receiver_persons\\\": [\\\"P. Christ - Wackernagel\\\"]\\n}\\n\\nIf sender_persons should be the company, we could list it, but it's not a person. However some might expect sender_persons to be the company name. But instruction says Name(s) of the person(s) who wrote the letter. Company is not a person, so null is correct.\\n\\nWe could also include signatures: one is A. M\u00fcller? The signature looks like \\\"A M\u00fcller\\\". But not typed, hard to read. Better to leave null.\\n\\nWe must not use OCR, but we are using visual.\\n\\nWe will output JSON.\\n\\n\",\"reasoning_details\":[{\"type\":\"reasoning.text\",\"text\":\"We need to extract values.\\n\\nLetter title: Title of the letter. Not included? The letter is about sending copy of letter to Dr Max Vischer. But no explicit title. So null.\\n\\nSender persons: Name(s) of person(s) who wrote letter. Letterhead: Basler Rheinschiffahrt-Aktiengesellschaft. Signatures: two signatures, one looks like A M\u00fcller? The other illegible. But sender is the company. However sender_persons expects persons. Could be null? Or maybe the signatories? But instruction says name(s) of person(s) who wrote letter. The letter is from Basler Rheinschiffahrt-Aktiengesellschaft. That's an organization, not a person. So sender_persons null? Or maybe we consider signatures as senders but names not typed. The typed sender is BASLER RHEINSCHIFFFAHRT-AKTIENGESELLSCHAFT. That's not a person. So null.\\n\\nBut maybe we should list the company as sender? However key is sender_persons. Example shows persons. If organization, maybe null.\\n\\nSend date: Basel, den 22. Juni 1926. So 1926-06-22.\\n\\nReceiver persons: Herrn P. Christ - Wackernagel, Basel. So P. Christ - Wackernagel. Possibly P. Christ-Wackernagel. Need to list as is.\\n\\nWe must return JSON with lists, even if single value. If not included, set value to \\\"null\\\" (string? Or null value?). Instruction says set value for corresponding key to \\\"null\\\". Example shows lists. Probably they want [\\\"null\\\"]? Or \\\"null\\\" string inside list? The instruction: If a piece of information is not included in the letter, set the value for the corresponding key to \\\"null\\\". Do not return anything except JSON file. Example shows lists. So likely they want [\\\"null\\\"]? Or null without quotes? The instruction says to \\\"null\\\" in quotes. Might mean JSON null? But says set value to \\\"null\\\" (string). Ambiguous. Usually these tasks want null (JSON null) or [\\\"null\\\"]. Let's interpret as string \\\"null\\\" inside list? The instruction: values corresponding to each key should be stored as a list, even if there is only a single value for a key. If not included, set value for corresponding key to \\\"null\\\". So that suggests if missing, value is \\\"null\\\" (maybe not a list?). But earlier says values should be stored as a list. Contradiction. Probably they want [\\\"null\\\"] or \\\"null\\\". Safer to follow instruction literally: if missing, value is \\\"null\\\" (string) not list. But example shows lists. Could do null JSON value.\\n\\nWe need to decide letter_title: null. So \\\"letter_title\\\": [\\\"null\\\"] or \\\"letter_title\\\": \\\"null\\\" or null.\\n\\nWe should output JSON with letter_title null, sender_persons null, etc.\\n\\nWe are historian with keyword knowledge and expert in 20th century Swiss history. But we must not use OCR, use ISO format.\\n\\nWe must return JSON only.\\n\\nLet's produce:\\n\\n{\\n  \\\"letter_title\\\": [\\\"null\\\"],\\n  \\\"send_date\\\": [\\\"1926-06-22\\\"],\\n  \\\"sender_persons\\\": [\\\"null\\\"],\\n  \\\"receiver_persons\\\": [\\\"P. Christ - Wackernagel\\\"]\\n}\\n\\nAlternatively sender_persons could be considered as Basler Rheinschiffahrt-Aktiengesellschaft but that's not a person. So null.\\n\\nIf we want to be safe, we could put sender as organization? But key is sender_persons, so null.\\n\\nReceiver: Herrn P. Christ - Wackernagel\\n\\nWe should include full name as appears: P. Christ - Wackernagel\\n\\nMaybe also include \\\"P. Christ-Wackernagel\\\"\\n\\nWe should output exactly JSON.\\n\\nWe must not add extra text.\\n\\nWe need to ensure ISO date.\\n\\nWe should also consider letter_title maybe null.\\n\\nWe will output JSON with 4 keys.\\n\\nWe need to decide format for null: Use \\\"null\\\" string inside list to satisfy both \\\"list\\\" and \\\"null\\\" requirement. Let's do [\\\"null\\\"].\\n\\nAlternatively we could do null (without quotes) but instruction says \\\"null\\\" in quotes.\\n\\nWe will do [\\\"null\\\"].\\n\\nWe must ensure valid JSON.\\n\\nWe should output:\\n\\n{\\n  \\\"letter_title\\\": [\\\"null\\\"],\\n  \\\"send_date\\\": [\\\"1926-06-22\\\"],\\n  \\\"sender_persons\\\": [\\\"null\\\"],\\n  \\\"receiver_persons\\\": [\\\"P. Christ - Wackernagel\\\"]\\n}\\n\\nIf sender_persons should be the company, we could list it, but it's not a person. However some might expect sender_persons to be the company name. But instruction says Name(s) of the person(s) who wrote the letter. Company is not a person, so null is correct.\\n\\nWe could also include signatures: one is A. M\u00fcller? The signature looks like \\\"A M\u00fcller\\\". But not typed, hard to read. Better to leave null.\\n\\nWe must not use OCR, but we are using visual.\\n\\nWe will output JSON.\\n\\n\",\"format\":\"unknown\",\"index\":0}]},\"native_finish_reason\":\"stop\"}],\"created\":1792869891,\"model\":\"meta/muse-spark-open\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":null,\"usage\":{\"completion_tokens\":1108,\"prompt_tokens\":4301,\"total_tokens\":5409,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":0,\"reasoning_tokens\":1046,\"rejected_prediction_tokens\":null,\"image_tokens\":0},\"prompt_tokens_details\":{\"audio_tokens\":0,\"cached_tokens\":448,\"cache_write_tokens\":0,\"video_tokens\":0},\"cost\":0.00959245,\"is_byok\":false,\"cost_details\":{\"upstream_inference_cost\":0.00959245,\"upstream_inference_prompt_cost\":0.00488345,\"upstream_inference_completions_cost\":0.004709}},\"provider\":\"Fireworks\"}"
+}

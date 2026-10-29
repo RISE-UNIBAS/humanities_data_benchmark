@@ -22,6 +22,8 @@ class FrakturAdverts(Benchmark):
     the model's predictions and ground truth data.
     """
 
+    score_unparseable_as_miss = True
+
     def calculate_cer(self, reference_text: str, hypothesis_text: str) -> float:
         """
         Calculate Character Error Rate (CER) between a reference text and a hypothesis text.
@@ -197,203 +199,79 @@ class FrakturAdverts(Benchmark):
     def group_by_section_and_number(self,
                                     ad_list: list,
                                     image_name: str = None) -> dict:
-        """
-        Group advertisements by their section titles and leading number prefixes.
-        
-        This method organizes advertisements into a nested dictionary structure,
-        first by section title (e.g., "Es werden zum Verkauff offerirt") and then
-        by their numerical prefix (e.g., "1.", "2.", etc.). This organization
-        facilitates matching between model responses and ground truth data.
-        
-        For image_4, uses a default section title if tags_section is empty or None.
-        
-        Args:
-            ad_list (list): List of advertisement dictionaries to be grouped.
-            image_name (str, optional): Name of the current image being processed.
-            
-        Returns:
-            dict: A nested dictionary with structure {section_title: {number: advertisement_dict}}
-                 where section_title is the advertisement section heading,
-                 number is the integer prefix of the advertisement,
-                 and advertisement_dict is the full advertisement object.
+        """ {section: {number: advert}} for the numbered adverts of a list.
+
+        An advert without a number prefix is left out; a later advert with the same section
+        and number replaces an earlier one. On image_4 an advert without a section belongs to
+        DEFAULT_SECTION, the heading the page continues from the previous page.
         """
         grouped = defaultdict(dict)
-
-        # Handle empty or invalid ad_list
         if not ad_list or not isinstance(ad_list, list):
             return grouped
 
         for ad in ad_list:
             if not isinstance(ad, dict):
-                continue  # skip malformed entries
-
+                continue
             try:
-                # Get section and strip whitespace
-                section = ad.get("tags_section", "")
-                if section is None:
-                    logging.warning("No tags_section found in advertisement. Skipping.")
-                    section = ""
-                section = section.strip()
-
-                # Special handling for image_4
+                section = (ad.get("tags_section") or "").strip()
                 if image_name == "image_4" and not section:
                     section = DEFAULT_SECTION
                     ad["tags_section"] = DEFAULT_SECTION
-
-                # Extract number from text and add to grouped structure
                 number = self.extract_number_prefix(ad.get("text", ""))
                 if section and number:
                     grouped[section][number] = ad
             except (AttributeError, TypeError) as e:
                 logging.warning(f"Error grouping advertisement: {e}")
-                continue
-
         return grouped
+
+    @staticmethod
+    def _result(section, number, gt_ad, response_ad):
+        """ One compared advert: matched (with its similarity) or missing. """
+        if response_ad is None:
+            return {"section": section, "number": number, "match_found": False, "similarity": 0.0,
+                    "response_text": None, "ground_truth_text": gt_ad["text"]}
+        similarity = calculate_fuzzy_score(test_value=response_ad["text"], gold_value=gt_ad["text"])
+        return {"section": section, "number": number, "match_found": True, "similarity": round(similarity, 3),
+                "response_text": response_ad["text"], "ground_truth_text": gt_ad["text"]}
 
     def compare_ads(self,
                     response: dict,
                     ground_truth: dict | list,
                     image_name: str = None):
         """
-        Compare advertisements between response and ground truth.
-        
-        This method matches advertisements from the model's response to the ground truth data
-        by section and number prefix, then calculates text similarity scores using fuzzy matching.
-        It uses a 95% similarity threshold for matching section names when exact matches aren't found.
-        
-        Args:
-            response (dict): The model's parsed response containing extracted advertisements.
-            ground_truth (dict): The ground truth data containing expected advertisements.
-            image_name (str, optional): Name of the current image being processed.
-            
-        Returns:
-            list: List of dictionaries containing comparison results for each advertisement, including:
-                - section: Section name from ground truth
-                - number: Advertisement number
-                - match_found: Boolean indicating if a matching advertisement was found
-                - similarity: Fuzzy similarity score (0.0-1.0)
-                - response_text: Text from model's response (or None if no match)
-                - ground_truth_text: Text from ground truth
+        Compare the numbered adverts of the ground truth with the response's.
+
+        Adverts are paired by section and number prefix. A ground-truth section is looked up
+        in the response by name, else by the first response section whose name scores at least
+        SECTION_MATCH_THRESHOLD. On image_4, whose adverts continue DEFAULT_SECTION, only that
+        section is compared, and an advert is also found by its number in any response section.
+
+        Returns one dict per ground-truth advert: section, number, match_found, similarity,
+        response_text, ground_truth_text.
         """
-        # Flatten ground_truth values (list of list of dicts) into single list
         if isinstance(ground_truth, dict):
-            ground_truth_flat = [entry for ads in ground_truth.values() for entry in ads]
-        else:
-            ground_truth_flat = ground_truth
-
-        # Get model response advertisements
+            ground_truth = [entry for ads in ground_truth.values() for entry in ads]
         try:
-            # For image_4, we need special handling
-            if image_name == "image_4":
-                logging.info(f"Using special handling for image_4")
-
-                # Get advertisements from response
-                response_ads = response.get("advertisements", [])
-
-                # Force the section name for ads without a section
-                for ad in response_ads:
-                    if isinstance(ad, dict) and ("tags_section" not in ad or not ad.get("tags_section")):
-                        ad["tags_section"] = DEFAULT_SECTION
-
-                # Group the modified ads
-                response_grouped = self.group_by_section_and_number(response_ads, image_name)
-            else:
-                # Standard handling for other images
-                response_grouped = self.group_by_section_and_number(response.get("advertisements", []), image_name)
+            response_grouped = self.group_by_section_and_number(response.get("advertisements", []), image_name)
         except (KeyError, AttributeError, TypeError) as e:
             logging.warning(f"Error getting response advertisements: {e}")
             response_grouped = {}
+        ground_truth_grouped = self.group_by_section_and_number(ground_truth, image_name)
 
-        # Group ground truth data
-        ground_truth_grouped = self.group_by_section_and_number(ground_truth_flat, image_name)
-        results = []
-
-        # Special handling for image_4 with default section
         if image_name == "image_4" and DEFAULT_SECTION in ground_truth_grouped:
-            gt_ads = ground_truth_grouped[DEFAULT_SECTION]
-            response_ads = response_grouped.get(DEFAULT_SECTION, {})
+            default_ads = response_grouped.get(DEFAULT_SECTION, {})
+            results = []
+            for number, gt_ad in ground_truth_grouped[DEFAULT_SECTION].items():
+                response_ad = default_ads.get(number) or next(
+                    (ads[number] for ads in response_grouped.values() if number in ads), None)
+                results.append(self._result(DEFAULT_SECTION, number, gt_ad, response_ad))
+            return results
 
-            # Process each advertisement in ground truth
+        results = []
+        for section, gt_ads in ground_truth_grouped.items():
+            response_ads = response_grouped.get(section) or next(
+                (ads for name, ads in response_grouped.items()
+                 if calculate_fuzzy_score(test_value=name, gold_value=section) >= SECTION_MATCH_THRESHOLD), {})
             for number, gt_ad in gt_ads.items():
-                match_found = False
-
-                # First try direct match by number in default section
-                response_ad = response_ads.get(number)
-                if response_ad:
-                    match_found = True
-                    similarity = calculate_fuzzy_score(test_value=response_ad["text"], gold_value=gt_ad["text"])
-                    results.append({
-                        "section": DEFAULT_SECTION,
-                        "number": number,
-                        "match_found": True,
-                        "similarity": round(similarity, 3),
-                        "response_text": response_ad["text"],
-                        "ground_truth_text": gt_ad["text"]
-                    })
-                else:
-                    # If no direct match, try to find by number across all sections
-                    for resp_section, resp_ads in response_grouped.items():
-                        if number in resp_ads:
-                            response_ad = resp_ads[number]
-                            match_found = True
-                            similarity = calculate_fuzzy_score(test_value=response_ad["text"], gold_value=gt_ad["text"])
-                            results.append({
-                                "section": DEFAULT_SECTION,
-                                "number": number,
-                                "match_found": True,
-                                "similarity": round(similarity, 3),
-                                "response_text": response_ad["text"],
-                                "ground_truth_text": gt_ad["text"]
-                            })
-                            break
-
-                    # If still no match found, mark as not found
-                    if not match_found:
-                        results.append({
-                            "section": DEFAULT_SECTION,
-                            "number": number,
-                            "match_found": False,
-                            "similarity": 0.0,
-                            "response_text": None,
-                            "ground_truth_text": gt_ad["text"]
-                        })
-        else:
-            # Standard matching algorithm for all other images
-            for section, gt_ads in ground_truth_grouped.items():
-                # First try exact match by section name
-                response_ads = response_grouped.get(section, {})
-
-                # If no exact match, try fuzzy matching of section names
-                if not response_ads:
-                    for resp_section, resp_ads in response_grouped.items():
-                        similarity = calculate_fuzzy_score(test_value=resp_section, gold_value=section)
-                        if similarity >= SECTION_MATCH_THRESHOLD:
-                            response_ads = resp_ads
-                            break
-
-                # Process each advertisement in this section
-                for number, gt_ad in gt_ads.items():
-                    response_ad = response_ads.get(number)
-                    if response_ad:
-                        # Match found - calculate similarity score
-                        similarity = calculate_fuzzy_score(test_value=response_ad["text"], gold_value=gt_ad["text"])
-                        results.append({
-                            "section": section,
-                            "number": number,
-                            "match_found": True,
-                            "similarity": round(similarity, 3),
-                            "response_text": response_ad["text"],
-                            "ground_truth_text": gt_ad["text"]
-                        })
-                    else:
-                        # No match found
-                        results.append({
-                            "section": section,
-                            "number": number,
-                            "match_found": False,
-                            "similarity": 0.0,
-                            "response_text": None,
-                            "ground_truth_text": gt_ad["text"]
-                        })
-
+                results.append(self._result(section, number, gt_ad, response_ads.get(number)))
         return results

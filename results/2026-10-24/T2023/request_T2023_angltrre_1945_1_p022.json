@@ -1,0 +1,104 @@
+{
+    "text": "{\"advertisements\":[{\"box\":[242.0,242.0,2288.0,1728.0]},{\"box\":[242.0,1762.0,1232.0,3262.0]},{\"box\":[1282.0,1762.0,2288.0,3262.0]}]}",
+    "model": "nvidia/nemotron-3.5-super-vl",
+    "provider": "openrouter",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 3118,
+        "output_tokens": 1513,
+        "total_tokens": 4631,
+        "reasoning_tokens": 0,
+        "input_cost_usd": 0.0003118,
+        "output_cost_usd": 0.0006052,
+        "estimated_cost_usd": 0.000917
+    },
+    "duration": 7.979914426803589,
+    "timestamp": "2026-10-24T21:12:05.417533",
+    "parsed": {
+        "advertisements": [
+            {
+                "box": [
+                    242.0,
+                    242.0,
+                    2288.0,
+                    1728.0
+                ]
+            },
+            {
+                "box": [
+                    242.0,
+                    1762.0,
+                    1232.0,
+                    3262.0
+                ]
+            },
+            {
+                "box": [
+                    1282.0,
+                    1762.0,
+                    2288.0,
+                    3262.0
+                ]
+            }
+        ]
+    },
+    "conversation_id": "145b8b25-01d9-43b8-a466-7495d07eb3b7",
+    "score": {
+        "field_scores": {
+            "box 0": {
+                "response": [
+                    242.0,
+                    242.0,
+                    2288.0,
+                    1728.0
+                ],
+                "ground_truth": [
+                    242,
+                    242,
+                    2312,
+                    1735
+                ],
+                "score": 0.984
+            },
+            "box 2": {
+                "response": [
+                    1282.0,
+                    1762.0,
+                    2288.0,
+                    3262.0
+                ],
+                "ground_truth": [
+                    1302,
+                    1767,
+                    2314,
+                    3260
+                ],
+                "score": 0.951
+            },
+            "box 1": {
+                "response": [
+                    242.0,
+                    1762.0,
+                    1232.0,
+                    3262.0
+                ],
+                "ground_truth": [
+                    247,
+                    1777,
+                    1265,
+                    3267
+                ],
+                "score": 0.95
+            }
+        },
+        "f1": 1.0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "mean_iou": 0.962,
+        "true_positives": 3,
+        "false_positives": 0,
+        "false_negatives": 0,
+        "iou_threshold": 0.5
+    },
+    "raw_response": "{\"id\":\"gen-1792869118-Py3s0tspJ26bCHv52aIe\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\n    \\\"advertisements\\\": [\\n        {\\\"box\\\": [242, 242, 2288, 1728]},\\n        {\\\"box\\\": [242, 1762, 1232, 3262]},\\n        {\\\"box\\\": [1282, 1762, 2288, 3262]}\\n    ]\\n}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"advertisements\":[{\"box\":[242.0,242.0,2288.0,1728.0]},{\"box\":[242.0,1762.0,1232.0,3262.0]},{\"box\":[1282.0,1762.0,2288.0,3262.0]}]},\"reasoning\":\"The user wants me to identify and extract bounding boxes for all advertisements on the provided page.\\n\\n1.  **Analyze the image:** The image is a scanned page from a magazine or book. It contains three distinct blocks of content, each framed by a border, which look like advertisements.\\n    *   **Top Ad:** A large rectangular ad spanning the top width. It features text \\\"1870 - 1945 INTERNATIONAL FORWARDING & SHIPPING AGENTS Goth & Co. Ltd., Basle\\\", a list of branch offices, and a photo of a building (\\\"Head Office in Basle 45, Elisabethenstrasse\\\").\\n    *   **Bottom Left Ad:** A smaller rectangular ad featuring an illustration of a couple dancing and a watch chain. Text includes \\\"E. BOREL CO NEUCHATEL\\\".\\n    *   **Bottom Right Ad:** A smaller rectangular ad with text \\\"Standard Marine Insurance Co. Limited Liverpool\\\", \\\"Manager for Switzerland: H. O. HIMMELSPACH Z\u00dcRICH\\\", and \\\"Marine Insurance of all kinds\\\".\\n\\n2.  **Determine coordinates:** I need to estimate the bounding boxes [x0, y0, x1, y1] for each of these three ads based on the original image size (2479 x 3508).\\n\\n    *   **Ad 1 (Top - Goth & Co.):**\\n        *   Top edge: Just below the top margin, around y=240.\\n        *   Left edge: Around x=240.\\n        *   Bottom edge: Just above the bottom row of ads, around y=1730.\\n        *   Right edge: Near the right margin, around x=2290.\\n        *   Let's refine: The border starts around y=240, x=240. It ends around y=1730, x=2290.\\n\\n    *   **Ad 2 (Bottom Left - E. Borel Co):**\\n        *   Top edge: Below the first ad, around y=1760.\\n        *   Left edge: Aligned with the left side of the top ad, around x=240.\\n        *   Bottom edge: Near the bottom of the page content area, around y=3260.\\n        *   Right edge: About halfway across, around x=1230.\\n\\n    *   **Ad 3 (Bottom Right - Standard Marine Insurance):**\\n        *   Top edge: Aligned with the bottom left ad, around y=1760.\\n        *   Left edge: To the right of the bottom left ad, around x=1280.\\n        *   Bottom edge: Aligned with the bottom left ad, around y=3260.\\n        *   Right edge: Aligned with the right side of the top ad, around x=2290.\\n\\n3.  **Format the output:** Create the JSON object as requested.\\n\\n    *   Box 1: [240, 240, 2290, 1730] -> Wait, let's look closer at the image.\\n        *   Top border line is visible. Left border line is visible.\\n        *   Let's approximate more carefully.\\n        *   Top Ad: [242, 242, 2288, 1728] roughly.\\n    *   Box 2: [242, 1762, 1232, 3262] roughly.\\n    *   Box 3: [1282, 1762, 2288, 3262] roughly.\\n\\n    Let's refine the coordinates visually.\\n    *   Top Ad: Starts near top left corner of the content area. Ends before the bottom section.\\n    *   Bottom Left Ad: Starts below the top ad. Ends near bottom.\\n    *   Bottom Right Ad: Starts below top ad, right of bottom left. Ends near bottom.\\n\\n    Let's try to be precise.\\n    *   Ad 1: x0=242, y0=242, x1=2288, y1=1728.\\n    *   Ad 2: x0=242, y0=1762, x1=1232, y1=3262.\\n    *   Ad 3: x0=1282, y0=1762, x1=2288, y1=3262.\\n\\n    Wait, looking at the full image, there are borders around the whole page too, but the ads are clearly the inner boxes.\\n    Let's check the bottom left ad box. It seems to go down to the page number \\\"20\\\".\\n    Let's check the bottom right ad box. It seems to align with the bottom left one.\\n\\n    Let's finalize the coordinates.\\n    Ad 1: [242, 242, 2288, 1728]\\n    Ad 2: [242, 1762, 1232, 3262]\\n    Ad 3: [1282, 1762, 2288, 3262]\\n\\n    Actually, looking at the spacing, the gap between top and bottom ads is small.\\n    Let's adjust y1 for top ad to ~1730.\\n    Let's adjust y0 for bottom ads to ~1760.\\n\\n    Let's re-verify the \\\"advertisement\\\" definition. All three distinct bordered sections are clearly ads.\\n    1. Goth & Co. Ltd.\\n    2. E. Borel Co\\n    3. Standard Marine Insurance Co.\\n\\n    Final check on coordinates.\\n    Image size: 2479 x 3508.\\n    Top Ad:\\n    x0: ~240\\n    y0: ~240\\n    x1: ~2290\\n    y1: ~1730\\n\\n    Bottom Left Ad:\\n    x0: ~240\\n    y0: ~1760\\n    x1: ~1230\\n    y1: ~3260\\n\\n    Bottom Right Ad:\\n    x0: ~1280\\n    y0: ~1760\\n    x1: ~2290\\n    y1: ~3260\\n\\n    Let's construct the JSON.\",\"reasoning_details\":[{\"type\":\"reasoning.text\",\"text\":\"The user wants me to identify and extract bounding boxes for all advertisements on the provided page.\\n\\n1.  **Analyze the image:** The image is a scanned page from a magazine or book. It contains three distinct blocks of content, each framed by a border, which look like advertisements.\\n    *   **Top Ad:** A large rectangular ad spanning the top width. It features text \\\"1870 - 1945 INTERNATIONAL FORWARDING & SHIPPING AGENTS Goth & Co. Ltd., Basle\\\", a list of branch offices, and a photo of a building (\\\"Head Office in Basle 45, Elisabethenstrasse\\\").\\n    *   **Bottom Left Ad:** A smaller rectangular ad featuring an illustration of a couple dancing and a watch chain. Text includes \\\"E. BOREL CO NEUCHATEL\\\".\\n    *   **Bottom Right Ad:** A smaller rectangular ad with text \\\"Standard Marine Insurance Co. Limited Liverpool\\\", \\\"Manager for Switzerland: H. O. HIMMELSPACH Z\u00dcRICH\\\", and \\\"Marine Insurance of all kinds\\\".\\n\\n2.  **Determine coordinates:** I need to estimate the bounding boxes [x0, y0, x1, y1] for each of these three ads based on the original image size (2479 x 3508).\\n\\n    *   **Ad 1 (Top - Goth & Co.):**\\n        *   Top edge: Just below the top margin, around y=240.\\n        *   Left edge: Around x=240.\\n        *   Bottom edge: Just above the bottom row of ads, around y=1730.\\n        *   Right edge: Near the right margin, around x=2290.\\n        *   Let's refine: The border starts around y=240, x=240. It ends around y=1730, x=2290.\\n\\n    *   **Ad 2 (Bottom Left - E. Borel Co):**\\n        *   Top edge: Below the first ad, around y=1760.\\n        *   Left edge: Aligned with the left side of the top ad, around x=240.\\n        *   Bottom edge: Near the bottom of the page content area, around y=3260.\\n        *   Right edge: About halfway across, around x=1230.\\n\\n    *   **Ad 3 (Bottom Right - Standard Marine Insurance):**\\n        *   Top edge: Aligned with the bottom left ad, around y=1760.\\n        *   Left edge: To the right of the bottom left ad, around x=1280.\\n        *   Bottom edge: Aligned with the bottom left ad, around y=3260.\\n        *   Right edge: Aligned with the right side of the top ad, around x=2290.\\n\\n3.  **Format the output:** Create the JSON object as requested.\\n\\n    *   Box 1: [240, 240, 2290, 1730] -> Wait, let's look closer at the image.\\n        *   Top border line is visible. Left border line is visible.\\n        *   Let's approximate more carefully.\\n        *   Top Ad: [242, 242, 2288, 1728] roughly.\\n    *   Box 2: [242, 1762, 1232, 3262] roughly.\\n    *   Box 3: [1282, 1762, 2288, 3262] roughly.\\n\\n    Let's refine the coordinates visually.\\n    *   Top Ad: Starts near top left corner of the content area. Ends before the bottom section.\\n    *   Bottom Left Ad: Starts below the top ad. Ends near bottom.\\n    *   Bottom Right Ad: Starts below top ad, right of bottom left. Ends near bottom.\\n\\n    Let's try to be precise.\\n    *   Ad 1: x0=242, y0=242, x1=2288, y1=1728.\\n    *   Ad 2: x0=242, y0=1762, x1=1232, y1=3262.\\n    *   Ad 3: x0=1282, y0=1762, x1=2288, y1=3262.\\n\\n    Wait, looking at the full image, there are borders around the whole page too, but the ads are clearly the inner boxes.\\n    Let's check the bottom left ad box. It seems to go down to the page number \\\"20\\\".\\n    Let's check the bottom right ad box. It seems to align with the bottom left one.\\n\\n    Let's finalize the coordinates.\\n    Ad 1: [242, 242, 2288, 1728]\\n    Ad 2: [242, 1762, 1232, 3262]\\n    Ad 3: [1282, 1762, 2288, 3262]\\n\\n    Actually, looking at the spacing, the gap between top and bottom ads is small.\\n    Let's adjust y1 for top ad to ~1730.\\n    Let's adjust y0 for bottom ads to ~1760.\\n\\n    Let's re-verify the \\\"advertisement\\\" definition. All three distinct bordered sections are clearly ads.\\n    1. Goth & Co. Ltd.\\n    2. E. Borel Co\\n    3. Standard Marine Insurance Co.\\n\\n    Final check on coordinates.\\n    Image size: 2479 x 3508.\\n    Top Ad:\\n    x0: ~240\\n    y0: ~240\\n    x1: ~2290\\n    y1: ~1730\\n\\n    Bottom Left Ad:\\n    x0: ~240\\n    y0: ~1760\\n    x1: ~1230\\n    y1: ~3260\\n\\n    Bottom Right Ad:\\n    x0: ~1280\\n    y0: ~1760\\n    x1: ~2290\\n    y1: ~3260\\n\\n    Let's construct the JSON.\",\"format\":\"unknown\",\"index\":0}]},\"native_finish_reason\":\"stop\"}],\"created\":1792869118,\"model\":\"nvidia/nemotron-3.5-super-vl\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":null,\"usage\":{\"completion_tokens\":1513,\"prompt_tokens\":3118,\"total_tokens\":4631,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":0,\"reasoning_tokens\":1416,\"rejected_prediction_tokens\":null,\"image_tokens\":0},\"prompt_tokens_details\":{\"audio_tokens\":0,\"cached_tokens\":0,\"cache_write_tokens\":0,\"video_tokens\":0},\"cost\":0.000917,\"is_byok\":false,\"cost_details\":{\"upstream_inference_cost\":0.000917,\"upstream_inference_prompt_cost\":0.0003118,\"upstream_inference_completions_cost\":0.0006052}},\"provider\":\"Crusoe\"}"
+}

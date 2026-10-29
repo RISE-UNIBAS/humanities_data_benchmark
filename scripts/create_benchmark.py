@@ -7,6 +7,7 @@ Usage:
 
 import json
 import re
+from datetime import date
 from pathlib import Path
 from typing import Dict, List, Optional
 
@@ -597,6 +598,9 @@ def generate_meta_json(info: Dict) -> str:
         "description": info['description'],
         "tags": info['tags'],
         "contributors": info['contributors'],
+        "data_type": ", ".join(t for t, used in (("image", info['use_images']), ("text", info['use_texts'])) if used),
+        "added": date.today().strftime("%Y-%m"),
+        "license": "Not specified",
         "ranking": {
             "metric": info['ranking_metric'],
             "order": info['ranking_order']
@@ -641,74 +645,50 @@ def generate_benchmark_py(info: Dict) -> str:
         return read_file(prompt_path)
 '''
 
+    typing_import = "from typing import List\n\n" if info['use_shared_context'] else ""
     template = f'''"""Benchmark implementation for {info['title']}.
 
 {info['description']}
 """
 
-from typing import Dict, List
-from scripts.benchmark_base import Benchmark
+{typing_import}from scripts.benchmark_base import Benchmark
+from scripts.scoring_helper import calculate_fuzzy_score
 
 
 class {info['class_name']}(Benchmark):
     """Benchmark for {info['title']}."""
+
+    score_unparseable_as_miss = True
 {shared_context_section}
-    def score_request_answer(self, image_name: str, response: dict, ground_truth: dict) -> dict:
-        """Score a single request against ground truth.
+    def score_request_answer(self, object_basename, response, ground_truth):
+        """Fuzzy similarity per top-level ground-truth field, averaged.
 
-        Args:
-            image_name: Name of the image/file being processed
-            response: The model's response (parsed JSON)
-            ground_truth: The expected ground truth (parsed JSON)
-
-        Returns:
-            Dictionary containing scores for this request
+        A starting point: replace it with a comparison that fits the task. An answer that
+        could not be parsed is not a dict and misses every field.
         """
-        # TODO: Implement scoring logic
-        # Example structure:
-        scores = {{
-            "image_name": image_name,
-            "score": 0.0,
-            # Add more metrics as needed
-        }}
+        data = self.prepare_scoring_data(response)
+        if not isinstance(data, dict):
+            data = {{}}
+        field_scores = {{}}
+        for key, expected in ground_truth.items():
+            found = data.get(key)
+            field_scores[key] = {{"response": found, "ground_truth": expected,
+                                 "score": calculate_fuzzy_score(found, expected)}}
+        fuzzy = sum(f["score"] for f in field_scores.values()) / len(field_scores) if field_scores else 0.0
+        return {{"fuzzy": fuzzy, "field_scores": field_scores}}
 
-        return scores
-
-    def score_benchmark(self, all_scores: list) -> dict:
-        """Aggregate scores from all requests.
-
-        Args:
-            all_scores: List of score dictionaries from score_request_answer
-
-        Returns:
-            Dictionary containing aggregated benchmark scores
-        """
-        # TODO: Implement aggregation logic
+    def score_benchmark(self, all_scores):
+        """Mean of the per-request fuzzy scores."""
         if not all_scores:
-            return {{"overall_score": 0.0}}
+            return {{"fuzzy": 0.0}}
+        return {{"fuzzy": sum(s["fuzzy"] for s in all_scores) / len(all_scores)}}
 
-        # Calculate average score
-        avg_score = sum(s.get("score", 0.0) for s in all_scores) / len(all_scores)
-
-        return {{
-            "overall_score": avg_score,
-            "num_samples": len(all_scores),
-            # Add more aggregated metrics as needed
-        }}
-
-    # Optional: Override these methods if needed
-
-    # def remove_none_values(self) -> bool:
-    #     """Whether to remove None values from parsed responses."""
-    #     return True
-
-    # def convert_result_to_json(self) -> bool:
-    #     """Whether to convert response to JSON before scoring."""
-    #     return True
-
-    # def get_title(self) -> str:
-    #     """Get benchmark title."""
-    #     return "{info['title']}"
+    # Optional hooks inherited from Benchmark (scripts/benchmark_base.py):
+    # remove_none_values() -> bool          strip None values before scoring (default True)
+    # convert_truth_to_json() -> bool       parse a ground truth stored as a JSON string (default True)
+    # resize_images() -> bool               resize oversized images before sending (default False)
+    # get_prompt_kwargs(basename, filenames) -> dict   values interpolated into the prompt
+    # skip_object(object_basename) -> bool  exclude an object from the run
 '''
 
     return template
@@ -753,81 +733,43 @@ class {class_name}(BaseModel):
     return template
 
 
+def generate_scoring_test_py(info: Dict) -> str:
+    """Generate tests/test_<name>_scoring.py: the scorer tests every benchmark needs."""
+    return f'''"""Scoring tests for {info['name']}."""
+import copy
+import importlib
+import json
+import os
+
+import pytest
+
+{info['class_name']} = importlib.import_module("benchmarks.{info['name']}.benchmark").{info['class_name']}
+
+GROUND_TRUTHS = os.path.join(os.path.dirname(__file__), "..", "benchmarks", "{info['name']}", "ground_truths")
+
+
+@pytest.fixture
+def scorer(make_scorer):
+    return make_scorer({info['class_name']})
+
+
+@pytest.mark.parametrize("name", sorted(f[:-5] for f in os.listdir(GROUND_TRUTHS) if f.endswith(".json")))
+def test_every_ground_truth_matches_itself(scorer, response, name):
+    with open(os.path.join(GROUND_TRUTHS, f"{{name}}.json"), encoding="utf-8") as f:
+        gt = json.load(f)
+    assert scorer.score_request_answer(name, response(parsed=copy.deepcopy(gt)), gt)["fuzzy"] == 1.0
+
+
+def test_unparseable_response_is_a_miss(scorer, response):
+    result = scorer.score_request_answer("x", response(parsed=None, text="prose"), {{"title": "Der Proceß"}})
+    assert result["fuzzy"] == 0.0
+'''
+
+
 def generate_readme(info: Dict) -> str:
-    """Generate README.md content."""
-    template = f'''# {info['title']}
-
-## Overview
-
-{info['description']}
-
-## Benchmark Structure
-
-**Tags:** {', '.join(info['tags']) if info['tags'] else 'None'}
-
-**Scoring Metric:** {info['ranking_metric']} ({info['ranking_order']}ending)
-
-## Data
-
-'''
-
-    if info['use_images']:
-        template += "- **Images:** Store images in the `images/` directory\n"
-    if info['use_texts']:
-        template += "- **Texts:** Store text files in the `texts/` directory\n"
-    if info['use_shared_context']:
-        template += "- **Shared Context:** Store reference documents in the `context/` directory\n"
-        template += "  - These files are sent once at the beginning and cached\n"
-        template += "  - Useful for large reference documents that all test items reference\n"
-
-    template += "- **Ground Truths:** Store JSON ground truth files in `ground_truths/` directory\n"
-    template += "  - Each ground truth filename must match the corresponding image/text filename (minus extension)\n\n"
-
-    if info['use_shared_context']:
-        template += '''## Shared Context
-
-This benchmark uses shared context to send reference documents once before processing test items.
-
-**How it works:**
-1. Large reference documents are placed in `context/` directory
-2. The initial prompt (`context/shared_context_prompt.txt`) is sent with these files
-3. Individual test items can then reference this context without re-sending it
-4. This saves tokens and costs, especially with Anthropic's prompt caching
-
-**Configuration:**
-- Edit `get_shared_context_files()` in `benchmark.py` to specify which files to load
-- Edit `context/shared_context_prompt.txt` to customize the initial prompt
-
-'''
-
-    template += '''## Ground Truth Format
-
-```json
-{
-  "field1": "value1",
-  "field2": ["item1", "item2"]
-}
-```
-
-## Scoring
-
-TODO: Describe how scoring works for this benchmark.
-
-## Examples
-
-TODO: Add example inputs and expected outputs.
-
-## Contributors
-
-'''
-
-    if info['contributors']:
-        for contrib in info['contributors']:
-            template += f"- **{contrib['role']}:** {', '.join(contrib['contributors'])}\n"
-    else:
-        template += "TODO: Add contributors\n"
-
-    return template
+    """Generate README.md content: the BenchmarkCard template with the title filled in."""
+    template = (Path(__file__).parent.parent / "benchmarks" / "README_TEMPLATE.md").read_text(encoding='utf-8')
+    return template.replace("# [Benchmark Title]", f"# {info['title']}", 1)
 
 
 def generate_prompt_txt(info: Dict) -> str:
@@ -878,14 +820,12 @@ def create_benchmark_structure(info: Dict) -> bool:
             print_info(f"Creating file: {file_path}")
             file_path.write_text(content, encoding='utf-8')
 
-        # Create placeholder files
-        if info['use_images']:
-            placeholder = benchmark_dir / 'images' / '.gitkeep'
-            placeholder.write_text('# Add your images here\n')
-
-        if info['use_texts']:
-            placeholder = benchmark_dir / 'texts' / '.gitkeep'
-            placeholder.write_text('# Add your text files here\n')
+        test_path = Path("tests") / f"test_{info['name']}_scoring.py"
+        if test_path.exists():
+            print_warning(f"Not overwriting existing {test_path}")
+        else:
+            print_info(f"Creating file: {test_path}")
+            test_path.write_text(generate_scoring_test_py(info), encoding='utf-8')
 
         if info['use_shared_context']:
             readme = benchmark_dir / 'context' / 'README.md'
@@ -902,9 +842,6 @@ These files are loaded via `get_shared_context_files()` in your benchmark.py and
 
 The files here save tokens by being sent once and cached (especially with Anthropic's prompt caching).
 ''')
-
-        placeholder = benchmark_dir / 'ground_truths' / '.gitkeep'
-        placeholder.write_text('# Add your ground truth JSON files here\n')
 
         print_success(f"\nBenchmark structure created successfully at: {benchmark_dir}")
         return True
@@ -942,7 +879,8 @@ def print_next_steps(info: Dict):
 
     print(f"\n{Colors.BOLD}2. Implement scoring logic:{Colors.END}")
     print(f"   - Edit: benchmarks/{info['name']}/benchmark.py")
-    print(f"   - Implement: score_request_answer() and score_benchmark()")
+    print(f"   - Replace the field-by-field fuzzy default in score_request_answer() and score_benchmark()")
+    print(f"   - Extend the scorer tests: tests/test_{info['name']}_scoring.py")
 
     step_num = 3
     if info['use_dataclass']:
@@ -959,12 +897,13 @@ def print_next_steps(info: Dict):
         step_num += 1
 
     print(f"\n{Colors.BOLD}{step_num}. Create and run tests:{Colors.END}")
-    print(f"   - Use the benchmark testing CLI to create test configurations")
-    print(f"   - Tests can be run against different models and providers")
+    print(f"   - Run it against a model: python scripts/run_single_test.py --adhoc")
+    print(f"   - Run the test suite: pytest")
     step_num += 1
 
     print(f"\n{Colors.BOLD}{step_num}. Review and refine:{Colors.END}")
-    print(f"   - Check README: benchmarks/{info['name']}/README.md")
+    print(f"   - Fill in the BenchmarkCard: benchmarks/{info['name']}/README.md and meta.json")
+    print(f"   - Then run: python scripts/benchmark_cards.py {info['name']}")
     print(f"   - Adjust prompt: benchmarks/{info['name']}/prompts/prompt.txt")
 
     print(f"\n{Colors.GREEN}{Colors.BOLD}Benchmark '{info['name']}' is ready for development!{Colors.END}\n")

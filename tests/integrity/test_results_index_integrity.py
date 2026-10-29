@@ -3,7 +3,7 @@
 Two jobs, and the first one is temporary in spirit but permanent in practice.
 
 **Equivalence.** The shared layer takes over from `offline_scoring`'s walk and CSV reader,
-`ndr_export.test_utils.get_all_tests` and `ndr_export.meta_utils.get_benchmarks`. These
+and the readers in `scripts.compare` (`get_all_tests`, `get_benchmarks`). These
 tests were written before any caller moved, so they were green against the old code and
 must stay green as each caller migrates. That is what makes the migration provably
 behaviour-preserving rather than merely diffed afterwards: a byte-diff of
@@ -27,8 +27,7 @@ build.
 import pytest
 
 from scripts import offline_scoring
-from scripts.ndr_export.meta_utils import get_benchmarks
-from scripts.ndr_export.test_utils import get_all_tests
+from scripts.compare import get_all_tests, get_benchmarks
 from scripts.results_index import (RESULTS_PATH, TEST_RUNS_PATH, TestCatalog,
                                    benchmark_names, iter_run_dirs, known_tests,
                                    object_id_of, observed_prefix, read_run)

@@ -1,0 +1,87 @@
+{
+    "text": "{\"metadata\":{\"send_date\":[\"1935-08-17\"],\"letter_title\":null,\"sender_persons\":[\"Basler Personenschifffahrtsgesellschaft\"],\"receiver_persons\":[\"Fritz Ritter\"]}}",
+    "model": "fireworks/ember-1",
+    "provider": "openrouter",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 4505,
+        "output_tokens": 1479,
+        "total_tokens": 5984,
+        "reasoning_tokens": 0,
+        "cached_tokens": 4504,
+        "input_cost_usd": 0.0013542,
+        "output_cost_usd": 0.022185,
+        "estimated_cost_usd": 0.0235392
+    },
+    "duration": 18.82146453857422,
+    "timestamp": "2026-10-25T00:06:31.342450",
+    "parsed": {
+        "metadata": {
+            "send_date": [
+                "1935-08-17"
+            ],
+            "letter_title": null,
+            "sender_persons": [
+                "Basler Personenschifffahrtsgesellschaft"
+            ],
+            "receiver_persons": [
+                "Fritz Ritter"
+            ]
+        }
+    },
+    "conversation_id": "2c9671b8-d094-4113-8f9d-e4fe4f6cfafc",
+    "score": {
+        "send_date_tp": 1,
+        "send_date_fp": 0,
+        "send_date_fn": 0,
+        "sender_persons_tp": 0,
+        "sender_persons_fp": 1,
+        "sender_persons_fn": 0,
+        "receiver_persons_tp": 1,
+        "receiver_persons_fp": 0,
+        "receiver_persons_fn": 0,
+        "field_scores": {
+            "send_date": {
+                "response": [
+                    "1935-08-17"
+                ],
+                "ground_truth": [
+                    "1935-08-17"
+                ],
+                "score": null,
+                "counts": {
+                    "send_date_tp": 1,
+                    "send_date_fp": 0,
+                    "send_date_fn": 0
+                }
+            },
+            "sender_persons": {
+                "response": [
+                    "Basler Personenschifffahrtsgesellschaft"
+                ],
+                "ground_truth": [],
+                "score": null,
+                "counts": {
+                    "sender_persons_tp": 0,
+                    "sender_persons_fp": 1,
+                    "sender_persons_fn": 0
+                }
+            },
+            "receiver_persons": {
+                "response": [
+                    "Ritter-Dreier, Fritz"
+                ],
+                "ground_truth": [
+                    "Ritter-Dreier, Fritz"
+                ],
+                "score": null,
+                "counts": {
+                    "receiver_persons_tp": 1,
+                    "receiver_persons_fp": 0,
+                    "receiver_persons_fn": 0
+                }
+            }
+        }
+    },
+    "raw_response": "{\"id\":\"gen-1792879572-b9dlbINP20oCGBfmqBMt\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\\"metadata\\\":{\\\"letter_title\\\":null,\\\"send_date\\\":[\\\"1935-08-17\\\"],\\\"sender_persons\\\":[\\\"Basler Personenschifffahrtsgesellschaft\\\"],\\\"receiver_persons\\\":[\\\"Fritz Ritter\\\"]}}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"metadata\":{\"send_date\":[\"1935-08-17\"],\"letter_title\":null,\"sender_persons\":[\"Basler Personenschifffahrtsgesellschaft\"],\"receiver_persons\":[\"Fritz Ritter\"]}},\"reasoning\":\"The user wants me to extract metadata from a historical letter image. Let me analyze the image carefully.\\n\\nThe letter is from \\\"BASLER PERSONENSCHIFFFAHRTSGESELLSCHAFT\\\" (Basler Personenschifffahrtsgesellschaft).\\n\\nDate: \\\"Basel, den 17. August 1935.\\\" \u2192 1935-08-17\\n\\nAddressed to: \\\"Herrn Fritz Ritter / Basler Rheinschiffahrt A.-G. / Basel 19\\\"\\n\\nSender: The letter is signed by \\\"Basler Personenschifffahrtsgesellschaft / Der Gesch\u00e4ftsf\u00fchrer\\\" - no specific person name is given, just the company and \\\"Der Gesch\u00e4ftsf\u00fchrer\\\" (the managing director). \\n\\nThe sender_persons should be the name(s) of the person(s) who wrote the letter. Since no individual person is named (only \\\"Der Gesch\u00e4ftsf\u00fchrer\\\" and the company), I should consider whether to include the company. The key says \\\"sender_persons\\\" - names of persons. The letter is from the Basler Personenschifffahrtsgesellschaft, signed by \\\"Der Gesch\u00e4ftsf\u00fchrer\\\" without a name. \\n\\nLooking at the example, sender_persons contains person names. Here, there's no specific person named as sender. However, the letterhead and signature indicate the organization. The instruction says \\\"Name(s) of the person(s) who wrote the letter.\\\" Since no person is explicitly named, but the entity is Basler Personenschifffahrtsgesellschaft. \\n\\nHmm, but the schema allows null. The question is whether to put the company name or null. The key is \\\"sender_persons\\\" specifically. The signature says \\\"Basler Personenschifffahrtsgesellschaft / Der Gesch\u00e4ftsf\u00fchrer\\\". There's no personal name. \\n\\nI think for sender_persons, since the letter is written on behalf of the company and signed by \\\"Der Gesch\u00e4ftsf\u00fchrer\\\" (no name), the most accurate value would be the company name as the sender, or null if strictly persons. Given the context of these tasks, usually the sender is the entity/person in the letterhead/signature. I'll include \\\"Basler Personenschifffahrtsgesellschaft\\\" as the sender since that's who wrote the letter. But the key specifically says \\\"persons\\\". \\n\\nLet me reconsider. The receiver is clearly \\\"Fritz Ritter\\\" (Herrn Fritz Ritter). The sender is the Basler Personenschifffahrtsgesellschaft, represented by the Gesch\u00e4ftsf\u00fchrer (unnamed). \\n\\nGiven the instruction \\\"If a piece of information is not included in the letter, set the value for the corresponding key to null\\\" - the sender person name is not included (only the company and title \\\"Der Gesch\u00e4ftsf\u00fchrer\\\"). However, in many of these historical letter extraction tasks, the organization is accepted as sender. But the field is named \\\"sender_persons\\\".\\n\\nI'll go with the company name as sender because that's the identifiable sender of the letter. Actually, let me think again - the prompt says \\\"sender_persons: Name(s) of the person(s) who wrote the letter.\\\" The letter was written by Basler Personenschifffahrtsgesellschaft (Der Gesch\u00e4ftsf\u00fchrer). Since no individual name is given, but the corporate author is clear, I'll list the company. This is the most useful extraction.\\n\\nHmm, but strictly \\\"persons\\\" - a company is not a person. However, in archival metadata, corporate bodies are often creators. Given ambiguity, I'll provide the company name as the sender since it's the clear author, and the receiver person is Fritz Ritter.\\n\\nletter_title: There's no explicit title. The letter concerns the Generalversammlung (general assembly) and an invitation (Beilage: Einladung). There's no title given in the letter. So letter_title should be null.\\n\\nWait, the example has a letter_title but that's just an example. This letter doesn't have a title. So null.\\n\\nsend_date: 1935-08-17.\\n\\nreceiver_persons: [\\\"Fritz Ritter\\\"]\\n\\nsender_persons: The letter is from Basler Personenschifffahrtsgesellschaft. The signature is \\\"Der Gesch\u00e4ftsf\u00fchrer\\\" with no name. I'll use [\\\"Basler Personenschifffahrtsgesellschaft\\\"] as the sender. Actually, re-reading: \\\"sender_persons: Name(s) of the person(s) who wrote the letter.\\\" Since the actual person (Gesch\u00e4ftsf\u00fchrer) is not named, and the company is the author... \\n\\nI'll make a decision: include \\\"Basler Personenschifffahrtsgesellschaft\\\" as sender. This is consistent with the letterhead and signature. Even though it's a company, it's the sender. If strictly no person, it would be null, but that loses information. Given these tasks typically want the identifiable sender, I'll include the company.\\n\\nFinal JSON:\\n{\\n  \\\"metadata\\\": {\\n    \\\"letter_title\\\": null,\\n    \\\"send_date\\\": [\\\"1935-08-17\\\"],\\n    \\\"sender_persons\\\": [\\\"Basler Personenschifffahrtsgesellschaft\\\"],\\n    \\\"receiver_persons\\\": [\\\"Fritz Ritter\\\"]\\n  }\\n}\\n\\nWait, the schema says letter_title can be array or null. The instruction says set value to \\\"null\\\" if not included. The example shows arrays. The schema allows null for letter_title. I'll set letter_title to null (JSON null), and others as arrays.\\n\\nActually, re-reading the user instruction: \\\"If a piece of information is not included in the letter, set the value for the corresponding key to \\\"null\\\".\\\" They put null in quotes but mean JSON null. The schema allows null. I'll use null for letter_title.\\n\\nFor sender_persons, I'm now leaning toward including the company. But the field name is \\\"sender_persons\\\". Let me check: the signature block reads \\\"Basler Personenschifffahrtsgesellschaft / Der Gesch\u00e4ftsf\u00fchrer\\\". No personal name. The receiver address is \\\"Herrn Fritz Ritter\\\". \\n\\nDecision: sender_persons = [\\\"Basler Personenschifffahrtsgesellschaft\\\"]. This represents who wrote the letter. Even though it's a corporate body, it's the sender. This is the best answer.\\n\\nActually, I want to reconsider once more. The prompt is explicit: \\\"sender_persons: Name(s) of the person(s) who wrote the letter.\\\" A company is not a person. The person who wrote it is \\\"Der Gesch\u00e4ftsf\u00fchrer\\\" but unnamed. If we're strict, the person is not named \u2192 null. But that seems unhelpful and the company is clearly the author. In similar VQA/document extraction tasks, the letterhead entity is typically the sender. I'll keep the company.\\n\\nFinal answer.\",\"reasoning_details\":[{\"type\":\"reasoning.text\",\"text\":\"The user wants me to extract metadata from a historical letter image. Let me analyze the image carefully.\\n\\nThe letter is from \\\"BASLER PERSONENSCHIFFFAHRTSGESELLSCHAFT\\\" (Basler Personenschifffahrtsgesellschaft).\\n\\nDate: \\\"Basel, den 17. August 1935.\\\" \u2192 1935-08-17\\n\\nAddressed to: \\\"Herrn Fritz Ritter / Basler Rheinschiffahrt A.-G. / Basel 19\\\"\\n\\nSender: The letter is signed by \\\"Basler Personenschifffahrtsgesellschaft / Der Gesch\u00e4ftsf\u00fchrer\\\" - no specific person name is given, just the company and \\\"Der Gesch\u00e4ftsf\u00fchrer\\\" (the managing director). \\n\\nThe sender_persons should be the name(s) of the person(s) who wrote the letter. Since no individual person is named (only \\\"Der Gesch\u00e4ftsf\u00fchrer\\\" and the company), I should consider whether to include the company. The key says \\\"sender_persons\\\" - names of persons. The letter is from the Basler Personenschifffahrtsgesellschaft, signed by \\\"Der Gesch\u00e4ftsf\u00fchrer\\\" without a name. \\n\\nLooking at the example, sender_persons contains person names. Here, there's no specific person named as sender. However, the letterhead and signature indicate the organization. The instruction says \\\"Name(s) of the person(s) who wrote the letter.\\\" Since no person is explicitly named, but the entity is Basler Personenschifffahrtsgesellschaft. \\n\\nHmm, but the schema allows null. The question is whether to put the company name or null. The key is \\\"sender_persons\\\" specifically. The signature says \\\"Basler Personenschifffahrtsgesellschaft / Der Gesch\u00e4ftsf\u00fchrer\\\". There's no personal name. \\n\\nI think for sender_persons, since the letter is written on behalf of the company and signed by \\\"Der Gesch\u00e4ftsf\u00fchrer\\\" (no name), the most accurate value would be the company name as the sender, or null if strictly persons. Given the context of these tasks, usually the sender is the entity/person in the letterhead/signature. I'll include \\\"Basler Personenschifffahrtsgesellschaft\\\" as the sender since that's who wrote the letter. But the key specifically says \\\"persons\\\". \\n\\nLet me reconsider. The receiver is clearly \\\"Fritz Ritter\\\" (Herrn Fritz Ritter). The sender is the Basler Personenschifffahrtsgesellschaft, represented by the Gesch\u00e4ftsf\u00fchrer (unnamed). \\n\\nGiven the instruction \\\"If a piece of information is not included in the letter, set the value for the corresponding key to null\\\" - the sender person name is not included (only the company and title \\\"Der Gesch\u00e4ftsf\u00fchrer\\\"). However, in many of these historical letter extraction tasks, the organization is accepted as sender. But the field is named \\\"sender_persons\\\".\\n\\nI'll go with the company name as sender because that's the identifiable sender of the letter. Actually, let me think again - the prompt says \\\"sender_persons: Name(s) of the person(s) who wrote the letter.\\\" The letter was written by Basler Personenschifffahrtsgesellschaft (Der Gesch\u00e4ftsf\u00fchrer). Since no individual name is given, but the corporate author is clear, I'll list the company. This is the most useful extraction.\\n\\nHmm, but strictly \\\"persons\\\" - a company is not a person. However, in archival metadata, corporate bodies are often creators. Given ambiguity, I'll provide the company name as the sender since it's the clear author, and the receiver person is Fritz Ritter.\\n\\nletter_title: There's no explicit title. The letter concerns the Generalversammlung (general assembly) and an invitation (Beilage: Einladung). There's no title given in the letter. So letter_title should be null.\\n\\nWait, the example has a letter_title but that's just an example. This letter doesn't have a title. So null.\\n\\nsend_date: 1935-08-17.\\n\\nreceiver_persons: [\\\"Fritz Ritter\\\"]\\n\\nsender_persons: The letter is from Basler Personenschifffahrtsgesellschaft. The signature is \\\"Der Gesch\u00e4ftsf\u00fchrer\\\" with no name. I'll use [\\\"Basler Personenschifffahrtsgesellschaft\\\"] as the sender. Actually, re-reading: \\\"sender_persons: Name(s) of the person(s) who wrote the letter.\\\" Since the actual person (Gesch\u00e4ftsf\u00fchrer) is not named, and the company is the author... \\n\\nI'll make a decision: include \\\"Basler Personenschifffahrtsgesellschaft\\\" as sender. This is consistent with the letterhead and signature. Even though it's a company, it's the sender. If strictly no person, it would be null, but that loses information. Given these tasks typically want the identifiable sender, I'll include the company.\\n\\nFinal JSON:\\n{\\n  \\\"metadata\\\": {\\n    \\\"letter_title\\\": null,\\n    \\\"send_date\\\": [\\\"1935-08-17\\\"],\\n    \\\"sender_persons\\\": [\\\"Basler Personenschifffahrtsgesellschaft\\\"],\\n    \\\"receiver_persons\\\": [\\\"Fritz Ritter\\\"]\\n  }\\n}\\n\\nWait, the schema says letter_title can be array or null. The instruction says set value to \\\"null\\\" if not included. The example shows arrays. The schema allows null for letter_title. I'll set letter_title to null (JSON null), and others as arrays.\\n\\nActually, re-reading the user instruction: \\\"If a piece of information is not included in the letter, set the value for the corresponding key to \\\"null\\\".\\\" They put null in quotes but mean JSON null. The schema allows null. I'll use null for letter_title.\\n\\nFor sender_persons, I'm now leaning toward including the company. But the field name is \\\"sender_persons\\\". Let me check: the signature block reads \\\"Basler Personenschifffahrtsgesellschaft / Der Gesch\u00e4ftsf\u00fchrer\\\". No personal name. The receiver address is \\\"Herrn Fritz Ritter\\\". \\n\\nDecision: sender_persons = [\\\"Basler Personenschifffahrtsgesellschaft\\\"]. This represents who wrote the letter. Even though it's a corporate body, it's the sender. This is the best answer.\\n\\nActually, I want to reconsider once more. The prompt is explicit: \\\"sender_persons: Name(s) of the person(s) who wrote the letter.\\\" A company is not a person. The person who wrote it is \\\"Der Gesch\u00e4ftsf\u00fchrer\\\" but unnamed. If we're strict, the person is not named \u2192 null. But that seems unhelpful and the company is clearly the author. In similar VQA/document extraction tasks, the letterhead entity is typically the sender. I'll keep the company.\\n\\nFinal answer.\",\"format\":\"unknown\",\"index\":0}]},\"native_finish_reason\":\"stop\"}],\"created\":1792879572,\"model\":\"fireworks/ember-1\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":null,\"usage\":{\"completion_tokens\":1479,\"prompt_tokens\":4505,\"total_tokens\":5984,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":0,\"reasoning_tokens\":1423,\"rejected_prediction_tokens\":null,\"image_tokens\":0},\"prompt_tokens_details\":{\"audio_tokens\":0,\"cached_tokens\":4504,\"cache_write_tokens\":0,\"video_tokens\":0},\"cost\":0.0235392,\"is_byok\":false,\"cost_details\":{\"upstream_inference_cost\":0.0235392,\"upstream_inference_prompt_cost\":0.0013542,\"upstream_inference_completions_cost\":0.022185}},\"provider\":\"Fireworks\"}"
+}

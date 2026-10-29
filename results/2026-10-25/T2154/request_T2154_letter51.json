@@ -1,0 +1,77 @@
+{
+    "text": "{\"metadata\":{\"send_date\":[\"1932-09-25\"],\"letter_title\":null,\"sender_persons\":null,\"receiver_persons\":null}}",
+    "model": "fireworks/ember-1",
+    "provider": "openrouter",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 4505,
+        "output_tokens": 1325,
+        "total_tokens": 5830,
+        "reasoning_tokens": 0,
+        "cached_tokens": 4504,
+        "input_cost_usd": 0.0013542,
+        "output_cost_usd": 0.019875,
+        "estimated_cost_usd": 0.0212292
+    },
+    "duration": 17.547849893569946,
+    "timestamp": "2026-10-25T00:06:23.415966",
+    "parsed": {
+        "metadata": {
+            "send_date": [
+                "1932-09-25"
+            ],
+            "letter_title": null,
+            "sender_persons": null,
+            "receiver_persons": null
+        }
+    },
+    "conversation_id": "99820714-ce2d-4172-a13a-02ae83817f32",
+    "score": {
+        "send_date_tp": 0,
+        "send_date_fp": 1,
+        "send_date_fn": 1,
+        "sender_persons_tp": 0,
+        "sender_persons_fp": 0,
+        "sender_persons_fn": 0,
+        "receiver_persons_tp": 0,
+        "receiver_persons_fp": 0,
+        "receiver_persons_fn": 0,
+        "field_scores": {
+            "send_date": {
+                "response": [
+                    "1932-09-25"
+                ],
+                "ground_truth": [
+                    "1932-09-23"
+                ],
+                "score": null,
+                "counts": {
+                    "send_date_tp": 0,
+                    "send_date_fp": 1,
+                    "send_date_fn": 1
+                }
+            },
+            "sender_persons": {
+                "response": [],
+                "ground_truth": [],
+                "score": null,
+                "counts": {
+                    "sender_persons_tp": 0,
+                    "sender_persons_fp": 0,
+                    "sender_persons_fn": 0
+                }
+            },
+            "receiver_persons": {
+                "response": [],
+                "ground_truth": [],
+                "score": null,
+                "counts": {
+                    "receiver_persons_tp": 0,
+                    "receiver_persons_fp": 0,
+                    "receiver_persons_fn": 0
+                }
+            }
+        }
+    },
+    "raw_response": "{\"id\":\"gen-1792879566-lb4CIc0V7DAsJZ0slZ1a\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\\"metadata\\\":{\\\"letter_title\\\":null,\\\"send_date\\\":[\\\"1932-09-25\\\"],\\\"sender_persons\\\":null,\\\"receiver_persons\\\":null}}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"metadata\":{\"send_date\":[\"1932-09-25\"],\"letter_title\":null,\"sender_persons\":null,\"receiver_persons\":null}},\"reasoning\":\"The user wants me to extract metadata from a historical letter image. Let me analyze the image carefully.\\n\\nThe letter is in German, dated \\\"Basel, den 25. September 1932.\\\"\\n\\nKey elements:\\n- Date: Basel, den 25. September 1932 \u2192 1932-09-25\\n- The letterhead/sender appears to be: \\\"Basler Rheinschifffahrts Aktiengesellschaft / Direktion / BASEL / Marktgasse 5.\\\"\\n- There's \\\"ER.\\\" on the left side (possibly an abbreviation)\\n- The letter mentions \\\"Herr Ryniker\\\" will make further oral communications\\n- The letter is signed \\\"In Hochachtung\\\" but no visible signature name\\n- The receiver is not explicitly named in the visible text - it references \\\"Ihr Geehrtes vom 5. ds.\\\" (your honored letter of the 5th of this month) and \\\"Ihrem Vorschlag betr. Darlehen von Fr. 33'000.-\\\"\\n\\nLet me think about sender_persons. The letter is from the Basler Rheinschifffahrts Aktiengesellschaft Direktion. The text says \\\"der Unterzeichnete\\\" (the undersigned) but no name is visible. \\\"Herr Ryniker\\\" is mentioned as someone who will provide oral information, but he's not necessarily the sender. The sender is the company/direction, but for \\\"sender_persons\\\" we need person names. Since no specific person is named as the writer, and the signature is not visible, sender_persons might be null. However, the letter is written on behalf of the Basler Rheinschifffahrts Aktiengesellschaft. But the key asks for \\\"person(s) who wrote the letter.\\\" \\n\\nActually, looking more carefully: \\\"Herr Ryniker wird Ihnen noch m\u00fcndlich n\u00e4here Mitteilungen machen. Ferner steht der Unterzeichnete f\u00fcr weitere Verhandlungen...\\\" So Ryniker is mentioned but the undersigned is someone else (not named visibly). \\n\\nThe receiver: The letter addresses \\\"Sie\\\" and references \\\"Ihr Geehrtes vom 5. ds.\\\" but no name is given for the receiver in the visible portion. So receiver_persons would be null.\\n\\nletter_title: There's no explicit title. The \\\"ER.\\\" might be a reference. There's no title like \\\"Petition for...\\\". So letter_title should be null.\\n\\nWait, let me reconsider. The sender is clearly the Basler Rheinschifffahrts Aktiengesellschaft (Direktion). But the schema asks for sender_persons specifically. Since the letter is from a company and no individual is named as author, I should set sender_persons to null. However, one could argue the company is the sender. But the key explicitly says \\\"person(s)\\\". \\n\\nActually, in many of these historical letter extraction tasks, the sender might be the organization if no person is given. But the instruction says \\\"Name(s) of the person(s) who wrote the letter.\\\" Since no person is named (the signature is just \\\"In Hochachtung\\\" with no name), I'll set sender_persons to null. But wait \u2014 the letterhead identifies the sender organization. Hmm.\\n\\nLet me reconsider: The visible text has \\\"ER.\\\" at left which could be initials. The sender organization is Basler Rheinschifffahrts Aktiengesellschaft. The person who wrote is \\\"der Unterzeichnete\\\" but unnamed. Herr Ryniker is mentioned as a contact but not the signatory.\\n\\nGiven the strict instruction \\\"If a piece of information is not included in the letter, set the value for the corresponding key to null\\\", and no person name is included for sender or receiver, I'll set both to null. But the date is clearly included: 1932-09-25.\\n\\nActually, I want to reconsider whether the sender should be the company. The key is \\\"sender_persons\\\" \u2014 persons. A company is not a person. So null is appropriate if no individual is named. But the letter does come from the \\\"Direktion\\\" of the company. Still no person name.\\n\\nFor receiver: not named \u2192 null.\\n\\nletter_title: no title \u2192 null.\\n\\nsend_date: 1932-09-25.\\n\\nLet me format the JSON according to the schema. The schema requires the top-level object to have \\\"metadata\\\" key containing the Metadata object. The example in the prompt shows a flat structure, but the response_format schema requires {\\\"metadata\\\": {...}}. I must follow the schema.\\n\\nSo output:\\n{\\n  \\\"metadata\\\": {\\n    \\\"letter_title\\\": null,\\n    \\\"send_date\\\": [\\\"1932-09-25\\\"],\\n    \\\"sender_persons\\\": null,\\n    \\\"receiver_persons\\\": null\\n  }\\n}\\n\\nWait, the schema says each field can be array of strings or null. The instruction says values should be stored as a list even if single value, but if info not included set to \\\"null\\\". The schema allows null. So for missing info, use null (not [\\\"null\\\"]). The instruction says set value to \\\"null\\\" \u2014 in JSON that's null. Good.\\n\\nLet me double check the date: \\\"Basel, den 25. September 1932.\\\" Yes \u2192 1932-09-25.\\n\\nI'm fairly confident. But let me reconsider sender once more. The letterhead \\\"Basler Rheinschifffahrts Aktiengesellschaft / Direktion\\\" is the sender. Even though it's a company, in these tasks sometimes the sender is recorded as the entity. However the explicit definition is \\\"Name(s) of the person(s) who wrote the letter.\\\" Since the actual writer is \\\"der Unterzeichnete\\\" (unnamed) and the company is the institution, I'll keep sender_persons as null because no person is named. \\n\\nHmm, but is that the best choice? The letter is clearly sent by the Basler Rheinschifffahrts Aktiengesellschaft. If the task wanted organizations, it would say sender. It says sender_persons. No person is identifiable. So null.\\n\\nFinal answer as raw JSON matching schema.\",\"reasoning_details\":[{\"type\":\"reasoning.text\",\"text\":\"The user wants me to extract metadata from a historical letter image. Let me analyze the image carefully.\\n\\nThe letter is in German, dated \\\"Basel, den 25. September 1932.\\\"\\n\\nKey elements:\\n- Date: Basel, den 25. September 1932 \u2192 1932-09-25\\n- The letterhead/sender appears to be: \\\"Basler Rheinschifffahrts Aktiengesellschaft / Direktion / BASEL / Marktgasse 5.\\\"\\n- There's \\\"ER.\\\" on the left side (possibly an abbreviation)\\n- The letter mentions \\\"Herr Ryniker\\\" will make further oral communications\\n- The letter is signed \\\"In Hochachtung\\\" but no visible signature name\\n- The receiver is not explicitly named in the visible text - it references \\\"Ihr Geehrtes vom 5. ds.\\\" (your honored letter of the 5th of this month) and \\\"Ihrem Vorschlag betr. Darlehen von Fr. 33'000.-\\\"\\n\\nLet me think about sender_persons. The letter is from the Basler Rheinschifffahrts Aktiengesellschaft Direktion. The text says \\\"der Unterzeichnete\\\" (the undersigned) but no name is visible. \\\"Herr Ryniker\\\" is mentioned as someone who will provide oral information, but he's not necessarily the sender. The sender is the company/direction, but for \\\"sender_persons\\\" we need person names. Since no specific person is named as the writer, and the signature is not visible, sender_persons might be null. However, the letter is written on behalf of the Basler Rheinschifffahrts Aktiengesellschaft. But the key asks for \\\"person(s) who wrote the letter.\\\" \\n\\nActually, looking more carefully: \\\"Herr Ryniker wird Ihnen noch m\u00fcndlich n\u00e4here Mitteilungen machen. Ferner steht der Unterzeichnete f\u00fcr weitere Verhandlungen...\\\" So Ryniker is mentioned but the undersigned is someone else (not named visibly). \\n\\nThe receiver: The letter addresses \\\"Sie\\\" and references \\\"Ihr Geehrtes vom 5. ds.\\\" but no name is given for the receiver in the visible portion. So receiver_persons would be null.\\n\\nletter_title: There's no explicit title. The \\\"ER.\\\" might be a reference. There's no title like \\\"Petition for...\\\". So letter_title should be null.\\n\\nWait, let me reconsider. The sender is clearly the Basler Rheinschifffahrts Aktiengesellschaft (Direktion). But the schema asks for sender_persons specifically. Since the letter is from a company and no individual is named as author, I should set sender_persons to null. However, one could argue the company is the sender. But the key explicitly says \\\"person(s)\\\". \\n\\nActually, in many of these historical letter extraction tasks, the sender might be the organization if no person is given. But the instruction says \\\"Name(s) of the person(s) who wrote the letter.\\\" Since no person is named (the signature is just \\\"In Hochachtung\\\" with no name), I'll set sender_persons to null. But wait \u2014 the letterhead identifies the sender organization. Hmm.\\n\\nLet me reconsider: The visible text has \\\"ER.\\\" at left which could be initials. The sender organization is Basler Rheinschifffahrts Aktiengesellschaft. The person who wrote is \\\"der Unterzeichnete\\\" but unnamed. Herr Ryniker is mentioned as a contact but not the signatory.\\n\\nGiven the strict instruction \\\"If a piece of information is not included in the letter, set the value for the corresponding key to null\\\", and no person name is included for sender or receiver, I'll set both to null. But the date is clearly included: 1932-09-25.\\n\\nActually, I want to reconsider whether the sender should be the company. The key is \\\"sender_persons\\\" \u2014 persons. A company is not a person. So null is appropriate if no individual is named. But the letter does come from the \\\"Direktion\\\" of the company. Still no person name.\\n\\nFor receiver: not named \u2192 null.\\n\\nletter_title: no title \u2192 null.\\n\\nsend_date: 1932-09-25.\\n\\nLet me format the JSON according to the schema. The schema requires the top-level object to have \\\"metadata\\\" key containing the Metadata object. The example in the prompt shows a flat structure, but the response_format schema requires {\\\"metadata\\\": {...}}. I must follow the schema.\\n\\nSo output:\\n{\\n  \\\"metadata\\\": {\\n    \\\"letter_title\\\": null,\\n    \\\"send_date\\\": [\\\"1932-09-25\\\"],\\n    \\\"sender_persons\\\": null,\\n    \\\"receiver_persons\\\": null\\n  }\\n}\\n\\nWait, the schema says each field can be array of strings or null. The instruction says values should be stored as a list even if single value, but if info not included set to \\\"null\\\". The schema allows null. So for missing info, use null (not [\\\"null\\\"]). The instruction says set value to \\\"null\\\" \u2014 in JSON that's null. Good.\\n\\nLet me double check the date: \\\"Basel, den 25. September 1932.\\\" Yes \u2192 1932-09-25.\\n\\nI'm fairly confident. But let me reconsider sender once more. The letterhead \\\"Basler Rheinschifffahrts Aktiengesellschaft / Direktion\\\" is the sender. Even though it's a company, in these tasks sometimes the sender is recorded as the entity. However the explicit definition is \\\"Name(s) of the person(s) who wrote the letter.\\\" Since the actual writer is \\\"der Unterzeichnete\\\" (unnamed) and the company is the institution, I'll keep sender_persons as null because no person is named. \\n\\nHmm, but is that the best choice? The letter is clearly sent by the Basler Rheinschifffahrts Aktiengesellschaft. If the task wanted organizations, it would say sender. It says sender_persons. No person is identifiable. So null.\\n\\nFinal answer as raw JSON matching schema.\",\"format\":\"unknown\",\"index\":0}]},\"native_finish_reason\":\"stop\"}],\"created\":1792879566,\"model\":\"fireworks/ember-1\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":null,\"usage\":{\"completion_tokens\":1325,\"prompt_tokens\":4505,\"total_tokens\":5830,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":0,\"reasoning_tokens\":1282,\"rejected_prediction_tokens\":null,\"image_tokens\":0},\"prompt_tokens_details\":{\"audio_tokens\":0,\"cached_tokens\":4504,\"cache_write_tokens\":0,\"video_tokens\":0},\"cost\":0.0212292,\"is_byok\":false,\"cost_details\":{\"upstream_inference_cost\":0.0212292,\"upstream_inference_prompt_cost\":0.0013542,\"upstream_inference_completions_cost\":0.019875}},\"provider\":\"Fireworks\"}"
+}

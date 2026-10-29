@@ -1,0 +1,62 @@
+{
+    "text": "{\"company\":{\"transcription\":\"Metallwerke\"},\"location\":{\"transcription\":\"Dorsten\"},\"b_id\":{\"transcription\":\"B.7.322.07\"},\"date\":\"\",\"information\":[]}",
+    "model": "nvidia/nemotron-3.5-super-vl",
+    "provider": "openrouter",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 2609,
+        "output_tokens": 923,
+        "total_tokens": 3532,
+        "reasoning_tokens": 0,
+        "input_cost_usd": 0.0002609,
+        "output_cost_usd": 0.0003692,
+        "estimated_cost_usd": 0.0006301
+    },
+    "duration": 6.205964803695679,
+    "timestamp": "2026-10-24T20:51:47.923579",
+    "parsed": {
+        "company": {
+            "transcription": "Metallwerke"
+        },
+        "location": {
+            "transcription": "Dorsten"
+        },
+        "b_id": {
+            "transcription": "B.7.322.07"
+        },
+        "date": "",
+        "information": []
+    },
+    "conversation_id": "4f553d33-df66-46e7-a5c9-5ac9da6a3176",
+    "score": {
+        "fuzzy": 0.8857142857142858,
+        "field_scores": {
+            "b_id.transcription": {
+                "response": "B.7.322.07",
+                "ground_truth": "B.57.322.01",
+                "score": 0.8571428571428572
+            },
+            "company.transcription": {
+                "response": "Metallwerke",
+                "ground_truth": "Metallwerke",
+                "score": 1.0
+            },
+            "date": {
+                "response": "",
+                "ground_truth": "",
+                "score": 1.0
+            },
+            "information": {
+                "response": "",
+                "ground_truth": "",
+                "score": 1.0
+            },
+            "location.transcription": {
+                "response": "Dorsten",
+                "ground_truth": "Dornach",
+                "score": 0.5714285714285714
+            }
+        }
+    },
+    "raw_response": "{\"id\":\"gen-1792867901-DceZo9BT41UVp0bwi3D1\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\n  \\\"company\\\": {\\\"transcription\\\": \\\"Metallwerke\\\"},\\n  \\\"location\\\": {\\\"transcription\\\": \\\"Dorsten\\\"},\\n  \\\"b_id\\\": {\\\"transcription\\\": \\\"B.7.322.07\\\"},\\n  \\\"date\\\": \\\"\\\",\\n  \\\"information\\\": []\\n}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"company\":{\"transcription\":\"Metallwerke\"},\"location\":{\"transcription\":\"Dorsten\"},\"b_id\":{\"transcription\":\"B.7.322.07\"},\"date\":\"\",\"information\":[]},\"reasoning\":\"The user wants me to extract data from an index card image and return it as a JSON object.\\n\\n**1. Analyze the Image:**\\n- It's an index card with handwritten cursive text at the top.\\n- There are red lines separating sections.\\n- Top left text: \\\"Metallwerke\\\" (looks like German for Metal Works).\\n- Top middle text: \\\"Dorsten\\\" (a city in Germany).\\n- Top right text: \\\"B.7.322.07\\\" (looks like an identifier code starting with B).\\n- The rest of the card is blank lined paper.\\n- There are no stamped dates visible.\\n\\n**2. Map to Fields:**\\n- **company:** \\\"Metallwerke\\\" (Top-left).\\n- **location:** \\\"Dorsten\\\" (Following the company name, in the middle).\\n- **b_id:** \\\"B.7.322.07\\\" (Top-right, starts with B).\\n- **date:** No stamped date visible. Empty string.\\n- **information:** The main body is empty. So the list should be empty or contain empty strings? The prompt says \\\"A list of text blocks from the main body of the card.\\\" Since there is no text in the main body, I will leave it as an empty list `[]`. Wait, looking at the required format example: `\\\"information\\\": [ {\\\"transcription\\\": \\\"\\\"} ]`. But usually, if there's no text, an empty list is better. However, let's look at the instruction: \\\"If you cannot find a value for a field, leave its transcription value as an empty string.\\\" This applies to the fields. For the list, if there are no blocks, an empty list `[]` is the most logical representation of \\\"no text blocks\\\". Let me re-read carefully. \\\"information\\\": A list of text blocks... Each block should be a separate string. If no text, likely `[]`.\\n\\nLet's refine the transcription.\\n- Company: \\\"Metallwerke\\\"\\n- Location: \\\"Dorsten\\\"\\n- b_id: \\\"B.7.322.07\\\"\\n- date: \\\"\\\"\\n- information: []\\n\\nLet's double check the handwriting.\\n- \\\"Metallwerke\\\": M-e-t-a-l-l-w-e-r-k-e. Looks correct.\\n- \\\"Dorsten\\\": D-o-r-s-t-e-n. Looks correct.\\n- \\\"B.7.322.07\\\": B . 7 . 3 2 2 . 0 7. Looks correct.\\n\\n**3. Construct JSON:**\\n```json\\n{\\n  \\\"company\\\": {\\\"transcription\\\": \\\"Metallwerke\\\"},\\n  \\\"location\\\": {\\\"transcription\\\": \\\"Dorsten\\\"},\\n  \\\"b_id\\\": {\\\"transcription\\\": \\\"B.7.322.07\\\"},\\n  \\\"date\\\": \\\"\\\",\\n  \\\"information\\\": []\\n}\\n```\\nWait, looking at the prompt's example format: `\\\"information\\\": [ {\\\"transcription\\\": \\\"\\\"} ]`. It implies a list of objects. If there is no text, an empty list is standard. I will use an empty list.\\n\\nLet's re-verify the \\\"location\\\" instruction: \\\"The city or town, often following the company name.\\\" Here \\\"Dorsten\\\" is in the middle, which fits.\\n\\nLet's re-verify the \\\"b_id\\\" instruction: \\\"The identifier code, usually in the top-right, starting with 'B.'.\\\" The text is \\\"B.7.322.07\\\".\\n\\nLet's re-verify the \\\"date\\\" instruction: \\\"Any stamped dates on the card in YYYY-MM-DD format.\\\" There are no stamps.\\n\\nFinal check on JSON structure.\\nKeys: company, location, b_id, date, information.\\nValues for company, location, b_id are objects with key \\\"transcription\\\".\\nValue for date is a string.\\nValue for information is a list of objects with key \\\"transcription\\\".\\n\\nSince the body is blank, `information` will be `[]`.\\n\\nOne detail: The prompt says \\\"Return the data ONLY as a valid JSON object.\\\" and \\\"Do not add any explanatory text outside of the JSON object.\\\"\\n\\nLet's write the JSON.\",\"reasoning_details\":[{\"type\":\"reasoning.text\",\"text\":\"The user wants me to extract data from an index card image and return it as a JSON object.\\n\\n**1. Analyze the Image:**\\n- It's an index card with handwritten cursive text at the top.\\n- There are red lines separating sections.\\n- Top left text: \\\"Metallwerke\\\" (looks like German for Metal Works).\\n- Top middle text: \\\"Dorsten\\\" (a city in Germany).\\n- Top right text: \\\"B.7.322.07\\\" (looks like an identifier code starting with B).\\n- The rest of the card is blank lined paper.\\n- There are no stamped dates visible.\\n\\n**2. Map to Fields:**\\n- **company:** \\\"Metallwerke\\\" (Top-left).\\n- **location:** \\\"Dorsten\\\" (Following the company name, in the middle).\\n- **b_id:** \\\"B.7.322.07\\\" (Top-right, starts with B).\\n- **date:** No stamped date visible. Empty string.\\n- **information:** The main body is empty. So the list should be empty or contain empty strings? The prompt says \\\"A list of text blocks from the main body of the card.\\\" Since there is no text in the main body, I will leave it as an empty list `[]`. Wait, looking at the required format example: `\\\"information\\\": [ {\\\"transcription\\\": \\\"\\\"} ]`. But usually, if there's no text, an empty list is better. However, let's look at the instruction: \\\"If you cannot find a value for a field, leave its transcription value as an empty string.\\\" This applies to the fields. For the list, if there are no blocks, an empty list `[]` is the most logical representation of \\\"no text blocks\\\". Let me re-read carefully. \\\"information\\\": A list of text blocks... Each block should be a separate string. If no text, likely `[]`.\\n\\nLet's refine the transcription.\\n- Company: \\\"Metallwerke\\\"\\n- Location: \\\"Dorsten\\\"\\n- b_id: \\\"B.7.322.07\\\"\\n- date: \\\"\\\"\\n- information: []\\n\\nLet's double check the handwriting.\\n- \\\"Metallwerke\\\": M-e-t-a-l-l-w-e-r-k-e. Looks correct.\\n- \\\"Dorsten\\\": D-o-r-s-t-e-n. Looks correct.\\n- \\\"B.7.322.07\\\": B . 7 . 3 2 2 . 0 7. Looks correct.\\n\\n**3. Construct JSON:**\\n```json\\n{\\n  \\\"company\\\": {\\\"transcription\\\": \\\"Metallwerke\\\"},\\n  \\\"location\\\": {\\\"transcription\\\": \\\"Dorsten\\\"},\\n  \\\"b_id\\\": {\\\"transcription\\\": \\\"B.7.322.07\\\"},\\n  \\\"date\\\": \\\"\\\",\\n  \\\"information\\\": []\\n}\\n```\\nWait, looking at the prompt's example format: `\\\"information\\\": [ {\\\"transcription\\\": \\\"\\\"} ]`. It implies a list of objects. If there is no text, an empty list is standard. I will use an empty list.\\n\\nLet's re-verify the \\\"location\\\" instruction: \\\"The city or town, often following the company name.\\\" Here \\\"Dorsten\\\" is in the middle, which fits.\\n\\nLet's re-verify the \\\"b_id\\\" instruction: \\\"The identifier code, usually in the top-right, starting with 'B.'.\\\" The text is \\\"B.7.322.07\\\".\\n\\nLet's re-verify the \\\"date\\\" instruction: \\\"Any stamped dates on the card in YYYY-MM-DD format.\\\" There are no stamps.\\n\\nFinal check on JSON structure.\\nKeys: company, location, b_id, date, information.\\nValues for company, location, b_id are objects with key \\\"transcription\\\".\\nValue for date is a string.\\nValue for information is a list of objects with key \\\"transcription\\\".\\n\\nSince the body is blank, `information` will be `[]`.\\n\\nOne detail: The prompt says \\\"Return the data ONLY as a valid JSON object.\\\" and \\\"Do not add any explanatory text outside of the JSON object.\\\"\\n\\nLet's write the JSON.\",\"format\":\"unknown\",\"index\":0}]},\"native_finish_reason\":\"stop\"}],\"created\":1792867901,\"model\":\"nvidia/nemotron-3.5-super-vl\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":null,\"usage\":{\"completion_tokens\":923,\"prompt_tokens\":2609,\"total_tokens\":3532,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":0,\"reasoning_tokens\":862,\"rejected_prediction_tokens\":null,\"image_tokens\":0},\"prompt_tokens_details\":{\"audio_tokens\":0,\"cached_tokens\":0,\"cache_write_tokens\":0,\"video_tokens\":0},\"cost\":0.0006301,\"is_byok\":false,\"cost_details\":{\"upstream_inference_cost\":0.0006301,\"upstream_inference_prompt_cost\":0.0002609,\"upstream_inference_completions_cost\":0.0003692}},\"provider\":\"Crusoe\"}"
+}

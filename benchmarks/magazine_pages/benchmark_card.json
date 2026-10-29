@@ -1,0 +1,97 @@
+{
+  "benchmark_card": {
+    "benchmark_details": {
+      "name": "Magazine Pages",
+      "overview": "Models locate the advertisements on printed pages of the journal of the British Chamber of Commerce for Switzerland, 1921–1950, and return one pixel bounding box per advertisement.",
+      "data_type": "image",
+      "domains": [
+        "history",
+        "economic history",
+        "periodicals"
+      ],
+      "languages": [
+        "English"
+      ],
+      "similar_benchmarks": [
+        "Not specified"
+      ],
+      "resources": [
+        "https://rise-services.rise.unibas.ch/benchmarks/p/benchmarks/magazine_pages",
+        "https://github.com/RISE-UNIBAS/humanities_data_benchmark/tree/main/benchmarks/magazine_pages"
+      ],
+      "authors": [
+        "Lea Kasper",
+        "Sorin Marti",
+        "Arno Bosse"
+      ]
+    },
+    "purpose_and_intended_users": {
+      "goal": "Measure how well vision-language models locate advertisements on printed pages of an English-language Anglo-Swiss trade journal, returning one pixel bounding box per advertisement. Separating advertisements from editorial content is a first step in using periodicals as sources for economic and business history. The results are meant to guide historians, archivists and digital humanities projects in choosing a model, or a non-LLM detector, for segmenting advertisements in historical periodicals.",
+      "audience": [
+        "humanities researchers",
+        "archivists and librarians",
+        "AI researchers",
+        "model developers"
+      ],
+      "tasks": [
+        "advertisement detection on printed magazine pages",
+        "bounding-box localisation in pixel coordinates"
+      ],
+      "limitations": "The 46 pages come from one journal under three successive titles, 1921–1950, all in English and all scanned at the same size; results do not transfer to other periodicals, layouts or scan conditions. Every page contains at least one advertisement, so the benchmark never tests whether a model correctly returns nothing. The prompts do not define what counts as an advertisement or how tightly a box should fit it, so the score measures agreement with the annotators' reading of both. A box counts only at an IoU of 0.5 or more with a ground-truth box (see Calculation), so a roughly placed box scores the same as no box. Part of the ground truth was derived from the output of the OpenCV contour detector that also runs as a baseline (see Annotation), which biases the reference towards that detector and towards border-aligned boxes; the size of this bias has not been measured. Scores of the two prompt variants are not comparable (see Interpretation).",
+      "out_of_scope_uses": [
+        "evaluating text recognition or the content of advertisements (no text is scored)",
+        "evaluating general document layout analysis beyond advertisements",
+        "comparing scores obtained with `prompt.txt` against scores obtained with `prompt_explicit-json.txt`"
+      ]
+    },
+    "data": {
+      "source": "Pages from the official journal of the British Chamber of Commerce for Switzerland, an English-language trade journal for Anglo-Swiss commerce, published under three successive titles: \"The Anglo-Swiss Review\" (September 1921), \"The Commercial Gazette\" (1923–1926) and \"Anglo-Swiss Trade Review\" (1945–1950). The pages mix editorial columns, trade news and bordered or free-standing advertisements of banks, shipping agents and manufacturers. The holding institution of the scans is not specified. The journals are described as sources by the NOISE project at the University of Basel (https://noise.europa.unibas.ch/p/sources/adverts/), and an advertisement corpus cut from them is published on Zenodo by Lea Kasper under CC BY 4.0 (https://doi.org/10.5281/zenodo.20172648).",
+      "size": "46 evaluated objects",
+      "format": "One JPG scan per page, 2479×3508 px (A4 at 300 dpi) and 0.7–1.9 MB each. The ground truth is one JSON file per page, following the `MagazinePage` dataclass in `dataclass.py`, with one `[x0, y0, x1, y1]` box per advertisement in original-image pixel coordinates, (x0, y0) the top-left and (x1, y1) the bottom-right corner:\n\n```json\n{\n  \"advertisements\": [\n    {\"box\": [265, 1730, 2344, 3235]},\n    {\"box\": [300, 187, 2331, 1703]}\n  ]\n}\n```\n\nThe 46 pages hold 126 advertisements, between 1 and 7 per page.",
+      "annotation": "The annotators Lea Kasper and Sorin Marti drew and checked the boxes, with Lea Kasper as domain expert. Part of the ground truth was created from the output of the OpenCV contour detector in `local/backends/contour.py` and then verified by hand. No written annotation guideline defines what counts as an advertisement.",
+      "size_breakdown": {
+        "image files": 46
+      },
+      "collection_date": "Source documents: 1921–1950. Added to the benchmark: March 2026.",
+      "contamination_controls": "None. The scans, prompts and ground truth have been public in this repository since March 2026."
+    },
+    "methodology": {
+      "methods": [
+        "zero-shot bounding-box detection from a single image per request, temperature 0.0 (1.0 for OpenAI models)",
+        "the prompt states the page size in pixels, filled in from the image (`{width}`, `{height}`)",
+        "structured JSON output requested using the `MagazinePage` dataclass",
+        "output cap: the repository default of 16,384 tokens per request",
+        "two prompt variants: [prompt.txt](prompts/prompt.txt) names no output format and is used by the tests created before the variant existed; [prompt_explicit-json.txt](prompts/prompt_explicit-json.txt) adds the exact JSON shape and the `box` key and is used by newer tests",
+        "a rule-based baseline: the OpenCV contour detector (`provider=contour_local`), which finds rectangular printed borders without any model"
+      ],
+      "metrics": [
+        "F1 (`f1`, used for ranking)",
+        "precision (`precision`)",
+        "recall (`recall`)",
+        "mean IoU of matched boxes (`mean_iou`)"
+      ],
+      "calculation": "For each page, boxes are read from `advertisements[].box` (or `detections[].box` for local backends); entries without a `box` key are ignored. The Intersection-over-Union (IoU) is computed for every pair of predicted and ground-truth box. Pairs with IoU of 0.5 or more are sorted by IoU, highest first, and assigned greedily so that each box is matched at most once.\n\n- TP: a predicted box matched to a ground-truth box\n- FP: a predicted box that matched nothing\n- FN: a ground-truth box that no prediction matched\n\nPer page, precision = TP / (TP + FP), recall = TP / (TP + FN) and F1 is their harmonic mean (0 when undefined); mean IoU averages the IoU of the matched pairs (0 when there are none). Each is rounded to three decimals. If both the page and the response have no boxes, every metric is 1.0; no page in the dataset is of that kind. A response that cannot be parsed as JSON is scored as an answer with no boxes, i.e. F1 0 on the page, rather than skipped.\n\nThe benchmark scores are the unweighted means of the per-page values, rounded to three decimals; TP, FP and FN are also summed over all pages.",
+      "interpretation": "Scores range from 0 to 1; higher is better. Because the benchmark F1 averages per-page F1, every page counts equally regardless of how many advertisements it holds. Precision and recall separate invented boxes from missed ones; mean IoU shows how tightly the matched boxes fit. Compare models only within one prompt variant: a model without a forced-tool path tends to answer `prompt.txt` in prose, which yields no boxes and scores zero, so a low score under `prompt.txt` can reflect the answer format rather than a failure to find the advertisements.",
+      "baseline_results": "Results are on the [benchmark page](https://rise-services.rise.unibas.ch/benchmarks/p/benchmarks/magazine_pages) and in `results/<date>/<test_id>/` at the repository root. No fixed baseline is recorded beyond the contour detector (see Methods). Compare runs only with the same prompt, rules and ground-truth revision.\n\nObserved across models: the prompt decides much of the result. Under `prompt.txt`, 23 of the 88 active test configurations score F1 0, because the model answers without boxes, and the median is 0.21; under `prompt_explicit-json.txt` none of the 7 scores 0 and the median is 0.86. The best models reach F1 0.97 under either prompt, with matched boxes fitting at a mean IoU of 0.90–0.97. The rule-based contour detector scores F1 0.80: its matched boxes fit closely (mean IoU 0.91), but it also frames bordered editorial content (precision 0.77). Its fit partly reflects how the ground truth was made (see Limitations).",
+      "validation": "The ground truth was checked by the annotators named under Annotation. Scoring is deterministic; the scorer is covered by `tests/test_magazine_pages_scoring.py`.",
+      "human_baseline": "Not specified",
+      "judge_uses_llm": false,
+      "judge_num": "Not specified",
+      "judge_models": [
+        "Not specified"
+      ],
+      "judge_score_consolidation": "Not specified",
+      "validity_justification": "An IoU of 0.5 is the PASCAL VOC threshold for a correct detection, and one-to-one matching rewards finding each advertisement exactly once. The score is not confidence-ranked average precision, because responses carry no confidence values. Whether accepted boxes yield adequate crops for downstream research has not been validated."
+    },
+    "ethical_and_legal_considerations": {
+      "privacy_and_anonymity": "The pages are published trade journal pages, 1921–1950. They name companies, and some articles and advertisements name individuals, mostly business people acting in a public capacity. No private records are included and nothing is anonymised. Only advertisement positions are annotated; no personal data is extracted or scored.",
+      "data_licensing": "Source material: CC BY 4.0. Ground truth, prompts and other data created for this benchmark: CC BY 4.0.",
+      "consent_procedures": "Not specified",
+      "compliance_with_regulations": "The page images are used under CC BY 4.0, the licence of the published advertisement corpus from the same journals. The pages are published material from 1921–1950; copyright in individual articles, illustrations and advertisement designs may outlast the publication if their authors are known (in Switzerland 70 years after the author's death, Art. 29 URG). No ethical review was carried out."
+    }
+  },
+  "card_info": {
+    "schema": "evaleval/auto-benchmarkcard@342c1ac7d278a93be75de713c151142b25f635d0",
+    "source": "README.md"
+  }
+}

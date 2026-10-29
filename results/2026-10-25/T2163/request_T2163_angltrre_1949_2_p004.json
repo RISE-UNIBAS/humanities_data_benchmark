@@ -1,0 +1,81 @@
+{
+    "text": "{\"advertisements\":[{\"box\":[329.0,210.0,2381.0,1714.0]},{\"box\":[318.0,1762.0,2380.0,3264.0]}]}",
+    "model": "fireworks/ember-1",
+    "provider": "openrouter",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 4331,
+        "output_tokens": 1303,
+        "total_tokens": 5634,
+        "reasoning_tokens": 0,
+        "input_cost_usd": 0.012993,
+        "output_cost_usd": 0.019545,
+        "estimated_cost_usd": 0.032538
+    },
+    "duration": 17.055808544158936,
+    "timestamp": "2026-10-25T00:54:09.960005",
+    "parsed": {
+        "advertisements": [
+            {
+                "box": [
+                    329.0,
+                    210.0,
+                    2381.0,
+                    1714.0
+                ]
+            },
+            {
+                "box": [
+                    318.0,
+                    1762.0,
+                    2380.0,
+                    3264.0
+                ]
+            }
+        ]
+    },
+    "conversation_id": "ebe2244e-5505-40a9-b4db-e32b671aabfb",
+    "score": {
+        "field_scores": {
+            "box 0": {
+                "response": [
+                    318.0,
+                    1762.0,
+                    2380.0,
+                    3264.0
+                ],
+                "ground_truth": [
+                    332,
+                    1772,
+                    2361,
+                    3263
+                ],
+                "score": 0.977
+            },
+            "box 1": {
+                "response": [
+                    329.0,
+                    210.0,
+                    2381.0,
+                    1714.0
+                ],
+                "ground_truth": [
+                    342,
+                    223,
+                    2368,
+                    1705
+                ],
+                "score": 0.973
+            }
+        },
+        "f1": 1.0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "mean_iou": 0.975,
+        "true_positives": 2,
+        "false_positives": 0,
+        "false_negatives": 0,
+        "iou_threshold": 0.5
+    },
+    "raw_response": "{\"id\":\"gen-1792882433-MIHzyTftAI3f6aGgw8qg\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\n\\\"advertisements\\\": [\\n{\\\"box\\\": [329, 210, 2381, 1714]},\\n{\\\"box\\\": [318, 1762, 2380, 3264]}\\n]\\n}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"advertisements\":[{\"box\":[329.0,210.0,2381.0,1714.0]},{\"box\":[318.0,1762.0,2380.0,3264.0]}]},\"reasoning\":\"The user wants me to extract all advertisements from the magazine page and return their bounding boxes.\\n\\nLooking at the image, I can see two distinct advertisements:\\n1. Top advertisement: Crowe & Co. Ltd. freight forwarding agent - bounded by a rectangular border\\n2. Bottom advertisement: Nivada watches (Grenchen-Suisse) - bounded by a rectangular border\\n\\nThe page is 2479 x 3508 pixels.\\n\\nLet me estimate the bounding boxes:\\n\\nTop ad (Crowe & Co.):\\n- The border starts around x=330, y=210\\n- The border ends around x=2380, y=1710\\nLooking more carefully:\\n- Left edge of border: ~330\\n- Top edge: ~210\\n- Right edge: ~2380\\n- Bottom edge: ~1710\\n\\nBottom ad (Nivada):\\n- Left edge: ~320\\n- Top edge: ~1760\\n- Right edge: ~2380\\n- Bottom edge: ~3260\\n\\nLet me refine based on the image. The image shown is 1456 x 2048 in the prompt, but the original is 2479 x 3508. I need to scale.\\n\\nActually, the image displayed has dimensions that I need to map to 2479 x 3508.\\n\\nThe displayed image appears to be roughly 1456 wide x 2048 tall (based on typical rendering). But I should think in terms of the original 2479 x 3508.\\n\\nScale factor: 2479/1456 \u2248 1.702, 3508/2048 \u2248 1.713. Close enough, roughly 1.71.\\n\\nLet me estimate in the displayed image coordinates first, then scale.\\n\\nTop ad border in displayed image:\\n- Left: ~193\\n- Top: ~123\\n- Right: ~1395\\n- Bottom: ~1000\\n\\nScaling by ~1.71:\\n- Left: 193 * 1.702 \u2248 328\\n- Top: 123 * 1.713 \u2248 211\\n- Right: 1395 * 1.702 \u2248 2374\\n- Bottom: 1000 * 1.713 \u2248 1713\\n\\nBottom ad border in displayed image:\\n- Left: ~188\\n- Top: ~1030\\n- Right: ~1390\\n- Bottom: ~1905\\n\\nScaling:\\n- Left: 188 * 1.702 \u2248 320\\n- Top: 1030 * 1.713 \u2248 1764\\n- Right: 1390 * 1.702 \u2248 2366\\n- Bottom: 1905 * 1.713 \u2248 3263\\n\\nLet me look more carefully at the image proportions. The image in the prompt is shown with the page. Let me use the actual displayed dimensions.\\n\\nThe image shown is 1456 \u00d7 2048 (this is a common size). Original is 2479 \u00d7 3508.\\n\\nRatio x: 2479/1456 = 1.7026\\nRatio y: 3508/2048 = 1.7129\\n\\nTop advertisement (Crowe & Co):\\nLooking at the bordered box:\\n- Top-left corner of border: approximately (192, 122) in displayed\\n- Bottom-right corner of border: approximately (1396, 1002) in displayed\\n\\nIn original:\\n- x0 = 192 * 1.7026 = 327\\n- y0 = 122 * 1.7129 = 209\\n- x1 = 1396 * 1.7026 = 2377\\n- y1 = 1002 * 1.7129 = 1716\\n\\nBottom advertisement (Nivada):\\n- Top-left: approximately (187, 1028) displayed\\n- Bottom-right: approximately (1390, 1908) displayed\\n\\nIn original:\\n- x0 = 187 * 1.7026 = 318\\n- y0 = 1028 * 1.7129 = 1761\\n- x1 = 1390 * 1.7026 = 2367\\n- y1 = 1908 * 1.7129 = 3268\\n\\nThese look reasonable. Let me finalize.\\n\\nActually, looking again at the image, the top ad's border:\\n- The top line is at about y=210 (original)\\n- The bottom line of the top ad is at about y=1710\\n- Left line at x\u2248330\\n- Right line at x\u22482380\\n\\nThe bottom ad:\\n- Top line at y\u22481765\\n- Bottom line at y\u22483260\\n- Left line at x\u2248320\\n- Right line at x\u22482380\\n\\nI'll provide these coordinates.\\n\\nLet me reconsider the right edge. The page itself extends to about x=2400 (the right edge of the page). The ad borders are inside. The right border of both ads appears to be around x=2375-2385.\\n\\nFinal answer:\\n[\\n  {\\\"box\\\": [328, 210, 2380, 1715]},\\n  {\\\"box\\\": [320, 1762, 2378, 3265]}\\n]\\n\\nLet me be more precise. Looking at the image again:\\n\\nThe outer page (cream colored) goes from about x=60 to x=2400 in original coordinates (the black border is outside). Actually the page left edge is around x=110 and right edge around x=2400.\\n\\nThe top ad box: left border ~330, top ~210, right ~2380, bottom ~1710.\\nThe bottom ad box: left ~320, top ~1760, right ~2380, bottom ~3260.\\n\\nI'll go with:\\n[330, 211, 2381, 1713]\\n[318, 1763, 2380, 3263]\\n\\nThese are estimates. The exact values aren't critical as long as they bound the ads.\",\"reasoning_details\":[{\"type\":\"reasoning.text\",\"text\":\"The user wants me to extract all advertisements from the magazine page and return their bounding boxes.\\n\\nLooking at the image, I can see two distinct advertisements:\\n1. Top advertisement: Crowe & Co. Ltd. freight forwarding agent - bounded by a rectangular border\\n2. Bottom advertisement: Nivada watches (Grenchen-Suisse) - bounded by a rectangular border\\n\\nThe page is 2479 x 3508 pixels.\\n\\nLet me estimate the bounding boxes:\\n\\nTop ad (Crowe & Co.):\\n- The border starts around x=330, y=210\\n- The border ends around x=2380, y=1710\\nLooking more carefully:\\n- Left edge of border: ~330\\n- Top edge: ~210\\n- Right edge: ~2380\\n- Bottom edge: ~1710\\n\\nBottom ad (Nivada):\\n- Left edge: ~320\\n- Top edge: ~1760\\n- Right edge: ~2380\\n- Bottom edge: ~3260\\n\\nLet me refine based on the image. The image shown is 1456 x 2048 in the prompt, but the original is 2479 x 3508. I need to scale.\\n\\nActually, the image displayed has dimensions that I need to map to 2479 x 3508.\\n\\nThe displayed image appears to be roughly 1456 wide x 2048 tall (based on typical rendering). But I should think in terms of the original 2479 x 3508.\\n\\nScale factor: 2479/1456 \u2248 1.702, 3508/2048 \u2248 1.713. Close enough, roughly 1.71.\\n\\nLet me estimate in the displayed image coordinates first, then scale.\\n\\nTop ad border in displayed image:\\n- Left: ~193\\n- Top: ~123\\n- Right: ~1395\\n- Bottom: ~1000\\n\\nScaling by ~1.71:\\n- Left: 193 * 1.702 \u2248 328\\n- Top: 123 * 1.713 \u2248 211\\n- Right: 1395 * 1.702 \u2248 2374\\n- Bottom: 1000 * 1.713 \u2248 1713\\n\\nBottom ad border in displayed image:\\n- Left: ~188\\n- Top: ~1030\\n- Right: ~1390\\n- Bottom: ~1905\\n\\nScaling:\\n- Left: 188 * 1.702 \u2248 320\\n- Top: 1030 * 1.713 \u2248 1764\\n- Right: 1390 * 1.702 \u2248 2366\\n- Bottom: 1905 * 1.713 \u2248 3263\\n\\nLet me look more carefully at the image proportions. The image in the prompt is shown with the page. Let me use the actual displayed dimensions.\\n\\nThe image shown is 1456 \u00d7 2048 (this is a common size). Original is 2479 \u00d7 3508.\\n\\nRatio x: 2479/1456 = 1.7026\\nRatio y: 3508/2048 = 1.7129\\n\\nTop advertisement (Crowe & Co):\\nLooking at the bordered box:\\n- Top-left corner of border: approximately (192, 122) in displayed\\n- Bottom-right corner of border: approximately (1396, 1002) in displayed\\n\\nIn original:\\n- x0 = 192 * 1.7026 = 327\\n- y0 = 122 * 1.7129 = 209\\n- x1 = 1396 * 1.7026 = 2377\\n- y1 = 1002 * 1.7129 = 1716\\n\\nBottom advertisement (Nivada):\\n- Top-left: approximately (187, 1028) displayed\\n- Bottom-right: approximately (1390, 1908) displayed\\n\\nIn original:\\n- x0 = 187 * 1.7026 = 318\\n- y0 = 1028 * 1.7129 = 1761\\n- x1 = 1390 * 1.7026 = 2367\\n- y1 = 1908 * 1.7129 = 3268\\n\\nThese look reasonable. Let me finalize.\\n\\nActually, looking again at the image, the top ad's border:\\n- The top line is at about y=210 (original)\\n- The bottom line of the top ad is at about y=1710\\n- Left line at x\u2248330\\n- Right line at x\u22482380\\n\\nThe bottom ad:\\n- Top line at y\u22481765\\n- Bottom line at y\u22483260\\n- Left line at x\u2248320\\n- Right line at x\u22482380\\n\\nI'll provide these coordinates.\\n\\nLet me reconsider the right edge. The page itself extends to about x=2400 (the right edge of the page). The ad borders are inside. The right border of both ads appears to be around x=2375-2385.\\n\\nFinal answer:\\n[\\n  {\\\"box\\\": [328, 210, 2380, 1715]},\\n  {\\\"box\\\": [320, 1762, 2378, 3265]}\\n]\\n\\nLet me be more precise. Looking at the image again:\\n\\nThe outer page (cream colored) goes from about x=60 to x=2400 in original coordinates (the black border is outside). Actually the page left edge is around x=110 and right edge around x=2400.\\n\\nThe top ad box: left border ~330, top ~210, right ~2380, bottom ~1710.\\nThe bottom ad box: left ~320, top ~1760, right ~2380, bottom ~3260.\\n\\nI'll go with:\\n[330, 211, 2381, 1713]\\n[318, 1763, 2380, 3263]\\n\\nThese are estimates. The exact values aren't critical as long as they bound the ads.\",\"format\":\"unknown\",\"index\":0}]},\"native_finish_reason\":\"stop\"}],\"created\":1792882433,\"model\":\"fireworks/ember-1\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":null,\"usage\":{\"completion_tokens\":1303,\"prompt_tokens\":4331,\"total_tokens\":5634,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":0,\"reasoning_tokens\":1006,\"rejected_prediction_tokens\":null,\"image_tokens\":0},\"prompt_tokens_details\":{\"audio_tokens\":0,\"cached_tokens\":0,\"cache_write_tokens\":0,\"video_tokens\":0},\"cost\":0.032538,\"is_byok\":false,\"cost_details\":{\"upstream_inference_cost\":0.032538,\"upstream_inference_prompt_cost\":0.012993,\"upstream_inference_completions_cost\":0.019545}},\"provider\":\"Fireworks\"}"
+}

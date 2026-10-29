@@ -1,0 +1,59 @@
+{
+    "text": "{\"advertisements\":[{\"box\":[344.0,381.0,2293.0,3162.0]}]}",
+    "model": "nex-agi/nex-n2.5-pro",
+    "provider": "openrouter",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 3060,
+        "output_tokens": 1158,
+        "total_tokens": 4218,
+        "reasoning_tokens": 0,
+        "cached_tokens": 128,
+        "input_cost_usd": 0.00022182,
+        "output_cost_usd": 0.0002895,
+        "estimated_cost_usd": 0.00051132
+    },
+    "duration": 24.273263931274414,
+    "timestamp": "2026-10-26T09:06:28.726584",
+    "parsed": {
+        "advertisements": [
+            {
+                "box": [
+                    344.0,
+                    381.0,
+                    2293.0,
+                    3162.0
+                ]
+            }
+        ]
+    },
+    "conversation_id": "cace4cfb-ef58-47c4-a751-baa2950e4630",
+    "score": {
+        "field_scores": {
+            "box 0": {
+                "response": [
+                    344.0,
+                    381.0,
+                    2293.0,
+                    3162.0
+                ],
+                "ground_truth": [
+                    339,
+                    375,
+                    2298,
+                    3170
+                ],
+                "score": 0.99
+            }
+        },
+        "f1": 1.0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "mean_iou": 0.99,
+        "true_positives": 1,
+        "false_positives": 0,
+        "false_negatives": 0,
+        "iou_threshold": 0.5
+    },
+    "raw_response": "{\"id\":\"gen-1793001964-LACIFbs4jElCRGMPB2ar\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\n  \\\"advertisements\\\": [\\n    {\\n      \\\"box\\\": [344, 381, 2293, 3162]\\n    }\\n  ]\\n}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"advertisements\":[{\"box\":[344.0,381.0,2293.0,3162.0]}]},\"reasoning\":\"\\nWe need answer JSON only with bounding boxes of advertisements. Need inspect image. It's a magazine page with a large advertisement Sandoz Chemical Works occupying main page. Need extract all advertisements. Maybe the entire bordered area is ad. Also perhaps masthead not ad. Page includes \\\"Emil Birkh\u00e4user & Co., printers\\\" outside ad. There is a sliver of adjacent page right with maybe text, not advertisement? The task asks all advertisements on page. Need return bounding boxes. Need be precise.\\n\\nNeed determine coordinates. Image original 2479x3508. The visible page includes black background around. Advertisement is the large rectangular border with double line around Sandoz. Need bbox coordinates. It starts x ~344? y~382? ends x~2292? y~3162? Need compute.\\n\\nLet's analyze image geometry. Page size 2479x3508. In image, left page black border; paper starts around x=94? y=199? maybe. The ad rectangle top border at y=382? left border x=344? right border x=2292? bottom y=3161. Need maybe include outer border. Need maybe if there are two ads? The entire page is a full-page advertisement. The top header at y~286 is magazine header, not ad. The ad starts at outer rectangle at x=344 y=381 to x=2293 y=3162. Need include the ad content but not printer line at bottom? The ad border bottom is above printer line. The ad is within border.\\n\\nLet's inspect visually: Outer border top horizontal line y approx 382, bottom y approx 3160, left x approx 344, right x approx 2291. It is a full-page ad. Need maybe include inner line? The box should encompass advertisement. If using outer border, x0=344, y0=382, x1=2292, y1=3161.\\n\\nBut need \\\"all advertisements\\\" maybe there is one. There is also maybe page header \\\"THE ANGLO-SWISS COMMERCIAL GAZETTE\\\" not ad. No other ads. The right edge shows next page sliver with maybe a partial ad? It is not on the page? It might be from facing page, not part of current page. Should not include.\\n\\nNeed maybe coordinate exact. Let's derive more carefully.\\n\\nImage dimensions 2479 x 3508. Page visible: left edge of page at x ~93; right edge at x ~2428? There is black gutter, adjacent page sliver at x=2429-2478. The main page is page 16. The ad rectangle within page.\\n\\nLet's map from image. Top header line: horizontal at y=325? Actually page top paper begins y=199, header page number at y=288. The ad top border at y=382. It spans x=344 to x=2293. The left border vertical x=344. Right border vertical x=2293. Bottom border y=3162. Outer border has thickness maybe 5 px. Need maybe x1=2293, y1=3162.\\n\\nLet's consider if the ad includes the title and all text. Yes.\\n\\nCould there be \\\"Emil Birkh\u00e4user & Co., printers, Basle\\\" at bottom outside border, which is printer's imprint, not ad. Exclude.\\n\\nNeed final JSON exactly.\\n\\nBut let's not rush. The user asks \\\"Extract all advertisements and return their bounding boxes.\\\" The page is a magazine page. The main ad is Sandoz Chemical Works. It may be the only advertisement. Need maybe include entire page as ad? The ad has border. Coordinates.\\n\\nLet's maybe compute from visible pixel positions using image proportions. We can estimate with OCR? Let's use image dimensions. The ad rectangle:\\n- left border: around 344 px from left. The paper left edge at 93, right edge at 2428. The ad left margin from page left ~251 px. The right border is ~136 px from page right.\\n- top border: y=382. Page top y=199. Header y=291. Top border y=382.\\n- bottom border: y=3161. Page bottom y=3331. The printer line at y=3194. So bottom border y=3162.\\n\\nNeed maybe include ad's border line itself. Use x0=344, y0=381, x1=2293, y1=3162.\\n\\nLet's think if there are multiple ads within the Sandoz ad? It lists products but one advertisement. The task \\\"advertisements\\\" not product sections. Return one.\\n\\nNeed final only JSON object. Ensure no markdown.\\n\",\"reasoning_details\":[{\"type\":\"reasoning.text\",\"text\":\"\\nWe need answer JSON only with bounding boxes of advertisements. Need inspect image. It's a magazine page with a large advertisement Sandoz Chemical Works occupying main page. Need extract all advertisements. Maybe the entire bordered area is ad. Also perhaps masthead not ad. Page includes \\\"Emil Birkh\u00e4user & Co., printers\\\" outside ad. There is a sliver of adjacent page right with maybe text, not advertisement? The task asks all advertisements on page. Need return bounding boxes. Need be precise.\\n\\nNeed determine coordinates. Image original 2479x3508. The visible page includes black background around. Advertisement is the large rectangular border with double line around Sandoz. Need bbox coordinates. It starts x ~344? y~382? ends x~2292? y~3162? Need compute.\\n\\nLet's analyze image geometry. Page size 2479x3508. In image, left page black border; paper starts around x=94? y=199? maybe. The ad rectangle top border at y=382? left border x=344? right border x=2292? bottom y=3161. Need maybe include outer border. Need maybe if there are two ads? The entire page is a full-page advertisement. The top header at y~286 is magazine header, not ad. The ad starts at outer rectangle at x=344 y=381 to x=2293 y=3162. Need include the ad content but not printer line at bottom? The ad border bottom is above printer line. The ad is within border.\\n\\nLet's inspect visually: Outer border top horizontal line y approx 382, bottom y approx 3160, left x approx 344, right x approx 2291. It is a full-page ad. Need maybe include inner line? The box should encompass advertisement. If using outer border, x0=344, y0=382, x1=2292, y1=3161.\\n\\nBut need \\\"all advertisements\\\" maybe there is one. There is also maybe page header \\\"THE ANGLO-SWISS COMMERCIAL GAZETTE\\\" not ad. No other ads. The right edge shows next page sliver with maybe a partial ad? It is not on the page? It might be from facing page, not part of current page. Should not include.\\n\\nNeed maybe coordinate exact. Let's derive more carefully.\\n\\nImage dimensions 2479 x 3508. Page visible: left edge of page at x ~93; right edge at x ~2428? There is black gutter, adjacent page sliver at x=2429-2478. The main page is page 16. The ad rectangle within page.\\n\\nLet's map from image. Top header line: horizontal at y=325? Actually page top paper begins y=199, header page number at y=288. The ad top border at y=382. It spans x=344 to x=2293. The left border vertical x=344. Right border vertical x=2293. Bottom border y=3162. Outer border has thickness maybe 5 px. Need maybe x1=2293, y1=3162.\\n\\nLet's consider if the ad includes the title and all text. Yes.\\n\\nCould there be \\\"Emil Birkh\u00e4user & Co., printers, Basle\\\" at bottom outside border, which is printer's imprint, not ad. Exclude.\\n\\nNeed final JSON exactly.\\n\\nBut let's not rush. The user asks \\\"Extract all advertisements and return their bounding boxes.\\\" The page is a magazine page. The main ad is Sandoz Chemical Works. It may be the only advertisement. Need maybe include entire page as ad? The ad has border. Coordinates.\\n\\nLet's maybe compute from visible pixel positions using image proportions. We can estimate with OCR? Let's use image dimensions. The ad rectangle:\\n- left border: around 344 px from left. The paper left edge at 93, right edge at 2428. The ad left margin from page left ~251 px. The right border is ~136 px from page right.\\n- top border: y=382. Page top y=199. Header y=291. Top border y=382.\\n- bottom border: y=3161. Page bottom y=3331. The printer line at y=3194. So bottom border y=3162.\\n\\nNeed maybe include ad's border line itself. Use x0=344, y0=381, x1=2293, y1=3162.\\n\\nLet's think if there are multiple ads within the Sandoz ad? It lists products but one advertisement. The task \\\"advertisements\\\" not product sections. Return one.\\n\\nNeed final only JSON object. Ensure no markdown.\\n\",\"format\":\"unknown\",\"index\":0}]},\"native_finish_reason\":\"stop\"}],\"created\":1793001964,\"model\":\"nex-agi/nex-n2.5-pro\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":null,\"usage\":{\"completion_tokens\":1158,\"prompt_tokens\":3060,\"total_tokens\":4218,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":0,\"reasoning_tokens\":962,\"rejected_prediction_tokens\":null,\"image_tokens\":0},\"prompt_tokens_details\":{\"audio_tokens\":0,\"cached_tokens\":128,\"cache_write_tokens\":0,\"video_tokens\":0},\"cost\":0.00051132,\"is_byok\":false,\"cost_details\":{\"upstream_inference_cost\":0.00051132,\"upstream_inference_prompt_cost\":0.00022182,\"upstream_inference_completions_cost\":0.0002895}},\"provider\":\"Nex AGI\"}"
+}
