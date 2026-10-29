@@ -210,9 +210,15 @@ This section is not part of the BenchmarkCard schema and is not exported to `ben
 
 **Versions:**
 
-- 3.0.0 — a card without rows answered without rows scores F1 1 instead of 0; all stored runs re-scored
-- 2.0.0 — a response that cannot be parsed is scored as a miss instead of being left out; all stored runs re-scored
-- 1.0.0 — initial versioned state, when the card was introduced; same content as 0.5.0
+- 3.0.0 (2026-10-18) — a card without rows answered without rows scores F1 1 instead of 0; all stored runs re-scored
+- 2.0.0 (2026-10-17) — a response that cannot be parsed is scored as a miss instead of being left out; all stored runs re-scored
+- 1.0.0 (2026-10-16) — initial versioned state, when the card was introduced; same content as 0.5.0
+- 0.5.0 (2026-09-09) — answers capped at 32,768 output tokens
+- 0.4.0 (2026-08-16) — an answer that cannot be parsed is left out of the average instead of scored as a miss
+- 0.3.0 (2026-03-24) — ranked by f1_micro instead of f1_macro
+- 0.2.1 (2026-03-10) — a failed object is left out of the average instead of stopping the run
+- 0.2.0 (2026-02-10) — ground truth corrected on four cards; prompt gains three rules
+- 0.1.0 (2026-02-09) — first state
 
 **How to Cite:** This benchmark:
 

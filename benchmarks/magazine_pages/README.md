@@ -156,8 +156,8 @@ Observed across models: the prompt decides much of the result. Under `prompt.txt
 
 This section is not part of the BenchmarkCard schema and is not exported to `benchmark_card.json`.
 
-<!-- Versions use semantic versioning, newest first, one line each: `- MAJOR.MINOR.PATCH — what
-     changed and why`.
+<!-- Versions use semantic versioning, newest first, one line each:
+     `- MAJOR.MINOR.PATCH (YYYY-MM-DD) — what changed and why`.
      MAJOR: scores before and after are not comparable (ground truth corrected, scoring or
             ranking metric changed, objects added or removed).
      MINOR: something added that leaves existing scores unchanged (e.g. a new prompt variant).
@@ -165,7 +165,13 @@ This section is not part of the BenchmarkCard schema and is not exported to `ben
 
 **Versions:**
 
-- 1.0.0 — initial versioned state, when the card was introduced; same content as 0.4.0
+- 1.0.0 (2026-10-16) — initial versioned state, when the card was introduced; same content as 0.4.0
+- 0.4.0 (2026-09-18) — an answer that cannot be parsed is scored as a miss again; prompt variant stating the JSON format
+- 0.3.1 (2026-09-11) — per-field comparison recorded with each answer; scores unchanged
+- 0.3.0 (2026-09-09) — answers capped at 32,768 output tokens
+- 0.2.0 (2026-08-16) — an answer that cannot be parsed is left out of the average instead of scored as a miss
+- 0.1.1 (2026-04-22) — a failed object is left out of the average instead of stopping the run
+- 0.1.0 (2026-03-21) — first state
 
 **How to Cite:** This benchmark:
 

@@ -161,8 +161,8 @@ Observed across models: results split sharply. Across the 95 active test configu
 
 This section is not part of the BenchmarkCard schema and is not exported to `benchmark_card.json`.
 
-<!-- Versions use semantic versioning, newest first, one line each: `- MAJOR.MINOR.PATCH — what
-     changed and why`.
+<!-- Versions use semantic versioning, newest first, one line each:
+     `- MAJOR.MINOR.PATCH (YYYY-MM-DD) — what changed and why`.
      MAJOR: scores before and after are not comparable (ground truth corrected, scoring or
             ranking metric changed, objects added or removed).
      MINOR: something added that leaves existing scores unchanged (e.g. a new prompt variant).
@@ -170,8 +170,22 @@ This section is not part of the BenchmarkCard schema and is not exported to `ben
 
 **Versions:**
 
-- 2.0.0 — ground truth corrected on `image_5`: advert 4 (stored in a raw database format and never scored) is a normal entry, and the advert numbered 3 twice is 5, as printed; all files share one format (a list of adverts, database fields removed); a response that cannot be parsed is scored as a miss instead of being left out; all stored runs re-scored
-- 1.0.0 — initial versioned state, when the card was introduced; same content as 0.11.1
+- 2.0.0 (2026-10-17) — ground truth corrected on `image_5`: advert 4 (stored in a raw database format and never scored) is a normal entry, and the advert numbered 3 twice is 5, as printed; all files share one format (a list of adverts, database fields removed); a response that cannot be parsed is scored as a miss instead of being left out; all stored runs re-scored
+- 1.0.0 (2026-10-16) — initial versioned state, when the card was introduced; same content as 0.11.1
+- 0.11.1 (2026-09-11) — per-field comparison recorded with each answer; scores unchanged
+- 0.11.0 (2026-09-09) — answers capped at 32,768 output tokens
+- 0.10.0 (2026-08-16) — an answer that cannot be parsed is left out of the average instead of scored as a miss
+- 0.9.2 (2026-04-22) — a failed object is left out of the average instead of stopping the run
+- 0.9.1 (2026-01-25) — image_3 to image_5 stored as real JPEG files; same images
+- 0.9.0 (2026-01-13) — schema: `ntokens` removed, also from the ground truth; typo fixed in the optimised prompt
+- 0.8.0 (2025-11-24) — renamed fraktur_adverts; answers are parsed by the API client instead of the benchmark; failed requests stop the run again
+- 0.7.0 (2025-10-17) — requests that fail are saved as empty answers and scored as misses
+- 0.6.0 (2025-09-24) — schema rebuilt with pydantic; `advertisements` defaults to an empty list
+- 0.5.0 (2025-05-09) — image_3 to image_5 scored; optimised prompt revised
+- 0.4.0 (2025-05-08) — image_3 to image_5 added
+- 0.3.0 (2025-05-07) — first scorer (fuzzy match per section, CER); prompt rewritten and an optimised prompt variant added; ground truth of image_1 revised
+- 0.2.0 (2025-05-06) — prompt and schema rewritten
+- 0.1.0 (2025-03-27) — first state, as fraktur; no scorer yet
 
 **How to Cite:** This benchmark:
 

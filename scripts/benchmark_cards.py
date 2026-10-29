@@ -9,9 +9,9 @@ Fields in GENERATED are derived from meta.json, the benchmark's files and CITATI
 rewritten by this script; edit meta.json, not the README, to change them. How to Cite cites the
 benchmark (its contributors, the year of meta.json `added`, the newest version, the suite's
 all-versions DOI), its source record (meta.json `source` and `license`) and the suite's papers.
-Versions lists meta.json `versions` from 1.0.0 on; that list, newest first, holds the whole history
-(0.y.z before the card: y counts incompatible changes, z compatible ones), each entry with its
-date, the commit that made it, the kind of change and a summary. check_meta_versions states the
+Versions lists meta.json `versions`, newest first, each as `- X.Y.Z (date) — summary`; that list
+holds the whole history (0.y.z before the card: y counts incompatible changes, z compatible ones),
+each entry with its date, the commit that made it, the kind of change and a summary. check_meta_versions states the
 rules it must follow.
 Data Licensing names two licences: meta.json `license` for the source material, and DATA_LICENSE
 for everything the benchmark itself creates (ground truth, prompts, annotations).
@@ -410,8 +410,8 @@ def generated_values(name, meta, contributors=None, version="1.0.0", citation=No
         ("beyond", "contributors_by_role"): by_role or [NOT_SPECIFIED],
     }
     if meta.get("versions"):
-        values[("beyond", "versions")] = ["%s — %s" % (v["version"], v["summary"]) for v in meta["versions"]
-                                          if not v["version"].startswith("0.")]
+        values[("beyond", "versions")] = ["%s (%s) — %s" % (v["version"], v["date"], v["summary"])
+                                          for v in meta["versions"]]
     return values
 
 
@@ -426,7 +426,7 @@ def render(text, parsed, values):
     return text
 
 
-VERSION_LINE = re.compile(r"-\s+(\d+)\.(\d+)\.(\d+)\s+—\s+\S")
+VERSION_LINE = re.compile(r"-\s+(\d+)\.(\d+)\.(\d+)\s+\(\d{4}-\d{2}-\d{2}\)\s+—\s+\S")
 
 
 def newest_version(raw):
@@ -435,7 +435,7 @@ def newest_version(raw):
 
 
 def check_versions(raw):
-    """Versions is a bullet list of `- MAJOR.MINOR.PATCH — what changed`, each version once."""
+    """Versions is a bullet list of `- MAJOR.MINOR.PATCH (YYYY-MM-DD) — what changed`, each version once."""
     lines = [line.strip() for line in raw.strip().splitlines() if line.strip()]
     if not lines or lines == [NOT_SPECIFIED]:
         raise CardError("Beyond the BenchmarkCard / Versions must list the benchmark's versions")
@@ -443,7 +443,7 @@ def check_versions(raw):
     for line in lines:
         m = VERSION_LINE.match(line)
         if not m:
-            raise CardError(f"Versions: '{line}' must read '- MAJOR.MINOR.PATCH — what changed'")
+            raise CardError(f"Versions: '{line}' must read '- MAJOR.MINOR.PATCH (YYYY-MM-DD) — what changed'")
         version = tuple(int(g) for g in m.groups())
         if version in seen:
             raise CardError(f"Versions: {'.'.join(m.groups())} is listed twice")

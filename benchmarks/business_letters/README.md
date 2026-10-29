@@ -165,8 +165,8 @@ A response that parses but does not fit the letter structure scores no TP and co
 
 This section is not part of the BenchmarkCard schema and is not exported to `benchmark_card.json`.
 
-<!-- Versions use semantic versioning, newest first, one line each: `- MAJOR.MINOR.PATCH — what
-     changed and why`.
+<!-- Versions use semantic versioning, newest first, one line each:
+     `- MAJOR.MINOR.PATCH (YYYY-MM-DD) — what changed and why`.
      MAJOR: scores before and after are not comparable (ground truth corrected, scoring or
             ranking metric changed, objects added or removed).
      MINOR: something added that leaves existing scores unchanged (e.g. a new prompt variant).
@@ -174,8 +174,26 @@ This section is not part of the BenchmarkCard schema and is not exported to `ben
 
 **Versions:**
 
-- 2.0.0 — ground truth kept as JSON only (the CSV exports and their per-run conversion removed), `has_signatures` stored as a boolean; a response that cannot be parsed is scored as a miss instead of being left out; all stored runs re-scored
-- 1.0.0 — initial versioned state, when the card was introduced; same content as 0.12.0
+- 2.0.0 (2026-10-17) — ground truth kept as JSON only (the CSV exports and their per-run conversion removed), `has_signatures` stored as a boolean; a response that cannot be parsed is scored as a miss instead of being left out; all stored runs re-scored
+- 1.0.0 (2026-10-16) — initial versioned state, when the card was introduced; same content as 0.12.0
+- 0.12.0 (2026-09-18) — null entries in name lists are dropped, so answers such as `[null]` are scored instead of left out
+- 0.11.1 (2026-09-11) — per-field comparison recorded with each answer; scores unchanged
+- 0.11.0 (2026-09-09) — answers capped at 32,768 output tokens; an answer that cannot be read as a letter is scored as a miss
+- 0.10.3 (2026-04-21) — configurations with empty rules no longer fail
+- 0.10.2 (2026-03-23) — configurations without rules no longer fail
+- 0.10.1 (2026-03-10) — a failed object is left out of the average instead of stopping the run
+- 0.10.0 (2026-02-10) — the alternate names of 2026-02-09 removed again
+- 0.9.0 (2026-02-09) — alternate names added for three persons
+- 0.8.0 (2025-11-24) — renamed business_letters; answers are parsed by the API client instead of the benchmark; failed requests stop the run again; persons inferred from a job title briefly counted, then left out again
+- 0.7.0 (2025-10-17) — requests that fail are saved as empty answers and scored as misses, as are answers that are not valid JSON
+- 0.6.1 (2025-09-30) — answers given as encoded strings, empty lists or objects are scored instead of failing
+- 0.6.0 (2025-09-24) — prompt corrected ("date" instead of a stray "completions_dir")
+- 0.5.0 (2025-04-15) — empty and "None" names no longer count as false positives; F1 rounded to two decimals
+- 0.4.0 (2025-04-11) — the sender of letter58 corrected; two alternate names added
+- 0.3.1 (2025-04-07) — letters marked for signatures, for new test configurations; scores unchanged
+- 0.3.0 (2025-03-07) — alternate names added to the persons list, so more answers match
+- 0.2.0 (2025-03-05) — first scorer (F1 over date, senders and receivers); answers without a `metadata` wrapper and null names accepted
+- 0.1.0 (2025-03-04) — first state, as metadata_extraction; no scorer yet
 
 **How to Cite:** This benchmark:
 

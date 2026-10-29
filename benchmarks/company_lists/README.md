@@ -164,8 +164,8 @@ Observed across models: most models handle the English directory layouts well (t
 
 This section is not part of the BenchmarkCard schema and is not exported to `benchmark_card.json`.
 
-<!-- Versions use semantic versioning, newest first, one line each: `- MAJOR.MINOR.PATCH — what
-     changed and why`.
+<!-- Versions use semantic versioning, newest first, one line each:
+     `- MAJOR.MINOR.PATCH (YYYY-MM-DD) — what changed and why`.
      MAJOR: scores before and after are not comparable (ground truth corrected, scoring or
             ranking metric changed, objects added or removed).
      MINOR: something added that leaves existing scores unchanged (e.g. a new prompt variant).
@@ -173,8 +173,15 @@ This section is not part of the BenchmarkCard schema and is not exported to `ben
 
 **Versions:**
 
-- 2.0.0 — `page_id` and `entry_id` are no longer scored: the model is never given their expected values; `prompt_v2.txt` added for new tests; a response that cannot be parsed is scored as a miss instead of being left out; all stored runs re-scored
-- 1.0.0 — initial versioned state, when the card was introduced; same content as 0.6.0
+- 2.0.0 (2026-10-17) — `page_id` and `entry_id` are no longer scored: the model is never given their expected values; `prompt_v2.txt` added for new tests; a response that cannot be parsed is scored as a miss instead of being left out; all stored runs re-scored
+- 1.0.0 (2026-10-16) — initial versioned state, when the card was introduced; same content as 0.6.0
+- 0.6.0 (2026-09-18) — schema: `location` may be null
+- 0.5.0 (2026-09-09) — answers capped at 32,768 output tokens
+- 0.4.0 (2026-08-16) — an answer that cannot be parsed is left out of the average instead of scored as a miss
+- 0.3.1 (2026-03-10) — a failed object is left out of the average instead of stopping the run
+- 0.3.0 (2025-11-24) — answers are parsed by the API client instead of the benchmark; failed requests stop the run again
+- 0.2.0 (2025-10-29) — scored by field-level F1 instead of a fuzzy average; a null answer matches an empty ground-truth field
+- 0.1.0 (2025-10-28) — first state
 
 **How to Cite:** This benchmark:
 

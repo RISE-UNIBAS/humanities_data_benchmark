@@ -176,8 +176,8 @@ Observed across models: share counts and signatures are read worst (mean field s
 
 This section is not part of the BenchmarkCard schema and is not exported to `benchmark_card.json`.
 
-<!-- Versions use semantic versioning, newest first, one line each: `- MAJOR.MINOR.PATCH — what
-     changed and why`.
+<!-- Versions use semantic versioning, newest first, one line each:
+     `- MAJOR.MINOR.PATCH (YYYY-MM-DD) — what changed and why`.
      MAJOR: scores before and after are not comparable (ground truth corrected, scoring or
             ranking metric changed, objects added or removed).
      MINOR: something added that leaves existing scores unchanged (e.g. a new prompt variant).
@@ -185,8 +185,16 @@ This section is not part of the BenchmarkCard schema and is not exported to `ben
 
 **Versions:**
 
-- 2.0.0 — ground truth corrected: the degree sign in Paris arrondissements, written as the literal text `U+00B0` 15 times on four pages, is now `°`; a response that cannot be parsed is scored as a miss instead of being left out; all stored runs re-scored
-- 1.0.0 — initial versioned state, when the card was introduced; same content as 0.5.1
+- 2.0.0 (2026-10-17) — ground truth corrected: the degree sign in Paris arrondissements, written as the literal text `U+00B0` 15 times on four pages, is now `°`; a response that cannot be parsed is scored as a miss instead of being left out; all stored runs re-scored
+- 1.0.0 (2026-10-16) — initial versioned state, when the card was introduced; same content as 0.5.1
+- 0.5.1 (2026-09-11) — per-field comparison recorded with each answer; scores unchanged
+- 0.5.0 (2026-09-09) — answers capped at 40,960 output tokens
+- 0.4.1 (2026-08-18) — a run with no scored object scores 0 instead of failing
+- 0.4.0 (2026-08-16) — an answer that cannot be parsed is left out of the average instead of scored as a miss
+- 0.3.0 (2026-07-03) — the context prompt is no longer sent as a separate first request; schema: `signature_present` defaults to false
+- 0.2.1 (2026-04-22) — a failed object is left out of the average instead of stopping the run
+- 0.2.0 (2026-03-12) — prompts revised
+- 0.1.0 (2026-03-10) — first state
 
 **How to Cite:** This benchmark:
 
