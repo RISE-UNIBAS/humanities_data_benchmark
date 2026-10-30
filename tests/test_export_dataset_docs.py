@@ -242,3 +242,21 @@ def test_default_dataset_version_pairs_the_cutoff_with_a_serial():
     assert default_dataset_version("2026-09-09", 2) == "2026-09-09.2", (
         "a correction to data at the same cutoff needs a distinct identifier")
     assert default_dataset_version(None) == "unknown.1"
+
+
+def test_citation_carries_the_articles_that_describe_the_benchmark(manifest):
+    """They become the deposit's related works (isDescribedBy) through .zenodo.json."""
+    yaml = pytest.importorskip("yaml")
+    software = {"references": [
+        {"type": "data", "title": "The dataset itself", "doi": "10.1/data"},
+        {"type": "article", "title": "A framework: for benchmarks", "doi": "10.5334/johd.481",
+         "journal": "Journal of Open Humanities Data", "year": 2026, "volume": 12, "issue": "1",
+         "authors": [{"family-names": "Hindermann", "given-names": "Maximilian"}]}]}
+    parsed = yaml.safe_load(docs.citation(manifest, software))
+    articles = [r for r in parsed["references"] if r["type"] == "article"]
+    assert articles == [{"type": "article", "title": "A framework: for benchmarks",
+                         "authors": [{"family-names": "Hindermann",
+                                      "given-names": "Maximilian"}],
+                         "journal": "Journal of Open Humanities Data", "year": 2026,
+                         "volume": 12, "issue": "1", "doi": "10.5334/johd.481"}]
+    assert not any(r["type"] == "data" for r in parsed["references"])

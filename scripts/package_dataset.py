@@ -402,7 +402,11 @@ def zenodo_metadata(citation):
         "keywords": citation.get("keywords") or [],
         "related_identifiers": [{"identifier": docs.SOFTWARE_CONCEPT_DOI,
                                  "relation": "isSupplementTo", "resource_type": "software",
-                                 "scheme": "doi"}],
+                                 "scheme": "doi"}]
+        + [{"identifier": ref["doi"], "relation": "isDescribedBy",
+            "resource_type": "publication-article", "scheme": "doi"}
+           for ref in citation.get("references") or []
+           if ref.get("type") == "article" and ref.get("doi")],
     }
 
 

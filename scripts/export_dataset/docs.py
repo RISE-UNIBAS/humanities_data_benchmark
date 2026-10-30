@@ -665,6 +665,22 @@ def citation(manifest, software_citation):
         "    doi: %s" % SOFTWARE_CONCEPT_DOI,
         "    notes: the software that produced these results",
     ])
+    # The articles that describe the benchmark, as the software's CITATION.cff lists them.
+    for ref in (software_citation or {}).get("references") or []:
+        if ref.get("type") != "article" or not ref.get("doi") or not ref.get("title"):
+            continue
+        lines.extend(["  - type: article", "    title: %s" % json.dumps(ref["title"])])
+        authors = [a for a in ref.get("authors") or [] if a.get("family-names")]
+        if authors:
+            lines.append("    authors:")
+            for author in authors:
+                lines.append("      - family-names: %s" % json.dumps(author["family-names"]))
+                if author.get("given-names"):
+                    lines.append("        given-names: %s" % json.dumps(author["given-names"]))
+        for key in ("journal", "year", "volume", "issue"):
+            if ref.get(key):
+                lines.append("    %s: %s" % (key, json.dumps(ref[key])))
+        lines.append("    doi: %s" % ref["doi"])
     return "\n".join(lines) + "\n"
 
 

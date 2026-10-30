@@ -49,6 +49,13 @@ authors:
     given-names: "Jane"
 keywords:
   - benchmark
+references:
+  - type: software
+    title: Humanities Data Benchmark
+    doi: 10.5281/zenodo.16941752
+  - type: article
+    title: "A framework"
+    doi: 10.5334/johd.481
 """
 
 
@@ -342,7 +349,11 @@ def test_the_sync_writes_the_repository_files_from_the_release(built, tmp_path, 
         {"name": "Hindermann, Maximilian", "orcid": "0000-0002-9337-4655",
          "affiliation": "University of Basel"},
         {"name": "Doe, Jane"}]
-    assert zenodo["related_identifiers"][0]["relation"] == "isSupplementTo"
+    assert zenodo["related_identifiers"] == [
+        {"identifier": "10.5281/zenodo.16941752", "relation": "isSupplementTo",
+         "resource_type": "software", "scheme": "doi"},
+        {"identifier": "10.5334/johd.481", "relation": "isDescribedBy",
+         "resource_type": "publication-article", "scheme": "doi"}]
     assert "version" not in zenodo, "Zenodo takes the version from the tag"
     assert (release_repo / "LICENSE").read_bytes() == P.LEGAL_CODE.read_bytes()
     assert "* -text" in (release_repo / ".gitattributes").read_text(encoding="utf-8")
