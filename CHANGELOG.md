@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased
+## [v0.8.0] - 2026-10-30
 
 ### Added
 - `scripts/export_dataset/`: builds `dataset/`, with `runs`, `requests`, `scores_long` and `rescored_fields` tables in Parquet and CSV, a metric dictionary, payload sidecars, coverage, diagnostics and a source manifest of hashed inputs.
@@ -22,6 +22,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Version history of every benchmark in `meta.json` `versions` (version, date, commit, kind of change, summary), reconstructed from the git history, with 0.y.z before the cards; the cards' Versions list is generated from it, every version dated, and an integrity test checks the history; it includes the default output cap lowered to 16,384 tokens on 2026-09-18.
 - `scripts/compare/generate_version_runs.py`: run counts per benchmark version and each run's version for the website (`collected_results/benchmark_versions.json`, `run_versions.json`), a step of `generate_all`.
 - Each run records the benchmark version in `scoring.json` `benchmark_version` (version, commit, uncommitted changes to the benchmark's files), and each answer in its request file; a resumed run keeps the version of its earliest answer, marked `mixed` when its answers were made with different benchmark states. The version assignment uses it before the run's time (`benchmark_version_basis = recorded`).
+- Results for 2026-10-29: T1956, T1960, T1962 (3 tests, 22 requests) for `ministral-3b-2512`, verification runs.
 
 ### Changed
 - `magazine_pages` example image: a page with seven advertisements.
@@ -440,3 +441,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [v0.6.1]: https://github.com/RISE-UNIBAS/humanities_data_benchmark/releases/tag/v0.6.1
 [v0.7.0]: https://github.com/RISE-UNIBAS/humanities_data_benchmark/releases/tag/v0.7.0
 [v0.7.1]: https://github.com/RISE-UNIBAS/humanities_data_benchmark/releases/tag/v0.7.1
+[v0.8.0]: https://github.com/RISE-UNIBAS/humanities_data_benchmark/releases/tag/v0.8.0
