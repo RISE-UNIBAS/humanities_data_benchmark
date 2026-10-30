@@ -381,10 +381,21 @@ def zenodo_metadata(citation):
     return {
         "upload_type": "dataset",
         "title": citation["title"],
-        "description": "<p>%s</p><p>Tables in Parquet, a metric dictionary, coverage, "
-                       "diagnostics and a source manifest, with the original request and "
-                       "scoring JSON as gzipped JSON Lines. See README.md and "
-                       "CHANGELOG.md.</p>" % " ".join(str(citation["abstract"]).split()),
+        # Self-contained, as the University of Basel's Zenodo community requires: the subject
+        # and its context must be clear without the README or any other source.
+        "description": "<p>The RISE Humanities Data Benchmark, maintained by RISE (Research "
+                       "and Infrastructure Support) at the University of Basel, evaluates large "
+                       "language models on tasks from humanities research: transcribing, "
+                       "interpreting and extracting structured data from historical documents "
+                       "such as letters, library cards, newspaper advertisements and medieval "
+                       "manuscripts, scored against ground truths defined by domain experts, "
+                       "with the cost and runtime of every request.</p><p>%s</p><p>Tables in "
+                       "Parquet, a metric dictionary, coverage, diagnostics and a source "
+                       "manifest, with the original request and scoring JSON as gzipped JSON "
+                       "Lines. A new release follows each release of the benchmark software; "
+                       "each is a complete snapshot. README.md documents the tables and how to "
+                       "use them, CHANGELOG.md what changed between releases.</p>"
+                       % " ".join(str(citation["abstract"]).split()),
         "creators": creators,
         "access_right": "open",
         "license": "cc-by-4.0",
