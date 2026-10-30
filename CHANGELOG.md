@@ -13,7 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Per-request cost from recorded tokens at the price in force on the run's date, reasoning included, beside the stored cost; `reasoning_tokens` and reasoning cost columns on `requests` and `runs`.
 - `dataset/` documentation: `datapackage.json`, README, changelog and `CITATION.cff`; data licensed CC BY 4.0.
 - `dataset/examples/business_letters_cost.py`: cost per correct extraction by provider and date.
-- `scripts/package_dataset.py`: packages a release, payload sidecars included, with `SHA256SUMS`; `--release-repo` syncs it into a clone of the release repository.
+- `scripts/package_dataset.py`: packages a release, payload sidecars included, with `SHA256SUMS`; `--release-repo` syncs it into a clone of the release repository and writes its `.zenodo.json`, `LICENSE` and `.gitattributes`.
 - `scripts/export_dataset/releases.py`: records each deposited release and its DOI in `scripts/data/dataset_releases.json`; later builds list them in the dataset's `CITATION.cff` and changelog, with the benchmark versions added per release. The `test_*` benchmarks are left out of the dataset.
 - `scripts/supervise_run.py` (restarts a stalled run, the date pinned for the runner) and `scripts/watch_run.py` (reports spend and waste during a run), with tests.
 - `scripts/export_dataset/crosscheck.py`: reconciles the dataset with the website's run export from benchmark-frontend before packaging.

@@ -35,6 +35,23 @@ def reconciliation_tested_separately(monkeypatch):
     monkeypatch.setattr(P, "_reconciliation_blockers", lambda dataset: [])
 
 
+CITATION = """cff-version: 1.2.0
+type: dataset
+title: "Humanities Data Benchmark: complete stored results"
+abstract: >-
+  Every stored result as joinable tables.
+authors:
+  - family-names: "Hindermann"
+    given-names: "Maximilian"
+    orcid: "https://orcid.org/0000-0002-9337-4655"
+    affiliation: "University of Basel"
+  - family-names: "Doe"
+    given-names: "Jane"
+keywords:
+  - benchmark
+"""
+
+
 @pytest.fixture
 def built(tmp_path):
     """A miniature `dataset/`: one of each kind of file the packager must handle."""
@@ -46,6 +63,7 @@ def built(tmp_path):
     (d / "coverage.csv").write_text("table,column\nruns,run_id\n", encoding="utf-8")
     (d / "source_manifest.jsonl").write_text('{"path":"x"}\n' * 200, encoding="utf-8")
     (d / "payloads" / "business_letters.jsonl.gz").write_bytes(b"\x1f\x8bfakegz")
+    (d / "CITATION.cff").write_text(CITATION, encoding="utf-8")
 
     declared = {}
     for path in sorted(d.rglob("*")):
@@ -311,8 +329,23 @@ def test_the_sync_replaces_the_release_and_keeps_the_repository(built, tmp_path,
         if path.is_file():
             assert (release_repo / path.relative_to(release)).read_bytes() == path.read_bytes()
     assert (release_repo / ".git").is_dir()
-    assert (release_repo / ".zenodo.json").is_file() and (release_repo / "LICENSE").is_file()
     assert not (release_repo / "dropped").exists(), "a file no longer produced is removed"
+
+
+def test_the_sync_writes_the_repository_files_from_the_release(built, tmp_path, release_repo):
+    """Rewritten at every sync, so the deposit's description and authors follow the release."""
+    P.main(["--dataset", str(built), "--out", str(tmp_path / "dist"),
+            "--release-repo", str(release_repo)])
+    zenodo = json.loads((release_repo / ".zenodo.json").read_text(encoding="utf-8"))
+    assert zenodo["upload_type"] == "dataset" and zenodo["license"] == "cc-by-4.0"
+    assert zenodo["creators"] == [
+        {"name": "Hindermann, Maximilian", "orcid": "0000-0002-9337-4655",
+         "affiliation": "University of Basel"},
+        {"name": "Doe, Jane"}]
+    assert zenodo["related_identifiers"][0]["relation"] == "isSupplementTo"
+    assert "version" not in zenodo, "Zenodo takes the version from the tag"
+    assert (release_repo / "LICENSE").read_bytes() == P.LEGAL_CODE.read_bytes()
+    assert "* -text" in (release_repo / ".gitattributes").read_text(encoding="utf-8")
 
 
 def test_a_second_sync_of_the_same_release_changes_nothing(built, tmp_path, release_repo):

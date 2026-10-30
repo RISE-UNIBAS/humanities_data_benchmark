@@ -19,7 +19,8 @@ does not reconcile against the frontend export. It also refuses any release file
 GitHub's 100 MB per-file limit.
 
 With ``--release-repo``, the release tree is then synced into a clone of the release
-repository (see ``sync_release_repo``), ready to review and commit.
+repository (see ``sync_release_repo``), with its ``.gitattributes``, ``LICENSE`` and
+``.zenodo.json`` written beside it (``write_repo_files``), ready to review and commit.
 
     python -m scripts.package_dataset [--dataset dataset] [--out dist] [--development]
                                       [--release-repo PATH]
@@ -270,8 +271,21 @@ def check_sizes(out):
 # --- the release repository ------------------------------------------------------
 
 REPO_OWN = (".git", ".gitattributes", ".gitignore", ".zenodo.json", "LICENSE", ".github")
-"""Top-level entries of the release repository that packaging never produces, never
-overwrites and never deletes: the repository itself and its furniture."""
+"""Top-level entries of the release repository that the release tree never contains and
+the sync never deletes: the repository itself and its furniture. `write_repo_files` writes
+three of them (`REPO_FILES`); the rest are the repository's own business."""
+
+REPO_FILES = (".gitattributes", "LICENSE", ".zenodo.json")
+
+LEGAL_CODE = Path(__file__).resolve().parent / "export_dataset" / "CC-BY-4.0.txt"
+"""The CC BY 4.0 legal code, as creativecommons.org publishes it, for the repository's
+LICENSE: GitHub recognises the licence from the full text, not from a name."""
+
+GITATTRIBUTES = """\
+# Committed bytes are the released bytes: no line-ending conversion, so every
+# file still matches SHA256SUMS after a checkout on any platform.
+* -text
+"""
 
 GITHUB_REPO_RECOMMENDED = 1024 * 1024 * 1024
 """GitHub recommends keeping a repository under 1 GB."""
@@ -348,6 +362,54 @@ def sync_release_repo(release, repo):
         if not any(directory.iterdir()):
             directory.rmdir()
     return added, changed, removed
+
+
+def zenodo_metadata(citation):
+    """`.zenodo.json` for the dataset, from the release's own CITATION.cff (parsed).
+
+    Zenodo reads this file in preference to CITATION.cff and to what it infers from GitHub;
+    without it a deposit is typed software, and the type of a concept record cannot be
+    changed after its first deposit. The version is left out: Zenodo takes the tag."""
+    creators = []
+    for author in citation.get("authors") or []:
+        creator = {"name": "%s, %s" % (author["family-names"], author["given-names"])}
+        if author.get("orcid"):
+            creator["orcid"] = str(author["orcid"]).rsplit("/", 1)[-1]
+        if author.get("affiliation"):
+            creator["affiliation"] = author["affiliation"]
+        creators.append(creator)
+    return {
+        "upload_type": "dataset",
+        "title": citation["title"],
+        "description": "<p>%s</p><p>Tables in Parquet, a metric dictionary, coverage, "
+                       "diagnostics and a source manifest, with the original request and "
+                       "scoring JSON as gzipped JSON Lines. See README.md and "
+                       "CHANGELOG.md.</p>" % " ".join(str(citation["abstract"]).split()),
+        "creators": creators,
+        "access_right": "open",
+        "license": "cc-by-4.0",
+        "keywords": citation.get("keywords") or [],
+        "related_identifiers": [{"identifier": docs.SOFTWARE_CONCEPT_DOI,
+                                 "relation": "isSupplementTo", "resource_type": "software",
+                                 "scheme": "doi"}],
+    }
+
+
+def write_repo_files(release, repo):
+    """Write `REPO_FILES` into the release repository and return their names.
+
+    Rewritten at every sync, so the deposit's description and authors follow the release
+    being committed rather than the first one."""
+    import yaml
+
+    release, repo = Path(release), Path(repo)
+    citation = yaml.safe_load((release / "CITATION.cff").read_text(encoding="utf-8"))
+    (repo / ".gitattributes").write_text(GITATTRIBUTES, encoding="utf-8", newline="\n")
+    shutil.copyfile(LEGAL_CODE, repo / "LICENSE")
+    (repo / ".zenodo.json").write_text(
+        json.dumps(zenodo_metadata(citation), indent=2, ensure_ascii=False) + "\n",
+        encoding="utf-8", newline="\n")
+    return list(REPO_FILES)
 
 
 def repo_size_after(repo, added, changed):
@@ -463,6 +525,7 @@ def main(argv=None):
     added, changed, removed = sync_release_repo(release, repo)
     print("  %s  %d added, %d changed, %d removed" % (repo, len(added), len(changed),
                                                       len(removed)))
+    print("  wrote %s" % ", ".join(write_repo_files(release, repo)))
     packed, adding = repo_size_after(repo, added, changed)
     print("  history %.1f MB; committing this release adds about %.1f MB"
           % (packed / 1048576, adding / 1048576))
