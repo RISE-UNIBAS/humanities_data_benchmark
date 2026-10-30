@@ -1,6 +1,7 @@
 # RISE Humanities Data Benchmark
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.16941752.svg)](https://doi.org/10.5281/zenodo.16941752)
+[![Dataset DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.23821532.svg)](https://doi.org/10.5281/zenodo.23821532)
 
 This repository contains benchmark datasets (images and text files), prompts, ground truths, and evaluation
 scripts for assessing the performance of large language models (LLMs) on humanities-related tasks. The suite is
@@ -48,6 +49,13 @@ this benchmark:
 Every score shown there traces back to a stored response in this repository, under
 `results/<date>/<test_id>/`, alongside the aggregated `scoring.json` for the run. The website is
 rebuilt from this repository every night that it changes.
+
+For analysis, the same results are published as a **dataset**
+([DOI 10.5281/zenodo.23821532](https://doi.org/10.5281/zenodo.23821532),
+[repository](https://github.com/RISE-UNIBAS/humanities_data_benchmark_dataset)): every stored run
+and request as Parquet tables, with a metric dictionary and the original request and scoring JSON,
+under CC BY 4.0. A new release follows each software release; its CHANGELOG says what changed,
+including which benchmark versions re-scored stored runs.
 
 ## Available benchmarks
 
@@ -503,6 +511,8 @@ Report bugs, propose benchmarks, or discuss improvements through
 Use the metadata in [CITATION.cff](CITATION.cff) to cite the software and identify the release or commit used.
 Archived releases are available through the [project DOI](https://doi.org/10.5281/zenodo.16941752).
 To cite a single benchmark, use the **How to Cite** field of its card.
+To cite the results, use the [dataset DOI](https://doi.org/10.5281/zenodo.23821532) and name the
+dataset version you analysed.
 
 ### Publications and background
 
@@ -525,7 +535,9 @@ Hindermann, M., & Marti, S. (2025, March 19). *RISE Crash Course: "AI Benchmarki
 The benchmark software is licensed under [GNU GPL version 3](LICENSE). Everything the benchmarks
 create (ground truths, prompts, annotations) is licensed under
 [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). The source material (images and texts)
-keeps its own licence, which each benchmark's README states under Data Licensing.
+keeps its own licence, which each benchmark's README states under Data Licensing. The results
+dataset is licensed under CC BY 4.0; the model responses it contains are third-party output, so
+their reuse may depend on the provider's terms.
 
 ## Contributors
 
