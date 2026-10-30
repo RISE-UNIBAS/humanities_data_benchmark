@@ -31,6 +31,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - An answer billed with `finish_reason` "error" (OpenRouter, Mistral) is saved and scored as a miss instead of dropped by the fatal-error check.
+- The 173 answers it dropped from 62 runs (2026-09-16 to 2026-10-26) are added as misses, with tokens and cost unknown.
 - `generate_compare_detail.py`: removes a detail file once its run no longer needs one.
 
 ## [v0.7.1] - 2026-10-26

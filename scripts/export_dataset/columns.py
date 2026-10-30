@@ -152,7 +152,10 @@ REQUESTS = {
     "is_error": "True when the record carries an explicit error field. Null when it cannot "
                 "be assessed, for instance when the file did not parse. Not a general "
                 "success verdict.",
-    "error_message": "The recorded error text, where present.",
+    "error_message": "The recorded error text, where present. Records holding nothing but "
+                     "this and `finish_reason` `error` stand for answers that were billed "
+                     "but dropped unsaved by a runner bug (runs of 2026-09-16 to 2026-10-26); "
+                     "they are scored as misses, and their tokens and cost are unknown.",
     "scoring_status": "Same vocabulary as `runs.scoring_status`, applied to this request's "
                       "own stored score.",
     "is_scored": "Whether this request carries a real scoring observation, by its "
