@@ -269,7 +269,7 @@ def check_sizes(out):
 
 # --- the release repository ------------------------------------------------------
 
-REPO_OWN = (".git", ".gitattributes", ".zenodo.json", "LICENSE", ".github")
+REPO_OWN = (".git", ".gitattributes", ".gitignore", ".zenodo.json", "LICENSE", ".github")
 """Top-level entries of the release repository that packaging never produces, never
 overwrites and never deletes: the repository itself and its furniture."""
 
@@ -286,14 +286,28 @@ def _git_in(repo, *args):
     return result.stdout
 
 
+def _ignored(repo, paths):
+    """The paths among `paths` (repository-relative) that the repository's ignore rules match."""
+    result = subprocess.run(["git", "-C", str(repo), "check-ignore", "--no-index", "-z",
+                             "--stdin"], input="\0".join(sorted(paths)), capture_output=True,
+                            text=True, encoding="utf-8")
+    # 1 means none matched; anything above it is git failing.
+    if result.returncode > 1:
+        raise SystemExit("git check-ignore failed in %s: %s" % (repo, result.stderr.strip()))
+    return set(filter(None, result.stdout.split("\0")))
+
+
 def sync_release_repo(release, repo):
     """Make the working tree of the release repository hold exactly `release`, plus its own
     files (`REPO_OWN`). Return ``(added, changed, removed)`` as sorted path lists.
 
     Refuses a target that is not a git repository or has uncommitted changes, so whatever
-    the sync does can be inspected with `git status` and undone with `git checkout`. Never
-    removes the target itself: `build_release_tree` replaces its destination wholesale, which
-    pointed at a repository would delete `.git`.
+    the sync does can be inspected with `git status` and undone with `git checkout`. Only
+    tracked files are removed or overwritten: an ignored file is the one thing `git status`
+    does not show and `git checkout` cannot bring back, so it is left alone, and a release
+    file the ignore rules match is refused, since it would not be committed. Never removes
+    the target itself: `build_release_tree` replaces its destination wholesale, which pointed
+    at a repository would delete `.git`.
     """
     release, repo = Path(release), Path(repo)
     check_paths(source=release, release_repo=repo)
@@ -306,12 +320,16 @@ def sync_release_repo(release, repo):
 
     produced = set(p.relative_to(release).as_posix()
                    for p in release.rglob("*") if p.is_file())
-    present = set(p.relative_to(repo).as_posix() for p in repo.rglob("*")
-                  if p.is_file() and p.relative_to(repo).parts[0] not in REPO_OWN)
+    present = set(p for p in _git_in(repo, "ls-files", "-z").split("\0")
+                  if p and p.split("/")[0] not in REPO_OWN)
     clash = sorted(p for p in produced if p.split("/")[0] in REPO_OWN)
     if clash:
         raise SystemExit("The release tree contains files the repository keeps as its own: "
                          "%s" % clash)
+    ignored = _ignored(repo, produced)
+    if ignored:
+        raise SystemExit("The ignore rules of %s match %d release file(s), which would not be "
+                         "committed: %s" % (repo, len(ignored), sorted(ignored)[:5]))
 
     added, changed, removed = [], [], []
     for relative in sorted(produced):

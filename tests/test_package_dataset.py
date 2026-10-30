@@ -354,3 +354,26 @@ def test_a_development_package_never_goes_to_the_release_repository(built, tmp_p
     with pytest.raises(SystemExit, match="development package"):
         P.main(["--dataset", str(built), "--out", str(tmp_path / "dist"), "--development",
                 "--release-repo", str(release_repo)])
+
+
+def test_the_sync_leaves_ignored_local_files_alone(built, tmp_path, release_repo):
+    """`git status` does not show them and `git checkout` cannot restore them."""
+    (release_repo / ".gitignore").write_text("notes.txt\n", encoding="utf-8")
+    _git(release_repo, "add", ".gitignore")
+    _git(release_repo, "commit", "-q", "-m", "ignore notes")
+    (release_repo / "notes.txt").write_text("local", encoding="utf-8")
+    release = tmp_path / "dist" / "release"
+    P.build_release_tree(built, release)
+    P.sync_release_repo(release, release_repo)
+    assert (release_repo / "notes.txt").read_text(encoding="utf-8") == "local"
+    assert (release_repo / ".gitignore").is_file(), "the repository's own ignore rules stay"
+
+
+def test_the_sync_refuses_release_files_the_repository_ignores(built, tmp_path, release_repo):
+    (release_repo / ".gitignore").write_text("*.parquet\n", encoding="utf-8")
+    _git(release_repo, "add", ".gitignore")
+    _git(release_repo, "commit", "-q", "-m", "ignore parquet")
+    release = tmp_path / "dist" / "release"
+    P.build_release_tree(built, release)
+    with pytest.raises(SystemExit, match="would not be committed"):
+        P.sync_release_repo(release, release_repo)

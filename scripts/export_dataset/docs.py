@@ -77,9 +77,10 @@ def datapackage(manifest):
         "title": DATASET_TITLE,
         "description": (
             "Every stored result of the Humanities Data Benchmark, as three joinable "
-            "tables with a metric dictionary and lossless payload sidecars. Nothing is "
-            "filtered: runs that failed, were never scored, or whose configuration is no "
-            "longer known are rows carrying a status, not omissions."),
+            "tables with a metric dictionary and lossless payload sidecars. Apart from the "
+            "framework's own test benchmarks, nothing is filtered: runs that failed, were "
+            "never scored, or whose configuration is no longer known are rows carrying a "
+            "status, not omissions."),
         "version": manifest.get("dataset_version") or SCHEMA_VERSION,
         "schema_version": SCHEMA_VERSION,
         # Deliberately not the build time. datapackage.json is hashed into manifest.json,
@@ -190,6 +191,8 @@ The full export retains every stored run directory and request file, including f
 requests, unscored runs, and runs whose test configuration cannot be resolved. Status
 columns distinguish these cases so that inclusion criteria can be applied explicitly.
 Completeness refers to the stored archive; attempts that were not saved cannot be recovered.
+The one exception is the framework's own test benchmarks (`test_*`), scaffolds that exercise
+the harness and measure nothing; their runs are left out.
 
 **Null values represent missing or unavailable information, not zero.** For example, a null
 `input_tokens` value indicates that no usable input-token count was recorded. Missing values
@@ -609,7 +612,8 @@ def citation(manifest, software_citation):
            "{:,}".format(manifest["row_counts"]["requests"]),
            "{:,}".format(manifest["row_counts"]["scores_long"]),
            manifest["data_cutoff"]),
-        "  Nothing is filtered: unscored, failed and unresolved runs are rows carrying a",
+        "  Apart from the framework's own test benchmarks, nothing is filtered: unscored,",
+        "  failed and unresolved runs are rows carrying a",
         "  status rather than omissions.",
         "version: %s" % (manifest.get("dataset_version") or SCHEMA_VERSION),
         "license: %s" % LICENSE_ID,
@@ -717,9 +721,9 @@ def release_datapackage(manifest, packaged_paths):
         "title": DATASET_TITLE,
         "description": (
             "Every stored result of the Humanities Data Benchmark, as joinable Parquet "
-            "tables with a metric dictionary. Nothing is filtered: runs that failed, were "
-            "never scored, or whose configuration is no longer known are rows carrying a "
-            "status, not omissions."),
+            "tables with a metric dictionary. Apart from the framework's own test "
+            "benchmarks, nothing is filtered: runs that failed, were never scored, or whose "
+            "configuration is no longer known are rows carrying a status, not omissions."),
         "version": manifest.get("dataset_version") or SCHEMA_VERSION,
         "schema_version": SCHEMA_VERSION,
         "created": manifest["data_cutoff"],
