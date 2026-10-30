@@ -43,8 +43,18 @@ IOU_THRESHOLD = 0.5
 # Pure helper functions (no state, easy to unit-test)
 # ---------------------------------------------------------------------------
 
+def _is_box(box) -> bool:
+    """Whether a value is a box the scorer can measure: a list of four numbers."""
+    return (isinstance(box, list) and len(box) == 4
+            and all(isinstance(v, (int, float)) and not isinstance(v, bool) for v in box))
+
+
 def _iou(a: list, b: list) -> float:
-    """Return Intersection-over-Union of two [x0, y0, x1, y1] boxes."""
+    """Return Intersection-over-Union of two [x0, y0, x1, y1] boxes.
+
+    A predicted box that is not four numbers overlaps nothing, so it stays a false positive."""
+    if not (_is_box(a) and _is_box(b)):
+        return 0.0
     ix0 = max(a[0], b[0])
     iy0 = max(a[1], b[1])
     ix1 = min(a[2], b[2])

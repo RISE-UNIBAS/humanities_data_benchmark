@@ -171,6 +171,7 @@ This section is not part of the BenchmarkCard schema and is not exported to `ben
 
 **Versions:**
 
+- 2.0.1 (2026-10-30) — a folio entry that is not an object counts as missed, and a number as its text, instead of stopping the scorer; no stored score changes
 - 2.0.0 (2026-10-17) — ground truth corrected: folio [69r] carries the number 69 (was empty); a response that cannot be parsed is scored as a miss instead of being left out; all stored runs re-scored
 - 1.0.0 (2026-10-16) — initial versioned state, when the card was introduced; same content as 0.5.0
 - 0.5.0 (2026-09-18) — answers capped at 16,384 output tokens instead of 32,768
@@ -184,7 +185,7 @@ This section is not part of the BenchmarkCard schema and is not exported to `ben
 
 **How to Cite:** This benchmark:
 
-> Serif, I., & Hindermann, M. (2025). Medieval Manuscripts (benchmark version 2.0.0). In *RISE Humanities Data Benchmark*. Zenodo. https://doi.org/10.5281/zenodo.16941752
+> Serif, I., & Hindermann, M. (2025). Medieval Manuscripts (benchmark version 2.0.1). In *RISE Humanities Data Benchmark*. Zenodo. https://doi.org/10.5281/zenodo.16941752
 
 Source:
 

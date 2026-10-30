@@ -47,6 +47,10 @@ class TestNormalizeEmpty:
     def test_value_preserved(self, scorer):
         assert scorer.normalize_empty("abc") == "abc"
 
+    def test_a_number_is_compared_as_its_text_and_other_values_as_empty(self, scorer):
+        assert (scorer.normalize_empty(18), scorer.normalize_empty(1.5)) == ("18", "1.5")
+        assert [scorer.normalize_empty(v) for v in (True, [], ["a"], {"a": 1})] == ["", "", "", ""]
+
 
 class TestScoreBenchmark:
     def test_empty_returns_worst_cer(self, scorer):
@@ -92,6 +96,17 @@ class TestFields:
         gt = {"[18r]": [{"folio": "18", "text": "hello"}]}
         result = scorer.score_request_answer("img", response(parsed={"folios": [{"folio": "", "text": "hello"}]}), gt)
         assert metrics(result) == {"fuzzy": 0.5, "cer": 0.5}
+
+    @pytest.mark.parametrize("entry", [1, "3r hello", ["3r", "hello"], None])
+    def test_a_folio_that_is_not_an_object_misses_its_fields(self, scorer, response, metrics, entry):
+        gt = {"[3r]": [{"folio": "3r", "text": "hello"}]}
+        result = scorer.score_request_answer("img", response(parsed={"folios": [entry]}), gt)
+        assert metrics(result) == {"fuzzy": 0.0, "cer": 1.0}
+
+    def test_a_numeric_folio_is_scored_as_text(self, scorer, response, metrics):
+        gt = {"[18r]": [{"folio": "18", "text": "hello"}]}
+        result = scorer.score_request_answer("img", response(parsed={"folios": [{"folio": 18, "text": "hello"}]}), gt)
+        assert metrics(result) == {"fuzzy": 1.0, "cer": 0.0}
 
     def test_additions_stop_at_the_first_missing_key(self, scorer, response):
         gt = {"[9v]": [{"folio": "", "text": "a", "addition1": "x"}]}

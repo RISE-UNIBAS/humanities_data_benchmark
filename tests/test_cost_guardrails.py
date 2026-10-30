@@ -111,6 +111,40 @@ class TestFatalProviderErrorDetection:
         assert bb.Benchmark._is_fatal_provider_error(answer) is False
 
 
+class TestScorerExceptionKeepsTheAnswer:
+    """A scorer that raised used to drop the billed answer unsaved (2026-09-17, 2026-09-18)."""
+
+    def _process(self, miss):
+        benchmark, _ = _make()
+        benchmark.score_unparseable_as_miss = miss
+        answer = LLMResponse(text='{"folios": [1]}', model="m", provider="openrouter", finish_reason="stop",
+                             usage=Usage(output_tokens=9), raw_response={}, duration=1.0, parsed={"folios": [1]})
+        seen, saved = [], []
+
+        def score(object_basename, response, ground_truth):
+            seen.append(response.parsed)
+            if response.parsed is not None:
+                raise AttributeError("'int' object has no attribute 'get'")
+            return {"fuzzy": 0.0}
+
+        benchmark.ask_llm = lambda basename: answer
+        benchmark.load_ground_truth = lambda basename: {}
+        benchmark.score_request_answer = score
+        benchmark.save_request_answer = lambda basename, a, s: saved.append((a, s))
+        benchmark._process_object("x", regenerate_existing_results=True)
+        return seen, saved
+
+    def test_the_answer_is_saved_and_scored_as_a_miss(self):
+        seen, saved = self._process(miss=True)
+        assert seen == [{"folios": [1]}, None]
+        (answer, score), = saved
+        assert score == {"fuzzy": 0.0} and answer.parsed == {"folios": [1]}
+
+    def test_without_miss_scoring_it_is_saved_unscored(self):
+        _, saved = self._process(miss=False)
+        assert [s for _, s in saved] == [None]
+
+
 class TestRunAbortsOnFatalError:
     def _run_with_fatal_error(self, workers):
         benchmark, _ = _make()

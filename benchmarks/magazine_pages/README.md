@@ -165,6 +165,7 @@ This section is not part of the BenchmarkCard schema and is not exported to `ben
 
 **Versions:**
 
+- 1.0.1 (2026-10-30) — a predicted box that is not four numbers counts as a false positive instead of stopping the scorer; no stored score changes
 - 1.0.0 (2026-10-16) — initial versioned state, when the card was introduced; same content as 0.4.0
 - 0.4.0 (2026-09-18) — an answer that cannot be parsed is scored as a miss again; prompt variant stating the JSON format; answers capped at 16,384 output tokens instead of 32,768
 - 0.3.1 (2026-09-11) — per-field comparison recorded with each answer; scores unchanged
@@ -175,7 +176,7 @@ This section is not part of the BenchmarkCard schema and is not exported to `ben
 
 **How to Cite:** This benchmark:
 
-> Kasper, L., Marti, S., & Bosse, A. (2026). Magazine Pages (benchmark version 1.0.0). In *RISE Humanities Data Benchmark*. Zenodo. https://doi.org/10.5281/zenodo.16941752
+> Kasper, L., Marti, S., & Bosse, A. (2026). Magazine Pages (benchmark version 1.0.1). In *RISE Humanities Data Benchmark*. Zenodo. https://doi.org/10.5281/zenodo.16941752
 
 Source:
 

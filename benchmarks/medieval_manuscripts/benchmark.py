@@ -29,10 +29,11 @@ class MedievalManuscripts(Benchmark):
 
         Returns:
             str: Empty string if value is None, empty, or whitespace-only; otherwise the original value.
+            A number is compared as its text; any other non-string counts as empty.
         """
-        if value is None:
-            return ""
-        if isinstance(value, str) and not value.strip():
+        if isinstance(value, (int, float)) and not isinstance(value, bool):
+            return str(value)
+        if not isinstance(value, str) or not value.strip():
             return ""
         return value
 
@@ -228,6 +229,8 @@ class MedievalManuscripts(Benchmark):
                 response_entry = response_folios_list[idx]
                 if isinstance(response_entry, dict):
                     match_found = True
+                else:
+                    response_entry = None  # not a folio: its fields count as missed
 
             # Score folio number
             gt_folio = self.normalize_empty(gt_entry.get("folio", ""))

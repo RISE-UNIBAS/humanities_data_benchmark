@@ -96,6 +96,13 @@ class TestScoreRequestAnswer:
     def test_unparseable_answers_are_scored(self):
         assert MagazinePages.score_unparseable_as_miss is True
 
+    @pytest.mark.parametrize("box", [None, 1, "x", [], [1, 2, 3], [[0, 0], [10, 10]], ["0", "0", "10", "10"],
+                                     [True, 0, 10, 10]])
+    def test_a_box_that_is_not_four_numbers_is_a_false_positive(self, scorer, response, box):
+        gt = ads([0, 0, 10, 10])
+        pred = {"advertisements": [{"box": [0, 0, 10, 10]}, {"box": box}]}
+        assert counts(scorer.score_request_answer("p", response(parsed=pred), gt)) == (1, 1, 0)
+
     @pytest.mark.parametrize("name", sorted(f[:-5] for f in os.listdir(GROUND_TRUTHS) if f.endswith(".json")))
     def test_every_ground_truth_matches_itself(self, scorer, response, name):
         with open(os.path.join(GROUND_TRUTHS, f"{name}.json"), encoding="utf-8") as f:

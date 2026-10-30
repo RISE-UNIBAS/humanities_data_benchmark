@@ -783,8 +783,7 @@ class Benchmark(ABC):
                               f"(truncated, empty or non-JSON completion); scoring skipped")
                 score = None
             else:
-                ground_truth = self.load_ground_truth(object_basename)
-                score = self.score_request_answer(object_basename, answer, ground_truth)
+                score = self._score_or_miss(object_basename, answer)
             self.save_request_answer(object_basename, answer, score)
             logging.info(f"{prefix} Finished with score: {score}")
         else:
@@ -792,6 +791,31 @@ class Benchmark(ABC):
             answer, score = self.load_saved_answer(object_basename)
         self.after_object(object_basename)
         return answer, score
+
+    def _score_or_miss(self, object_basename, answer):
+        """Score an answer. A scorer that raises scores it as unparseable instead, or leaves it
+        unscored, so the billed answer is saved either way rather than dropped."""
+        prefix = f"[{object_basename}]"
+        loaded = False
+        try:
+            ground_truth = self.load_ground_truth(object_basename)
+            loaded = True
+            return self.score_request_answer(object_basename, answer, ground_truth)
+        except Exception as e:
+            miss = loaded and self.score_unparseable_as_miss
+            logging.error(f"{prefix} Scorer raised for {self.id}, {object_basename}: {e}; "
+                          + ("scored as a miss" if miss else "saved unscored"))
+            if not miss:
+                return None
+        parsed, answer.parsed = answer.parsed, None
+        try:
+            return self.score_request_answer(object_basename, answer, ground_truth)
+        except Exception as e:
+            logging.error(f"{prefix} Scorer raised again on the miss for {self.id}, {object_basename}: {e}; "
+                          f"saved unscored")
+            return None
+        finally:
+            answer.parsed = parsed
 
     def run(self, regenerate_existing_results=True, workers=1):
         """Run the benchmark.

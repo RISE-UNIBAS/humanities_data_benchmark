@@ -24,6 +24,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - `magazine_pages` example image: a page with seven advertisements.
 - Card versions published on the same day are merged: `company_lists`, `duty_rosters`, `fraktur_adverts`, `general_meeting_minutes` and `library_cards` 3.0.0 become 2.0.0, and `business_letters` 1.0.1 is part of 2.0.0; `published_as` records the former numbers.
+- `business_letters` is ranked on all 57 letters: `meta.json` `ranking` names the ranked letter set (`label`, `rules`) and ranks the 32 signed and the 25 unsigned letters apart (`variants`). Before, a model's best run on any of the three sets counted, and the 25 unsigned letters, which score higher, made up the top of the ranking.
 - Website code moved to the benchmark-frontend repository; `scripts/ndr_export/` is now `scripts/compare/`, which builds only the comparison data, and `pricing_resolver.py` moved to `scripts/`.
 
 ### Removed
@@ -31,7 +32,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - An answer billed with `finish_reason` "error" (OpenRouter, Mistral) is saved and scored as a miss instead of dropped by the fatal-error check.
-- The 173 answers it dropped from 62 runs (2026-09-16 to 2026-10-26) are added as misses, with tokens and cost unknown.
+- The 173 answers it dropped from 62 runs (2026-09-16 to 2026-10-26) are added as misses, with tokens and cost unknown; so are 28 inputs of 10 runs (2026-09-16 to 09-18) whose error records were deleted or whose answers a scorer exception dropped.
+- A scorer that raises no longer drops the answer: it is saved and scored as a miss. `magazine_pages` 1.0.1 counts a box that is not four numbers as a false positive, `medieval_manuscripts` 2.0.1 a folio entry that is not an object as missed; no stored score changes.
 - `generate_compare_detail.py`: removes a detail file once its run no longer needs one.
 
 ## [v0.7.1] - 2026-10-26
