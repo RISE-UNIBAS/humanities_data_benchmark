@@ -203,6 +203,11 @@ class TestCatalog:
         return test_id in self.raw_by_id()
 
 
+def is_test_benchmark(name):
+    """A framework test benchmark (`test_*`): run like the others, published in no dataset."""
+    return bool(name) and name.startswith("test_")
+
+
 def benchmark_names():
     """Benchmark directory names; a directory without a meta.json is not a benchmark."""
     if not BENCHMARKS_PATH.is_dir():

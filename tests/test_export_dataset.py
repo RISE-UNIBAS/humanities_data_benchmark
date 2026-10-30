@@ -755,6 +755,43 @@ def test_the_manifest_records_commit_membership_per_input(tmp_path, make_corpus,
     assert all(r["committed"] is None for r in rows)
 
 
+def test_the_test_benchmarks_are_left_out_of_the_release(tmp_path, make_corpus, write_tests_csv,
+                                                         make_benchmarks, monkeypatch):
+    from scripts.export_dataset import __main__ as build_module
+    from scripts.export_dataset import inventory, rescored
+    monkeypatch.setattr(rescored, "DETAIL_DIR", tmp_path / "compare_detail")
+    make_corpus({"2026-01-01": {"T0001": {"requests": {"a": {}}},
+                                "T0002": {"requests": {"a": {}}},
+                                "T9999": {"requests": {"a": {}}}}})
+    # make_benchmarks points results_index at the fixture; inventory holds its own name.
+    monkeypatch.setattr(inventory, "BENCHMARKS_PATH", make_benchmarks(
+        {"company_lists": {}, "test_benchmark2": {}}))
+    catalog = TestCatalog.load(write_tests_csv([
+        {"id": "T0001", "name": "company_lists", "legacy_test": "false"},
+        {"id": "T0002", "name": "test_benchmark2", "legacy_test": "false"}]))
+
+    runs = build_module._release_runs(tmp_path / "results", catalog)
+    assert [r.test_id for r in runs] == ["T0001", "T9999"], "an unknown test id stays"
+
+    rows, summary, _diagnostics = inventory.build(tmp_path / "results", runs=runs)
+    paths = [r["path"] for r in rows]
+    assert summary["run_dirs"] == 2
+    assert not any("T0002" in p or "test_benchmark2" in p for p in paths)
+    assert any(p.endswith("company_lists/meta.json") for p in paths)
+
+
+def test_the_crosscheck_leaves_out_the_test_benchmarks_the_website_shows(tmp_path, monkeypatch):
+    from scripts.export_dataset import crosscheck
+    export = tmp_path / "test_runs_export.json"
+    export.write_text(json.dumps([
+        {"test_id": "T0001", "date": "2026-01-01", "benchmark": "company_lists", "config": {}},
+        {"test_id": "T0002", "date": "2026-01-01", "benchmark": "test_benchmark", "config": {}}]),
+        encoding="utf-8")
+    monkeypatch.setattr(crosscheck, "FRONTEND_EXPORT", export)
+    monkeypatch.setattr(crosscheck, "frontend_price", lambda record: None)
+    assert list(crosscheck.load_frontend()) == ["T0001@2026-01-01"]
+
+
 def test_an_existing_empty_source_still_builds(build_with_detail, tmp_path):
     empty = tmp_path / "empty"
     empty.mkdir()

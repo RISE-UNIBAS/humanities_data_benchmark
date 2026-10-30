@@ -20,12 +20,13 @@ from pathlib import Path
 from scripts.export_dataset import (DATASET_PATH, SCHEMA_VERSION, STAGING_SUFFIX,
                                     default_dataset_version)
 from scripts.export_dataset import (columns, coverage, docs, inventory, metrics,
-                                    rescored, writers)
+                                    releases, rescored, writers)
 from scripts.export_dataset.extract import Extractor
 from scripts.export_dataset.paths import check as check_paths
 from scripts.export_dataset.schema import SCHEMAS_FOR_DOCS, SORT_KEYS, TABLES, UNIQUE_KEYS
 from scripts.pricing_resolver import pricing_table_version
-from scripts.results_index import PROJECT_ROOT, RESULTS_PATH, TestCatalog, iter_run_dirs
+from scripts.results_index import (PROJECT_ROOT, RESULTS_PATH, TestCatalog, is_test_benchmark,
+                                   iter_run_dirs)
 
 
 def _git(*args):
@@ -58,8 +59,13 @@ def _committed_paths():
     return set(filter(None, tracked.split("\0"))) - set(filter(None, changed.split("\0")))
 
 
-def _selected_runs(results_path, date, benchmark, limit, catalog):
-    runs = list(iter_run_dirs(results_path))
+def _release_runs(results_path, catalog):
+    """Every run directory except those of the framework's test benchmarks."""
+    return [r for r in iter_run_dirs(results_path)
+            if not is_test_benchmark(catalog.benchmark_of(r.test_id))]
+
+
+def _selected_runs(runs, date, benchmark, limit, catalog):
     if date:
         runs = [r for r in runs if r.date == date]
     if benchmark:
@@ -97,23 +103,19 @@ def build(source=RESULTS_PATH, out=DATASET_PATH, date=None, benchmark=None, limi
     columns.check_complete(SCHEMAS_FOR_DOCS)
 
     print("Inventory ...")
+    runs = _release_runs(source, catalog)
     manifest_rows, summary, inv_diagnostics = inventory.build(
-        source, committed_paths=_committed_paths())
+        source, committed_paths=_committed_paths(), runs=runs)
     print("  %d files hashed, %d run directories, %d request files, %d scoring files"
           % (summary["files_hashed"], summary["run_dirs"], summary["request_files"],
              summary["scoring_files"]))
 
     print("Extract ...")
     extractor = Extractor(results_path=source, catalog=catalog)
+    selected = _selected_runs(runs, date, benchmark, limit, catalog)
     if partial:
-        selected = _selected_runs(source, date, benchmark, limit, catalog)
         print("  partial build: %d run directories selected" % len(selected))
-        extractor.run_selected(selected)
-        if extractor._unknown_metrics:
-            raise ValueError("undefined metrics: %s"
-                             % sorted(set(extractor._unknown_metrics)))
-    else:
-        extractor.run()
+    extractor.run_selected(selected)._check_metrics()
     print("  %d runs, %d requests, %d score observations"
           % (len(extractor.runs), len(extractor.requests), len(extractor.scores)))
 
@@ -251,6 +253,8 @@ def build(source=RESULTS_PATH, out=DATASET_PATH, date=None, benchmark=None, limi
         "output_sha256": outputs,
         "build_started_utc": started.isoformat(),
     }
+    # The releases before this one, their DOIs, and the benchmark versions it holds.
+    manifest.update(releases.for_manifest(manifest["dataset_version"]))
     with open(staging / "manifest.json", "w", encoding="utf-8", newline="\n") as f:
         json.dump(manifest, f, indent=2, sort_keys=True)
         f.write("\n")

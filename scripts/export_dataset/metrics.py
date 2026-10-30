@@ -13,7 +13,7 @@ import math
 from scripts.export_dataset.schema import METRIC_ROLES
 
 FUZZY_BENCHMARKS = ("bibliographic_data", "blacklist_cards", "general_meeting_minutes",
-                    "fraktur_adverts", "medieval_manuscripts", "test_benchmark")
+                    "fraktur_adverts", "medieval_manuscripts")
 """Benchmarks with registered fuzzy similarity metrics on a 0-1 scale."""
 
 CER_BENCHMARKS = ("fraktur_adverts", "medieval_manuscripts")
@@ -182,16 +182,6 @@ def _build():
                          ("false_negatives", "Edits the reference makes that were not made")):
         add(_entry("book_advert_xml", "request", metric, "count", "edits", "not_applicable",
                    0.0, None, "sum", "%s, for this advert. Summable across requests." % name))
-
-    # --- scaffolds ------------------------------------------------------------
-    add(_entry("test_benchmark2", "request", "score", "parameter", "none",
-               "not_applicable", None, None, "not_aggregatable",
-               "Fixed placeholder from a scaffold benchmark used to exercise the harness. "
-               "Not a measurement of anything."))
-    for metric in ("score_3", "scoresdfsdf_2"):
-        add(_entry("test_benchmark2", "request", metric, "parameter", "none",
-                   "not_applicable", None, None, "not_aggregatable",
-                   "Fixed placeholder from a scaffold benchmark. Not a measurement."))
 
     return rows
 

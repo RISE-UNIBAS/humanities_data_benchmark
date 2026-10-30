@@ -19,24 +19,30 @@ import collections
 
 import pytest
 
+from scripts.export_dataset.__main__ import _release_runs
 from scripts.export_dataset.extract import Extractor
 from scripts.export_dataset.schema import SCORING_STATUSES, PARSE_STATUSES
-from scripts.results_index import RESULTS_PATH, iter_run_dirs, read_run
+from scripts.results_index import RESULTS_PATH, TestCatalog, read_run
 
 pytestmark = pytest.mark.integrity
 
 
 @pytest.fixture(scope="module")
-def extracted():
-    """One full pass over the corpus. Completing it at all is the first assertion."""
-    return Extractor().run()
+def release_runs():
+    """The run directories a build exports: every one but the test benchmarks'."""
+    return _release_runs(RESULTS_PATH, TestCatalog.load())
 
 
 @pytest.fixture(scope="module")
-def tree():
-    runs = list(iter_run_dirs())
-    requests = sum(len(read_run(run).requests) for run in runs)
-    return {"run_dirs": runs, "request_files": requests}
+def extracted(release_runs):
+    """One full pass over the corpus. Completing it at all is the first assertion."""
+    return Extractor().run_selected(release_runs)._check_metrics()
+
+
+@pytest.fixture(scope="module")
+def tree(release_runs):
+    requests = sum(len(read_run(run).requests) for run in release_runs)
+    return {"run_dirs": release_runs, "request_files": requests}
 
 
 def test_every_run_directory_produced_exactly_one_row(extracted, tree):

@@ -5,29 +5,32 @@ the files attached to a release, so anything that must reach Zenodo has to be co
 That constraint, with GitHub's 100 MB per-file limit, determines what this script produces
 from a finished ``dataset/``:
 
-  * ``release/`` -- the tree to commit. Parquet tables only, text files gzipped, payloads
-    excluded. ``datapackage.json`` and the README are regenerated for this tree, because
-    the build's copies describe files that packaging renames or omits.
-  * ``payloads-<version>.tar.gz`` -- the sidecars, kept out of the release repository.
-    They are most of the artifact by volume and largely third-party model output, and are
-    deposited as a separate record related with ``isPartOf``.
+  * ``release/`` -- the tree to commit. Parquet tables only, text files gzipped, and the
+    payload sidecars as built (``payloads/<benchmark>/<YYYY-MM>.jsonl.gz``), so that one
+    repository and one record hold the whole dataset. ``datapackage.json`` and the README are
+    regenerated for this tree, because the build's copies describe files that packaging
+    renames or omits.
   * ``SHA256SUMS``, written beside the output rather than inside it.
 
 Packaging stops before writing anything when the inputs do not match
 ``manifest.output_sha256``, when an output path would overwrite an input, or, unless
 ``--development`` is given, when the build is partial, carries a blocking diagnostic, or
-does not reconcile against the frontend export. It also refuses any release file or payload
-sidecar over GitHub's 100 MB per-file limit.
+does not reconcile against the frontend export. It also refuses any release file over
+GitHub's 100 MB per-file limit.
+
+With ``--release-repo``, the release tree is then synced into a clone of the release
+repository (see ``sync_release_repo``), ready to review and commit.
 
     python -m scripts.package_dataset [--dataset dataset] [--out dist] [--development]
+                                      [--release-repo PATH]
 """
 import argparse
 import gzip
 import hashlib
 import json
 import shutil
+import subprocess
 import sys
-import tarfile
 from pathlib import Path
 
 from scripts.export_dataset import docs
@@ -50,7 +53,6 @@ exception -- it has no Parquet form -- and ships gzipped."""
 
 KEEP_CSV = ("coverage.csv",)
 
-PAYLOAD_DIR = "payloads"
 GENERATED_DOCS = ("datapackage.json", "README.md")
 """Rewritten for the release tree rather than copied from the build."""
 
@@ -173,8 +175,9 @@ def _reconciliation_blockers(dataset):
     return []
 
 
-def build_release_tree(dataset, out, payload_archive=None):
-    """Copy the dataset into `out`: Parquet as-is, text gzipped, CSV tables dropped."""
+def build_release_tree(dataset, out):
+    """Copy the dataset into `out`: Parquet and payloads as-is, text gzipped, CSV tables
+    dropped."""
     dataset, out = Path(dataset), Path(out)
     check_paths(source=dataset, out=out)
 
@@ -191,8 +194,6 @@ def build_release_tree(dataset, out, payload_archive=None):
             continue
         relative = source.relative_to(dataset)
         posix = relative.as_posix()
-        if relative.parts and relative.parts[0] == PAYLOAD_DIR:
-            continue
         if posix in GENERATED_DOCS:
             continue
         if source.suffix in EXCLUDE and source.name not in KEEP_CSV:
@@ -222,11 +223,9 @@ def build_release_tree(dataset, out, payload_archive=None):
     packaged_paths = set(entry["packaged_path"] for entry in packaging)
     for name, text in (
         ("datapackage.json",
-         json.dumps(docs.release_datapackage(manifest, packaged_paths | set(GENERATED_DOCS),
-                                             payload_archive), indent=2, sort_keys=True)
-         + "\n"),
-        ("README.md", docs.release_readme(manifest, packaged_paths | set(GENERATED_DOCS),
-                                          payload_archive)),
+         json.dumps(docs.release_datapackage(manifest, packaged_paths | set(GENERATED_DOCS)),
+                    indent=2, sort_keys=True) + "\n"),
+        ("README.md", docs.release_readme(manifest, packaged_paths | set(GENERATED_DOCS))),
     ):
         (out / name).write_text(text, encoding="utf-8", newline="\n")
         packaging.append({
@@ -242,7 +241,6 @@ def build_release_tree(dataset, out, payload_archive=None):
     (out / "packaging.json").write_text(
         json.dumps({"dataset_version": manifest.get("dataset_version"),
                     "schema_version": manifest.get("schema_version"),
-                    "payload_archive": payload_archive,
                     "files": packaging}, indent=2, sort_keys=True) + "\n",
         encoding="utf-8", newline="\n")
     return manifest, packaging
@@ -269,44 +267,103 @@ def check_sizes(out):
     return blocked, warned
 
 
-def pack_payloads(dataset, out, version):
-    dataset, out = Path(dataset), Path(out)
-    check_paths(source=dataset, out=out)
-    payloads = dataset / PAYLOAD_DIR
-    if not payloads.is_dir():
-        return None
-    archive = out / ("payloads-%s.tar.gz" % version)
-    with open(archive, "wb") as raw:
-        with gzip.GzipFile(filename="", fileobj=raw, mode="wb", mtime=0,
-                           compresslevel=6) as gz:
-            with tarfile.open(fileobj=gz, mode="w") as tar:
-                for path in sorted(payloads.rglob("*")):
-                    if path.is_file():
-                        info = tar.gettarinfo(str(path),
-                                              arcname=str(path.relative_to(dataset)))
-                        info.mtime = 0
-                        info.uid = info.gid = 0
-                        info.uname = info.gname = ""
-                        with open(path, "rb") as handle:
-                            tar.addfile(info, handle)
-    return archive
+# --- the release repository ------------------------------------------------------
+
+REPO_OWN = (".git", ".gitattributes", ".zenodo.json", "LICENSE", ".github")
+"""Top-level entries of the release repository that packaging never produces, never
+overwrites and never deletes: the repository itself and its furniture."""
+
+GITHUB_REPO_RECOMMENDED = 1024 * 1024 * 1024
+"""GitHub recommends keeping a repository under 1 GB."""
+
+
+def _git_in(repo, *args):
+    result = subprocess.run(["git", "-C", str(repo)] + list(args), capture_output=True,
+                            text=True, encoding="utf-8")
+    if result.returncode != 0:
+        raise SystemExit("git %s failed in %s: %s"
+                         % (" ".join(args), repo, result.stderr.strip()))
+    return result.stdout
+
+
+def sync_release_repo(release, repo):
+    """Make the working tree of the release repository hold exactly `release`, plus its own
+    files (`REPO_OWN`). Return ``(added, changed, removed)`` as sorted path lists.
+
+    Refuses a target that is not a git repository or has uncommitted changes, so whatever
+    the sync does can be inspected with `git status` and undone with `git checkout`. Never
+    removes the target itself: `build_release_tree` replaces its destination wholesale, which
+    pointed at a repository would delete `.git`.
+    """
+    release, repo = Path(release), Path(repo)
+    check_paths(source=release, release_repo=repo)
+    if not (repo / ".git").exists():
+        raise SystemExit("%s is not a git repository; clone the release repository there "
+                         "first." % repo)
+    if _git_in(repo, "status", "--porcelain").strip():
+        raise SystemExit("%s has uncommitted changes; commit or discard them first, so the "
+                         "sync is the only change in the tree." % repo)
+
+    produced = set(p.relative_to(release).as_posix()
+                   for p in release.rglob("*") if p.is_file())
+    present = set(p.relative_to(repo).as_posix() for p in repo.rglob("*")
+                  if p.is_file() and p.relative_to(repo).parts[0] not in REPO_OWN)
+    clash = sorted(p for p in produced if p.split("/")[0] in REPO_OWN)
+    if clash:
+        raise SystemExit("The release tree contains files the repository keeps as its own: "
+                         "%s" % clash)
+
+    added, changed, removed = [], [], []
+    for relative in sorted(produced):
+        source, target = release / relative, repo / relative
+        if target.is_file() and sha256_of(target) == sha256_of(source):
+            continue
+        (changed if target.is_file() else added).append(relative)
+        target.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copyfile(source, target)
+    for relative in sorted(present - produced):
+        (repo / relative).unlink()
+        removed.append(relative)
+    for directory in sorted((d for d in repo.rglob("*") if d.is_dir()
+                             and d.relative_to(repo).parts[0] not in REPO_OWN),
+                            key=lambda d: len(d.parts), reverse=True):
+        if not any(directory.iterdir()):
+            directory.rmdir()
+    return added, changed, removed
+
+
+def repo_size_after(repo, added, changed):
+    """Return ``(packed_bytes, adding_bytes)``: the repository's history so far, and what
+    committing the synced files adds to it. Parquet and gzip do not compress further, so
+    their size on disk is close to what the commit costs."""
+    packed = 0
+    for line in _git_in(repo, "count-objects", "-v").splitlines():
+        key, _, value = line.partition(":")
+        if key.strip() in ("size", "size-pack"):
+            packed += int(value.strip()) * 1024
+    adding = sum((Path(repo) / p).stat().st_size for p in list(added) + list(changed))
+    return packed, adding
 
 
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     parser.add_argument("--dataset", default="dataset")
     parser.add_argument("--out", default="dist")
-    parser.add_argument("--skip-payloads", action="store_true")
     parser.add_argument("--development", action="store_true",
                         help="package a build that is not releasable; output is labelled "
                              "and no deposit instruction is printed")
+    parser.add_argument("--release-repo",
+                        help="clone of the release repository: its working tree is made to "
+                             "hold the release, ready to review and commit")
     args = parser.parse_args(argv)
+    if args.release_repo and args.development:
+        raise SystemExit("A development package never goes to the release repository.")
 
     dataset, out = Path(args.dataset), Path(args.out)
     if not (dataset / "manifest.json").is_file():
         raise SystemExit("No built dataset at %s. Run `python -m scripts.export_dataset` "
                          "first." % dataset.resolve())
-    # The archive, release tree and SHA256SUMS all land under `out`: one check covers them,
+    # The release tree and SHA256SUMS both land under `out`: one check covers them,
     # and it must precede the first write.
     check_paths(source=dataset, out=out)
     manifest = json.loads((dataset / "manifest.json").read_bytes().decode("utf-8"))
@@ -340,30 +397,8 @@ def main(argv=None):
     out.mkdir(parents=True, exist_ok=True)
     release = out / ("release-development" if args.development else "release")
 
-    archive = None
-    if not args.skip_payloads:
-        print("Payload archive ...")
-        archive = pack_payloads(dataset, out, version)
-        if archive:
-            print("  %s  %.1f MB" % (archive, archive.stat().st_size / 1048576))
-            # Each sidecar is committed to a repository of its own, so the same limits hold.
-            payloads = dataset / PAYLOAD_DIR
-            blocked, warned = check_sizes(payloads)
-            for path, size in warned:
-                print("  note: %s is %.1f MB, over GitHub's %d MB warning threshold"
-                      % (path.relative_to(dataset), size / 1048576,
-                         GITHUB_WARN_LIMIT // 1048576))
-            if blocked:
-                raise SystemExit(
-                    "Refusing to package: %d payload file(s) exceed GitHub's %d MB hard "
-                    "limit:\n  %s"
-                    % (len(blocked), GITHUB_FILE_LIMIT // 1048576,
-                       "\n  ".join("%s (%.1f MB)" % (p.relative_to(dataset), s / 1048576)
-                                   for p, s in blocked)))
-
     print("Release tree ...")
-    _manifest, packaging = build_release_tree(dataset, release,
-                                              archive.name if archive else None)
+    _manifest, packaging = build_release_tree(dataset, release)
     total = sum(entry["packaged_bytes"] for entry in packaging)
     print("  %s  %d files, %.1f MB" % (release, len(packaging), total / 1048576))
 
@@ -376,12 +411,13 @@ def main(argv=None):
     blocked, warned = check_sizes(release)
     for path, size in warned:
         print("  note: %s is %.1f MB, over GitHub's %d MB warning threshold"
-              % (path.relative_to(release), size / 1048576, GITHUB_WARN_LIMIT // 1048576))
+              % (path.relative_to(release).as_posix(), size / 1048576,
+                 GITHUB_WARN_LIMIT // 1048576))
     if blocked:
         raise SystemExit(
             "Refusing to package: %d file(s) exceed GitHub's %d MB hard limit:\n  %s"
             % (len(blocked), GITHUB_FILE_LIMIT // 1048576,
-               "\n  ".join("%s (%.1f MB)" % (p.relative_to(release), s / 1048576)
+               "\n  ".join("%s (%.1f MB)" % (p.relative_to(release).as_posix(), s / 1048576)
                            for p, s in blocked)))
 
     print("Checksums ...")
@@ -390,8 +426,6 @@ def main(argv=None):
         if path.is_file():
             lines.append("%s  %s/%s" % (sha256_of(path), release.name,
                                         path.relative_to(release).as_posix()))
-    if archive:
-        lines.append("%s  %s" % (sha256_of(archive), archive.name))
     sums = out / "SHA256SUMS"
     sums.write_text("\n".join(lines) + "\n", encoding="utf-8", newline="\n")
     print("  %s  %d entries" % (sums, len(lines)))
@@ -399,9 +433,25 @@ def main(argv=None):
     if args.development:
         print("\nDevelopment package at %s. Not releasable; see the blockers above."
               % release)
-    else:
-        print("\nDataset version %s. Commit %s/ to the release repository, tag it, and let "
-              "the Zenodo webhook deposit it." % (version, release))
+        return 0
+    if not args.release_repo:
+        print("\nDataset version %s. Sync it into the release repository with "
+              "--release-repo, commit, tag it, and let the Zenodo webhook deposit it."
+              % version)
+        return 0
+
+    print("Release repository ...")
+    repo = Path(args.release_repo)
+    added, changed, removed = sync_release_repo(release, repo)
+    print("  %s  %d added, %d changed, %d removed" % (repo, len(added), len(changed),
+                                                      len(removed)))
+    packed, adding = repo_size_after(repo, added, changed)
+    print("  history %.1f MB; committing this release adds about %.1f MB"
+          % (packed / 1048576, adding / 1048576))
+    if packed + adding > GITHUB_REPO_RECOMMENDED:
+        print("  note: over GitHub's recommended 1 GB per repository")
+    print("\nDataset version %s. Review with git status in %s, commit, tag %s, and let the "
+          "Zenodo webhook deposit it." % (version, repo, version))
     return 0
 
 

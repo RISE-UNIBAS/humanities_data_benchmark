@@ -7,6 +7,8 @@ comparison-detail artifacts.
 
 Resolve paths before comparison to account for relative paths and filesystem
 links. Builders call these checks before creating or replacing output directories.
+A git repository is refused as any writable role except ``release_repo``, the one
+destination that is synced file by file rather than replaced.
 """
 from pathlib import Path
 
@@ -66,6 +68,12 @@ def check(**paths):
 
     writable = [(name, path) for name, path in named if name != "source"]
     for name, path in writable:
+        # Every writable role but the release repository is replaced wholesale.
+        if name != "release_repo" and (path / ".git").exists():
+            raise UnsafePaths(
+                "%s (%s) is a git repository. The build replaces its destination "
+                "wholesale, which would delete the repository's history; sync into a "
+                "release repository with --release-repo instead." % (name, path))
         for protected in PROTECTED_INPUTS:
             resolved_protected = _resolved(protected)
             if _contains(resolved_protected, path):

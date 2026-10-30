@@ -25,7 +25,7 @@ from pathlib import Path
 import pyarrow.parquet as pq
 
 from scripts.pricing_resolver import resolve_pricing
-from scripts.results_index import PROJECT_ROOT
+from scripts.results_index import PROJECT_ROOT, is_test_benchmark
 
 FRONTEND_EXPORT = Path(os.environ.get("BENCHMARK_FRONTEND_EXPORT")
                        or PROJECT_ROOT.parent / "benchmark-frontend" / "generated" / "test_runs_export.json")
@@ -74,6 +74,8 @@ def load_frontend():
                          "benchmark-frontend first, or set BENCHMARK_FRONTEND_EXPORT."
                          % (FRONTEND_EXPORT, PROJECT_ROOT))
     records = json.loads(FRONTEND_EXPORT.read_bytes().decode("utf-8"))
+    # The website shows the test benchmarks' runs; the dataset leaves them out.
+    records = [r for r in records if not is_test_benchmark(r.get("benchmark"))]
     for record in records:
         record["pricing"] = frontend_price(record)
     return dict(("%s@%s" % (r["test_id"], r["date"]), r) for r in records)

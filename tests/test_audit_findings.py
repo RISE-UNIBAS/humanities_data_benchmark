@@ -256,7 +256,7 @@ def test_f03_packaging_refuses_and_leaves_the_previous_distribution(tmp_path):
     (dist / "release" / "sentinel").write_text("previous", encoding="utf-8")
 
     with pytest.raises(SystemExit, match="does not match its own manifest"):
-        PD.main(["--dataset", str(d), "--out", str(dist), "--skip-payloads"])
+        PD.main(["--dataset", str(d), "--out", str(dist)])
     assert (dist / "release" / "sentinel").read_text(encoding="utf-8") == "previous"
 
 
@@ -306,7 +306,7 @@ def test_f04_the_cli_exits_nonzero_and_gives_no_deposit_instruction(tmp_path, ca
     (d / "manifest.json").write_text(json.dumps(manifest), encoding="utf-8")
 
     with pytest.raises(SystemExit) as exit_info:
-        PD.main(["--dataset", str(d), "--out", str(tmp_path / "dist"), "--skip-payloads"])
+        PD.main(["--dataset", str(d), "--out", str(tmp_path / "dist")])
     assert exit_info.value.code != 0
     assert "deposit" not in capsys.readouterr().out
 
@@ -325,10 +325,10 @@ def test_f05_the_release_readme_does_not_promise_absent_files(tmp_path):
     from scripts import package_dataset as PD
     d = _mini_dataset(tmp_path)
     release = tmp_path / "dist" / "release"
-    PD.build_release_tree(d, release, payload_archive="payloads-2026-09-09.2.tar.gz")
+    PD.build_release_tree(d, release)
     text = (release / "README.md").read_text(encoding="utf-8")
     assert "Loading CSV files" not in text
-    assert "payloads-2026-09-09.2.tar.gz" in text
+    assert "not** in this package" not in text
 
 
 def test_f05_table_csvs_do_not_ship(tmp_path):

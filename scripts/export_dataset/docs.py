@@ -427,12 +427,36 @@ evidence of model behaviour. The project does not claim authorship of these resp
 grant rights beyond those it holds; reuse may depend on the relevant provider's terms.
 Benchmark input documents are not included in this export.
 
+## Versions
+
+Three version numbers answer three different questions.
+
+- **The dataset version** (`{version}`) names a release: `<data cutoff>.<serial>`, the last
+  day of runs it holds, and a serial that counts rebuilds at the same cutoff. Each release is
+  a full snapshot, not an addition to the previous one: stored results are corrected and
+  re-scored between releases, so the same run can carry a different score in two releases.
+  [CHANGELOG.md](CHANGELOG.md) lists what changed in each.
+- **The schema version** (`{schema}`) describes the format, in semantic versioning: MAJOR
+  when a table or column is removed, renamed or changes meaning, MINOR when one is added,
+  PATCH for documentation and metadata only. Code written against one schema reads every
+  release with the same MAJOR.
+- **Benchmark versions** say which scores can be compared. `benchmark_version_scored` in
+  `runs` is the benchmark version whose scorer and ground truth produced a run's stored
+  scores. Compare scores only within one MAJOR benchmark version; the dataset version says
+  nothing about this.
+
 ## Citation
 
 Use the citation metadata in [CITATION.cff](CITATION.cff) and identify the dataset version
-used in the analysis. Results may change between releases as records are added or corrected.
-A dataset DOI has not yet been assigned; it will be added when the dataset is deposited.
+used in the analysis. {doi_line}
 """.format(
+        doi_line=(
+            "Cite the version DOI of the release you used; the concept DOI [{0}]"
+            "(https://doi.org/{0}) names the dataset as a whole and resolves to the newest "
+            "release. CITATION.cff lists both.".format(manifest["concept_doi"])
+            if manifest.get("concept_doi") else
+            "This is the first release: its DOI is minted at deposit and is listed on the "
+            "Zenodo record, and every later release carries it in CITATION.cff."),
         title=DATASET_TITLE,
         version=manifest.get("dataset_version") or SCHEMA_VERSION,
         schema=SCHEMA_VERSION,
@@ -449,36 +473,107 @@ A dataset DOI has not yet been assigned; it will be added when the dataset is de
 
 
 def changelog(manifest):
+    """Return the dataset changelog: this build's entry, then every earlier release from
+    the release record (`releases.py`), newest first."""
+    prior = manifest.get("prior_releases") or []
+    entries = [_changelog_entry(manifest, prior[-1] if prior else None)]
+    for index in range(len(prior) - 1, -1, -1):
+        entries.append(_released_entry(prior[index], prior[index - 1] if index else None))
     return """# Changelog — dataset
 
-Dataset releases, separate from the software changelog. Figures change between releases
-both because results are added and because corrections are made, so an analysis should
-cite the exact version it used.
+Dataset releases, separate from the software changelog. Each release is a full snapshot:
+figures change between releases both because results are added and because corrections are
+made, and a MAJOR benchmark version re-scores every stored run of its benchmark. An analysis
+should cite the exact version it used.
 
-## {version} — unreleased
+""" + "\n".join(entries)
 
-Initial export. Schema {schema}. Data through {cutoff}, built from source commit `{commit}`.
 
-- {runs:,} runs, {requests:,} requests, {scores:,} metric observations, {metrics} metric
-  definitions.{rescored}
-- Per-request cost is exported twice: as the request file records it, and as derived from
-  recorded tokens and the price in force on the run's date. Both include reasoning billed
-  outside output tokens.
-- `timestamp_utc` is null throughout: every stored timestamp is naive and no source
-  timezone is recorded.
-- Licensed CC BY 4.0, separately from the software's GPL-3.0. The payload
-  sidecars additionally contain third-party model output; see the README.
-""".format(
-        version=manifest.get("dataset_version") or SCHEMA_VERSION,
-        schema=SCHEMA_VERSION,
-        cutoff=manifest["data_cutoff"],
-        commit=(manifest.get("source_commit") or "unknown")[:9],
-        runs=manifest["row_counts"]["runs"],
-        requests=manifest["row_counts"]["requests"],
-        scores=manifest["row_counts"]["scores_long"],
-        metrics=manifest["row_counts"]["metrics"],
-        rescored=_rescored_line(manifest),
-    )
+def _software(manifest):
+    return (", software %s" % manifest["software_version"]
+            if manifest.get("software_version") else "")
+
+
+def _version_lines(added):
+    """One bullet per benchmark version, flagging the ones that re-based stored scores."""
+    lines = []
+    for entry in added:
+        rebased = " Scores of all its stored runs were re-based." if entry.get(
+            "change") == "major" else ""
+        lines.append("  - `%s` %s (%s, %s): %s%s"
+                     % (entry["benchmark"], entry["version"], entry.get("change") or "?",
+                        entry["date"], (entry.get("summary") or "").rstrip("."), "." + rebased))
+    return lines
+
+
+def _at(versions):
+    return ", ".join("`%s` %s" % (name, version) for name, version in sorted(versions.items()))
+
+
+def _changelog_entry(manifest, previous):
+    """This build's entry. The first release describes the dataset; later ones what changed."""
+    counts = manifest["row_counts"]
+    head = "## %s\n\nSchema %s. Data through %s, built from source commit `%s`%s.\n" % (
+        manifest.get("dataset_version") or SCHEMA_VERSION, SCHEMA_VERSION,
+        manifest["data_cutoff"], (manifest.get("source_commit") or "unknown")[:9],
+        _software(manifest))
+    if previous is None:
+        lines = [
+            "- Initial release: {runs:,} runs, {requests:,} requests, {scores:,} metric "
+            "observations, {metrics} metric definitions.{rescored}".format(
+                runs=counts["runs"], requests=counts["requests"],
+                scores=counts["scores_long"], metrics=counts["metrics"],
+                rescored=_rescored_line(manifest)),
+            "- Per-request cost is exported twice: as the request file records it, and as "
+            "derived from recorded tokens and the price in force on the run's date. Both "
+            "include reasoning billed outside output tokens.",
+            "- `timestamp_utc` is null throughout: every stored timestamp is naive and no "
+            "source timezone is recorded.",
+            "- Licensed CC BY 4.0, separately from the software's GPL-3.0. The payload "
+            "sidecars additionally contain third-party model output; see the README.",
+        ]
+        if manifest.get("benchmark_versions"):
+            lines.append("- Benchmark versions: %s."
+                         % _at(manifest["benchmark_versions"]))
+        return head + "\n" + "\n".join(lines) + "\n"
+
+    lines = ["- {runs:,} runs ({drun:+,}) and {requests:,} requests ({dreq:+,}) since "
+             "{previous}.".format(runs=counts["runs"], requests=counts["requests"],
+                                  drun=counts["runs"] - (previous.get("runs") or 0),
+                                  dreq=counts["requests"] - (previous.get("requests") or 0),
+                                  previous=previous["version"])]
+    if previous.get("schema_version") != SCHEMA_VERSION:
+        lines.append("- Schema %s, was %s; see the README's Versions section for what a "
+                     "change of each level means." % (SCHEMA_VERSION,
+                                                       previous.get("schema_version")))
+    added = manifest.get("benchmark_versions_since_previous") or []
+    if added:
+        lines.append("- Benchmark versions since %s:" % previous["version"])
+        lines.extend(_version_lines(added))
+    else:
+        lines.append("- No benchmark changed version since %s." % previous["version"])
+    return head + "\n" + "\n".join(lines) + "\n"
+
+
+def _released_entry(release, previous):
+    """An earlier release, as the release record holds it."""
+    lines = ["## %s — released %s" % (release["version"], release.get("released") or "?"),
+             "",
+             "DOI [%s](https://doi.org/%s). Schema %s. Data through %s, source commit `%s`%s."
+             % (release["doi"], release["doi"], release.get("schema_version"),
+                release["data_cutoff"], (release.get("source_commit") or "unknown")[:9],
+                _software(release)),
+             "",
+             "- {:,} runs, {:,} requests.".format(release.get("runs") or 0,
+                                                 release.get("requests") or 0)]
+    added = release.get("benchmark_versions_since_previous")
+    if previous is not None and added:
+        lines.append("- Benchmark versions since %s:" % previous["version"])
+        lines.extend(_version_lines(added))
+    elif release.get("benchmark_versions"):
+        lines.append("- Benchmark versions: %s."
+                     % _at(release["benchmark_versions"]))
+    return "\n".join(lines) + "\n"
 
 
 def _rescored_line(manifest):
@@ -498,8 +593,9 @@ def citation(manifest, software_citation):
     """Return dataset CITATION.cff text using the supplied author metadata.
 
     Include the dataset version and licence. Include a release date only when
-    provided in the manifest. Leave the dataset identifier list empty until a DOI
-    is assigned at deposit; retain the related software DOI as a reference.
+    provided in the manifest. List the concept DOI and the earlier releases' version DOIs
+    from the release record; this release's own DOI is minted after its bytes are fixed,
+    so the list is empty for the first. Retain the related software DOI as a reference.
     """
     lines = [
         "cff-version: 1.2.0",
@@ -545,7 +641,20 @@ def citation(manifest, software_citation):
         "  - benchmark",
         "  - LLM",
         "  - digital humanities",
-        "identifiers: []   # version DOI is added at deposit",
+    ])
+    identifiers = []
+    if manifest.get("concept_doi"):
+        identifiers.append((manifest["concept_doi"], "All versions"))
+    for release in manifest.get("prior_releases") or []:
+        identifiers.append((release["doi"], "Version %s" % release["version"]))
+    if identifiers:
+        lines.append("identifiers:")
+        for doi, description in identifiers:
+            lines.extend(["  - type: doi", "    value: %s" % doi,
+                          "    description: %s" % description])
+    else:
+        lines.append("identifiers: []   # the first version DOI is minted at deposit")
+    lines.extend([
         "references:",
         "  - type: software",
         "    title: Humanities Data Benchmark",
@@ -558,17 +667,17 @@ def citation(manifest, software_citation):
 # --- the packaged release describes itself, not the build ------------------------
 #
 # The build directory and the release tree are not the same artifact: the release ships
-# Parquet only, gzips the text files and leaves the payloads out. Copying the build's
+# Parquet only and gzips the text files. Copying the build's
 # datapackage and README into it produced a package whose five declared CSV resources did
 # not exist at those paths and whose README promised `payloads/`, an uncompressed source
 # manifest and uncompressed diagnostics -- none of them present. A consumer following the
 # documentation could not load the thing they had.
 
-def release_datapackage(manifest, packaged_paths, payload_archive=None):
+def release_datapackage(manifest, packaged_paths):
     """Describe table and coverage resources present in ``packaged_paths``.
 
-    Use packaged Parquet and compressed coverage paths. When supplied, record the
-    separate payload archive as a related resource.
+    Use packaged Parquet and compressed coverage paths. The payload sidecars are not
+    tabular resources; the README describes them.
     """
     resources = []
     for name in sorted(TABLES):
@@ -632,20 +741,13 @@ def release_datapackage(manifest, packaged_paths, payload_archive=None):
                      % (manifest.get("source_commit") or "unknown")),
         }],
     }
-    if payload_archive:
-        package["relatedIdentifiers"].append({
-            "relationType": "hasPart",
-            "relatedIdentifier": payload_archive,
-            "relatedIdentifierType": "other",
-            "note": "complete stored request and scoring JSON, distributed separately",
-        })
     return package
 
 
-def release_readme(manifest, packaged_paths, payload_archive=None):
+def release_readme(manifest, packaged_paths):
     """Return README text for the packaged release.
 
-    Describe Parquet tables, compressed text files, and the separate payload archive.
+    Describe Parquet tables, compressed text files, and the payload sidecars.
     Reuse the build README's analytical guidance, excluding its CSV-loading section.
     """
     full = readme(manifest)
@@ -653,14 +755,19 @@ def release_readme(manifest, packaged_paths, payload_archive=None):
     guidance = guidance[:guidance.index("## Loading CSV files")] + \
         guidance[guidance.index("## Coverage and diagnostics"):]
 
+    payloads = sorted(p for p in packaged_paths if p.startswith("payloads/"))
     payload_line = (
-        "The payload sidecars -- the complete original request and scoring JSON -- are "
-        "**not** in this package. They are %s, distributed separately because they are "
-        "four fifths of the artifact by volume and are mostly third-party model output."
-        % (("`%s`" % payload_archive) if payload_archive else
-           "a separate archive named in the deposit"))
+        "`payloads/` holds the complete original request and scoring JSON as gzipped JSON "
+        "Lines, one file per benchmark and run month (`<benchmark>/<YYYY-MM>.jsonl.gz`), "
+        "plus `run_scoring.jsonl.gz` and the re-scoring records in "
+        "`rescored_detail.jsonl.gz`: %d files. Most of their bytes are third-party model "
+        "output; see Licence." % len(payloads)) if payloads else (
+        "This package holds no payload sidecars.")
 
-    listing = "\n".join("- `%s`" % p for p in sorted(packaged_paths))
+    listing = "\n".join("- `%s`" % p for p in sorted(packaged_paths)
+                        if not p.startswith("payloads/"))
+    if payloads:
+        listing += "\n- `payloads/` (%d files)" % len(payloads)
 
     return """# {title}
 

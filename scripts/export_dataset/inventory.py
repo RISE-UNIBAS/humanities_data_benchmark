@@ -18,14 +18,16 @@ import json
 from pathlib import Path
 
 from scripts.results_index import (BENCHMARKS_PATH, PROJECT_ROOT, RESULTS_PATH, TESTS_CSV,
-                                   benchmark_names, iter_run_dirs)
+                                   benchmark_names, is_test_benchmark, iter_run_dirs)
 
 METADATA_FILES = (
     TESTS_CSV,
     PROJECT_ROOT / "scripts" / "data" / "pricing.json",
     PROJECT_ROOT / "scripts" / "data" / "model_aliases.json",
     PROJECT_ROOT / "scripts" / "data" / "contributors.json",
+    PROJECT_ROOT / "scripts" / "data" / "dataset_releases.json",
     PROJECT_ROOT / "CITATION.cff",
+    PROJECT_ROOT / "VERSION",
 )
 
 CHUNK = 1 << 20
@@ -57,12 +59,17 @@ def relative_path(path, *roots):
 _relative = relative_path
 
 
-def consumed_files(results_path=RESULTS_PATH):
-    """Return existing inventoried input files, deduplicated and sorted by path."""
+def consumed_files(results_path=RESULTS_PATH, runs=None):
+    """Return existing inventoried input files, deduplicated and sorted by path.
+
+    runs limits the run directories to those given; None takes every one under results_path.
+    """
     paths = []
-    for run in iter_run_dirs(results_path):
+    for run in (iter_run_dirs(results_path) if runs is None else runs):
         paths.extend(sorted(run.path.iterdir()))
     for name in benchmark_names():
+        if is_test_benchmark(name):
+            continue
         meta = BENCHMARKS_PATH / name / "meta.json"
         if meta.is_file():
             paths.append(meta)
@@ -95,12 +102,13 @@ def _generated_provenance(path):
     }
 
 
-def build(results_path=RESULTS_PATH, committed_paths=None):
+def build(results_path=RESULTS_PATH, committed_paths=None, runs=None):
     """Return ``(manifest_rows, summary, diagnostics)`` for the source archive.
 
     committed_paths is the set of repository-relative paths Git holds unchanged at
     the source commit; None when Git could not be asked, which records ``committed``
-    as null rather than guessing.
+    as null rather than guessing. runs limits the inventory to those run directories;
+    None takes every one under results_path.
 
     Count run directories and their immediate contents, compute date bounds, and
     hash inventoried files. Nested directories and unexpected filenames within a
@@ -111,7 +119,8 @@ def build(results_path=RESULTS_PATH, committed_paths=None):
     counts = {"request_files": 0, "scoring_files": 0, "other_files": 0, "run_dirs": 0}
     dates = set()
 
-    for run in iter_run_dirs(results_path):
+    runs = list(iter_run_dirs(results_path)) if runs is None else runs
+    for run in runs:
         counts["run_dirs"] += 1
         dates.add(run.date)
         for entry in sorted(run.path.iterdir()):
@@ -137,7 +146,7 @@ def build(results_path=RESULTS_PATH, committed_paths=None):
                 })
 
     generated = set(_detail_files())
-    for path in consumed_files(results_path):
+    for path in consumed_files(results_path, runs):
         row = {
             "path": _relative(path),
             "sha256": sha256_of(path),

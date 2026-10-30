@@ -85,14 +85,6 @@ def test_table_csvs_are_dropped_entirely(built, tmp_path):
     assert (out / "scores_long.parquet").is_file()
 
 
-def test_payloads_are_left_out_of_the_release_tree(built, tmp_path):
-    out = tmp_path / "release"
-    P.build_release_tree(built, out)
-    assert not (out / "payloads").exists(), (
-        "the sidecars are four fifths of the artifact and mostly third-party model "
-        "output; they are kept out of the release repository")
-
-
 def test_a_compressed_file_still_unpacks_to_the_original(built, tmp_path):
     out = tmp_path / "release"
     P.build_release_tree(built, out)
@@ -144,30 +136,39 @@ def test_packaging_refuses_a_tree_that_cannot_be_pushed(built, tmp_path, monkeyp
     monkeypatch.setattr(P, "GITHUB_FILE_LIMIT", 10)
     monkeypatch.setattr(P, "GITHUB_WARN_LIMIT", 5)
     with pytest.raises(SystemExit, match="hard limit"):
-        P.main(["--dataset", str(built), "--out", str(tmp_path / "dist"),
-                "--skip-payloads"])
+        P.main(["--dataset", str(built), "--out", str(tmp_path / "dist")])
 
 
 def test_packaging_refuses_a_payload_that_cannot_be_pushed(built, tmp_path, monkeypatch):
-    """The sidecars are committed to a repository too, so they are held to the same limit."""
+    """The sidecars are committed with the tables, so they are held to the same limit."""
     payload = built / "payloads" / "business_letters.jsonl.gz"
     payload.write_bytes(b"x" * 20_000)
     manifest = json.loads((built / "manifest.json").read_text(encoding="utf-8"))
     manifest["output_sha256"]["payloads/business_letters.jsonl.gz"] = P.sha256_of(payload)
     (built / "manifest.json").write_text(json.dumps(manifest), encoding="utf-8")
     monkeypatch.setattr(P, "GITHUB_FILE_LIMIT", 10_000)
-    with pytest.raises(SystemExit, match="payload file"):
+    with pytest.raises(SystemExit, match="payloads/business_letters.jsonl.gz"):
         P.main(["--dataset", str(built), "--out", str(tmp_path / "dist")])
 
 
 def test_checksums_are_written_beside_the_output_not_inside_it(built, tmp_path):
     dist = tmp_path / "dist"
-    P.main(["--dataset", str(built), "--out", str(dist), "--skip-payloads"])
+    P.main(["--dataset", str(built), "--out", str(dist)])
     sums = dist / "SHA256SUMS"
     assert sums.is_file()
     assert not (dist / "release" / "SHA256SUMS").exists(), (
         "a checksum sealed inside the thing it verifies proves nothing")
     assert "release/runs.parquet" in sums.read_text()
+
+
+def test_the_payloads_ship_unchanged_in_the_release_tree(built, tmp_path):
+    """One repository and one record hold the whole dataset, sidecars included."""
+    dist = tmp_path / "dist"
+    P.main(["--dataset", str(built), "--out", str(dist)])
+    shipped = dist / "release" / "payloads" / "business_letters.jsonl.gz"
+    assert shipped.read_bytes() == (built / "payloads" / "business_letters.jsonl.gz").read_bytes()
+    assert "release/payloads/business_letters.jsonl.gz" in (dist / "SHA256SUMS").read_text()
+    assert not list(dist.glob("payloads-*.tar.gz"))
 
 
 def test_a_development_package_is_labelled_and_not_told_to_deposit(built, tmp_path, capsys):
@@ -179,8 +180,7 @@ def test_a_development_package_is_labelled_and_not_told_to_deposit(built, tmp_pa
     del declared["manifest.json"]
 
     dist = tmp_path / "dist"
-    P.main(["--dataset", str(built), "--out", str(dist), "--skip-payloads",
-            "--development"])
+    P.main(["--dataset", str(built), "--out", str(dist), "--development"])
     out = capsys.readouterr().out
     assert (dist / "release-development").is_dir()
     assert "deposit" not in out and "Not releasable" in out
@@ -195,20 +195,13 @@ def _snapshot(root):
 @pytest.mark.parametrize("out", ["dataset", "dataset/dist", "."])
 def test_an_overlapping_out_is_refused_before_anything_is_written(built, tmp_path, out,
                                                                    flags):
-    """Payloads enabled: the archive was the write that used to precede the check."""
+    """The release tree and SHA256SUMS are the writes that must not precede the check."""
     (tmp_path / "SHA256SUMS").write_text("existing output", encoding="utf-8")
     before = _snapshot(tmp_path)
     with pytest.raises(UnsafePaths):
         P.main(["--dataset", str(built), "--out", str(tmp_path / out)] + flags)
     assert _snapshot(tmp_path) == before
     assert P.verify_inputs(built, json.loads((built / "manifest.json").read_text())) == []
-
-
-def test_pack_payloads_refuses_an_archive_inside_its_source(built):
-    before = _snapshot(built)
-    with pytest.raises(UnsafePaths):
-        P.pack_payloads(built, built, "2026-09-09.2")
-    assert _snapshot(built) == before
 
 
 def test_a_missing_dataset_is_refused_with_a_usable_message(tmp_path):
@@ -284,3 +277,80 @@ def test_a_crosscheck_that_cannot_run_blocks_rather_than_crashes(monkeypatch):
     blockers = _blockers(monkeypatch, _Crosscheck(raises=ValueError("truncated json")))
     assert len(blockers) == 1 and "could not run" in blockers[0]
     assert "truncated json" in blockers[0], "keep the reason"
+
+
+# --- the release repository ------------------------------------------------------
+
+def _git(repo, *args):
+    import subprocess
+    subprocess.run(["git", "-C", str(repo), "-c", "user.name=t", "-c", "user.email=t@t",
+                    "-c", "commit.gpgsign=false"] + list(args),
+                   check=True, capture_output=True)
+
+
+@pytest.fixture
+def release_repo(tmp_path):
+    """A clone of the release repository: its furniture and one file of an older release."""
+    repo = tmp_path / "release_repo"
+    repo.mkdir()
+    _git(repo, "init", "-q")
+    (repo / ".zenodo.json").write_text('{"upload_type": "dataset"}', encoding="utf-8")
+    (repo / "LICENSE").write_text("CC BY 4.0", encoding="utf-8")
+    (repo / "dropped").mkdir()
+    (repo / "dropped" / "old.parquet").write_bytes(b"PAR1old")
+    _git(repo, "add", "-A")
+    _git(repo, "commit", "-q", "-m", "older release")
+    return repo
+
+
+def test_the_sync_replaces_the_release_and_keeps_the_repository(built, tmp_path, release_repo):
+    P.main(["--dataset", str(built), "--out", str(tmp_path / "dist"),
+            "--release-repo", str(release_repo)])
+    release = tmp_path / "dist" / "release"
+    for path in release.rglob("*"):
+        if path.is_file():
+            assert (release_repo / path.relative_to(release)).read_bytes() == path.read_bytes()
+    assert (release_repo / ".git").is_dir()
+    assert (release_repo / ".zenodo.json").is_file() and (release_repo / "LICENSE").is_file()
+    assert not (release_repo / "dropped").exists(), "a file no longer produced is removed"
+
+
+def test_a_second_sync_of_the_same_release_changes_nothing(built, tmp_path, release_repo):
+    release = tmp_path / "dist" / "release"
+    P.build_release_tree(built, release)
+    P.sync_release_repo(release, release_repo)
+    _git(release_repo, "add", "-A")
+    _git(release_repo, "commit", "-q", "-m", "release")
+    assert P.sync_release_repo(release, release_repo) == ([], [], [])
+
+
+def test_the_sync_refuses_uncommitted_changes(built, tmp_path, release_repo):
+    (release_repo / "LICENSE").write_text("edited", encoding="utf-8")
+    release = tmp_path / "dist" / "release"
+    P.build_release_tree(built, release)
+    with pytest.raises(SystemExit, match="uncommitted changes"):
+        P.sync_release_repo(release, release_repo)
+    assert (release_repo / "dropped" / "old.parquet").is_file()
+
+
+def test_the_sync_refuses_a_directory_that_is_not_a_repository(built, tmp_path):
+    release = tmp_path / "dist" / "release"
+    P.build_release_tree(built, release)
+    plain = tmp_path / "plain"
+    plain.mkdir()
+    with pytest.raises(SystemExit, match="not a git repository"):
+        P.sync_release_repo(release, plain)
+
+
+def test_a_repository_is_never_a_destination_replaced_wholesale(built, release_repo):
+    before = _snapshot(release_repo)
+    with pytest.raises(UnsafePaths, match="git repository"):
+        P.build_release_tree(built, release_repo)
+    assert _snapshot(release_repo) == before
+
+
+def test_a_development_package_never_goes_to_the_release_repository(built, tmp_path,
+                                                                    release_repo):
+    with pytest.raises(SystemExit, match="development package"):
+        P.main(["--dataset", str(built), "--out", str(tmp_path / "dist"), "--development",
+                "--release-repo", str(release_repo)])
