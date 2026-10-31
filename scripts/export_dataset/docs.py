@@ -20,6 +20,16 @@ DATASET_TITLE = "Humanities Data Benchmark: complete stored results"
 
 SOFTWARE_CONCEPT_DOI = "10.5281/zenodo.16941752"
 
+KEYWORDS = (
+    "benchmark", "LLM evaluation", "large language models", "vision-language models",
+    "digital humanities", "cultural heritage", "historical documents",
+    "optical character recognition", "handwritten text recognition", "document understanding",
+    "information extraction", "evaluation results", "model outputs", "inference cost",
+    "reproducible research",
+)
+"""The dataset's keywords, in datapackage.json and CITATION.cff and so on its Zenodo record:
+the software's, plus three for what the dataset holds."""
+
 LICENSE_ID = "CC-BY-4.0"
 LICENSE_TITLE = "Creative Commons Attribution 4.0 International"
 LICENSE_URL = "https://creativecommons.org/licenses/by/4.0/"
@@ -91,8 +101,7 @@ def datapackage(manifest):
         "created": manifest["data_cutoff"],
         "licenses": [{"name": LICENSE_ID, "title": LICENSE_TITLE, "path": LICENSE_URL}],
         "resources": resources,
-        "keywords": ["benchmark", "LLM", "digital humanities", "OCR", "HTR",
-                     "information extraction"],
+        "keywords": list(KEYWORDS),
         "relatedIdentifiers": [{
             "relationType": "isSupplementTo",
             "relatedIdentifier": SOFTWARE_CONCEPT_DOI,
@@ -640,12 +649,8 @@ def citation(manifest, software_citation):
                 entry[0] = "  -" + entry[0][3:]
                 lines.extend(entry)
 
-    lines.extend([
-        "keywords:",
-        "  - benchmark",
-        "  - LLM",
-        "  - digital humanities",
-    ])
+    lines.append("keywords:")
+    lines.extend("  - %s" % json.dumps(keyword) for keyword in KEYWORDS)
     identifiers = []
     if manifest.get("concept_doi"):
         identifiers.append((manifest["concept_doi"], "All versions"))
@@ -745,8 +750,7 @@ def release_datapackage(manifest, packaged_paths):
         "created": manifest["data_cutoff"],
         "licenses": [{"name": LICENSE_ID, "title": LICENSE_TITLE, "path": LICENSE_URL}],
         "resources": resources,
-        "keywords": ["benchmark", "LLM", "digital humanities", "OCR", "HTR",
-                     "information extraction"],
+        "keywords": list(KEYWORDS),
         "relatedIdentifiers": [{
             "relationType": "isSupplementTo",
             "relatedIdentifier": SOFTWARE_CONCEPT_DOI,
