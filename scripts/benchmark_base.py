@@ -334,7 +334,7 @@ class Benchmark(ABC):
         ground_truth_path = os.path.join(self.benchmark_dir, "ground_truths", f"{object_basename}.json")
         ground_truth_text = read_file(ground_truth_path)
 
-        if self.convert_truth_to_json:
+        if self.convert_truth_to_json():
             try:
                 return json.loads(ground_truth_text)
             except json.JSONDecodeError as e:
@@ -980,18 +980,9 @@ class Benchmark(ABC):
         """ Score the benchmark. """
         pass
 
-    def remove_none_values(self) -> bool:
-        """If True, remove None values from the response before scoring."""
-        return True
-
-
     def convert_truth_to_json(self) -> bool:
         """If the result is a JSON string, convert it to a JSON object."""
         return True
-
-    def resize_images(self) -> bool:
-        """If images are too large, resize them before sending to the model."""
-        return False
 
     def get_title(self) -> str:
         """Title of the benchmark. Used in the result table."""

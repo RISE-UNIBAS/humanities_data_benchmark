@@ -303,3 +303,17 @@ class TestRecordedVersion:
         save("b", __import__("datetime").datetime(2026, 1, 2, 9))
         stamp = resumed_version(benchmark.saved_versions(["a", "b", "never-saved"]), repo)
         assert stamp["version"] == "2.0.0" and stamp["mixed"] is True
+
+
+class _TextTruth(_Stored):
+    def convert_truth_to_json(self):
+        return False
+
+
+@pytest.mark.parametrize("cls,expected", [(_Stored, {"a": 1}), (_TextTruth, {"response_text": '{"a": 1}'})])
+def test_load_ground_truth_follows_convert_truth_to_json(tmp_path, cls, expected):
+    (tmp_path / "ground_truths").mkdir()
+    (tmp_path / "ground_truths" / "x.json").write_text('{"a": 1}', encoding="utf-8")
+    benchmark = cls.__new__(cls)
+    benchmark.benchmark_dir = str(tmp_path)
+    assert benchmark.load_ground_truth("x") == expected

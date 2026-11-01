@@ -127,7 +127,7 @@ GENERATED = {
 }
 
 LANGUAGES = {
-    "de": "German", "el": "Greek", "en": "English", "fi": "Finnish", "fr": "French",
+    "ar": "Arabic", "de": "German", "el": "Greek", "en": "English", "fi": "Finnish", "fr": "French",
     "it": "Italian", "la": "Latin", "pl": "Polish", "sv": "Swedish",
 }
 

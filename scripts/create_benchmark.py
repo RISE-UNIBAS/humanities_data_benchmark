@@ -7,11 +7,16 @@ Usage:
 
 import json
 import re
+import sys
 from datetime import date
 from pathlib import Path
 from typing import Dict, List, Optional
 
-VOCABULARIES_PATH = Path(__file__).parent.parent / "vocabularies"
+REPO_ROOT = Path(__file__).resolve().parent.parent
+BENCHMARKS_PATH = REPO_ROOT / "benchmarks"
+TESTS_PATH = REPO_ROOT / "tests"
+TEMPLATE_PATH = REPO_ROOT / "benchmarks" / "README_TEMPLATE.md"
+VOCABULARIES_PATH = REPO_ROOT / "vocabularies"
 
 
 # Color codes for terminal output
@@ -78,9 +83,7 @@ def get_input(prompt: str, default: Optional[str] = None, required: bool = True)
                 return default
             elif not required:
                 return ""
-            else:
-                print_error("Input required but EOF encountered.")
-                continue
+            raise
         except KeyboardInterrupt:
             raise
 
@@ -189,9 +192,14 @@ def validate_benchmark_name(name: str) -> tuple[bool, str]:
 
 
 def to_camel_case(snake_str: str) -> str:
-    """Convert snake_case to CamelCase."""
+    """Convert snake_case to CamelCase, as run_benchmarks.load_benchmark does (letters_19c -> Letters19c)."""
     components = snake_str.split('_')
-    return ''.join(x.title() for x in components)
+    return ''.join(x.capitalize() for x in components)
+
+
+def docstring_text(text: str) -> str:
+    """Text that can stand inside a triple-quoted docstring and reads back unchanged."""
+    return re.sub(r'"(?="")', r'\\"', text.replace('\\', '\\\\'))
 
 
 def load_vocabularies() -> List[Dict]:
@@ -320,8 +328,7 @@ def collect_benchmark_info() -> Dict:
         valid, error_msg = validate_benchmark_name(name)
         if valid:
             try:
-                benchmarks_dir = Path("benchmarks")
-                if (benchmarks_dir / name).exists():
+                if (BENCHMARKS_PATH / name).exists():
                     print_error(f"Benchmark '{name}' already exists!")
                     continue
                 info['name'] = name
@@ -387,8 +394,8 @@ def collect_benchmark_info() -> Dict:
     # Scoring configuration (default values)
     info['ranking_metric'] = 'fuzzy'
     info['ranking_order'] = 'desc'
-    print_info("\nScoring Configuration: Using default (fuzzy/descending)")
-    print("(This can be customized later in meta.json)")
+    print_info("\nScoring Configuration: fuzzy, descending (the metric the scaffolded scorer returns)")
+    print("(To rank by another metric, change the scorer in benchmark.py and meta.json `ranking` together)")
 
     # Dataclass
     print()
@@ -431,11 +438,6 @@ def collect_benchmark_info() -> Dict:
     print("(This prompt will be saved in prompts/prompt.txt and can be edited later)")
     info['default_prompt'] = get_multiline_input("Enter default prompt text")
 
-    # Default role description
-    print()
-    info['role_description'] = get_input("Default role description",
-                                         default="You are a historian analyzing historical documents.")
-
     return info
 
 
@@ -471,9 +473,7 @@ def display_configuration(info: Dict):
     if info['use_shared_context']:
         shared_prompt_preview = info['shared_context_prompt'][:100] + ('...' if len(info['shared_context_prompt']) > 100 else '')
         print(f"   {Colors.BOLD}Initial Prompt:{Colors.END} {shared_prompt_preview}")
-    print(f"{Colors.BOLD}12. Role Description:{Colors.END}")
-    print(f"   {info['role_description']}")
-    print(f"{Colors.BOLD}13. Default Prompt:{Colors.END}")
+    print(f"{Colors.BOLD}12. Default Prompt:{Colors.END}")
     prompt_preview = info['default_prompt'][:150] + ('...' if len(info['default_prompt']) > 150 else '')
     print(f"   {prompt_preview}")
     print()
@@ -485,7 +485,7 @@ def edit_configuration(info: Dict) -> Dict:
         display_configuration(info)
 
         print(f"{Colors.YELLOW}Options:{Colors.END}")
-        print("  • Enter a number (1-13) to edit that field")
+        print("  • Enter a number (1-12) to edit that field")
         print("  • Enter 'c' to continue and create benchmark")
         print("  • Enter 'q' to quit without creating")
         print()
@@ -545,13 +545,8 @@ def edit_configuration(info: Dict) -> Dict:
                 info['contributors'] = contributors
         elif choice == '7':
             print()
-            print("Available metrics: fuzzy, f1_macro, f1_micro, exact")
-            new_metric = get_input("Ranking metric", default=info['ranking_metric'])
-            if new_metric in ['fuzzy', 'f1_macro', 'f1_micro', 'exact']:
-                info['ranking_metric'] = new_metric
-            new_order = get_input("Ranking order (desc/asc)", default=info['ranking_order'])
-            if new_order in ['desc', 'asc']:
-                info['ranking_order'] = new_order
+            print_warning("The scaffolded scorer returns only 'fuzzy'. To rank by another metric, "
+                          "change the scorer in benchmark.py and meta.json `ranking` together.")
         elif choice == '8':
             info['use_dataclass'] = get_yes_no("Use a structured dataclass/schema?",
                                               default=info['use_dataclass'])
@@ -576,8 +571,6 @@ def edit_configuration(info: Dict) -> Dict:
             else:
                 info['shared_context_prompt'] = ""
         elif choice == '12':
-            info['role_description'] = get_input("Role description", default=info['role_description'])
-        elif choice == '13':
             print()
             print(f"{Colors.BOLD}Current prompt:{Colors.END}")
             print(info['default_prompt'])
@@ -585,7 +578,7 @@ def edit_configuration(info: Dict) -> Dict:
             if get_yes_no("Edit prompt?", default=True):
                 info['default_prompt'] = get_multiline_input("New prompt")
         else:
-            print_error("Invalid choice. Please enter a number 1-13, 'c' to continue, or 'q' to quit.")
+            print_error("Invalid choice. Please enter a number 1-12, 'c' to continue, or 'q' to quit.")
 
         print()
 
@@ -649,9 +642,10 @@ def generate_benchmark_py(info: Dict) -> str:
 '''
 
     typing_import = "from typing import List\n\n" if info['use_shared_context'] else ""
-    template = f'''"""Benchmark implementation for {info['title']}.
+    title = docstring_text(info['title'])
+    template = f'''"""Benchmark implementation for {title}.
 
-{info['description']}
+{docstring_text(info['description'])}
 """
 
 {typing_import}from scripts.benchmark_base import Benchmark
@@ -659,7 +653,7 @@ from scripts.scoring_helper import calculate_fuzzy_score
 
 
 class {info['class_name']}(Benchmark):
-    """Benchmark for {info['title']}."""
+    """Benchmark for {title}."""
 
     score_unparseable_as_miss = True
 {shared_context_section}
@@ -687,9 +681,7 @@ class {info['class_name']}(Benchmark):
         return {{"fuzzy": sum(s["fuzzy"] for s in all_scores) / len(all_scores)}}
 
     # Optional hooks inherited from Benchmark (scripts/benchmark_base.py):
-    # remove_none_values() -> bool          strip None values before scoring (default True)
     # convert_truth_to_json() -> bool       parse a ground truth stored as a JSON string (default True)
-    # resize_images() -> bool               resize oversized images before sending (default False)
     # get_prompt_kwargs(basename, filenames) -> dict   values interpolated into the prompt
     # skip_object(object_basename) -> bool  exclude an object from the run
 '''
@@ -703,8 +695,9 @@ def generate_dataclass_py(info: Dict) -> str:
         return ""
 
     class_name = info['dataclass_name']
+    title = docstring_text(info['title'])
 
-    template = f'''"""Pydantic models for {info['title']} benchmark output validation.
+    template = f'''"""Pydantic models for {title} benchmark output validation.
 
 This module defines the expected structure of model outputs.
 """
@@ -714,7 +707,7 @@ from pydantic import BaseModel, Field
 
 
 class {class_name}(BaseModel):
-    """Main output structure for {info['title']}."""
+    """Main output structure for {title}."""
 
     # TODO: Define your schema fields here
     # Example:
@@ -771,7 +764,7 @@ def test_unparseable_response_is_a_miss(scorer, response):
 
 def generate_readme(info: Dict) -> str:
     """Generate README.md content: the BenchmarkCard template with the title filled in."""
-    template = (Path(__file__).parent.parent / "benchmarks" / "README_TEMPLATE.md").read_text(encoding='utf-8')
+    template = TEMPLATE_PATH.read_text(encoding='utf-8')
     return template.replace("# [Benchmark Title]", f"# {info['title']}", 1)
 
 
@@ -784,7 +777,7 @@ def create_benchmark_structure(info: Dict) -> bool:
     """Create all directories and files for the benchmark."""
     benchmark_dir = None
     try:
-        benchmark_dir = Path("benchmarks") / info['name']
+        benchmark_dir = BENCHMARKS_PATH / info['name']
 
         # Create main directory
         print_info(f"Creating directory: {benchmark_dir}")
@@ -823,7 +816,7 @@ def create_benchmark_structure(info: Dict) -> bool:
             print_info(f"Creating file: {file_path}")
             file_path.write_text(content, encoding='utf-8')
 
-        test_path = Path("tests") / f"test_{info['name']}_scoring.py"
+        test_path = TESTS_PATH / f"test_{info['name']}_scoring.py"
         if test_path.exists():
             print_warning(f"Not overwriting existing {test_path}")
         else:
@@ -899,6 +892,12 @@ def print_next_steps(info: Dict):
         print(f"   - Review: context/shared_context_prompt.txt")
         step_num += 1
 
+    print(f"\n{Colors.BOLD}{step_num}. Add test configurations:{Colors.END}")
+    print(f"   - Add rows to: benchmarks/benchmarks_tests.csv (name {info['name']}, prompt_file prompt.txt"
+          + (f", dataclass {info['dataclass_name']}" if info['use_dataclass'] else "")
+          + ", and the role_description sent as the system prompt)")
+    step_num += 1
+
     print(f"\n{Colors.BOLD}{step_num}. Create and run tests:{Colors.END}")
     print(f"   - Run it against a model: python scripts/run_single_test.py --adhoc")
     print(f"   - Run the test suite: pytest")
@@ -914,6 +913,10 @@ def print_next_steps(info: Dict):
 
 def main():
     """Main CLI entry point."""
+    for stream in (sys.stdout, sys.stderr):
+        # Redirected output on Windows is cp1252, which has no ✓ or ℹ.
+        if hasattr(stream, "reconfigure"):
+            stream.reconfigure(errors="replace")
     try:
         # Collect information
         info = collect_benchmark_info()
@@ -934,6 +937,8 @@ def main():
 
     except KeyboardInterrupt:
         print_warning("\n\nBenchmark creation cancelled by user.")
+    except EOFError:
+        print_warning("\n\nInput ended before every required answer was given; nothing was created.")
     except Exception as e:
         print_error(f"\nUnexpected error: {e}")
         import traceback

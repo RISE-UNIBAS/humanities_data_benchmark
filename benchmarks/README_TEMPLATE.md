@@ -68,7 +68,7 @@ This README is a BenchmarkCard (Sokol et al., NeurIPS 2025, arXiv 2410.12974), s
 
 **Human Baseline:** Not specified
 
-**Judge Uses LLM:** true
+**Judge Uses LLM:** false
 
 **Judge Num:** Not specified
 

@@ -83,9 +83,10 @@ tests in `tests/test_<benchmark_name>_scoring.py` and the README (a BenchmarkCar
 python scripts/create_benchmark.py
 ```
 
-It asks for a name, title, description, tags, contributors, the scoring metric, whether the
-benchmark uses images, texts and a dataclass, and the default prompt, and lets you edit every
-answer before it writes anything. Name the benchmark after its **source**, not the task
+It asks for a name, title, description, tags, contributors, whether the benchmark uses images,
+texts and a dataclass, and the default prompt, and lets you edit every answer before it writes
+anything. Run it from anywhere; it writes into the repository. The scaffold ranks by `fuzzy`, the
+metric its scorer returns; to rank by another, change the scorer and `meta.json` `ranking` together. Name the benchmark after its **source**, not the task
 (`personal_letters`, not `date_recognition`), in lowercase with underscores; choose it once, as
 test configurations and result paths refer to it. Tags are chosen per facet from the controlled
 vocabularies in `vocabularies/` (century, document type, language, layout, script, task and
@@ -154,9 +155,7 @@ The class inherits further hooks from `Benchmark` (`scripts/benchmark_base.py`):
 
 | Method | Purpose |
 |--------|---------|
-| `remove_none_values()` | Whether `None` values are stripped from the response before scoring (default `True`) |
 | `convert_truth_to_json()` | Whether a ground truth stored as a JSON string is parsed into an object (default `True`) |
-| `resize_images()` | Whether oversized images are resized before being sent to the model (default `False`) |
 | `get_title()` | Title of the benchmark as shown in the result table |
 | `get_prompt_kwargs(basename, filenames)` | Values interpolated into the prompt file, e.g. file information |
 | `skip_object(object_basename)` | Whether a given object is excluded from the run |

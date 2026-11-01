@@ -13,6 +13,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - `CITATION.cff` records the University of Basel affiliation of 13 authors; the dataset deposit's description explains the benchmark without the README, and the dataset's `CITATION.cff` and deposit name the two JOHD articles that describe it; one list of 15 keywords for `datapackage.json`, `CITATION.cff` and the deposit.
 
+### Removed
+- `Benchmark.remove_none_values()` and `resize_images()`, hooks the runner never called.
+
+### Fixed
+- `create_benchmark.py`: class names with digits match the runner's; backslashes or `"""` in a title or description no longer break `benchmark.py`; stops at end of input instead of looping; works from any directory; no longer asks for a role description it discarded or a ranking metric its scorer does not return; no crash on redirected Windows output.
+- Card template: Judge Uses LLM defaults to false; cards name Arabic (`ar`).
+- `Benchmark.convert_truth_to_json()` overrides take effect.
+
 ## [v0.8.0] - 2026-10-30
 
 ### Added
