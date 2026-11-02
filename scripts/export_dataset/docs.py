@@ -16,7 +16,7 @@ from scripts.export_dataset.coverage import COLUMNS as COVERAGE_COLUMNS
 from scripts.export_dataset.schema import TABLES, UNIQUE_KEYS
 
 DATASET_NAME = "humanities-data-benchmark-results"
-DATASET_TITLE = "Humanities Data Benchmark: complete stored results"
+DATASET_TITLE = "RISE Humanities Data Benchmark Dataset: Complete Stored Results"
 
 SOFTWARE_CONCEPT_DOI = "10.5281/zenodo.16941752"
 

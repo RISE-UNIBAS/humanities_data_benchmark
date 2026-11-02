@@ -37,7 +37,7 @@ def reconciliation_tested_separately(monkeypatch):
 
 CITATION = """cff-version: 1.2.0
 type: dataset
-title: "Humanities Data Benchmark: complete stored results"
+title: "RISE Humanities Data Benchmark Dataset: Complete Stored Results"
 abstract: >-
   Every stored result as joinable tables.
 authors:
