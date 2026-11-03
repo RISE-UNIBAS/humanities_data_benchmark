@@ -236,14 +236,21 @@ class BusinessLetters(Benchmark):
     def _match_person(persons: dict,
                       ground_truth_person: Person,
                       predicted_person: str) -> str | None:
-        """ Match predicted person to ground truth person name variant. """
+        """ Match predicted person to ground truth person name variant, ignoring case and whitespace. """
 
+        predicted = BusinessLetters._normalize_name(predicted_person)
         for person in persons:
             if ground_truth_person.name == person["name"]:
-                if predicted_person in person["alternateName"]:
+                if any(predicted == BusinessLetters._normalize_name(variant) for variant in person["alternateName"]):
                     return ground_truth_person.name
 
         return None
+
+    @staticmethod
+    def _normalize_name(name: str) -> str:
+        """ Case and whitespace do not distinguish names: "J. A. Ritter" is "J.A.Ritter". """
+
+        return re.sub(r"\s+", "", name).casefold()
 
     @staticmethod
     def _score_send_date(ground_truth_letter: Letter,
@@ -307,15 +314,18 @@ class BusinessLetters(Benchmark):
         predicted_persons = []
         if predicted_letter.__getattribute__(f"{sender_or_receiver}_persons") is not None:
             predicted_persons = predicted_letter.__getattribute__(f"{sender_or_receiver}_persons")
-        predicted_persons = [predicted_person.name for predicted_person in predicted_persons]
+        # drop empty names before matching, so that they cannot match an empty name variant:
+        predicted_persons = [predicted_person.name for predicted_person in predicted_persons
+                             if predicted_person.name is not None
+                             and predicted_person.name.strip() not in ("", "null", "None")]
 
         # match predicted persons to their preferred name variant:
         matched_predicted_persons = []
         for predicted_person in predicted_persons:
             matched = False
             for ground_truth_person in ground_truth_persons:
-                if ground_truth_person.name == predicted_person:
-                    matched_predicted_persons.append(predicted_person)
+                if self._normalize_name(ground_truth_person.name) == self._normalize_name(predicted_person):
+                    matched_predicted_persons.append(ground_truth_person.name)
                     matched = True
                     break
                 else:

@@ -174,6 +174,7 @@ This section is not part of the BenchmarkCard schema and is not exported to `ben
 
 **Versions:**
 
+- 3.0.0 (2026-11-03) — ground truth corrected against the scans: `persons.json` accepts `F. Lützelschwab` (letter46), `Jean Frey` (letter55), `Rupprecht` (letter13) and `P. Christ` (letter02), drops two spellings of Lützelschwab found on no letter, the empty spelling of Ritter-Wehrle and a duplicate; the sender of the unsigned `letter46` is marked as inferred (`<Oettinger-Meili, Artur>`), as on the other unsigned letters; person names are matched ignoring case and whitespace, and empty names are dropped before matching, so they no longer match an empty spelling; all stored runs re-scored
 - 2.0.0 (2026-10-17) — ground truth kept as JSON only (the CSV exports and their per-run conversion removed), `has_signatures` stored as a boolean; a response that cannot be parsed is scored as a miss instead of being left out; all stored runs re-scored
 - 1.0.0 (2026-10-16) — initial versioned state, when the card was introduced; same content as 0.12.0
 - 0.12.0 (2026-09-18) — null entries in name lists are dropped, so answers such as `[null]` are scored instead of left out; answers capped at 16,384 output tokens instead of 32,768
@@ -197,7 +198,7 @@ This section is not part of the BenchmarkCard schema and is not exported to `ben
 
 **How to Cite:** This benchmark:
 
-> Decker, E., Hindermann, M., Kasper, L., Alberto, A., Frick, P., Losada Palenzuela, J. L., Marti, S., & Spadini, E. (2025). Business Letters (benchmark version 2.0.0). In *RISE Humanities Data Benchmark*. Zenodo. https://doi.org/10.5281/zenodo.16941752
+> Decker, E., Hindermann, M., Kasper, L., Alberto, A., Frick, P., Losada Palenzuela, J. L., Marti, S., & Spadini, E. (2025). Business Letters (benchmark version 3.0.0). In *RISE Humanities Data Benchmark*. Zenodo. https://doi.org/10.5281/zenodo.16941752
 
 Source:
 

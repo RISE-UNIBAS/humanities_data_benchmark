@@ -173,6 +173,7 @@ This section is not part of the BenchmarkCard schema and is not exported to `ben
 
 **Versions:**
 
+- 3.0.0 (2026-11-03) — ground truth corrected against the scan: in `156089_1321088_41` the locations of Imperial Airways (`Basle, Switzerland`) and the Schweiz. Schleppschiffahrtsgenossenschaft (`Basle`) were swapped; all stored runs re-scored
 - 2.0.0 (2026-10-17) — `page_id` and `entry_id` are no longer scored: the model is never given their expected values; `prompt_v2.txt` added for new tests; a response that cannot be parsed is scored as a miss instead of being left out; all stored runs re-scored
 - 1.0.0 (2026-10-16) — initial versioned state, when the card was introduced; same content as 0.6.0
 - 0.6.0 (2026-09-18) — schema: `location` may be null; answers capped at 16,384 output tokens instead of 32,768
@@ -185,7 +186,7 @@ This section is not part of the BenchmarkCard schema and is not exported to `ben
 
 **How to Cite:** This benchmark:
 
-> Kasper, L., & Marti, S. (2025). Company Lists (benchmark version 2.0.0). In *RISE Humanities Data Benchmark*. Zenodo. https://doi.org/10.5281/zenodo.16941752
+> Kasper, L., & Marti, S. (2025). Company Lists (benchmark version 3.0.0). In *RISE Humanities Data Benchmark*. Zenodo. https://doi.org/10.5281/zenodo.16941752
 
 Source:
 

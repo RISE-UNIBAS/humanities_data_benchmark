@@ -229,5 +229,46 @@ class TestScoreRequestAnswerNonConforming:
         assert "document_number" not in ground_truth
 
 
+class TestPersonMatching:
+    GROUND_TRUTH = {
+        "send_date": "1947-03-05",
+        "letter_title": "Test",
+        "sender_persons": ["Speich, Rudolf"],
+        "receiver_persons": ["Ritter-Wehrle, Oskar"],
+        "has_signatures": "TRUE",
+    }
+    PERSONS = [
+        {"name": "Speich, Rudolf", "alternateName": ["Dr. RUD. SPEICH", "J.A.Speich"]},
+        {"name": "Ritter-Wehrle, Oskar", "alternateName": ["O. Ritter", ""]},
+    ]
+
+    @pytest.fixture
+    def scorer(self, make_scorer, benchmark_dir):
+        (benchmark_dir / "ground_truths" / "persons.json").write_text(json.dumps(self.PERSONS), encoding="utf-8")
+        return make_scorer(BusinessLetters, benchmark_dir=str(benchmark_dir))
+
+    def _persons(self, scorer, response, senders, receivers):
+        parsed = {"metadata": {"send_date": ["1947-03-05"], "sender_persons": senders, "receiver_persons": receivers}}
+        score = scorer.score_request_answer("letter_1", response(parsed=parsed), dict(self.GROUND_TRUTH))
+        return {k: v for k, v in score.items() if k.startswith(("sender", "receiver"))}
+
+    @pytest.mark.parametrize("variant", ["Dr. Rud. Speich", "dr. rud. speich", "J. A. Speich", "speich,rudolf"])
+    def test_case_and_whitespace_are_ignored(self, scorer, response, variant):
+        assert self._persons(scorer, response, [variant], ["O. Ritter"]) == {
+            "sender_persons_tp": 1, "sender_persons_fp": 0, "sender_persons_fn": 0,
+            "receiver_persons_tp": 1, "receiver_persons_fp": 0, "receiver_persons_fn": 0,
+        }
+
+    def test_other_spellings_still_rejected(self, scorer, response):
+        assert self._persons(scorer, response, ["Dr. R. Speicher"], ["O. Ritter"])["sender_persons_fp"] == 1
+
+    @pytest.mark.parametrize("empty", ["", " ", "null", "None"])
+    def test_empty_name_never_matches_an_empty_variant(self, scorer, response, empty):
+        assert self._persons(scorer, response, ["Dr. RUD. SPEICH"], [empty]) == {
+            "sender_persons_tp": 1, "sender_persons_fp": 0, "sender_persons_fn": 0,
+            "receiver_persons_tp": 0, "receiver_persons_fp": 0, "receiver_persons_fn": 1,
+        }
+
+
 def test_unparseable_answers_are_scored_as_misses():
     assert BusinessLetters.score_unparseable_as_miss is True

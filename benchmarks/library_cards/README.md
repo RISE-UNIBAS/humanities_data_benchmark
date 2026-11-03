@@ -185,6 +185,7 @@ This section is not part of the BenchmarkCard schema and is not exported to `ben
 
 **Versions:**
 
+- 3.0.0 (2026-11-03) — ground truth corrected against the scans: the format entered as `pages` on `00443771`, `00589241`, `00599509`, `00614130` and `00658520` moved to `format`; `00639255` pages as on the card (`1+III+(zus. 207) Bl.`, was `1+111`); `00443771` shelfmark added; `00414956`, a cross-reference, records the referenced author in full and no title, as the other cross-references do; all stored runs re-scored
 - 2.0.0 (2026-10-17) — ground truth corrected: `00575005` (a cross-reference without a year) has an empty year instead of `0`; ground-truth files hold only the card record, years as strings; two files without an image removed; a response that cannot be parsed is scored as a miss instead of being left out; all stored runs re-scored
 - 1.0.0 (2026-10-16) — initial versioned state, when the card was introduced; same content as 0.13.1
 - 0.13.1 (2026-09-27) — prompt variant asking for `year` as a string
@@ -206,7 +207,7 @@ This section is not part of the BenchmarkCard schema and is not exported to `ben
 
 **How to Cite:** This benchmark:
 
-> Müller, G., & Hindermann, M. (2025). Library Cards (benchmark version 2.0.0). In *RISE Humanities Data Benchmark*. Zenodo. https://doi.org/10.5281/zenodo.16941752
+> Müller, G., & Hindermann, M. (2025). Library Cards (benchmark version 3.0.0). In *RISE Humanities Data Benchmark*. Zenodo. https://doi.org/10.5281/zenodo.16941752
 
 Source:
 
