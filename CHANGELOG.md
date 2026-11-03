@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased
+## [v0.8.1] - 2026-11-03
 
 ### Added
 - Dataset release `2026-10-29.5` deposited ([10.5281/zenodo.23821533](https://doi.org/10.5281/zenodo.23821533), concept DOI 10.5281/zenodo.23821532) and recorded in `scripts/data/dataset_releases.json`; README and `CITATION.cff` link it, and `CITATION.cff` lists the v0.8.0 DOI.
@@ -462,3 +462,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [v0.7.0]: https://github.com/RISE-UNIBAS/humanities_data_benchmark/releases/tag/v0.7.0
 [v0.7.1]: https://github.com/RISE-UNIBAS/humanities_data_benchmark/releases/tag/v0.7.1
 [v0.8.0]: https://github.com/RISE-UNIBAS/humanities_data_benchmark/releases/tag/v0.8.0
+[v0.8.1]: https://github.com/RISE-UNIBAS/humanities_data_benchmark/releases/tag/v0.8.1
