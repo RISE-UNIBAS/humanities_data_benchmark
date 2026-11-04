@@ -1,0 +1,143 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 730" width="1200" height="730" role="img" aria-labelledby="t d">
+  <title id="t">How the RISE Humanities Data Benchmark works</title>
+  <desc id="d">Benchmarks define sources, prompts, schema, ground truth and scorer; tests in benchmarks_tests.csv configure provider, model and prompt; the runner asks the model, scores each answer and stores it under results; stored results feed the website, the dataset release and daily reports. A new major benchmark version re-scores the stored answers without new requests.</desc>
+  <style>
+    .bg { fill: #ffffff; }
+    .box { fill: #f6f8fa; stroke: #d0d7de; stroke-width: 1.5; }
+    .card { fill: #ffffff; stroke: #d0d7de; stroke-width: 1; }
+    .t { font-family: system-ui, -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2328; }
+    .m { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; fill: #1f2328; }
+    .step { font-size: 11.5px; font-weight: 700; letter-spacing: 0.08em; fill: #0969da; }
+    .h { font-size: 19px; font-weight: 700; }
+    .path { font-size: 12px; fill: #59636e; }
+    .name { font-size: 12.5px; font-weight: 600; }
+    .desc { font-size: 12.5px; fill: #59636e; }
+    .small { font-size: 11.5px; }
+    .muted { fill: #59636e; }
+    .link { fill: #0969da; }
+    .flow { stroke: #59636e; stroke-width: 2; fill: none; }
+    .head { fill: #59636e; }
+    .loop { stroke: #bc4c00; stroke-width: 2; fill: none; stroke-dasharray: 6 4; }
+    .loophead { fill: #bc4c00; }
+    .looptext { fill: #bc4c00; font-size: 13px; }
+    @media (prefers-color-scheme: dark) {
+      .bg { fill: #0d1117; }
+      .box { fill: #151b23; stroke: #3d444d; }
+      .card { fill: #0d1117; stroke: #3d444d; }
+      .t, .m { fill: #f0f6fc; }
+      .path, .desc, .muted { fill: #9198a1; }
+      .step, .link { fill: #4493f8; }
+      .flow { stroke: #9198a1; }
+      .head { fill: #9198a1; }
+      .loop { stroke: #f0883e; }
+      .loophead { fill: #f0883e; }
+      .looptext { fill: #f0883e; }
+    }
+  </style>
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="head" d="M0,0 L10,5 L0,10 z"/></marker>
+    <marker id="al" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="loophead" d="M0,0 L10,5 L0,10 z"/></marker>
+  </defs>
+
+  <rect class="bg" x="0" y="0" width="1200" height="730" rx="12"/>
+
+  <!-- re-scoring loop -->
+  <path class="loop" d="M147.5,98 V70 Q147.5,58 160,58 H1030 Q1042.5,58 1042.5,70 V96" marker-end="url(#al)"/>
+  <text class="t looptext" x="595" y="44" text-anchor="middle">New MAJOR version of a benchmark (ground truth, scorer): <tspan class="m" font-size="12.5">rescore.py</tspan> and <tspan class="m" font-size="12.5">rewrite_scores.py</tspan> re-score the stored answers, without new requests</text>
+
+  <!-- 1 Benchmarks -->
+  <rect class="box" x="30" y="100" width="235" height="380" rx="10"/>
+  <text class="t step" x="48" y="128">1 · DEFINE</text>
+  <text class="t h" x="48" y="152">Benchmarks</text>
+  <text class="m path" x="48" y="172">benchmarks/&lt;name&gt;/</text>
+  <text class="m name" x="48" y="208">images/ · texts/</text><text class="t desc" x="48" y="225">the scans or texts</text>
+  <text class="m name" x="48" y="250">prompts/</text><text class="t desc" x="48" y="267">what the model is asked</text>
+  <text class="m name" x="48" y="292">dataclass.py</text><text class="t desc" x="48" y="309">the answer schema</text>
+  <text class="m name" x="48" y="334">ground_truths/</text><text class="t desc" x="48" y="351">the expected answers</text>
+  <text class="m name" x="48" y="376">benchmark.py</text><text class="t desc" x="48" y="393">the scorer</text>
+  <text class="m name" x="48" y="418">meta.json · README.md</text><text class="t desc" x="48" y="435">card, versions, ranking</text>
+  <text class="t small muted" x="30" y="503">New benchmark: <tspan class="m">scripts/create_benchmark.py</tspan></text>
+
+  <!-- 2 Tests -->
+  <rect class="box" x="300" y="100" width="290" height="380" rx="10"/>
+  <text class="t step" x="318" y="128">2 · CONFIGURE</text>
+  <text class="t h" x="318" y="152">Tests</text>
+  <text class="m path" x="318" y="172">benchmarks/benchmarks_tests.csv</text>
+  <text class="t desc" x="318" y="204">One row per configuration: benchmark,</text>
+  <text class="t desc" x="318" y="221">provider, model, prompt, temperature, rules</text>
+  <rect class="card" x="314" y="238" width="262" height="50" rx="6"/>
+  <text class="m small" x="326" y="258"><tspan font-weight="700">T0100</tspan>  business_letters</text>
+  <text class="m small muted" x="326" y="277">anthropic · claude-opus-4-20250514</text>
+  <rect class="card" x="314" y="296" width="262" height="50" rx="6"/>
+  <text class="m small" x="326" y="316"><tspan font-weight="700">T1956</tspan>  bibliographic_data</text>
+  <text class="m small muted" x="326" y="335">mistral · ministral-3b-2512</text>
+  <rect class="card" x="314" y="354" width="262" height="50" rx="6"/>
+  <text class="m small" x="326" y="374"><tspan font-weight="700">T2219</tspan>  magazine_pages</text>
+  <text class="m small muted" x="326" y="393">openrouter · nex-agi/nex-n2.5-pro</text>
+  <text class="t desc" x="318" y="432">IDs are sequential. A new setting</text>
+  <text class="t desc" x="318" y="449">gets a new row; old rows are not edited.</text>
+
+  <!-- 3 Run -->
+  <rect class="box" x="625" y="100" width="255" height="380" rx="10"/>
+  <text class="t step" x="643" y="128">3 · RUN</text>
+  <text class="t h" x="643" y="152">Runner</text>
+  <text class="m path" x="643" y="172">scripts/</text>
+  <text class="m name" x="643" y="204">run_benchmarks.py</text><text class="t desc" x="643" y="221">runs a list of tests</text>
+  <text class="m name" x="643" y="242">run_single_test.py</text><text class="t desc" x="643" y="259">one test, or an ad-hoc one</text>
+  <text class="m name" x="643" y="280">ai_client</text><text class="t desc" x="643" y="297">one interface to every provider</text>
+  <text class="m name" x="643" y="318">benchmark.py</text><text class="t desc" x="643" y="335">scores each answer</text>
+  <text class="m name" x="643" y="356">data/pricing.json</text><text class="t desc" x="643" y="373">the cost of each request</text>
+  <text class="m name" x="643" y="394">supervise_run.py</text><text class="t desc" x="643" y="411">restarts a stalled run</text>
+  <text class="m name" x="643" y="432">watch_run.py</text><text class="t desc" x="643" y="449">reports spend and waste</text>
+
+  <!-- 4 Results -->
+  <rect class="box" x="915" y="100" width="255" height="380" rx="10"/>
+  <text class="t step" x="933" y="128">4 · STORE</text>
+  <text class="t h" x="933" y="152">Results</text>
+  <text class="m path" x="933" y="172">results/&lt;date&gt;/&lt;test id&gt;/</text>
+  <text class="m name" x="933" y="208">request_&lt;object&gt;.json</text>
+  <text class="t desc" x="933" y="225">one per object: the answer,</text>
+  <text class="t desc" x="933" y="242">tokens, cost, benchmark version</text>
+  <text class="m name" x="933" y="274">scoring.json</text>
+  <text class="t desc" x="933" y="291">the run's scores and the</text>
+  <text class="t desc" x="933" y="308">benchmark version it used</text>
+  <rect class="card" x="929" y="334" width="227" height="70" rx="6"/>
+  <text class="m small muted" x="941" y="354">2026-10-29/T1956/</text>
+  <text class="m small muted" x="955" y="372">request_T1956_page_2.json</text>
+  <text class="m small muted" x="955" y="390">… scoring.json</text>
+  <text class="t desc" x="933" y="432">Answers are kept, so a run can be</text>
+  <text class="t desc" x="933" y="449">re-scored without asking again.</text>
+
+  <!-- flow arrows -->
+  <path class="flow" d="M267,290 H297" marker-end="url(#a)"/>
+  <path class="flow" d="M592,290 H622" marker-end="url(#a)"/>
+  <path class="flow" d="M882,290 H912" marker-end="url(#a)"/>
+
+  <!-- publish bus -->
+  <path class="flow" d="M1042.5,482 V530 H205"/>
+  <path class="flow" d="M205,530 V556" marker-end="url(#a)"/>
+  <path class="flow" d="M600,530 V556" marker-end="url(#a)"/>
+  <path class="flow" d="M995,530 V556" marker-end="url(#a)"/>
+  <text class="t step" x="30" y="534">5 · PUBLISH</text>
+
+  <!-- 5 outputs -->
+  <rect class="box" x="30" y="560" width="350" height="140" rx="10"/>
+  <text class="t h" x="48" y="592">Website</text>
+  <text class="m path" x="48" y="614">scripts/compare → collected_results/</text>
+  <text class="t desc" x="48" y="642">benchmark-frontend builds the site from</text>
+  <text class="t desc" x="48" y="659">these files: rankings, comparisons, cards</text>
+  <text class="m small link" x="48" y="684">rise-services.rise.unibas.ch/benchmarks</text>
+
+  <rect class="box" x="425" y="560" width="350" height="140" rx="10"/>
+  <text class="t h" x="443" y="592">Dataset</text>
+  <text class="m path" x="443" y="614">scripts/export_dataset · package_dataset.py</text>
+  <text class="t desc" x="443" y="642">every stored run, request and score as Parquet</text>
+  <text class="t desc" x="443" y="659">and CSV; one release per software version</text>
+  <text class="m small link" x="443" y="684">doi.org/10.5281/zenodo.23821532</text>
+
+  <rect class="box" x="820" y="560" width="350" height="140" rx="10"/>
+  <text class="t h" x="838" y="592">Reports</text>
+  <text class="m path" x="838" y="614">scripts/generate_date_report.py</text>
+  <text class="t desc" x="838" y="642">one day's results as an HTML page</text>
+  <text class="m small link" x="838" y="684">reports/&lt;date&gt;_report.html</text>
+</svg>

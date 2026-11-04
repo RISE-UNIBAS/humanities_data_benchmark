@@ -412,7 +412,7 @@ This benchmark suite currently tests models from the following providers:
 The RISE Humanities Data Benchmark is designed to be modular and extensible. Each test applies a model configuration to a benchmark dataset, scores the responses against the ground truths, and stores the results.
 The framework, datasets, and recorded results are included in this repository.
 
-<img width="2279" height="1206" alt="how-it-works" src="https://github.com/user-attachments/assets/ae3197f1-2ea8-4d5f-bb47-94f0cb0e3a69" />
+<img width="1200" alt="How it works: benchmarks define sources, prompts, schema, ground truth and scorer; tests configure provider, model and prompt; the runner asks the model, scores each answer and stores it under results; stored results feed the website, the dataset and date reports; a new major benchmark version re-scores the stored answers." src="docs/how-it-works.svg" />
 
 ### Ground truths
 
