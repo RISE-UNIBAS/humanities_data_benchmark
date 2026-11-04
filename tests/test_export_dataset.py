@@ -883,7 +883,7 @@ def test_an_unknown_rescored_version_is_ignored_with_a_diagnostic(extract):
 
 
 def test_a_rescoring_covers_unlabelled_runs_stored_by_its_day(extract):
-    """rewrite_scores labels only the runs whose aggregate changed; it re-scored all of them."""
+    """`rescore.py --write` labels only the runs whose aggregate changed; it re-scored all of them."""
     metas = {"company_lists": _versions(("1.0.0", "2026-10-16", {}), ("0.1.0", "2026-01-01", {}))}
     e = extract({"2026-03-01": {"T0001": {"requests": {"a": {}},
                                           "scoring": {"f1_micro": 0.5, "rescored": "company_lists 1.0.0 on 2026-10-16"}}},

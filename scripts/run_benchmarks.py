@@ -18,7 +18,7 @@ BENCHMARKS_DIR = '../benchmarks'
 CONFIG_FILE = os.path.join(BENCHMARKS_DIR, 'benchmarks_tests.csv')
 
 # Configure logging
-log_dir = "logs"
+log_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "logs")
 os.makedirs(log_dir, exist_ok=True)
 logging.basicConfig(
     level=logging.INFO,

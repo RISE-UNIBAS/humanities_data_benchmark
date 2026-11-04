@@ -8,9 +8,8 @@ required to drop nothing: a run whose test id is not in the CSV, a request file 
 not parse and a run with no `scoring.json` are all rows it must emit, with a diagnostic,
 rather than silences it must explain later.
 
-`generate_date_report.py`, `generate_test_report.py` and `inject_costs.py` still keep their
-own iteration and are deliberately untouched: the first two only ever read one date or one
-run, and the third writes back into `results/`, which is not this module's business.
+`generate_date_report.py` and `generate_test_report.py` still keep their own iteration and
+are deliberately untouched: they only ever read one date or one run.
 
 So the walk here is complete and the filtering is explicit. `iter_run_dirs` yields every
 run directory and `iter_request_records` yields every request file, malformed included;
@@ -295,7 +294,7 @@ def version_of_label(history, number):
 
 
 RESCORED_LABEL = re.compile(r"^\S+ (\d+\.\d+\.\d+)(?:.* on (\d{4}-\d{2}-\d{2}))?")
-"""scoring.json `rescored`, as rewrite_scores writes it: "<label naming X.Y.Z> on YYYY-MM-DD"."""
+"""scoring.json `rescored`, as `rescore.py --write` writes it: "<label naming X.Y.Z> on YYYY-MM-DD"."""
 
 
 def run_version(history, first, recorded=None):

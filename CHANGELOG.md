@@ -12,7 +12,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Benchmark cards: a generated "Stored results" paragraph in Baseline Results (ranking metric by prompt, latest run per active test up to `meta.json` `results_snapshot`); `benchmark_cards.py --snapshot` moves the date; aggregate scores removed from card prose; `CONTRIBUTING.md` and the card template describe it.
 
 ### Changed
+- `rewrite_scores.py` merged into `rescore.py` (`--check`, `--verify`, `--write`).
+- Importing `scripts` no longer writes a log file into the working directory; runner logs always go to `scripts/logs/`.
+- `generate_date_report.py` links each run to its test report (`--no-test-reports` to skip) and reads files as UTF-8; `generate_test_report.py` handles requests stored with a null `usage` or `score` and drops `--no-images`, which did nothing.
 - `book_advert_xml` card cites Avisdata v1.0.0 as its source (adverts dated 1731–1749); `magazine_pages` card names the Schweizerisches Wirtschaftsarchiv copies (UBW Zq 53, Zq 54, Zq 55a), digitised by the Universitätsbibliothek, and marks them Public Domain Mark 1.0 instead of CC BY 4.0; `fraktur_adverts` card cites the Avisblatt repository and the scanned copies (UBH Ztg 1:1729/1734; UBH Ztg 1:1761/1762 or UBH VB R 5:1762/63).
+
+### Removed
+- `scripts/inject_costs.py` (superseded by `backfill_costs.py`) and `scripts/truth_corrector/`.
 
 ## [v0.8.1] - 2026-11-03
 

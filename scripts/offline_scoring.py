@@ -3,7 +3,8 @@
 The response and the ground truth are both on disk, so a scorer can simply be run
 again. Three callers need that and were growing their own copies of the setup:
 
-  * `scripts/rescore.py` -- proving a change to a scorer leaves its numbers untouched
+  * `scripts/rescore.py` -- proving a change to a scorer leaves its numbers untouched,
+    and writing re-scored values back after a MAJOR version
   * `tests/integrity/test_field_scores_integrity.py` -- the `field_scores` contract
   * `scripts/compare/generate_compare_detail.py` -- comparison detail for runs whose
     scorer did not record any at the time

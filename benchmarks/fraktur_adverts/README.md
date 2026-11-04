@@ -196,7 +196,7 @@ This section is not part of the BenchmarkCard schema and is not exported to `ben
 
 Source:
 
-> Avisblatt repository (Universitätsbibliothek Basel), 1731–1762. Licence of the source material: CC BY 4.0. https://avisblatt.dg-basel.hasdai.org
+> Avisblatt repository (Universitätsbibliothek Basel), UBH Ztg 1:1729/1734; UBH Ztg 1:1761/1762 or UBH VB R 5:1762/63, 1731–1762. Licence of the source material: CC BY 4.0. https://avisblatt.dg-basel.hasdai.org
 
 The benchmark suite:
 

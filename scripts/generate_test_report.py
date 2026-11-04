@@ -94,8 +94,7 @@ def format_duration(seconds: float) -> str:
 def generate_html_report(
     result_folder: Path,
     output_file: Path,
-    include_raw: bool = False,
-    include_images: bool = True
+    include_raw: bool = False
 ) -> None:
     """Generate HTML report for a test result folder."""
 
@@ -150,8 +149,7 @@ def generate_html_report(
         benchmark_meta=benchmark_meta,
         scoring=scoring,
         results=results,
-        include_raw=include_raw,
-        include_images=include_images
+        include_raw=include_raw
     )
 
     # Write HTML file
@@ -169,8 +167,7 @@ def generate_html_content(
     benchmark_meta: Optional[Dict[str, Any]],
     scoring: Optional[Dict[str, Any]],
     results: List[Dict[str, Any]],
-    include_raw: bool,
-    include_images: bool
+    include_raw: bool
 ) -> str:
     """Generate the HTML content for the report."""
 
@@ -625,7 +622,7 @@ def generate_html_content(
         ground_truth = result['ground_truth']
 
         # Calculate item score
-        score_data = req_data.get('score', {})
+        score_data = req_data.get('score') or {}
         item_score = None
         if 'f1_score' in score_data:
             item_score = score_data['f1_score']
@@ -637,7 +634,7 @@ def generate_html_content(
 
         # Item metadata
         duration = req_data.get('duration')
-        usage = req_data.get('usage', {})
+        usage = req_data.get('usage') or {}
 
         html += f"""
                     <div style="margin-bottom: 15px;">
@@ -816,12 +813,6 @@ Examples:
     )
 
     parser.add_argument(
-        '--no-images',
-        action='store_true',
-        help='Do not include images in the report'
-    )
-
-    parser.add_argument(
         '--open',
         action='store_true',
         help='Open the report in the default web browser after generation'
@@ -852,8 +843,7 @@ Examples:
         generate_html_report(
             result_folder=result_folder,
             output_file=output_file,
-            include_raw=args.include_raw,
-            include_images=not args.no_images
+            include_raw=args.include_raw
         )
     except Exception as e:
         print(f"Error generating report: {e}", file=sys.stderr)

@@ -77,11 +77,7 @@ def _load_pricing() -> Dict:
 
 
 def _load_aliases() -> Dict:
-    """Maps a result-file model name back to its pricing.json key.
-
-    Mirrors the reverse map built in inject_costs.py, kept here so the resolver has no
-    import dependency on that script.
-    """
+    """Maps a result-file model name back to its pricing.json key."""
     global _alias_cache
     if _alias_cache is None:
         _alias_cache = {}

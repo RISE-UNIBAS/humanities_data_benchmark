@@ -206,13 +206,16 @@ python scripts/generate_test_report.py results/YYYY-MM-DD/T0001
 ```
 
 The report is written to `reports/<test_id>_report.html` by default; use `-o` to choose another path, `--include-raw`
-to embed the raw API responses, `--no-images` to omit the input images, and `--open` to open the result in a browser.
+to embed the raw API responses, and `--open` to open the result in a browser.
 
 To render all test runs of a given day into one overview report:
 
 ```
 python scripts/generate_date_report.py --date YYYY-MM-DD
 ```
+
+Each test ID in the overview links to that run's test report, written to `reports/<date>/<test_id>_report.html`;
+`--no-test-reports` skips them.
 
 </details>
 

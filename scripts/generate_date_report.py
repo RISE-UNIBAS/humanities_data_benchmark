@@ -7,18 +7,24 @@ Usage: python scripts/generate_date_report.py --date 2025-03-05 --format html
 """
 
 import argparse
+import contextlib
+import io
 import json
 import os
+import sys
 from pathlib import Path
 from datetime import datetime, timedelta
 import csv
+
+sys.path.insert(0, str(Path(__file__).parent))
+import generate_test_report
 
 
 def load_test_metadata():
     """Load test metadata from benchmarks_tests.csv"""
     csv_path = Path(__file__).parent.parent / "benchmarks" / "benchmarks_tests.csv"
     tests = {}
-    with open(csv_path, 'r') as f:
+    with open(csv_path, 'r', encoding='utf-8') as f:
         reader = csv.DictReader(f)
         for row in reader:
             tests[row['id']] = {
@@ -120,7 +126,7 @@ def analyze_test_results(results_dir, test_id, date=None):
     scoring_file = test_dir / "scoring.json"
     scoring = {}
     if scoring_file.exists():
-        with open(scoring_file, 'r') as f:
+        with open(scoring_file, 'r', encoding='utf-8') as f:
             scoring = json.load(f)
 
     # Analyze request files
@@ -132,7 +138,7 @@ def analyze_test_results(results_dir, test_id, date=None):
     models = set()
 
     for req_file in request_files:
-        with open(req_file, 'r') as f:
+        with open(req_file, 'r', encoding='utf-8') as f:
             data = json.load(f)
             if 'duration' in data:
                 durations.append(data['duration'])
@@ -177,7 +183,27 @@ def analyze_test_results(results_dir, test_id, date=None):
     return result
 
 
-def generate_html_report(dates, base_dir, test_metadata, output_file):
+def write_test_reports(test_results, base_dir, output_file):
+    """Writes each run's test report to <date>/<test_id>_report.html beside the date report."""
+    report_dir = Path(output_file).parent
+    written, failed = 0, []
+    for result in test_results:
+        relative = Path(result['date']) / f"{result['test_id']}_report.html"
+        try:
+            with contextlib.redirect_stdout(io.StringIO()):
+                generate_test_report.generate_html_report(
+                    base_dir / "results" / result['date'] / result['test_id'], report_dir / relative)
+        except Exception as error:
+            failed.append(f"{result['date']}/{result['test_id']} ({type(error).__name__}: {error})")
+            continue
+        result['report_href'] = relative.as_posix()
+        written += 1
+    print(f"  ✓ {written} test reports written to {report_dir}")
+    for entry in failed:
+        print(f"  ⚠️  No test report for {entry}")
+
+
+def generate_html_report(dates, base_dir, test_metadata, output_file, test_reports=True):
     """Generate HTML report"""
 
     # Collect all test results from all dates
@@ -212,6 +238,9 @@ def generate_html_report(dates, base_dir, test_metadata, output_file):
 
     # Sort by date, then by test ID
     test_results.sort(key=lambda x: (x['date'], x['test_id']))
+
+    if test_reports:
+        write_test_reports(test_results, base_dir, output_file)
 
     # Generate title based on single date or date range
     if len(dates) == 1:
@@ -333,6 +362,9 @@ def generate_html_report(dates, base_dir, test_metadata, output_file):
         .benchmark-name {{
             font-weight: 600;
             color: #333;
+        }}
+        .test-link {{
+            color: inherit;
         }}
         .duration {{
             color: #666;
@@ -499,10 +531,14 @@ def generate_html_report(dates, base_dir, test_metadata, output_file):
         else:
             warnings_html = '<span class="warning-none">✓</span>'
 
+        test_id_html = f"<strong>{result['test_id']}</strong>"
+        if result.get('report_href'):
+            test_id_html = f'<a class="test-link" href="{result["report_href"]}">{test_id_html}</a>'
+
         html += f"""
             <tr>
                 <td>{result.get('date', 'N/A')}</td>
-                <td><strong>{result['test_id']}</strong></td>
+                <td>{test_id_html}</td>
                 <td class="benchmark-name">{result.get('name', 'Unknown')}</td>
                 <td><span class="badge badge-provider">{result.get('provider', 'Unknown')}</span></td>
                 <td><span class="badge badge-model">{result.get('model', 'Unknown')}</span></td>
@@ -828,6 +864,8 @@ Examples:
     parser.add_argument('--output', help='Output file path (optional)')
     parser.add_argument('--no-warnings', action='store_true',
                         help='Skip generating the warnings report')
+    parser.add_argument('--no-test-reports', action='store_true',
+                        help='HTML: do not write a linked test report per run')
 
     args = parser.parse_args()
 
@@ -886,7 +924,8 @@ Examples:
     if args.format in ['html', 'both']:
         print(f"\n📊 Generating HTML report...")
         output_file = args.output or reports_dir / f"{date_label}_report.html"
-        generate_html_report(existing_dates, base_dir, test_metadata, output_file)
+        generate_html_report(existing_dates, base_dir, test_metadata, output_file,
+                             test_reports=not args.no_test_reports)
 
     if args.format in ['md', 'both']:
         print(f"\n📝 Generating Markdown report...")
