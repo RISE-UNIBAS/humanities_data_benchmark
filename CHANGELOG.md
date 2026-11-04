@@ -9,11 +9,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - Dataset release `2026-10-29.5` deposited ([10.5281/zenodo.23821533](https://doi.org/10.5281/zenodo.23821533), concept DOI 10.5281/zenodo.23821532) and recorded in `scripts/data/dataset_releases.json`; README and `CITATION.cff` link it, and `CITATION.cff` lists the v0.8.0 DOI.
+- `.zenodo.json`, generated from `CITATION.cff` by `scripts/zenodo_metadata.py`: the software deposit links the dataset and the JOHD articles and describes itself.
 
 ### Changed
 - `library_cards` 3.0.0: format entered as pages moved to `format` on five cards; `00639255` pages, `00443771` shelfmark and the cross-reference `00414956` corrected; stored runs re-scored.
 - `company_lists` 3.0.0: swapped locations on `156089_1321088_41` corrected; stored runs re-scored.
 - `business_letters` 3.0.0: names matched ignoring case and whitespace, empty names no longer match; `persons.json` adds four spellings and drops four bad ones; the `letter46` sender is marked as inferred; stored runs re-scored.
+- `CITATION.cff` titled "RISE Humanities Data Benchmark"; the README's DOI badges name the project and the dataset; the How it works graphic redrawn (`docs/how-it-works.svg`).
 - Stored `rescored` labels from before the version merge say 2.0.0 instead of 3.0.0 (194 runs); `published_as` removed from `meta.json`.
 - `CITATION.cff` records the University of Basel affiliation of 13 authors; the dataset deposit's description explains the benchmark without the README, and the dataset's `CITATION.cff` and deposit name the two JOHD articles that describe it; one list of 15 keywords for `datapackage.json`, `CITATION.cff` and the deposit; the dataset is titled "RISE Humanities Data Benchmark Dataset: Complete Stored Results".
 

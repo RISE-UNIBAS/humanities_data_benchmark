@@ -364,12 +364,8 @@ def sync_release_repo(release, repo):
     return added, changed, removed
 
 
-def zenodo_metadata(citation):
-    """`.zenodo.json` for the dataset, from the release's own CITATION.cff (parsed).
-
-    Zenodo reads this file in preference to CITATION.cff and to what it infers from GitHub;
-    without it a deposit is typed software, and the type of a concept record cannot be
-    changed after its first deposit. The version is left out: Zenodo takes the tag."""
+def zenodo_creators(citation):
+    """Zenodo's creators from the authors of a CITATION.cff (parsed), in order."""
     creators = []
     for author in citation.get("authors") or []:
         creator = {"name": "%s, %s" % (author["family-names"], author["given-names"])}
@@ -378,25 +374,28 @@ def zenodo_metadata(citation):
         if author.get("affiliation"):
             creator["affiliation"] = author["affiliation"]
         creators.append(creator)
+    return creators
+
+
+def zenodo_metadata(citation):
+    """`.zenodo.json` for the dataset, from the release's own CITATION.cff (parsed).
+
+    Zenodo reads this file in preference to CITATION.cff and to what it infers from GitHub;
+    without it a deposit is typed software, and the type of a concept record cannot be
+    changed after its first deposit. The version is left out: Zenodo takes the tag."""
     return {
         "upload_type": "dataset",
         "title": citation["title"],
         # Self-contained, as the University of Basel's Zenodo community requires: the subject
         # and its context must be clear without the README or any other source.
-        "description": "<p>The RISE Humanities Data Benchmark, maintained by RISE (Research "
-                       "and Infrastructure Support) at the University of Basel, evaluates large "
-                       "language models on tasks from humanities research: transcribing, "
-                       "interpreting and extracting structured data from historical documents "
-                       "such as letters, library cards, newspaper advertisements and medieval "
-                       "manuscripts, scored against ground truths defined by domain experts, "
-                       "with the cost and runtime of every request.</p><p>%s</p><p>Tables in "
+        "description": "<p>" + docs.BENCHMARK_SUMMARY + "</p><p>%s</p><p>Tables in "
                        "Parquet, a metric dictionary, coverage, diagnostics and a source "
                        "manifest, with the original request and scoring JSON as gzipped JSON "
                        "Lines. A new release follows each release of the benchmark software; "
                        "each is a complete snapshot. README.md documents the tables and how to "
                        "use them, CHANGELOG.md what changed between releases.</p>"
                        % " ".join(str(citation["abstract"]).split()),
-        "creators": creators,
+        "creators": zenodo_creators(citation),
         "access_right": "open",
         "license": "cc-by-4.0",
         "keywords": citation.get("keywords") or [],

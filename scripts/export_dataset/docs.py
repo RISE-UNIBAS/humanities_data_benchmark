@@ -20,6 +20,17 @@ DATASET_TITLE = "RISE Humanities Data Benchmark Dataset: Complete Stored Results
 
 SOFTWARE_CONCEPT_DOI = "10.5281/zenodo.16941752"
 
+BENCHMARK_SUMMARY = (
+    "The RISE Humanities Data Benchmark, maintained by RISE (Research and Infrastructure "
+    "Support) at the University of Basel, evaluates large language models on tasks from "
+    "humanities research: transcribing, interpreting and extracting structured data from "
+    "historical documents such as letters, library cards, newspaper advertisements and "
+    "medieval manuscripts, scored against ground truths defined by domain experts, with the "
+    "cost and runtime of every request."
+)
+"""Opens the description of both Zenodo deposits, software and dataset, which the University
+of Basel's community requires to be clear without the README or any other source."""
+
 KEYWORDS = (
     "benchmark", "LLM evaluation", "large language models", "vision-language models",
     "digital humanities", "cultural heritage", "historical documents",
