@@ -69,7 +69,7 @@ Several scoring properties bias results (see Calculation). An entry without a nu
 
 ## Data
 
-**Source:** Pages of the Basler Avisblatt, an advertisement newspaper published in Basel from 1729 to 1844 (Universitätsbibliothek Basel, UBH Ztg 1), as digitised for the project at https://avisblatt.dg-basel.hasdai.org (hosting institution Universitätsbibliothek Basel). The pages come from two issues: [Avis-Blättlein (1731), issue 1](https://avisblatt.dg-basel.hasdai.org/records/zr4m9-68q93) and [Wochentliche Nachrichten aus dem Bericht-Haus zu Basel (1762), issue 6](https://avisblatt.dg-basel.hasdai.org/records/st1gf-t4m41). The paper appeared about weekly, with 1 to 16 pages per issue, and carries mainly numbered classified adverts grouped under standing section headings (things for sale, wanted, to let, lost and found, servants seeking positions), alongside occasional news, price lists and announcements.
+**Source:** Pages of the Basler Avisblatt, an advertisement newspaper published in Basel from 1729 to 1845, from the Avisblatt repository of the Universitätsbibliothek Basel (https://avisblatt.dg-basel.hasdai.org), which holds the scans the Universitätsbibliothek made for the SNSF project "Printed markets" (https://avisblatt.philhist.unibas.ch/). The pages come from two issues: [Avis-Blättlein (1731), issue 1](https://avisblatt.dg-basel.hasdai.org/records/zr4m9-68q93) and [Wochentliche Nachrichten aus dem Bericht-Haus zu Basel (1762), issue 6](https://avisblatt.dg-basel.hasdai.org/records/st1gf-t4m41). Both are scans of the Universitätsbibliothek's own copies: the 1731 issue of UBH Ztg 1:1729/1734, the 1762 issue of UBH Ztg 1:1761/1762 or UBH VB R 5:1762/63 (the volume records do not say which). The paper appeared about weekly, with 1 to 16 pages per issue, and carries mainly numbered classified adverts grouped under standing section headings (things for sale, wanted, to let, lost and found, servants seeking positions), alongside occasional news, price lists and announcements.
 
 **Size:** 5 evaluated objects
 
@@ -131,7 +131,9 @@ A page's fuzzy score is the mean over its ground-truth adverts, rounded to two d
 
 **Baseline Results:** Model results are on the [benchmark page](https://rise-services.rise.unibas.ch/benchmarks/p/benchmarks/fraktur_adverts) and in `results/<date>/<test_id>/` at the repository root. Compare runs with the same prompt, scoring rules and ground-truth revision. No fixed model baseline is defined.
 
-Observed across models: results split sharply. Across the 95 active test configurations CER ranges from 0.005 to 1, with an interquartile range of 0.03–0.47 and a median of 0.19: some models read the Fraktur almost perfectly, others fail widely. Much of the error comes from pairing rather than reading: only 68–89% of a page's adverts are found by section and number on average, and a missed advert counts as CER 1 however well its text was read. `image_5` (median CER 0.23) and the two 1731 pages are the hardest.
+Stored results, snapshot 2026-11-04 (`cer`, lower is better; the latest stored run of each active test, by prompt): `prompt_optimized.txt`, 114 tests: median 0.231 (interquartile range 0.047–0.524), best 0.005 (claude-fable-5-1, claude-opus-5-5), 8 at 1. 2 active tests have no scored run by that date.
+
+Observed across models: results split sharply: some models read the Fraktur almost perfectly, others fail widely. Much of the error comes from pairing rather than reading: only 68–89% of a page's adverts are found by section and number on average, and a missed advert counts as CER 1 however well its text was read. `image_5` (median CER 0.23) and the two 1731 pages are the hardest.
 
 **Validation:** The ground truth was created by Ina Serif as domain expert and annotator; no second check by another person is recorded. Scoring is deterministic; the scorer is covered by `tests/test_fraktur_adverts_scoring.py`.
 
@@ -194,7 +196,7 @@ This section is not part of the BenchmarkCard schema and is not exported to `ben
 
 Source:
 
-> Universitätsbibliothek Basel, UBH Ztg 1, 1731–1762. Licence of the source material: CC BY 4.0. https://avisblatt.dg-basel.hasdai.org
+> Avisblatt repository (Universitätsbibliothek Basel), 1731–1762. Licence of the source material: CC BY 4.0. https://avisblatt.dg-basel.hasdai.org
 
 The benchmark suite:
 

@@ -134,7 +134,9 @@ F1 per page is rounded to two decimals. F1 macro averages the rounded per-page F
 
 **Baseline Results:** Results are on the [benchmark page](https://rise-services.rise.unibas.ch/benchmarks/p/benchmarks/company_lists) and in `results/<date>/<test_id>/` at the repository root. No fixed baseline is recorded. Compare runs only with the same prompt, rules and ground-truth revision, and report the number of scored pages with the score.
 
-Observed across models: most models handle the English directory layouts well (the best scores are around 0.97). Company names are read far better than locations (79% against 57% of fields correct across all stored runs). Pages that break the entry order score far lower: the two-column German subject index `156089_1321079_26` scores below 0.2 in almost half of all runs, because entries are compared by position.
+Stored results, snapshot 2026-11-04 (`f1_macro`, higher is better; the latest stored run of each active test, by prompt): `prompt.txt`, 95 tests: median 0.81 (interquartile range 0.71–0.85), best 0.98 (gpt-6-sol), 1 at 0; `prompt_min.txt`, 95 tests: median 0.67 (interquartile range 0.55–0.73), best 0.84 (qwen3.5-397b-a17b), 1 at 0; `prompt_v2.txt`, 19 tests: median 0.78 (interquartile range 0.69–0.89), best 0.97 (fireworks/ember-1). 2 active tests have no scored run by that date.
+
+Observed across models: most models handle the English directory layouts well. Company names are read far better than locations (79% against 57% of fields correct across all stored runs). Pages that break the entry order score far lower: the two-column German subject index `156089_1321079_26` scores below 0.2 in almost half of all runs, because entries are compared by position.
 
 **Validation:** The ground truth was created by the annotators and the domain expert named under Annotation; no separate check is recorded. Scoring is deterministic; the scorer is covered by the repository's test suite.
 

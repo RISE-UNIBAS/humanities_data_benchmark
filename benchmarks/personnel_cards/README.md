@@ -178,6 +178,8 @@ The `rules` column of `benchmarks_tests.csv` selects which sub-fields are scored
 
 **Baseline Results:** Model results are available on the [benchmark page](https://rise-services.rise.unibas.ch/benchmarks/p/benchmarks/personnel_cards) and in `results/<date>/<test_id>/` at the repository root. Compare runs with the same prompt, scoring rules and ground-truth revision, and report the number of successfully scored objects alongside the score. There is no fixed model baseline with a run ID and date. A diagnostic response that keeps the ground-truth row structure, blanks every transcript and interpretation, and sets every crossed-out flag to `false` scores F1 micro 0.663839 and F1 macro 0.625082 under the default rules. It borrows the row structure from the ground truth and is not an independent extraction baseline.
 
+Stored results, snapshot 2026-11-04 (`f1_micro`, higher is better; the latest stored run of each active test, by prompt): `prompt.txt`, 114 tests: median 0.95 (interquartile range 0.88–0.97), best 0.98 (meta/muse-spark-open). 2 active tests have no scored run by that date.
+
 Observed across models: the interpretation layer, which turns ditto marks, dates, salary classes and amounts into machine-readable values, is particularly useful downstream. Models produce the diplomatic transcript and its interpretation in a single pass, so no separate normalisation step is needed; this shortens the manual post-processing that turns archival data into structured records.
 
 **Validation:** The ground truth was checked by the domain expert, Tabea Wullschleger. Scoring is deterministic; the scorer is covered by `tests/test_f1_scoring.py`.

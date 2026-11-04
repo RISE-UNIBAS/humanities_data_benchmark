@@ -67,7 +67,7 @@ To run this benchmark, use `python scripts/run_single_test.py --adhoc` from the 
 
 ## Data
 
-**Source:** Pages from the official journal of the British Chamber of Commerce for Switzerland, an English-language trade journal for Anglo-Swiss commerce, published under three successive titles: "The Anglo-Swiss Review" (September 1921), "The Commercial Gazette" (1923–1926) and "Anglo-Swiss Trade Review" (1945–1950). The pages mix editorial columns, trade news and bordered or free-standing advertisements of banks, shipping agents and manufacturers. The holding institution of the scans is not specified. The journals are described as sources by the NOISE project at the University of Basel (https://noise.europa.unibas.ch/p/sources/adverts/), and an advertisement corpus cut from them is published on Zenodo by Lea Kasper under CC BY 4.0 (https://doi.org/10.5281/zenodo.20172648).
+**Source:** Pages from the official journal of the British Chamber of Commerce for Switzerland, an English-language trade journal for Anglo-Swiss commerce, published under three successive titles: "The Anglo-Swiss Review" (September 1921), "The Commercial Gazette" (1923–1926) and "Anglo-Swiss Trade Review" (1945–1950). The pages mix editorial columns, trade news and bordered or free-standing advertisements of banks, shipping agents and manufacturers. The pages are scans of the copies in the Swiss Economic Archives (Schweizerisches Wirtschaftsarchiv), UBW Zq 53 ("The Anglo-Swiss Review", 1920–1923), UBW Zq 54 ("The Anglo-Swiss Commercial Gazette", 1923–1931) and UBW Zq 55a ("Anglo-Swiss Trade Review", 1945–1953), as listed in the description of the Chamber's archive there (SWA PA 632, https://swisscollections.ch/Record/991170743599805501). The Universitätsbibliothek Basel digitised them; the scans are not on e-manuscripta or e-periodica, which have no collection they fit, and are hosted by the NOISE project at the University of Basel, which describes the journals as sources (https://noise.europa.unibas.ch/p/sources/adverts/). An advertisement corpus cut from them is published on Zenodo by Lea Kasper (https://doi.org/10.5281/zenodo.20172647).
 
 **Size:** 46 evaluated objects
 
@@ -126,7 +126,9 @@ The benchmark scores are the unweighted means of the per-page values, rounded to
 
 **Baseline Results:** Results are on the [benchmark page](https://rise-services.rise.unibas.ch/benchmarks/p/benchmarks/magazine_pages) and in `results/<date>/<test_id>/` at the repository root. No fixed baseline is recorded beyond the contour detector (see Methods). Compare runs only with the same prompt, rules and ground-truth revision.
 
-Observed across models: the prompt decides much of the result. Under `prompt.txt`, 23 of the 88 active test configurations score F1 0, because the model answers without boxes, and the median is 0.21; under `prompt_explicit-json.txt` none of the 7 scores 0 and the median is 0.86. The best models reach F1 0.97 under either prompt, with matched boxes fitting at a mean IoU of 0.90–0.97. The rule-based contour detector scores F1 0.80: its matched boxes fit closely (mean IoU 0.91), but it also frames bordered editorial content (precision 0.77). Its fit partly reflects how the ground truth was made (see Limitations).
+Stored results, snapshot 2026-11-04 (`f1`, higher is better; the latest stored run of each active test, by prompt): `prompt.txt`, 88 tests: median 0.21 (interquartile range 0.00–0.74), best 0.97 (gpt-5.6-luna), 23 at 0; `prompt_explicit-json.txt`, 26 tests: median 0.68 (interquartile range 0.17–0.92), best 0.97 (claude-opus-5-5, gpt-6.1-sol), 2 at 0. `opencv-contour`, which takes no prompt, scores 0.80. 2 active tests have no scored run by that date.
+
+Observed across models: the prompt decides much of the result. Under `prompt.txt` many models answer without boxes and score F1 0; `prompt_explicit-json.txt`, which states the JSON shape, makes that much rarer. The best models fit their matched boxes at a mean IoU of 0.90–0.97. The rule-based contour detector fits its matched boxes closely (mean IoU 0.91), but it also frames bordered editorial content (precision 0.77). Its fit partly reflects how the ground truth was made (see Limitations).
 
 **Validation:** The ground truth was checked by the annotators named under Annotation. Scoring is deterministic; the scorer is covered by `tests/test_magazine_pages_scoring.py`.
 
@@ -146,11 +148,11 @@ Observed across models: the prompt decides much of the result. Under `prompt.txt
 
 **Privacy and Anonymity:** The pages are published trade journal pages, 1921–1950. They name companies, and some articles and advertisements name individuals, mostly business people acting in a public capacity. No private records are included and nothing is anonymised. Only advertisement positions are annotated; no personal data is extracted or scored.
 
-**Data Licensing:** Source material: CC BY 4.0. Ground truth, prompts and other data created for this benchmark: CC BY 4.0.
+**Data Licensing:** Source material: Public Domain Mark 1.0. Ground truth, prompts and other data created for this benchmark: CC BY 4.0.
 
 **Consent Procedures:** Not specified
 
-**Compliance with Regulations:** The page images are used under CC BY 4.0, the licence of the published advertisement corpus from the same journals. The pages are published material from 1921–1950; copyright in individual articles, illustrations and advertisement designs may outlast the publication if their authors are known (in Switzerland 70 years after the author's death, Art. 29 URG). No ethical review was carried out.
+**Compliance with Regulations:** No rights statement has been published for these scans. The British Chamber of Commerce for Switzerland transferred its rights to the Schweizerisches Wirtschaftsarchiv with the deposit, and the archive allowed the NOISE project to use and show the scans (as reported by Lea Kasper); the images are therefore marked with the Public Domain Mark 1.0, as the archive's scans on e-manuscripta are. The pages are published material from 1921–1950; copyright in individual articles, illustrations and advertisement designs may outlast the publication if their authors are known (in Switzerland 70 years after the author's death, Art. 29 URG). No ethical review was carried out.
 
 ## Beyond the BenchmarkCard
 
@@ -180,7 +182,7 @@ This section is not part of the BenchmarkCard schema and is not exported to `ben
 
 Source:
 
-> Journal of the British Chamber of Commerce for Switzerland, 1921–1950. Licence of the source material: CC BY 4.0. https://noise.europa.unibas.ch/p/sources/adverts/
+> Schweizerisches Wirtschaftsarchiv, UBW Zq 53, UBW Zq 54, UBW Zq 55a, 1921–1950. Licence of the source material: Public Domain Mark 1.0. https://noise.europa.unibas.ch/p/sources/adverts/
 
 The benchmark suite:
 

@@ -14,7 +14,7 @@ To run it, call `python scripts/run_single_test.py --adhoc` from the repository 
 
 **Name:** Book Advert XML Repair
 
-**Overview:** Evaluates models on repairing malformed XML markup in transcribed adverts from the Basler Avisblatt (1729–1844), most of them book sale listings tagged for title, author, format and price, while leaving the advert text unchanged.
+**Overview:** Evaluates models on repairing malformed XML markup in transcribed adverts from the Basler Avisblatt (1729–1845), most of them book sale listings tagged for title, author, format and price, while leaving the advert text unchanged.
 
 **Data Type:** text
 
@@ -68,7 +68,7 @@ The data keeps two features of the source as real-world noise. 49 of 50 texts ca
 
 ## Data
 
-**Source:** Adverts from the Basler Avisblatt, the weekly advertising paper of Basel (1729–1844), digitised and processed by the SNSF project "Printed markets: information, data, and news in the Basel 'Avisblatt', 1729–1844" at the University of Basel: https://avisblatt.philhist.unibas.ch/. Most adverts announce books for sale or subscription by booksellers, printers and bookbinders; a few offer other goods. Each is tagged with elements for its bibliographic parts and made malformed.
+**Source:** Adverts from the Basler Avisblatt, the weekly advertising paper of Basel (1729–1845), taken from Avisdata v1.0.0 (https://doi.org/10.5281/zenodo.8278751), the transcriptions published by the SNSF project "Printed markets: information, data, and news in the Basel 'Avisblatt', 1729–1844" at the University of Basel (https://avisblatt.philhist.unibas.ch/). All 50 adverts are identified there, dated 13 March 1731 to 20 February 1749. The transcriptions were made from the Universitätsbibliothek Basel's scans of its own copies. Most adverts announce books for sale or subscription by booksellers, printers and bookbinders; a few offer other goods. Each is tagged with elements for its bibliographic parts and made malformed.
 
 **Size:** 50 evaluated objects
 
@@ -96,7 +96,7 @@ Elements used: `ITEM` (one per advert), `BIBL`, `TITLE`, `AUTHOR`, `FORMAT`, `VO
 
 - text files: 50
 
-**Collection Date:** Source documents: the Avisblatt appeared 1729–1844; the years named in the 50 adverts run up to 1748. Added to the benchmark: December 2025.
+**Collection Date:** Source documents: the Avisblatt appeared 1729–1845; the 50 adverts appeared 1731–1749. Added to the benchmark: December 2025.
 
 **Contamination Controls:** None. The texts, prompt and ground truth have been public in this repository since December 2025.
 
@@ -118,7 +118,9 @@ Elements used: `ITEM` (one per advert), `BIBL`, `TITLE`, `AUTHOR`, `FORMAT`, `VO
 
 **Interpretation:** Scores range from 0 to 1; higher is better. 1 means the response makes exactly the reference's repairs and nothing else; returning the input unchanged scores 0. Low precision means edits the reference does not make: changed or dropped text, added or renamed tags. Low recall means missed repairs. A changed character counts as much as a changed tag, so `f1_micro` is dominated by the few responses that rewrite or drop whole adverts; rank by `f1_macro`. A score does not show that the response is well-formed XML.
 
-**Baseline Results:** Model results are on the [benchmark page](https://rise-services.rise.unibas.ch/benchmarks/p/benchmarks/book_advert_xml) and in `results/<date>/<test_id>/` at the repository root. Compare runs with the same prompt, scoring rules and ground-truth revision. No fixed model baseline is defined. Copying each input `xml_string` unchanged into `fixed_xml` scores 0. Across the latest run of each of the 100 non-legacy tests, `f1_macro` has a median of 0.27 and a best of 0.61 (claude-fable-5-1).
+**Baseline Results:** Model results are on the [benchmark page](https://rise-services.rise.unibas.ch/benchmarks/p/benchmarks/book_advert_xml) and in `results/<date>/<test_id>/` at the repository root. Compare runs with the same prompt, scoring rules and ground-truth revision. No fixed model baseline is defined. Copying each input `xml_string` unchanged into `fixed_xml` scores 0.
+
+Stored results, snapshot 2026-11-04 (`f1_macro`, higher is better; the latest stored run of each active test, by prompt): `prompt.txt`, 100 tests: median 0.27 (interquartile range 0.16–0.41), best 0.61 (claude-fable-5-1), 1 at 0; `prompt_v2.txt`, 19 tests: median 0.29 (interquartile range 0.17–0.45), best 0.65 (gpt-6.1-sol). 2 active tests have no scored run by that date.
 
 Observed across models: most answers make the reference's repairs only in part and add edits of their own, such as further tags or corrected spellings; the median test makes exactly the reference's repairs in about 4% of adverts that need them. The task combines syntactic repair, structural reconstruction (adding missing tags) and implicit interpretation (deciding what should be tagged); separate variants for repair only and for enrichment would allow more controlled comparisons.
 
@@ -167,7 +169,7 @@ This section is not part of the BenchmarkCard schema and is not exported to `ben
 
 Source:
 
-> Basler Avisblatt, digitised by the SNSF project "Printed markets" (University of Basel), 1729–1844. Licence of the source material: CC BY-NC-SA 4.0. https://avisblatt.philhist.unibas.ch/
+> Avisdata v1.0.0, SNSF project "Printed markets" (University of Basel), 1731–1749. Licence of the source material: CC BY-NC-SA 4.0. https://doi.org/10.5281/zenodo.8278751
 
 The benchmark suite:
 

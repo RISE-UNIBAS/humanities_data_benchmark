@@ -146,7 +146,9 @@ The page score is the mean over that page's fields. The benchmark score is the m
 
 **Interpretation:** Scores range from 0 to 1; higher is better. Because partial string similarity earns partial credit, a wrong but similar value (for example `Journal of Philosphy` for `Journal of Philosophy`, 0.98) still scores high; a score near 1 means near-exact records, not a share of correct entries.
 
-**Baseline Results:** Model results are available on the [benchmark page](https://rise-services.rise.unibas.ch/benchmarks/p/benchmarks/bibliographic_data) and in `results/<date>/<test_id>/` at the repository root. Compare runs with the same prompt, scoring rules and ground-truth revision. No fixed baseline run is designated. Across the latest run of each of the 95 non-legacy tests, `fuzzy` has a median of 0.95 and a best of 0.99 (gpt-6-astra).
+**Baseline Results:** Model results are available on the [benchmark page](https://rise-services.rise.unibas.ch/benchmarks/p/benchmarks/bibliographic_data) and in `results/<date>/<test_id>/` at the repository root. Compare runs with the same prompt, scoring rules and ground-truth revision. No fixed baseline run is designated.
+
+Stored results, snapshot 2026-11-04 (`fuzzy`, higher is better; the latest stored run of each active test, by prompt): `prompt.txt`, 95 tests: median 0.94 (interquartile range 0.83–0.97), best 0.99 (gpt-6-astra); `prompt_v2.txt`, 20 tests: median 0.79 (interquartile range 0.67–0.93), best 0.99 (gpt-6.1-sol). 1 active test has no scored run by that date.
 
 Observed across models: averaged over all scored fields of those runs, `note` (0.55), `relation` (0.71) and `issued` (0.73) score lowest, since they depend on conventions the prompt leaves open; names, titles, publishers and pages score about 0.9.
 

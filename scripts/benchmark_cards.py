@@ -17,16 +17,22 @@ Data Licensing names two licences: meta.json `license` for the source material, 
 for everything the benchmark itself creates (ground truth, prompts, annotations).
 The card is exported to benchmark_card.json beside the README and validated against
 scripts/benchmark_card_schema.py.
+Baseline Results carries one generated paragraph, starting STORED_LEAD: the ranking metric over the
+latest stored run of each active test up to meta.json `results_snapshot`, by prompt (and by
+ranking variant). Runs after that date leave it unchanged; --snapshot moves the date.
 
 Run:
     python scripts/benchmark_cards.py [name ...]          # regenerate (all cards if no name)
     python scripts/benchmark_cards.py --check [name ...]  # exit 1 on drift, write nothing
+    python scripts/benchmark_cards.py --snapshot YYYY-MM-DD [name ...]  # set results_snapshot, regenerate
 """
 
 import argparse
+import csv
 import json
 import os
 import re
+import statistics
 import sys
 from collections import namedtuple
 
@@ -44,6 +50,9 @@ CONTRIBUTORS_PATH = os.path.join(SCRIPTS_DIR, "data", "contributors.json")
 CITATION_PATH = os.path.join(REPO_ROOT, "CITATION.cff")
 SUITE_TITLE = "RISE Humanities Data Benchmark"
 DATA_LICENSE = "CC BY 4.0"
+RESULTS_DIR = os.path.join(REPO_ROOT, "results")
+TESTS_CSV = os.path.join(BENCHMARKS_DIR, "benchmarks_tests.csv")
+STORED_LEAD = "Stored results, snapshot "
 SITE_URL = "https://rise-services.rise.unibas.ch/benchmarks/p/benchmarks/{name}"
 REPO_URL = "https://github.com/RISE-UNIBAS/humanities_data_benchmark/tree/main/benchmarks/{name}"
 
@@ -415,6 +424,111 @@ def generated_values(name, meta, contributors=None, version="1.0.0", citation=No
     return values
 
 
+def _variant_label(ranking, rules_text):
+    """The ranking label of a test's scoring rules (meta.json ranking `rules`/`variants`), or None."""
+    main = ranking.get("rules")
+    if not main:
+        return None
+    rules = json.loads(rules_text) if rules_text.strip() else {}
+    signature = {k: rules.get(k, v) for k, v in main.items()}
+    if signature == main:
+        return ranking.get("label")
+    for variant in ranking.get("variants", []):
+        if signature == {k: variant["rules"].get(k, v) for k, v in main.items()}:
+            return variant.get("label", variant["name"])
+    return "other rules"
+
+
+def _fmt(x, digits):
+    return f"{x:.{digits}f}"
+
+
+def stored_results(name, meta):
+    """The generated Baseline Results paragraph, or None without `results_snapshot`."""
+    snapshot = meta.get("results_snapshot")
+    ranking = meta.get("ranking", {})
+    if not snapshot or not ranking.get("metric"):
+        return None
+    if not re.fullmatch(r"\d{4}-\d{2}-\d{2}", snapshot):
+        raise CardError(f"meta.json results_snapshot '{snapshot}' must be YYYY-MM-DD")
+    metric, ascending = ranking["metric"], ranking.get("order") == "asc"
+    digits = 3 if ascending else 2
+    with open(TESTS_CSV, encoding="utf-8-sig") as f:
+        tests = {r["id"]: r for r in csv.DictReader(f)
+                 if r["name"] == name and r["legacy_test"].strip().lower() == "false"}
+    latest = {}
+    dates = sorted(d for d in os.listdir(RESULTS_DIR)
+                   if re.fullmatch(r"\d{4}-\d{2}-\d{2}", d) and d <= snapshot)
+    for date in dates:
+        for tid in tests:
+            path = os.path.join(RESULTS_DIR, date, tid, "scoring.json")
+            if os.path.isfile(path):
+                latest[tid] = path
+    groups, unrun = {}, 0
+    for tid, test in tests.items():
+        if tid not in latest:
+            unrun += 1
+            continue
+        with open(latest[tid], encoding="utf-8") as f:
+            value = json.load(f).get(metric)
+        if not isinstance(value, (int, float)):
+            unrun += 1
+            continue
+        if not (test["prompt_file"].strip() or test["role_description"].strip()):
+            key = (None, test["model"])
+        else:
+            key = (test["prompt_file"].strip() or "prompt.txt", _variant_label(ranking, test["rules"]))
+        groups.setdefault(key, []).append((value, test["model"]))
+    if not groups:
+        return None
+    order = [ranking.get("label")] + [v.get("label", v["name"]) for v in ranking.get("variants", [])]
+    prompt_size = {}
+    for (prompt, _), scored in groups.items():
+        prompt_size[prompt] = prompt_size.get(prompt, 0) + len(scored)
+
+    def sort_key(item):
+        (prompt, variant), _ = item
+        if prompt is None:
+            return (1, 0, variant, 0)
+        return (0, -prompt_size[prompt], prompt, order.index(variant) if variant in order else len(order))
+
+    parts, baselines = [], []
+    for (prompt, variant), scored in sorted(groups.items(), key=sort_key):
+        values = sorted(v for v, _ in scored)
+        if prompt is None:
+            baselines.append(f"`{variant}`, which takes no prompt, scores " + "/".join(_fmt(v, digits) for v in values))
+            continue
+        best = values[0] if ascending else values[-1]
+        leaders = sorted({m for v, m in scored if v == best})
+        leader = ", ".join(leaders[:3]) + (f" and {len(leaders) - 3} more" if len(leaders) > 3 else "")
+        label = f"`{prompt}`" + (f", {variant}" if variant else "")
+        text = f"{label}, {len(values)} test{'s' if len(values) != 1 else ''}: median {_fmt(statistics.median(values), digits)}"
+        if len(values) >= 4:
+            q1, _, q3 = statistics.quantiles(values, n=4, method="inclusive")
+            text += f" (interquartile range {_fmt(q1, digits)}–{_fmt(q3, digits)})"
+        text += f", best {_fmt(best, digits)} ({leader})"
+        worst = sum(1 for v in values if (v >= 1 if ascending else v <= 0))
+        if worst:
+            text += f", {worst} at {'1' if ascending else '0'}"
+        parts.append(text)
+    paragraph = (f"{STORED_LEAD}{snapshot} (`{metric}`, {'lower' if ascending else 'higher'} is better; "
+                 f"the latest stored run of each active test, by prompt): " + "; ".join(parts) + ".")
+    if baselines:
+        paragraph += " " + "; ".join(baselines) + "."
+    if unrun:
+        paragraph += f" {unrun} active test{'s have' if unrun != 1 else ' has'} no scored run by that date."
+    return paragraph
+
+
+def _with_stored_results(text, parsed, paragraph):
+    """README text whose Baseline Results holds `paragraph` (replacing an earlier one)."""
+    pf = parsed["methodology"]["baseline_results"]
+    blocks = [b for b in re.split(r"\n\s*\n", pf.raw.strip()) if not b.startswith(STORED_LEAD)]
+    if paragraph:
+        blocks.insert(1, paragraph)
+    return text[:pf.start] + " " + "\n\n".join(blocks) + text[pf.end:]
+
+
 def render(text, parsed, values):
     """README text with every generated field rewritten."""
     edits = []
@@ -516,6 +630,7 @@ def build(name, contributors=None):
     else:
         version = newest_version(parsed["beyond"]["versions"].raw)
     readme = render(readme, parsed, generated_values(name, meta, contributors, version))
+    readme = _with_stored_results(readme, parse(readme), stored_results(name, meta))
     parsed = parse(readme)
     card = to_card(parsed)
     metric = meta.get("ranking", {}).get("metric")
@@ -550,15 +665,38 @@ def write(name):
         f.write(payload)
 
 
+def set_snapshot(name, date):
+    """Write `results_snapshot` into meta.json, keeping its key order and formatting."""
+    path = os.path.join(BENCHMARKS_DIR, name, "meta.json")
+    with open(path, encoding="utf-8") as f:
+        text = f.read()
+    line = f'"results_snapshot": "{date}"'
+    if re.search(r'"results_snapshot":\s*"[^"]*"', text):
+        text = re.sub(r'"results_snapshot":\s*"[^"]*"', line, text, count=1)
+    else:
+        m = re.search(r'\n(\s*)"ranking":', text)
+        if not m:
+            raise CardError("meta.json has no ranking to place results_snapshot after")
+        text = text[:m.start()] + f'\n{m.group(1)}{line},' + text[m.start():]
+    with open(path, "w", encoding="utf-8", newline="") as f:
+        f.write(text)
+
+
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     parser.add_argument("names", nargs="*", help="benchmarks (default: every card)")
     parser.add_argument("--check", action="store_true", help="report drift, write nothing")
+    parser.add_argument("--snapshot", metavar="YYYY-MM-DD",
+                        help="set meta.json results_snapshot to this date before regenerating")
     args = parser.parse_args(argv)
+    if args.snapshot and not re.fullmatch(r"\d{4}-\d{2}-\d{2}", args.snapshot):
+        parser.error("--snapshot must be YYYY-MM-DD")
     names = args.names or card_benchmarks()
     failed = False
     for name in names:
         try:
+            if args.snapshot and not args.check:
+                set_snapshot(name, args.snapshot)
             if args.check:
                 stale = drift(name)
                 if stale:

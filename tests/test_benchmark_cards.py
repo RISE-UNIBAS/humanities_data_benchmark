@@ -177,3 +177,62 @@ def test_how_to_cite():
 def test_how_to_cite_needs_added():
     with pytest.raises(bc.CardError, match="added"):
         bc.how_to_cite({"title": "x", "license": "x"}, [], "1.0.0", CITATION)
+
+
+def _stored_fixture(tmp_path, monkeypatch, rows, runs):
+    csv_path = tmp_path / "tests.csv"
+    header = "id,name,provider,model,dataclass,temperature,role_description,prompt_file,rules,legacy_test\n"
+    csv_path.write_text(header + "".join(r + "\n" for r in rows), encoding="utf-8")
+    for date, tid, scores in runs:
+        folder = tmp_path / "results" / date / tid
+        folder.mkdir(parents=True)
+        (folder / "scoring.json").write_text(bc.json.dumps(scores), encoding="utf-8")
+    monkeypatch.setattr(bc, "TESTS_CSV", str(csv_path))
+    monkeypatch.setattr(bc, "RESULTS_DIR", str(tmp_path / "results"))
+
+
+def test_stored_results_uses_latest_run_up_to_the_snapshot(tmp_path, monkeypatch):
+    rows = ["T1,b,p,m1,D,0,r,prompt.txt,,false", "T2,b,p,m2,D,0,r,,,false",
+            "T3,b,p,m3,D,0,r,v2.txt,,false", "T4,b,p,m4,D,0,r,prompt.txt,,true",
+            "T5,b,p,m5,D,0,r,prompt.txt,,false", "T6,b,local,detector,D,,,,,false"]
+    runs = [("2026-01-01", "T1", {"f1": 0.2}), ("2026-02-01", "T1", {"f1": 0.6}),
+            ("2026-03-01", "T1", {"f1": 0.9}), ("2026-01-01", "T2", {"f1": 0.0}),
+            ("2026-01-01", "T3", {"f1": 0.5}), ("2026-01-01", "T4", {"f1": 1.0}),
+            ("2026-01-01", "T6", {"f1": 0.8})]
+    _stored_fixture(tmp_path, monkeypatch, rows, runs)
+    meta = {"results_snapshot": "2026-02-15", "ranking": {"metric": "f1", "order": "desc"}}
+    text = bc.stored_results("b", meta)
+    assert text.startswith(bc.STORED_LEAD + "2026-02-15 (`f1`, higher is better;")
+    assert "`prompt.txt`, 2 tests: median 0.30, best 0.60 (m1), 1 at 0" in text
+    assert "`v2.txt`, 1 test: median 0.50, best 0.50 (m3)" in text
+    assert "`detector`, which takes no prompt, scores 0.80." in text
+    assert "1 active test has no scored run by that date." in text
+    assert "m4" not in text
+
+
+def test_stored_results_groups_ranking_variants(tmp_path, monkeypatch):
+    rows = ['T1,b,p,m1,D,0,r,prompt.txt,,false',
+            'T2,b,p,m2,D,0,r,prompt.txt,"{""skip"": true}",false']
+    _stored_fixture(tmp_path, monkeypatch, rows,
+                    [("2026-01-01", "T1", {"cer": 0.1}), ("2026-01-01", "T2", {"cer": 1.0})])
+    meta = {"results_snapshot": "2026-01-01",
+            "ranking": {"metric": "cer", "order": "asc", "label": "all", "rules": {"skip": False},
+                        "variants": [{"name": "s", "label": "some", "rules": {"skip": True}}]}}
+    text = bc.stored_results("b", meta)
+    assert "lower is better" in text
+    assert text.index("`prompt.txt`, all, 1 test: median 0.100") < text.index("`prompt.txt`, some, 1 test")
+    assert "best 1.000 (m2), 1 at 1" in text
+
+
+def test_stored_results_needs_a_snapshot():
+    assert bc.stored_results("b", {"ranking": {"metric": "f1"}}) is None
+
+
+def test_stored_paragraph_replaces_the_previous_one():
+    text = _template()
+    parsed = bc.parse(text)
+    once = bc._with_stored_results(text, parsed, bc.STORED_LEAD + "2026-01-01 (old).")
+    twice = bc._with_stored_results(once, bc.parse(once), bc.STORED_LEAD + "2026-02-01 (new).")
+    raw = bc.parse(twice)["methodology"]["baseline_results"].raw
+    assert "(new)." in raw and "(old)." not in raw
+    assert bc._with_stored_results(twice, bc.parse(twice), None).count(bc.STORED_LEAD) == 0

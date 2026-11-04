@@ -164,6 +164,8 @@ Every row covers all 30 days of April; the 21 rows hold 656 shifts.
 
 **Baseline Results:** Model results are available on the [benchmark page](https://rise-services.rise.unibas.ch/benchmarks/p/benchmarks/duty_rosters) and in `results/<date>/<test_id>/` at the repository root. Compare runs with the same prompt, scoring rules and ground-truth revision, and report the number of successfully scored objects alongside the score. There is no fixed model baseline with a run ID and date.
 
+Stored results, snapshot 2026-11-04 (`f1_micro`, higher is better; the latest stored run of each active test, by prompt): `prompt.txt`, 107 tests: median 0.77 (interquartile range 0.65–0.85), best 0.97 (gemini-4-argon), 3 at 0. 9 active tests have no scored run by that date.
+
 Observed across models: the shift icon is the field read worst (38% of icons correct across all stored runs), followed by the alternate unit (49%) and the shading flag `planned_on_current_unit` (73%). Mapping cells to their dates through the separate header works comparatively well (88%). Models also confuse empty cells with `Freier Tag` or assign icons such as `HomeOffice` to them.
 
 **Validation:** The ground truth was created by a single annotator, Maximilian Hindermann; no second check is recorded. Scoring is deterministic; the scorer is covered by `tests/test_duty_rosters_scoring.py`.
