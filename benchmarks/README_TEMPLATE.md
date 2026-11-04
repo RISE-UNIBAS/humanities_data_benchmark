@@ -64,6 +64,9 @@ This README is a BenchmarkCard (Sokol et al., NeurIPS 2025, arXiv 2410.12974), s
 
 **Baseline Results:** Not specified
 
+<!-- A paragraph of stored results is generated here from meta.json
+     `results_snapshot`; state no aggregate scores in the prose. -->
+
 **Validation:** Not specified
 
 **Human Baseline:** Not specified

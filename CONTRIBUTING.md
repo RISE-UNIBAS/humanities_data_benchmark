@@ -172,7 +172,10 @@ then run:
 python scripts/benchmark_cards.py <benchmark_name>
 ```
 
-It fills the generated fields, validates the card and writes `benchmark_card.json`.
+It fills the generated fields, validates the card and writes `benchmark_card.json`. With
+`results_snapshot` (a date) in `meta.json`, it also writes a "Stored results" paragraph into
+Baseline Results: the ranking metric over the latest run of each active test up to that date, by
+prompt. Keep scores out of the rest of the card's text, so they cannot go stale.
 `benchmarks/personnel_cards/README.md` is a complete example.
 
 ### 7. Test it

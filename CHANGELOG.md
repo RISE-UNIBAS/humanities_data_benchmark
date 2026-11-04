@@ -9,8 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - Dataset release `2026-10-29.6` deposited ([10.5281/zenodo.23944033](https://doi.org/10.5281/zenodo.23944033)) and recorded in `scripts/data/dataset_releases.json`; `CITATION.cff` lists the v0.8.1 DOI.
-
-- Benchmark cards: a generated "Stored results" paragraph in Baseline Results (ranking metric by prompt, latest run per active test up to `meta.json` `results_snapshot`); `benchmark_cards.py --snapshot` moves the date; aggregate scores removed from card prose.
+- Benchmark cards: a generated "Stored results" paragraph in Baseline Results (ranking metric by prompt, latest run per active test up to `meta.json` `results_snapshot`); `benchmark_cards.py --snapshot` moves the date; aggregate scores removed from card prose; `CONTRIBUTING.md` and the card template describe it.
 
 ### Changed
 - `book_advert_xml` card cites Avisdata v1.0.0 as its source (adverts dated 1731–1749); `magazine_pages` card names the Schweizerisches Wirtschaftsarchiv copies (UBW Zq 53, Zq 54, Zq 55a), digitised by the Universitätsbibliothek, and marks them Public Domain Mark 1.0 instead of CC BY 4.0; `fraktur_adverts` card cites the Avisblatt repository and the scanned copies (UBH Ztg 1:1729/1734; UBH Ztg 1:1761/1762 or UBH VB R 5:1762/63).
