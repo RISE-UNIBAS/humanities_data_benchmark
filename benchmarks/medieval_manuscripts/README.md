@@ -132,7 +132,7 @@ Example: ground truth `Vnd ein pferit die mir vnd`, response `und ein pferit die
 
 **Baseline Results:** Model results are on the [benchmark page](https://rise-services.rise.unibas.ch/benchmarks/p/benchmarks/medieval_manuscripts) and in `results/<date>/<test_id>/` at the repository root. Compare runs with the same prompt, scoring rules and ground-truth revision. No fixed model baseline is defined.
 
-Stored results, snapshot 2026-11-04 (`cer`, lower is better; the latest stored run of each active test, by prompt): `prompt.txt`, 114 tests: median 0.302 (interquartile range 0.212–0.446), best 0.088 (claude-fable-5, gemini-4-argon), 2 at 1. 2 active tests have no scored run by that date.
+Stored results, snapshot 2026-11-04 (`cer`, lower is better; the latest stored run of each active test, by prompt): `prompt.txt`, 114 tests: median 0.302 (interquartile range 0.212–0.446), best 0.088 (claude-fable-5, gemini-4-argon), 2 at 1. 6 active tests have no scored run by that date.
 
 Observed across models: main text is read considerably better (median CER 0.19 per page) than marginal additions (0.37 for the first, 0.88 and 1.0 for the second and third, which occur only on [9v]). The hardest pages are [9v], with three additions, and [70v], with a 279-character marginal note.
 

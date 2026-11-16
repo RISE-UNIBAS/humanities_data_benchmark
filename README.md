@@ -267,6 +267,7 @@ This benchmark suite currently tests models from the following providers:
 | | claude-sonnet-5                           | Claude Sonnet 5                                            |
 | | claude-fable-5                            | Claude Fable 5                                             |
 | | claude-fable-5-1                          | Claude Fable 5.1                                           |
+| | claude-fable-5-2                          | Claude Fable 5.2                                           |
 | | claude-opus-5                             | Claude Opus 5                                              |
 | | claude-opus-5-5                           | Claude Opus 5.5                                            |
 | | claude-sonnet-5-5                         | Claude Sonnet 5.5                                          |
@@ -308,6 +309,7 @@ This benchmark suite currently tests models from the following providers:
 | | gemini-3.7-flash                          | Gemini 3.7 Flash                                           |
 | | gemini-3.8-flash                          | Gemini 3.8 Flash                                           |
 | | gemini-4-argon                            | Gemini 4 Argon                                             |
+| | gemini-4-carbon                           | Gemini 4 Carbon                                            |
 | **Hugging Face** | swiss-ai/Apertus-v1.5-70B:publicai        | Apertus v1.5, 70B (Swiss AI Initiative); multimodal         |
 | | swiss-ai/Apertus-v1.5-8B:publicai         | Apertus v1.5, 8B (Swiss AI Initiative); multimodal          |
 | | Qwen/Qwen3-VL-235B-A22B-Instruct:deepinfra | Qwen3-VL 235B-A22B Instruct (Alibaba); multimodal          |
@@ -349,6 +351,7 @@ This benchmark suite currently tests models from the following providers:
 | | gpt-6-sol                                 | GPT-6 Sol                                                  |
 | | gpt-6-luna                                | GPT-6 Luna                                                 |
 | | gpt-6.1-sol                               | GPT-6.1 Sol                                                |
+| | gpt-6.1-terra                             | GPT-6.1 Terra                                              |
 | | gpt-5-mini                                | GPT-5 Mini                                                 |
 | | gpt-5-nano                                | GPT-5 Nano                                                 |
 | | o3                                        | OpenAI o3; reasoning                                       |
@@ -375,6 +378,7 @@ This benchmark suite currently tests models from the following providers:
 | | meta-llama/llama-4-scout                  | Llama 4 Scout                                              |
 | | stepfun/step-3.7-flash                    | StepFun Step 3.7 Flash                                     |
 | | moonshotai/kimi-k3                        | Kimi K3                                                    |
+| | moonshotai/kimi-k3.1-pro                  | Kimi K3.1 Pro; multimodal                                  |
 | | meta/muse-spark-1.2                       | Muse Spark 1.2 (Meta); multimodal                          |
 | | z-ai/glm-5v-turbo                         | GLM-5V Turbo (Z.ai); multimodal                            |
 | | meta/muse-spark-1.3                       | Muse Spark 1.3 (Meta); multimodal                          |

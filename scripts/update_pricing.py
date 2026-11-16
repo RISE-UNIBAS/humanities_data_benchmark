@@ -75,6 +75,7 @@ class PricingUpdater:
         'gpt-6-sol':           'https://developers.openai.com/api/docs/models/gpt-6-sol',
         'gpt-6-luna':          'https://developers.openai.com/api/docs/models/gpt-6-luna',
         'gpt-6.1-sol':         'https://developers.openai.com/api/docs/models/gpt-6.1-sol',
+        'gpt-6.1-terra':       'https://developers.openai.com/api/docs/models/gpt-6.1-terra',
         'o3':                  'https://developers.openai.com/api/docs/models/o3',
     }
 
@@ -986,6 +987,7 @@ Return only JSON:"""
         'gemini-3.7-flash':              'https://ai.google.dev/gemini-api/docs/pricing',
         'gemini-3.8-flash':              'https://ai.google.dev/gemini-api/docs/pricing',
         'gemini-4-argon':                'https://ai.google.dev/gemini-api/docs/pricing',
+        'gemini-4-carbon':               'https://ai.google.dev/gemini-api/docs/pricing',
     }
 
     OPENROUTER_MODEL_URLS = {
@@ -1016,6 +1018,7 @@ Return only JSON:"""
         'meta-llama/llama-4-scout': 'https://openrouter.ai/meta-llama/llama-4-scout',
         'stepfun/step-3.7-flash': 'https://openrouter.ai/stepfun/step-3.7-flash',
         'moonshotai/kimi-k3':             'https://openrouter.ai/moonshotai/kimi-k3',
+        'moonshotai/kimi-k3.1-pro':       'https://openrouter.ai/moonshotai/kimi-k3.1-pro',
         'minimax/minimax-m3.1-flash':     'https://openrouter.ai/minimax/minimax-m3.1-flash',
         'nvidia/nemotron-3.5-super-vl':   'https://openrouter.ai/nvidia/nemotron-3.5-super-vl',
         'meta/muse-spark-open':           'https://openrouter.ai/meta/muse-spark-open',
