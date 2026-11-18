@@ -146,7 +146,7 @@ For example, for the ground truth above and a response that differs only in `fir
 
 **Baseline Results:** Model results are available on the [benchmark page](https://rise-services.rise.unibas.ch/benchmarks/p/benchmarks/library_cards) and in `results/<date>/<test_id>/` at the repository root. Compare runs with the same prompt, scoring rules and ground-truth revision, and report the number of successfully scored objects alongside the score. No fixed baseline run is designated.
 
-Stored results, snapshot 2026-11-04 (`f1_macro`, higher is better; the latest stored run of each active test, by prompt): `prompt.txt`, 91 tests: median 0.84 (interquartile range 0.77–0.87), best 0.92 (gpt-6-astra); `prompt_year-string.txt`, 23 tests: median 0.87 (interquartile range 0.83–0.90), best 0.92 (gpt-6.1-sol). 8 active tests have no scored run by that date.
+Stored results, snapshot 2026-11-18 (`f1_macro`, higher is better; the latest stored run of each active test, by prompt): `prompt.txt`, 91 tests: median 0.84 (interquartile range 0.77–0.87), best 0.92 (gpt-6-astra); `prompt_year-string.txt`, 27 tests: median 0.87 (interquartile range 0.85–0.91), best 0.92 (gpt-6.2-sol). 4 active tests have no scored run by that date.
 
 Observed across models: the card type (93% of fields correct across all stored runs), first names (88%) and places (87%) are read best; subjects (61%), shelfmarks (70%), formats (70%) and pages (77%) worst. Common errors are omitted or misparsed shelfmarks and subject classifications, small formatting differences in pages and publisher, publisher names with an added "Verlag", and variant notations of format and academic abbreviations.
 

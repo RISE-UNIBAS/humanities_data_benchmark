@@ -127,7 +127,7 @@ The card score is the mean over that card's fields. The benchmark score is the m
 
 **Baseline Results:** Model results are available on the [benchmark page](https://rise-services.rise.unibas.ch/benchmarks/p/benchmarks/blacklist_cards) and in `results/<date>/<test_id>/` at the repository root. Compare runs with the same prompt, scoring rules and ground-truth revision, and report the number of successfully scored objects alongside the score. No fixed baseline run is designated. As a scorer diagnostic, an empty parsed object scores 0.158 on the 33 ground-truth files, because missing values are normalised to empty strings; it is not a schema-valid model response.
 
-Stored results, snapshot 2026-11-04 (`fuzzy`, higher is better; the latest stored run of each active test, by prompt): `prompt.txt`, 114 tests: median 0.92 (interquartile range 0.87–0.95), best 0.98 (gemini-2.5-pro). 8 active tests have no scored run by that date.
+Stored results, snapshot 2026-11-18 (`fuzzy`, higher is better; the latest stored run of each active test, by prompt): `prompt.txt`, 118 tests: median 0.92 (interquartile range 0.87–0.96), best 0.98 (gpt-6.2-astra). 4 active tests have no scored run by that date.
 
 Observed across models: models separate company name and location (mean field score 0.93 and 0.92), extract the identification number (0.95) and the stamped date (0.94) reliably; the text blocks of the body are the weakest part (0.84). Dates in the text blocks stay as written; turning them into structured dates for analysis is left to a later processing step.
 

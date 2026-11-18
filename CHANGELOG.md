@@ -5,10 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased
+## [v0.8.2] - 2026-11-18
 
 ### Added
 - 6 new models with 14 benchmark test configurations each (T2222-T2305): `claude-fable-5-2` (Anthropic), `gemini-4-carbon` (GenAI), `gpt-6.1-terra`, `gpt-6.2-sol`, `gpt-6.2-astra` (OpenAI), `moonshotai/kimi-k3.1-pro` (OpenRouter); `pricing.json` metadata bumped to version 1.60.
+- Results for 2026-11-16: T2236-T2263 (28 tests, 1,268 requests) for `gemini-4-carbon` and `gpt-6.1-terra`; 15 `gemini-4-carbon` answers empty (thinking hit the output cap).
+- Results for 2026-11-18: T2278-T2305 (28 tests, 1,268 requests) for `gpt-6.2-sol` and `gpt-6.2-astra`.
 - Dataset release `2026-10-29.6` deposited ([10.5281/zenodo.23944033](https://doi.org/10.5281/zenodo.23944033)) and recorded in `scripts/data/dataset_releases.json`; `CITATION.cff` lists the v0.8.1 DOI.
 - Benchmark cards: a generated "Stored results" paragraph in Baseline Results (ranking metric by prompt, latest run per active test up to `meta.json` `results_snapshot`); `benchmark_cards.py --snapshot` moves the date; aggregate scores removed from card prose; `CONTRIBUTING.md` and the card template describe it.
 
@@ -481,3 +483,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [v0.7.1]: https://github.com/RISE-UNIBAS/humanities_data_benchmark/releases/tag/v0.7.1
 [v0.8.0]: https://github.com/RISE-UNIBAS/humanities_data_benchmark/releases/tag/v0.8.0
 [v0.8.1]: https://github.com/RISE-UNIBAS/humanities_data_benchmark/releases/tag/v0.8.1
+[v0.8.2]: https://github.com/RISE-UNIBAS/humanities_data_benchmark/releases/tag/v0.8.2
