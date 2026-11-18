@@ -76,6 +76,8 @@ class PricingUpdater:
         'gpt-6-luna':          'https://developers.openai.com/api/docs/models/gpt-6-luna',
         'gpt-6.1-sol':         'https://developers.openai.com/api/docs/models/gpt-6.1-sol',
         'gpt-6.1-terra':       'https://developers.openai.com/api/docs/models/gpt-6.1-terra',
+        'gpt-6.2-sol':         'https://developers.openai.com/api/docs/models/gpt-6.2-sol',
+        'gpt-6.2-astra':       'https://developers.openai.com/api/docs/models/gpt-6.2-astra',
         'o3':                  'https://developers.openai.com/api/docs/models/o3',
     }
 

@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Unreleased
 
 ### Added
-- 4 new models with 14 benchmark test configurations each (T2222-T2277): `claude-fable-5-2` (Anthropic), `gemini-4-carbon` (GenAI), `gpt-6.1-terra` (OpenAI), `moonshotai/kimi-k3.1-pro` (OpenRouter); `pricing.json` metadata bumped to version 1.59.
+- 6 new models with 14 benchmark test configurations each (T2222-T2305): `claude-fable-5-2` (Anthropic), `gemini-4-carbon` (GenAI), `gpt-6.1-terra`, `gpt-6.2-sol`, `gpt-6.2-astra` (OpenAI), `moonshotai/kimi-k3.1-pro` (OpenRouter); `pricing.json` metadata bumped to version 1.60.
 - Dataset release `2026-10-29.6` deposited ([10.5281/zenodo.23944033](https://doi.org/10.5281/zenodo.23944033)) and recorded in `scripts/data/dataset_releases.json`; `CITATION.cff` lists the v0.8.1 DOI.
 - Benchmark cards: a generated "Stored results" paragraph in Baseline Results (ranking metric by prompt, latest run per active test up to `meta.json` `results_snapshot`); `benchmark_cards.py --snapshot` moves the date; aggregate scores removed from card prose; `CONTRIBUTING.md` and the card template describe it.
 

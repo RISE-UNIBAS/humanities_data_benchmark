@@ -131,7 +131,7 @@ A page's fuzzy score is the mean over its ground-truth adverts, rounded to two d
 
 **Baseline Results:** Model results are on the [benchmark page](https://rise-services.rise.unibas.ch/benchmarks/p/benchmarks/fraktur_adverts) and in `results/<date>/<test_id>/` at the repository root. Compare runs with the same prompt, scoring rules and ground-truth revision. No fixed model baseline is defined.
 
-Stored results, snapshot 2026-11-04 (`cer`, lower is better; the latest stored run of each active test, by prompt): `prompt_optimized.txt`, 114 tests: median 0.231 (interquartile range 0.047–0.524), best 0.005 (claude-fable-5-1, claude-opus-5-5), 8 at 1. 6 active tests have no scored run by that date.
+Stored results, snapshot 2026-11-04 (`cer`, lower is better; the latest stored run of each active test, by prompt): `prompt_optimized.txt`, 114 tests: median 0.231 (interquartile range 0.047–0.524), best 0.005 (claude-fable-5-1, claude-opus-5-5), 8 at 1. 8 active tests have no scored run by that date.
 
 Observed across models: results split sharply: some models read the Fraktur almost perfectly, others fail widely. Much of the error comes from pairing rather than reading: only 68–89% of a page's adverts are found by section and number on average, and a missed advert counts as CER 1 however well its text was read. `image_5` (median CER 0.23) and the two 1731 pages are the hardest.
 
