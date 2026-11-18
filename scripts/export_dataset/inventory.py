@@ -6,7 +6,8 @@ artifacts. Record source paths, file sizes, SHA-256 hashes, counts, and date bou
 
 Each row records ``committed``: whether the file is tracked at the source commit with
 its contents unchanged, as Git reports it, or null where Git could not say. Separately,
-``origin`` is ``generated`` for comparison-detail artifacts, which a pipeline step writes
+``origin`` is ``generated`` for comparison-detail artifacts and the generator's record of
+its passes, which a pipeline step writes
 rather than a benchmark run, with the scorer and ground-truth revisions each file records,
 and ``source`` for everything else.
 
@@ -82,7 +83,9 @@ def consumed_files(results_path=RESULTS_PATH, runs=None):
 
 def _detail_files():
     from scripts.export_dataset import rescored
-    return rescored.detail_files()
+    stamp = rescored.regeneration_path()
+    # The pass dates decide which runs count as stale, so they are an input like the rest.
+    return rescored.detail_files() + ([stamp] if stamp.is_file() else [])
 
 
 def _generated_provenance(path):

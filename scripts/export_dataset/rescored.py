@@ -18,12 +18,16 @@ from scripts.export_dataset.inventory import relative_path
 from scripts.results_index import COLLECTED_RESULTS_PATH, read_json
 
 DETAIL_DIR = COLLECTED_RESULTS_PATH / "compare_detail"
-REGENERATED_PATH = COLLECTED_RESULTS_PATH / "compare_detail_regenerated.json"
+
+
+def regeneration_path():
+    """The generator's record of its full passes, beside the detail tree."""
+    return DETAIL_DIR.with_name("compare_detail_regenerated.json")
 
 
 def regeneration_dates(path=None):
     """Return {benchmark: day of the last full generator pass}, or {} if unrecorded."""
-    path = REGENERATED_PATH if path is None else path
+    path = regeneration_path() if path is None else path
     try:
         stamps = json.loads(path.read_bytes().decode("utf-8"))
     except (OSError, UnicodeDecodeError, json.JSONDecodeError):
@@ -87,6 +91,20 @@ def extract(root=None, benchmark_of=None):
                                 "detail file's (%s)" % (expected, benchmark),
                 })
             benchmark = expected or benchmark
+
+        failures = detail.get("diagnostics")
+        if failures:
+            # Not "no detail": the scorer could not run, so whether there is any is unknown.
+            diagnostics.append({
+                "source_path": source,
+                "issue": "rescored_detail_scorer_failed",
+                "severity": "blocking",
+                "handling": "the scorer raised on %d input(s) of %s (first: %s); fix the "
+                            "scorer and regenerate" % (
+                                len(failures), run_id,
+                                next(iter(failures.values())) if isinstance(failures, dict)
+                                else failures),
+            })
 
         dirty = detail.get("uncommitted_changes")
         provenance = {

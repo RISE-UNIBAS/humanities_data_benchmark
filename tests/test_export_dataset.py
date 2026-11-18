@@ -730,6 +730,17 @@ def test_generated_inputs_are_labelled_in_the_source_manifest(build_with_detail,
     assert all(r["origin"] == "source" for r in rows if r not in generated)
 
 
+def test_the_generators_pass_dates_are_a_hashed_input(build_with_detail, tmp_path):
+    """They decide which runs block a release, so a change to them must show."""
+    (tmp_path / "compare_detail_regenerated.json").write_text(
+        json.dumps({"library_cards": "2026-01-02"}), encoding="utf-8")
+    build_with_detail()
+    rows = [json.loads(line) for line in (tmp_path / "dataset" / "source_manifest.jsonl")
+            .read_text(encoding="utf-8").splitlines()]
+    stamp = [r for r in rows if r["path"].endswith("compare_detail_regenerated.json")]
+    assert len(stamp) == 1 and stamp[0]["origin"] == "generated" and stamp[0]["sha256"]
+
+
 @pytest.mark.parametrize("ls_files,diff,expected", [
     ("results/a.json\0results/b.json\0", "results/b.json\0", {"results/a.json"}),
     (None, "", None),

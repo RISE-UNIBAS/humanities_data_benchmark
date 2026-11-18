@@ -69,6 +69,15 @@ def test_every_field_becomes_a_row(detail_tree):
     assert sorted(r["field_path"] for r in rows) == ["", "author.last_name"]
 
 
+def test_a_run_the_scorer_failed_on_blocks_whatever_its_date(detail_tree):
+    """A scorer error is not "no detail": the pass date must not let it through."""
+    _rows, _payloads, diagnostics = rescored.extract(detail_tree(
+        {("2026-01-01", "T0001"): _detail(inputs={}, diagnostics={"x": "TypeError: boom"})}))
+    failed = _issues(diagnostics)["rescored_detail_scorer_failed"]
+    assert failed["severity"] == "blocking"
+    assert "T0001@2026-01-01" in failed["handling"] and "TypeError: boom" in failed["handling"]
+
+
 def test_the_empty_field_path_is_data_here_too(detail_tree):
     rows, _payloads, _d = rescored.extract(
         detail_tree({("2026-01-01", "T0001"): _detail()}))
