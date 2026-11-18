@@ -18,6 +18,17 @@ from scripts.export_dataset.inventory import relative_path
 from scripts.results_index import COLLECTED_RESULTS_PATH, read_json
 
 DETAIL_DIR = COLLECTED_RESULTS_PATH / "compare_detail"
+REGENERATED_PATH = COLLECTED_RESULTS_PATH / "compare_detail_regenerated.json"
+
+
+def regeneration_dates(path=None):
+    """Return {benchmark: day of the last full generator pass}, or {} if unrecorded."""
+    path = REGENERATED_PATH if path is None else path
+    try:
+        stamps = json.loads(path.read_bytes().decode("utf-8"))
+    except (OSError, UnicodeDecodeError, json.JSONDecodeError):
+        return {}
+    return stamps if isinstance(stamps, dict) else {}
 
 
 def detail_files(root=None):
@@ -148,13 +159,16 @@ def restrict(rows, payloads, requests, partial):
             diagnostics)
 
 
-def coverage_diagnostics(rows, runs, stored_field_run_ids):
+def coverage_diagnostics(rows, runs, stored_field_run_ids, regenerated=None):
     """Return run-level diagnostics for absent, stale, or incomplete field detail.
 
     A run is covered when either stored or supplementary data contains a field
     observation for it. With no supplementary rows, return an absence warning.
-    Otherwise, uncovered runs dated after the latest recorded re-scoring date produce
-    a blocking stale-detail diagnostic; other uncovered runs produce a warning.
+    Otherwise, uncovered runs dated after their benchmark's last regeneration produce
+    a blocking stale-detail diagnostic; other uncovered runs produce a warning. The
+    last regeneration is the later of the latest recorded re-scoring date and the
+    generator's pass date for the benchmark (`regenerated`); a pass that finds no
+    detail writes no file, so only the pass date moves past such runs.
     Missing re-scoring dates also produce a warning.
 
     This date-based check cannot establish that every older run was processed or
@@ -175,7 +189,13 @@ def coverage_diagnostics(rows, runs, stored_field_run_ids):
     dates = [row["rescored_date"] for row in rows if row.get("rescored_date")]
     last = max(dates) if dates else None
 
-    stale = [run for run in uncovered if last and run["date"] > last]
+    regenerated = regenerated or {}
+
+    def regenerated_on(run):
+        return max(filter(None, (last, regenerated.get(run["benchmark"]))), default=None)
+
+    stale = [run for run in uncovered
+             if last and run["date"] > regenerated_on(run)]
     stale_ids = set(run["run_id"] for run in stale)
     seen = [run for run in uncovered if run["run_id"] not in stale_ids]
 
@@ -185,10 +205,10 @@ def coverage_diagnostics(rows, runs, stored_field_run_ids):
             "source_path": detail_dir,
             "issue": "rescored_detail_stale",
             "severity": "blocking",
-            "handling": "%d run(s) dated after the last regeneration (%s) have no "
-                        "field-level detail from either source, the newest dated %s. "
-                        "Regenerate with python -m scripts.compare.generate_compare_detail "
-                        "and rebuild." % (len(stale), last,
+            "handling": "%d run(s) dated after their benchmark's last regeneration have "
+                        "no field-level detail from either source (%s), the newest dated "
+                        "%s. Regenerate with python -m scripts.compare.generate_compare_detail "
+                        "and rebuild." % (len(stale), _by_benchmark(stale),
                                           max(run["date"] for run in stale)),
         })
     if seen:
@@ -197,10 +217,10 @@ def coverage_diagnostics(rows, runs, stored_field_run_ids):
             "issue": "rescored_detail_incomplete",
             "severity": "warning",
             "handling": "%d run(s) carry no field-level detail from either source (%s). "
-                        "All predate the last regeneration (%s), so the scorer saw them "
-                        "and produced none: a run without an answer, or a scorer that "
-                        "reports no per-field similarity."
-                        % (len(seen), _by_benchmark(seen), last),
+                        "All predate their benchmark's last regeneration, so the scorer "
+                        "saw them and produced none: a run without an answer, or a scorer "
+                        "that reports no per-field similarity."
+                        % (len(seen), _by_benchmark(seen)),
         })
     if last is None:
         diagnostics.append({

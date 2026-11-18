@@ -131,7 +131,8 @@ def build(source=RESULTS_PATH, out=DATASET_PATH, date=None, benchmark=None, limi
           % (len(rescored_rows), len(rescored_payloads)))
     rescored_diagnostics += rescored.coverage_diagnostics(
         rescored_rows, extractor.runs,
-        set(s["run_id"] for s in extractor.scores if s.get("level") == "field"))
+        set(s["run_id"] for s in extractor.scores if s.get("level") == "field"),
+        rescored.regeneration_dates())
     for row in rescored_diagnostics:
         if row["issue"].startswith("rescored_detail_"):
             print("  %s: %s" % (row["severity"], row["handling"]))

@@ -21,7 +21,10 @@ kept, so the divergence stays visible.
 
 **A re-run that finds nothing new writes nothing.** `rescored` dates the detail on
 file, not the last attempt to recompute it, so a run whose detail comes back identical
-keeps its recorded date and its file stays byte-identical.
+keeps its recorded date and its file stays byte-identical. The day of each full pass is
+recorded per benchmark in collected_results/compare_detail_regenerated.json instead, so
+the dataset export can tell a run the scorer saw and found no detail for from one it never
+saw.
 
 Output: collected_results/compare_detail/<date>/<test_id>.json, one file per run that
 needs any, so the view fetches only the run it is showing.
@@ -58,6 +61,7 @@ from scripts.offline_scoring import (iter_run_inputs, iter_runs, load_scorer,
                                      numeric_metrics, read_tests, rules_of_test)
 
 DETAIL_DIR = EXPORT_PATH / "compare_detail"
+REGENERATED_PATH = EXPORT_PATH / "compare_detail_regenerated.json"
 
 logger = logging.getLogger(__name__)
 
@@ -157,6 +161,19 @@ def _unstamped(document):
     return {key: value for key, value in document.items() if key != "rescored"}
 
 
+def _record_regeneration(benchmarks, today):
+    try:
+        stamps = json.loads(REGENERATED_PATH.read_bytes().decode("utf-8"))
+    except (OSError, UnicodeDecodeError, json.JSONDecodeError):
+        stamps = {}
+    if not isinstance(stamps, dict):
+        stamps = {}
+    stamps.update((name, today) for name in benchmarks)
+    REGENERATED_PATH.parent.mkdir(parents=True, exist_ok=True)
+    REGENERATED_PATH.write_text(json.dumps(stamps, indent=2, sort_keys=True) + "\n",
+                                encoding="utf-8")
+
+
 def generate_compare_detail(benchmark=None, limit=0, measure=False, only_missing=False):
     """Writes collected_results/compare_detail/<date>/<test_id>.json."""
     tests = read_tests()
@@ -238,6 +255,10 @@ def generate_compare_detail(benchmark=None, limit=0, measure=False, only_missing
         if not measure:
             out_path.parent.mkdir(parents=True, exist_ok=True)
             out_path.write_bytes(blob)
+
+    # Only a pass over every run of a benchmark has seen all of them.
+    if not (measure or limit or only_missing):
+        _record_regeneration(scorers, today)
 
     verb = "would write" if measure else "wrote"
     print("  %s %d run file(s) to %s" % (verb, written, DETAIL_DIR))

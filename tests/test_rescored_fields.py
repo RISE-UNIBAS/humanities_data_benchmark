@@ -202,6 +202,32 @@ def test_a_run_the_generator_already_saw_is_only_a_warning():
     assert "book_advert_xml 1" in issues["rescored_detail_incomplete"]["handling"]
 
 
+def test_a_pass_that_wrote_nothing_still_counts_as_regeneration():
+    """business_letters reports no per-field similarity, so its runs never get a file;
+    the generator's pass date is what says the scorer saw them."""
+    runs = [_run("T0001", "2026-01-01"), _run("T0002", "2026-11-18", "business_letters")]
+    issues = _issues(rescored.coverage_diagnostics(
+        [_row("T0001@2026-01-01", "2026-11-04")], runs, set(),
+        regenerated={"business_letters": "2026-11-18"}))
+    assert "rescored_detail_stale" not in issues
+    assert "business_letters 1" in issues["rescored_detail_incomplete"]["handling"]
+
+
+def test_another_benchmarks_pass_does_not_cover_a_run():
+    runs = [_run("T0001", "2026-01-01"), _run("T0002", "2026-11-18", "business_letters")]
+    issues = _issues(rescored.coverage_diagnostics(
+        [_row("T0001@2026-01-01", "2026-11-04")], runs, set(),
+        regenerated={"library_cards": "2026-11-18"}))
+    assert "business_letters 1" in issues["rescored_detail_stale"]["handling"]
+
+
+def test_regeneration_dates_tolerate_an_absent_or_broken_file(tmp_path):
+    assert rescored.regeneration_dates(tmp_path / "missing.json") == {}
+    broken = tmp_path / "broken.json"
+    broken.write_text("[", encoding="utf-8")
+    assert rescored.regeneration_dates(broken) == {}
+
+
 def test_detail_recorded_at_run_time_counts_as_coverage():
     """The two sources are complementary, so a run covered by either is covered."""
     assert rescored.coverage_diagnostics(

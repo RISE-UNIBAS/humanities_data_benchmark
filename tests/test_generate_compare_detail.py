@@ -17,6 +17,7 @@ def detail(tmp_path, monkeypatch):
         rules = None
 
     monkeypatch.setattr(g, "DETAIL_DIR", detail_dir)
+    monkeypatch.setattr(g, "REGENERATED_PATH", tmp_path / "compare_detail_regenerated.json")
     monkeypatch.setattr(g, "read_tests", lambda: {})
     monkeypatch.setattr(g, "rules_of_test", lambda test_id, tests: None)
     monkeypatch.setattr(g, "iter_runs",
@@ -49,3 +50,17 @@ def test_measure_never_deletes(detail):
     produced.clear()
     g.generate_compare_detail(measure=True)
     assert path.exists()
+
+
+def test_a_full_pass_records_its_day_even_when_it_writes_nothing(detail):
+    """The export judges staleness by this day: a run the scorer saw and found no
+    detail for leaves no file, so the files' own dates never move past it."""
+    g.generate_compare_detail()
+    stamps = json.loads(g.REGENERATED_PATH.read_text(encoding="utf-8"))
+    assert stamps == {"test_benchmark": g.date_type.today().isoformat()}
+
+
+@pytest.mark.parametrize("partial", [{"measure": True}, {"limit": 1}, {"only_missing": True}])
+def test_a_partial_pass_records_nothing(detail, partial):
+    g.generate_compare_detail(**partial)
+    assert not g.REGENERATED_PATH.exists()
