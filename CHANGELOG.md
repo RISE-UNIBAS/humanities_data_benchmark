@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Unreleased
 
 ### Added
-- `CITATION.cff` lists the v0.8.2 DOI.
+- Dataset release `2026-11-18.1` deposited ([10.5281/zenodo.24342744](https://doi.org/10.5281/zenodo.24342744)) and recorded in `scripts/data/dataset_releases.json`; `CITATION.cff` lists the v0.8.2 DOI.
 
 ### Fixed
 - Dataset export: runs whose scorer gives no per-field detail (`business_letters`) no longer block a release once newer than the last written detail file; `generate_compare_detail` records each full pass per benchmark in `collected_results/compare_detail_regenerated.json`, hashed in `source_manifest.jsonl`; a detail file with scorer errors blocks.
