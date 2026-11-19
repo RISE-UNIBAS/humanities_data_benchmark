@@ -120,7 +120,7 @@ Elements used: `ITEM` (one per advert), `BIBL`, `TITLE`, `AUTHOR`, `FORMAT`, `VO
 
 **Baseline Results:** Model results are on the [benchmark page](https://rise-services.rise.unibas.ch/benchmarks/p/benchmarks/book_advert_xml) and in `results/<date>/<test_id>/` at the repository root. Compare runs with the same prompt, scoring rules and ground-truth revision. No fixed model baseline is defined. Copying each input `xml_string` unchanged into `fixed_xml` scores 0.
 
-Stored results, snapshot 2026-11-18 (`f1_macro`, higher is better; the latest stored run of each active test, by prompt): `prompt.txt`, 100 tests: median 0.27 (interquartile range 0.16–0.41), best 0.61 (claude-fable-5-1), 1 at 0; `prompt_v2.txt`, 23 tests: median 0.32 (interquartile range 0.22–0.53), best 0.65 (gpt-6.1-sol). 4 active tests have no scored run by that date.
+Stored results, snapshot 2026-11-18 (`f1_macro`, higher is better; the latest stored run of each active test, by prompt): `prompt.txt`, 100 tests: median 0.27 (interquartile range 0.16–0.41), best 0.61 (claude-fable-5-1), 1 at 0; `prompt_v2.txt`, 23 tests: median 0.32 (interquartile range 0.22–0.53), best 0.65 (gpt-6.1-sol). 6 active tests have no scored run by that date.
 
 Observed across models: most answers make the reference's repairs only in part and add edits of their own, such as further tags or corrected spellings; the median test makes exactly the reference's repairs in about 4% of adverts that need them. The task combines syntactic repair, structural reconstruction (adding missing tags) and implicit interpretation (deciding what should be tagged); separate variants for repair only and for enrichment would allow more controlled comparisons.
 

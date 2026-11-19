@@ -164,7 +164,7 @@ Every row covers all 30 days of April; the 21 rows hold 656 shifts.
 
 **Baseline Results:** Model results are available on the [benchmark page](https://rise-services.rise.unibas.ch/benchmarks/p/benchmarks/duty_rosters) and in `results/<date>/<test_id>/` at the repository root. Compare runs with the same prompt, scoring rules and ground-truth revision, and report the number of successfully scored objects alongside the score. There is no fixed model baseline with a run ID and date.
 
-Stored results, snapshot 2026-11-18 (`f1_micro`, higher is better; the latest stored run of each active test, by prompt): `prompt.txt`, 111 tests: median 0.78 (interquartile range 0.66–0.86), best 0.97 (gpt-6.2-astra), 3 at 0. 11 active tests have no scored run by that date.
+Stored results, snapshot 2026-11-18 (`f1_micro`, higher is better; the latest stored run of each active test, by prompt): `prompt.txt`, 111 tests: median 0.78 (interquartile range 0.66–0.86), best 0.97 (gpt-6.2-astra), 3 at 0. 13 active tests have no scored run by that date.
 
 Observed across models: the shift icon is the field read worst (38% of icons correct across all stored runs), followed by the alternate unit (49%) and the shading flag `planned_on_current_unit` (73%). Mapping cells to their dates through the separate header works comparatively well (88%). Models also confuse empty cells with `Freier Tag` or assign icons such as `HomeOffice` to them.
 

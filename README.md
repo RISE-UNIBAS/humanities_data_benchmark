@@ -310,6 +310,8 @@ This benchmark suite currently tests models from the following providers:
 | | gemini-3.8-flash                          | Gemini 3.8 Flash                                           |
 | | gemini-4-argon                            | Gemini 4 Argon                                             |
 | | gemini-4-carbon                           | Gemini 4 Carbon                                            |
+| | gemini-4-neon                             | Gemini 4 Neon                                              |
+| | gemini-4-hydrogen                         | Gemini 4 Hydrogen                                          |
 | **Hugging Face** | swiss-ai/Apertus-v1.5-70B:publicai        | Apertus v1.5, 70B (Swiss AI Initiative); multimodal         |
 | | swiss-ai/Apertus-v1.5-8B:publicai         | Apertus v1.5, 8B (Swiss AI Initiative); multimodal          |
 | | Qwen/Qwen3-VL-235B-A22B-Instruct:deepinfra | Qwen3-VL 235B-A22B Instruct (Alibaba); multimodal          |

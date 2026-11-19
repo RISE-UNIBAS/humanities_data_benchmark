@@ -137,7 +137,7 @@ A response that parses but does not fit the letter structure scores no TP and co
 
 **Baseline Results:** Results are on the [benchmark page](https://rise-services.rise.unibas.ch/benchmarks/p/benchmarks/business_letters) and in `results/<date>/<test_id>/` at the repository root. No fixed baseline is recorded. Compare runs only with the same prompt, rules and ground-truth revision, and report the number of scored letters with the score.
 
-Stored results, snapshot 2026-11-18 (`f1_macro`, higher is better; the latest stored run of each active test, by prompt): `prompt.txt`, all 57 letters, 119 tests: median 0.58 (interquartile range 0.53–0.62), best 0.79 (gemini-4-carbon); `prompt.txt`, 32 signed letters, 119 tests: median 0.61 (interquartile range 0.56–0.65), best 0.76 (claude-opus-5-5); `prompt.txt`, 25 unsigned letters, 119 tests: median 0.55 (interquartile range 0.49–0.62), best 0.96 (gemini-3.6-flash). 12 active tests have no scored run by that date.
+Stored results, snapshot 2026-11-18 (`f1_macro`, higher is better; the latest stored run of each active test, by prompt): `prompt.txt`, all 57 letters, 119 tests: median 0.58 (interquartile range 0.53–0.62), best 0.79 (gemini-4-carbon); `prompt.txt`, 32 signed letters, 119 tests: median 0.61 (interquartile range 0.56–0.65), best 0.76 (claude-opus-5-5); `prompt.txt`, 25 unsigned letters, 119 tests: median 0.55 (interquartile range 0.49–0.62), best 0.96 (gemini-3.6-flash). 18 active tests have no scored run by that date.
 
 **Validation:** The source spreadsheet records for each letter who annotated it and who checked it. Scoring is deterministic; the scorer is covered by `tests/test_business_letters_scoring.py`.
 

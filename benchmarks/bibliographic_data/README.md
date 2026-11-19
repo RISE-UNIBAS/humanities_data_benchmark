@@ -148,7 +148,7 @@ The page score is the mean over that page's fields. The benchmark score is the m
 
 **Baseline Results:** Model results are available on the [benchmark page](https://rise-services.rise.unibas.ch/benchmarks/p/benchmarks/bibliographic_data) and in `results/<date>/<test_id>/` at the repository root. Compare runs with the same prompt, scoring rules and ground-truth revision. No fixed baseline run is designated.
 
-Stored results, snapshot 2026-11-18 (`fuzzy`, higher is better; the latest stored run of each active test, by prompt): `prompt.txt`, 95 tests: median 0.94 (interquartile range 0.83–0.97), best 0.99 (gpt-6-astra); `prompt_v2.txt`, 24 tests: median 0.83 (interquartile range 0.74–0.98), best 0.99 (gpt-6.2-astra). 3 active tests have no scored run by that date.
+Stored results, snapshot 2026-11-18 (`fuzzy`, higher is better; the latest stored run of each active test, by prompt): `prompt.txt`, 95 tests: median 0.94 (interquartile range 0.83–0.97), best 0.99 (gpt-6-astra); `prompt_v2.txt`, 24 tests: median 0.83 (interquartile range 0.74–0.98), best 0.99 (gpt-6.2-astra). 5 active tests have no scored run by that date.
 
 Observed across models: averaged over all scored fields of those runs, `note` (0.55), `relation` (0.71) and `issued` (0.73) score lowest, since they depend on conventions the prompt leaves open; names, titles, publishers and pages score about 0.9.
 

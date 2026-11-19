@@ -990,6 +990,8 @@ Return only JSON:"""
         'gemini-3.8-flash':              'https://ai.google.dev/gemini-api/docs/pricing',
         'gemini-4-argon':                'https://ai.google.dev/gemini-api/docs/pricing',
         'gemini-4-carbon':               'https://ai.google.dev/gemini-api/docs/pricing',
+        'gemini-4-neon':                 'https://ai.google.dev/gemini-api/docs/pricing',
+        'gemini-4-hydrogen':             'https://ai.google.dev/gemini-api/docs/pricing',
     }
 
     OPENROUTER_MODEL_URLS = {
