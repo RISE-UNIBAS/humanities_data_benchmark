@@ -20,8 +20,10 @@ the scorer no longer reports, and records the rewrite in `rescored`. Only files 
 numbers change are written; a stored score that lacks the field detail of today's scorer
 is not rewritten for that alone.
 
-Per run, a request counts as scored if its file records a score, or if it was skipped as
-unparseable and the benchmark now scores such answers as misses. A file without a `score`
+Per run, a request counts as scored if its file records a score, if it was parsed but left
+unscored because the scorer failed (the run then stays unfinished until this writes the
+score), or if it was skipped as unparseable and the benchmark now scores such answers as
+misses. A file without a `score`
 key comes from a run that predates per-request scores: that runner scored every request and
 read the answer from the response text (a ```json block or the whole text) when nothing was
 parsed, so all of them count and the text is parsed the same way.
@@ -73,9 +75,10 @@ def rescore_requests(run_dir, test_id, scorer, trap_errors=False):
     """
     for object_id, record, answer, truth in iter_run_inputs(run_dir, test_id):
         if "score" in record:
-            # A skipped unparseable answer counts once the benchmark scores it as a miss.
-            scored = record["score"] is not None or (
-                record.get("parsed") is None and getattr(scorer, "score_unparseable_as_miss", False))
+            # A parsed answer left unscored by a failed scorer counts; a skipped unparseable
+            # answer counts once the benchmark scores it as a miss.
+            scored = record["score"] is not None or record.get("parsed") is not None or (
+                getattr(scorer, "score_unparseable_as_miss", False))
         else:
             scored = True
         if "score" not in record and answer.parsed is None:

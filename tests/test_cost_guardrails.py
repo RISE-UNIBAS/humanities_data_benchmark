@@ -217,3 +217,24 @@ class TestRunWithAnObjectWithoutAnswerStaysUnfinished:
     def test_a_deliberately_skipped_object_still_completes_the_run(self, tmp_path):
         saved = self._run(tmp_path, regenerate=False, skip={"b"})
         assert len(saved) == 1
+
+    def test_an_answer_whose_scorer_failed(self, tmp_path):
+        benchmark, _ = _make()
+        saved = []
+        benchmark.get_all_basenames = lambda *a, **k: ["a", "b"]
+        benchmark.get_request_answer_file_name = lambda bn: str(tmp_path / ("%s.json" % bn))
+        benchmark.ask_llm = lambda bn: _ok()
+        benchmark._score_or_miss = lambda bn, answer: None if bn == "b" else {"fuzzy": 1.0}
+        benchmark.save_request_answer = lambda *a, **k: None
+        benchmark.save_benchmark_score = lambda *a, **k: saved.append(a)
+        benchmark.run(regenerate_existing_results=True, workers=2)
+        assert saved == []
+
+    def test_an_unparseable_answer_the_benchmark_does_not_score_completes_the_run(self, tmp_path):
+        benchmark, _ = _make()
+        benchmark.dataclass = object()
+        benchmark.score_unparseable_as_miss = False
+        assert benchmark._is_complete("b", _ok(), None)
+        parsed = _ok()
+        parsed.parsed = {"rows": []}
+        assert not benchmark._is_complete("b", parsed, None)

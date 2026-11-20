@@ -76,3 +76,14 @@ def test_write_puts_each_score_in_its_own_file_when_one_id_ends_another(tmp_path
         path = folder / ("request_T9999_%s.json" % name)
         return json.loads(path.read_text(encoding="utf-8"))["score"]["fuzzy"]
     assert (written("1"), written("page_1")) == (0.25, 0.75)
+
+
+def test_a_parsed_answer_left_unscored_by_a_failed_scorer_is_rescored(tmp_path):
+    """The runner leaves such a run unfinished; --write must be able to supply the score."""
+    record = {"score": None, "parsed": {"rows": []}}
+    answer = SimpleNamespace(parsed={"rows": []})
+    scorer = SimpleNamespace(score_unparseable_as_miss=False,
+                             score_request_answer=lambda *a: {"fuzzy": 0.5})
+    with patch.object(rescore, "iter_run_inputs", return_value=[("a", record, answer, {})]):
+        assert list(rescore.rescore_requests(tmp_path, "T9999", scorer)) == [
+            ("a", record, {"fuzzy": 0.5})]

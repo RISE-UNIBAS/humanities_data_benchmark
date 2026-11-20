@@ -860,15 +860,15 @@ class Benchmark(ABC):
             raise FatalProviderError(
                 f"{self.get_title()} aborted on a fatal provider error; no score saved.")
 
-        # An object without an answer is unfinished: its worker raised, the provider returned
-        # nothing (never saved), or its saved file cannot be read. Only a deliberately skipped
-        # object has no answer by design. Saving a score would average over the rest and mark
-        # the test finished, so the supervisor would never retry the missing objects.
+        # Saving a score would average over the rest and mark the test finished, so the
+        # supervisor would never retry these objects.
         failed = [bn for bn, r in zip(object_basenames, results)
-                  if r is None or (r[0] is None and not self.skip_object(bn))]
+                  if r is None or not self._is_complete(bn, *r)]
         if failed:
-            logging.error(f"{self.get_title()}: {len(failed)} object(s) without an answer "
-                          f"({', '.join(failed[:5])}); no score saved, the test stays unfinished.")
+            logging.error(f"{self.get_title()}: {len(failed)} object(s) without an answer or "
+                          f"its score ({', '.join(failed[:5])}); no score saved, the test stays "
+                          f"unfinished. For a scorer failure, fix the scorer and run "
+                          f"rescore.py --write on the benchmark before resuming.")
             return
 
         all_answers = [r[0] for r in results]
@@ -889,6 +889,20 @@ class Benchmark(ABC):
         self.save_benchmark_score(benchmark_score)
 
         self.after_run()
+
+    def _is_complete(self, object_basename, answer, score):
+        """Whether an object's outcome may enter the aggregate.
+
+        No answer is complete only for a deliberately skipped object; otherwise the worker
+        raised, the provider returned nothing (never saved) or the saved file is unreadable.
+        No score is complete only for an unparseable answer on a benchmark that does not score
+        those as misses; otherwise the ground truth did not load or the scorer raised.
+        """
+        if answer is None:
+            return bool(self.skip_object(object_basename))
+        if score is not None:
+            return True
+        return bool(self.dataclass and answer.parsed is None and not self.score_unparseable_as_miss)
 
     def _run_parallel(self, object_basenames: List[str], regenerate_existing_results: bool, workers: int):
         """Run object processing in parallel, returning results in original order."""

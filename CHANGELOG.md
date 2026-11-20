@@ -13,7 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Dataset release `2026-11-18.1` deposited ([10.5281/zenodo.24342744](https://doi.org/10.5281/zenodo.24342744)) and recorded in `scripts/data/dataset_releases.json`; `CITATION.cff` lists the v0.8.2 DOI.
 
 ### Fixed
-- `generate_compare_detail` and `generate_all` start again (broken by the audit fixes' import); a run also stays unfinished when an object got no answer or its saved answer is unreadable; `scorer_revision` covers a benchmark's helper files and the shared scoring code.
+- `generate_compare_detail` and `generate_all` start again (broken by the audit fixes' import); a run also stays unfinished when an object got no answer, its saved answer is unreadable or its scorer failed, and `rescore.py --write` can supply such a score; `scorer_revision` covers a benchmark's helper files and the shared scoring code.
 - Audit 2026-11-19 fixes: a run with a crashed object saves no `scoring.json`; `rescore.py --check` fails on scorer errors or nothing compared, and `--write` matches request files by exact id; supervisor and watcher accept single-quoted ids and refuse an empty scope; the export's stale-detail check is per benchmark; test reports escape model output, show `fuzzy`/`cer`/`f1` aggregates and parse the test CSV properly; compare detail flags uncommitted shared scoring code; CI checks out full history (blobless).
 - Dataset export: runs whose scorer gives no per-field detail (`business_letters`) no longer block a release once newer than the last written detail file; `generate_compare_detail` records each full pass per benchmark in `collected_results/compare_detail_regenerated.json`, hashed in `source_manifest.jsonl`; a detail file with scorer errors blocks.
 
