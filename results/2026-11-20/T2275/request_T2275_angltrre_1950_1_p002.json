@@ -1,0 +1,86 @@
+{
+    "text": "{\"advertisements\":[{\"box\":[336.0,209.0,2361.0,1710.0]},{\"box\":[336.0,1763.0,2345.0,3258.0]}]}",
+    "model": "moonshotai/kimi-k3.1-pro",
+    "provider": "openrouter",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 4328,
+        "output_tokens": 827,
+        "total_tokens": 5155,
+        "reasoning_tokens": 0,
+        "input_cost_usd": 0.008656,
+        "output_cost_usd": 0.00827,
+        "estimated_cost_usd": 0.016926
+    },
+    "duration": 10.015084266662598,
+    "timestamp": "2026-11-20T14:26:52.725072",
+    "parsed": {
+        "advertisements": [
+            {
+                "box": [
+                    336.0,
+                    209.0,
+                    2361.0,
+                    1710.0
+                ]
+            },
+            {
+                "box": [
+                    336.0,
+                    1763.0,
+                    2345.0,
+                    3258.0
+                ]
+            }
+        ]
+    },
+    "conversation_id": "dc2ef9f5-e7e1-4126-92a6-13e69d5631a0",
+    "score": {
+        "field_scores": {
+            "box 0": {
+                "response": [
+                    336.0,
+                    209.0,
+                    2361.0,
+                    1710.0
+                ],
+                "ground_truth": [
+                    330,
+                    204,
+                    2365,
+                    1716
+                ],
+                "score": 0.988
+            },
+            "box 1": {
+                "response": [
+                    336.0,
+                    1763.0,
+                    2345.0,
+                    3258.0
+                ],
+                "ground_truth": [
+                    347,
+                    1774,
+                    2337,
+                    3253
+                ],
+                "score": 0.98
+            }
+        },
+        "f1": 1.0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "mean_iou": 0.984,
+        "true_positives": 2,
+        "false_positives": 0,
+        "false_negatives": 0,
+        "iou_threshold": 0.5
+    },
+    "benchmark_version": {
+        "version": "1.0.1",
+        "commit": "88e9e0bd38a67481733ad4d814ba31d7e10521a4",
+        "uncommitted": []
+    },
+    "raw_response": "{\"id\":\"gen-1795181202-UhvbGSsBqgI1xaqo8dji\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\\"advertisements\\\":[{\\\"box\\\":[336,209,2361,1710]},{\\\"box\\\":[336,1763,2345,3258]}]}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"advertisements\":[{\"box\":[336.0,209.0,2361.0,1710.0]},{\"box\":[336.0,1763.0,2345.0,3258.0]}]},\"reasoning\":\"I need analyze image dimensions original 2479x3508, displayed 1447x2048? Should extract all ads bounding boxes. Two obvious bordered ads: Swiss Bank Corporation top, Crowe bottom. Should have coordinates original. Should map displayed image to original. Image shown resolution 1447 x 2048 (indeed user embed). Original ratio 2479/1447=1.7132, 3508/2048=1.71289. Should have precise boxes based borders. Top ad border x ~196 to1377? y122 to998? Bottom x196 to1368 y1030 to1901. Should convert. I'll carefully inspect visual. Should return only JSON. Should determine bounding boxes likely around full advertisements including borders. Top border left at x196 y122, top line to1377 y137? right border x1376 y137 to1365 y990, bottom line y997. Bottom border left x197 y1031, right x1367 y1030 to1358 y1888, bottom y1900. Convert to original.\\n\\nI'll estimate exact using proportions. Original page 2479x3508. Display image 1447x2048. scale x=1.7132 y=1.71289. Top box [196,121,1378,999] -> [336,207,2361,1711]. Bottom [196,1029,1369,1902] -> [336,1763,2345,3258]. Should be accurate. I'll reason pixel coordinate from visual. The top Swiss ad starts border at displayed (196,122) and ends (1370,998). It is skewed: top-left 196,122; top-right 1377,137; bottom-right 1366,992; bottom-left 199,997. Bounding [196,122,1378,998]. Original [336,209,2360,1709]. Bottom ad bounding [195,1029,1369,1902] original [334,1763,2345,3257]. Could include only content not border? Usually expected bounding boxes around ads. Use borders.\\n\\nMake sure no third ad sliver on right? Page has adjacent page text at extreme right, not ad. Two ads.\\n\\nI'll calculate more exact manually. 2479/1447: 1447*1.713 =2478.711 so 1.7131997.3508/2048=1.712890625. If x0 196 =>335.787; y0 122=>208.9726; x1 1378=>2360.789; y1 998=>1709.465. Bottom x0 196 same 335.787 y0 1029=>1762.564; x1 1369=>2344.766; y1 1902=>3257.918. Could round [336,209,2361,1710], [336,1763,2345,3258].\\n\\nPerhaps top border bottom at 996 not 998. Fine. Should have no commentary. Could choose [334,207,2363,1712] etc. I'll inspect image mentally: top ad left vertical at 197 from 124 to 995. top horizontal starts 196,122. right vertical at1376,137. bottom horizontal at198,996 to1366,990. So max y997. x max1377. [336,209,2360,1708]. Bottom border top y1031, left x198, right x1367. bottom y1900. [196,1029,1368,1901]. [336,1763,2344,3256]. I think acceptable.\\n\\nShould output JSON exactly.\",\"reasoning_details\":[{\"type\":\"reasoning.text\",\"text\":\"I need analyze image dimensions original 2479x3508, displayed 1447x2048? Should extract all ads bounding boxes. Two obvious bordered ads: Swiss Bank Corporation top, Crowe bottom. Should have coordinates original. Should map displayed image to original. Image shown resolution 1447 x 2048 (indeed user embed). Original ratio 2479/1447=1.7132, 3508/2048=1.71289. Should have precise boxes based borders. Top ad border x ~196 to1377? y122 to998? Bottom x196 to1368 y1030 to1901. Should convert. I'll carefully inspect visual. Should return only JSON. Should determine bounding boxes likely around full advertisements including borders. Top border left at x196 y122, top line to1377 y137? right border x1376 y137 to1365 y990, bottom line y997. Bottom border left x197 y1031, right x1367 y1030 to1358 y1888, bottom y1900. Convert to original.\\n\\nI'll estimate exact using proportions. Original page 2479x3508. Display image 1447x2048. scale x=1.7132 y=1.71289. Top box [196,121,1378,999] -> [336,207,2361,1711]. Bottom [196,1029,1369,1902] -> [336,1763,2345,3258]. Should be accurate. I'll reason pixel coordinate from visual. The top Swiss ad starts border at displayed (196,122) and ends (1370,998). It is skewed: top-left 196,122; top-right 1377,137; bottom-right 1366,992; bottom-left 199,997. Bounding [196,122,1378,998]. Original [336,209,2360,1709]. Bottom ad bounding [195,1029,1369,1902] original [334,1763,2345,3257]. Could include only content not border? Usually expected bounding boxes around ads. Use borders.\\n\\nMake sure no third ad sliver on right? Page has adjacent page text at extreme right, not ad. Two ads.\\n\\nI'll calculate more exact manually. 2479/1447: 1447*1.713 =2478.711 so 1.7131997.3508/2048=1.712890625. If x0 196 =>335.787; y0 122=>208.9726; x1 1378=>2360.789; y1 998=>1709.465. Bottom x0 196 same 335.787 y0 1029=>1762.564; x1 1369=>2344.766; y1 1902=>3257.918. Could round [336,209,2361,1710], [336,1763,2345,3258].\\n\\nPerhaps top border bottom at 996 not 998. Fine. Should have no commentary. Could choose [334,207,2363,1712] etc. I'll inspect image mentally: top ad left vertical at 197 from 124 to 995. top horizontal starts 196,122. right vertical at1376,137. bottom horizontal at198,996 to1366,990. So max y997. x max1377. [336,209,2360,1708]. Bottom border top y1031, left x198, right x1367. bottom y1900. [196,1029,1368,1901]. [336,1763,2344,3256]. I think acceptable.\\n\\nShould output JSON exactly.\",\"format\":\"unknown\",\"index\":0}]},\"native_finish_reason\":\"stop\"}],\"created\":1795181202,\"model\":\"moonshotai/kimi-k3.1-pro\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":null,\"usage\":{\"completion_tokens\":827,\"prompt_tokens\":4328,\"total_tokens\":5155,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":0,\"reasoning_tokens\":780,\"rejected_prediction_tokens\":null,\"image_tokens\":0},\"prompt_tokens_details\":{\"audio_tokens\":0,\"cached_tokens\":0,\"cache_write_tokens\":0,\"video_tokens\":0},\"cost\":0.016926,\"is_byok\":false,\"cost_details\":{\"upstream_inference_cost\":0.016926,\"upstream_inference_prompt_cost\":0.008656,\"upstream_inference_completions_cost\":0.00827}},\"provider\":\"River\"}"
+}

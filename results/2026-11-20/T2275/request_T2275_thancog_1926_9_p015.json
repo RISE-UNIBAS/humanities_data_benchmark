@@ -1,0 +1,86 @@
+{
+    "text": "{\"advertisements\":[{\"box\":[185.0,336.0,2158.0,1723.0]},{\"box\":[184.0,1769.0,2161.0,3155.0]}]}",
+    "model": "moonshotai/kimi-k3.1-pro",
+    "provider": "openrouter",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 4329,
+        "output_tokens": 1047,
+        "total_tokens": 5376,
+        "reasoning_tokens": 0,
+        "input_cost_usd": 0.008658,
+        "output_cost_usd": 0.01047,
+        "estimated_cost_usd": 0.019128
+    },
+    "duration": 10.625876903533936,
+    "timestamp": "2026-11-20T14:27:16.986479",
+    "parsed": {
+        "advertisements": [
+            {
+                "box": [
+                    185.0,
+                    336.0,
+                    2158.0,
+                    1723.0
+                ]
+            },
+            {
+                "box": [
+                    184.0,
+                    1769.0,
+                    2161.0,
+                    3155.0
+                ]
+            }
+        ]
+    },
+    "conversation_id": "ca375382-2f36-422a-9867-ef66122167d5",
+    "score": {
+        "field_scores": {
+            "box 1": {
+                "response": [
+                    184.0,
+                    1769.0,
+                    2161.0,
+                    3155.0
+                ],
+                "ground_truth": [
+                    179,
+                    1765,
+                    2163,
+                    3165
+                ],
+                "score": 0.987
+            },
+            "box 0": {
+                "response": [
+                    185.0,
+                    336.0,
+                    2158.0,
+                    1723.0
+                ],
+                "ground_truth": [
+                    179,
+                    321,
+                    2175,
+                    1730
+                ],
+                "score": 0.973
+            }
+        },
+        "f1": 1.0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "mean_iou": 0.98,
+        "true_positives": 2,
+        "false_positives": 0,
+        "false_negatives": 0,
+        "iou_threshold": 0.5
+    },
+    "benchmark_version": {
+        "version": "1.0.1",
+        "commit": "88e9e0bd38a67481733ad4d814ba31d7e10521a4",
+        "uncommitted": []
+    },
+    "raw_response": "{\"id\":\"gen-1795181226-3lBjOTeJRkQ1WXx5kgnp\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\\"advertisements\\\":[{\\\"box\\\":[185,336,2158,1723]},{\\\"box\\\":[184,1769,2161,3155]}]}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"advertisements\":[{\"box\":[185.0,336.0,2158.0,1723.0]},{\"box\":[184.0,1769.0,2161.0,3155.0]}]},\"reasoning\":\"I need analyze image dimensions and identify ads bounding boxes pixels original 2479x3508. Kimi will output JSON only. Should be accurate. Image shown at resolution 1447 x 2048? User says original 2479x3508. Should scale coordinates from displayed. Two large boxed advertisements: top German British Industries Fair 1927, bottom application membership British Chamber. Should have bounding boxes each. I need map. Display image 1447 wide, 2048 high (indeed user embedded). Original aspect 2479/3508=0.70667; displayed 1447/2048=0.70654. Scale x 1.7132, y 1.7129. Should locate ad boxes precisely perhaps outer border coordinates.\\n\\nTop ad outer border roughly x109 to1258? y197 to1005? Bottom x109 to1260 y1034 to1840? I'll inspect visual mentally. Should return all advertisements bounding boxes perhaps top ad and bottom membership form. Determine coordinates based displayed.\\n\\nImage: header top at y140. Top ad border starts x108 y197, top horizontal to1256 y201. Vertical left to998, right to1003. So bbox [108,197,1259,1005]. Bottom ad border x109 y1034 to1260 y1842. Should convert. I'll be systematic using pixel coordinate scaling.\\n\\nCould directly estimate original coordinates by ratio. Top left [186,338], top right [2156,1721]. Bottom [186,1770,2160,3154]. Make sure.\\n\\nI'll analyze full image dimensions: It is presented 1447 \u00d7 2048 exactly from markdown? Yes visual. I can infer positions. Top ad top line at y196 (black thick). Bottom at1003. Left x109, right1257. Bottom ad top y1034 and bottom y1840. Original scaled by2479/1447=1.71320. 3508/2048=1.71289. So:\\ntop x0=109*1.7132=186.7, y0=196*1.7129=335.7; x1=1259*1.7132=2156.9; y1=1005*1.7129=1721.5.\\nbottom x0=108?=185; y0=1033*1.7129=1769.4; x1=1261*1.7132=2160.3; y1=1841*1.7129=3153.4.\\n\\nShould decide whether header excluded yes. Could bounding boxes content not borders? Typically object detection asks ads; boxes should surround entire ad incl borders. Two. Perhaps only top is ad, bottom application form also advertisement? It's an application for admission membership, promotional announcement; yes ad. I include both.\\n\\nI'll scrutinize exact coords visual:\\nTop border:\\nleft outer line at x108-117, starts y198. top line x112 y197 to1254 y200. right border x1248-1258. bottom at y994-1004. Bottom border left x109 y1036 etc. I'll output integers rounded.\\n\\nPotential scale due actual image displayed has original? The user image in prompt resolution 1447 2048 but original 2479 3508. Yes.\\n\\nCould estimate normalized: top bbox x0 .075, y0 .096, x1 .870, y1 .491. Original [186,337,2156,1723]. bottom [.075,.505,.871,.900] ->[186,1772,2159,3157]. Should not have exact pixel perfection but good.\\n\\nI'll derive with care from picture proportions. Page main area top black border at y54. Header etc. Top ad top y197. Bottom ad bottom y1840. Good.\\n\\nPerhaps top ad is from x108,y196 to1258,y1005. Bottom x107,y1033 to1260,y1841. Convert:\\nx0 top 185.0 (108*1.7132)\\ny0 335.7\\nx1 2155.2\\ny1 1721.5\\nbottom x0 183.3 if107\\ny0 1769.4\\nx1 2158.6\\ny1 3153.4\\n\\nWhich coordinates use? I'd respond [184, 335, 2158, 1724], [183,1768,2161,3156]. Should have no extra.\\n\\nI'll consider possible marginal partial ad on left edge? At left visible sliver of previous page with text and \\\"Basle\\\" maybe not part current page. Task extract all advertisements on page; don't include sliver. Only two.\\n\\nPerhaps top German ad and bottom application form are single advertising section? They are separated border and whitespace. Distinct.\\n\\nNow respond JSON.\",\"reasoning_details\":[{\"type\":\"reasoning.text\",\"text\":\"I need analyze image dimensions and identify ads bounding boxes pixels original 2479x3508. Kimi will output JSON only. Should be accurate. Image shown at resolution 1447 x 2048? User says original 2479x3508. Should scale coordinates from displayed. Two large boxed advertisements: top German British Industries Fair 1927, bottom application membership British Chamber. Should have bounding boxes each. I need map. Display image 1447 wide, 2048 high (indeed user embedded). Original aspect 2479/3508=0.70667; displayed 1447/2048=0.70654. Scale x 1.7132, y 1.7129. Should locate ad boxes precisely perhaps outer border coordinates.\\n\\nTop ad outer border roughly x109 to1258? y197 to1005? Bottom x109 to1260 y1034 to1840? I'll inspect visual mentally. Should return all advertisements bounding boxes perhaps top ad and bottom membership form. Determine coordinates based displayed.\\n\\nImage: header top at y140. Top ad border starts x108 y197, top horizontal to1256 y201. Vertical left to998, right to1003. So bbox [108,197,1259,1005]. Bottom ad border x109 y1034 to1260 y1842. Should convert. I'll be systematic using pixel coordinate scaling.\\n\\nCould directly estimate original coordinates by ratio. Top left [186,338], top right [2156,1721]. Bottom [186,1770,2160,3154]. Make sure.\\n\\nI'll analyze full image dimensions: It is presented 1447 \u00d7 2048 exactly from markdown? Yes visual. I can infer positions. Top ad top line at y196 (black thick). Bottom at1003. Left x109, right1257. Bottom ad top y1034 and bottom y1840. Original scaled by2479/1447=1.71320. 3508/2048=1.71289. So:\\ntop x0=109*1.7132=186.7, y0=196*1.7129=335.7; x1=1259*1.7132=2156.9; y1=1005*1.7129=1721.5.\\nbottom x0=108?=185; y0=1033*1.7129=1769.4; x1=1261*1.7132=2160.3; y1=1841*1.7129=3153.4.\\n\\nShould decide whether header excluded yes. Could bounding boxes content not borders? Typically object detection asks ads; boxes should surround entire ad incl borders. Two. Perhaps only top is ad, bottom application form also advertisement? It's an application for admission membership, promotional announcement; yes ad. I include both.\\n\\nI'll scrutinize exact coords visual:\\nTop border:\\nleft outer line at x108-117, starts y198. top line x112 y197 to1254 y200. right border x1248-1258. bottom at y994-1004. Bottom border left x109 y1036 etc. I'll output integers rounded.\\n\\nPotential scale due actual image displayed has original? The user image in prompt resolution 1447 2048 but original 2479 3508. Yes.\\n\\nCould estimate normalized: top bbox x0 .075, y0 .096, x1 .870, y1 .491. Original [186,337,2156,1723]. bottom [.075,.505,.871,.900] ->[186,1772,2159,3157]. Should not have exact pixel perfection but good.\\n\\nI'll derive with care from picture proportions. Page main area top black border at y54. Header etc. Top ad top y197. Bottom ad bottom y1840. Good.\\n\\nPerhaps top ad is from x108,y196 to1258,y1005. Bottom x107,y1033 to1260,y1841. Convert:\\nx0 top 185.0 (108*1.7132)\\ny0 335.7\\nx1 2155.2\\ny1 1721.5\\nbottom x0 183.3 if107\\ny0 1769.4\\nx1 2158.6\\ny1 3153.4\\n\\nWhich coordinates use? I'd respond [184, 335, 2158, 1724], [183,1768,2161,3156]. Should have no extra.\\n\\nI'll consider possible marginal partial ad on left edge? At left visible sliver of previous page with text and \\\"Basle\\\" maybe not part current page. Task extract all advertisements on page; don't include sliver. Only two.\\n\\nPerhaps top German ad and bottom application form are single advertising section? They are separated border and whitespace. Distinct.\\n\\nNow respond JSON.\",\"format\":\"unknown\",\"index\":0}]},\"native_finish_reason\":\"stop\"}],\"created\":1795181226,\"model\":\"moonshotai/kimi-k3.1-pro\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":null,\"usage\":{\"completion_tokens\":1047,\"prompt_tokens\":4329,\"total_tokens\":5376,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":0,\"reasoning_tokens\":1011,\"rejected_prediction_tokens\":null,\"image_tokens\":0},\"prompt_tokens_details\":{\"audio_tokens\":0,\"cached_tokens\":0,\"cache_write_tokens\":0,\"video_tokens\":0},\"cost\":0.019128,\"is_byok\":false,\"cost_details\":{\"upstream_inference_cost\":0.019128,\"upstream_inference_prompt_cost\":0.008658,\"upstream_inference_completions_cost\":0.01047}},\"provider\":\"PrimaLabs\"}"
+}

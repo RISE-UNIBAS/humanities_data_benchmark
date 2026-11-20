@@ -1,0 +1,86 @@
+{
+    "text": "{\"advertisements\":[{\"box\":[328.0,208.0,2383.0,1718.0]},{\"box\":[317.0,1759.0,2375.0,3268.0]}]}",
+    "model": "moonshotai/kimi-k3.1-pro",
+    "provider": "openrouter",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 4328,
+        "output_tokens": 1216,
+        "total_tokens": 5544,
+        "reasoning_tokens": 0,
+        "input_cost_usd": 0.008656,
+        "output_cost_usd": 0.01216,
+        "estimated_cost_usd": 0.020816
+    },
+    "duration": 12.672847747802734,
+    "timestamp": "2026-11-20T14:26:52.924176",
+    "parsed": {
+        "advertisements": [
+            {
+                "box": [
+                    328.0,
+                    208.0,
+                    2383.0,
+                    1718.0
+                ]
+            },
+            {
+                "box": [
+                    317.0,
+                    1759.0,
+                    2375.0,
+                    3268.0
+                ]
+            }
+        ]
+    },
+    "conversation_id": "78eea931-0841-4f2b-bd94-8666aa079445",
+    "score": {
+        "field_scores": {
+            "box 0": {
+                "response": [
+                    317.0,
+                    1759.0,
+                    2375.0,
+                    3268.0
+                ],
+                "ground_truth": [
+                    332,
+                    1772,
+                    2361,
+                    3263
+                ],
+                "score": 0.974
+            },
+            "box 1": {
+                "response": [
+                    328.0,
+                    208.0,
+                    2383.0,
+                    1718.0
+                ],
+                "ground_truth": [
+                    342,
+                    223,
+                    2368,
+                    1705
+                ],
+                "score": 0.968
+            }
+        },
+        "f1": 1.0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "mean_iou": 0.971,
+        "true_positives": 2,
+        "false_positives": 0,
+        "false_negatives": 0,
+        "iou_threshold": 0.5
+    },
+    "benchmark_version": {
+        "version": "1.0.1",
+        "commit": "88e9e0bd38a67481733ad4d814ba31d7e10521a4",
+        "uncommitted": []
+    },
+    "raw_response": "{\"id\":\"gen-1795181200-4QBKl4EV54o3NNhf86Nk\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\\"advertisements\\\":[{\\\"box\\\":[328,208,2383,1718]},{\\\"box\\\":[317,1759,2375,3268]}]}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"advertisements\":[{\"box\":[328.0,208.0,2383.0,1718.0]},{\"box\":[317.0,1759.0,2375.0,3268.0]}]},\"reasoning\":\"I need analyze image dimensions original 2479x3508, displayed 1447x2048? Should extract all ads bounding boxes. Two obvious ads top Crowe and bottom Nivada. Should have precise pixel coords original. Should map displayed image to original. Image shown resolution 1447 x 2048 (indeed user embed). Original ratio 2479/1447=1.7132, 3508/2048=1.71289. Should identify borders. Top ad border x ~194 to1388? y123 to1000? Bottom x187 to1384 y1029 to1904? Should convert.\\n\\nI'll carefully inspect visual. Page top ad: rectangular border from x196 y123 top to x1388 y132? Actually top line slightly curved/skewed. Left vertical x197 at124 down to x193 y992. Bottom line y993 left to1000 right. Right vertical x1388 top y134 to1381 y998. So bounding box around full advertisement including border: [192,121,1390,1002] display. Convert x*2479/1447, y*3508/2048. x0 192*1.7132=329; y0 121*1.7129=207; x1 1390*1.7132=2381; y1 1002*1.7129=1716. Bottom ad border: top left x193 y1029, top right x1382 y1034; left vertical slants x193 at1030 to187 at1894; bottom y1894 left to1905 right; right x1382 to1378. bbox [186,1028,1385,1907] display => [319,1761,2373,3267]. Should decide exact expected likely boxes around ads. Could use [326, 207, 2384, 1717], [318,1760,2374,3268]. Make sure no other ads? Whole page consists two. Page number not ad. Return only JSON.\\n\\nI'll calculate more accurately based on image. Should infer original coordinates perhaps border top at 197? I'll use ratios. The actual input image in prompt 1447x2048. Original 2479x3508. scale x 1.7131997236, y 1.712890625. Almost same. Can treat 1.713. Top border visual coordinates: leftmost vertical around193? At top x197. Top line starts 197,124. Rightmost 1388? bottom right 1382,999. So min x192? left line at194 around y986. max x1389. min y122 max1001. Box [192,122,1390,1002]. Original [329,209,2382,1716]. Bottom min x186 max1384 min y1028 max1906. Orig [319,1761,2371,3265]. Should include border. Could output rounded [327, 208, 2383, 1718], [317, 1759, 2375, 3268]. Which is best?\\n\\nI'll scrutinize proportions visually. Top ad occupies from 13.4% image width to96%, y6% to48.9%. Original x 332 to2381, y210 to1716. Bottom from 12.9% to95.8%, y50.2% to93%. original x320 to2375, y1761 to3263. Good.\\n\\nPotential issue top and bottom are one full-page ad? No two separate framed ads. Should have two boxes.\\n\\nI should not include page exterior. Use coordinates exact enough. I'll derive with more systematic visual pixel estimates. The top border left at 196 in displayed, top y123. right at1388, bottom y1000. Bottom border left x188, top y1030, right x1383, bottom y1904. Convert:\\n196*1.7132=335.8; but min left 193=330.6. x0 330.\\n123*1.71289=210.7.\\n1388*1.7132=2378.7.\\n1000*1.71289=1712.9. If bottom line at1001 then1714.6. Looking image top ad bottom border at y994? Should have actual displayed dimensions perhaps rendered in prompt not exact? It says image 1447 2048 and visual. Top border bottom horizontal at roughly 994 (the line just above gap at1001-1028). I'll estimate from elements: top ad bottom line appears y995 left,1000 right. So bbox max1001. y1715. Top y123. Good.\\n\\nBottom: top line y1030 left,1034 right. bottom line y1895 left,1905 right. max1906. y3265. x min186 max1384. Good.\\n\\nCould choose [328, 209, 2382, 1717] and [318, 1760, 2374, 3267]. This encompasses borders with tiny margin. Usually bounding box tasks expect approximate. Should have no commentary.\\n\\nI'll ensure coordinates within original. yes.\\n\\nPerhaps top ad box should [330,210,2380,1715], bottom [320,1762,2372,3264]. I'll settle [328, 208, 2383, 1718] and [317, 1759, 2375, 3268]. Slight padding 2-4 pixels original negligible. Should have exact format numbers.\",\"reasoning_details\":[{\"type\":\"reasoning.text\",\"text\":\"I need analyze image dimensions original 2479x3508, displayed 1447x2048? Should extract all ads bounding boxes. Two obvious ads top Crowe and bottom Nivada. Should have precise pixel coords original. Should map displayed image to original. Image shown resolution 1447 x 2048 (indeed user embed). Original ratio 2479/1447=1.7132, 3508/2048=1.71289. Should identify borders. Top ad border x ~194 to1388? y123 to1000? Bottom x187 to1384 y1029 to1904? Should convert.\\n\\nI'll carefully inspect visual. Page top ad: rectangular border from x196 y123 top to x1388 y132? Actually top line slightly curved/skewed. Left vertical x197 at124 down to x193 y992. Bottom line y993 left to1000 right. Right vertical x1388 top y134 to1381 y998. So bounding box around full advertisement including border: [192,121,1390,1002] display. Convert x*2479/1447, y*3508/2048. x0 192*1.7132=329; y0 121*1.7129=207; x1 1390*1.7132=2381; y1 1002*1.7129=1716. Bottom ad border: top left x193 y1029, top right x1382 y1034; left vertical slants x193 at1030 to187 at1894; bottom y1894 left to1905 right; right x1382 to1378. bbox [186,1028,1385,1907] display => [319,1761,2373,3267]. Should decide exact expected likely boxes around ads. Could use [326, 207, 2384, 1717], [318,1760,2374,3268]. Make sure no other ads? Whole page consists two. Page number not ad. Return only JSON.\\n\\nI'll calculate more accurately based on image. Should infer original coordinates perhaps border top at 197? I'll use ratios. The actual input image in prompt 1447x2048. Original 2479x3508. scale x 1.7131997236, y 1.712890625. Almost same. Can treat 1.713. Top border visual coordinates: leftmost vertical around193? At top x197. Top line starts 197,124. Rightmost 1388? bottom right 1382,999. So min x192? left line at194 around y986. max x1389. min y122 max1001. Box [192,122,1390,1002]. Original [329,209,2382,1716]. Bottom min x186 max1384 min y1028 max1906. Orig [319,1761,2371,3265]. Should include border. Could output rounded [327, 208, 2383, 1718], [317, 1759, 2375, 3268]. Which is best?\\n\\nI'll scrutinize proportions visually. Top ad occupies from 13.4% image width to96%, y6% to48.9%. Original x 332 to2381, y210 to1716. Bottom from 12.9% to95.8%, y50.2% to93%. original x320 to2375, y1761 to3263. Good.\\n\\nPotential issue top and bottom are one full-page ad? No two separate framed ads. Should have two boxes.\\n\\nI should not include page exterior. Use coordinates exact enough. I'll derive with more systematic visual pixel estimates. The top border left at 196 in displayed, top y123. right at1388, bottom y1000. Bottom border left x188, top y1030, right x1383, bottom y1904. Convert:\\n196*1.7132=335.8; but min left 193=330.6. x0 330.\\n123*1.71289=210.7.\\n1388*1.7132=2378.7.\\n1000*1.71289=1712.9. If bottom line at1001 then1714.6. Looking image top ad bottom border at y994? Should have actual displayed dimensions perhaps rendered in prompt not exact? It says image 1447 2048 and visual. Top border bottom horizontal at roughly 994 (the line just above gap at1001-1028). I'll estimate from elements: top ad bottom line appears y995 left,1000 right. So bbox max1001. y1715. Top y123. Good.\\n\\nBottom: top line y1030 left,1034 right. bottom line y1895 left,1905 right. max1906. y3265. x min186 max1384. Good.\\n\\nCould choose [328, 209, 2382, 1717] and [318, 1760, 2374, 3267]. This encompasses borders with tiny margin. Usually bounding box tasks expect approximate. Should have no commentary.\\n\\nI'll ensure coordinates within original. yes.\\n\\nPerhaps top ad box should [330,210,2380,1715], bottom [320,1762,2372,3264]. I'll settle [328, 208, 2383, 1718] and [317, 1759, 2375, 3268]. Slight padding 2-4 pixels original negligible. Should have exact format numbers.\",\"format\":\"unknown\",\"index\":0}]},\"native_finish_reason\":\"stop\"}],\"created\":1795181200,\"model\":\"moonshotai/kimi-k3.1-pro\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":null,\"usage\":{\"completion_tokens\":1216,\"prompt_tokens\":4328,\"total_tokens\":5544,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":0,\"reasoning_tokens\":1169,\"rejected_prediction_tokens\":null,\"image_tokens\":0},\"prompt_tokens_details\":{\"audio_tokens\":0,\"cached_tokens\":0,\"cache_write_tokens\":0,\"video_tokens\":0},\"cost\":0.020816,\"is_byok\":false,\"cost_details\":{\"upstream_inference_cost\":0.020816,\"upstream_inference_prompt_cost\":0.008656,\"upstream_inference_completions_cost\":0.01216}},\"provider\":\"River\"}"
+}

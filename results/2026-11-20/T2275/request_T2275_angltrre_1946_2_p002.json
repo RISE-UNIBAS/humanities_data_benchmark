@@ -1,0 +1,84 @@
+{
+    "text": "{\"advertisements\":[{\"box\":[54.0,51.0,2427.0,3454.0]}]}",
+    "model": "moonshotai/kimi-k3.1-pro",
+    "provider": "openrouter",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 4311,
+        "output_tokens": 998,
+        "total_tokens": 5309,
+        "reasoning_tokens": 0,
+        "cached_tokens": 64,
+        "input_cost_usd": 0.001086011,
+        "output_cost_usd": 0.0087824,
+        "estimated_cost_usd": 0.009868411
+    },
+    "duration": 12.307024478912354,
+    "timestamp": "2026-11-20T14:26:34.808200",
+    "parsed": {
+        "advertisements": [
+            {
+                "box": [
+                    54.0,
+                    51.0,
+                    2427.0,
+                    3454.0
+                ]
+            }
+        ]
+    },
+    "conversation_id": "f12c8132-3136-4ada-940f-7c6ec02d2ee6",
+    "score": {
+        "field_scores": {
+            "box 2": {
+                "response": [
+                    54.0,
+                    51.0,
+                    2427.0,
+                    3454.0
+                ],
+                "ground_truth": [
+                    121,
+                    62,
+                    2354,
+                    3383
+                ],
+                "score": 0.918
+            },
+            "box 0": {
+                "response": null,
+                "ground_truth": [
+                    1872,
+                    563,
+                    2190,
+                    911
+                ],
+                "score": 0.0
+            },
+            "box 1": {
+                "response": null,
+                "ground_truth": [
+                    1632,
+                    556,
+                    1865,
+                    847
+                ],
+                "score": 0.0
+            }
+        },
+        "f1": 0.5,
+        "precision": 1.0,
+        "recall": 0.333,
+        "mean_iou": 0.918,
+        "true_positives": 1,
+        "false_positives": 0,
+        "false_negatives": 2,
+        "iou_threshold": 0.5
+    },
+    "benchmark_version": {
+        "version": "1.0.1",
+        "commit": "88e9e0bd38a67481733ad4d814ba31d7e10521a4",
+        "uncommitted": []
+    },
+    "raw_response": "{\"id\":\"gen-1795181182-Q65rGL0eKEytsSww6TBr\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\\"advertisements\\\":[{\\\"box\\\":[54,51,2427,3454]}]}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"advertisements\":[{\"box\":[54.0,51.0,2427.0,3454.0]}]},\"reasoning\":\"I need analyze image and output JSON only. Should have bounding boxes all advertisements. Page is single full-page ad Strub shoes. Should have coordinates original 2479x3508. Display image 1447x2048? Should map. Should determine bounding box of advertisement likely entire page content excluding black border? Should return one box encompassing full-page ad. Should have precise pixel coords. Should reason image dimensions shown 1447 x 2048 (indeed user image). Original 2479 x3508 ratio .7065; displayed 1447/2048=.7065. Scale x 2479/1447=1.7132, y3508/2048=1.71289. Should identify ad bounds. Full page from x~40 to1415, y30 to2015 in displayed including black frame? Usually tasks expect bounding box around ad content. Should output likely [54, 50, 2424, 3450] or entire [0,0,2479,3508]? Should inspect.\\n\\nImage: white margin narrow around black border. At top black horizontal from x42 y30 to1414 y78? Left black vertical x32-80 etc. Actual magazine page inside border x80 y55 to1390 y1970. Bottom black border y1970-2015. Full-page advertisement printed within page. Should box likely [62, 48, 2422, 3448] if including border? I'll deeply estimate expected conventions from similar tasks. User asks \\\"Extract all advertisements and return their bounding boxes.\\\" Usually full-page ad should box nearly whole page, perhaps coordinates of actual page. Should have one advertisement. Could set [68, 52, 2420, 3440]. Should not overthink? I'll map exact.\\n\\nDisplayed original user image resolution 1447x2048. Content:\\n- outer white at x0..31 left, top y0..29.\\n- black frame top left begins x42 y30, top edge to x1416 y31. At top y30-54 black? There's white page from x80 y55. Right edge black? Page right x1400 etc.\\n- bottom black frame x31 y1972 to1404 y2016. White below to2047.\\nActual ad including border bounding x31 y30 x1417 y2017. Scale: x0 53, y0 51, x1 2427, y1 3454. If exclude black border and use printed area x78 y54 to1394 y1974 => [134,93,2388,3381]. Which is desired? Most ad detection bounding boxes include full ad area, often border. Full page no need exact border? Could return [56, 50, 2425, 3450].\\n\\nI'll examine visual: entire page is an ad, no editorial. Should have bounding box perhaps [75, 80, 2400, 3390]. I should include all content but not scanner black frame? The black frame looks like page border from scanning? It is thick black around page, perhaps mounting frame. Original page boundaries? At top black strip with white above, bottom black strip. Left black strip. Right cream page edge. It could be advertisement on magazine page with black border due to scan. Ad content is full page inside. Usually bounding box annotation would be around whole page including content, not black scanner edges. Should choose robust.\\n\\nI'll calculate scale precisely: 2479/1447 = 1.7131997236. 3508/2048=1.712890625. If box displayed [40,30,1416,2016] -> [69,51,2426,3453]. If [75,52,1398,1975] -> [128,89,2395,3383]. The ad's bottom text at y1925, so content ends 1927. Page bottom 1970. Top content starts y100 globe. Lots whitespace. Full-page ad box should include page.\\n\\nCould simply [0,0,2479,3508] accepted? But white margins not ad. Better [62,48,2428,3452].\\n\\nShould output only JSON. Ensure numbers ints. One ad. I'll settle [62, 49, 2428, 3454]. But perhaps right edge original 2410? I'll inspect right: displayed black top ends 1415, page right edge at1408 bottom. So x1 2424. left x32 =>55. top y30=>51. bottom y2016=>3453. So [54,51,2427,3454]. This encloses full framed ad. Use that.\\n\\nShould have no commentary.\",\"reasoning_details\":[{\"type\":\"reasoning.text\",\"text\":\"I need analyze image and output JSON only. Should have bounding boxes all advertisements. Page is single full-page ad Strub shoes. Should have coordinates original 2479x3508. Display image 1447x2048? Should map. Should determine bounding box of advertisement likely entire page content excluding black border? Should return one box encompassing full-page ad. Should have precise pixel coords. Should reason image dimensions shown 1447 x 2048 (indeed user image). Original 2479 x3508 ratio .7065; displayed 1447/2048=.7065. Scale x 2479/1447=1.7132, y3508/2048=1.71289. Should identify ad bounds. Full page from x~40 to1415, y30 to2015 in displayed including black frame? Usually tasks expect bounding box around ad content. Should output likely [54, 50, 2424, 3450] or entire [0,0,2479,3508]? Should inspect.\\n\\nImage: white margin narrow around black border. At top black horizontal from x42 y30 to1414 y78? Left black vertical x32-80 etc. Actual magazine page inside border x80 y55 to1390 y1970. Bottom black border y1970-2015. Full-page advertisement printed within page. Should box likely [62, 48, 2422, 3448] if including border? I'll deeply estimate expected conventions from similar tasks. User asks \\\"Extract all advertisements and return their bounding boxes.\\\" Usually full-page ad should box nearly whole page, perhaps coordinates of actual page. Should have one advertisement. Could set [68, 52, 2420, 3440]. Should not overthink? I'll map exact.\\n\\nDisplayed original user image resolution 1447x2048. Content:\\n- outer white at x0..31 left, top y0..29.\\n- black frame top left begins x42 y30, top edge to x1416 y31. At top y30-54 black? There's white page from x80 y55. Right edge black? Page right x1400 etc.\\n- bottom black frame x31 y1972 to1404 y2016. White below to2047.\\nActual ad including border bounding x31 y30 x1417 y2017. Scale: x0 53, y0 51, x1 2427, y1 3454. If exclude black border and use printed area x78 y54 to1394 y1974 => [134,93,2388,3381]. Which is desired? Most ad detection bounding boxes include full ad area, often border. Full page no need exact border? Could return [56, 50, 2425, 3450].\\n\\nI'll examine visual: entire page is an ad, no editorial. Should have bounding box perhaps [75, 80, 2400, 3390]. I should include all content but not scanner black frame? The black frame looks like page border from scanning? It is thick black around page, perhaps mounting frame. Original page boundaries? At top black strip with white above, bottom black strip. Left black strip. Right cream page edge. It could be advertisement on magazine page with black border due to scan. Ad content is full page inside. Usually bounding box annotation would be around whole page including content, not black scanner edges. Should choose robust.\\n\\nI'll calculate scale precisely: 2479/1447 = 1.7131997236. 3508/2048=1.712890625. If box displayed [40,30,1416,2016] -> [69,51,2426,3453]. If [75,52,1398,1975] -> [128,89,2395,3383]. The ad's bottom text at y1925, so content ends 1927. Page bottom 1970. Top content starts y100 globe. Lots whitespace. Full-page ad box should include page.\\n\\nCould simply [0,0,2479,3508] accepted? But white margins not ad. Better [62,48,2428,3452].\\n\\nShould output only JSON. Ensure numbers ints. One ad. I'll settle [62, 49, 2428, 3454]. But perhaps right edge original 2410? I'll inspect right: displayed black top ends 1415, page right edge at1408 bottom. So x1 2424. left x32 =>55. top y30=>51. bottom y2016=>3453. So [54,51,2427,3454]. This encloses full framed ad. Use that.\\n\\nShould have no commentary.\",\"format\":\"unknown\",\"index\":0}]},\"native_finish_reason\":\"stop\"}],\"created\":1795181182,\"model\":\"moonshotai/kimi-k3.1-pro\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":null,\"usage\":{\"completion_tokens\":998,\"prompt_tokens\":4311,\"total_tokens\":5309,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":0,\"reasoning_tokens\":979,\"rejected_prediction_tokens\":null,\"image_tokens\":0},\"prompt_tokens_details\":{\"audio_tokens\":0,\"cached_tokens\":64,\"cache_write_tokens\":0,\"video_tokens\":0},\"cost\":0.009868411,\"is_byok\":false,\"cost_details\":{\"upstream_inference_cost\":0.009868411,\"upstream_inference_prompt_cost\":0.001086011,\"upstream_inference_completions_cost\":0.0087824}},\"provider\":\"Wafer\"}"
+}

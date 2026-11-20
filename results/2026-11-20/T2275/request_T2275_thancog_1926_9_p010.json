@@ -1,0 +1,86 @@
+{
+    "text": "{\"advertisements\":[{\"box\":[1380.0,1810.0,2312.0,2508.0]},{\"box\":[330.0,2522.0,2310.0,3182.0]}]}",
+    "model": "moonshotai/kimi-k3.1-pro",
+    "provider": "openrouter",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 4331,
+        "output_tokens": 1830,
+        "total_tokens": 6161,
+        "reasoning_tokens": 0,
+        "input_cost_usd": 0.008662,
+        "output_cost_usd": 0.0183,
+        "estimated_cost_usd": 0.026962
+    },
+    "duration": 10.077332019805908,
+    "timestamp": "2026-11-20T14:27:11.534684",
+    "parsed": {
+        "advertisements": [
+            {
+                "box": [
+                    1380.0,
+                    1810.0,
+                    2312.0,
+                    2508.0
+                ]
+            },
+            {
+                "box": [
+                    330.0,
+                    2522.0,
+                    2310.0,
+                    3182.0
+                ]
+            }
+        ]
+    },
+    "conversation_id": "2a95f4ff-6280-4c23-b8a2-6165c56de6f2",
+    "score": {
+        "field_scores": {
+            "box 1": {
+                "response": [
+                    1380.0,
+                    1810.0,
+                    2312.0,
+                    2508.0
+                ],
+                "ground_truth": [
+                    1375,
+                    1809,
+                    2314,
+                    2509
+                ],
+                "score": 0.99
+            },
+            "box 0": {
+                "response": [
+                    330.0,
+                    2522.0,
+                    2310.0,
+                    3182.0
+                ],
+                "ground_truth": [
+                    328,
+                    2516,
+                    2309,
+                    3188
+                ],
+                "score": 0.981
+            }
+        },
+        "f1": 1.0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "mean_iou": 0.985,
+        "true_positives": 2,
+        "false_positives": 0,
+        "false_negatives": 0,
+        "iou_threshold": 0.5
+    },
+    "benchmark_version": {
+        "version": "1.0.1",
+        "commit": "88e9e0bd38a67481733ad4d814ba31d7e10521a4",
+        "uncommitted": []
+    },
+    "raw_response": "{\"id\":\"gen-1795181221-6nwxFoGvpm78r6kO1H58\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\\"advertisements\\\":[{\\\"box\\\":[1380,1810,2312,2508]},{\\\"box\\\":[330,2522,2310,3182]}]}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"advertisements\":[{\"box\":[1380.0,1810.0,2312.0,2508.0]},{\"box\":[330.0,2522.0,2310.0,3182.0]}]},\"reasoning\":\"I need analyze image and output JSON only. Should identify all advertisements bounding boxes original 2479x3508. Display image 1447x2048? Should map. Should have precise boxes for two obvious ads: Fr. Klingelfuss & Co. right mid-lower, Banque F\u00e9d\u00e9rale bottom. Should consider trade openings as ads? Usually task extract display advertisements, not classified trade listings? Should determine. Page has trade openings text and two boxed display ads. Should have bounding boxes coordinates original. Should calculate scaling from displayed image. Original 2479x3508, rendered image 1447x2048 (indeed user image dimensions visually 1447x2048). Scale x=2479/1447=1.7132, y=3508/2048=1.71289. Essentially same. Should locate ad borders.\\n\\nFr Klingelfuss box: displayed x ~805? y1057? to 1349? y1464? I'll inspect carefully. Image: right ad rectangular border top at x809? y1058, left x807? y1060 down to 1458, right x1347? y1059 to 1458. Bottom y1462. Should have original coords x0 ~1382, y0~1811, x1~2311,y1~2505. Bottom bank ad border x194 y1474 to 1346 y1855? Should be precise.\\n\\nI'll deeply analyze pixel positions mentally using image. Should output reasonable bounding boxes. Could include only interior or border? Usually bounding box around full ad including border. Should map.\\n\\nI'll establish displayed dimensions exactly from prompt: image shown 1447 \u00d7 2048 per markdown? It says original 2479x3508. The visual coordinate can infer. Should use ratios. I'll enumerate features.\\n\\nTop header etc. Right ad:\\n- top border horizontal begins around (810,1059) and ends (1346,1060). It is just below text ending at y1034. Left vertical at x808 from y1060 to y1460. Right vertical at x1345 from y1060 to y1458. Bottom horizontal y1459 from x808 to1344.\\n- There might be double border? Outer box x805? Looking at image: top line at y1058, left line x808. Should choose [1380,1810,2312,2507].\\n\\nBank ad:\\n- decorative border top starts x198 y1474? It spans to x1344 y1480? Actually top border at y1475 left, y1478 right due page skew. Left edge x196 y1478 down to1848. Right edge x1343 y1480 down to1851. Bottom y1853. Outer border. Should have original [333,2523,2307,3180]. I'll calculate.\\n\\nBut perhaps there is a third ad partly visible on far right page? The image includes sliver of adjacent page at x1420 onwards with text and border. Task page likely only current page; ignore sliver. Two ads.\\n\\nMake sure trade openings themselves are advertisements? The heading \\\"TRADE OPENINGS\\\" lists agencies and goods. They could be classified ads but typical dataset ad extraction wants all advertisements including these? Should infer from similar tasks. User asks \\\"Extract all advertisements and return their bounding boxes.\\\" Historical magazine page. Usually expected bounding boxes around obvious ad blocks. Trade openings are editorial/commercial listings, not display ads. Two boxed advertisements. Should not box whole trade openings.\\n\\nI'll refine coordinates using scaling exact. Original aspect 2479/3508=0.70667. Display 1447/2048=0.70654. Good. scale 1.7132. If image actual content resampled to 1447x2048, yes.\\n\\nI'll estimate exact boxes visually with coordinate grid. I can use proportions. Right ad top-left in displayed at 807,1058. Original x=807*1.7132=1382.75; y=1058*1.71289=1812.24. Bottom-right x=1348*1.7132=2309.4; y=1463*1.71289=2505.95. So [1381,1810,2312,2508].\\n\\nBank top-left displayed x194,y1473. Original x332.4,y2523.1. Bottom-right x1347,y1856 =>2307.7,3179.9. Perhaps y1853 =>3174.7. I'll inspect visual: bank ad bottom decorative border at around 1852, page bottom at1940. In image, bank border top y1475, bottom y1854. Height379. Original height649. Ad seems from original y2527 to3178. Right ad height 405 display =694 original. Looks plausible.\\n\\nI'll derive from original likely scanned page boundaries. Page original 2479x3508. Display page left edge x50 =>86 original, right edge x1415=>2424. Top of page y90=>154. Bottom y1940=>3323. Ad bank left x195=>334, right x1344=>2302. So margins left 248, right 122? Hmm page is curved. Text left x197=>338, right col x808=>1384. Bank left x195 matches text left. Right x1345 matches right text end. Good.\\n\\nRight ad left x807=>1383, right x1348=>2310. Top y1059=>1814, bottom y1461=>2502. Bank top y1475=>2527, bottom y1854=>3176. There is 13 px display gap between ads? Right bottom y1461, bank top y1475 =14. Yes.\\n\\nPerhaps bank border top y1473 at left and y1478 at right. Bounding y1473. Bottom border y1855 at right. Use [330,2520,2310,3182].\\n\\nI'll output only JSON. Could choose rounded integers. I'll be precise enough. Should have no commentary.\\n\\nBefore responding, consider if Fr. ad box includes border at x805 y1056 to1350 y1465. Bank x192 y1471 to1348 y1858. Convert:\\nx0 805*2479/1447. Compute ratio exactly: 1447*1.713 =2478.711, so 1.7131997. y ratio 3508/2048=1.712890625.\\n805*1.7132=1379.126? Calculate 800*1.7132=1370.56, 5*1.7132=8.566 =>1379.126. Earlier 807 gives1382.55. So x0 around1380.\\n1350*1.7132=2312.82.\\n1056*1.712890625=1808.8125? 1000=1712.8906,56=95.9219 =>1808.8125.\\n1465*1.712890625=2509.3848.\\nBank 192*1.7132=328.9344; 1348*=2309.3936; 1471*1.712890625=2519.662? 1400=2398.046875,71=121.615234=>2519.6621. 1858*1.712890625=3182.5508. So broad boxes [1379,1808,2313,2510], [329,2519,2310,3183].\\n\\nShould avoid too broad including text? Top right ad y1058 line. If y1056 includes 2 px margin okay. Bottom bank y1855 maybe. Could output [1380,1810,2312,2508] and [330,2522,2308,3180]. These are likely acceptable.\\n\\nI'll scrutinize visual dimensions more: Right ad top border at y1058 exactly aligned just below paragraph. Left vertical appears x808. At bottom, border y1461. Ad bottom to bank top decorative y1477 gap16. Right border x1347. So [1382,1811,2310,2504]. Bank outer border top left maybe x199 y1473, but decorative loops extend x193. Top line y1475. Bottom y1854. [330,2523,2308,3179].\\n\\nI think respond with two boxes. Should have ordering top to bottom: Fr then Banque. JSON.\",\"reasoning_details\":[{\"type\":\"reasoning.text\",\"text\":\"I need analyze image and output JSON only. Should identify all advertisements bounding boxes original 2479x3508. Display image 1447x2048? Should map. Should have precise boxes for two obvious ads: Fr. Klingelfuss & Co. right mid-lower, Banque F\u00e9d\u00e9rale bottom. Should consider trade openings as ads? Usually task extract display advertisements, not classified trade listings? Should determine. Page has trade openings text and two boxed display ads. Should have bounding boxes coordinates original. Should calculate scaling from displayed image. Original 2479x3508, rendered image 1447x2048 (indeed user image dimensions visually 1447x2048). Scale x=2479/1447=1.7132, y=3508/2048=1.71289. Essentially same. Should locate ad borders.\\n\\nFr Klingelfuss box: displayed x ~805? y1057? to 1349? y1464? I'll inspect carefully. Image: right ad rectangular border top at x809? y1058, left x807? y1060 down to 1458, right x1347? y1059 to 1458. Bottom y1462. Should have original coords x0 ~1382, y0~1811, x1~2311,y1~2505. Bottom bank ad border x194 y1474 to 1346 y1855? Should be precise.\\n\\nI'll deeply analyze pixel positions mentally using image. Should output reasonable bounding boxes. Could include only interior or border? Usually bounding box around full ad including border. Should map.\\n\\nI'll establish displayed dimensions exactly from prompt: image shown 1447 \u00d7 2048 per markdown? It says original 2479x3508. The visual coordinate can infer. Should use ratios. I'll enumerate features.\\n\\nTop header etc. Right ad:\\n- top border horizontal begins around (810,1059) and ends (1346,1060). It is just below text ending at y1034. Left vertical at x808 from y1060 to y1460. Right vertical at x1345 from y1060 to y1458. Bottom horizontal y1459 from x808 to1344.\\n- There might be double border? Outer box x805? Looking at image: top line at y1058, left line x808. Should choose [1380,1810,2312,2507].\\n\\nBank ad:\\n- decorative border top starts x198 y1474? It spans to x1344 y1480? Actually top border at y1475 left, y1478 right due page skew. Left edge x196 y1478 down to1848. Right edge x1343 y1480 down to1851. Bottom y1853. Outer border. Should have original [333,2523,2307,3180]. I'll calculate.\\n\\nBut perhaps there is a third ad partly visible on far right page? The image includes sliver of adjacent page at x1420 onwards with text and border. Task page likely only current page; ignore sliver. Two ads.\\n\\nMake sure trade openings themselves are advertisements? The heading \\\"TRADE OPENINGS\\\" lists agencies and goods. They could be classified ads but typical dataset ad extraction wants all advertisements including these? Should infer from similar tasks. User asks \\\"Extract all advertisements and return their bounding boxes.\\\" Historical magazine page. Usually expected bounding boxes around obvious ad blocks. Trade openings are editorial/commercial listings, not display ads. Two boxed advertisements. Should not box whole trade openings.\\n\\nI'll refine coordinates using scaling exact. Original aspect 2479/3508=0.70667. Display 1447/2048=0.70654. Good. scale 1.7132. If image actual content resampled to 1447x2048, yes.\\n\\nI'll estimate exact boxes visually with coordinate grid. I can use proportions. Right ad top-left in displayed at 807,1058. Original x=807*1.7132=1382.75; y=1058*1.71289=1812.24. Bottom-right x=1348*1.7132=2309.4; y=1463*1.71289=2505.95. So [1381,1810,2312,2508].\\n\\nBank top-left displayed x194,y1473. Original x332.4,y2523.1. Bottom-right x1347,y1856 =>2307.7,3179.9. Perhaps y1853 =>3174.7. I'll inspect visual: bank ad bottom decorative border at around 1852, page bottom at1940. In image, bank border top y1475, bottom y1854. Height379. Original height649. Ad seems from original y2527 to3178. Right ad height 405 display =694 original. Looks plausible.\\n\\nI'll derive from original likely scanned page boundaries. Page original 2479x3508. Display page left edge x50 =>86 original, right edge x1415=>2424. Top of page y90=>154. Bottom y1940=>3323. Ad bank left x195=>334, right x1344=>2302. So margins left 248, right 122? Hmm page is curved. Text left x197=>338, right col x808=>1384. Bank left x195 matches text left. Right x1345 matches right text end. Good.\\n\\nRight ad left x807=>1383, right x1348=>2310. Top y1059=>1814, bottom y1461=>2502. Bank top y1475=>2527, bottom y1854=>3176. There is 13 px display gap between ads? Right bottom y1461, bank top y1475 =14. Yes.\\n\\nPerhaps bank border top y1473 at left and y1478 at right. Bounding y1473. Bottom border y1855 at right. Use [330,2520,2310,3182].\\n\\nI'll output only JSON. Could choose rounded integers. I'll be precise enough. Should have no commentary.\\n\\nBefore responding, consider if Fr. ad box includes border at x805 y1056 to1350 y1465. Bank x192 y1471 to1348 y1858. Convert:\\nx0 805*2479/1447. Compute ratio exactly: 1447*1.713 =2478.711, so 1.7131997. y ratio 3508/2048=1.712890625.\\n805*1.7132=1379.126? Calculate 800*1.7132=1370.56, 5*1.7132=8.566 =>1379.126. Earlier 807 gives1382.55. So x0 around1380.\\n1350*1.7132=2312.82.\\n1056*1.712890625=1808.8125? 1000=1712.8906,56=95.9219 =>1808.8125.\\n1465*1.712890625=2509.3848.\\nBank 192*1.7132=328.9344; 1348*=2309.3936; 1471*1.712890625=2519.662? 1400=2398.046875,71=121.615234=>2519.6621. 1858*1.712890625=3182.5508. So broad boxes [1379,1808,2313,2510], [329,2519,2310,3183].\\n\\nShould avoid too broad including text? Top right ad y1058 line. If y1056 includes 2 px margin okay. Bottom bank y1855 maybe. Could output [1380,1810,2312,2508] and [330,2522,2308,3180]. These are likely acceptable.\\n\\nI'll scrutinize visual dimensions more: Right ad top border at y1058 exactly aligned just below paragraph. Left vertical appears x808. At bottom, border y1461. Ad bottom to bank top decorative y1477 gap16. Right border x1347. So [1382,1811,2310,2504]. Bank outer border top left maybe x199 y1473, but decorative loops extend x193. Top line y1475. Bottom y1854. [330,2523,2308,3179].\\n\\nI think respond with two boxes. Should have ordering top to bottom: Fr then Banque. JSON.\",\"format\":\"unknown\",\"index\":0}]},\"native_finish_reason\":\"stop\"}],\"created\":1795181221,\"model\":\"moonshotai/kimi-k3.1-pro\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":null,\"usage\":{\"completion_tokens\":1830,\"prompt_tokens\":4331,\"total_tokens\":6161,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":0,\"reasoning_tokens\":1783,\"rejected_prediction_tokens\":null,\"image_tokens\":0},\"prompt_tokens_details\":{\"audio_tokens\":0,\"cached_tokens\":0,\"cache_write_tokens\":0,\"video_tokens\":0},\"cost\":0.026962,\"is_byok\":false,\"cost_details\":{\"upstream_inference_cost\":0.026962,\"upstream_inference_prompt_cost\":0.008662,\"upstream_inference_completions_cost\":0.0183}},\"provider\":\"DigitalOcean\"}"
+}

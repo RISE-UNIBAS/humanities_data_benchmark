@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - 2 new models with 14 benchmark test configurations each (T2306-T2333): `gemini-4-neon`, `gemini-4-hydrogen` (GenAI); `pricing.json` metadata bumped to version 1.61.
 - Results for 2026-11-19: T2306-T2333 (28 tests, 1,268 requests) for `gemini-4-neon` and `gemini-4-hydrogen`; 34 neon and 11 hydrogen answers empty or truncated (thinking hit the output cap), incl. every `medieval_manuscripts` answer from neon.
+- Results for 2026-11-20: T2264-T2277 (14 tests, 634 requests) for `kimi-k3.1-pro`; 12 answers truncated at the output cap (hidden thinking), 8 of them in `medieval_manuscripts`.
 - Dataset release `2026-11-18.1` deposited ([10.5281/zenodo.24342744](https://doi.org/10.5281/zenodo.24342744)) and recorded in `scripts/data/dataset_releases.json`; `CITATION.cff` lists the v0.8.2 DOI.
 
 ### Fixed

@@ -1,0 +1,86 @@
+{
+    "text": "{\"advertisements\":[{\"box\":[1361.0,1772.0,2304.0,2490.0]},{\"box\":[301.0,2491.0,2300.0,3152.0]}]}",
+    "model": "moonshotai/kimi-k3.1-pro",
+    "provider": "openrouter",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 4328,
+        "output_tokens": 1277,
+        "total_tokens": 5605,
+        "reasoning_tokens": 0,
+        "input_cost_usd": 0.0116856,
+        "output_cost_usd": 0.0172395,
+        "estimated_cost_usd": 0.0289251
+    },
+    "duration": 10.11015009880066,
+    "timestamp": "2026-11-20T14:27:04.329482",
+    "parsed": {
+        "advertisements": [
+            {
+                "box": [
+                    1361.0,
+                    1772.0,
+                    2304.0,
+                    2490.0
+                ]
+            },
+            {
+                "box": [
+                    301.0,
+                    2491.0,
+                    2300.0,
+                    3152.0
+                ]
+            }
+        ]
+    },
+    "conversation_id": "b623c656-76eb-4444-b70c-74fa5691d8da",
+    "score": {
+        "field_scores": {
+            "box 1": {
+                "response": [
+                    1361.0,
+                    1772.0,
+                    2304.0,
+                    2490.0
+                ],
+                "ground_truth": [
+                    1372,
+                    1786,
+                    2293,
+                    2481
+                ],
+                "score": 0.945
+            },
+            "box 0": {
+                "response": [
+                    301.0,
+                    2491.0,
+                    2300.0,
+                    3152.0
+                ],
+                "ground_truth": [
+                    346,
+                    2537,
+                    2260,
+                    3109
+                ],
+                "score": 0.829
+            }
+        },
+        "f1": 1.0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "mean_iou": 0.887,
+        "true_positives": 2,
+        "false_positives": 0,
+        "false_negatives": 0,
+        "iou_threshold": 0.5
+    },
+    "benchmark_version": {
+        "version": "1.0.1",
+        "commit": "88e9e0bd38a67481733ad4d814ba31d7e10521a4",
+        "uncommitted": []
+    },
+    "raw_response": "{\"id\":\"gen-1795181214-cuRq7DJ836e3Ey8kZdFw\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\\"advertisements\\\":[{\\\"box\\\":[1361,1772,2304,2490]},{\\\"box\\\":[301,2491,2300,3152]}]}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"advertisements\":[{\"box\":[1361.0,1772.0,2304.0,2490.0]},{\"box\":[301.0,2491.0,2300.0,3152.0]}]},\"reasoning\":\"I need analyze image and output JSON only. Should identify all advertisements bounding boxes original 2479x3508. Display image 1447x2048? Should map. Should have precise boxes for two obvious ads: Fr. Klingelfuss & Co right mid-lower, Banque F\u00e9d\u00e9rale bottom. Should consider trade openings classified ads? User asks all advertisements likely only display ads, not editorial trade openings. Should have bounding boxes. Should calculate original coordinates from displayed image. Should inspect dimensions and positions.\\n\\nImage shown resolution 1447 x 2048 (indeed user embed). Original 2479x3508 ratio 1.7132. Should map x*2479/1447 =1.7132, y*3508/2048=1.71289. Should have boxes around borders.\\n\\nFr Klingelfuss ad border: displayed x ~795 to1344, y1035 to1454? I'll carefully inspect. Bottom bank border x176 to1341 y1455 to1839? Should be exact.\\n\\nI'll parse visual. Page top etc. Right ad starts rectangular border at x798? top y1036, left vertical x797 from 1040 to1448, right x1341. Bottom y1450. It is 548x416 display. Original box [1364,1774,2302,2487] roughly.\\n\\nBank ad decorative border top y1457? left x177, right x1340, bottom y1838. Original [303,2494,2296,3148]. Should refine.\\n\\nI'll derive using pixel coordinate mental. The image dimensions perhaps actual rendered 1447x2048. Should map. I can estimate based on visible. I'll zoom mentally via coordinates. Top of Fr ad: horizontal line at y1036 from x800 to1261 then break? right border top at y1040? It appears box top left at (797,1037), top right (1342,1038), bottom right (1338,1452), bottom left (795,1449). Bank top border overlaps? There is small gap ~7 pixels between bottom Fr and top bank? Fr bottom at1450, bank top at1458. Bank spans x177 to1340. Should include full border.\\n\\nPotential third ad? The entire \\\"TRADE OPENINGS\\\" could be classified adverts but usually task object detection ads in historical magazine, only clearly bordered commercial ads. Should output two.\\n\\nI'll ensure coordinates. Use scale exact: original/display if display 1447 wide: 2479/1447. Compute 1447*1.7=2460 - wait 1447*1.7 =2459.9, difference19.1 => .0132, so1.7131997. Height 2048*1.712890625 =3508 exactly? 3508/2048: 1.7=3481.6 difference26.4 /2048=.012890625 yes. Width 2479/1447: 1.7132*1447 =? 1.7 2459.9; .0132*1447=19.1004 total2479.0004 exactly nearly. So x factor1.7131997. Nice.\\n\\nPerhaps displayed image actual 1447x2048 as given in markdown. Yes.\\n\\nBox Fr display perhaps [794,1034,1345,1455]. Original x0=1360, y0=1771, x1=2304,y1=2492. Bank [174,1455,1342,1840] => [298,2492,2299,3152]. Should not be overly precise but bounding.\\n\\nI'll scrutinize visual proportions. Right ad top border aligned just below text \\\"Switzerland.\\\" at y1023. Top line y1037. Left vertical thick at x797. Right vertical at1341. Bottom line y1450. Ad includes border only. Bank top decorative border at y1457 and bottom at1837. Left x177, right x1338. Should choose [1362,1773,2303,2490] and [300,2492,2298,3152].\\n\\nCould there be small \\\"Consult British Chamber...\\\" ad? It's editorial notice, no. Trade openings are paid announcements but not display ad. Usually expected bounding boxes around explicit ads. Two.\\n\\nI'll think if bank ad top border begins x179 y1458 and right edge x1340. Bottom y1838. Should include decorative border. Use original [302,2493,2300,3150]. Fr [1363,1773,2304,2490]. They touch at y2490/2493 but in image Fr bottom and bank top nearly same horizontal. Actually bank top border runs underneath Fr ad bottom? Looking: right ad bottom border at y1450, then white narrow line, bank top decorative at y1458. Fine.\\n\\nI'll output only JSON. Could use boxes [1360,1772,2305,2492], [298,2490,2302,3152]. Should avoid overlap? Doesn't matter.\\n\\nI'll estimate more exact by deriving from text positions known. The displayed page right edge at1421. Ad right border x1342. Original 2299. Bank right border x1338 ->2292. Left bank x177 ->303. Bottom y1838 ->3148. Top bank y1457 ->2495. Fr left x795 ->1362, top1035->1773, right1344->2303, bottom1453->2488. So response perhaps:\\n{\\\"advertisements\\\":[{\\\"box\\\":[1361,1772,2304,2490]},{\\\"box\\\":[301,2491,2300,3152]}]}\\n\\nCheck bank bottom in original: displayed bottom border around1837, scale=3147. Page content bottom lots blank until1944. Bank bottom at1838 yes. Use3152.\\n\\nShould have no extra.\",\"reasoning_details\":[{\"type\":\"reasoning.text\",\"text\":\"I need analyze image and output JSON only. Should identify all advertisements bounding boxes original 2479x3508. Display image 1447x2048? Should map. Should have precise boxes for two obvious ads: Fr. Klingelfuss & Co right mid-lower, Banque F\u00e9d\u00e9rale bottom. Should consider trade openings classified ads? User asks all advertisements likely only display ads, not editorial trade openings. Should have bounding boxes. Should calculate original coordinates from displayed image. Should inspect dimensions and positions.\\n\\nImage shown resolution 1447 x 2048 (indeed user embed). Original 2479x3508 ratio 1.7132. Should map x*2479/1447 =1.7132, y*3508/2048=1.71289. Should have boxes around borders.\\n\\nFr Klingelfuss ad border: displayed x ~795 to1344, y1035 to1454? I'll carefully inspect. Bottom bank border x176 to1341 y1455 to1839? Should be exact.\\n\\nI'll parse visual. Page top etc. Right ad starts rectangular border at x798? top y1036, left vertical x797 from 1040 to1448, right x1341. Bottom y1450. It is 548x416 display. Original box [1364,1774,2302,2487] roughly.\\n\\nBank ad decorative border top y1457? left x177, right x1340, bottom y1838. Original [303,2494,2296,3148]. Should refine.\\n\\nI'll derive using pixel coordinate mental. The image dimensions perhaps actual rendered 1447x2048. Should map. I can estimate based on visible. I'll zoom mentally via coordinates. Top of Fr ad: horizontal line at y1036 from x800 to1261 then break? right border top at y1040? It appears box top left at (797,1037), top right (1342,1038), bottom right (1338,1452), bottom left (795,1449). Bank top border overlaps? There is small gap ~7 pixels between bottom Fr and top bank? Fr bottom at1450, bank top at1458. Bank spans x177 to1340. Should include full border.\\n\\nPotential third ad? The entire \\\"TRADE OPENINGS\\\" could be classified adverts but usually task object detection ads in historical magazine, only clearly bordered commercial ads. Should output two.\\n\\nI'll ensure coordinates. Use scale exact: original/display if display 1447 wide: 2479/1447. Compute 1447*1.7=2460 - wait 1447*1.7 =2459.9, difference19.1 => .0132, so1.7131997. Height 2048*1.712890625 =3508 exactly? 3508/2048: 1.7=3481.6 difference26.4 /2048=.012890625 yes. Width 2479/1447: 1.7132*1447 =? 1.7 2459.9; .0132*1447=19.1004 total2479.0004 exactly nearly. So x factor1.7131997. Nice.\\n\\nPerhaps displayed image actual 1447x2048 as given in markdown. Yes.\\n\\nBox Fr display perhaps [794,1034,1345,1455]. Original x0=1360, y0=1771, x1=2304,y1=2492. Bank [174,1455,1342,1840] => [298,2492,2299,3152]. Should not be overly precise but bounding.\\n\\nI'll scrutinize visual proportions. Right ad top border aligned just below text \\\"Switzerland.\\\" at y1023. Top line y1037. Left vertical thick at x797. Right vertical at1341. Bottom line y1450. Ad includes border only. Bank top decorative border at y1457 and bottom at1837. Left x177, right x1338. Should choose [1362,1773,2303,2490] and [300,2492,2298,3152].\\n\\nCould there be small \\\"Consult British Chamber...\\\" ad? It's editorial notice, no. Trade openings are paid announcements but not display ad. Usually expected bounding boxes around explicit ads. Two.\\n\\nI'll think if bank ad top border begins x179 y1458 and right edge x1340. Bottom y1838. Should include decorative border. Use original [302,2493,2300,3150]. Fr [1363,1773,2304,2490]. They touch at y2490/2493 but in image Fr bottom and bank top nearly same horizontal. Actually bank top border runs underneath Fr ad bottom? Looking: right ad bottom border at y1450, then white narrow line, bank top decorative at y1458. Fine.\\n\\nI'll output only JSON. Could use boxes [1360,1772,2305,2492], [298,2490,2302,3152]. Should avoid overlap? Doesn't matter.\\n\\nI'll estimate more exact by deriving from text positions known. The displayed page right edge at1421. Ad right border x1342. Original 2299. Bank right border x1338 ->2292. Left bank x177 ->303. Bottom y1838 ->3148. Top bank y1457 ->2495. Fr left x795 ->1362, top1035->1773, right1344->2303, bottom1453->2488. So response perhaps:\\n{\\\"advertisements\\\":[{\\\"box\\\":[1361,1772,2304,2490]},{\\\"box\\\":[301,2491,2300,3152]}]}\\n\\nCheck bank bottom in original: displayed bottom border around1837, scale=3147. Page content bottom lots blank until1944. Bank bottom at1838 yes. Use3152.\\n\\nShould have no extra.\",\"format\":\"unknown\",\"index\":0}]},\"native_finish_reason\":\"stop\"}],\"created\":1795181214,\"model\":\"moonshotai/kimi-k3.1-pro\",\"object\":\"chat.completion\",\"service_tier\":\"priority\",\"system_fingerprint\":null,\"usage\":{\"completion_tokens\":1277,\"prompt_tokens\":4328,\"total_tokens\":5605,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":0,\"reasoning_tokens\":1242,\"rejected_prediction_tokens\":null,\"image_tokens\":0},\"prompt_tokens_details\":{\"audio_tokens\":0,\"cached_tokens\":0,\"cache_write_tokens\":0,\"video_tokens\":0},\"cost\":0.0289251,\"is_byok\":false,\"cost_details\":{\"upstream_inference_cost\":0.0289251,\"upstream_inference_prompt_cost\":0.0116856,\"upstream_inference_completions_cost\":0.0172395}},\"provider\":\"InferenceNet\"}"
+}

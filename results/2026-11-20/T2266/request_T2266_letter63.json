@@ -1,0 +1,82 @@
+{
+    "text": "{\"metadata\":{\"send_date\":[\"1933-08-15\"],\"letter_title\":null,\"sender_persons\":null,\"receiver_persons\":null}}",
+    "model": "moonshotai/kimi-k3.1-pro",
+    "provider": "openrouter",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 4506,
+        "output_tokens": 1015,
+        "total_tokens": 5521,
+        "reasoning_tokens": 0,
+        "cached_tokens": 4480,
+        "input_cost_usd": 0.000948,
+        "output_cost_usd": 0.01015,
+        "estimated_cost_usd": 0.011098
+    },
+    "duration": 5.695749521255493,
+    "timestamp": "2026-11-20T13:59:07.071130",
+    "parsed": {
+        "metadata": {
+            "send_date": [
+                "1933-08-15"
+            ],
+            "letter_title": null,
+            "sender_persons": null,
+            "receiver_persons": null
+        }
+    },
+    "conversation_id": "cee8de97-1e74-47dc-b995-41bc45100891",
+    "score": {
+        "send_date_tp": 1,
+        "send_date_fp": 0,
+        "send_date_fn": 0,
+        "sender_persons_tp": 0,
+        "sender_persons_fp": 0,
+        "sender_persons_fn": 0,
+        "receiver_persons_tp": 0,
+        "receiver_persons_fp": 0,
+        "receiver_persons_fn": 0,
+        "field_scores": {
+            "send_date": {
+                "response": [
+                    "1933-08-15"
+                ],
+                "ground_truth": [
+                    "1933-08-15"
+                ],
+                "score": null,
+                "counts": {
+                    "send_date_tp": 1,
+                    "send_date_fp": 0,
+                    "send_date_fn": 0
+                }
+            },
+            "sender_persons": {
+                "response": [],
+                "ground_truth": [],
+                "score": null,
+                "counts": {
+                    "sender_persons_tp": 0,
+                    "sender_persons_fp": 0,
+                    "sender_persons_fn": 0
+                }
+            },
+            "receiver_persons": {
+                "response": [],
+                "ground_truth": [],
+                "score": null,
+                "counts": {
+                    "receiver_persons_tp": 0,
+                    "receiver_persons_fp": 0,
+                    "receiver_persons_fn": 0
+                }
+            }
+        }
+    },
+    "benchmark_version": {
+        "version": "3.0.0",
+        "commit": "88e9e0bd38a67481733ad4d814ba31d7e10521a4",
+        "uncommitted": []
+    },
+    "raw_response": "{\"id\":\"gen-1795179541-W1gDmc4J4F2S7ZIysiuc\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\\"metadata\\\":{\\\"send_date\\\":[\\\"1933-08-15\\\"],\\\"letter_title\\\":null,\\\"sender_persons\\\":null,\\\"receiver_persons\\\":null}}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"metadata\":{\"send_date\":[\"1933-08-15\"],\"letter_title\":null,\"sender_persons\":null,\"receiver_persons\":null}},\"reasoning\":\"I need analyze image and output JSON only schema metadata. Should determine title sender persons date receiver persons. Should carefully read. Letter header BASLER PERSONENSCHIFFFAHRTSGESELLSCHAFT. Date Basel den 15. Aug. 1933. Address An die Basler Rheinschiffahrts A.-G.- Marktgasse 5 Basel. Body no named sender except stamp Basler Personenschiffahrtsgesellschaft Der Gesch\u00e4ftsf\u00fchrer? Handwritten bottom perhaps \\\"Copie f\u00fcr Herr Dr. ...\\\"? Should infer keys. User asks title of letter, sender_persons names persons wrote letter, receiver_persons names persons received. Organizations not persons? Should decide null for title and persons if no individual. Could letter_title be \\\"Basler Personenschiffahrtsgesellschaft\\\" as title? Usually these tasks metadata extraction from historical letters, letter_title often sender org? Should inspect examples and patterns. Should not OCR (means don't use OCR tool, visual okay). Should map.\\n\\nImage text:\\nBASLER PERSONENSCHIFFFAHRTSGESELLSCHAFT\\nBasel, den 15. Aug. 1933.\\nAn die Basler Rheinschiffahrts A.-G.-\\nMarktgasse 5\\nBasel\\nSehr geehrte Herren,\\nAm 4. Juli sandten wir Ihnen einen Brief\\nenthaltend 4 Beschwerden, welche gegen Ihren Betrieb\\nin unserer Generalversammlung vom 24. Juni erhoben worden\\nsind.\\nWir baten um Ihre Stellungnahme hierzu. Da wir\\nbis heute keinerlei Antwort erhalten haben, ersuchen wir Sie\\nh\u00f6flich um Ihren baldigen Bescheid, da wir verpflichtet\\nsind, den Beschwerdef\u00fchrern eine Nachricht zukommen zu lassen.\\nMit vorz\u00fcglicher Hochachtung\\n[stamp] Basler Personenschiffahrtsgesellschaft\\nDer Gesch\u00e4ftsf\u00fchrer:\\nHandwritten bottom perhaps \\\"Copie f\u00fcr Herr Dr. ...\\\" irrelevant.\\n\\nNo explicit title. Sender is organization, no person. Receiver organization, no person. So output null letter_title, sender_persons null, receiver_persons null, date 1933-08-15. But perhaps expected sender_persons [\\\"Basler Personenschiffahrtsgesellschaft\\\"] and receiver_persons [\\\"Basler Rheinschiffahrts A.-G.\\\"] despite key persons. Should think typical benchmark tasks. User asks values keys, if info not included null. Often letters with org sender and recipient, they may expect org names in person fields? Should infer from wording. \\\"sender_persons: Name(s) of the person(s) who wrote the letter.\\\" \\\"receiver_persons: Name(s) of the person(s) who received the letter.\\\" Since no names, null. \\\"letter_title: Title of the letter.\\\" No title. Could use \\\"Basler Personenschiffahrtsgesellschaft\\\" as letter title? It's letterhead not title. Should null.\\n\\nBut perhaps handwritten note identifies \\\"Herr Dr. ...\\\" recipient copy, not original receiver. Should not include.\\n\\nI'll output exact raw JSON with metadata. Could set arrays with org? I'll examine stamp: \\\"Basler Personenschiffahrtsgesellschaft / Der Gesch\u00e4ftsf\u00fchrer:\\\" no signature. So no person. Address to company. Therefore null both. Date clear 1933. Title null. JSON:\\n{\\\"metadata\\\":{\\\"letter_title\\\":null,\\\"sender_persons\\\":null,\\\"send_date\\\":[\\\"1933-08-15\\\"],\\\"receiver_persons\\\":null}}\\nOrdering irrelevant. User said values corresponding each key stored as list even single, if not included set value \\\"null\\\". Schema allows null. Could use [\\\"null\\\"]? Example and schema suggests null. Usually tasks expect null not string. Should decide.\\n\\nPerhaps letter_title should be [\\\"BASLER PERSONENSCHIFFFAHRTSGESELLSCHAFT\\\"] because title at top. But that's sender org letterhead. No. Should not hallucinate.\\n\\nI'll think if \\\"An die Basler Rheinschiffahrts A.-G.-\\\" counts receiver persons? No. If strict, null. Yet extraction tasks often use sender_persons and receiver_persons broadly and expect corporate entities. Could be evaluated by human? Should best response. I can include orgs? User specifically persons. Better adhere.\\n\\nCould there be a person's name in handwritten note: \\\"Copie f\u00fcr Herr Dr. ...\\\" perhaps \\\"Herr Dr. ...\\\" This indicates copy for Dr. [???], not sender or receiver. Not include.\\n\\nNo need explanation. Output JSON.\",\"reasoning_details\":[{\"type\":\"reasoning.text\",\"text\":\"I need analyze image and output JSON only schema metadata. Should determine title sender persons date receiver persons. Should carefully read. Letter header BASLER PERSONENSCHIFFFAHRTSGESELLSCHAFT. Date Basel den 15. Aug. 1933. Address An die Basler Rheinschiffahrts A.-G.- Marktgasse 5 Basel. Body no named sender except stamp Basler Personenschiffahrtsgesellschaft Der Gesch\u00e4ftsf\u00fchrer? Handwritten bottom perhaps \\\"Copie f\u00fcr Herr Dr. ...\\\"? Should infer keys. User asks title of letter, sender_persons names persons wrote letter, receiver_persons names persons received. Organizations not persons? Should decide null for title and persons if no individual. Could letter_title be \\\"Basler Personenschiffahrtsgesellschaft\\\" as title? Usually these tasks metadata extraction from historical letters, letter_title often sender org? Should inspect examples and patterns. Should not OCR (means don't use OCR tool, visual okay). Should map.\\n\\nImage text:\\nBASLER PERSONENSCHIFFFAHRTSGESELLSCHAFT\\nBasel, den 15. Aug. 1933.\\nAn die Basler Rheinschiffahrts A.-G.-\\nMarktgasse 5\\nBasel\\nSehr geehrte Herren,\\nAm 4. Juli sandten wir Ihnen einen Brief\\nenthaltend 4 Beschwerden, welche gegen Ihren Betrieb\\nin unserer Generalversammlung vom 24. Juni erhoben worden\\nsind.\\nWir baten um Ihre Stellungnahme hierzu. Da wir\\nbis heute keinerlei Antwort erhalten haben, ersuchen wir Sie\\nh\u00f6flich um Ihren baldigen Bescheid, da wir verpflichtet\\nsind, den Beschwerdef\u00fchrern eine Nachricht zukommen zu lassen.\\nMit vorz\u00fcglicher Hochachtung\\n[stamp] Basler Personenschiffahrtsgesellschaft\\nDer Gesch\u00e4ftsf\u00fchrer:\\nHandwritten bottom perhaps \\\"Copie f\u00fcr Herr Dr. ...\\\" irrelevant.\\n\\nNo explicit title. Sender is organization, no person. Receiver organization, no person. So output null letter_title, sender_persons null, receiver_persons null, date 1933-08-15. But perhaps expected sender_persons [\\\"Basler Personenschiffahrtsgesellschaft\\\"] and receiver_persons [\\\"Basler Rheinschiffahrts A.-G.\\\"] despite key persons. Should think typical benchmark tasks. User asks values keys, if info not included null. Often letters with org sender and recipient, they may expect org names in person fields? Should infer from wording. \\\"sender_persons: Name(s) of the person(s) who wrote the letter.\\\" \\\"receiver_persons: Name(s) of the person(s) who received the letter.\\\" Since no names, null. \\\"letter_title: Title of the letter.\\\" No title. Could use \\\"Basler Personenschiffahrtsgesellschaft\\\" as letter title? It's letterhead not title. Should null.\\n\\nBut perhaps handwritten note identifies \\\"Herr Dr. ...\\\" recipient copy, not original receiver. Should not include.\\n\\nI'll output exact raw JSON with metadata. Could set arrays with org? I'll examine stamp: \\\"Basler Personenschiffahrtsgesellschaft / Der Gesch\u00e4ftsf\u00fchrer:\\\" no signature. So no person. Address to company. Therefore null both. Date clear 1933. Title null. JSON:\\n{\\\"metadata\\\":{\\\"letter_title\\\":null,\\\"sender_persons\\\":null,\\\"send_date\\\":[\\\"1933-08-15\\\"],\\\"receiver_persons\\\":null}}\\nOrdering irrelevant. User said values corresponding each key stored as list even single, if not included set value \\\"null\\\". Schema allows null. Could use [\\\"null\\\"]? Example and schema suggests null. Usually tasks expect null not string. Should decide.\\n\\nPerhaps letter_title should be [\\\"BASLER PERSONENSCHIFFFAHRTSGESELLSCHAFT\\\"] because title at top. But that's sender org letterhead. No. Should not hallucinate.\\n\\nI'll think if \\\"An die Basler Rheinschiffahrts A.-G.-\\\" counts receiver persons? No. If strict, null. Yet extraction tasks often use sender_persons and receiver_persons broadly and expect corporate entities. Could be evaluated by human? Should best response. I can include orgs? User specifically persons. Better adhere.\\n\\nCould there be a person's name in handwritten note: \\\"Copie f\u00fcr Herr Dr. ...\\\" perhaps \\\"Herr Dr. ...\\\" This indicates copy for Dr. [???], not sender or receiver. Not include.\\n\\nNo need explanation. Output JSON.\",\"format\":\"unknown\",\"index\":0}]},\"native_finish_reason\":\"stop\"}],\"created\":1795179541,\"model\":\"moonshotai/kimi-k3.1-pro\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":\"vllm-0.1.dev24216+g266e88c05-tp8-d13d0b6c\",\"usage\":{\"completion_tokens\":1015,\"prompt_tokens\":4506,\"total_tokens\":5521,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":0,\"reasoning_tokens\":981,\"rejected_prediction_tokens\":null,\"image_tokens\":0},\"prompt_tokens_details\":{\"audio_tokens\":0,\"cached_tokens\":4480,\"cache_write_tokens\":0,\"video_tokens\":0},\"cost\":0.011098,\"is_byok\":false,\"cost_details\":{\"upstream_inference_cost\":0.011098,\"upstream_inference_prompt_cost\":0.000948,\"upstream_inference_completions_cost\":0.01015}},\"provider\":\"Nebius\"}"
+}

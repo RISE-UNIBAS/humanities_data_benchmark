@@ -1,0 +1,86 @@
+{
+    "text": "{\"advertisements\":[{\"box\":[173.0,293.0,2160.0,1689.0]},{\"box\":[185.0,1721.0,2174.0,3106.0]}]}",
+    "model": "moonshotai/kimi-k3.1-pro",
+    "provider": "openrouter",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 4331,
+        "output_tokens": 1269,
+        "total_tokens": 5600,
+        "reasoning_tokens": 0,
+        "input_cost_usd": 0.008662,
+        "output_cost_usd": 0.01269,
+        "estimated_cost_usd": 0.021352
+    },
+    "duration": 8.517250061035156,
+    "timestamp": "2026-11-20T14:27:06.569335",
+    "parsed": {
+        "advertisements": [
+            {
+                "box": [
+                    173.0,
+                    293.0,
+                    2160.0,
+                    1689.0
+                ]
+            },
+            {
+                "box": [
+                    185.0,
+                    1721.0,
+                    2174.0,
+                    3106.0
+                ]
+            }
+        ]
+    },
+    "conversation_id": "0c08ae33-a516-4566-b662-129f055208eb",
+    "score": {
+        "field_scores": {
+            "box 1": {
+                "response": [
+                    185.0,
+                    1721.0,
+                    2174.0,
+                    3106.0
+                ],
+                "ground_truth": [
+                    181,
+                    1719,
+                    2177,
+                    3111
+                ],
+                "score": 0.991
+            },
+            "box 0": {
+                "response": [
+                    173.0,
+                    293.0,
+                    2160.0,
+                    1689.0
+                ],
+                "ground_truth": [
+                    170,
+                    289,
+                    2165,
+                    1695
+                ],
+                "score": 0.989
+            }
+        },
+        "f1": 1.0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "mean_iou": 0.99,
+        "true_positives": 2,
+        "false_positives": 0,
+        "false_negatives": 0,
+        "iou_threshold": 0.5
+    },
+    "benchmark_version": {
+        "version": "1.0.1",
+        "commit": "88e9e0bd38a67481733ad4d814ba31d7e10521a4",
+        "uncommitted": []
+    },
+    "raw_response": "{\"id\":\"gen-1795181218-EDCVy93GTFq8cxLDGCQM\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\\"advertisements\\\":[{\\\"box\\\":[173,293,2160,1689]},{\\\"box\\\":[185,1721,2174,3106]}]}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"advertisements\":[{\"box\":[173.0,293.0,2160.0,1689.0]},{\"box\":[185.0,1721.0,2174.0,3106.0]}]},\"reasoning\":\"I need analyze image dimensions and boxes. I'll output only JSON. Should identify two ads Cunard and Geigy. Should map displayed image 1447x2048? Original 2479x3508. Should have precise bounding boxes original. Should inspect coordinates. Image shown resolution 1447 x 2048 (indeed). Should scale x 2479/1447 =1.7132, y3508/2048=1.71289. Should have boxes around borders. Cunard top border x~102 y~174 to1258 y~985? Geigy x~109 y~1007 to1268 y~1812. Should be careful.\\n\\nI'll parse visual. Page top header at y~120. Cunard border top left x102 y178? Top horizontal thick line from x104 y180 to1250 y174. Right vertical x1250 y174 to1258 y974. Bottom horizontal x110 y984 to1258 y974. Left vertical x102 y181 to110 y982. So bounding box [102,172,1260,986] displayed. Scale gives [175,295,2158,1689]. Geigy top border x109 y1017? top line from 110,1018 to1258,1007. Right x1258,1007 to1267,1798. Bottom x119,1811 to1267,1798. Left x109,1018 to119,1811. Box [108,1005,1269,1813] scaled [185,1721,2174,3105]. Should determine exact based image. I'll think original page perhaps scanned and borders. Should include full ad not page header. Two boxes.\\n\\nI should ensure no sliver ads on left count? User extract all advertisements on page. Left edge shows adjacent page fragments, likely ignore. Main page two ads. Should have coordinates accurate. I'll calculate more carefully using ratios. The image embedded actual 1447x2048. Original stated 2479x3508. ratio exactly ~1.7132. Could infer original image is downsampled by factor 0.5837. Should choose border extents.\\n\\nI'll inspect mentally pixel positions from visual. Top Cunard outer border: left at 102? top y173? The top line slopes: at left x104 y179, at right x1251 y172. Outer topmost y171? Right edge to y975. Bottom line at left y985right y974. So min x101, min y171, max x1260, max y986. Scaled x0=173, y0=293, x1=2158, y1=1689.\\n\\nGeigy: top line left x109 y1016, right x1259 y1006. left vertical to x118 y1810. bottom line to x1267 y1798. right vertical. min x108, min y1005, max x1269, max y1813. scaled x0=185,y0=1721,x1=2174,y1=3106.\\n\\nPerhaps boxes should be content bounds not borders? Usually bounding boxes around advertisements including borders. Good.\\n\\nI'll derive exact scale: 2479 / 1447. 1447*1.7=2460? Wait 1447*1.7 = 2459.9 yes difference19.1 /1447=.0132 so1.7132. 3508/2048 =1.712890625. Good.\\n\\nCunard [101,171,1261,986] -> x0 173.03, y0 292.9, x1 2160.35, y1 1688.9. Geigy [108,1005,1269,1813] ->185.03,1721.45,2174.06,3105.51.\\n\\nCould output rounded [173,293,2160,1689], [185,1721,2174,3106]. Should check top border perhaps x103 not101. Fine.\\n\\nI'll scrutinize image proportions: Original page content right edge at 1393 display, left main page x35. Cunard border right at1254. So original x2148. My 2160 plausible. Ad width ~1987. Geigy width ~1989. Typical original task expected approximate. Should have no extra commentary.\\n\\nCould there be ad Cunard box y294 to1686 and Geigy y1724 to3103. I'll settle.\\n\\nPerhaps use [174, 294, 2161, 1690] and [185, 1722, 2175, 3107]. Ensure coordinates within original. Yes.\\n\\nI'll think if top Cunard border at original x176 y298. The page header baseline y145 display. Top border y176 display. 176*1.7129=301.5. But topmost right y173 gives296.3. I earlier y171. Should have visual actual: image top white border 0-53, black scan to page at y104. Header top at y117. Cunard top line visible around y174. At right starts y173. So min y171? thickness perhaps 8. I'll estimate from rendered: top line at near 174 (the image in prompt). It says Cunard letters top y211. Border top y176. There is 35 px gap. If border y173 and letters y213 gap40. Looks right. Use y171? Could be 172. Not material.\\n\\nGeigy top line y1008. Cunard bottom y978. Gap30. In image Cunard bottom line at y977 and Geigy top at1010. My boxes good.\\n\\nPerhaps output [175, 294, 2160, 1688], [186, 1722, 2174, 3105]. I'll respond with consistent.\",\"reasoning_details\":[{\"type\":\"reasoning.text\",\"text\":\"I need analyze image dimensions and boxes. I'll output only JSON. Should identify two ads Cunard and Geigy. Should map displayed image 1447x2048? Original 2479x3508. Should have precise bounding boxes original. Should inspect coordinates. Image shown resolution 1447 x 2048 (indeed). Should scale x 2479/1447 =1.7132, y3508/2048=1.71289. Should have boxes around borders. Cunard top border x~102 y~174 to1258 y~985? Geigy x~109 y~1007 to1268 y~1812. Should be careful.\\n\\nI'll parse visual. Page top header at y~120. Cunard border top left x102 y178? Top horizontal thick line from x104 y180 to1250 y174. Right vertical x1250 y174 to1258 y974. Bottom horizontal x110 y984 to1258 y974. Left vertical x102 y181 to110 y982. So bounding box [102,172,1260,986] displayed. Scale gives [175,295,2158,1689]. Geigy top border x109 y1017? top line from 110,1018 to1258,1007. Right x1258,1007 to1267,1798. Bottom x119,1811 to1267,1798. Left x109,1018 to119,1811. Box [108,1005,1269,1813] scaled [185,1721,2174,3105]. Should determine exact based image. I'll think original page perhaps scanned and borders. Should include full ad not page header. Two boxes.\\n\\nI should ensure no sliver ads on left count? User extract all advertisements on page. Left edge shows adjacent page fragments, likely ignore. Main page two ads. Should have coordinates accurate. I'll calculate more carefully using ratios. The image embedded actual 1447x2048. Original stated 2479x3508. ratio exactly ~1.7132. Could infer original image is downsampled by factor 0.5837. Should choose border extents.\\n\\nI'll inspect mentally pixel positions from visual. Top Cunard outer border: left at 102? top y173? The top line slopes: at left x104 y179, at right x1251 y172. Outer topmost y171? Right edge to y975. Bottom line at left y985right y974. So min x101, min y171, max x1260, max y986. Scaled x0=173, y0=293, x1=2158, y1=1689.\\n\\nGeigy: top line left x109 y1016, right x1259 y1006. left vertical to x118 y1810. bottom line to x1267 y1798. right vertical. min x108, min y1005, max x1269, max y1813. scaled x0=185,y0=1721,x1=2174,y1=3106.\\n\\nPerhaps boxes should be content bounds not borders? Usually bounding boxes around advertisements including borders. Good.\\n\\nI'll derive exact scale: 2479 / 1447. 1447*1.7=2460? Wait 1447*1.7 = 2459.9 yes difference19.1 /1447=.0132 so1.7132. 3508/2048 =1.712890625. Good.\\n\\nCunard [101,171,1261,986] -> x0 173.03, y0 292.9, x1 2160.35, y1 1688.9. Geigy [108,1005,1269,1813] ->185.03,1721.45,2174.06,3105.51.\\n\\nCould output rounded [173,293,2160,1689], [185,1721,2174,3106]. Should check top border perhaps x103 not101. Fine.\\n\\nI'll scrutinize image proportions: Original page content right edge at 1393 display, left main page x35. Cunard border right at1254. So original x2148. My 2160 plausible. Ad width ~1987. Geigy width ~1989. Typical original task expected approximate. Should have no extra commentary.\\n\\nCould there be ad Cunard box y294 to1686 and Geigy y1724 to3103. I'll settle.\\n\\nPerhaps use [174, 294, 2161, 1690] and [185, 1722, 2175, 3107]. Ensure coordinates within original. Yes.\\n\\nI'll think if top Cunard border at original x176 y298. The page header baseline y145 display. Top border y176 display. 176*1.7129=301.5. But topmost right y173 gives296.3. I earlier y171. Should have visual actual: image top white border 0-53, black scan to page at y104. Header top at y117. Cunard top line visible around y174. At right starts y173. So min y171? thickness perhaps 8. I'll estimate from rendered: top line at near 174 (the image in prompt). It says Cunard letters top y211. Border top y176. There is 35 px gap. If border y173 and letters y213 gap40. Looks right. Use y171? Could be 172. Not material.\\n\\nGeigy top line y1008. Cunard bottom y978. Gap30. In image Cunard bottom line at y977 and Geigy top at1010. My boxes good.\\n\\nPerhaps output [175, 294, 2160, 1688], [186, 1722, 2174, 3105]. I'll respond with consistent.\",\"format\":\"unknown\",\"index\":0}]},\"native_finish_reason\":\"stop\"}],\"created\":1795181218,\"model\":\"moonshotai/kimi-k3.1-pro\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":null,\"usage\":{\"completion_tokens\":1269,\"prompt_tokens\":4331,\"total_tokens\":5600,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":0,\"reasoning_tokens\":1236,\"rejected_prediction_tokens\":null,\"image_tokens\":0},\"prompt_tokens_details\":{\"audio_tokens\":0,\"cached_tokens\":0,\"cache_write_tokens\":0,\"video_tokens\":0},\"cost\":0.021352,\"is_byok\":false,\"cost_details\":{\"upstream_inference_cost\":0.021352,\"upstream_inference_prompt_cost\":0.008662,\"upstream_inference_completions_cost\":0.01269}},\"provider\":\"Parasail\"}"
+}

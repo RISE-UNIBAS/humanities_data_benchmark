@@ -1,0 +1,109 @@
+{
+    "text": "{\"advertisements\":[{\"box\":[245.0,248.0,2308.0,1728.0]},{\"box\":[250.0,1780.0,1259.0,3258.0]},{\"box\":[1304.0,1775.0,2313.0,3256.0]}]}",
+    "model": "moonshotai/kimi-k3.1-pro",
+    "provider": "openrouter",
+    "finish_reason": "stop",
+    "usage": {
+        "input_tokens": 4331,
+        "output_tokens": 1457,
+        "total_tokens": 5788,
+        "reasoning_tokens": 0,
+        "input_cost_usd": 0.008662,
+        "output_cost_usd": 0.01457,
+        "estimated_cost_usd": 0.023232
+    },
+    "duration": 11.935843229293823,
+    "timestamp": "2026-11-20T14:26:22.496711",
+    "parsed": {
+        "advertisements": [
+            {
+                "box": [
+                    245.0,
+                    248.0,
+                    2308.0,
+                    1728.0
+                ]
+            },
+            {
+                "box": [
+                    250.0,
+                    1780.0,
+                    1259.0,
+                    3258.0
+                ]
+            },
+            {
+                "box": [
+                    1304.0,
+                    1775.0,
+                    2313.0,
+                    3256.0
+                ]
+            }
+        ]
+    },
+    "conversation_id": "0b4e2ce0-8789-4e21-b4b7-f3c3bed35353",
+    "score": {
+        "field_scores": {
+            "box 2": {
+                "response": [
+                    1304.0,
+                    1775.0,
+                    2313.0,
+                    3256.0
+                ],
+                "ground_truth": [
+                    1302,
+                    1767,
+                    2314,
+                    3260
+                ],
+                "score": 0.989
+            },
+            "box 0": {
+                "response": [
+                    245.0,
+                    248.0,
+                    2308.0,
+                    1728.0
+                ],
+                "ground_truth": [
+                    242,
+                    242,
+                    2312,
+                    1735
+                ],
+                "score": 0.988
+            },
+            "box 1": {
+                "response": [
+                    250.0,
+                    1780.0,
+                    1259.0,
+                    3258.0
+                ],
+                "ground_truth": [
+                    247,
+                    1777,
+                    1265,
+                    3267
+                ],
+                "score": 0.983
+            }
+        },
+        "f1": 1.0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "mean_iou": 0.987,
+        "true_positives": 3,
+        "false_positives": 0,
+        "false_negatives": 0,
+        "iou_threshold": 0.5
+    },
+    "benchmark_version": {
+        "version": "1.0.1",
+        "commit": "88e9e0bd38a67481733ad4d814ba31d7e10521a4",
+        "uncommitted": []
+    },
+    "raw_response": "{\"id\":\"gen-1795181171-oxYNp50Yinx6EmjWQ48W\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"{\\\"advertisements\\\":[{\\\"box\\\":[245,248,2308,1728]},{\\\"box\\\":[250,1780,1259,3258]},{\\\"box\\\":[1304,1775,2313,3256]}]}\",\"refusal\":null,\"role\":\"assistant\",\"annotations\":null,\"audio\":null,\"function_call\":null,\"tool_calls\":null,\"parsed\":{\"advertisements\":[{\"box\":[245.0,248.0,2308.0,1728.0]},{\"box\":[250.0,1780.0,1259.0,3258.0]},{\"box\":[1304.0,1775.0,2313.0,3256.0]}]},\"reasoning\":\"I need analyze image dimensions original 2479x3508, displayed 1447x2048? Should extract all ads bounding boxes. Three ads: top Goth & Co large bordered, bottom left E Borel Co, bottom right Standard Marine. Should have precise pixel coords original. Should map displayed image to original. Image shown resolution 1447 x 2048 (indeed user embed). Original ratio 2479/1447=1.7132, 3508/2048=1.71289. Should identify borders coordinates in displayed then scale.\\n\\nI'll inspect visually. Top ad border from x~143 y~145 to x~1347 y~1008? Bottom left border x~147 y~1040 to x~735 y~1901. Bottom right x~762 y~1037 to x~1349 y~1900. Should have exact enough. Should return boxes likely around full advertisements including borders. I'll carefully estimate.\\n\\nImage dimensions in prompt 1447x2048. Top border: left vertical at x144-149 from y149 to1006, top horizontal y146-151 from x145 to1339, right vertical x1337-1344 y147-1004, bottom y1002-1009 x148-1346. So original [246,250,2306,1727] perhaps.\\n\\nBottom left: outer border top x147 y1040 to731 y1043; left x147-153 y1042-1898; right x728-735 y1042-1900; bottom x151 y1895 to734 y1901. Original [252,1782,1259,3256].\\nBottom right: top x762 y1037 to1345 y1040; left x762-769 y1039-1896; right x1342-1349 y1038-1898; bottom x767 y1893 to1347 y1900. Original [1306,1776,2312,3254].\\n\\nMake sure top ad coordinates. I'll derive scaling exactly based on known original. sx=2479/1447. Compute: 1447*1.7=2459.9? Wait 1447*1.7 = 2459.9 yes difference19.1 => .0132 so 1.7132. Actually 1447*1.7132 = 2479.? 1447 + .7132*1447 (1032.?); .7=1012.9, .0132=19.1004 total 2479.0004. Wow exactly 1.7132 gives 2479.0004. So sx=1.7131997. sy=3508/2048 = 1.712890625. Essentially same. Good.\\n\\nCould use normalized approximate. Should decide whether boxes should be content or border. Usually tasks expect bounding boxes around ads. Include borders. Three.\\n\\nI'll scrutinize top: page actual starts x35 etc. Ad top border at displayed (144,146), right (1341,146), bottom (1346,1007), left (147,1007). So original top-left (247,250), bottom-right (2306,1724). Bottom left outer border (147,1040) to (735,1901) => (252,1781)-(1259,3256). Bottom right (762,1037) to (1349,1900) => (1306,1776)-(2311,3254). Could output rounded.\\n\\nPerhaps top ad border x143 y145, x1347 y1009. I'll estimate from visual pixel proportions. I can mentally zoom. The top border line appears at y146 (7.13% image height). Original y250. Bottom at1006 (49.12%) original 1723. Bottom left top y1040 (50.78%) original 1781. Bottom at1900 (92.77%) original 3254. Right top y1037 original1776. Good.\\n\\nPotential issue E Borel ad only inner illustrated block vs entire bordered region? The bordered bottom-left has large blank margins around central illustration but entire bordered area is ad. Should include full border. Standard Marine border full. Top full.\\n\\nI'll think if page number excluded yes.\\n\\nReturn only JSON. Could choose [244,246,2308,1728], [250,1779,1261,3258], [1304,1774,2314,3257]. Should not be overly precise but plausible.\\n\\nI'll calculate exact based on chosen displayed:\\nTop [143,145,1347,1009]:\\nx0=143*1.7132=245.0 (140*1.7132=239.848,3=5.1396 total244.9876)\\ny0=145*1.712890625=248.369\\nx1=1347*1.7132: 1300=2227.16,47=80.5204 total2307.6804\\ny1=1009*1.712890625:1000=1712.890625,9=15.4160156 total1728.30664.\\nSo [245,248,2308,1728].\\n\\nBut visual top left border x145? [248,250]. Doesn't matter.\\n\\nBottom left [146,1039,735,1902]:\\nx0=250.1272\\ny0=1039*1.712890625 = 1779.? 1040=1781.40625, minus1.71289=1779.69336.\\nx1=735*1.7132=1259.202\\ny1=1902*1.712890625:1900=3254.4921875, +2=3.42578=3257.91797.\\n[250,1780,1259,3258].\\nBottom right [761,1036,1350,1901]:\\nx0=1303.?? 760=1302.032, +1.7132=1303.7452.\\ny0=1036*1.712890625 = 1774.?? 1000 1712.890625 +36 61.6640625 =1774.5546875.\\nx1=1350*1.7132=2312.82\\ny1=1901*=3256.205078.\\n[1304,1775,2313,3256].\\n\\nPerhaps border right top at1340 not1347? Looking image top right vertical at x1338 and bottom horizontal extends1345. Use max. Fine.\\n\\nCould output [245,248,2308,1728], etc. Should have no commentary.\",\"reasoning_details\":[{\"type\":\"reasoning.text\",\"text\":\"I need analyze image dimensions original 2479x3508, displayed 1447x2048? Should extract all ads bounding boxes. Three ads: top Goth & Co large bordered, bottom left E Borel Co, bottom right Standard Marine. Should have precise pixel coords original. Should map displayed image to original. Image shown resolution 1447 x 2048 (indeed user embed). Original ratio 2479/1447=1.7132, 3508/2048=1.71289. Should identify borders coordinates in displayed then scale.\\n\\nI'll inspect visually. Top ad border from x~143 y~145 to x~1347 y~1008? Bottom left border x~147 y~1040 to x~735 y~1901. Bottom right x~762 y~1037 to x~1349 y~1900. Should have exact enough. Should return boxes likely around full advertisements including borders. I'll carefully estimate.\\n\\nImage dimensions in prompt 1447x2048. Top border: left vertical at x144-149 from y149 to1006, top horizontal y146-151 from x145 to1339, right vertical x1337-1344 y147-1004, bottom y1002-1009 x148-1346. So original [246,250,2306,1727] perhaps.\\n\\nBottom left: outer border top x147 y1040 to731 y1043; left x147-153 y1042-1898; right x728-735 y1042-1900; bottom x151 y1895 to734 y1901. Original [252,1782,1259,3256].\\nBottom right: top x762 y1037 to1345 y1040; left x762-769 y1039-1896; right x1342-1349 y1038-1898; bottom x767 y1893 to1347 y1900. Original [1306,1776,2312,3254].\\n\\nMake sure top ad coordinates. I'll derive scaling exactly based on known original. sx=2479/1447. Compute: 1447*1.7=2459.9? Wait 1447*1.7 = 2459.9 yes difference19.1 => .0132 so 1.7132. Actually 1447*1.7132 = 2479.? 1447 + .7132*1447 (1032.?); .7=1012.9, .0132=19.1004 total 2479.0004. Wow exactly 1.7132 gives 2479.0004. So sx=1.7131997. sy=3508/2048 = 1.712890625. Essentially same. Good.\\n\\nCould use normalized approximate. Should decide whether boxes should be content or border. Usually tasks expect bounding boxes around ads. Include borders. Three.\\n\\nI'll scrutinize top: page actual starts x35 etc. Ad top border at displayed (144,146), right (1341,146), bottom (1346,1007), left (147,1007). So original top-left (247,250), bottom-right (2306,1724). Bottom left outer border (147,1040) to (735,1901) => (252,1781)-(1259,3256). Bottom right (762,1037) to (1349,1900) => (1306,1776)-(2311,3254). Could output rounded.\\n\\nPerhaps top ad border x143 y145, x1347 y1009. I'll estimate from visual pixel proportions. I can mentally zoom. The top border line appears at y146 (7.13% image height). Original y250. Bottom at1006 (49.12%) original 1723. Bottom left top y1040 (50.78%) original 1781. Bottom at1900 (92.77%) original 3254. Right top y1037 original1776. Good.\\n\\nPotential issue E Borel ad only inner illustrated block vs entire bordered region? The bordered bottom-left has large blank margins around central illustration but entire bordered area is ad. Should include full border. Standard Marine border full. Top full.\\n\\nI'll think if page number excluded yes.\\n\\nReturn only JSON. Could choose [244,246,2308,1728], [250,1779,1261,3258], [1304,1774,2314,3257]. Should not be overly precise but plausible.\\n\\nI'll calculate exact based on chosen displayed:\\nTop [143,145,1347,1009]:\\nx0=143*1.7132=245.0 (140*1.7132=239.848,3=5.1396 total244.9876)\\ny0=145*1.712890625=248.369\\nx1=1347*1.7132: 1300=2227.16,47=80.5204 total2307.6804\\ny1=1009*1.712890625:1000=1712.890625,9=15.4160156 total1728.30664.\\nSo [245,248,2308,1728].\\n\\nBut visual top left border x145? [248,250]. Doesn't matter.\\n\\nBottom left [146,1039,735,1902]:\\nx0=250.1272\\ny0=1039*1.712890625 = 1779.? 1040=1781.40625, minus1.71289=1779.69336.\\nx1=735*1.7132=1259.202\\ny1=1902*1.712890625:1900=3254.4921875, +2=3.42578=3257.91797.\\n[250,1780,1259,3258].\\nBottom right [761,1036,1350,1901]:\\nx0=1303.?? 760=1302.032, +1.7132=1303.7452.\\ny0=1036*1.712890625 = 1774.?? 1000 1712.890625 +36 61.6640625 =1774.5546875.\\nx1=1350*1.7132=2312.82\\ny1=1901*=3256.205078.\\n[1304,1775,2313,3256].\\n\\nPerhaps border right top at1340 not1347? Looking image top right vertical at x1338 and bottom horizontal extends1345. Use max. Fine.\\n\\nCould output [245,248,2308,1728], etc. Should have no commentary.\",\"format\":\"unknown\",\"index\":0}]},\"native_finish_reason\":\"stop\"}],\"created\":1795181171,\"model\":\"moonshotai/kimi-k3.1-pro\",\"object\":\"chat.completion\",\"service_tier\":null,\"system_fingerprint\":null,\"usage\":{\"completion_tokens\":1457,\"prompt_tokens\":4331,\"total_tokens\":5788,\"completion_tokens_details\":{\"accepted_prediction_tokens\":null,\"audio_tokens\":0,\"reasoning_tokens\":1409,\"rejected_prediction_tokens\":null,\"image_tokens\":0},\"prompt_tokens_details\":{\"audio_tokens\":0,\"cached_tokens\":0,\"cache_write_tokens\":0,\"video_tokens\":0},\"cost\":0.023232,\"is_byok\":false,\"cost_details\":{\"upstream_inference_cost\":0.023232,\"upstream_inference_prompt_cost\":0.008662,\"upstream_inference_completions_cost\":0.01457}},\"provider\":\"Parasail\"}"
+}
