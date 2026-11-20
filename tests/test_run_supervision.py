@@ -94,3 +94,25 @@ def test_a_result_file_first_seen_half_written_is_checked_once_complete(tmp_path
     with pytest.raises(_Stop):
         watch_run.main()
     assert "WASTE expensive request T9999/request_T9999_a.json $0.90" in capsys.readouterr().out
+
+
+# --- scope parsing (audit 2026-11-19 F08) ----------------------------------------------
+
+@pytest.mark.parametrize("call", ["main(limit_to=['T0001', 'T0002'], workers=3)",
+                                  'main(limit_to=[\n    "T0001",\n    "T0002",\n], workers=3)'])
+def test_the_scope_is_read_with_either_quote_style(tmp_path, call):
+    runfile = tmp_path / "run_benchmarks_fake.py"
+    runfile.write_text("def main(limit_to=None, workers=1): pass\n" + call + "\n",
+                       encoding="utf-8")
+    _head, ids, workers = supervise_run.read_scope(str(runfile))
+    assert (ids, workers) == (["T0001", "T0002"], "3")
+    assert watch_run.test_ids(str(runfile)) == {"T0001", "T0002"}
+
+
+def test_an_empty_scope_is_an_error_not_done(tmp_path):
+    runfile = tmp_path / "run_benchmarks_fake.py"
+    runfile.write_text("main(limit_to=[], workers=1)\n", encoding="utf-8")
+    with pytest.raises(SystemExit):
+        supervise_run.read_scope(str(runfile))
+    with pytest.raises(SystemExit):
+        watch_run.test_ids(str(runfile))

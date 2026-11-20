@@ -1,5 +1,6 @@
 """`generate_compare_detail` against stubbed runs and scorers, without a corpus."""
 import json
+from pathlib import Path
 
 import pytest
 
@@ -64,3 +65,10 @@ def test_a_full_pass_records_its_day_even_when_it_writes_nothing(detail):
 def test_a_partial_pass_records_nothing(detail, partial):
     g.generate_compare_detail(**partial)
     assert not g.REGENERATED_PATH.exists()
+
+
+def test_an_edit_to_the_shared_scoring_code_is_recorded(monkeypatch):
+    """Audit 2026-11-19 F06: only benchmark.py and ground_truths/ were checked."""
+    monkeypatch.setattr(g, "is_dirty", lambda path: Path(path).name == "scoring_helper.py")
+    monkeypatch.setattr(g, "git_revision", lambda path: "a" * 40)
+    assert g.revisions_for("library_cards", {})["uncommitted_changes"] == ["shared_scoring"]

@@ -56,6 +56,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent.parent.parent.resolve()))
 
+from scripts.benchmark_base import _SHARED_SCORING_CODE
 from scripts.compare import BENCHMARKS_PATH, EXPORT_PATH
 from scripts.offline_scoring import (iter_run_inputs, iter_runs, load_scorer,
                                      numeric_metrics, read_tests, rules_of_test)
@@ -99,13 +100,16 @@ def revisions_for(benchmark, cache):
     if benchmark not in cache:
         scorer_path = BENCHMARKS_PATH / benchmark / "benchmark.py"
         truth_path = BENCHMARKS_PATH / benchmark / "ground_truths"
+        # Scorers import these too, so an edit there changes scores as much as one in benchmark.py.
+        shared_paths = [BENCHMARKS_PATH.parent / path for path in _SHARED_SCORING_CODE]
         cache[benchmark] = {
             "scorer_revision": git_revision(scorer_path),
             "ground_truth_revision": git_revision(truth_path),
             "uncommitted_changes": sorted(
-                name for name, path in (("scorer", scorer_path),
-                                        ("ground_truths", truth_path))
-                if is_dirty(path)) or None,
+                name for name, paths in (("scorer", [scorer_path]),
+                                         ("ground_truths", [truth_path]),
+                                         ("shared_scoring", shared_paths))
+                if any(is_dirty(path) for path in paths)) or None,
         }
     return cache[benchmark]
 

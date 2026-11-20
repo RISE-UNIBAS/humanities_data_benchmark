@@ -52,6 +52,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent.resolve()))
 from scripts.offline_scoring import (RESULTS_PATH, benchmark_of_test, iter_run_inputs,
                                      iter_runs, load_scorer, numeric_metrics, read_tests,
                                      rules_of_test)
+from scripts.results_index import RunDir, iter_request_files
 
 
 def _legacy_parse(text):
@@ -127,6 +128,8 @@ def check(args, tests):
 
     for run_dir, test_id, benchmark in targets:
         if not benchmark or not Path(run_dir).is_dir():
+            if args.run:
+                failures["no such run or unknown test: " + args.run] += 1
             continue
         if benchmark not in scorers:
             try:
@@ -177,7 +180,11 @@ def check(args, tests):
         for key, count in failures.most_common(10):
             print("    %5dx %s" % (count, key))
 
-    return 1 if tally["differs"] else 0
+    compared = tally["identical"] + tally["differs"]
+    if not compared:
+        print("\n  nothing compared: not a verification")
+    # Exit 0 means every selected score was re-computed and matched, not only that none differed.
+    return 1 if tally["differs"] or tally["error"] or failures or not compared else 0
 
 
 def verify_or_write(args, tests):
@@ -209,11 +216,17 @@ def verify_or_write(args, tests):
         if finished and not stored_metrics:
             skipped.append("%s/%s" % (Path(run_dir).parent.name, test_id))
             continue
-        for path in Path(run_dir).glob("request_*.json"):
+        run = RunDir(Path(run_dir), Path(run_dir).parent.name, test_id,
+                     "%s@%s" % (test_id, Path(run_dir).parent.name))
+        for request in iter_request_files(run):
+            # The exact id, as scoring read it: a suffix match gave object `1` the score of `page_1`.
+            object_id = request.object_id
+            if object_id not in request_scores:
+                continue
+            path = request.path
             with path.open(encoding="utf-8") as handle:
                 record = json.load(handle)
-            object_id = next((o for o in request_scores if path.stem.endswith("_" + o)), None)
-            if object_id is None or "score" not in record:
+            if "score" not in record:
                 continue
             fresh = request_scores[object_id]
             if (record["score"] is None) == (fresh is None) and (

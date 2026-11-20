@@ -7,10 +7,12 @@ and cost analysis.
 """
 
 import argparse
+import csv
 import json
 import sys
 import webbrowser
 from datetime import datetime
+from html import escape
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
@@ -34,22 +36,20 @@ def get_test_config(test_id: str) -> Optional[Dict[str, Any]]:
         return None
 
     try:
-        with open(csv_path, 'r', encoding='utf-8') as f:
-            lines = f.readlines()
-            for line in lines[1:]:  # Skip header
-                parts = line.strip().split(',')
-                if parts[0] == test_id:
+        with open(csv_path, 'r', encoding='utf-8', newline='') as f:
+            for row in csv.DictReader(f):
+                if row['id'] == test_id:
                     return {
-                        "id": parts[0],
-                        "benchmark": parts[1],
-                        "provider": parts[2],
-                        "model": parts[3],
-                        "dataclass": parts[4],
-                        "temperature": parts[5],
-                        "role_description": parts[6],
-                        "prompt_file": parts[7],
-                        "rules": parts[8],
-                        "legacy_test": parts[9] if len(parts) > 9 else "false"
+                        "id": row['id'],
+                        "benchmark": row['name'],
+                        "provider": row['provider'],
+                        "model": row['model'],
+                        "dataclass": row['dataclass'],
+                        "temperature": row['temperature'],
+                        "role_description": row['role_description'],
+                        "prompt_file": row['prompt_file'],
+                        "rules": row['rules'],
+                        "legacy_test": row.get('legacy_test') or "false"
                     }
     except Exception as e:
         print(f"Error loading test config: {e}", file=sys.stderr)
@@ -172,7 +172,7 @@ def generate_html_content(
     """Generate the HTML content for the report."""
 
     benchmark_name = test_config.get("benchmark", "Unknown")
-    benchmark_title = benchmark_meta.get("title", benchmark_name) if benchmark_meta else benchmark_name
+    benchmark_title = escape(str(benchmark_meta.get("title", benchmark_name) if benchmark_meta else benchmark_name))
 
     # Start HTML
     html = f"""<!DOCTYPE html>
@@ -473,7 +473,7 @@ def generate_html_content(
         <div class="header">
             <h1>{benchmark_title}</h1>
             <div class="meta">
-                Test ID: {test_id} | Date: {date_str} | Generated: {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}
+                Test ID: {escape(str(test_id))} | Date: {date_str} | Generated: {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}
             </div>
         </div>
 
@@ -487,19 +487,19 @@ def generate_html_content(
                 <div class="info-grid">
                     <div class="info-card">
                         <div class="label">Provider</div>
-                        <div class="value">{test_config.get('provider', 'N/A')}</div>
+                        <div class="value">{escape(str(test_config.get('provider', 'N/A')))}</div>
                     </div>
                     <div class="info-card">
                         <div class="label">Model</div>
-                        <div class="value">{test_config.get('model', 'N/A')}</div>
+                        <div class="value">{escape(str(test_config.get('model', 'N/A')))}</div>
                     </div>
                     <div class="info-card">
                         <div class="label">Temperature</div>
-                        <div class="value">{test_config.get('temperature', 'N/A')}</div>
+                        <div class="value">{escape(str(test_config.get('temperature', 'N/A')))}</div>
                     </div>
                     <div class="info-card">
                         <div class="label">Dataclass</div>
-                        <div class="value">{test_config.get('dataclass', 'N/A')}</div>
+                        <div class="value">{escape(str(test_config.get('dataclass', 'N/A')))}</div>
                     </div>
 """
 
@@ -507,7 +507,7 @@ def generate_html_content(
         html += f"""
                     <div class="info-card">
                         <div class="label">Role Description</div>
-                        <div class="value">{test_config.get('role_description')}</div>
+                        <div class="value">{escape(str(test_config.get('role_description')))}</div>
                     </div>
 """
 
@@ -515,7 +515,7 @@ def generate_html_content(
         html += f"""
                     <div class="info-card">
                         <div class="label">Prompt File</div>
-                        <div class="value">{test_config.get('prompt_file')}</div>
+                        <div class="value">{escape(str(test_config.get('prompt_file')))}</div>
                     </div>
 """
 
@@ -546,6 +546,15 @@ def generate_html_content(
                     <div class="score-card">
                         <div class="score">{scoring['f1_micro']:.3f}</div>
                         <div class="label">F1 Micro</div>
+                    </div>
+"""
+
+        for key, label in (('fuzzy', 'Fuzzy'), ('cer', 'CER (lower is better)'), ('f1', 'F1')):
+            if isinstance(scoring.get(key), (int, float)) and not isinstance(scoring[key], bool):
+                html += f"""
+                    <div class="score-card">
+                        <div class="score">{scoring[key]:.3f}</div>
+                        <div class="label">{label}</div>
                     </div>
 """
 
@@ -629,7 +638,7 @@ def generate_html_content(
 
         html += f"""
                 <div class="result-item">
-                    <h3>#{idx}: {item_id}</h3>
+                    <h3>#{idx}: {escape(str(item_id))}</h3>
 """
 
         # Item metadata
@@ -675,7 +684,7 @@ def generate_html_content(
 
         parsed = req_data.get('parsed')
         if parsed:
-            html += f"""<pre>{json.dumps(parsed, indent=2, ensure_ascii=False)}</pre>"""
+            html += f"""<pre>{escape(json.dumps(parsed, indent=2, ensure_ascii=False))}</pre>"""
         else:
             html += "<em>No parsed response</em>"
 
@@ -688,7 +697,7 @@ def generate_html_content(
 """
 
         if ground_truth:
-            html += f"""<pre>{json.dumps(ground_truth, indent=2, ensure_ascii=False)}</pre>"""
+            html += f"""<pre>{escape(json.dumps(ground_truth, indent=2, ensure_ascii=False))}</pre>"""
         else:
             html += "<em>No ground truth available</em>"
 
@@ -736,9 +745,9 @@ def generate_html_content(
 
                 html += f"""
                             <div class="field-row">
-                                <div class="field-name">{field_name}</div>
-                                <div class="field-value">{response_val}</div>
-                                <div class="field-value">{gt_val}</div>
+                                <div class="field-name">{escape(str(field_name))}</div>
+                                <div class="field-value">{escape(str(response_val))}</div>
+                                <div class="field-value">{escape(str(gt_val))}</div>
                                 <div class="field-score {score_class}">{score_text}</div>
                             </div>
 """
@@ -755,7 +764,7 @@ def generate_html_content(
                         <summary>Raw API Response</summary>
                         <div class="json-view" style="margin-top: 10px;">
 """
-            html += f"""<pre>{json.dumps(req_data['raw_response'], indent=2, ensure_ascii=False)[:5000]}</pre>"""
+            html += f"""<pre>{escape(json.dumps(req_data['raw_response'], indent=2, ensure_ascii=False)[:5000])}</pre>"""
             html += """
                         </div>
                     </details>

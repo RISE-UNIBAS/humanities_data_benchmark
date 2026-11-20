@@ -184,9 +184,10 @@ def coverage_diagnostics(rows, runs, stored_field_run_ids, regenerated=None):
     observation for it. With no supplementary rows, return an absence warning.
     Otherwise, uncovered runs dated after their benchmark's last regeneration produce
     a blocking stale-detail diagnostic; other uncovered runs produce a warning. The
-    last regeneration is the later of the latest recorded re-scoring date and the
-    generator's pass date for the benchmark (`regenerated`); a pass that finds no
-    detail writes no file, so only the pass date moves past such runs.
+    last regeneration is the later of the benchmark's latest recorded re-scoring date
+    and the generator's pass date for it (`regenerated`); a pass that finds no detail
+    writes no file, so only the pass date moves past such runs. A benchmark with
+    neither has never been regenerated, so its uncovered runs are stale.
     Missing re-scoring dates also produce a warning.
 
     This date-based check cannot establish that every older run was processed or
@@ -206,14 +207,23 @@ def coverage_diagnostics(rows, runs, stored_field_run_ids, regenerated=None):
     uncovered = [run for run in runs if run["run_id"] not in covered]
     dates = [row["rescored_date"] for row in rows if row.get("rescored_date")]
     last = max(dates) if dates else None
+    # Per benchmark: another benchmark's newer detail says nothing about this one's runs.
+    last_of = {}
+    for row in rows:
+        if row.get("rescored_date"):
+            name = row.get("benchmark")
+            last_of[name] = max(last_of.get(name, ""), row["rescored_date"])
 
     regenerated = regenerated or {}
 
     def regenerated_on(run):
-        return max(filter(None, (last, regenerated.get(run["benchmark"]))), default=None)
+        return max(filter(None, (last_of.get(run["benchmark"]),
+                                 regenerated.get(run["benchmark"]))), default=None)
 
+    # A run without a resolved benchmark has no scorer to regenerate it; it stays a warning.
     stale = [run for run in uncovered
-             if last and run["date"] > regenerated_on(run)]
+             if last and run["benchmark"]
+             and (regenerated_on(run) is None or run["date"] > regenerated_on(run))]
     stale_ids = set(run["run_id"] for run in stale)
     seen = [run for run in uncovered if run["run_id"] not in stale_ids]
 

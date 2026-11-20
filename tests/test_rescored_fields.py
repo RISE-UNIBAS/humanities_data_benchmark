@@ -178,8 +178,8 @@ def _run(test_id, date, benchmark="library_cards"):
     return {"run_id": "%s@%s" % (test_id, date), "date": date, "benchmark": benchmark}
 
 
-def _row(run_id, rescored_date="2026-09-14"):
-    return {"run_id": run_id, "rescored_date": rescored_date}
+def _row(run_id, rescored_date="2026-09-14", benchmark="library_cards"):
+    return {"run_id": run_id, "rescored_date": rescored_date, "benchmark": benchmark}
 
 
 def _issues(diagnostics):
@@ -204,7 +204,7 @@ def test_a_run_the_generator_already_saw_is_only_a_warning():
     diagnostics = rescored.coverage_diagnostics(
         [_row("T0001@2026-01-01")],
         [_run("T0001", "2026-01-01"), _run("T0002", "2026-08-01", "book_advert_xml")],
-        stored_field_run_ids=set())
+        stored_field_run_ids=set(), regenerated={"book_advert_xml": "2026-09-14"})
     issues = _issues(diagnostics)
     assert "rescored_detail_stale" not in issues
     assert issues["rescored_detail_incomplete"]["severity"] == "warning"
@@ -228,6 +228,24 @@ def test_another_benchmarks_pass_does_not_cover_a_run():
         [_row("T0001@2026-01-01", "2026-11-04")], runs, set(),
         regenerated={"library_cards": "2026-11-18"}))
     assert "business_letters 1" in issues["rescored_detail_stale"]["handling"]
+
+
+def test_another_benchmarks_newer_detail_does_not_cover_a_run():
+    """Audit 2026-11-19 F03: a fresh library_cards row hid a company_lists run newer than
+    company_lists' own pass."""
+    runs = [_run("T0001", "2026-01-01"), _run("T0002", "2026-11-18", "company_lists")]
+    issues = _issues(rescored.coverage_diagnostics(
+        [_row("T0001@2026-01-01", "2026-11-19")], runs, set(),
+        regenerated={"company_lists": "2026-11-01"}))
+    assert issues["rescored_detail_stale"]["severity"] == "blocking"
+    assert "company_lists 1" in issues["rescored_detail_stale"]["handling"]
+
+
+def test_a_benchmark_never_regenerated_is_stale():
+    runs = [_run("T0001", "2026-01-01"), _run("T0002", "2026-08-01", "company_lists")]
+    issues = _issues(rescored.coverage_diagnostics(
+        [_row("T0001@2026-01-01", "2026-11-19")], runs, set()))
+    assert "company_lists 1" in issues["rescored_detail_stale"]["handling"]
 
 
 def test_regeneration_dates_tolerate_an_absent_or_broken_file(tmp_path):

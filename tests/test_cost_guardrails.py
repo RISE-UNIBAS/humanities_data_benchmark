@@ -175,3 +175,25 @@ class TestRunAbortsOnFatalError:
         # An error file would count as a finished object and be skipped on resume.
         _, saved = self._run_with_fatal_error(workers)
         assert saved == []
+
+
+class TestRunWithAFailedObjectStaysUnfinished:
+    """Audit 2026-11-19 F01: an object whose worker raised was dropped from the average and
+    scoring.json was still written, so the supervisor took the test as finished."""
+
+    def test_no_score_is_saved(self):
+        benchmark, _ = _make()
+        saved = []
+        benchmark.get_all_basenames = lambda *a, **k: ["a", "b"]
+        ok = LLMResponse(text="{}", model="m", provider="openrouter", finish_reason="stop",
+                         usage=Usage(), raw_response={}, duration=0.0)
+
+        def fake_process(basename, regenerate):
+            if basename == "b":
+                raise RuntimeError("worker crashed")
+            return ok, {"fuzzy": 1.0}
+
+        benchmark._process_object = fake_process
+        benchmark.save_benchmark_score = lambda *a, **k: saved.append(a)
+        benchmark.run(regenerate_existing_results=True, workers=2)
+        assert saved == []

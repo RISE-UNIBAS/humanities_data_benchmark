@@ -859,6 +859,14 @@ class Benchmark(ABC):
             raise FatalProviderError(
                 f"{self.get_title()} aborted on a fatal provider error; no score saved.")
 
+        failed = [bn for bn, r in zip(object_basenames, results) if r is None]
+        if failed:
+            # Saving a score would average over the rest and mark the test finished, so the
+            # supervisor would never retry the failed objects.
+            logging.error(f"{self.get_title()}: {len(failed)} object(s) failed "
+                          f"({', '.join(failed[:5])}); no score saved, the test stays unfinished.")
+            return
+
         all_answers = [r[0] for r in results]
         benchmark_scores = [r[1] for r in results if r[1] is not None]
 
@@ -892,7 +900,6 @@ class Benchmark(ABC):
                     results[i] = future.result()
                 except Exception as e:
                     logging.error(f"[{object_basenames[i]}] Failed with exception: {e}")
-                    results[i] = (None, None)
         return results
 
     @staticmethod

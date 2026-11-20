@@ -53,7 +53,12 @@ def test_ids(runfile):
     """Return the test ids a runfile's __main__ block passes to limit_to."""
     with open(runfile, encoding="utf-8") as fh:
         source = fh.read()
-    return set(re.findall(r'"(T\d{4})"', source.rsplit("main(limit_to=", 1)[-1]))
+    if "main(limit_to=" not in source:
+        raise SystemExit("no main(limit_to= call in %s" % runfile)
+    ids = set(re.findall(r"""["'](T\d{4})["']""", source.rsplit("main(limit_to=", 1)[-1]))
+    if not ids:
+        raise SystemExit("no test ids in the main(limit_to= call of %s" % runfile)
+    return ids
 
 
 def newest_log():

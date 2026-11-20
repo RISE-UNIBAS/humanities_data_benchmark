@@ -40,7 +40,11 @@ def read_scope(runfile):
     if not head:
         raise SystemExit("no main(limit_to= call in %s" % runfile)
     workers = re.search(r"workers\s*=\s*(\d+)", tail)
-    return head, re.findall(r'"(T\d{4})"', tail), workers.group(1) if workers else "10"
+    ids = re.findall(r"""["'](T\d{4})["']""", tail)
+    if not ids:
+        # An empty list would read as "every test has a scoring.json" and report DONE.
+        raise SystemExit("no test ids in the main(limit_to= call of %s" % runfile)
+    return head, ids, workers.group(1) if workers else "10"
 
 
 def write_cycle_runfile(runfile, head, todo, workers):
