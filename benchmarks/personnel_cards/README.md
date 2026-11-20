@@ -212,6 +212,7 @@ This section is not part of the BenchmarkCard schema and is not exported to `ben
 
 **Versions:**
 
+- 4.0.0 (2026-11-20) — an empty card earns F1 1 only for a {"rows": [...]} answer, not for an unparseable or wrapped one; all stored runs re-scored
 - 3.0.0 (2026-10-18) — a card without rows answered without rows scores F1 1 instead of 0; all stored runs re-scored
 - 2.0.0 (2026-10-17) — a response that cannot be parsed is scored as a miss instead of being left out; all stored runs re-scored
 - 1.0.0 (2026-10-16) — initial versioned state, when the card was introduced; same content as 0.6.0
@@ -225,7 +226,7 @@ This section is not part of the BenchmarkCard schema and is not exported to `ben
 
 **How to Cite:** This benchmark:
 
-> Wullschleger, T., Hindermann, M., & Decker, E. (2026). Personnel Cards (benchmark version 3.0.0). In *RISE Humanities Data Benchmark*. Zenodo. https://doi.org/10.5281/zenodo.16941752
+> Wullschleger, T., Hindermann, M., & Decker, E. (2026). Personnel Cards (benchmark version 4.0.0). In *RISE Humanities Data Benchmark*. Zenodo. https://doi.org/10.5281/zenodo.16941752
 
 Source:
 

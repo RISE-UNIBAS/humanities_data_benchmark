@@ -203,6 +203,24 @@ def test_personnel_cards_empty_card_answered_empty_scores_one(make_scorer, respo
     assert scorer.score_request_answer("img", response(parsed=_row()), {"rows": []})["f1_score"] == 0.0
 
 
+EMPTY_CARDS = ["0002_20230927_170549", "0002_20231005_171250", "0002_20231012_180835",
+               "0002_20231129_110950"]
+
+
+@pytest.mark.parametrize("name", EMPTY_CARDS)
+@pytest.mark.parametrize("parsed", [None, {"input": {"rows": []}}, {"parameter": {"rows": []}}, [], "rows"])
+def test_personnel_cards_an_invalid_answer_to_an_empty_card_is_a_miss(make_scorer, response, name, parsed):
+    """Audit 2026-11-19 F02: with no fields to compare, any answer scored F1 1."""
+    with open(os.path.join(PERSONNEL_CARDS_GT, f"{name}.json"), encoding="utf-8") as f:
+        gt = json.load(f)
+    assert gt == {"rows": []}
+    scorer = make_scorer(PersonnelCards, rules=None)
+    result = scorer.score_request_answer(name, response(parsed=parsed, text="not JSON"), gt)
+    assert result["f1_score"] == 0.0
+    assert (result["true_positives"], result["false_negatives"]) == (0, 0), "no invented misses"
+    assert scorer.score_request_answer(name, response(parsed={"rows": []}), gt)["f1_score"] == 1.0
+
+
 @pytest.mark.parametrize("name", sorted(f[:-5] for f in os.listdir(PERSONNEL_CARDS_GT) if f.endswith(".json")))
 def test_personnel_cards_every_ground_truth_matches_itself(make_scorer, response, name):
     with open(os.path.join(PERSONNEL_CARDS_GT, f"{name}.json"), encoding="utf-8") as f:

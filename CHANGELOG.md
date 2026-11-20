@@ -16,6 +16,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Audit 2026-11-19 fixes: a run with a crashed object saves no `scoring.json`; `rescore.py --check` fails on scorer errors or nothing compared, and `--write` matches request files by exact id; supervisor and watcher accept single-quoted ids and refuse an empty scope; the export's stale-detail check is per benchmark; test reports escape model output, show `fuzzy`/`cer`/`f1` aggregates and parse the test CSV properly; compare detail flags uncommitted shared scoring code; CI checks out full history (blobless).
 - Dataset export: runs whose scorer gives no per-field detail (`business_letters`) no longer block a release once newer than the last written detail file; `generate_compare_detail` records each full pass per benchmark in `collected_results/compare_detail_regenerated.json`, hashed in `source_manifest.jsonl`; a detail file with scorer errors blocks.
 
+### Changed
+- `personnel_cards` 4.0.0: an unparseable or wrapped answer to an empty card scores F1 0, not 1; stored runs re-scored (33 requests, 12 aggregates).
+
 ## [v0.8.2] - 2026-11-18
 
 ### Added
