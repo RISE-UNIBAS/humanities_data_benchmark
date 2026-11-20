@@ -250,7 +250,8 @@ RESCORED_FIELDS = {
                                "False means the ground truth or the scorer has changed "
                                "since -- 12 inputs in this release.",
     "rescored_date": "When the re-scoring ran. Not when the benchmark ran.",
-    "scorer_revision": "Commit that last touched the benchmark's scorer at that point.",
+    "scorer_revision": "Commit that last touched the benchmark's scorer code (its Python "
+                       "files and the shared scoring code) at that point.",
     "ground_truth_revision": "Commit that last touched the benchmark's ground truths.",
     "scorer_dirty": "Whether the scorer or ground truths had uncommitted changes when the "
                     "re-scoring ran, which makes the two revisions above incomplete "

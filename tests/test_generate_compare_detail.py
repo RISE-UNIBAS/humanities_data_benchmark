@@ -70,5 +70,15 @@ def test_a_partial_pass_records_nothing(detail, partial):
 def test_an_edit_to_the_shared_scoring_code_is_recorded(monkeypatch):
     """Audit 2026-11-19 F06: only benchmark.py and ground_truths/ were checked."""
     monkeypatch.setattr(g, "is_dirty", lambda path: Path(path).name == "scoring_helper.py")
-    monkeypatch.setattr(g, "git_revision", lambda path: "a" * 40)
+    monkeypatch.setattr(g, "git_revision", lambda *paths: "a" * 40)
     assert g.revisions_for("library_cards", {})["uncommitted_changes"] == ["shared_scoring"]
+
+
+def test_the_scorer_revision_covers_helpers_and_shared_scoring_code(monkeypatch):
+    """A committed change to scoring_helper.py must move scorer_revision, not only benchmark.py."""
+    asked = []
+    monkeypatch.setattr(g, "is_dirty", lambda path: False)
+    monkeypatch.setattr(g, "git_revision", lambda *paths: asked.append(
+        sorted(Path(p).name for p in paths)) or "a" * 40)
+    g.revisions_for("business_letters", {})
+    assert {"benchmark.py", "letter.py", "benchmark_base.py", "scoring_helper.py"} <= set(asked[0])

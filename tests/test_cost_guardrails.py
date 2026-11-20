@@ -177,23 +177,43 @@ class TestRunAbortsOnFatalError:
         assert saved == []
 
 
-class TestRunWithAFailedObjectStaysUnfinished:
-    """Audit 2026-11-19 F01: an object whose worker raised was dropped from the average and
+def _ok():
+    return LLMResponse(text="{}", model="m", provider="openrouter", finish_reason="stop",
+                       usage=Usage(), raw_response={}, duration=0.0)
+
+
+class TestRunWithAnObjectWithoutAnswerStaysUnfinished:
+    """Audit 2026-11-19 F01: an object without an answer was dropped from the average and
     scoring.json was still written, so the supervisor took the test as finished."""
 
-    def test_no_score_is_saved(self):
+    def _run(self, tmp_path, workers=2, regenerate=True, ask=None, skip=()):
         benchmark, _ = _make()
         saved = []
         benchmark.get_all_basenames = lambda *a, **k: ["a", "b"]
-        ok = LLMResponse(text="{}", model="m", provider="openrouter", finish_reason="stop",
-                         usage=Usage(), raw_response={}, duration=0.0)
-
-        def fake_process(basename, regenerate):
-            if basename == "b":
-                raise RuntimeError("worker crashed")
-            return ok, {"fuzzy": 1.0}
-
-        benchmark._process_object = fake_process
+        benchmark.get_request_answer_file_name = lambda bn: str(tmp_path / ("%s.json" % bn))
+        benchmark.ask_llm = ask or (lambda bn: _ok())
+        benchmark.skip_object = lambda bn: bn in skip
+        benchmark._score_or_miss = lambda bn, answer: {"fuzzy": 1.0}
+        benchmark.save_request_answer = lambda *a, **k: None
         benchmark.save_benchmark_score = lambda *a, **k: saved.append(a)
-        benchmark.run(regenerate_existing_results=True, workers=2)
-        assert saved == []
+        benchmark.run(regenerate_existing_results=regenerate, workers=workers)
+        return saved
+
+    def test_a_crashed_worker(self, tmp_path):
+        def ask(bn):
+            if bn == "b":
+                raise RuntimeError("worker crashed")
+            return _ok()
+        assert self._run(tmp_path, ask=ask) == []
+
+    @pytest.mark.parametrize("workers", [1, 2])
+    def test_a_provider_that_returned_nothing(self, tmp_path, workers):
+        assert self._run(tmp_path, workers, ask=lambda bn: None if bn == "b" else _ok()) == []
+
+    def test_an_unreadable_saved_answer(self, tmp_path):
+        (tmp_path / "b.json").write_text("{", encoding="utf-8")
+        assert self._run(tmp_path, regenerate=False) == []
+
+    def test_a_deliberately_skipped_object_still_completes_the_run(self, tmp_path):
+        saved = self._run(tmp_path, regenerate=False, skip={"b"})
+        assert len(saved) == 1

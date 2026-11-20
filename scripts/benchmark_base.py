@@ -12,6 +12,7 @@ from datetime import datetime
 from pathlib import Path
 from typing import Dict, List, Union, Pattern, Optional, Iterable, Set
 from data_loader import read_file, write_file
+from results_index import SHARED_SCORING_CODE
 from ai_client import create_ai_client, LLMResponse, Usage
 from ai_client.pricing import apply_costs, set_pricing_file
 import ai_client.openai_client as _openai_client
@@ -30,7 +31,7 @@ else:
 
 _REPO_ROOT = Path(__file__).resolve().parent.parent
 # Code outside the benchmark's folder that changes its scores (as in the card integrity test).
-_SHARED_SCORING_CODE = ("scripts/benchmark_base.py", "scripts/scoring_helper.py")
+_SHARED_SCORING_CODE = SHARED_SCORING_CODE
 
 
 def _state_paths(folder):
@@ -859,11 +860,14 @@ class Benchmark(ABC):
             raise FatalProviderError(
                 f"{self.get_title()} aborted on a fatal provider error; no score saved.")
 
-        failed = [bn for bn, r in zip(object_basenames, results) if r is None]
+        # An object without an answer is unfinished: its worker raised, the provider returned
+        # nothing (never saved), or its saved file cannot be read. Only a deliberately skipped
+        # object has no answer by design. Saving a score would average over the rest and mark
+        # the test finished, so the supervisor would never retry the missing objects.
+        failed = [bn for bn, r in zip(object_basenames, results)
+                  if r is None or (r[0] is None and not self.skip_object(bn))]
         if failed:
-            # Saving a score would average over the rest and mark the test finished, so the
-            # supervisor would never retry the failed objects.
-            logging.error(f"{self.get_title()}: {len(failed)} object(s) failed "
+            logging.error(f"{self.get_title()}: {len(failed)} object(s) without an answer "
                           f"({', '.join(failed[:5])}); no score saved, the test stays unfinished.")
             return
 

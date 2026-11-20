@@ -55,6 +55,10 @@ BENCHMARKS_PATH = PROJECT_ROOT / "benchmarks"
 TESTS_CSV = BENCHMARKS_PATH / "benchmarks_tests.csv"
 COLLECTED_RESULTS_PATH = PROJECT_ROOT / "collected_results"
 
+SHARED_SCORING_CODE = ("scripts/benchmark_base.py", "scripts/scoring_helper.py")
+"""Code outside a benchmark's folder that its scorer runs, relative to the project root.
+Here rather than in benchmark_base so tools can import it without the runner's dependencies."""
+
 
 JSON_STATUSES = ("ok", "missing", "unreadable", "invalid")
 

@@ -253,7 +253,7 @@ The following columns describe the supplementary evaluations:
 |---|---|
 | `score` | Per-field value returned by the scorer; null where no numeric similarity is assigned, including evaluations based on counts |
 | `rescored_date` | Date of the subsequent scoring pass, distinct from the original run date and export date |
-| `scorer_revision` | Recorded commit that last changed the benchmark's scorer file |
+| `scorer_revision` | Recorded commit that last changed the benchmark's scorer code: its Python files and the shared scoring code (`benchmark_base.py`, `scoring_helper.py`) |
 | `ground_truth_revision` | Recorded commit that last changed the benchmark's ground truths |
 | `scorer_dirty` | Whether uncommitted scorer or ground-truth changes were reported; true means the revision identifiers do not fully describe the evaluated state |
 | `reproduces_stored_score` | Whether the recomputed numeric metrics for the input equal its stored numeric metrics; null when no comparison result is available |

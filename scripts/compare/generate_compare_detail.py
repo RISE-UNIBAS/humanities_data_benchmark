@@ -33,7 +33,7 @@ needs any, so the view fetches only the run it is showing.
       "test_id": "T1597", "date": "2026-08-18", "benchmark": "magazine_pages",
       "source": "rescored",
       "rescored": "2026-09-10",
-      "scorer_revision": "<commit that last touched the benchmark>",
+      "scorer_revision": "<commit that last touched its scorer code, shared code included>",
       "ground_truth_revision": "<commit that last touched its ground truths>",
       "inputs": {
         "0002_p002": {
@@ -56,10 +56,10 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent.parent.parent.resolve()))
 
-from scripts.benchmark_base import _SHARED_SCORING_CODE
 from scripts.compare import BENCHMARKS_PATH, EXPORT_PATH
 from scripts.offline_scoring import (iter_run_inputs, iter_runs, load_scorer,
                                      numeric_metrics, read_tests, rules_of_test)
+from scripts.results_index import SHARED_SCORING_CODE
 
 DETAIL_DIR = EXPORT_PATH / "compare_detail"
 REGENERATED_PATH = EXPORT_PATH / "compare_detail_regenerated.json"
@@ -67,11 +67,11 @@ REGENERATED_PATH = EXPORT_PATH / "compare_detail_regenerated.json"
 logger = logging.getLogger(__name__)
 
 
-def git_revision(path):
-    """The commit that last touched `path`, or None outside a checkout."""
+def git_revision(*paths):
+    """The commit that last touched any of `paths`, or None outside a checkout."""
     try:
         result = subprocess.run(
-            ["git", "log", "-1", "--format=%H", "--", str(path)],
+            ["git", "log", "-1", "--format=%H", "--", *map(str, paths)],
             cwd=str(BENCHMARKS_PATH.parent), capture_output=True, text=True, timeout=30)
     except (OSError, subprocess.SubprocessError):
         return None
@@ -98,15 +98,16 @@ def revisions_for(benchmark, cache):
     clears it.
     """
     if benchmark not in cache:
-        scorer_path = BENCHMARKS_PATH / benchmark / "benchmark.py"
+        # The scorer is benchmark.py, the helpers beside it and the shared scoring code it
+        # imports: a change to any of them changes scores as much as one to benchmark.py.
+        local_paths = sorted((BENCHMARKS_PATH / benchmark).glob("*.py"))
+        shared_paths = [BENCHMARKS_PATH.parent / path for path in SHARED_SCORING_CODE]
         truth_path = BENCHMARKS_PATH / benchmark / "ground_truths"
-        # Scorers import these too, so an edit there changes scores as much as one in benchmark.py.
-        shared_paths = [BENCHMARKS_PATH.parent / path for path in _SHARED_SCORING_CODE]
         cache[benchmark] = {
-            "scorer_revision": git_revision(scorer_path),
+            "scorer_revision": git_revision(*local_paths, *shared_paths),
             "ground_truth_revision": git_revision(truth_path),
             "uncommitted_changes": sorted(
-                name for name, paths in (("scorer", [scorer_path]),
+                name for name, paths in (("scorer", local_paths),
                                          ("ground_truths", [truth_path]),
                                          ("shared_scoring", shared_paths))
                 if any(is_dirty(path) for path in paths)) or None,
