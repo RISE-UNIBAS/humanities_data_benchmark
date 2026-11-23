@@ -314,7 +314,7 @@ This benchmark suite currently tests models from the following providers:
 | | gemini-4-neon                             | Gemini 4 Neon                                              |
 | | gemini-4-hydrogen                         | Gemini 4 Hydrogen                                          |
 | **Hugging Face** | swiss-ai/Apertus-v1.5-70B:publicai        | Apertus v1.5, 70B (Swiss AI Initiative); multimodal         |
-| | swiss-ai/Apertus-v1.5-8B:publicai         | Apertus v1.5, 8B (Swiss AI Initiative); multimodal          |
+| | ~~swiss-ai/Apertus-v1.5-8B:publicai~~     | ~~Apertus v1.5, 8B (Swiss AI Initiative); multimodal~~ (legacy) |
 | | Qwen/Qwen3-VL-235B-A22B-Instruct:deepinfra | Qwen3-VL 235B-A22B Instruct (Alibaba); multimodal          |
 | | MiniMaxAI/MiniMax-M3:deepinfra            | MiniMax M3 (MiniMax); multimodal                            |
 | | thinkingmachines/Inkling-Small:deepinfra  | Inkling Small (Thinking Machines); multimodal               |
@@ -337,7 +337,7 @@ This benchmark suite currently tests models from the following providers:
 | | ~~pixtral-large-2411~~                    | ~~Pixtral Large (Nov 2024); multimodal~~ (legacy)          |
 | **OpenAI** | gpt-4.1                                   | GPT-4.1                                                    |
 | | gpt-4.1-mini                              | GPT-4.1 Mini                                               |
-| | gpt-4.1-nano                              | GPT-4.1 Nano                                               |
+| | ~~gpt-4.1-nano~~                          | ~~GPT-4.1 Nano~~ (legacy)                                  |
 | | ~~gpt-4.5-preview~~                       | ~~GPT-4.5 (preview)~~ (legacy)                             |
 | | gpt-4o                                    | GPT-4o; multimodal                                         |
 | | gpt-4o-mini                               | GPT-4o Mini; multimodal                                    |
@@ -365,7 +365,7 @@ This benchmark suite currently tests models from the following providers:
 | | meta-llama/llama-4-maverick               | Llama 4 Maverick                                           |
 | | qwen/qwen3-vl-30b-a3b-instruct            | Qwen3-VL, 30B MoE (3B active), instruction-tuned; multimodal |
 | | qwen/qwen3-vl-8b-instruct                 | Qwen3-VL 8B, instruction-tuned; multimodal                 |
-| | qwen/qwen3-vl-8b-thinking                 | Qwen3-VL 8B, reasoning; multimodal                         |
+| | ~~qwen/qwen3-vl-8b-thinking~~             | ~~Qwen3-VL 8B, reasoning; multimodal~~ (legacy)            |
 | | ~~qwen/qwen3.8-max~~                      | ~~Qwen 3.8 Max; multimodal~~ (legacy)                      |
 | | qwen/qwen3.8-max-0902                     | Qwen 3.8 Max (0902 build); multimodal                      |
 | | qwen/qwen3.8-flash                        | Qwen 3.8 Flash; multimodal                                 |

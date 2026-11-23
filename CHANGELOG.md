@@ -9,7 +9,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - `address_book_layout` benchmark: one bounding box per entry on the 64 pages of the business directory of the Basel address book of 1890 (StABS, public domain), scored with F1 at IoU 0.5; 125 test configurations (T2334-T2458), one per active vision model; its metrics are registered for the dataset export.
+- Results for 2026-11-23: T2334-T2458 (117 tests, 7,397 requests) for `address_book_layout`; 2 unfinished (`gpt-4.1-nano` withdrawn, `nex-n2.5-pro` provider outage).
 - Dataset release `2026-11-20.1` deposited ([10.5281/zenodo.24401327](https://doi.org/10.5281/zenodo.24401327)) and recorded in `scripts/data/dataset_releases.json`; `CITATION.cff` lists the v0.8.3 DOI.
+
+### Changed
+- `legacy_test=true` for three models their providers no longer serve: `gpt-4.1-nano` (OpenAI), `swiss-ai/Apertus-v1.5-8B:publicai` (Hugging Face) and `qwen/qwen3-vl-8b-thinking` (OpenRouter); README models table updated.
 
 ## [v0.8.3] - 2026-11-20
 

@@ -146,7 +146,7 @@ The page score is the unrounded mean over its fields; the benchmark score is the
 
 **Baseline Results:** Model results are available on the [benchmark page](https://rise-services.rise.unibas.ch/benchmarks/p/benchmarks/general_meeting_minutes) and in `results/<date>/<test_id>/` at the repository root. Compare runs with the same prompt, scoring rules and ground-truth revision. There is no fixed model baseline with a run ID and date.
 
-Stored results, snapshot 2026-11-20 (`fuzzy`, higher is better; the latest stored run of each active test, by prompt): `prompt.txt`, 115 tests: median 0.82 (interquartile range 0.75–0.88), best 0.97 (gemini-4-neon). 9 active tests have no scored run by that date.
+Stored results, snapshot 2026-11-20 (`fuzzy`, higher is better; the latest stored run of each active test, by prompt): `prompt.txt`, 112 tests: median 0.82 (interquartile range 0.75–0.88), best 0.97 (gemini-4-neon). 9 active tests have no scored run by that date.
 
 Observed across models: share counts and signatures are read worst (mean field score about 0.5 for `actions_o`, `actions_p`, the page totals and `signature`), names, addresses and row numbers well (0.85–0.89), and the vote count best (0.93). Part of the share-count error is the column order, which varies between forms.
 
