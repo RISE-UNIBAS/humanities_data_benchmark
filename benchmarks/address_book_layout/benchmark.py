@@ -1,14 +1,15 @@
 """Benchmark implementation for entry localisation in the Basel address book of 1890.
 
-Models receive one page of the business directory ("Verzeichniss der Einwohner nach ihren
+Models receive one page of the business directory ("Verzeichnis der Einwohner nach ihren
 Geschäften und Gewerben") and return one bounding box per directory entry. An entry may run
-over several printed lines; its box covers all of them. Category headings, running heads and
-page numbers are not entries.
+over several printed lines; its box covers all of them. A cross-reference standing in place of
+entries ("(Siehe Konditoren.)") is an entry; headings, notes, legends, footnotes, running heads
+and page numbers are not.
 
 Scoring approach
 ----------------
 Predicted boxes are matched 1:1 to ground-truth boxes, greedily by IoU, highest first.
-A pair counts at IoU >= IOU_THRESHOLD (0.5). Entries are narrow (a line is about 3 % of the
+A pair counts at IoU >= IOU_THRESHOLD (0.5). Entries are narrow (a one-line entry is about 1.5 % of the
 page height), so a box that drifts by one line already falls below the threshold. A second
 pass at STRICT_IOU_THRESHOLD (0.75) shows how tightly the boxes fit.
 
@@ -20,12 +21,13 @@ Per-page metrics
     count_error                  |predicted - expected| / expected
 
 Benchmark-level metrics are macro-averages over the pages, plus micro precision, recall and
-F1 over all boxes (pages hold 40 to 90 entries, so the two can differ).
+F1 over all boxes (pages hold 38 to 105 entries, so the two can differ).
 
 Ground truth format (ground_truths/<stem>.json):
     {"entries": [{"box": [x0, y0, x1, y1]}, ...]}   pixel coordinates of the image in images/
 """
 
+import math
 import os
 from typing import Dict, List, Optional, Tuple
 
@@ -75,18 +77,18 @@ def _match_boxes(gt_boxes: list, pred_boxes: list,
 
 
 def _clean_box(box) -> Optional[list]:
-    """Return [x0, y0, x1, y1] with ordered corners, or None if the box is not four numbers."""
+    """Return [x0, y0, x1, y1] with ordered corners, or None unless the box is four finite numbers."""
     if not isinstance(box, (list, tuple)) or len(box) != 4:
         return None
-    try:
-        x0, y0, x1, y1 = (float(v) for v in box)
-    except (TypeError, ValueError):
+    if not all(isinstance(v, (int, float)) and not isinstance(v, bool) and math.isfinite(v) for v in box):
         return None
+    x0, y0, x1, y1 = (float(v) for v in box)
     return [min(x0, x1), min(y0, y1), max(x0, x1), max(y0, y1)]
 
 
 def _extract_boxes(data) -> List[Optional[list]]:
-    """Boxes from {"entries": [{"box": [...]}, ...]}; a malformed item stays as None.
+    """Boxes from {"entries": [{"box": [...]}, ...]}, or {"detections": [...]} from the local
+    backends; a malformed item stays as None.
 
     Malformed items are kept so they count as false positives instead of disappearing.
     """
@@ -95,6 +97,8 @@ def _extract_boxes(data) -> List[Optional[list]]:
     if not isinstance(data, dict):
         return []
     items = data.get("entries")
+    if items is None:
+        items = data.get("detections")
     if not isinstance(items, list):
         return []
     return [_clean_box(item.get("box")) if isinstance(item, dict) else None for item in items]
@@ -107,7 +111,7 @@ def _prf(tp: int, fp: int, fn: int) -> Tuple[float, float, float]:
     return precision, recall, f1
 
 
-class BaselAddressBook1890Layout(Benchmark):
+class AddressBookLayout(Benchmark):
     """Locate every directory entry on a page of the Basel address book of 1890."""
 
     score_unparseable_as_miss = True

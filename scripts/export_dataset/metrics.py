@@ -153,6 +153,48 @@ def _build():
                "The overlap a box had to reach to count as matched. Configuration, not a "
                "result: averaging it with mean_iou is meaningless."))
 
+    b = "address_book_layout"
+    for level in ("run", "request"):
+        for metric, desc in (
+            ("f1", "F1 over directory entries matched at IoU 0.5. The ranking metric."),
+            ("precision", "Precision over directory entries matched at IoU 0.5."),
+            ("recall", "Recall over directory entries matched at IoU 0.5."),
+            ("f1_strict", "F1 over directory entries matched at IoU 0.75."),
+        ):
+            add(_entry(b, level, metric, "performance", "ratio_0_1", "higher_better",
+                       0.0, 1.0, "not_summable",
+                       desc + (" The run value is the mean over pages." if level == "run" else "")))
+        add(_entry(b, level, "mean_iou", "performance", "iou", "higher_better", 0.0, 1.0,
+                   "not_summable", "Mean intersection-over-union of the entries matched at "
+                   "IoU 0.5; 0 when none matched."))
+        add(_entry(b, level, "count_error", "performance", "error_rate", "lower_better",
+                   0.0, None, "not_summable", "|predicted - expected| / expected number of "
+                   "entry boxes. Lower is better."))
+        for metric in ("true_positives", "false_positives", "false_negatives"):
+            add(_entry(b, level, metric, "count", "entries", "not_applicable", 0.0, None,
+                       "sum", "Entry boxes counted at IoU 0.5; malformed predicted boxes "
+                       "are false positives."))
+    for metric, desc in (
+        ("f1_micro", "F1 over the run's pooled entry counts at IoU 0.5."),
+        ("precision_micro", "Precision over the run's pooled entry counts at IoU 0.5."),
+        ("recall_micro", "Recall over the run's pooled entry counts at IoU 0.5."),
+    ):
+        add(_entry(b, "run", metric, "performance", "ratio_0_1", "higher_better", 0.0, 1.0,
+                   "not_summable", desc))
+    add(_entry(b, "run", "num_pages", "count", "pages", "not_applicable", 0.0, None, "sum",
+               "Pages the scorer examined in this run."))
+    for metric, desc in (("expected_entries", "Entries in the page's ground truth."),
+                         ("predicted_entries", "Boxes in the answer, malformed ones included.")):
+        add(_entry(b, "request", metric, "count", "entries", "not_applicable", 0.0, None,
+                   "sum", desc))
+    add(_entry(b, "request", "iou_threshold", "parameter", "iou", "not_applicable", 0.0, 1.0,
+               "not_aggregatable", "The overlap a box had to reach to count as matched. "
+               "Configuration, not a result."))
+    add(_entry(b, "field", "score", "performance", "iou", "higher_better", 0.0, 1.0,
+               "not_summable", "IoU of the prediction matched to one ground-truth entry, "
+               "keyed `entry <n>`; 0.0 where nothing matched it and for an unmatched "
+               "prediction, keyed `unmatched prediction <n>`."))
+
     # --- XML repair: F1 over edits ----------------------------------------------
     # An edit is a deleted, inserted or substituted token (whole tag, character reference
     # or single character) against the advert's input; the reference's edits are the ones

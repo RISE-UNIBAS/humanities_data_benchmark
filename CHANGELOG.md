@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Unreleased
 
 ### Added
+- `address_book_layout` benchmark: one bounding box per entry on the 64 pages of the business directory of the Basel address book of 1890 (StABS, public domain), scored with F1 at IoU 0.5; 125 test configurations (T2334-T2458), one per active vision model; its metrics are registered for the dataset export.
 - Dataset release `2026-11-20.1` deposited ([10.5281/zenodo.24401327](https://doi.org/10.5281/zenodo.24401327)) and recorded in `scripts/data/dataset_releases.json`; `CITATION.cff` lists the v0.8.3 DOI.
 
 ## [v0.8.3] - 2026-11-20

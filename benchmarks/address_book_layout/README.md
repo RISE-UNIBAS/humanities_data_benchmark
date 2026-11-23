@@ -8,13 +8,13 @@ This README is a BenchmarkCard (Sokol et al., NeurIPS 2025, arXiv 2410.12974), s
 
 The scorer is in [benchmark.py](benchmark.py), the requested output schema in [dataclass.py](dataclass.py) and the prompt in [prompts/](prompts/).
 
-To run this benchmark, use `python scripts/run_single_test.py --adhoc` from the repository root and select `basel_address_book_1890_layout`. Provider setup is described in the [root README](../../README.md#quick-start); configured prompts, models and scoring rules are recorded in [benchmarks_tests.csv](../benchmarks_tests.csv). Provider-backed runs incur API charges.
+To run this benchmark, use `python scripts/run_single_test.py --adhoc` from the repository root and select `address_book_layout`. Provider setup is described in the [root README](../../README.md#quick-start); configured prompts, models and scoring rules are recorded in [benchmarks_tests.csv](../benchmarks_tests.csv). Provider-backed runs incur API charges.
 
 ## Benchmark Details
 
 **Name:** Basel Address Book 1890: Entry Layout
 
-**Overview:** Models locate every entry on pages of the business directory of the Basel address book of 1890 (Staatsarchiv Basel-Stadt) and return one pixel bounding box per entry; entries are short, set in two columns and may run over several lines.
+**Overview:** Models locate every entry in the complete business directory of the Basel address book of 1890 (Staatsarchiv Basel-Stadt), all 64 pages, and return one pixel bounding box per entry; entries are short, set in two columns and may run over several lines.
 
 **Data Type:** image
 
@@ -35,8 +35,8 @@ To run this benchmark, use `python scripts/run_single_test.py --adhoc` from the 
 
 **Resources:**
 
-- https://rise-services.rise.unibas.ch/benchmarks/p/benchmarks/basel_address_book_1890_layout
-- https://github.com/RISE-UNIBAS/humanities_data_benchmark/tree/main/benchmarks/basel_address_book_1890_layout
+- https://rise-services.rise.unibas.ch/benchmarks/p/benchmarks/address_book_layout
+- https://github.com/RISE-UNIBAS/humanities_data_benchmark/tree/main/benchmarks/address_book_layout
 
 **Authors:**
 
@@ -58,16 +58,16 @@ To run this benchmark, use `python scripts/run_single_test.py --adhoc` from the 
 - entry detection on printed directory pages
 - bounding-box localisation in pixel coordinates
 
-**Limitations:** The 64 pages come from one volume, the business directory of the Basel address book of 1890, all printed in the same two-column layout and scanned under the same conditions; results do not transfer to other directories, layouts or scans. Entries are narrow (a printed line is about 3 % of the page height), so a box that drifts by one line already falls below the IoU threshold of 0.5 and scores the same as no box. The prompt describes what counts as an entry but not where exactly its box ends (indentation, leaders, marginal marks), so the score also measures agreement with the annotator's reading of that. The ground truth started from automatic boxes (Tesseract line boxes matched to the extracted entries) that the annotator confirmed or redrew (see Annotation); this may bias the reference towards OCR-style line boxes. Every page holds entries, so the benchmark never tests whether a model correctly returns nothing. The images are downscaled to a height of 2000 px, which makes the small type harder to read than in the original scans.
+**Limitations:** The 64 pages come from one volume, the business directory of the Basel address book of 1890, all printed in the same two-column layout and scanned under the same conditions; results do not transfer to other directories, layouts or scans. Entries are narrow (a one-line entry is about 1.5 % of the page height, 30 px in the downscaled image), so a box that drifts by one line already falls below the IoU threshold of 0.5 and scores the same as no box. The prompt describes what counts as an entry but not where exactly its box ends (indentation, leaders, marginal marks), so the score also measures agreement with the annotator's reading of that. The ground truth started from automatic boxes (Tesseract line boxes matched to the extracted entries) that the annotator confirmed or redrew (see Annotation); this may bias the reference towards OCR-style line boxes. Every page holds entries, so the benchmark never tests whether a model correctly returns nothing. The images are downscaled to a height of 2000 px, which makes the small type harder to read than in the original scans.
 
 **Out-of-Scope Uses:**
 
 - evaluating transcription or the content of the entries (no text is scored)
-- evaluating general layout analysis beyond directory entries (headings, running heads and page numbers are not annotated)
+- evaluating general layout analysis beyond directory entries (headings, notes, legends, footnotes, running heads and page numbers are not annotated)
 
 ## Data
 
-**Source:** Pages from the "Verzeichniss der Einwohner nach ihren Geschäften und Gewerben", the business directory of the Basel address book of 1890 ("Adressbuch der Stadt Basel"), held by the Staatsarchiv Basel-Stadt under the signature STA H 43 36 and digitised by it. The directory lists persons, companies and institutions under trade headings, usually with an address and sometimes with marks such as a telephone sign. The benchmark uses printed page 23 and the consecutive printed pages 354 to 416, the pages for which every entry box had been checked when the benchmark was created. The pages were annotated in the project "Basel address books" at the University of Basel (RISE), which extracts the entries of a series of Basel address books with a language model and links each record to its place on the page.
+**Source:** Pages from the "Verzeichnis der Einwohner nach ihren Geschäften und Gewerben", the business directory of the Basel address book of 1890 ("Adressbuch der Stadt Basel"), held by the Staatsarchiv Basel-Stadt under the signature STA H 43 36 and digitised by it. The directory lists persons, companies and institutions under trade headings, usually with an address and sometimes with marks such as a telephone sign. The benchmark uses the whole directory, images 362 to 425 of the volume: its first page, which carries the printed page number 23, and printed pages 354 to 416. The pages were annotated in the project "Basel address books" at the University of Basel (RISE), which extracts the entries of a series of Basel address books with a language model and links each record to its place on the page.
 
 **Size:** 64 evaluated objects
 
@@ -84,9 +84,9 @@ The first two entries of `sta_h_43_36_0363`:
 }
 ```
 
-The 64 pages hold 5,494 entries, between 38 and 105 per page (median 88). An entry that runs over several printed lines has one box covering all of them.
+The 64 pages hold 5,494 entries, between 38 and 105 per page (median 88). An entry that runs over several printed lines has one box covering all of them. A cross-reference standing in place of entries, such as "(Siehe Konditoren.)" under a trade heading, is boxed as an entry (about 46 of them); trade headings and sub-headings, notes under a heading, legends of marks, footnotes, running heads and page numbers are not boxed.
 
-**Annotation:** Eric Decker checked every box page by page in a box editor built for the project. The editor showed the box found automatically for each extracted entry (Tesseract line boxes matched to the entry's text); he confirmed 4,157 boxes and drew or redrew 1,337, among them 52 entries for which no automatic box had been found. Category headings, running heads and page numbers were not boxed. One extracted record was discarded and has no box. On the final ground truth, 97.6 % of the automatic boxes match the checked box at IoU 0.5 or more (mean IoU 0.945). No second annotator checked the boxes, and no written guideline beyond the rule that a box covers all lines of one entry was used.
+**Annotation:** Eric Decker checked every box page by page in a box editor built for the project. The editor showed the box found automatically for each extracted entry (Tesseract line boxes matched to the entry's text); he confirmed 4,157 boxes and drew or redrew 1,337, among them 52 entries for which no automatic box had been found. Headings, notes, footnotes, running heads and page numbers were not boxed. One extracted record was discarded and has no box. On the final ground truth, 97.6 % of the checked boxes are matched by their automatic box at IoU 0.5 or more (98.5 % of the 5,442 automatic boxes; mean IoU of all automatic boxes 0.945). No second annotator checked the boxes, and no written guideline beyond the rule that a box covers all lines of one entry was used.
 
 **Size Breakdown:**
 
@@ -101,7 +101,7 @@ The 64 pages hold 5,494 entries, between 38 and 105 per page (median 88). An ent
 **Methods:**
 
 - zero-shot bounding-box detection from a single image per request
-- the prompt states the page size in pixels, filled in from the image (`{width}`, `{height}`), and the exact JSON shape of the answer
+- the prompt defines an entry (including cross-references such as "(Siehe Konditoren.)") and names what is not one, states the page size in pixels, filled in from the image (`{width}`, `{height}`), and the exact JSON shape of the answer
 - structured JSON output requested using the `AddressBookPage` dataclass
 - output cap: the repository default per request
 
@@ -113,7 +113,7 @@ The 64 pages hold 5,494 entries, between 38 and 105 per page (median 88). An ent
 - mean IoU of matched boxes (`mean_iou`)
 - relative error of the number of boxes (`count_error`)
 
-**Calculation:** For each page, boxes are read from `entries[].box`; corners are put in order, and an item that is not four numbers is kept as a box that matches nothing. The Intersection-over-Union (IoU) is computed for every pair of predicted and ground-truth box. Pairs with IoU of 0.5 or more are sorted by IoU, highest first, and assigned greedily so that each box is matched at most once.
+**Calculation:** For each page, boxes are read from `entries[].box` (from `detections[].box` for the local detectors); corners are put in order, and an item that is not four finite JSON numbers (a quoted number, NaN or infinity included) is kept as a box that matches nothing. The Intersection-over-Union (IoU) is computed for every pair of predicted and ground-truth box. Pairs with IoU of 0.5 or more are sorted by IoU, highest first, and assigned greedily so that each box is matched at most once.
 
 - TP: a predicted box matched to a ground-truth box
 - FP: a predicted box that matched nothing, including malformed items
@@ -127,7 +127,7 @@ The benchmark scores are the unweighted means of the per-page values, rounded to
 
 **Baseline Results:** Results are on the benchmark page and in `results/<date>/<test_id>/` at the repository root once tests are configured. No fixed baseline is recorded. As a reference outside the benchmark runs, the automatic OCR-based localisation that produced the pre-boxes matches 97.6 % of the ground-truth boxes at IoU 0.5 (see Annotation); it had the extracted entry texts as input and is therefore not a comparable baseline. Compare runs only with the same prompt, rules and ground-truth revision.
 
-**Validation:** The ground truth was checked box by box by the annotator named under Annotation; every one of the 64 pages has no unchecked box. Boxes of one page (printed page 370) were drawn onto the downscaled image and inspected after the export. Scoring is deterministic; the scorer is covered by `tests/test_basel_address_book_1890_layout_scoring.py`, including a test in which every ground truth scores perfectly against itself.
+**Validation:** The ground truth was checked box by box by the annotator named under Annotation; every one of the 64 pages has no unchecked box. Boxes of one page (printed page 370) were drawn onto the downscaled image and inspected after the export. Scoring is deterministic; the scorer is covered by `tests/test_address_book_layout_scoring.py`, including a test in which every ground truth scores perfectly against itself.
 
 **Human Baseline:** Not specified
 
@@ -145,11 +145,11 @@ The benchmark scores are the unweighted means of the per-page values, rounded to
 
 **Privacy and Anonymity:** The pages are a printed public directory from 1890. They name persons and businesses with their trades and addresses, as published at the time; all persons named are long dead. Nothing is anonymised. Only the positions of the entries are annotated; no personal data is extracted or scored.
 
-**Data Licensing:** Source material: Not specified. Ground truth, prompts and other data created for this benchmark: CC BY 4.0.
+**Data Licensing:** Source material: Public Domain. Ground truth, prompts and other data created for this benchmark: CC BY 4.0.
 
 **Consent Procedures:** Not specified
 
-**Compliance with Regulations:** The address book was printed in 1890 and is in the public domain as a work. The Staatsarchiv Basel-Stadt shows the scans online; its rights statement for the digital images has not yet been confirmed for this benchmark. No ethical review was carried out.
+**Compliance with Regulations:** The address book was printed in 1890 and is in the public domain as a work; the Staatsarchiv Basel-Stadt marks the digitised volume as "gemeinfrei" (public domain) in its online reading room. No ethical review was carried out.
 
 ## Beyond the BenchmarkCard
 
@@ -175,7 +175,7 @@ This section is not part of the BenchmarkCard schema and is not exported to `ben
 
 Source:
 
-> Staatsarchiv Basel-Stadt, STA H 43 36, 1890. Licence of the source material: Not specified. https://dls.staatsarchiv.bs.ch/records/1231752/611148/preview
+> Staatsarchiv Basel-Stadt, STA H 43 36, 1890. Licence of the source material: Public Domain. https://dls.staatsarchiv.bs.ch/records/1231752/611148/preview
 
 The benchmark suite:
 

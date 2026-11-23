@@ -23,6 +23,16 @@ Contributions are categorized by benchmark and type of contribution, and in alph
 | Analyst       | Develop meaningful scoring (evaluation criteria and methodology) | [Other](https://datacite-metadata-schema.readthedocs.io/en/4.6/appendices/appendix-1/contributorType/#other)             |
 | Engineer      | Implement benchmark                                              | [Other](https://datacite-metadata-schema.readthedocs.io/en/4.6/appendices/appendix-1/contributorType/#other)             |
 
+### [Basel Address Book Layout](benchmarks/address_book_layout/)
+
+| Role          | Contributors  |
+|---------------|---------------|
+| Domain expert | [Eric Decker] |
+| Data curator  | [Eric Decker] |
+| Annotator     | [Eric Decker] |
+| Analyst       | [Eric Decker] |
+| Engineer      | [Eric Decker] |
+
 ### [Bibliographic Data](benchmarks/bibliographic_data/)
 
 | Role          | Contributors                   |

@@ -66,6 +66,7 @@ the task, the metrics and how to read them, known limitations, versions and how 
 
 | Benchmark | Description |
 |-----------|-------------|
+| **[Basel Address Book Layout](benchmarks/address_book_layout/)** | Locate every entry, as a bounding box, on the 64 pages of the business directory of the Basel address book of 1890 |
 | **[Bibliographic Data](benchmarks/bibliographic_data/)** | Extract structured entries (author, title, publisher, place, year, pages, cross-references) from a printed 1961 bibliography of the philosophy of history |
 | **[Blacklist Cards](benchmarks/blacklist_cards/)** | Extract company, location, identification number, date and blacklist entries from Swiss Federal Archives index cards on the British trade blacklist, 1940–1946 |
 | **[Book Advert XML](benchmarks/book_advert_xml/)** | Repair malformed XML markup in transcribed adverts from the Basler Avisblatt (1729–1844) without changing the advert text |
