@@ -25,13 +25,13 @@ Contributions are categorized by benchmark and type of contribution, and in alph
 
 ### [Basel Address Book Layout](benchmarks/address_book_layout/)
 
-| Role          | Contributors  |
-|---------------|---------------|
-| Domain expert | [Eric Decker] |
-| Data curator  | [Eric Decker] |
-| Annotator     | [Eric Decker] |
-| Analyst       | [Eric Decker] |
-| Engineer      | [Eric Decker] |
+| Role          | Contributors                 |
+|---------------|------------------------------|
+| Domain expert | [Eric Decker]                |
+| Data curator  | [Eric Decker], [Lea Kasper]  |
+| Annotator     | [Eric Decker]                |
+| Analyst       | [Eric Decker]                |
+| Engineer      | [Eric Decker]                |
 
 ### [Bibliographic Data](benchmarks/bibliographic_data/)
 

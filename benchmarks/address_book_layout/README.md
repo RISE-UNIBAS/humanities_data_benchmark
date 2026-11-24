@@ -41,6 +41,7 @@ To run this benchmark, use `python scripts/run_single_test.py --adhoc` from the 
 **Authors:**
 
 - Eric Decker
+- Lea Kasper
 
 ## Purpose and Intended Users
 
@@ -171,7 +172,7 @@ This section is not part of the BenchmarkCard schema and is not exported to `ben
 
 **How to Cite:** This benchmark:
 
-> Decker, E. (2026). Basel Address Book 1890: Entry Layout (benchmark version 1.0.0). In *RISE Humanities Data Benchmark*. Zenodo. https://doi.org/10.5281/zenodo.16941752
+> Decker, E., & Kasper, L. (2026). Basel Address Book 1890: Entry Layout (benchmark version 1.0.0). In *RISE Humanities Data Benchmark*. Zenodo. https://doi.org/10.5281/zenodo.16941752
 
 Source:
 
@@ -186,7 +187,7 @@ The benchmark suite:
 **Contributors by Role:**
 
 - Domain Expert: Eric Decker
-- Data Curator: Eric Decker
+- Data Curator: Eric Decker, Lea Kasper
 - Annotator: Eric Decker
 - Analyst: Eric Decker
 - Engineer: Eric Decker
