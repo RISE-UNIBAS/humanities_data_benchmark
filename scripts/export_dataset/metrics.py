@@ -138,10 +138,14 @@ def _build():
             ("recall", "Recall over matched page regions."),
         ):
             add(_entry("magazine_pages", level, metric, "performance", "ratio_0_1",
-                       "higher_better", 0.0, 1.0, "not_summable", desc))
+                       "higher_better", 0.0, 1.0, "not_summable",
+                       desc + (" The run value is the mean of the per-page values." if level == "run" else "")))
         add(_entry("magazine_pages", level, "mean_iou", "performance", "iou",
                    "higher_better", 0.0, 1.0, "not_summable",
-                   "Mean intersection-over-union of the matched boxes. A measurement."))
+                   "Mean intersection-over-union of the matched boxes; 0 when none matched. A "
+                   "measurement." + (" The run value is the mean of the per-page values, pages "
+                   "without a match counting 0, not the mean over all matched boxes of the run."
+                   if level == "run" else "")))
         for metric in ("true_positives", "false_positives", "false_negatives"):
             add(_entry("magazine_pages", level, metric, "count", "regions",
                        "not_applicable", 0.0, None, "sum",
@@ -163,13 +167,17 @@ def _build():
         ):
             add(_entry(b, level, metric, "performance", "ratio_0_1", "higher_better",
                        0.0, 1.0, "not_summable",
-                       desc + (" The run value is the mean over pages." if level == "run" else "")))
+                       desc + (" The run value is the mean of the per-page values." if level == "run" else "")))
         add(_entry(b, level, "mean_iou", "performance", "iou", "higher_better", 0.0, 1.0,
                    "not_summable", "Mean intersection-over-union of the entries matched at "
-                   "IoU 0.5; 0 when none matched."))
+                   "IoU 0.5; 0 when none matched." + (" The run value is the mean of the "
+                   "per-page values, pages without a match counting 0, not the mean over all "
+                   "matched boxes of the run." if level == "run" else "")))
         add(_entry(b, level, "count_error", "performance", "error_rate", "lower_better",
                    0.0, None, "not_summable", "|predicted - expected| / expected number of "
-                   "entry boxes. Lower is better."))
+                   "entry boxes. Lower is better." + (" The run value is the mean of the "
+                   "per-page values, not the error of the run's pooled counts."
+                   if level == "run" else "")))
         for metric in ("true_positives", "false_positives", "false_negatives"):
             add(_entry(b, level, metric, "count", "entries", "not_applicable", 0.0, None,
                        "sum", "Entry boxes counted at IoU 0.5; malformed predicted boxes "

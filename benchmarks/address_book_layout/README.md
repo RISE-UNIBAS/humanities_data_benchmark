@@ -168,11 +168,12 @@ This section is not part of the BenchmarkCard schema and is not exported to `ben
 
 **Versions:**
 
+- 1.0.1 (2026-11-24) — a coordinate too large for a float counts as one malformed box instead of failing the page; scores unchanged
 - 1.0.0 (2026-11-23) — first state, created with its card
 
 **How to Cite:** This benchmark:
 
-> Decker, E., & Kasper, L. (2026). Basel Address Book 1890: Entry Layout (benchmark version 1.0.0). In *RISE Humanities Data Benchmark*. Zenodo. https://doi.org/10.5281/zenodo.16941752
+> Decker, E., & Kasper, L. (2026). Basel Address Book 1890: Entry Layout (benchmark version 1.0.1). In *RISE Humanities Data Benchmark*. Zenodo. https://doi.org/10.5281/zenodo.16941752
 
 Source:
 

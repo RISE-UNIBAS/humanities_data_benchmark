@@ -80,9 +80,14 @@ def _clean_box(box) -> Optional[list]:
     """Return [x0, y0, x1, y1] with ordered corners, or None unless the box is four finite numbers."""
     if not isinstance(box, (list, tuple)) or len(box) != 4:
         return None
-    if not all(isinstance(v, (int, float)) and not isinstance(v, bool) and math.isfinite(v) for v in box):
+    if not all(isinstance(v, (int, float)) and not isinstance(v, bool) for v in box):
         return None
-    x0, y0, x1, y1 = (float(v) for v in box)
+    try:
+        x0, y0, x1, y1 = (float(v) for v in box)
+    except OverflowError:  # an integer too large for a float
+        return None
+    if not all(math.isfinite(v) for v in (x0, y0, x1, y1)):
+        return None
     return [min(x0, x1), min(y0, y1), max(x0, x1), max(y0, y1)]
 
 

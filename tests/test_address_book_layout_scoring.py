@@ -52,7 +52,7 @@ class TestExtractBoxes:
         assert module._extract_boxes("not json") == []
 
     @pytest.mark.parametrize("box", [["0", "0", "10", "10"], [0, 0, float("nan"), 10],
-                                     [0, 0, float("inf"), 10], [True, 0, 10, 10]])
+                                     [0, 0, float("inf"), 10], [True, 0, 10, 10], [0, 0, 10**400, 10]])
     def test_only_finite_numbers_are_coordinates(self, box):
         assert module._extract_boxes(entries(box)) == [None]
 
@@ -86,6 +86,12 @@ class TestScoreRequestAnswer:
         result = scorer.score_request_answer("p", response(parsed=pred), gt)
         assert (result["true_positives"], result["false_positives"], result["f1"]) == (0, 2, 0.0)
         json.dumps(result, allow_nan=False)
+
+    def test_an_oversized_coordinate_is_one_false_positive(self, scorer, response):
+        gt = entries(*[[0, 20 * i, 100, 20 * i + 10] for i in range(60)])
+        pred = {"entries": gt["entries"] + [{"box": [0, 0, 10**400, 10]}]}
+        result = scorer.score_request_answer("p", response(parsed=pred), gt)
+        assert (result["true_positives"], result["false_positives"], result["false_negatives"]) == (60, 1, 0)
 
     def test_detections_score_like_entries(self, scorer, response):
         gt = entries([0, 0, 10, 10], [0, 20, 10, 30])

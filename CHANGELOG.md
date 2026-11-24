@@ -15,6 +15,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - `legacy_test=true` for three models their providers no longer serve: `gpt-4.1-nano` (OpenAI), `swiss-ai/Apertus-v1.5-8B:publicai` (Hugging Face) and `qwen/qwen3-vl-8b-thinking` (OpenRouter); README models table updated.
 
+### Fixed
+- `address_book_layout` 1.0.1: a coordinate too large for a float counts as one malformed box instead of failing the page; scores unchanged.
+- Dataset export dictionary: run-level `mean_iou` and `count_error` (`address_book_layout`) and the `magazine_pages` run-level box metrics are described as means of the per-page values.
+
 ## [v0.8.3] - 2026-11-20
 
 ### Added
