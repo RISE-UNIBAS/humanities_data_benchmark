@@ -1,4 +1,4 @@
-# Basel Address Book 1890: Entry Layout
+# Address Book Layout
 
 This README is a BenchmarkCard (Sokol et al., NeurIPS 2025, arXiv 2410.12974), schema as in evaleval/auto-benchmarkcard v0.2.0.
 
@@ -12,7 +12,7 @@ To run this benchmark, use `python scripts/run_single_test.py --adhoc` from the 
 
 ## Benchmark Details
 
-**Name:** Basel Address Book 1890: Entry Layout
+**Name:** Address Book Layout
 
 **Overview:** Models locate every entry in the complete business directory of the Basel address book of 1890 (Staatsarchiv Basel-Stadt), all 64 pages, and return one pixel bounding box per entry; entries are short, set in two columns and may run over several lines.
 
@@ -173,7 +173,7 @@ This section is not part of the BenchmarkCard schema and is not exported to `ben
 
 **How to Cite:** This benchmark:
 
-> Decker, E., & Kasper, L. (2026). Basel Address Book 1890: Entry Layout (benchmark version 1.0.1). In *RISE Humanities Data Benchmark*. Zenodo. https://doi.org/10.5281/zenodo.16941752
+> Decker, E., & Kasper, L. (2026). Address Book Layout (benchmark version 1.0.1). In *RISE Humanities Data Benchmark*. Zenodo. https://doi.org/10.5281/zenodo.16941752
 
 Source:
 
